@@ -1,0 +1,8 @@
+{
+  "images" : [
+    { "filename" : "monstera.png",    "idiom" : "universal", "scale" : "1x" },
+    { "filename" : "monstera@2x.png", "idiom" : "universal", "scale" : "2x" },
+    { "filename" : "monstera@3x.png", "idiom" : "universal", "scale" : "3x" }
+  ],
+  "info" : { "author" : "xcode", "version" : 1 }
+}
