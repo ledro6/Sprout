@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/cupertino.dart';
 
 import '../design/tokens.dart';
@@ -30,45 +32,53 @@ class PlantScreen extends StatelessWidget {
         Positioned.fill(
           child: SproutBackground(scroll: _zero),
         ),
-        SafeArea(
-          bottom: false,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-                horizontal: SproutMetrics.margin),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                const SizedBox(height: 14),
-                _Staggered(
-                  animation: entry,
-                  delay: 0.0,
-                  child: _nav(context),
-                ),
-                const SizedBox(height: 55),
-                _Staggered(
-                  animation: entry,
-                  delay: 0.08,
-                  child: _photo(),
-                ),
-                const SizedBox(height: 44),
-                _Staggered(
-                  animation: entry,
-                  delay: 0.16,
-                  child: _facts(),
-                ),
-                const Spacer(),
-                const SizedBox(height: 120),
-              ],
-            ),
+        // Прокрутка, а не Column во весь экран: макет нарисован под 874 pt,
+        // а на телефоне поменьше или с длинным названием вида содержимое
+        // перестаёт помещаться.
+        SingleChildScrollView(
+          // Навигация начинается на 68 pt — под плашкой Sprout, которая
+          // висит в чёлке на 19..47. На устройстве с более высоким вырезом
+          // отступ растёт вместе с ним, иначе кнопки заедут под плашку.
+          padding: EdgeInsets.fromLTRB(
+            SproutMetrics.margin,
+            math.max(68.0, MediaQuery.paddingOf(context).top + 6),
+            SproutMetrics.margin,
+            // Место под нижнюю панель.
+            120,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              _Staggered(
+                animation: entry,
+                delay: 0.0,
+                child: _nav(context),
+              ),
+              const SizedBox(height: 45),
+              _Staggered(
+                animation: entry,
+                delay: 0.08,
+                child: _photo(),
+              ),
+              const SizedBox(height: 44),
+              _Staggered(
+                animation: entry,
+                delay: 0.16,
+                child: _facts(),
+              ),
+            ],
           ),
         ),
       ],
     );
   }
 
+  /// Навигация: кнопка назад, капсула заголовка, «ещё».
+  /// В макете капсула выше кнопок — 63 против 47 — и они выровнены
+  /// по общему центру.
   Widget _nav(BuildContext context) {
     return SizedBox(
-      height: 47,
+      height: 63,
       child: Row(
         children: [
           _GlassButton(
@@ -79,18 +89,20 @@ class PlantScreen extends StatelessWidget {
           ),
           const SizedBox(width: 25),
           Expanded(
-            child: SizedBox(
-              height: 47,
-              child: Stack(
-                children: [
-                  const Positioned.fill(
-                    child: LiquidGlass(borderRadius: 23.5),
+            child: Stack(
+              children: [
+                const Positioned.fill(
+                  child: LiquidGlass(borderRadius: 31.5),
+                ),
+                Center(
+                  child: Text(
+                    plant.name,
+                    style: SproutText.navTitle,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  Center(
-                    child: Text(plant.name, style: SproutText.navTitle),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
           const SizedBox(width: 25),

@@ -100,9 +100,16 @@ class _HomeScreenState extends State<HomeScreen> {
               controller: _scroll,
               slivers: [
                 SliverToBoxAdapter(
+                  // Отступ сверху 73, а не 77 как у приветствия в макете:
+                  // кнопка комнаты стоит в потоке целиком, всеми своими
+                  // 44 pt, тогда как в макете она на 13 pt заходит за свою
+                  // строку вверх и вниз — 44 pt там площадь нажатия, а не
+                  // место в потоке. Забираем эти 4 pt у верхнего поля, и
+                  // дальше подпись комнаты и карточки встают ровно по
+                  // макету, на 154 и 188.
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(
-                        SproutMetrics.margin, 77, SproutMetrics.margin, 0),
+                        SproutMetrics.margin, 73, SproutMetrics.margin, 0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -110,7 +117,6 @@ class _HomeScreenState extends State<HomeScreen> {
                           'Добро пожаловать,\n${Garden.owner}!',
                           style: SproutText.greeting,
                         ),
-                        const SizedBox(height: 9),
                         RoomPickerButton(
                           anchorKey: _anchor,
                           room: Garden.rooms[_room].name,

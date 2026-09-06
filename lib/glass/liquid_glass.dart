@@ -88,14 +88,16 @@ class GlassSettings {
   /// #FFFFFFA6 — ровно та, что стоит в макете. Аналог Regular у Apple.
   static const regular = GlassSettings();
 
-  /// Плашки карточек: подкраска почти прозрачная (#FFFFFF1A), стекло держится
-  /// на преломлении и кромке. Аналог Clear.
+  /// Плашки карточек. У слоя заливки в макете стоит #FFFFFF1A, но поверх
+  /// него лежит эффект стекла, который сильно высветляет — на рендерах
+  /// карточки заметно белее фона. Здесь эта суммарная плотность и задана,
+  /// иначе плашка тонет в узоре. Аналог Clear у Apple.
   static const clear = GlassSettings(
     blur: 14.0,
     thickness: 26.0,
     refraction: 17.0,
     specular: 0.6,
-    tint: Color(0x1AFFFFFF),
+    tint: Color(0x4DFFFFFF),
     saturation: 1.7,
     glow: 2.0,
   );
@@ -155,7 +157,13 @@ class GlassSettings {
 class GlassProgram {
   GlassProgram._();
 
-  static const _asset = 'shaders/liquid_glass.frag';
+  static const asset = 'shaders/liquid_glass.frag';
+
+  /// Сколько float занимают все uniform шейдера вместе, включая те два,
+  /// что заполняет движок. Униформы задаются по индексу, без имён, поэтому
+  /// лишний или пропущенный setFloat сдвинет всё, что за ним, — и материал
+  /// сломается молча. Число сверяется с самим .frag в тестах.
+  static const uniformFloats = 27;
 
   static ui.FragmentProgram? _program;
   static Future<ui.FragmentProgram?>? _pending;
@@ -173,7 +181,7 @@ class GlassProgram {
   static Future<ui.FragmentProgram?> load() {
     if (_program != null) return Future.value(_program);
     if (!isSupported) return Future.value(null);
-    return _pending ??= ui.FragmentProgram.fromAsset(_asset).then(
+    return _pending ??= ui.FragmentProgram.fromAsset(asset).then(
       (p) => _program = p,
       onError: (Object e, StackTrace s) {
         // Не роняем приложение из-за материала: без шейдера остаётся
@@ -296,6 +304,9 @@ class _LiquidGlassState extends State<LiquidGlass> {
     f(s.glow);
     f(1.0); // uAA
     f(s.blur);
+    assert(i == GlassProgram.uniformFloats,
+        'записано ${i - 2} униформ вместо ${GlassProgram.uniformFloats - 2}; '
+        'порядок разъехался с shaders/liquid_glass.frag');
 
     // Сэмплер фона подставляет движок: для ImageFilter.shader первый
     // sampler2D заполняется им самим, руками его задавать не нужно.
