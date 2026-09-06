@@ -1,0 +1,44 @@
+# Flutter / Dart
+.dart_tool/
+.packages
+build/
+*.iml
+.flutter-plugins
+.flutter-plugins-dependencies
+pubspec.lock
+
+# Android
+android/.gradle/
+android/local.properties
+android/key.properties
+*.jks
+*.keystore
+
+# iOS
+ios/Pods/
+ios/.symlinks/
+ios/Flutter/Flutter.framework
+ios/Flutter/Flutter.podspec
+ios/Flutter/Generated.xcconfig
+ios/Flutter/flutter_export_environment.sh
+*.mobileprovision
+*.p12
+*.p8
+
+# Выгрузка из Figma: raw.json огромный, рендеры бинарные.
+# Разобранный дизайн (screens.json/tokens.json) держим в репозитории —
+# по нему видно, из чего собран UI.
+design/raw.json
+design/png/
+
+# Секреты. Токен Figma живёт только в окружении.
+.env
+.env.*
+*.local
+
+# Прочее
+.DS_Store
+
+# IDE
+.idea/
+*.iml
