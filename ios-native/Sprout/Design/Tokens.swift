@@ -26,8 +26,13 @@ enum Palette {
     /// Голубой капли на логотипе.
     static let water = Color(red: 71 / 255, green: 181 / 255, blue: 228 / 255)
 
-    /// Тень карточек и панелей: #0000001F.
+    /// Тень панелей: #0000001F.
     static let shadow = Color.black.opacity(0.12)
+
+    /// Тень карточки — в макете она заметно плотнее панельной: чёрный
+    /// 40%, вниз на 8, размытие 40, и включено «не рисовать под самим
+    /// слоем».
+    static let cardShadow = Color.black.opacity(0.4)
 
     /// Тревожное свечение — полив завтра: #FF000066.
     static let thirsty = Color.red.opacity(0.4)
@@ -87,6 +92,19 @@ enum Metrics {
     /// Скругление карточки и внутреннее поле.
     static let cardRadius: CGFloat = 26
     static let cardPadding: CGFloat = 11
+
+    /// Тень карточки. Смещение из макета как есть, размытие вдвое
+    /// меньше: Figma задаёт его диаметром пятна, SwiftUI — сигмой.
+    static let cardShadowY: CGFloat = 8
+    static let cardShadowBlur: CGFloat = 20
+
+    /// Тревожное свечение вокруг карточки и во сколько оно ослаблено
+    /// против макета. В макете красный лежит на плотной плашке, а здесь
+    /// стекло прозрачное, и на экране телефона тот же цвет горит так,
+    /// что спорит с содержимым карточки.
+    static let glowWidth: CGFloat = 12
+    static let glowBlur: CGFloat = 12
+    static let glowAttenuation: CGFloat = 0.4
 
     /// Всплывающее меню комнат.
     static let sheetRadius: CGFloat = 24.8

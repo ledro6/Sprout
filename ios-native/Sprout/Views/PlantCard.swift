@@ -38,26 +38,87 @@ struct PlantCard: View {
         }
         .padding(.horizontal, Metrics.cardPadding)
         .padding(.vertical, 10)
-        .glassEffect(
-            .clear.interactive(),
-            in: .rect(cornerRadius: Metrics.cardRadius, style: .continuous)
-        )
-        .background { glow }
+        .glassEffect(.clear.interactive(), in: shape)
+        .background {
+            ZStack {
+                shadow
+                glow
+            }
+        }
     }
 
-    /// Тревожное свечение — только ореолом по контуру, а не заливкой:
-    /// заливка просвечивала бы сквозь прозрачное стекло и красила саму
-    /// карточку, а в макете розовое лежит вокруг неё.
+    private var shape: RoundedRectangle {
+        RoundedRectangle(cornerRadius: Metrics.cardRadius, style: .continuous)
+    }
+
+    /// Тень под карточкой.
+    ///
+    /// Силуэт самой карточки из тени вырезается. Это не украшательство:
+    /// стекло прозрачное и преломляет всё, что лежит в `.background`, —
+    /// тень без выреза оказалась бы прямо под карточкой и замутила бы её
+    /// изнутри. В макете у этой тени по той же причине стоит
+    /// «не рисовать под самим слоем».
+    private var shadow: some View {
+        ZStack {
+            shape
+                .fill(Palette.cardShadow)
+                .blur(radius: Metrics.cardShadowBlur)
+                .offset(y: Metrics.cardShadowY)
+            shape
+                .fill(.black)
+                .blendMode(.destinationOut)
+        }
+        .compositingGroup()
+    }
+
+    /// Тревожное свечение — ореолом по контуру, а не заливкой: заливка
+    /// просвечивала бы сквозь прозрачное стекло и красила саму карточку,
+    /// а в макете розовое лежит вокруг неё.
     @ViewBuilder
     private var glow: some View {
         if plant.thirst != .calm {
-            RoundedRectangle(
-                cornerRadius: Metrics.cardRadius, style: .continuous
-            )
-            .stroke(
-                plant.thirst == .now ? Palette.thirstyNow : Palette.thirsty,
-                lineWidth: 16)
-            .blur(radius: 14)
+            shape
+                .stroke(
+                    plant.thirst == .now ? Palette.thirstyNow : Palette.thirsty,
+                    lineWidth: Metrics.glowWidth)
+                .blur(radius: Metrics.glowBlur)
+                .opacity(Metrics.glowAttenuation)
+        }
+    }
+}
+
+/// Появление карточки: поднимается снизу, чуть приближаясь, и
+/// проявляется. Соседняя стартует на полкадра позже — сетка не
+/// подставляется разом, а набегает волной.
+///
+/// Движение взято с ленты Сообщений: там при прокрутке вверх содержимое
+/// приходит одной пружиной, без затухающей кривой, и потому читается как
+/// продолжение жеста, а не как проигранный ролик.
+struct CardAppear: ViewModifier {
+    /// Порядковый номер карточки в сетке — от него задержка.
+    let index: Int
+
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @State private var shown = false
+
+    func body(content: Content) -> some View {
+        content
+            .opacity(shown ? 1 : 0)
+            .scaleEffect(shown ? 1 : 0.9, anchor: .top)
+            .offset(y: shown ? 0 : 26)
+            .onAppear(perform: reveal)
+    }
+
+    private func reveal() {
+        guard !reduceMotion else {
+            shown = true
+            return
+        }
+        withAnimation(
+            .spring(duration: 0.45, bounce: 0.28)
+                .delay(Double(index) * 0.055)
+        ) {
+            shown = true
         }
     }
 }

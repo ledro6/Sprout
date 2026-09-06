@@ -3,6 +3,7 @@ import SwiftUI
 /// Главный экран: приветствие, выбор комнаты и сетка растений.
 struct HomeView: View {
     @State private var roomIndex = 0
+    @State private var topInset: CGFloat = 0
 
     private var room: Room { Garden.rooms[roomIndex] }
 
@@ -15,14 +16,43 @@ struct HomeView: View {
                 }
             }
             .background { SproutBackground() }
+            .background { insetProbe }
             // Плашка с логотипом закреплена и не уезжает с прокруткой:
             // safeAreaInset отдаёт ей полосу сверху, содержимое проезжает
             // под ней.
             .safeAreaInset(edge: .top) {
-                SproutBadge().padding(.bottom, 6)
+                SproutBadge()
+                    .padding(.bottom, 6)
+                    // Плашка прижимается к вырезу. safeAreaInset ставит её
+                    // на нижнюю границу безопасной зоны, а у телефонов с
+                    // островом граница проходит на 14 pt ниже самого
+                    // острова — отсюда и была пустая полоса над плашкой.
+                    // Сдвиг только рисует её выше: полоса, которую плашка
+                    // занимает в потоке, прежней высоты, поэтому
+                    // приветствие и карточки остаются на своих местах.
+                    .offset(y: -badgeLift)
             }
             .navigationDestination(for: Plant.self) { PlantView(plant: $0) }
         }
+    }
+
+    /// Насколько поднять плашку к вырезу.
+    ///
+    /// У острова под безопасной зоной 14 pt запаса, у чёлки — почти
+    /// ничего, и там поднимать нечего: плашка ушла бы под сам вырез.
+    /// Порог по высоте вставки как раз и различает эти две формы.
+    private var badgeLift: CGFloat { topInset >= 55 ? 13 : 2 }
+
+    /// Мерка вставок окна. Внутри безопасной зоны они читаются нулями,
+    /// поэтому вью сначала выходит за неё, а уже потом спрашивает.
+    private var insetProbe: some View {
+        Color.clear
+            .ignoresSafeArea()
+            .onGeometryChange(for: CGFloat.self) { proxy in
+                proxy.safeAreaInsets.top
+            } action: { inset in
+                topInset = inset
+            }
     }
 
     private var header: some View {
@@ -50,14 +80,21 @@ struct HomeView: View {
             ],
             spacing: Metrics.gutterV
         ) {
-            ForEach(room.plants) { plant in
-                NavigationLink(value: plant) {
-                    PlantCard(plant: plant)
+            ForEach(Array(room.plants.enumerated()), id: \.element.id) { item in
+                NavigationLink(value: item.element) {
+                    PlantCard(plant: item.element)
                 }
                 .buttonStyle(.plain)
+                // Появление ведёт сама карточка: при смене комнаты
+                // растения другие, значит и вью другие, и каждое въезжает
+                // со своей задержкой. Уходящим достаётся только затухание —
+                // новые к этому времени уже поднимаются на их места.
+                .modifier(CardAppear(index: item.offset))
+                .transition(.asymmetric(insertion: .identity, removal: .opacity))
             }
         }
         .padding(.top, 3)
         .padding(.horizontal, Metrics.margin)
+        .animation(.easeOut(duration: 0.18), value: roomIndex)
     }
 }

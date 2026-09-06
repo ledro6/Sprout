@@ -28,6 +28,58 @@ enum SproutShapes {
         return p
     }
 
+    /// Коробка, в которой нарисован логотип в макете: группа «лого»,
+    /// 74.92 × 137.51. Все точки ниже — в ней.
+    static let logoBox = CGSize(width: 74.9208, height: 137.5099)
+
+    /// Толщина обводки листьев в той же коробке.
+    static let logoStroke: CGFloat = 7.4455
+
+    /// Ломаная по точкам: замкнутая — лист, открытая — стебель.
+    private static func line(_ points: [CGPoint], closed: Bool) -> Path {
+        var p = Path()
+        p.addLines(points)
+        if closed { p.closeSubpath() }
+        return p
+    }
+
+    /// Листья логотипа. В макете это не кривые, а ломаные: Figma отдаёт
+    /// их в vectorNetwork прямыми сегментами, обведёнными зелёным.
+    static let logoLeaves: [Path] = [
+        // Левый лист и его стебель.
+        line([CGPoint(x: 24.8960, y: 70.2674),
+              CGPoint(x: 0, y: 49.3268),
+              CGPoint(x: 0, y: 85.8565),
+              CGPoint(x: 24.8960, y: 108.8912)], closed: true),
+        line([CGPoint(x: 24.8960, y: 123.5496),
+              CGPoint(x: 24.8960, y: 108.8912)], closed: false),
+        // Правый, самый крупный, с длинным стеблем.
+        line([CGPoint(x: 37.6930, y: 63.5198),
+              CGPoint(x: 37.6930, y: 115.4059),
+              CGPoint(x: 74.9207, y: 85.6238),
+              CGPoint(x: 74.9207, y: 32.1089)], closed: true),
+        line([CGPoint(x: 37.6930, y: 115.4059),
+              CGPoint(x: 37.6930, y: 137.5099)], closed: false),
+        // Верхний, самый мелкий.
+        line([CGPoint(x: 39.7870, y: 13.9604),
+              CGPoint(x: 23.4999, y: 27.2228),
+              CGPoint(x: 23.4999, y: 50.0248),
+              CGPoint(x: 26.9900, y: 54.2129),
+              CGPoint(x: 39.7870, y: 43.2772)], closed: true),
+    ]
+
+    /// Две капли воды: заливка, без обводки.
+    static let logoDrops: [Path] = [
+        line([CGPoint(x: 2.0941, y: 39.9268),
+              CGPoint(x: 8.6090, y: 26.5248),
+              CGPoint(x: 15.5891, y: 39.9268),
+              CGPoint(x: 8.6090, y: 46.0694)], closed: true),
+        line([CGPoint(x: 47.6980, y: 23.2939),
+              CGPoint(x: 59.1552, y: 0),
+              CGPoint(x: 71.4307, y: 23.2939),
+              CGPoint(x: 59.1552, y: 33.9703)], closed: true),
+    ]
+
     /// Капля.
     static var drop: Path {
         var p = Path()
@@ -115,33 +167,56 @@ struct SproutBackground: View {
     }
 }
 
-/// Логотип Sprout: росток контуром и две капли воды.
+/// Логотип Sprout: три листа контуром и две капли воды.
+///
+/// Раньше здесь обводился лист фонового узора — получались закорючки,
+/// к логотипу отношения не имеющие. Теперь это сам логотип из макета.
+///
+/// В плашке под чёлкой коробка контуров 13.37 × 21.1 — по пропорциям
+/// шире, чем та же группа на отдельном экране логотипа. То есть в макете
+/// логотип вписан в плашку с разным масштабом по осям, поэтому здесь две
+/// шкалы, а не одна.
 struct SproutLogo: View {
-    var height: CGFloat = 21
+    /// Высота логотипа: в плашке макета 21.1.
+    ///
+    /// Ровно коробка контуров, без запаса. Обводка выходит за неё только
+    /// вбок: концы стеблей внизу срезаны прямо, а сверху всё перекрывает
+    /// капля, у которой обводки нет. Так это и записано в макете —
+    /// absoluteRenderBounds группы выше самой группы на половину
+    /// толщины слева и справа и совпадает с ней по высоте.
+    var height: CGFloat = 21.1
+
+    private static let aspect: CGFloat = 14.6986 / 21.1
 
     var body: some View {
         Canvas { context, size in
-            let scale = size.height / (SproutShapes.leafSize.height * 1.35)
-            var leaf = SproutShapes.leaf
-            leaf = leaf.applying(CGAffineTransform(scaleX: scale, y: scale))
-            context.stroke(
-                leaf,
-                with: .color(Palette.green),
-                style: StrokeStyle(lineWidth: 3.4, lineJoin: .round))
+            let box = SproutShapes.logoBox
+            let pad = SproutShapes.logoStroke / 2
+            let sx = size.width / (box.width + 2 * pad)
+            let sy = size.height / box.height
+            let scale = CGAffineTransform(scaleX: sx, y: sy)
+            // Стыки острые, концы срезаны — как в макете. Предел острия
+            // 4 отвечает фигмовским 28.96°, за которыми она сама срезает
+            // угол; здесь до него не доходит ни один стык.
+            let style = StrokeStyle(
+                lineWidth: SproutShapes.logoStroke * (sx * sy).squareRoot(),
+                lineCap: .butt,
+                lineJoin: .miter,
+                miterLimit: 4)
 
-            let dropScale = size.height / SproutShapes.dropSize.height
-            let big = SproutShapes.drop
-                .applying(CGAffineTransform(scaleX: dropScale * 0.16,
-                                            y: dropScale * 0.16))
-                .offsetBy(dx: size.width * 0.52, dy: 0)
-            context.fill(big, with: .color(Palette.water))
+            func place(_ path: Path) -> Path {
+                path.applying(scale).offsetBy(dx: pad * sx, dy: 0)
+            }
 
-            let small = SproutShapes.drop
-                .applying(CGAffineTransform(scaleX: dropScale * 0.10,
-                                            y: dropScale * 0.10))
-                .offsetBy(dx: 0, dy: size.height * 0.24)
-            context.fill(small, with: .color(Palette.water))
+            for leaf in SproutShapes.logoLeaves {
+                context.stroke(place(leaf), with: .color(Palette.green),
+                               style: style)
+            }
+            for drop in SproutShapes.logoDrops {
+                context.fill(place(drop), with: .color(Palette.water))
+            }
         }
-        .frame(width: height * 13 / 21, height: height)
+        .frame(width: height * Self.aspect, height: height)
+        .accessibilityHidden(true)
     }
 }

@@ -36,18 +36,20 @@ struct RoomPicker: View {
 
 /// Плашка под чёлкой: логотип и название.
 ///
-/// В макете она стоит на 19..47 по вертикали — это ровно область Dynamic
-/// Island, и там её на живом телефоне не видно. Поэтому висит сразу под
-/// строкой состояния, а не в ней.
+/// Размеры из макета: капсула 81.6 × 28, логотип 14.6 шириной, между ним
+/// и словом 2.5, поля 6.9 слева и 7.6 справа. Скругление в макете 19.8
+/// при высоте 28 — Figma подрезает его до половины высоты, то есть это
+/// капсула.
 struct SproutBadge: View {
     var body: some View {
-        HStack(spacing: 4) {
-            SproutLogo(height: 21)
+        HStack(spacing: 2.5) {
+            SproutLogo()
             Text("Sprout")
                 .font(Typography.wordmark)
                 .foregroundStyle(.black)
         }
-        .padding(.horizontal, 8)
+        .padding(.leading, 6.9)
+        .padding(.trailing, 7.6)
         .frame(height: 28)
         .background(Palette.greenSoft, in: .capsule)
     }
