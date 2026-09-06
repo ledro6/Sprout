@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'design/tokens.dart';
 import 'glass/liquid_glass.dart';
@@ -30,6 +31,17 @@ class SproutApp extends StatelessWidget {
         primaryColor: SproutColors.accent,
         scaffoldBackgroundColor: SproutColors.background,
       ),
+      // Приложение целиком русское, поэтому и системные элементы — меню
+      // выделения текста в поиске, подписи в диалогах — должны быть
+      // русскими. Без этого списка они остаются английскими.
+      locale: Locale('ru'),
+      supportedLocales: [Locale('ru')],
+      localizationsDelegates: [
+        DefaultCupertinoLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+      ],
       home: SproutShell(),
     );
   }
