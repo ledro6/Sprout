@@ -73,38 +73,6 @@ def test_background(w: int, h: int) -> Image.Image:
     return img
 
 
-def sdf_mask(W, H, shapes, merge, aa=1.0):
-    """Та же геометрия, что в шейдере: скруглённые прямоугольники,
-    при merge>0 склеенные smooth-min. Нужна, чтобы наложить результат
-    ровно на форму — как это делает ClipRRect во Flutter."""
-    ys, xs = np.mgrid[0:H, 0:W].astype("f4")
-
-    def sd(cx, cy, hx, hy, r):
-        r = min(r, min(hx, hy))
-        qx = np.abs(xs - cx) - hx + r
-        qy = np.abs(ys - cy) - hy + r
-        return (np.minimum(np.maximum(qx, qy), 0.0)
-                + np.hypot(np.maximum(qx, 0.0), np.maximum(qy, 0.0)) - r)
-
-    d = sd(*shapes[0])
-    if merge > 0 and len(shapes) > 1:
-        b = sd(*shapes[1])
-        h = np.clip(0.5 + 0.5 * (b - d) / merge, 0.0, 1.0)
-        d = b * (1 - h) + d * h - merge * h * (1 - h)
-    # inside: 1 внутри, 0 снаружи, мягкая кромка шириной aa
-    t = np.clip((d + aa) / (2 * aa), 0.0, 1.0)
-    return (1.0 - (t * t * (3 - 2 * t))).astype("f4")
-
-
-def gaussian_blur(img: Image.Image, sigma: float) -> Image.Image:
-    """В приложении размытие делает ImageFilter.blur до шейдера
-    (ImageFilter.compose). Здесь повторяем тот же порядок."""
-    if sigma <= 0:
-        return img
-    from PIL import ImageFilter as PILFilter
-    return img.filter(PILFilter.GaussianBlur(radius=sigma))
-
-
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--out", default="glass_preview.png")
@@ -135,8 +103,7 @@ def main():
         sys.exit(1)
 
     sharp = test_background(W, H)
-    bg = gaussian_blur(sharp, args.blur)
-    tex = ctx.texture((W, H), 3, bg.tobytes())
+    tex = ctx.texture((W, H), 3, sharp.tobytes())
     tex.build_mipmaps()
     tex.use(0)
 
@@ -146,26 +113,26 @@ def main():
 
     setu("uViewportH", float(H))
     setu("uSize", (float(W), float(H)))
-    shapes = []
+    # Превью рисует один к одному, без ретины: логический размер = пиксельный.
+    setu("uLogical", (float(W), float(H)))
     if args.merge > 0:
         sep = args.sep or W * 0.16
-        setu("uCenterA", (0.5 - sep / W, 0.5))
-        setu("uHalfA", (0.16, 0.16 * W / H))
+        half = (W * 0.16, W * 0.16)
+        setu("uCenterA", (W / 2 - sep, H / 2))
+        setu("uHalfA", half)
         setu("uRadiusA", W * 0.16)
-        setu("uCenterB", (0.5 + sep / W, 0.5))
-        setu("uHalfB", (0.16, 0.16 * W / H))
+        setu("uCenterB", (W / 2 + sep, H / 2))
+        setu("uHalfB", half)
         setu("uRadiusB", W * 0.16)
-        shapes = [(W / 2 - sep, H / 2, W * 0.16, H * 0.16, W * 0.16),
-                  (W / 2 + sep, H / 2, W * 0.16, H * 0.16, W * 0.16)]
     else:
-        setu("uCenterA", (0.5, 0.5))
-        setu("uHalfA", (0.32, 0.22))
+        setu("uCenterA", (W / 2, H / 2))
+        setu("uHalfA", (W * 0.32, H * 0.22))
         setu("uRadiusA", 56.0)
         setu("uCenterB", (0.0, 0.0))
         setu("uHalfB", (0.0, 0.0))
         setu("uRadiusB", 0.0)
-        shapes = [(W / 2, H / 2, W * 0.32, H * 0.22, 56.0)]
     setu("uMerge", args.merge)
+    setu("uBlur", args.blur)
     setu("uThickness", args.thickness)
     setu("uRefract", args.refract)
     setu("uSpecular", args.specular)
@@ -187,15 +154,6 @@ def main():
     out = Image.frombytes("RGB", (W, H), fbo.read(components=3))
     # GL считает начало координат снизу
     out = out.transpose(Image.FLIP_TOP_BOTTOM)
-
-    # Во Flutter размывается только то, что под стеклом: BackdropFilter
-    # живёт внутри ClipRRect. Повторяем — иначе на превью размыт весь
-    # кадр и преломление на кромке не разглядеть.
-    m = sdf_mask(W, H, shapes, args.merge)[..., None]
-    out = Image.fromarray(
-        (np.asarray(out, dtype="f4") * m
-         + np.asarray(sharp, dtype="f4") * (1.0 - m)
-         ).clip(0, 255).astype("u1"))
     out.save(args.out)
     print(f"готово: {args.out}")
 

@@ -13,25 +13,50 @@ import 'package:flutter/widgets.dart';
 /// на кромке — то, чем стекло отличается от полупрозрачного прямоугольника
 /// с размытием.
 ///
+/// Форму задаёт шейдер, а не обрезка вокруг него. Из-за этого две формы
+/// можно слить в одну каплю с перемычкой ([merge]) — перемычка лежит вне
+/// обоих прямоугольников, и любой ClipRRect срезал бы её.
+///
 /// Работает только на Impeller (iOS, Android). На вебе и на старом Skia
 /// [ui.ImageFilter.shader] недоступен, поэтому там включается запасной
 /// путь: размытие плюс подкраска. Он не выглядит стеклом, но и не падает.
 
-/// Параметры материала. Значения в логических пикселях.
+/// Одна форма стекла — скруглённый прямоугольник в координатах виджета.
+@immutable
+class GlassBlob {
+  const GlassBlob(this.rect, this.radius);
+
+  final Rect rect;
+  final double radius;
+
+  static GlassBlob lerp(GlassBlob a, GlassBlob b, double t) => GlassBlob(
+        Rect.lerp(a.rect, b.rect, t)!,
+        ui.lerpDouble(a.radius, b.radius, t)!,
+      );
+
+  @override
+  bool operator ==(Object other) =>
+      other is GlassBlob && other.rect == rect && other.radius == radius;
+
+  @override
+  int get hashCode => Object.hash(rect, radius);
+}
+
+/// Параметры материала. Все длины — в логических пикселях.
 @immutable
 class GlassSettings {
   const GlassSettings({
     this.blur = 18.0,
-    this.thickness = 22.0,
-    this.refraction = 14.0,
+    this.thickness = 20.0,
+    this.refraction = 12.0,
     this.specular = 0.5,
     this.lightAngle = -math.pi / 2.2,
-    this.tint = const Color(0x14FFFFFF),
-    this.saturation = 1.6,
+    this.tint = const Color(0xA6FFFFFF),
+    this.saturation = 1.5,
     this.glow = 1.5,
   });
 
-  /// Сигма размытия фона под стеклом.
+  /// Радиус размытия фона под стеклом.
   final double blur;
 
   /// Ширина скоса-линзы от кромки внутрь. Чем больше, тем «толще» стекло.
@@ -59,19 +84,32 @@ class GlassSettings {
   /// подложке, где преломлять нечего.
   final double glow;
 
-  /// Плотный вариант: под ним читается текст. Аналог Regular у Apple.
+  /// Панели, поверх которых лежит текст: таб-бар, навбар. Плотная подкраска
+  /// #FFFFFFA6 — ровно та, что стоит в макете. Аналог Regular у Apple.
   static const regular = GlassSettings();
 
-  /// Прозрачный вариант: сильнее преломляет, слабее красит. Для случаев,
-  /// когда важнее показать картинку под стеклом. Аналог Clear.
+  /// Плашки карточек: подкраска почти прозрачная (#FFFFFF1A), стекло держится
+  /// на преломлении и кромке. Аналог Clear.
   static const clear = GlassSettings(
-    blur: 8.0,
-    thickness: 28.0,
-    refraction: 20.0,
-    specular: 0.65,
-    tint: Color(0x0AFFFFFF),
-    saturation: 1.8,
+    blur: 14.0,
+    thickness: 26.0,
+    refraction: 17.0,
+    specular: 0.6,
+    tint: Color(0x1AFFFFFF),
+    saturation: 1.7,
     glow: 2.0,
+  );
+
+  /// Всплывающее меню: подложка плотнее и чуть холоднее, чтобы текст
+  /// читался поверх любого содержимого экрана.
+  static const sheet = GlassSettings(
+    blur: 24.0,
+    thickness: 18.0,
+    refraction: 11.0,
+    specular: 0.45,
+    tint: Color(0x99F5F5F5),
+    saturation: 1.4,
+    glow: 1.2,
   );
 
   GlassSettings copyWith({
@@ -151,15 +189,30 @@ class GlassProgram {
 
 /// Стеклянная панель. Всё, что нарисовано позади, размывается
 /// и преломляется в форме этого виджета.
+///
+/// По умолчанию стекло занимает весь виджет со скруглением [borderRadius].
+/// Если задать [blobs], форма собирается из них: одна или две, при [merge]
+/// больше нуля вторая «стекается» к первой.
 class LiquidGlass extends StatefulWidget {
   const LiquidGlass({
     super.key,
-    this.borderRadius = const BorderRadius.all(Radius.circular(24)),
+    this.borderRadius = 24.0,
+    this.blobs,
+    this.merge = 0.0,
     this.settings = GlassSettings.regular,
     this.child,
-  });
+  }) : assert(blobs == null || blobs.length <= 2,
+            'шейдер знает про две формы; больше — это уже другой материал');
 
-  final BorderRadius borderRadius;
+  /// Скругление, когда стекло занимает весь виджет.
+  final double borderRadius;
+
+  /// Явные формы в координатах виджета. Одна или две.
+  final List<GlassBlob>? blobs;
+
+  /// Радиус слияния форм в логических пикселях. Ноль — формы независимы.
+  final double merge;
+
   final GlassSettings settings;
   final Widget? child;
 
@@ -197,78 +250,110 @@ class _LiquidGlassState extends State<LiquidGlass> {
     super.dispose();
   }
 
+  List<GlassBlob> _shapes(Size size) =>
+      widget.blobs ??
+      [GlassBlob(Offset.zero & size, widget.borderRadius)];
+
   /// Новый экземпляр шейдера на каждую сборку — это обязательно, а не
   /// расточительность. ImageFilter.shader сравнивается по идентичности
   /// шейдера, а RenderBackdropFilter при равенстве фильтра не помечает
   /// себя на перерисовку. Если переиспользовать один объект и только
   /// менять униформы, анимация встанет.
-  ui.FragmentShader _buildShader(double radius) {
+  ui.FragmentShader _buildShader(Size size) {
     final s = widget.settings;
+    final shapes = _shapes(size);
     final shader = _program!.fragmentShader();
 
     // Порядок строго соответствует объявлению uniform в
     // shaders/liquid_glass.frag. Индексы 0–1 (uSize) заполняет движок.
     var i = 2;
     void f(double v) => shader.setFloat(i++, v);
+    void blob(GlassBlob? b) {
+      f(b?.rect.center.dx ?? 0);
+      f(b?.rect.center.dy ?? 0);
+      f((b?.rect.width ?? 0) / 2);
+      f((b?.rect.height ?? 0) / 2);
+      f(b?.radius ?? 0);
+    }
 
-    f(0.5); f(0.5);   // uCenterA — центр области
-    f(0.5); f(0.5);   // uHalfA   — половина области, стекло занимает всю
-    f(radius);        // uRadiusA
-    f(0.0); f(0.0);   // uCenterB — вторая форма выключена
-    f(0.0); f(0.0);   // uHalfB
-    f(0.0);           // uRadiusB
-    f(0.0);           // uMerge
+    // Логический размер области: по нему шейдер сам вычисляет, во сколько
+    // раз текстура крупнее, и переводит все длины из логических пикселей
+    // в пиксели текстуры. Гадать про devicePixelRatio не нужно.
+    f(size.width);
+    f(size.height);
+    blob(shapes.first);
+    blob(shapes.length > 1 ? shapes[1] : null);
+    f(shapes.length > 1 ? widget.merge : 0.0);
     f(s.thickness);
     f(s.refraction);
     f(s.specular);
     f(s.lightAngle);
-    f(s.tint.r); f(s.tint.g); f(s.tint.b); f(s.tint.a);
+    f(s.tint.r);
+    f(s.tint.g);
+    f(s.tint.b);
+    f(s.tint.a);
     f(s.saturation);
     f(s.glow);
-    f(1.0);           // uAA
+    f(1.0); // uAA
+    f(s.blur);
 
     // Сэмплер фона подставляет движок: для ImageFilter.shader первый
     // sampler2D заполняется им самим, руками его задавать не нужно.
     return shader;
   }
 
+  /// Запасной путь: размытие и подкраска по каждой форме отдельно.
+  /// Без преломления и без перемычки, но и без падения.
+  Widget _fallback(Size size) {
+    final s = widget.settings;
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        for (final b in _shapes(size))
+          Positioned.fromRect(
+            rect: b.rect,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(b.radius),
+              child: BackdropFilter(
+                filter: ui.ImageFilter.blur(sigmaX: s.blur, sigmaY: s.blur),
+                child: DecoratedBox(
+                  decoration: BoxDecoration(color: s.tint),
+                  child: const SizedBox.expand(),
+                ),
+              ),
+            ),
+          ),
+        if (widget.child != null) SizedBox.fromSize(size: size, child: widget.child),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final s = widget.settings;
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        assert(
+          constraints.hasBoundedWidth && constraints.hasBoundedHeight,
+          'LiquidGlass должен получать ограниченный размер: форма стекла '
+          'считается из него.',
+        );
+        final size = constraints.biggest;
 
-    // Запасной путь: размытие и подкраска. Без преломления, но без падения.
-    if (_program == null) {
-      return ClipRRect(
-        borderRadius: widget.borderRadius,
-        child: BackdropFilter(
-          filter: ui.ImageFilter.blur(sigmaX: s.blur, sigmaY: s.blur),
-          child: DecoratedBox(
-            decoration: BoxDecoration(color: s.tint),
-            child: widget.child,
-          ),
-        ),
-      );
-    }
+        if (_program == null) return _fallback(size);
 
-    final radius = widget.borderRadius.topLeft.x;
-    final shader = _buildShader(radius);
+        final shader = _buildShader(size);
+        _retired.add(shader);
+        if (_retired.length > _retireDepth) {
+          _retired.removeAt(0).dispose();
+        }
 
-    _retired.add(shader);
-    if (_retired.length > _retireDepth) {
-      _retired.removeAt(0).dispose();
-    }
-
-    return ClipRRect(
-      borderRadius: widget.borderRadius,
-      child: BackdropFilter(
-        // Порядок важен: сначала размытие фона, потом преломление
-        // размытого. Наоборот стекло теряет чёткую кромку.
-        filter: ui.ImageFilter.compose(
-          outer: ui.ImageFilter.shader(shader),
-          inner: ui.ImageFilter.blur(sigmaX: s.blur, sigmaY: s.blur),
-        ),
-        child: widget.child,
-      ),
+        // Обрезки нет намеренно: за форму отвечает шейдер, а он за
+        // пределами стекла возвращает фон нетронутым.
+        return BackdropFilter(
+          filter: ui.ImageFilter.shader(shader),
+          child: SizedBox.fromSize(size: size, child: widget.child),
+        );
+      },
     );
   }
 }

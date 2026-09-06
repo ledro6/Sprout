@@ -30,6 +30,8 @@ ios/Flutter/flutter_export_environment.sh
 # по нему видно, из чего собран UI.
 design/raw.json
 design/png/
+# Растровые заливки из макета: то, что нужно приложению, лежит в assets/
+design/img/
 
 # Секреты. Токен Figma живёт только в окружении.
 .env

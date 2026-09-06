@@ -252,10 +252,13 @@ def main():
     ap.add_argument("--out", default="design", help="куда сложить результат")
     ap.add_argument("--scale", type=float, default=2.0, help="масштаб PNG-рендеров")
     ap.add_argument("--no-png", action="store_true", help="не качать рендеры")
+    ap.add_argument("--reuse-raw", action="store_true",
+                    help="не ходить в API за деревом, взять готовый raw.json")
     args = ap.parse_args()
 
     token = os.environ.get("FIGMA_TOKEN", "").strip()
-    if not token:
+    # Без токена можно только пересобрать разбор из уже скачанного дерева.
+    if not token and not (args.reuse_raw and args.no_png):
         die("не задан FIGMA_TOKEN. Сделай: export FIGMA_TOKEN=figd_...")
 
     key = parse_file_key(args.target)
@@ -264,20 +267,49 @@ def main():
     os.makedirs(args.out, exist_ok=True)
     print(f"файл {key}" + (f", узел {only_node}" if only_node else ""))
 
-    data = get(f"/files/{key}", token, geometry="paths")
-    with open(os.path.join(args.out, "raw.json"), "w") as f:
-        json.dump(data, f, ensure_ascii=False, indent=1)
+    raw_path = os.path.join(args.out, "raw.json")
+    if args.reuse_raw and os.path.exists(raw_path):
+        with open(raw_path) as f:
+            data = json.load(f)
+        print("дерево взято из raw.json (--reuse-raw)")
+    else:
+        data = get(f"/files/{key}", token, geometry="paths")
+        with open(raw_path, "w") as f:
+            json.dump(data, f, ensure_ascii=False, indent=1)
 
     doc = data["document"]
     pages = [p for p in doc.get("children", []) if p.get("type") == "CANVAS"]
     print(f"название: {data.get('name')}")
     print(f"страниц: {len(pages)}")
 
+    # node-id страницы (в ссылке это обычно 0-1) — не фильтр по фрейму,
+    # а указание «возьми всю эту страницу целиком».
+    page_ids = {p.get("id") for p in pages}
+    if only_node in page_ids:
+        pages = [p for p in pages if p.get("id") == only_node]
+        only_node = None
+
+    TOP = ("FRAME", "COMPONENT", "COMPONENT_SET", "GROUP", "INSTANCE")
+
+    def top_level(page: dict) -> list:
+        """Верхний уровень канваса. SECTION — контейнер, разворачиваем его."""
+        out = []
+        for c in page.get("children", []) or []:
+            if c.get("type") == "SECTION":
+                out.extend(c.get("children", []) or [])
+            else:
+                out.append(c)
+        return out
+
     screens = []
     for page in pages:
-        for frame in page.get("children", []) or []:
-            if frame.get("type") not in ("FRAME", "COMPONENT", "COMPONENT_SET", "GROUP"):
-                continue
+        nodes = top_level(page)
+        frames = [n for n in nodes if n.get("type") in TOP]
+        # Если экраны сложены не фреймами, а голыми слоями на канвасе —
+        # берём всё, у чего есть геометрия, чтобы не потерять макет.
+        if not frames and not only_node:
+            frames = [n for n in nodes if n.get("absoluteBoundingBox")]
+        for frame in frames:
             if only_node and frame.get("id") != only_node:
                 continue
             box = frame.get("absoluteBoundingBox") or {}
@@ -286,11 +318,25 @@ def main():
             if not s:
                 continue
             s["page"] = page.get("name")
+            # walk() обнуляет координаты относительно самого экрана, поэтому
+            # положение на канвасе запоминаем отдельно — по нему сортируем.
+            s["canvas"] = {"x": round(box.get("x", 0), 2),
+                           "y": round(box.get("y", 0), 2)}
             screens.append(s)
 
     if not screens:
-        die("не нашёл ни одного фрейма верхнего уровня. "
-            "Проверь, что экраны лежат как Frame на канвасе.")
+        names = ", ".join(sorted({n.get("type", "?") for p in pages
+                                  for n in top_level(p)})) or "пусто"
+        die("не нашёл ни одного фрейма верхнего уровня "
+            f"(на канвасе лежат: {names}). "
+            + (f"Узел {only_node} на верхнем уровне не найден — "
+               "убери node-id из ссылки, чтобы взять всю страницу."
+               if only_node else
+               "Проверь, что экраны лежат как Frame на канвасе."))
+
+    # Экраны на канвасе разложены сеткой — сортируем по строкам сверху вниз,
+    # внутри строки слева направо, чтобы порядок совпадал с глазами дизайнера.
+    screens.sort(key=lambda s: (round(s["canvas"]["y"] / 200), s["canvas"]["x"]))
 
     with open(os.path.join(args.out, "screens.json"), "w") as f:
         json.dump({"file": data.get("name"), "key": key, "screens": screens},
@@ -314,6 +360,40 @@ def main():
     print(f"\nтокенов: {len(tokens['colors'])} цветов, "
           f"{len(tokens['type'])} стилей текста, "
           f"{len(tokens['radii'])} радиусов, {len(tokens['shadows'])} теней")
+
+    # Растровые заливки (фото растений и т.п.) — отдельная ручка API:
+    # в дереве лежит только imageRef, ссылки на файлы отдаёт /images.
+    refs = set()
+
+    def scan_refs(n: dict):
+        for f in n.get("fills", []) or []:
+            if f.get("type") == "image" and f.get("ref"):
+                refs.add(f["ref"])
+        for c in n.get("children", []) or []:
+            scan_refs(c)
+
+    for s in screens:
+        scan_refs(s)
+    if refs and not args.no_png:
+        img_dir = os.path.join(args.out, "img")
+        os.makedirs(img_dir, exist_ok=True)
+        meta = get(f"/files/{key}/images", token).get("meta", {}).get("images", {})
+        got = 0
+        for ref in sorted(refs):
+            u = meta.get(ref)
+            if not u:
+                continue
+            try:
+                with urllib.request.urlopen(u, timeout=120) as r:
+                    blob = r.read()
+            except Exception as e:
+                print(f"  не скачал заливку {ref[:8]}: {e}", file=sys.stderr)
+                continue
+            ext = "png" if blob[:8] == b"\x89PNG\r\n\x1a\n" else "jpg"
+            with open(os.path.join(img_dir, f"{ref[:12]}.{ext}"), "wb") as f:
+                f.write(blob)
+            got += 1
+        print(f"заливок скачано: {got} → {img_dir}/")
 
     if args.no_png:
         return
