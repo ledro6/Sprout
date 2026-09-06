@@ -83,25 +83,35 @@ struct SproutBackground: View {
             }
 
             VStack {
-                wash
+                wash(fadingDown: true)
                 Spacer(minLength: 0)
-                wash
+                wash(fadingDown: false)
             }
         }
         .ignoresSafeArea()
     }
 
-    private var wash: some View {
-        LinearGradient(
-            stops: [
-                .init(color: Palette.background, location: 0),
-                .init(color: Palette.background, location: Metrics.washStop),
-                .init(color: Palette.background.opacity(0), location: 1),
-            ],
-            startPoint: .top,
-            endPoint: .bottom
-        )
-        .frame(height: Metrics.washHeight)
+    /// Полоса, гасящая узор у края экрана.
+    ///
+    /// Верхняя уходит в прозрачность вниз, нижняя — вверх. Направление
+    /// важно: одинаковое для обеих давало у нижней сплошной белый сверху
+    /// и обрыв посреди экрана вместо мягкого схода к панели.
+    private func wash(fadingDown: Bool) -> some View {
+        let solid = Palette.background
+        let clear = Palette.background.opacity(0)
+        let stops: [Gradient.Stop] = fadingDown
+            ? [
+                .init(color: solid, location: 0),
+                .init(color: solid, location: Metrics.washStop),
+                .init(color: clear, location: 1),
+            ]
+            : [
+                .init(color: clear, location: 0),
+                .init(color: solid, location: 1 - Metrics.washStop),
+                .init(color: solid, location: 1),
+            ]
+        return LinearGradient(stops: stops, startPoint: .top, endPoint: .bottom)
+            .frame(height: Metrics.washHeight)
     }
 }
 

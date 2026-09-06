@@ -1,78 +1,54 @@
 import SwiftUI
 
-/// Кнопка выбора комнаты: «Спальня ⌄».
-struct RoomPickerButton: View {
-    let room: String
-    let action: () -> Void
+/// Выбор комнаты — системное меню.
+///
+/// Раньше здесь была своя всплывающая панель: стеклянный прямоугольник,
+/// три пилюли, затемнение и анимация появления руками. Выглядело
+/// самодельно, потому что таким и было.
+///
+/// Теперь это `Menu` с `Picker` внутри. Система сама рисует стеклянное
+/// меню у кнопки, ставит галочку у выбранного пункта, анимирует
+/// появление и закрытие, даёт тактильный отклик и закрывается по тапу
+/// мимо. Ни одной строки анимации здесь нет и быть не должно.
+struct RoomPicker: View {
+    let rooms: [String]
+    @Binding var selection: Int
 
     var body: some View {
-        Button(action: action) {
+        Menu {
+            Picker("Комната", selection: $selection) {
+                ForEach(rooms.indices, id: \.self) { index in
+                    Text(rooms[index]).tag(index)
+                }
+            }
+        } label: {
             HStack(spacing: 3) {
-                Text(room)
+                Text(rooms[selection])
                 Image(systemName: "chevron.up.chevron.down")
                     .font(.system(size: 15, weight: .semibold))
             }
             .font(Typography.room)
             .foregroundStyle(Palette.accent)
         }
-        .buttonStyle(.plain)
         .frame(height: 44, alignment: .leading)
     }
 }
 
-/// Всплывающее меню комнат.
+/// Плашка под чёлкой: логотип и название.
 ///
-/// Собрано вручную, а не системным `Menu`, потому что системное меню
-/// рисует строки со своими разделителями, а в макете три отдельные
-/// пилюли внутри стеклянной панели. Материал при этом всё равно
-/// системный, и появление — штатной пружиной `.smooth`, а не самописной.
-struct RoomMenu: View {
-    let rooms: [String]
-    let selected: Int
-    /// Левый верхний угол кнопки в координатах экрана: панель в макете
-    /// сдвинута относительно неё на 4 pt влево и вниз.
-    let anchor: CGPoint
-    let onPick: (Int) -> Void
-    let onDismiss: () -> Void
-
-    private var sheetHeight: CGFloat {
-        Metrics.sheetPadding * 2
-            + CGFloat(rooms.count) * Metrics.menuItemHeight
-            + CGFloat(rooms.count - 1) * Metrics.menuItemGap
-    }
-
+/// В макете она стоит на 19..47 по вертикали — это ровно область Dynamic
+/// Island, и там её на живом телефоне не видно. Поэтому висит сразу под
+/// строкой состояния, а не в ней.
+struct SproutBadge: View {
     var body: some View {
-        ZStack(alignment: .topLeading) {
-            Palette.scrim
-                .ignoresSafeArea()
-                .onTapGesture(perform: onDismiss)
-
-            VStack(spacing: Metrics.menuItemGap) {
-                ForEach(Array(rooms.enumerated()), id: \.offset) { index, name in
-                    Button {
-                        onPick(index)
-                    } label: {
-                        Text(name)
-                            .font(Typography.menuItem)
-                            .foregroundStyle(
-                                index == selected ? Palette.accent : .black)
-                            .frame(maxWidth: .infinity)
-                            .frame(height: Metrics.menuItemHeight)
-                            .background(
-                                Palette.menuItemFill,
-                                in: .capsule)
-                    }
-                    .buttonStyle(.plain)
-                }
-            }
-            .padding(Metrics.sheetPadding)
-            .frame(width: Metrics.sheetWidth, height: sheetHeight)
-            .glassEffect(
-                .regular,
-                in: .rect(cornerRadius: Metrics.sheetRadius, style: .continuous))
-            .shadow(color: Palette.shadow, radius: 15, x: 0, y: 6)
-            .offset(x: anchor.x - 4, y: anchor.y + 4)
+        HStack(spacing: 4) {
+            SproutLogo(height: 21)
+            Text("Sprout")
+                .font(Typography.wordmark)
+                .foregroundStyle(.black)
         }
-        .transition(.opacity)
+        .padding(.horizontal, 8)
+        .frame(height: 28)
+        .background(Palette.greenSoft, in: .capsule)
     }
 }

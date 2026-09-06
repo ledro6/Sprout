@@ -3,9 +3,11 @@ import SwiftUI
 /// Карточка растения: стеклянная плашка, фото, кличка, влажность и срок
 /// полива.
 ///
-/// Анимаций тут не написано ни одной. Нажатие обрабатывает система:
-/// `.glassEffect` с `interactive` даёт штатный отклик стекла, а переход
-/// на экран растения делает NavigationLink.
+/// Тени на самом стекле нет намеренно. `.shadow` заставляет систему
+/// растеризовать вью отдельным слоем, стекло при этом теряет фон, который
+/// должно преломлять, и превращается в глухую тёмную плашку. Всё, что
+/// нужно нарисовать за стеклом, кладётся в `.background` — он рисуется
+/// позади вью вместе со стеклом, и стекло его честно преломляет.
 struct PlantCard: View {
     let plant: Plant
 
@@ -37,19 +39,25 @@ struct PlantCard: View {
         .padding(.horizontal, Metrics.cardPadding)
         .padding(.vertical, 10)
         .glassEffect(
-            .regular.interactive(),
+            .clear.interactive(),
             in: .rect(cornerRadius: Metrics.cardRadius, style: .continuous)
         )
-        // Тень из макета: смещение (0, 8), размытие 40 — у SwiftUI радиус
-        // задаётся вдвое меньшим числом, чем блюр в Figma.
-        .shadow(color: glow, radius: 20, x: 0, y: 8)
+        .background { glow }
     }
 
-    private var glow: Color {
-        switch plant.thirst {
-        case .calm: Palette.shadow
-        case .soon: Palette.thirsty
-        case .now: Palette.thirstyNow
+    /// Тревожное свечение — только ореолом по контуру, а не заливкой:
+    /// заливка просвечивала бы сквозь прозрачное стекло и красила саму
+    /// карточку, а в макете розовое лежит вокруг неё.
+    @ViewBuilder
+    private var glow: some View {
+        if plant.thirst != .calm {
+            RoundedRectangle(
+                cornerRadius: Metrics.cardRadius, style: .continuous
+            )
+            .stroke(
+                plant.thirst == .now ? Palette.thirstyNow : Palette.thirsty,
+                lineWidth: 16)
+            .blur(radius: 14)
         }
     }
 }

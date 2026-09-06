@@ -3,39 +3,26 @@ import SwiftUI
 /// Главный экран: приветствие, выбор комнаты и сетка растений.
 struct HomeView: View {
     @State private var roomIndex = 0
-    @State private var menuOpen = false
-    /// Левый верхний угол кнопки комнаты — из него вырастает меню.
-    @State private var pickerAnchor: CGPoint = .zero
 
     private var room: Room { Garden.rooms[roomIndex] }
 
     var body: some View {
-        ZStack(alignment: .topLeading) {
-            NavigationStack {
-                ScrollView {
-                    VStack(alignment: .leading, spacing: 0) {
-                        header
-                        grid
-                    }
+        NavigationStack {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 0) {
+                    header
+                    grid
                 }
-                .background { SproutBackground() }
-                .navigationDestination(for: Plant.self) { PlantView(plant: $0) }
             }
-
-            if menuOpen {
-                RoomMenu(
-                    rooms: Garden.rooms.map(\.name),
-                    selected: roomIndex,
-                    anchor: pickerAnchor,
-                    onPick: { index in
-                        roomIndex = index
-                        withAnimation(.smooth) { menuOpen = false }
-                    },
-                    onDismiss: { withAnimation(.smooth) { menuOpen = false } }
-                )
+            .background { SproutBackground() }
+            // Плашка с логотипом закреплена и не уезжает с прокруткой:
+            // safeAreaInset отдаёт ей полосу сверху, содержимое проезжает
+            // под ней.
+            .safeAreaInset(edge: .top) {
+                SproutBadge().padding(.bottom, 6)
             }
+            .navigationDestination(for: Plant.self) { PlantView(plant: $0) }
         }
-        .coordinateSpace(.named("screen"))
     }
 
     private var header: some View {
@@ -44,14 +31,7 @@ struct HomeView: View {
                 .font(Typography.greeting)
                 .foregroundStyle(.black)
 
-            RoomPickerButton(room: room.name) {
-                withAnimation(.smooth) { menuOpen = true }
-            }
-            .onGeometryChange(for: CGRect.self) {
-                $0.frame(in: .named("screen"))
-            } action: { frame in
-                pickerAnchor = frame.origin
-            }
+            RoomPicker(rooms: Garden.rooms.map(\.name), selection: $roomIndex)
         }
         // Сверху 11, а не 15 как у приветствия в макете: кнопка комнаты
         // стоит в потоке всеми своими 44 pt, тогда как в макете эти 44 —
