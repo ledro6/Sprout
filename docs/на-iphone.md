@@ -277,3 +277,119 @@ flutter run --release
 | Режим разработчика не появился в настройках | Он показывается только после первой попытки установки. Запусти `flutter run`, потом ищи пункт |
 | Стекло выглядит просто размытым | Смотришь в симуляторе или в браузере. Нужен живой телефон |
 | `CocoaPods not installed` | В этом проекте плагинов нет, но если Flutter всё равно требует: `brew install cocoapods` |
+
+---
+
+## Отдельно: «No Xcode build settings have been found»
+
+```
+No Xcode build settings have been found. Please check possible errors above.
+Could not build the precompiled application for the device.
+Error launching application on <имя телефона>.
+```
+
+Сообщение выглядит страшно, но означает ровно одно: Flutter спросил у
+Xcode настройки сборки, а `xcodebuild` ответил пустотой. Само по себе оно
+причину не называет.
+
+Хорошая новость: телефон тут ни при чём. Раз в последней строке стоит его
+имя, устройство найдено, кабель и «Доверять» в порядке. Ломается всё на
+стороне Mac.
+
+### Сначала — увидеть настоящую ошибку
+
+Flutter пишет причину только в подробный лог, при обычном запуске она
+проглатывается. Поэтому:
+
+```bash
+flutter run -v 2>&1 | grep -i -A5 "Unexpected failure to get Xcode build settings"
+```
+
+Либо спросить у Xcode напрямую — он ответит человеческим текстом:
+
+```bash
+cd ios
+xcodebuild -project Runner.xcodeproj -scheme Runner -configuration Debug \
+  -destination generic/platform=iOS -showBuildSettings
+```
+
+Дальше действовать по тому, что он скажет. Ниже — четыре причины,
+которые дают именно эту ошибку, по убыванию частоты.
+
+### 1. Командная строка смотрит не на Xcode
+
+Самая частая. Если Xcode ставили после Command Line Tools, `xcodebuild`
+из терминала — это заглушка, которая ничего не умеет.
+
+```bash
+xcode-select -p
+```
+
+Должно ответить `/Applications/Xcode.app/Contents/Developer`. Если
+ответило `/Library/Developer/CommandLineTools` — вот и причина:
+
+```bash
+sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
+```
+
+### 2. Xcode не доделал первый запуск
+
+Лицензия не принята или не доустановлены компоненты. `xcodebuild` в этом
+состоянии падает с отказом, не доходя до проекта.
+
+```bash
+sudo xcodebuild -license accept
+sudo xcodebuild -runFirstLaunch
+```
+
+### 3. Нет Generated.xcconfig
+
+`ios/Flutter/Debug.xcconfig` состоит из одной строки — подключения файла
+`Generated.xcconfig`, который в репозиторий не входит: его создаёт сам
+Flutter под конкретную машину. Если его нет, `xcodebuild` спотыкается на
+включении и не доходит до настроек.
+
+```bash
+ls ios/Flutter/Generated.xcconfig
+```
+
+Нет файла — пересоздать:
+
+```bash
+flutter clean
+flutter pub get
+```
+
+### 4. Не выбрана Team для конфигурации Debug
+
+Если на шаге 3.4 переключатель стоял на **Release**, а не на **All**,
+то отладочная сборка осталась без подписи. `flutter run` собирает именно
+Debug.
+
+Вернуться в **Signing & Capabilities**, переключить на **All** и
+убедиться, что Team выбрана во всех трёх конфигурациях.
+
+### Если ничего из этого
+
+Проверить, что путь до проекта без кириллицы и пробелов — `xcodebuild`
+на них иногда спотыкается. И заодно:
+
+```bash
+flutter doctor -v
+```
+
+Строка `[✓] Xcode - develop for iOS and macOS` должна быть зелёной. Если
+там крестик, в подробностях будет сказано, чего не хватает.
+
+### Разом, если разбираться некогда
+
+```bash
+sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
+sudo xcodebuild -license accept
+sudo xcodebuild -runFirstLaunch
+flutter clean
+flutter pub get
+flutter run
+```
+
+Первые три строки лечат причины 1 и 2, следующие две — причину 3.
