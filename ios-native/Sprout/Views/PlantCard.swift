@@ -2,8 +2,9 @@ import SwiftUI
 
 /// Карточка растения: фото, кличка, влажность и срок полива.
 ///
-/// Материал плашки общий для всего приложения — см. `sproutPlate`, там же
-/// разобрано, почему у карточек нет системного стекла.
+/// Материал плашки общий для всего приложения — см. `sproutPlate`.
+/// У карточки стекло отзывчивое: под пальцем оно проминается и
+/// отпускает пружиной, всё это делает сама система.
 struct PlantCard: View {
     let plant: Plant
 
@@ -34,7 +35,7 @@ struct PlantCard: View {
         }
         .padding(.horizontal, Metrics.cardPadding)
         .padding(.vertical, 10)
-        .sproutPlate(in: shape)
+        .sproutPlate(in: shape, interactive: true)
         .background { glow }
     }
 

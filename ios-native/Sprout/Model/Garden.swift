@@ -66,7 +66,9 @@ struct Room: Identifiable, Hashable {
     let plants: [Plant]
 }
 
-/// Данные из макета: те же клички, проценты и сроки полива.
+/// Растения квартиры. Первые в каждой комнате — из макета, с теми же
+/// кличками, процентами и сроками полива; остальные досажены, чтобы
+/// сетка не пустовала и было на чём смотреть прокрутку.
 enum Garden {
     static let owner = "Святослав"
 
@@ -78,11 +80,29 @@ enum Garden {
             Plant(id: "pr", name: "Пр", species: "Монстера",
                   moisture: 0.14, daysUntilWatering: 1,
                   addedOn: DateComponents(year: 2025, month: 3, day: 17)),
+            Plant(id: "tapok", name: "Тапок", species: "Хлорофитум",
+                  moisture: 0.62, daysUntilWatering: 4,
+                  addedOn: DateComponents(year: 2025, month: 5, day: 12)),
+            Plant(id: "boris", name: "Борис", species: "Алоэ",
+                  moisture: 0.08, daysUntilWatering: 0,
+                  addedOn: DateComponents(year: 2024, month: 9, day: 30)),
+            Plant(id: "shuba", name: "Шуба", species: "Папоротник",
+                  moisture: 0.45, daysUntilWatering: 3,
+                  addedOn: DateComponents(year: 2025, month: 7, day: 21)),
         ]),
         Room(name: "Гостиная", plants: [
             Plant(id: "zelenik", name: "Зеленик", species: "Фикус",
                   moisture: 0.30, daysUntilWatering: 2,
                   addedOn: DateComponents(year: 2025, month: 1, day: 9)),
+            Plant(id: "gosha", name: "Гоша", species: "Драцена",
+                  moisture: 0.73, daysUntilWatering: 6,
+                  addedOn: DateComponents(year: 2025, month: 2, day: 14)),
+            Plant(id: "petrovich", name: "Петрович", species: "Кактус",
+                  moisture: 0.21, daysUntilWatering: 12,
+                  addedOn: DateComponents(year: 2023, month: 8, day: 5)),
+            Plant(id: "sonya", name: "Соня", species: "Орхидея",
+                  moisture: 0.11, daysUntilWatering: 1,
+                  addedOn: DateComponents(year: 2025, month: 8, day: 19)),
         ]),
         Room(name: "Кухня", plants: [
             Plant(id: "murzik", name: "Мурзик", species: "Монстера",
@@ -100,6 +120,15 @@ enum Garden {
             Plant(id: "baksik-2", name: "Баксик", species: "Тюльпан",
                   moisture: 0.89, daysUntilWatering: 8,
                   addedOn: DateComponents(year: 2024, month: 11, day: 2)),
+            Plant(id: "ukrop", name: "Укроп", species: "Розмарин",
+                  moisture: 0.34, daysUntilWatering: 2,
+                  addedOn: DateComponents(year: 2025, month: 6, day: 7)),
+            Plant(id: "baton", name: "Батон", species: "Хойя",
+                  moisture: 0.67, daysUntilWatering: 7,
+                  addedOn: DateComponents(year: 2024, month: 10, day: 11)),
+            Plant(id: "kefir", name: "Кефир", species: "Толстянка",
+                  moisture: 0.05, daysUntilWatering: 0,
+                  addedOn: DateComponents(year: 2025, month: 3, day: 3)),
         ]),
     ]
 

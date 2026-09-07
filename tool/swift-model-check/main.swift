@@ -22,11 +22,12 @@ check(plant(days: 22).wateringLabel, "Следующий полив через 2
 print("данные из макета:")
 let bedroom = Garden.rooms[0]
 check(bedroom.name, "Спальня", "первая комната")
-check("\(bedroom.plants.count)", "2", "растений в спальне")
+check("\(bedroom.plants.count)", "5", "растений в спальне")
 check(bedroom.plants[0].moistureLabel, "89%", "влажность Баксика")
 check(bedroom.plants[0].addedLabel, "Добавлен 2.11.2024", "дата добавления")
 check(bedroom.plants[1].wateringLabel, "Следующий полив завтра", "полив «Пр»")
-check("\(Garden.rooms[2].plants.count)", "5", "растений на кухне")
+check("\(Garden.rooms[1].plants.count)", "4", "растений в гостиной")
+check("\(Garden.rooms[2].plants.count)", "8", "растений на кухне")
 
 print("тревожность:")
 func thirst(_ d: Int) -> String { "\(plant(days: d).thirst)" }

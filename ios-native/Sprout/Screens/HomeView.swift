@@ -3,52 +3,65 @@ import SwiftUI
 /// Главный экран: приветствие, выбор комнаты и сетка растений.
 struct HomeView: View {
     @State private var roomIndex = 0
-    @State private var topInset: CGFloat = 0
+
+    /// Вставка окна сверху. До первого замера берём типичную для телефона
+    /// с вырезом, чтобы шапка не дёргалась на первом кадре.
+    @State private var topInset: CGFloat = 47
 
     private var room: Room { Garden.rooms[roomIndex] }
 
     var body: some View {
         NavigationStack {
             ScrollView {
-                VStack(alignment: .leading, spacing: 0) {
-                    header
-                    grid
-                }
+                grid
             }
             .background { SproutBackground() }
             .background { insetProbe }
-            // Плашка с логотипом закреплена и не уезжает с прокруткой:
-            // safeAreaInset отдаёт ей полосу сверху, содержимое проезжает
-            // под ней.
-            .safeAreaInset(edge: .top) {
-                SproutBadge()
-                    .padding(.bottom, 6)
-                    // Плашка прижимается к вырезу. safeAreaInset ставит её
-                    // на нижнюю границу безопасной зоны, а у телефонов с
-                    // островом граница проходит на 14 pt ниже самого
-                    // острова — отсюда и была пустая полоса над плашкой.
-                    // Сдвиг только рисует её выше: полоса, которую плашка
-                    // занимает в потоке, прежней высоты, поэтому
-                    // приветствие и карточки остаются на своих местах.
-                    .offset(y: -badgeLift)
-            }
+            // Шапка закреплена и не уезжает: приветствие и комната всегда
+            // на виду, карточки проезжают под ними и гаснут в растяжке.
+            .safeAreaInset(edge: .top, spacing: 0) { topBar }
             .navigationDestination(for: Plant.self) { PlantView(plant: $0) }
         }
     }
 
-    /// Насколько поднять плашку к вырезу.
+    private var topBar: some View {
+        header
+            .background(alignment: .top) { headerWash }
+            .overlay(alignment: .top) { badge }
+    }
+
+    /// Плашка стоит там же, где в макете, — в 19 pt от верха экрана, то
+    /// есть наполовину за вырезом. В поток она не входит: `overlay`
+    /// высоты не занимает, и шапка встаёт по макету, а не под плашкой.
+    private var badge: some View {
+        SproutBadge()
+            .offset(y: -max(0, topInset - Metrics.badgeTop))
+    }
+
+    /// Растяжка под шапкой. Та же, что в макете гасит узор у края экрана,
+    /// но лежит уже не в фоне, а в закреплённом слое: под ней проезжает
+    /// содержимое, и она должна успеть увести его в белый прежде, чем оно
+    /// дойдёт до текста.
     ///
-    /// Считаем не от границы безопасной зоны, а от нижней кромки самого
-    /// выреза, и ставим плашку на 2 pt ниже неё. Кромка известна по типу
-    /// выреза: остров кончается на 47.7, чёлка — на 33, и вставка окна
-    /// эти два случая различает (у острова она 59–62, у чёлки 47–50).
-    ///
-    /// Выше кромки плашку поднимать нельзя: она уже выреза и просто
-    /// скроется под ним целиком. У экранов без выреза поднимать нечего.
-    private var badgeLift: CGFloat {
-        guard topInset >= 40 else { return 0 }
-        let cutoutBottom: CGFloat = topInset >= 55 ? 47.7 : 33
-        return max(0, topInset - cutoutBottom - 2)
+    /// Сплошная часть тянется ровно на высоту шапки, а сход прицеплен к
+    /// её низу — так он не зависит от того, сколько места на самом деле
+    /// заняло приветствие своим шрифтом.
+    private var headerWash: some View {
+        VStack(spacing: 0) {
+            Palette.background
+            LinearGradient(
+                colors: [Palette.background, Palette.background.opacity(0)],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+            .frame(height: Metrics.headerWashFade)
+        }
+        // Вверх — до самого верха экрана, под плашку с логотипом; вниз —
+        // на 3 pt, ровно до карточек. Отрицательные поля выпускают
+        // растяжку за границы шапки, не меняя её собственной высоты.
+        .padding(.top, -topInset)
+        .padding(.bottom, -Metrics.headerWashOverhang)
+        .allowsHitTesting(false)
     }
 
     /// Мерка вставок окна. Внутри безопасной зоны они читаются нулями,
@@ -71,12 +84,8 @@ struct HomeView: View {
 
             RoomPicker(rooms: Garden.rooms.map(\.name), selection: $roomIndex)
         }
-        // Сверху 11, а не 15 как у приветствия в макете: кнопка комнаты
-        // стоит в потоке всеми своими 44 pt, тогда как в макете эти 44 —
-        // площадь нажатия, и она на 13 pt заходит за свою строку вверх и
-        // вниз. Забираем 4 pt у верхнего поля, и подпись комнаты с
-        // карточками встают ровно по макету.
-        .padding(.top, 11)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.top, max(0, Metrics.headerTop - topInset))
         .padding(.horizontal, Metrics.margin)
     }
 
@@ -103,6 +112,6 @@ struct HomeView: View {
         }
         .padding(.top, 3)
         .padding(.horizontal, Metrics.margin)
-        .animation(.easeOut(duration: 0.18), value: roomIndex)
+        .padding(.bottom, 24)
     }
 }
