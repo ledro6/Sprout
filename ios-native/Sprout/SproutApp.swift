@@ -52,6 +52,9 @@ struct RootView: View {
 struct SearchView: View {
     @State private var query = ""
 
+    /// То же разворачивание карточки в экран, что и на главной.
+    @Namespace private var cardZoom
+
     private var results: [Plant] { Garden.search(query) }
 
     var body: some View {
@@ -69,13 +72,17 @@ struct SearchView: View {
                             PlantCard(plant: plant)
                         }
                         .buttonStyle(.plain)
+                        .matchedTransitionSource(id: plant.id, in: cardZoom)
                     }
                 }
-                .padding(.horizontal, Metrics.margin)
+                .padding(.horizontal, Metrics.contentMargin)
                 .padding(.top, 14)
             }
             .background { SproutBackground() }
-            .navigationDestination(for: Plant.self) { PlantView(plant: $0) }
+            .navigationDestination(for: Plant.self) { plant in
+                PlantView(plant: plant)
+                    .navigationTransition(.zoom(sourceID: plant.id, in: cardZoom))
+            }
         }
         .searchable(text: $query, prompt: "Найти растение")
     }

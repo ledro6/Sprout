@@ -1,12 +1,12 @@
 import SwiftUI
 
-/// Главный экран: приветствие, выбор комнаты и сетка растений.
+/// Главная: выбор комнаты и сетка растений.
 struct HomeView: View {
     @State private var roomIndex = 0
 
-    /// Вставка окна сверху. До первого замера берём типичную для телефона
-    /// с вырезом, чтобы шапка не дёргалась на первом кадре.
-    @State private var topInset: CGFloat = 47
+    /// Пространство для перехода на растение: карточка не исчезает, а
+    /// разворачивается в экран.
+    @Namespace private var cardZoom
 
     private var room: Room { Garden.rooms[roomIndex] }
 
@@ -16,28 +16,34 @@ struct HomeView: View {
                 grid
             }
             .background { SproutBackground(topWash: false) }
-            .background { insetProbe }
-            // Шапка закреплена и не уезжает: приветствие и комната всегда
-            // на виду, карточки проезжают под ними и гаснут в растяжке.
-            .safeAreaInset(edge: .top, spacing: 0) { topBar }
+            // Строка комнаты закреплена и не уезжает: карточки проходят
+            // под ней и гаснут в растяжке.
+            .safeAreaInset(edge: .top, spacing: 0) { roomBar }
             .overlay(alignment: .top) { badge }
-            .navigationDestination(for: Plant.self) { PlantView(plant: $0) }
+            // Заголовок системный — тот же, что у остальных вкладок:
+            // крупный, сам съезжает в строку при прокрутке, сам получает
+            // стекло под собой. Своей вёрстки для него не нужно.
+            .navigationTitle("Главная")
+            .navigationDestination(for: Plant.self) { plant in
+                PlantView(plant: plant)
+                    .navigationTransition(.zoom(sourceID: plant.id, in: cardZoom))
+            }
         }
     }
 
-    private var topBar: some View {
-        header
+    private var roomBar: some View {
+        RoomPicker(rooms: Garden.rooms.map(\.name), selection: $roomIndex)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.horizontal, Metrics.contentMargin)
             .background(alignment: .top) { headerWash }
     }
 
     /// Плашка стоит там же, где в макете, — в 19 pt от верха экрана, то
     /// есть наполовину за вырезом.
     ///
-    /// Раньше она висела внутри шапки и сдвигалась вверх смещением. Так
-    /// её было не видно вовсе: шапка живёт в безопасной зоне, и всё, что
-    /// вылезает выше, срезается. Поэтому теперь это отдельный слой во весь
-    /// экран, безопасную зону игнорирующий, — плашка попадает в полосу
-    /// выреза, а на скриншотах, где вырез не снимается, видна целиком.
+    /// Это отдельный слой во весь экран, безопасную зону игнорирующий.
+    /// Внутри шапки её было не видно вовсе: та живёт в безопасной зоне, и
+    /// всё, что вылезает выше, срезается.
     private var badge: some View {
         SproutBadge()
             .padding(.top, Metrics.badgeTop)
@@ -46,15 +52,15 @@ struct HomeView: View {
             .allowsHitTesting(false)
     }
 
-    /// Растяжка под шапкой. В макете она лежит в фоне и гасит узор у края
-    /// экрана; здесь переехала в закреплённый слой, потому что под ней
+    /// Растяжка под строкой комнаты. В макете такая гасит узор у края
+    /// экрана; здесь она переехала в закреплённый слой, потому что под ней
     /// проезжает содержимое и она должна успеть его увести, прежде чем
     /// оно дойдёт до текста.
     ///
-    /// Не сплошная: сквозь неё читается узор, как сквозь панель в
-    /// мессенджерах. Ровная часть тянется на высоту шапки, а сход
-    /// прицеплен к её низу — так он не зависит от того, сколько места на
-    /// самом деле заняло приветствие своим шрифтом.
+    /// Вверх уходит с запасом — за панель навигации и дальше за край
+    /// экрана, иначе была бы видна её верхняя кромка. Сход прицеплен к
+    /// низу строки, а не задан абсолютной высотой: так он не поедет,
+    /// сколько бы места ни занял системный заголовок.
     private var headerWash: some View {
         VStack(spacing: 0) {
             Palette.background.opacity(Metrics.headerWashOpacity)
@@ -68,38 +74,9 @@ struct HomeView: View {
             )
             .frame(height: Metrics.headerWashFade)
         }
-        // Вверх — до самого верха экрана, под плашку с логотипом; вниз —
-        // на свес, чтобы сход успел закончиться уже под карточками.
-        // Отрицательные поля выпускают растяжку за границы шапки, не
-        // меняя её собственной высоты.
-        .padding(.top, -topInset)
-        .padding(.bottom, -Metrics.headerWashOverhang)
+        .padding(.top, -Metrics.headerWashRise)
+        .padding(.bottom, -Metrics.headerWashDrop)
         .allowsHitTesting(false)
-    }
-
-    /// Мерка вставок окна. Внутри безопасной зоны они читаются нулями,
-    /// поэтому вью сначала выходит за неё, а уже потом спрашивает.
-    private var insetProbe: some View {
-        Color.clear
-            .ignoresSafeArea()
-            .onGeometryChange(for: CGFloat.self) { proxy in
-                proxy.safeAreaInsets.top
-            } action: { inset in
-                topInset = inset
-            }
-    }
-
-    private var header: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            Text("Добро пожаловать,\n\(Garden.owner)!")
-                .font(Typography.greeting)
-                .foregroundStyle(.black)
-
-            RoomPicker(rooms: Garden.rooms.map(\.name), selection: $roomIndex)
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(.top, Metrics.headerTop)
-        .padding(.horizontal, Metrics.margin)
     }
 
     private var grid: some View {
@@ -115,16 +92,21 @@ struct HomeView: View {
                     PlantCard(plant: item.element)
                 }
                 .buttonStyle(.plain)
-                // Появление ведёт сама карточка: при смене комнаты
-                // растения другие, значит и вью другие, и каждое въезжает
-                // со своей задержкой. Уходящим достаётся только затухание —
-                // новые к этому времени уже поднимаются на их места.
+                // Появление ведёт сама карточка — от номера комнаты, а не
+                // от появления вью: вернувшись в уже открытую комнату,
+                // SwiftUI переиспользует карточку вместе с состоянием.
                 .modifier(CardAppear(index: item.offset, room: roomIndex))
                 .transition(.asymmetric(insertion: .identity, removal: .opacity))
+                // Отсюда карточка разворачивается в экран растения.
+                // Замер снимается с готовой геометрии, поэтому источник
+                // навешен последним.
+                .matchedTransitionSource(id: item.element.id, in: cardZoom)
             }
         }
-        .padding(.top, 3)
-        .padding(.horizontal, Metrics.margin)
+        // Ровно на свес растяжки: в покое сход до карточек не
+        // дотягивается, а уезжающим наверх есть где раствориться.
+        .padding(.top, Metrics.headerWashDrop)
+        .padding(.horizontal, Metrics.contentMargin)
         .padding(.bottom, 24)
     }
 }
