@@ -16,30 +16,28 @@ struct SproutApp: App {
 /// рисует сам в iOS 26. Стекло, перетекание подложки между вкладками,
 /// раскрытие поиска в поле — всё системное, ничего из этого здесь не
 /// написано.
+///
+/// Смена вкладки тоже системная. Своя пружина здесь была и убрана: она
+/// не добавлялась к штатному переходу, а закрывала его собой — вкладка
+/// сначала доигрывала системную анимацию, а поверх шла моя. Раз штатная
+/// одинакова для всех вкладок, ничего для этого делать и не нужно.
 struct RootView: View {
-    @State private var tab: RootTab = .home
-
     var body: some View {
-        TabView(selection: $tab) {
-            Tab("Главная", systemImage: "house.fill", value: RootTab.home) {
-                HomeView().modifier(ScreenAppear(active: tab == .home))
+        TabView {
+            Tab("Главная", systemImage: "house.fill") {
+                HomeView()
             }
-            Tab("Статистика", systemImage: "chart.bar.fill",
-                value: RootTab.stats) {
+            Tab("Статистика", systemImage: "chart.bar.fill") {
                 Stub(title: "Статистика")
-                    .modifier(ScreenAppear(active: tab == .stats))
             }
-            Tab("Добавить", systemImage: "plus.circle.fill",
-                value: RootTab.add) {
+            Tab("Добавить", systemImage: "plus.circle.fill") {
                 Stub(title: "Добавить")
-                    .modifier(ScreenAppear(active: tab == .add))
             }
-            Tab("Профиль", systemImage: "person.fill", value: RootTab.profile) {
+            Tab("Профиль", systemImage: "person.fill") {
                 Stub(title: "Профиль")
-                    .modifier(ScreenAppear(active: tab == .profile))
             }
-            Tab(value: RootTab.search, role: .search) {
-                SearchView().modifier(ScreenAppear(active: tab == .search))
+            Tab(role: .search) {
+                SearchView()
             }
         }
         // Панель уезжает вниз при прокрутке — штатное поведение iOS 26.
@@ -67,51 +65,6 @@ struct RootView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             .ignoresSafeArea()
             .allowsHitTesting(false)
-    }
-}
-
-/// Вкладки. Нужны значениями, а не порядком: без них `TabView` не отдаёт
-/// выбранную вкладку, а экран должен знать, что стал видимым.
-enum RootTab {
-    case home, stats, add, profile, search
-}
-
-/// Появление экрана при смене вкладки: содержимое подаётся чуть вперёд и
-/// встаёт пружиной.
-///
-/// Играет от того, выбрана ли вкладка, а не от появления вью. Вкладки в
-/// `TabView` остаются живыми после первого захода, и `onAppear` во второй
-/// раз уже не придёт.
-struct ScreenAppear: ViewModifier {
-    let active: Bool
-
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
-    @State private var shown = false
-
-    func body(content: Content) -> some View {
-        content
-            .opacity(shown ? 1 : 0)
-            .scaleEffect(shown ? 1 : 0.97)
-            .onChange(of: active, initial: true) { _, isActive in
-                guard isActive else {
-                    // Сброс, чтобы в следующий заход было что играть.
-                    // Вкладка в этот момент уже уступила экран.
-                    shown = false
-                    return
-                }
-                guard !reduceMotion else {
-                    shown = true
-                    return
-                }
-                // Сброс и подъём в одном проходе SwiftUI схлопнёт:
-                // значение вернётся к прежнему, и анимировать станет
-                // нечего. Поэтому подъём уходит следующим проходом.
-                Task { @MainActor in
-                    withAnimation(.spring(duration: 0.42, bounce: 0.3)) {
-                        shown = true
-                    }
-                }
-            }
     }
 }
 
