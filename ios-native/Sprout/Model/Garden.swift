@@ -1,144 +1,184 @@
 import Foundation
+import Observation
 
-/// Насколько срочно растение просит воды. От этого зависит красное
-/// свечение карточки — в макете оно двух сил, #FF000066 и #FF000099.
-enum Thirst {
-    /// Полив нескоро, карточка спокойная.
-    case calm
-    /// Полив завтра — мягкое свечение.
-    case soon
-    /// Полив сегодня или уже просрочен — свечение сильнее.
-    case now
+/// Живой сад: комнаты, растения, время и файл, в котором всё это лежит
+/// между запусками.
+///
+/// Влажность не хранится замороженной — сад её сушит. Раз в секунду
+/// приложение отдаёт саду прошедшее время, и почва подсыхает ровно на
+/// столько, сколько его прошло. Считаем от часов, а не от числа тактов:
+/// пока приложение свёрнуто, таймер стоит, а время идёт.
+@Observable
+final class Garden {
+    var owner: String
+    var rooms: [Room]
+    var speed: TimeSpeed
 
-    init(daysUntilWatering days: Int) {
-        switch days {
-        case ..<1: self = .now
-        case 1: self = .soon
-        default: self = .calm
+    /// Когда сад считали в прошлый раз. Не наблюдаемое: от его смены
+    /// перерисовывать нечего.
+    @ObservationIgnored private var lastTick: Date
+
+    /// Куда лечь между запусками.
+    ///
+    /// Documents, а не Caches: это данные хозяина, их нельзя вычистить
+    /// ради места. Файл заодно попадает в резервную копию.
+    @ObservationIgnored private lazy var file: URL? = {
+        FileManager.default
+            .urls(for: .documentDirectory, in: .userDomainMask)
+            .first?
+            .appendingPathComponent("garden.json")
+    }()
+
+    init() {
+        let saved = Garden.load()
+        let state = saved ?? Seed.state
+        owner = state.owner
+        rooms = state.rooms
+        speed = state.speed
+
+        // Пока приложение было закрыто, почва тоже сохла — но только по
+        // настоящему времени. Ускоренное идёт лишь пока на сад смотрят:
+        // иначе восемь часов сна при «часе в секунду» обернулись бы
+        // тремя годами, и утром всё стояло бы сухим.
+        lastTick = state.speed == .real ? state.savedAt : Date()
+        advance()
+    }
+
+    // MARK: - Время
+
+    func advance(to now: Date = Date()) {
+        let elapsed = now.timeIntervalSince(lastTick)
+        lastTick = now
+        guard elapsed > 0 else { return }
+        let days = elapsed * speed.factor / 86_400
+        for room in rooms.indices {
+            for plant in rooms[room].plants.indices {
+                rooms[room].plants[plant].dry(days: days)
+            }
         }
     }
-}
 
-struct Plant: Identifiable, Hashable {
-    let id: String
-    /// Кличка, которую дал хозяин: «Баксик», «Сумка».
-    let name: String
-    /// Вид растения: «Тюльпан».
-    let species: String
-    /// Влажность почвы, 0…1.
-    let moisture: Double
-    let daysUntilWatering: Int
-    let addedOn: DateComponents
-    var photo: String = "monstera"
+    // MARK: - Что где растёт
 
-    var thirst: Thirst { Thirst(daysUntilWatering: daysUntilWatering) }
+    var allPlants: [Plant] { rooms.flatMap(\.plants) }
 
-    var moistureLabel: String { "\(Int((moisture * 100).rounded()))%" }
-
-    /// «Следующий полив сегодня / завтра / через 5 дней».
-    var wateringLabel: String {
-        if daysUntilWatering <= 0 { return "Следующий полив сегодня" }
-        if daysUntilWatering == 1 { return "Следующий полив завтра" }
-        return "Следующий полив через \(daysUntilWatering) "
-            + Self.plural(daysUntilWatering, "день", "дня", "дней")
+    /// Те, кому пора пить, — самые сухие первыми.
+    var thirsty: [Plant] {
+        allPlants
+            .filter { $0.thirst != .calm }
+            .sorted { $0.moisture < $1.moisture }
     }
 
-    var addedLabel: String {
-        "Добавлен \(addedOn.day ?? 1).\(addedOn.month ?? 1).\(addedOn.year ?? 2024)"
+    var averageMoisture: Double {
+        let plants = allPlants
+        guard !plants.isEmpty else { return 0 }
+        return plants.reduce(0) { $0 + $1.moisture } / Double(plants.count)
     }
 
-    /// Русское склонение по числу: 1 день, 2 дня, 5 дней.
-    static func plural(_ n: Int, _ one: String, _ few: String,
-                       _ many: String) -> String {
-        let mod100 = n % 100
-        if (11...14).contains(mod100) { return many }
-        switch n % 10 {
-        case 1: return one
-        case 2, 3, 4: return few
-        default: return many
+    func plant(id: Plant.ID) -> Plant? {
+        for room in rooms {
+            if let found = room.plants.first(where: { $0.id == id }) { return found }
+        }
+        return nil
+    }
+
+    func roomName(of id: Plant.ID) -> String? {
+        rooms.first { $0.plants.contains { $0.id == id } }?.name
+    }
+
+    func search(_ query: String) -> [Plant] { Seed.search(query, in: rooms) }
+
+    // MARK: - Что с ними делают
+
+    func water(_ id: Plant.ID) {
+        change(id) { $0.moisture = 1 }
+    }
+
+    func waterAll() {
+        for room in rooms.indices {
+            for plant in rooms[room].plants.indices {
+                rooms[room].plants[plant].moisture = 1
+            }
+        }
+        save()
+    }
+
+    /// Пустое имя не сохраняем: безымянная карточка — это поломка, а не
+    /// решение хозяина.
+    func rename(_ id: Plant.ID, to name: String) {
+        let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return }
+        change(id) { $0.name = trimmed }
+    }
+
+    func delete(_ id: Plant.ID) {
+        for room in rooms.indices {
+            rooms[room].plants.removeAll { $0.id == id }
+        }
+        save()
+    }
+
+    /// Новое растение приходит политым: его только что поставили на
+    /// подоконник и полили.
+    func add(name: String, species: String, roomIndex: Int, dryingDays: Double) {
+        let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty, rooms.indices.contains(roomIndex) else { return }
+        let kind = species.trimmingCharacters(in: .whitespacesAndNewlines)
+        rooms[roomIndex].plants.append(
+            Plant(id: UUID().uuidString,
+                  name: trimmed,
+                  species: kind.isEmpty ? "Растение" : kind,
+                  moisture: 1,
+                  dryingDays: dryingDays,
+                  addedOn: Calendar.current.dateComponents(
+                    [.year, .month, .day], from: Date())))
+        save()
+    }
+
+    private func change(_ id: Plant.ID, _ edit: (inout Plant) -> Void) {
+        for room in rooms.indices {
+            if let index = rooms[room].plants.firstIndex(where: { $0.id == id }) {
+                edit(&rooms[room].plants[index])
+                save()
+                return
+            }
         }
     }
-}
 
-struct Room: Identifiable, Hashable {
-    var id: String { name }
-    let name: String
-    let plants: [Plant]
-}
+    // MARK: - Файл
 
-/// Растения квартиры. Первые в каждой комнате — из макета, с теми же
-/// кличками, процентами и сроками полива; остальные досажены, чтобы
-/// сетка не пустовала и было на чём смотреть прокрутку.
-enum Garden {
-    static let owner = "Святослав"
+    /// Слепок сада.
+    var state: GardenState {
+        GardenState(owner: owner, rooms: rooms, speed: speed, savedAt: Date())
+    }
 
-    static let rooms: [Room] = [
-        Room(name: "Спальня", plants: [
-            Plant(id: "baksik", name: "Баксик", species: "Тюльпан",
-                  moisture: 0.89, daysUntilWatering: 8,
-                  addedOn: DateComponents(year: 2024, month: 11, day: 2)),
-            Plant(id: "pr", name: "Пр", species: "Монстера",
-                  moisture: 0.14, daysUntilWatering: 1,
-                  addedOn: DateComponents(year: 2025, month: 3, day: 17)),
-            Plant(id: "tapok", name: "Тапок", species: "Хлорофитум",
-                  moisture: 0.62, daysUntilWatering: 4,
-                  addedOn: DateComponents(year: 2025, month: 5, day: 12)),
-            Plant(id: "boris", name: "Борис", species: "Алоэ",
-                  moisture: 0.08, daysUntilWatering: 0,
-                  addedOn: DateComponents(year: 2024, month: 9, day: 30)),
-            Plant(id: "shuba", name: "Шуба", species: "Папоротник",
-                  moisture: 0.45, daysUntilWatering: 3,
-                  addedOn: DateComponents(year: 2025, month: 7, day: 21)),
-        ]),
-        Room(name: "Гостиная", plants: [
-            Plant(id: "zelenik", name: "Зеленик", species: "Фикус",
-                  moisture: 0.30, daysUntilWatering: 2,
-                  addedOn: DateComponents(year: 2025, month: 1, day: 9)),
-            Plant(id: "gosha", name: "Гоша", species: "Драцена",
-                  moisture: 0.73, daysUntilWatering: 6,
-                  addedOn: DateComponents(year: 2025, month: 2, day: 14)),
-            Plant(id: "petrovich", name: "Петрович", species: "Кактус",
-                  moisture: 0.21, daysUntilWatering: 12,
-                  addedOn: DateComponents(year: 2023, month: 8, day: 5)),
-            Plant(id: "sonya", name: "Соня", species: "Орхидея",
-                  moisture: 0.11, daysUntilWatering: 1,
-                  addedOn: DateComponents(year: 2025, month: 8, day: 19)),
-        ]),
-        Room(name: "Кухня", plants: [
-            Plant(id: "murzik", name: "Мурзик", species: "Монстера",
-                  moisture: 0.89, daysUntilWatering: 8,
-                  addedOn: DateComponents(year: 2024, month: 12, day: 20)),
-            Plant(id: "privet", name: "Привет", species: "Замиокулькас",
-                  moisture: 0.14, daysUntilWatering: 1,
-                  addedOn: DateComponents(year: 2025, month: 2, day: 4)),
-            Plant(id: "lera", name: "Лера", species: "Сансевиерия",
-                  moisture: 0.56, daysUntilWatering: 5,
-                  addedOn: DateComponents(year: 2025, month: 4, day: 28)),
-            Plant(id: "sumka", name: "Сумка", species: "Спатифиллум",
-                  moisture: 0.01, daysUntilWatering: 0,
-                  addedOn: DateComponents(year: 2025, month: 6, day: 1)),
-            Plant(id: "baksik-2", name: "Баксик", species: "Тюльпан",
-                  moisture: 0.89, daysUntilWatering: 8,
-                  addedOn: DateComponents(year: 2024, month: 11, day: 2)),
-            Plant(id: "ukrop", name: "Укроп", species: "Розмарин",
-                  moisture: 0.34, daysUntilWatering: 2,
-                  addedOn: DateComponents(year: 2025, month: 6, day: 7)),
-            Plant(id: "baton", name: "Батон", species: "Хойя",
-                  moisture: 0.67, daysUntilWatering: 7,
-                  addedOn: DateComponents(year: 2024, month: 10, day: 11)),
-            Plant(id: "kefir", name: "Кефир", species: "Толстянка",
-                  moisture: 0.05, daysUntilWatering: 0,
-                  addedOn: DateComponents(year: 2025, month: 3, day: 3)),
-        ]),
-    ]
-
-    /// Поиск идёт по всей квартире: искать растение по имени логично
-    /// не только в открытой комнате.
-    static func search(_ query: String) -> [Plant] {
-        let q = query.trimmingCharacters(in: .whitespaces).lowercased()
-        guard !q.isEmpty else { return [] }
-        return rooms.flatMap(\.plants).filter {
-            $0.name.lowercased().contains(q) || $0.species.lowercased().contains(q)
+    /// Записать сад на диск.
+    ///
+    /// Вызывается на действиях хозяина и при уходе приложения в фон, но
+    /// не на каждом такте часов: влажность меняется ежесекундно, а писать
+    /// файл ежесекундно незачем — при настоящей скорости она всё равно
+    /// пересчитывается от времени слепка.
+    func save() {
+        guard let file else { return }
+        do {
+            let encoder = JSONEncoder()
+            encoder.outputFormatting = .prettyPrinted
+            try encoder.encode(state).write(to: file, options: .atomic)
+        } catch {
+            // Не сохранились — не повод падать: сад в памяти цел, а
+            // разбираться с диском посреди полива нечем.
         }
+    }
+
+    private static func load() -> GardenState? {
+        guard let file = FileManager.default
+            .urls(for: .documentDirectory, in: .userDomainMask)
+            .first?
+            .appendingPathComponent("garden.json"),
+            let data = try? Data(contentsOf: file)
+        else { return nil }
+        // Битый файл — тоже «нет файла»: лучше начать с макетного сада,
+        // чем не запуститься.
+        return try? JSONDecoder().decode(GardenState.self, from: data)
     }
 }

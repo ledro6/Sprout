@@ -22,6 +22,11 @@ struct SproutApp: App {
 /// сначала доигрывала системную анимацию, а поверх шла моя. Раз штатная
 /// одинакова для всех вкладок, ничего для этого делать и не нужно.
 struct RootView: View {
+    /// Сад живёт здесь и виден всем вкладкам.
+    @State private var garden = Garden()
+
+    @Environment(\.scenePhase) private var phase
+
     var body: some View {
         TabView {
             Tab("Главная", systemImage: "house.fill") {
@@ -40,6 +45,13 @@ struct RootView: View {
                 SearchView()
             }
         }
+        .environment(garden)
+        .task { await runClock() }
+        // Уходим с экрана — записываем сад. Приложение могут выгрузить в
+        // любой момент и разрешения не спросят.
+        .onChange(of: phase) { _, now in
+            if now != .active { garden.save() }
+        }
         // Панель уезжает вниз при прокрутке — штатное поведение iOS 26.
         .tabBarMinimizeBehavior(.onScrollDown)
         .tint(Palette.accent)
@@ -47,6 +59,16 @@ struct RootView: View {
         // приложение идёт за системой. Выбор в настройках появится
         // позже — он ляжет сюда же, отдельным preferredColorScheme.
         .overlay(alignment: .top) { badge }
+    }
+
+    /// Часы сада: раз в секунду отдаём ему прошедшее время, и почва
+    /// подсыхает. Раз в секунду, а не чаще: проценты меняются медленнее,
+    /// а будить экран ради невидимого — только тратить батарею.
+    private func runClock() async {
+        while !Task.isCancelled {
+            try? await Task.sleep(for: .seconds(1))
+            garden.advance()
+        }
     }
 
     /// Плашка с логотипом — общая для всех вкладок, как в макете.
@@ -72,12 +94,14 @@ struct RootView: View {
 /// Поле ввода даёт система: у вкладки с ролью `.search` капсула сама
 /// раскрывается в строку поиска.
 struct SearchView: View {
+    @Environment(Garden.self) private var garden
+
     @State private var query = ""
 
     /// То же разворачивание карточки в экран, что и на главной.
     @Namespace private var cardZoom
 
-    private var results: [Plant] { Garden.search(query) }
+    private var results: [Plant] { garden.search(query) }
 
     var body: some View {
         NavigationStack {
@@ -93,7 +117,7 @@ struct SearchView: View {
                         spacing: Metrics.gutterV
                     ) {
                         ForEach(results) { plant in
-                            NavigationLink(value: plant) {
+                            NavigationLink(value: plant.id) {
                                 PlantCard(plant: plant)
                             }
                             .buttonStyle(.plain)
@@ -105,9 +129,9 @@ struct SearchView: View {
                 .padding(.top, 14)
             }
             .background { SproutBackground() }
-            .navigationDestination(for: Plant.self) { plant in
-                PlantView(plant: plant)
-                    .navigationTransition(.zoom(sourceID: plant.id, in: cardZoom))
+            .navigationDestination(for: Plant.ID.self) { id in
+                PlantView(plantID: id)
+                    .navigationTransition(.zoom(sourceID: id, in: cardZoom))
             }
         }
         .searchable(text: $query, prompt: "Найти растение")
