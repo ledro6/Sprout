@@ -42,6 +42,24 @@ struct RootView: View {
         // этой строки в тёмной теме стекло уходит в тёмный материал, а
         // фон остаётся белым — и приложение выглядит сломанным.
         .preferredColorScheme(.light)
+        .overlay(alignment: .top) { badge }
+    }
+
+    /// Плашка с логотипом — общая для всех вкладок, как в макете.
+    ///
+    /// Живёт в корне и игнорирует безопасную зону: только здесь отступ
+    /// отсчитывается от верха самого экрана. Внутри экрана координаты
+    /// уже чужие — там сверху и панель навигации, и безопасная зона,
+    /// которая срезает всё, что выше неё.
+    ///
+    /// Целиком уходит под вырез — на телефоне её не видно, а на
+    /// скриншотах, где вырез не снимается, она на своём месте.
+    private var badge: some View {
+        SproutBadge()
+            .padding(.top, Metrics.badgeTop)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+            .ignoresSafeArea()
+            .allowsHitTesting(false)
     }
 }
 
@@ -95,13 +113,18 @@ struct Stub: View {
 
     var body: some View {
         NavigationStack {
-            ZStack {
-                SproutBackground()
-                Text("Этого экрана в макете нет")
-                    .font(Typography.cardTitle)
-                    .foregroundStyle(.secondary)
+            ScrollView {
+                VStack(alignment: .leading, spacing: 0) {
+                    SectionTitle(title)
+                    Text("Этого экрана в макете нет")
+                        .font(Typography.cardTitle)
+                        .foregroundStyle(.secondary)
+                        .frame(maxWidth: .infinity)
+                        .padding(.top, 140)
+                }
             }
-            .navigationTitle(title)
+            .background { SproutBackground() }
+            .toolbar(.hidden, for: .navigationBar)
         }
     }
 }

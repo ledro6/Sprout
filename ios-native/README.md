@@ -68,6 +68,7 @@ SwiftUI, язык Swift; затем удалить из нового проек�
 | --- | --- |
 | `Sprout/SproutApp.swift` | точка входа и `TabView` — нижняя панель из макета целиком системная |
 | `Sprout/Design/Tokens.swift` | цвета, шрифты, отступы из выгрузки Figma |
+| `Sprout/Views/SectionTitle.swift` | заголовок раздела: уезжает с содержимым, а не в панель |
 | `Sprout/Design/Plate.swift` | материал плашек: стекло, заливка, тень и ореол |
 | `Sprout/Design/Background.swift` | узор и логотип; узор — из `fillGeometry` макета, логотип — из `vectorNetwork` |
 | `Sprout/Model/Garden.swift` | комнаты и растения, данные те же, что в макете |
