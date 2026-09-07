@@ -111,6 +111,10 @@ struct HomeView: View {
         .padding(.top, Metrics.headerWashDrop)
         .padding(.horizontal, Metrics.contentMargin)
         .padding(.bottom, 24)
+        // Затухание уходящим карточкам. Без этого их нечем анимировать:
+        // переход у них описан, но анимации в области видимости нет, и
+        // старая комната просто пропадала кадром.
+        .animation(Motion.leave, value: roomIndex)
         // Сменили комнату — растения другие, и всплыть должны все.
         .onChange(of: roomIndex) { _, _ in revealed.removeAll() }
     }

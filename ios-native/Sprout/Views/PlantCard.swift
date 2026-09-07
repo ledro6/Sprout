@@ -91,8 +91,8 @@ struct CardAppear: ViewModifier {
     func body(content: Content) -> some View {
         content
             .opacity(shown ? 1 : 0)
-            .scaleEffect(shown ? 1 : 0.9, anchor: .top)
-            .offset(y: shown ? 0 : 26)
+            .scaleEffect(shown ? 1 : Motion.scale, anchor: .top)
+            .offset(y: shown ? 0 : Motion.rise)
             .onChange(of: room, initial: true) { _, _ in restart() }
     }
 
@@ -109,10 +109,7 @@ struct CardAppear: ViewModifier {
         // менять состояние сетки посреди её же отрисовки.
         Task { @MainActor in
             onShown()
-            withAnimation(
-                .spring(duration: 0.45, bounce: 0.28)
-                    .delay(Double(index) * 0.055)
-            ) {
+            withAnimation(Motion.appear.delay(Double(index) * Motion.stagger)) {
                 shown = true
             }
         }
