@@ -167,7 +167,7 @@ SKIP_INVISIBLE = True
 
 def walk(node: dict, depth: int, origin=(0.0, 0.0)) -> dict:
     """Рекурсивно разбирает узел. Координаты приводит к локальным
-    относительно родительского экрана — так их проще класть в Flutter."""
+    относительно родительского экрана — так их проще класть в вёрстку."""
     if SKIP_INVISIBLE and node.get("visible") is False:
         return {}
 

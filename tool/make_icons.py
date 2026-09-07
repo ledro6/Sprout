@@ -1,17 +1,18 @@
 #!/usr/bin/env python3
 """
-Собирает иконки приложения из логотипа, нарисованного в макете.
+Собирает иконку приложения из логотипа, нарисованного в макете.
 
     python3 tool/make_icons.py
 
-Берёт design/png/логоС.png — рендер логотипа из Figma — и раскладывает
-его по всем размерам, которые ждут iOS и Android.
+Берёт design/png/логоС.png — рендер логотипа из Figma — и кладёт его в
+набор иконок приложения. Начиная с Xcode 14 хватает одного файла
+1024×1024: остальные размеры система делает сама.
 
 Логотип в макете нарисован как скруглённый квадрат с зелёной обводкой.
-Иконке приложения обводка не нужна: и iOS, и Android накладывают свою
-маску скругления поверх, и обводка внутри неё читается как лишнее кольцо.
-Поэтому логотип слегка увеличивается и обрезается по краям — контур
-уходит за границу, остаётся ровное поле с ростком.
+Иконке приложения обводка не нужна: iOS накладывает свою маску скругления
+поверх, и обводка внутри неё читается как лишнее кольцо. Поэтому логотип
+слегка увеличивается и обрезается по краям — контур уходит за границу,
+остаётся ровное поле с ростком.
 """
 import json
 import os
@@ -28,10 +29,7 @@ GROUP = 'логоС'               # группа на канвасе: знач�
 BG = (198, 250, 183)          # #C6FAB7 — заливка логотипа из макета
 OVERSCAN = 1.10               # насколько вылезти за края, чтобы срезать обводку
 
-IOS_DIR = 'ios/Runner/Assets.xcassets/AppIcon.appiconset'
-ANDROID = {                   # mipmap-<плотность> : сторона в пикселях
-    'mdpi': 48, 'hdpi': 72, 'xhdpi': 96, 'xxhdpi': 144, 'xxxhdpi': 192,
-}
+ICONSET = 'ios-native/Sprout/Assets.xcassets/AppIcon.appiconset'
 
 
 def icon_top_fraction() -> float:
@@ -76,29 +74,20 @@ def main():
     if not os.path.exists(SRC):
         sys.exit(f'не нашёл {SRC} — сначала выгрузи макет '
                  f'через tool/figma_extract.py')
-    big = master(1024)
+    contents = os.path.join(ICONSET, 'Contents.json')
+    if not os.path.exists(contents):
+        sys.exit(f'не нашёл {contents}')
+
+    # Размеры перечислены в самом наборе — читаем их оттуда, чтобы не
+    # разойтись с тем, что ждёт Xcode.
     written = 0
-
-    # iOS: размеры перечислены в Contents.json набора, читаем их оттуда,
-    # чтобы не разойтись с тем, что ждёт Xcode.
-    contents = os.path.join(IOS_DIR, 'Contents.json')
-    if os.path.exists(contents):
-        for entry in json.load(open(contents))['images']:
-            name = entry.get('filename')
-            if not name:
-                continue
-            base = float(entry['size'].split('x')[0])
-            side = round(base * float(entry['scale'].rstrip('x')))
-            big.resize((side, side), Image.LANCZOS).save(
-                os.path.join(IOS_DIR, name))
-            written += 1
-
-    for density, side in ANDROID.items():
-        d = f'android/app/src/main/res/mipmap-{density}'
-        if not os.path.isdir(d):
+    for entry in json.load(open(contents))['images']:
+        name = entry.get('filename')
+        if not name:
             continue
-        big.resize((side, side), Image.LANCZOS).save(
-            os.path.join(d, 'ic_launcher.png'))
+        side = round(float(entry['size'].split('x')[0])
+                     * float(entry.get('scale', '1x').rstrip('x')))
+        master(side).save(os.path.join(ICONSET, name))
         written += 1
 
     print(f'иконок записано: {written}')
