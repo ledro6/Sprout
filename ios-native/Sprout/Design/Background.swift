@@ -107,6 +107,13 @@ enum SproutShapes {
 /// полосы, дальше сход в прозрачность. Благодаря им заголовок вверху и
 /// панель внизу читаются, а узор не спорит с текстом.
 struct SproutBackground: View {
+    /// Гасить ли узор у верхнего края.
+    ///
+    /// На главном экране — нет: там верхнюю растяжку держит закреплённая
+    /// шапка, и вторая, из фона, сложилась бы с ней и добила бы узор до
+    /// белого именно там, где он должен просвечивать.
+    var topWash = true
+
     /// Шаг сетки из макета: ростки через 89.4 pt, капля посередине между
     /// ними, ряды через 46.7 pt.
     private let pitchX: CGFloat = 89.4
@@ -135,7 +142,9 @@ struct SproutBackground: View {
             }
 
             VStack {
-                wash(fadingDown: true)
+                if topWash {
+                    wash(fadingDown: true)
+                }
                 Spacer(minLength: 0)
                 wash(fadingDown: false)
             }

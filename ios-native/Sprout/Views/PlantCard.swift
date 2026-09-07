@@ -67,6 +67,12 @@ struct CardAppear: ViewModifier {
     /// Порядковый номер карточки в сетке — от него задержка.
     let index: Int
 
+    /// Номер комнаты. Появление привязано к нему, а не к появлению вью:
+    /// на `onAppear` полагаться нельзя — вернувшись в уже открытую
+    /// комнату, SwiftUI переиспользует карточку вместе с её состоянием,
+    /// и играть становится нечего.
+    let room: Int
+
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var shown = false
 
@@ -75,19 +81,25 @@ struct CardAppear: ViewModifier {
             .opacity(shown ? 1 : 0)
             .scaleEffect(shown ? 1 : 0.9, anchor: .top)
             .offset(y: shown ? 0 : 26)
-            .onAppear(perform: reveal)
+            .onChange(of: room, initial: true) { _, _ in restart() }
     }
 
-    private func reveal() {
+    private func restart() {
+        shown = false
         guard !reduceMotion else {
             shown = true
             return
         }
-        withAnimation(
-            .spring(duration: 0.45, bounce: 0.28)
-                .delay(Double(index) * 0.055)
-        ) {
-            shown = true
+        // Сброс и подъём в одном проходе SwiftUI схлопнёт: значение
+        // вернётся к прежнему, и анимировать станет нечего. Поэтому
+        // подъём уходит следующим проходом.
+        Task { @MainActor in
+            withAnimation(
+                .spring(duration: 0.45, bounce: 0.28)
+                    .delay(Double(index) * 0.055)
+            ) {
+                shown = true
+            }
         }
     }
 }

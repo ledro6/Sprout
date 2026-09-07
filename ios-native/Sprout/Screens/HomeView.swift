@@ -15,11 +15,12 @@ struct HomeView: View {
             ScrollView {
                 grid
             }
-            .background { SproutBackground() }
+            .background { SproutBackground(topWash: false) }
             .background { insetProbe }
             // Шапка закреплена и не уезжает: приветствие и комната всегда
             // на виду, карточки проезжают под ними и гаснут в растяжке.
             .safeAreaInset(edge: .top, spacing: 0) { topBar }
+            .overlay(alignment: .top) { badge }
             .navigationDestination(for: Plant.self) { PlantView(plant: $0) }
         }
     }
@@ -27,38 +28,50 @@ struct HomeView: View {
     private var topBar: some View {
         header
             .background(alignment: .top) { headerWash }
-            .overlay(alignment: .top) { badge }
     }
 
     /// Плашка стоит там же, где в макете, — в 19 pt от верха экрана, то
-    /// есть наполовину за вырезом. В поток она не входит: `overlay`
-    /// высоты не занимает, и шапка встаёт по макету, а не под плашкой.
+    /// есть наполовину за вырезом.
+    ///
+    /// Раньше она висела внутри шапки и сдвигалась вверх смещением. Так
+    /// её было не видно вовсе: шапка живёт в безопасной зоне, и всё, что
+    /// вылезает выше, срезается. Поэтому теперь это отдельный слой во весь
+    /// экран, безопасную зону игнорирующий, — плашка попадает в полосу
+    /// выреза, а на скриншотах, где вырез не снимается, видна целиком.
     private var badge: some View {
         SproutBadge()
-            .offset(y: -max(0, topInset - Metrics.badgeTop))
+            .padding(.top, Metrics.badgeTop)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+            .ignoresSafeArea()
+            .allowsHitTesting(false)
     }
 
-    /// Растяжка под шапкой. Та же, что в макете гасит узор у края экрана,
-    /// но лежит уже не в фоне, а в закреплённом слое: под ней проезжает
-    /// содержимое, и она должна успеть увести его в белый прежде, чем оно
-    /// дойдёт до текста.
+    /// Растяжка под шапкой. В макете она лежит в фоне и гасит узор у края
+    /// экрана; здесь переехала в закреплённый слой, потому что под ней
+    /// проезжает содержимое и она должна успеть его увести, прежде чем
+    /// оно дойдёт до текста.
     ///
-    /// Сплошная часть тянется ровно на высоту шапки, а сход прицеплен к
-    /// её низу — так он не зависит от того, сколько места на самом деле
-    /// заняло приветствие своим шрифтом.
+    /// Не сплошная: сквозь неё читается узор, как сквозь панель в
+    /// мессенджерах. Ровная часть тянется на высоту шапки, а сход
+    /// прицеплен к её низу — так он не зависит от того, сколько места на
+    /// самом деле заняло приветствие своим шрифтом.
     private var headerWash: some View {
         VStack(spacing: 0) {
-            Palette.background
+            Palette.background.opacity(Metrics.headerWashOpacity)
             LinearGradient(
-                colors: [Palette.background, Palette.background.opacity(0)],
+                colors: [
+                    Palette.background.opacity(Metrics.headerWashOpacity),
+                    Palette.background.opacity(0),
+                ],
                 startPoint: .top,
                 endPoint: .bottom
             )
             .frame(height: Metrics.headerWashFade)
         }
         // Вверх — до самого верха экрана, под плашку с логотипом; вниз —
-        // на 3 pt, ровно до карточек. Отрицательные поля выпускают
-        // растяжку за границы шапки, не меняя её собственной высоты.
+        // на свес, чтобы сход успел закончиться уже под карточками.
+        // Отрицательные поля выпускают растяжку за границы шапки, не
+        // меняя её собственной высоты.
         .padding(.top, -topInset)
         .padding(.bottom, -Metrics.headerWashOverhang)
         .allowsHitTesting(false)
@@ -85,7 +98,7 @@ struct HomeView: View {
             RoomPicker(rooms: Garden.rooms.map(\.name), selection: $roomIndex)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(.top, max(0, Metrics.headerTop - topInset))
+        .padding(.top, Metrics.headerTop)
         .padding(.horizontal, Metrics.margin)
     }
 
@@ -106,7 +119,7 @@ struct HomeView: View {
                 // растения другие, значит и вью другие, и каждое въезжает
                 // со своей задержкой. Уходящим достаётся только затухание —
                 // новые к этому времени уже поднимаются на их места.
-                .modifier(CardAppear(index: item.offset))
+                .modifier(CardAppear(index: item.offset, room: roomIndex))
                 .transition(.asymmetric(insertion: .identity, removal: .opacity))
             }
         }
