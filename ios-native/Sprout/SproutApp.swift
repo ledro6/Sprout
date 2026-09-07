@@ -22,29 +22,24 @@ struct SproutApp: App {
 /// сначала доигрывала системную анимацию, а поверх шла моя. Раз штатная
 /// одинакова для всех вкладок, ничего для этого делать и не нужно.
 struct RootView: View {
-    /// Сад живёт здесь и виден всем вкладкам.
-    @State private var garden = Garden()
-
     var body: some View {
         TabView {
             Tab("Главная", systemImage: "house.fill") {
                 HomeView()
             }
             Tab("Статистика", systemImage: "chart.bar.fill") {
-                StatsView()
+                Stub(title: "Статистика")
             }
             Tab("Добавить", systemImage: "plus.circle.fill") {
-                AddView()
+                Stub(title: "Добавить")
             }
             Tab("Профиль", systemImage: "person.fill") {
-                ProfileView()
+                Stub(title: "Профиль")
             }
             Tab(role: .search) {
                 SearchView()
             }
         }
-        .environment(garden)
-        .task { await runClock() }
         // Панель уезжает вниз при прокрутке — штатное поведение iOS 26.
         .tabBarMinimizeBehavior(.onScrollDown)
         .tint(Palette.accent)
@@ -53,16 +48,6 @@ struct RootView: View {
         // фон остаётся белым — и приложение выглядит сломанным.
         .preferredColorScheme(.light)
         .overlay(alignment: .top) { badge }
-    }
-
-    /// Часы сада: раз в секунду отдаём ему прошедшее время, и почва
-    /// подсыхает. Раз в секунду, а не чаще: проценты меняются медленнее,
-    /// а будить экран ради невидимого — только тратить батарею.
-    private func runClock() async {
-        while !Task.isCancelled {
-            try? await Task.sleep(for: .seconds(1))
-            garden.advance()
-        }
     }
 
     /// Плашка с логотипом — общая для всех вкладок, как в макете.
@@ -88,14 +73,12 @@ struct RootView: View {
 /// Поле ввода даёт система: у вкладки с ролью `.search` капсула сама
 /// раскрывается в строку поиска.
 struct SearchView: View {
-    @Environment(Garden.self) private var garden
-
     @State private var query = ""
 
     /// То же разворачивание карточки в экран, что и на главной.
     @Namespace private var cardZoom
 
-    private var results: [Plant] { garden.search(query) }
+    private var results: [Plant] { Garden.search(query) }
 
     var body: some View {
         NavigationStack {
@@ -108,7 +91,7 @@ struct SearchView: View {
                     spacing: Metrics.gutterV
                 ) {
                     ForEach(results) { plant in
-                        NavigationLink(value: plant.id) {
+                        NavigationLink(value: plant) {
                             PlantCard(plant: plant)
                         }
                         .buttonStyle(.plain)
@@ -119,12 +102,34 @@ struct SearchView: View {
                 .padding(.top, 14)
             }
             .background { SproutBackground() }
-            .navigationDestination(for: Plant.ID.self) { id in
-                PlantView(plantID: id)
-                    .navigationTransition(.zoom(sourceID: id, in: cardZoom))
+            .navigationDestination(for: Plant.self) { plant in
+                PlantView(plant: plant)
+                    .navigationTransition(.zoom(sourceID: plant.id, in: cardZoom))
             }
         }
         .searchable(text: $query, prompt: "Найти растение")
     }
 }
 
+/// Экранов для этих вкладок в макете нет — рисовать их «на глаз» значит
+/// придумывать дизайн, которого никто не рисовал. Пока честная заглушка.
+struct Stub: View {
+    let title: String
+
+    var body: some View {
+        NavigationStack {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 0) {
+                    SectionTitle(title)
+                    Text("Этого экрана в макете нет")
+                        .font(Typography.cardTitle)
+                        .foregroundStyle(.secondary)
+                        .frame(maxWidth: .infinity)
+                        .padding(.top, 140)
+                }
+            }
+            .background { SproutBackground() }
+            .toolbar(.hidden, for: .navigationBar)
+        }
+    }
+}

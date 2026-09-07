@@ -2,19 +2,13 @@ import SwiftUI
 
 /// Главная: заголовок раздела, выбор комнаты и сетка растений.
 struct HomeView: View {
-    @Environment(Garden.self) private var garden
-
     @State private var roomIndex = 0
 
     /// Пространство для перехода на растение: карточка не исчезает, а
     /// разворачивается в экран.
     @Namespace private var cardZoom
 
-    /// Открытая комната. Номер придерживаем в границах: комнат может
-    /// стать меньше, а выбор остаётся прежним.
-    private var room: Room {
-        garden.rooms[min(roomIndex, garden.rooms.count - 1)]
-    }
+    private var room: Room { Garden.rooms[roomIndex] }
 
     var body: some View {
         NavigationStack {
@@ -37,15 +31,15 @@ struct HomeView: View {
             // Панель сверху не нужна: заголовок раздела живёт в самом
             // содержимом. У экрана растения панель своя.
             .toolbar(.hidden, for: .navigationBar)
-            .navigationDestination(for: Plant.ID.self) { id in
-                PlantView(plantID: id)
-                    .navigationTransition(.zoom(sourceID: id, in: cardZoom))
+            .navigationDestination(for: Plant.self) { plant in
+                PlantView(plant: plant)
+                    .navigationTransition(.zoom(sourceID: plant.id, in: cardZoom))
             }
         }
     }
 
     private var roomBar: some View {
-        RoomPicker(rooms: garden.rooms.map(\.name), selection: $roomIndex)
+        RoomPicker(rooms: Garden.rooms.map(\.name), selection: $roomIndex)
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.horizontal, Metrics.contentMargin)
             .background(alignment: .top) { headerWash }
@@ -86,7 +80,7 @@ struct HomeView: View {
             spacing: Metrics.gutterV
         ) {
             ForEach(Array(room.plants.enumerated()), id: \.element.id) { item in
-                NavigationLink(value: item.element.id) {
+                NavigationLink(value: item.element) {
                     PlantCard(plant: item.element)
                 }
                 .buttonStyle(.plain)

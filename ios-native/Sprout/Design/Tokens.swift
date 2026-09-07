@@ -41,15 +41,6 @@ enum Palette {
     /// То же в критической стадии — полив сегодня: #FF000099.
     static let thirstyNow = Color.red.opacity(0.6)
 
-    /// Цвет влажности: от красного у сухой почвы к зелёному у политой.
-    /// Оттенок ведём по кругу от 0 до трети — это ровно от красного к
-    /// зелёному, — а насыщенность держим ниже полной, чтобы полоска не
-    /// спорила с зеленью узора.
-    static func moisture(_ level: Double) -> Color {
-        Color(hue: 0.33 * min(max(level, 0), 1), saturation: 0.72,
-              brightness: 0.82)
-    }
-
     /// Затемнение экрана под всплывающим меню: #00000024.
     static let scrim = Color.black.opacity(0.14)
 
@@ -105,9 +96,6 @@ enum Metrics {
     /// Промежутки между карточками: по горизонтали 36, по вертикали 25.
     static let gutterH: CGFloat = 36
     static let gutterV: CGFloat = 25
-
-    /// Скругление плашек в списках — мельче карточного, они и сами ниже.
-    static let rowRadius: CGFloat = 22
 
     /// Скругление карточки и внутреннее поле.
     static let cardRadius: CGFloat = 26
