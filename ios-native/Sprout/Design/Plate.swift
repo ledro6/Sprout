@@ -15,6 +15,8 @@ extension Shape {
             fill(color)
                 .blur(radius: blur)
                 .offset(y: offsetY)
+            // Цвет здесь не рисуется, а вырезает: важна только его
+            // непрозрачность, поэтому он не участвует в темах.
             fill(.black)
                 .blendMode(.destinationOut)
         }

@@ -32,7 +32,7 @@ struct HomeView: View {
                     }
                 }
             }
-            .background { SproutBackground(topWash: false).equatable() }
+            .background { SproutBackground(topWash: false) }
             // Панель сверху не нужна: заголовок раздела живёт в самом
             // содержимом. У экрана растения панель своя.
             .toolbar(.hidden, for: .navigationBar)

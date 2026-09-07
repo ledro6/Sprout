@@ -46,6 +46,8 @@ struct SproutBadge: View {
             SproutLogo()
             Text("Sprout")
                 .font(Typography.wordmark)
+                // Чёрный в обеих темах: плашка светло-зелёная и в тёмной
+                // остаётся такой же — это знак, а не поверхность экрана.
                 .foregroundStyle(.black)
         }
         .padding(.leading, 6.9)

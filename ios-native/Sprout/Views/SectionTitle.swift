@@ -16,7 +16,7 @@ struct SectionTitle: View {
     var body: some View {
         Text(text)
             .font(.largeTitle.bold())
-            .foregroundStyle(.black)
+            .foregroundStyle(Palette.ink)
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.horizontal, Metrics.contentMargin)
             .padding(.top, 4)

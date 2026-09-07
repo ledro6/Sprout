@@ -25,7 +25,7 @@ struct PlantView: View {
             .padding(.top, 14)
             .padding(.bottom, 40)
         }
-        .background { SproutBackground().equatable() }
+        .background { SproutBackground() }
         .navigationTitle(plant.name)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
@@ -80,6 +80,6 @@ struct PlantView: View {
             Text(text)
         }
         .font(Typography.detail)
-        .foregroundStyle(.black)
+        .foregroundStyle(Palette.ink)
     }
 }

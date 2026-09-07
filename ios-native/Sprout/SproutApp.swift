@@ -43,15 +43,9 @@ struct RootView: View {
         // Панель уезжает вниз при прокрутке — штатное поведение iOS 26.
         .tabBarMinimizeBehavior(.onScrollDown)
         .tint(Palette.accent)
-        // Тёмной темы у макета нет: фон в нём белый, текст чёрный. Без
-        // этого в тёмной теме стекло уходит в тёмный материал, а фон
-        // остаётся белым — и приложение выглядит сломанным.
-        //
-        // То же самое прописано и в Info.plist: система узнаёт про
-        // светлую тему ещё до первого кадра, и заставка с системными
-        // элементами не успевают мигнуть тёмным. Здесь строка остаётся
-        // страховкой — стоит она ничего.
-        .preferredColorScheme(.light)
+        // Тему не навязываем: обе половины палитры живут в Palette, и
+        // приложение идёт за системой. Выбор в настройках появится
+        // позже — он ляжет сюда же, отдельным preferredColorScheme.
         .overlay(alignment: .top) { badge }
     }
 
@@ -110,7 +104,7 @@ struct SearchView: View {
                 .padding(.horizontal, Metrics.contentMargin)
                 .padding(.top, 14)
             }
-            .background { SproutBackground().equatable() }
+            .background { SproutBackground() }
             .navigationDestination(for: Plant.self) { plant in
                 PlantView(plant: plant)
                     .navigationTransition(.zoom(sourceID: plant.id, in: cardZoom))
@@ -137,7 +131,7 @@ struct Stub: View {
                         .padding(.top, 140)
                 }
             }
-            .background { SproutBackground().equatable() }
+            .background { SproutBackground() }
             .toolbar(.hidden, for: .navigationBar)
         }
     }

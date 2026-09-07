@@ -24,11 +24,11 @@ struct PlantCard: View {
                 Text(plant.moistureLabel)
             }
             .font(Typography.cardTitle)
-            .foregroundStyle(.black)
+            .foregroundStyle(Palette.ink)
 
             Text(plant.wateringLabel)
                 .font(Typography.cardCaption)
-                .foregroundStyle(.black)
+                .foregroundStyle(Palette.ink)
                 .lineLimit(2)
                 .frame(height: 24, alignment: .top)
                 .frame(maxWidth: .infinity, alignment: .leading)
