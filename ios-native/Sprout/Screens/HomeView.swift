@@ -4,6 +4,11 @@ import SwiftUI
 struct HomeView: View {
     @State private var roomIndex = 0
 
+    /// Карточки, которые в этой комнате уже всплыли. Список лежит здесь,
+    /// а не в самой карточке: сетка ленивая, уехавшие за край карточки
+    /// она выбрасывает вместе с их памятью, а сетка остаётся.
+    @State private var revealed: Set<String> = []
+
     /// Пространство для перехода на растение: карточка не исчезает, а
     /// разворачивается в экран.
     @Namespace private var cardZoom
@@ -87,7 +92,13 @@ struct HomeView: View {
                 // Появление ведёт сама карточка — от номера комнаты, а не
                 // от появления вью: вернувшись в уже открытую комнату,
                 // SwiftUI переиспользует карточку вместе с состоянием.
-                .modifier(CardAppear(index: item.offset, room: roomIndex))
+                // Играет один раз: кто показался, тот при обратной
+                // прокрутке стоит на месте.
+                .modifier(CardAppear(
+                    index: item.offset,
+                    room: roomIndex,
+                    animates: !revealed.contains(item.element.id),
+                    onShown: { revealed.insert(item.element.id) }))
                 .transition(.asymmetric(insertion: .identity, removal: .opacity))
                 // Отсюда карточка разворачивается в экран растения.
                 // Замер снимается с готовой геометрии, поэтому источник
@@ -100,5 +111,7 @@ struct HomeView: View {
         .padding(.top, Metrics.headerWashDrop)
         .padding(.horizontal, Metrics.contentMargin)
         .padding(.bottom, 24)
+        // Сменили комнату — растения другие, и всплыть должны все.
+        .onChange(of: roomIndex) { _, _ in revealed.removeAll() }
     }
 }
