@@ -6,8 +6,8 @@ import SwiftUI
 /// капсулы кнопки «назад» и элементов тулбара, сама держит жест возврата
 /// свайпом и сама анимирует переход. Ничего из этого писать не нужно.
 ///
-/// Теней на стекле нет намеренно — см. PlantCard: `.shadow` уводит вью в
-/// отдельный слой, и стекло теряет фон, который должно преломлять.
+/// Плашки фото и сведений — тот же материал, что у карточек на главном:
+/// вуаль поверх узора, а не стекло. Почему так — в `sproutPlate`.
 struct PlantView: View {
     let plant: Plant
 
@@ -51,9 +51,7 @@ struct PlantView: View {
             .padding(.vertical, 6)
             .frame(maxWidth: .infinity)
             .aspectRatio(336.0 / 347.0, contentMode: .fit)
-            .glassEffect(
-                .clear,
-                in: .rect(cornerRadius: Metrics.cardRadius, style: .continuous))
+            .sproutPlate(in: plate)
     }
 
     private var facts: some View {
@@ -65,9 +63,11 @@ struct PlantView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.horizontal, 25)
         .padding(.vertical, 22)
-        .glassEffect(
-            .clear,
-            in: .rect(cornerRadius: Metrics.cardRadius, style: .continuous))
+        .sproutPlate(in: plate)
+    }
+
+    private var plate: RoundedRectangle {
+        RoundedRectangle(cornerRadius: Metrics.cardRadius, style: .continuous)
     }
 
     private func fact(_ text: String) -> some View {

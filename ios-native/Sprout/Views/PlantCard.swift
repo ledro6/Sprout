@@ -1,13 +1,9 @@
 import SwiftUI
 
-/// Карточка растения: стеклянная плашка, фото, кличка, влажность и срок
-/// полива.
+/// Карточка растения: фото, кличка, влажность и срок полива.
 ///
-/// Тени на самом стекле нет намеренно. `.shadow` заставляет систему
-/// растеризовать вью отдельным слоем, стекло при этом теряет фон, который
-/// должно преломлять, и превращается в глухую тёмную плашку. Всё, что
-/// нужно нарисовать за стеклом, кладётся в `.background` — он рисуется
-/// позади вью вместе со стеклом, и стекло его честно преломляет.
+/// Материал плашки общий для всего приложения — см. `sproutPlate`, там же
+/// разобрано, почему у карточек нет системного стекла.
 struct PlantCard: View {
     let plant: Plant
 
@@ -38,51 +34,23 @@ struct PlantCard: View {
         }
         .padding(.horizontal, Metrics.cardPadding)
         .padding(.vertical, 10)
-        .glassEffect(.clear.interactive(), in: shape)
-        .background {
-            ZStack {
-                shadow
-                glow
-            }
-        }
+        .sproutPlate(in: shape)
+        .background { glow }
     }
 
     private var shape: RoundedRectangle {
         RoundedRectangle(cornerRadius: Metrics.cardRadius, style: .continuous)
     }
 
-    /// Тень под карточкой.
-    ///
-    /// Силуэт самой карточки из тени вырезается. Это не украшательство:
-    /// стекло прозрачное и преломляет всё, что лежит в `.background`, —
-    /// тень без выреза оказалась бы прямо под карточкой и замутила бы её
-    /// изнутри. В макете у этой тени по той же причине стоит
-    /// «не рисовать под самим слоем».
-    private var shadow: some View {
-        ZStack {
-            shape
-                .fill(Palette.cardShadow)
-                .blur(radius: Metrics.cardShadowBlur)
-                .offset(y: Metrics.cardShadowY)
-            shape
-                .fill(.black)
-                .blendMode(.destinationOut)
-        }
-        .compositingGroup()
-    }
-
-    /// Тревожное свечение — ореолом по контуру, а не заливкой: заливка
-    /// просвечивала бы сквозь прозрачное стекло и красила саму карточку,
-    /// а в макете розовое лежит вокруг неё.
+    /// Тревожное свечение: тот же ореол, что и тень, только красный и без
+    /// смещения. В макете розовое лежит строго вокруг карточки — внутри
+    /// она остаётся нейтральной.
     @ViewBuilder
     private var glow: some View {
         if plant.thirst != .calm {
-            shape
-                .stroke(
-                    plant.thirst == .now ? Palette.thirstyNow : Palette.thirsty,
-                    lineWidth: Metrics.glowWidth)
-                .blur(radius: Metrics.glowBlur)
-                .opacity(Metrics.glowAttenuation)
+            shape.sproutHalo(
+                plant.thirst == .now ? Palette.thirstyNow : Palette.thirsty,
+                blur: Metrics.glowBlur)
         }
     }
 }
