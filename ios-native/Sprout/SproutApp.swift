@@ -44,8 +44,13 @@ struct RootView: View {
         .tabBarMinimizeBehavior(.onScrollDown)
         .tint(Palette.accent)
         // Тёмной темы у макета нет: фон в нём белый, текст чёрный. Без
-        // этой строки в тёмной теме стекло уходит в тёмный материал, а
-        // фон остаётся белым — и приложение выглядит сломанным.
+        // этого в тёмной теме стекло уходит в тёмный материал, а фон
+        // остаётся белым — и приложение выглядит сломанным.
+        //
+        // То же самое прописано и в Info.plist: система узнаёт про
+        // светлую тему ещё до первого кадра, и заставка с системными
+        // элементами не успевают мигнуть тёмным. Здесь строка остаётся
+        // страховкой — стоит она ничего.
         .preferredColorScheme(.light)
         .overlay(alignment: .top) { badge }
     }
@@ -83,25 +88,29 @@ struct SearchView: View {
     var body: some View {
         NavigationStack {
             ScrollView {
-                LazyVGrid(
-                    columns: [
-                        GridItem(.flexible(), spacing: Metrics.gutterH),
-                        GridItem(.flexible(), spacing: Metrics.gutterH),
-                    ],
-                    spacing: Metrics.gutterV
-                ) {
-                    ForEach(results) { plant in
-                        NavigationLink(value: plant) {
-                            PlantCard(plant: plant)
+                // Стекло найденных карточек — одним проходом, как на
+                // главной.
+                GlassEffectContainer(spacing: 0) {
+                    LazyVGrid(
+                        columns: [
+                            GridItem(.flexible(), spacing: Metrics.gutterH),
+                            GridItem(.flexible(), spacing: Metrics.gutterH),
+                        ],
+                        spacing: Metrics.gutterV
+                    ) {
+                        ForEach(results) { plant in
+                            NavigationLink(value: plant) {
+                                PlantCard(plant: plant)
+                            }
+                            .buttonStyle(.plain)
+                            .matchedTransitionSource(id: plant.id, in: cardZoom)
                         }
-                        .buttonStyle(.plain)
-                        .matchedTransitionSource(id: plant.id, in: cardZoom)
                     }
                 }
                 .padding(.horizontal, Metrics.contentMargin)
                 .padding(.top, 14)
             }
-            .background { SproutBackground() }
+            .background { SproutBackground().equatable() }
             .navigationDestination(for: Plant.self) { plant in
                 PlantView(plant: plant)
                     .navigationTransition(.zoom(sourceID: plant.id, in: cardZoom))
@@ -128,7 +137,7 @@ struct Stub: View {
                         .padding(.top, 140)
                 }
             }
-            .background { SproutBackground() }
+            .background { SproutBackground().equatable() }
             .toolbar(.hidden, for: .navigationBar)
         }
     }

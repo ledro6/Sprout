@@ -4,10 +4,10 @@ import SwiftUI
 struct HomeView: View {
     @State private var roomIndex = 0
 
-    /// Карточки, которые в этой комнате уже всплыли. Список лежит здесь,
+    /// Карточки, которые в этой комнате уже всплыли. Журнал лежит здесь,
     /// а не в самой карточке: сетка ленивая, уехавшие за край карточки
     /// она выбрасывает вместе с их памятью, а сетка остаётся.
-    @State private var revealed: Set<String> = []
+    @State private var revealed = RevealLog()
 
     /// Пространство для перехода на растение: карточка не исчезает, а
     /// разворачивается в экран.
@@ -32,7 +32,7 @@ struct HomeView: View {
                     }
                 }
             }
-            .background { SproutBackground(topWash: false) }
+            .background { SproutBackground(topWash: false).equatable() }
             // Панель сверху не нужна: заголовок раздела живёт в самом
             // содержимом. У экрана растения панель своя.
             .toolbar(.hidden, for: .navigationBar)
@@ -76,7 +76,16 @@ struct HomeView: View {
         .allowsHitTesting(false)
     }
 
+    /// Стекло всех карточек рисуется одним проходом, а не по проходу на
+    /// карточку: ради этого контейнер и существует. Нулевой шаг — чтобы
+    /// соседние карточки не сливались краями: слияние тут не задумано.
     private var grid: some View {
+        GlassEffectContainer(spacing: 0) {
+            cards
+        }
+    }
+
+    private var cards: some View {
         LazyVGrid(
             columns: [
                 GridItem(.flexible(), spacing: Metrics.gutterH),
@@ -116,6 +125,6 @@ struct HomeView: View {
         // старая комната просто пропадала кадром.
         .animation(Motion.leave, value: roomIndex)
         // Сменили комнату — растения другие, и всплыть должны все.
-        .onChange(of: roomIndex) { _, _ in revealed.removeAll() }
+        .onChange(of: roomIndex) { _, _ in revealed.reset() }
     }
 }

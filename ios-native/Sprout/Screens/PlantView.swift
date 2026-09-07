@@ -13,15 +13,19 @@ struct PlantView: View {
 
     var body: some View {
         ScrollView {
-            VStack(spacing: 44) {
-                photo
-                facts
+            // Обе плашки стеклянные — контейнер сводит их в один проход
+            // рисования. Нулевой шаг: сливаться им незачем.
+            GlassEffectContainer(spacing: 0) {
+                VStack(spacing: 44) {
+                    photo
+                    facts
+                }
             }
             .padding(.horizontal, Metrics.margin)
             .padding(.top, 14)
             .padding(.bottom, 40)
         }
-        .background { SproutBackground() }
+        .background { SproutBackground().equatable() }
         .navigationTitle(plant.name)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {

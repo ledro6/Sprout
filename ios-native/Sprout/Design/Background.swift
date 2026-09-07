@@ -9,7 +9,10 @@ enum SproutShapes {
     static let dropSize = CGSize(width: 30.4193, height: 42.2327)
 
     /// Росток: два листа, сходящихся к общей точке внизу.
-    static var leaf: Path {
+    ///
+    /// Хранимое, а не вычисляемое: узор обращается к нему сотни раз за
+    /// кадр, и каждое обращение собирало бы контур заново.
+    static let leaf: Path = {
         var p = Path()
         p.move(to: CGPoint(x: 50.2067, y: 0))
         p.addCurve(to: CGPoint(x: 25.1033, y: 42.2327),
@@ -26,7 +29,7 @@ enum SproutShapes {
                    control2: CGPoint(x: 25.1033, y: 0))
         p.closeSubpath()
         return p
-    }
+    }()
 
     /// Коробка, в которой нарисован логотип в макете: группа «лого»,
     /// 74.92 × 137.51. Все точки ниже — в ней.
@@ -81,7 +84,7 @@ enum SproutShapes {
     ]
 
     /// Капля.
-    static var drop: Path {
+    static let drop: Path = {
         var p = Path()
         p.move(to: CGPoint(x: 30.4193, y: 27.0336))
         p.addCurve(to: CGPoint(x: 15.2097, y: 42.2327),
@@ -98,7 +101,7 @@ enum SproutShapes {
                    control2: CGPoint(x: 30.4193, y: 18.6393))
         p.closeSubpath()
         return p
-    }
+    }()
 }
 
 /// Фон экрана: узор и две белые растяжки поверх него.
@@ -106,7 +109,7 @@ enum SproutShapes {
 /// Растяжки взяты из макета один в один: сплошной белый до 40% высоты
 /// полосы, дальше сход в прозрачность. Благодаря им заголовок вверху и
 /// панель внизу читаются, а узор не спорит с текстом.
-struct SproutBackground: View {
+struct SproutBackground: View, Equatable {
     /// Гасить ли узор у верхнего края.
     ///
     /// На главном экране — нет: там верхнюю растяжку держит закреплённая
@@ -122,23 +125,15 @@ struct SproutBackground: View {
 
     var body: some View {
         ZStack {
-            Palette.background
-
-            Canvas { context, size in
-                let paint = GraphicsContext.Shading.color(Palette.pattern)
-                var y = -pitchY
-                while y < size.height + pitchY {
-                    var x = -pitchX
-                    while x < size.width + pitchX {
-                        context.fill(
-                            SproutShapes.leaf.offsetBy(dx: x, dy: y), with: paint)
-                        context.fill(
-                            SproutShapes.drop.offsetBy(dx: x + dropOffsetX, dy: y),
-                            with: paint)
-                        x += pitchX
-                    }
-                    y += pitchY
-                }
+            // Непрозрачный: холст закрашивает каждый пиксель сам, и
+            // системе не нужно смешивать его с тем, что под ним. Это
+            // самый большой слой в приложении, и белый фон переехал
+            // внутрь холста — отдельным слоем он был лишним.
+            Canvas(opaque: true) { context, size in
+                context.fill(Path(CGRect(origin: .zero, size: size)),
+                             with: .color(Palette.background))
+                context.fill(pattern(covering: size),
+                             with: .color(Palette.pattern))
             }
 
             VStack {
@@ -150,6 +145,30 @@ struct SproutBackground: View {
             }
         }
         .ignoresSafeArea()
+    }
+
+    /// Весь узор одним контуром.
+    ///
+    /// Раньше здесь было по команде заливки на каждый росток и каплю —
+    /// под три сотни отдельных вызовов на кадр. Собранные в один контур,
+    /// они уходят одной: рисуется столько же, а команд в двести раз
+    /// меньше.
+    private func pattern(covering size: CGSize) -> Path {
+        var path = Path()
+        var y = -pitchY
+        while y < size.height + pitchY {
+            var x = -pitchX
+            while x < size.width + pitchX {
+                path.addPath(SproutShapes.leaf,
+                             transform: .init(translationX: x, y: y))
+                path.addPath(SproutShapes.drop,
+                             transform: .init(translationX: x + dropOffsetX,
+                                              y: y))
+                x += pitchX
+            }
+            y += pitchY
+        }
+        return path
     }
 
     /// Полоса, гасящая узор у края экрана.
