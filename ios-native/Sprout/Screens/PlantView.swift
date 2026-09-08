@@ -53,7 +53,12 @@ struct PlantView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .principal) { title }
+            // Без общей стеклянной подложки: её рисует панель, а не эта
+            // вью, и на размытие она не отзывалась — кнопка проступала, а
+            // капсула под ней стояла с первого кадра. Сняв её, капсулу
+            // рисуем сами, и проступает кнопка целиком.
             ToolbarItem(placement: .topBarTrailing) { actions }
+                .sharedBackgroundVisibility(.hidden)
         }
         // Панель проступает сама, следом за разворачиванием карточки.
         //
@@ -87,8 +92,6 @@ struct PlantView: View {
     /// Системный появляется разом и на полную силу, и подступиться к нему
     /// нечем: это не вью, а строка, которую панель рисует сама. Свой —
     /// обычный текст, и проступает он тем же размытием, что и меню рядом.
-    /// Кнопка «назад» остаётся системной: за неё держится и жест возврата
-    /// свайпом, а его терять ради полусекунды размытия не стоит.
     private var title: some View {
         Text(plant?.name ?? "")
             .font(Typography.navTitle)
@@ -97,7 +100,15 @@ struct PlantView: View {
             .modifier(Chrome(shown: chrome))
     }
 
-    /// Меню в панели.
+    /// Меню в панели. Капсула своя — см. `sharedBackgroundVisibility`
+    /// выше.
+    ///
+    /// Кнопка «назад» осталась системной, со своей капсулой и без
+    /// проступания. Сделать своей её нельзя без потери: спрятав
+    /// системную, SwiftUI заодно выключает жест возврата свайпом, а
+    /// вернуть его можно только руками через UIKit. Полсекунды размытия
+    /// того не стоят, и панель она не портит — системный переход и так
+    /// вводит её плавно.
     private var actions: some View {
         Menu {
             Button { water() } label: {
@@ -113,7 +124,12 @@ struct PlantView: View {
                 Label("Удалить", systemImage: "trash")
             }
         } label: {
+            // Цвет не задаём: кнопка идёт за общим оттенком приложения,
+            // как и системная «назад» рядом.
             Image(systemName: "ellipsis")
+                .font(Typography.navTitle)
+                .frame(width: Metrics.barButton, height: Metrics.barButton)
+                .glassEffect(.regular.interactive(), in: Circle())
         }
         .modifier(Chrome(shown: chrome))
     }
