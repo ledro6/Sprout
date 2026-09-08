@@ -18,7 +18,12 @@ fi
 OUT=$(mktemp -d)
 trap 'rm -rf "$OUT"' EXIT
 "$SWIFTC" -O \
+  ios-native/Sprout/Model/Plants.swift \
   ios-native/Sprout/Model/Garden.swift \
   tool/swift-model-check/main.swift \
   -o "$OUT/check"
-"$OUT/check"
+# Сад пишет себя в Documents хозяина. Домашняя папка на время проверки
+# своя, временная: иначе прогон подложил бы файл в настоящую и следующий
+# прогон читал бы его вместо макетных данных.
+mkdir -p "$OUT/home/Documents"
+HOME="$OUT/home" "$OUT/check"

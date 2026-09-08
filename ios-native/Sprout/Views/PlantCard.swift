@@ -47,16 +47,29 @@ struct PlantCard: View {
         RoundedRectangle(cornerRadius: Metrics.cardRadius, style: .continuous)
     }
 
-    /// Тревожное свечение: тот же ореол, что и тень, только красный и без
-    /// смещения. В макете розовое лежит строго вокруг карточки — внутри
-    /// она остаётся нейтральной.
+    /// Тревожная тень: тот же ореол, что и обычная, только цветной и без
+    /// смещения — он лежит вокруг карточки ровным кольцом, а внутри она
+    /// остаётся нейтральной.
+    ///
+    /// Цвет ступенькой: оранжевый, пока влаги больше двадцати процентов,
+    /// красный ниже. Сила — плавно, из самой влажности, поэтому с каждым
+    /// процентом тень заметно ярче, а на смене цвета яркость не прыгает:
+    /// красное подхватывает ровно там, где кончилось оранжевое.
     @ViewBuilder
     private var glow: some View {
         if plant.thirst != .calm {
-            shape.sproutHalo(
-                plant.thirst == .now ? Palette.thirstyNow : Palette.thirsty,
-                blur: Metrics.glowBlur)
+            shape.sproutHalo(glowColour.opacity(glowStrength),
+                             blur: Metrics.glowBlur)
         }
+    }
+
+    private var glowColour: Color {
+        plant.thirst == .alarm ? Palette.alarm : Palette.warn
+    }
+
+    private var glowStrength: Double {
+        Metrics.glowFaint
+            + (Metrics.glowFull - Metrics.glowFaint) * plant.alarm
     }
 }
 
