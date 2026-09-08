@@ -54,9 +54,6 @@ struct RootView: View {
         .tabBarMinimizeBehavior(.onScrollDown)
         .tint(Palette.accent)
         .environment(garden)
-        // Глубину выреза знает только корень — окна из экрана не видно, —
-        // а нужна она и фону: узор гаснет ровно под подложкой.
-        .environment(\.notch, notch)
         .task { await runClock() }
         // Тему не навязываем: обе половины палитры живут в Palette, и
         // приложение идёт за системой. Выбор в настройках появится
@@ -102,12 +99,11 @@ struct RootView: View {
     /// телефонов вырез разной глубины, а лишние пункты срезали бы верх
     /// заголовка. Откуда берётся число — см. `topInset`.
     private var cover: some View {
-        // Ровный цвет ровно на глубину выреза, без схода. Сход был бы
-        // лишним: узор под подложкой гасит сам фон, там ему нечего
-        // прикрывать, — а наползал этот сход на заголовок и приглушал
-        // его.
-        Palette.background
-            .frame(height: notch)
+        // Не ровный цвет, а тот же фон, обрезанный по вырезу: узор идёт
+        // под подложкой насквозь, и её нижний край не виден. Ровным
+        // цветом она читалась полосой, наклеенной поверх экрана, а сход
+        // вместо края давал приглушённый заголовок — см. `SproutNotchCover`.
+        SproutNotchCover(depth: notch)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             .ignoresSafeArea()
             .allowsHitTesting(false)

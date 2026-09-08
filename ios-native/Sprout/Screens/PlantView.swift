@@ -22,6 +22,11 @@ struct PlantView: View {
     @State private var draft = ""
     @State private var deleting = false
 
+    /// Где на экране лежит плашка с фото. Отсюда по узору расходится
+    /// волна: полив виден на ней, от неё же он и идёт по фону. Не
+    /// состоянием — см. `Spot`.
+    @State private var spot = Spot()
+
     private var plant: Plant? { garden.plant(id: plantID) }
 
     var body: some View {
@@ -66,13 +71,10 @@ struct PlantView: View {
         }
     }
 
-    /// Меню в панели. Полив идёт с анимацией: проценты прыгают к сотне
-    /// разом, и без неё тревожная тень гасла бы щелчком.
+    /// Меню в панели.
     private var actions: some View {
         Menu {
-            Button {
-                withAnimation(Motion.appear) { garden.water(plantID) }
-            } label: {
+            Button { water() } label: {
                 Label("Полить сейчас", systemImage: "drop.fill")
             }
             Button {
@@ -89,6 +91,16 @@ struct PlantView: View {
         }
     }
 
+    /// Полить: сад меняет влажность, а по узору от плашки с фото
+    /// расходится волна.
+    ///
+    /// Полив с анимацией: проценты прыгают к сотне разом, и без неё
+    /// тревожная тень гасла бы щелчком.
+    private func water() {
+        withAnimation(Motion.appear) { garden.water(plantID) }
+        Cheer.shared.now(from: spot.middle)
+    }
+
     /// Плашка с фото. В макете 336×347: квадратное фото плюс поля.
     private func photo(_ plant: Plant) -> some View {
         Image(plant.photo)
@@ -102,6 +114,8 @@ struct PlantView: View {
             // кодом. Только под плашкой с растением: у плашки со
             // сведениями тревожиться не о чем.
             .modifier(PlantGlow(plant: plant, shape: plate))
+            .onGeometryChange(for: CGRect.self) { $0.frame(in: .global) }
+                action: { spot.rect = $0 }
     }
 
     private func facts(_ plant: Plant) -> some View {

@@ -128,12 +128,16 @@ struct PlantGlow<S: Shape>: ViewModifier {
         Metrics.glowBlur * (1 + Metrics.splashSpread * CGFloat(splash))
     }
 
-    /// Полили: ореол вспыхивает синим во всю силу и стягивается, а узор
-    /// на заднем плане вздрагивает за компанию.
+    /// Полили: ореол вспыхивает синим во всю силу и стягивается.
+    ///
+    /// Волну по фону отсюда не пускаем, хотя раньше пускали. Полив ловится
+    /// по влажности, а её подъём видят все плашки этого растения разом —
+    /// и карточка на витрине, и плашка на его экране. Кто из них позовёт
+    /// волну первым, не определено, а точка у волны от этого разная. Зовёт
+    /// её теперь та кнопка, которую нажали.
     private func flash() {
         splashing = true
         splash = 1
-        Cheer.shared.now()
         withAnimation(Motion.splash) { splash = 0 }
         // Слой снимаем, когда всплеск отыграл. По самой доле этого не
         // узнать: она станет нулём в теле вью сразу.
@@ -215,15 +219,19 @@ struct PlantMenu: ViewModifier {
     /// же, и другого признака у контекстного меню нет.
     @State private var previewing = false
 
+    /// Где карточка лежит на экране. Отсюда по фону расходится волна:
+    /// нажали на карточку — от неё и пошло. Не состоянием — см. `Spot`.
+    @State private var spot = Spot()
+
     private var plant: Plant? { garden.plant(id: id) }
 
     func body(content: Content) -> some View {
         content
+            .onGeometryChange(for: CGRect.self) { $0.frame(in: .global) }
+                action: { spot.rect = $0 }
             .environment(\.sproutHalos, halos && !previewing)
             .contextMenu {
-                Button {
-                    withAnimation(Motion.appear) { garden.water(id) }
-                } label: {
+                Button { water() } label: {
                     Label("Полить сейчас", systemImage: "drop.fill")
                 }
                 Button {
@@ -253,6 +261,16 @@ struct PlantMenu: ViewModifier {
             } message: {
                 Text("Растение исчезнет из комнаты. Вернуть его будет нельзя.")
             }
+    }
+
+    /// Полить: сад меняет влажность, а по узору от карточки расходится
+    /// волна.
+    ///
+    /// Полив с анимацией: проценты прыгают к сотне разом, и без неё
+    /// тревожная тень гасла бы щелчком.
+    private func water() {
+        withAnimation(Motion.appear) { garden.water(id) }
+        Cheer.shared.now(from: spot.middle)
     }
 
     /// Предпросмотр для меню — свой, а не системный снимок.
