@@ -54,6 +54,10 @@ struct RootView: View {
         .tabBarMinimizeBehavior(.onScrollDown)
         .tint(Palette.accent)
         .environment(garden)
+        // Глубину выреза знает только корень — окна из экрана не видно, —
+        // а нужна она и фону: полоса без узора должна быть ровно под
+        // подложкой.
+        .environment(\.notch, notch)
         .task { await runClock() }
         // Тему не навязываем: обе половины палитры живут в Palette, и
         // приложение идёт за системой. Выбор в настройках появится
@@ -99,18 +103,14 @@ struct RootView: View {
     /// телефонов вырез разной глубины, а лишние пункты срезали бы верх
     /// заголовка. Откуда берётся число — см. `topInset`.
     private var cover: some View {
-        // Не плоский цвет, а тот же фон экрана, обрезанный по вырезу.
-        // Плоским он читался заплаткой: узор под ним обрывался ровной
-        // чертой через весь экран. А раз это тот же фон, в той же
-        // разметке и с тем же наклоном, узор в нём совпадает с тем, что
-        // идёт под содержимым, и шва не видно вовсе.
-        SproutBackground()
-            .mask(alignment: .top) {
-                Color.black
-                    .frame(height: notch)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity,
-                           alignment: .top)
-            }
+        // Ровный цвет — и фон под ней в этой полосе тоже ровный: узора
+        // там нет, он проступает ниже, уже за подложкой. Попытка нарисовать
+        // в подложке второй узор провалилась ровно по этой причине: у неё
+        // своя разметка, свой отсчёт и свой наклон, и стык всегда выходил
+        // сдвинутым. Совпадать не с чем — вот и не расходится.
+        Palette.background
+            .frame(height: notch)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             .ignoresSafeArea()
             .allowsHitTesting(false)
     }
@@ -166,9 +166,9 @@ struct SearchView: View {
     /// То же разворачивание карточки в экран, что и на главной.
     @Namespace private var cardZoom
 
-    /// И то же гашение ореолов на время перехода — см. главную.
+    /// И то же гашение ореола у открываемой карточки — см. главную.
     @State private var path: [Plant.ID] = []
-    @State private var halos = true
+    @State private var opening: Plant.ID?
 
     private var results: [Plant] { garden.search(query) }
 
@@ -190,12 +190,13 @@ struct SearchView: View {
                             PlantCard(plant: plant)
                         }
                         .buttonStyle(.plain)
+                        .modifier(PlantMenu(id: plant.id))
+                        .environment(\.sproutHalos, opening != plant.id)
                         .matchedTransitionSource(id: plant.id, in: cardZoom)
                     }
                 }
                 .padding(.horizontal, Metrics.contentMargin)
                 .padding(.top, 14)
-                .environment(\.sproutHalos, halos)
             }
             .background { SproutBackground() }
             .navigationDestination(for: Plant.ID.self) { id in
@@ -206,7 +207,7 @@ struct SearchView: View {
         .searchable(text: $query, prompt: "Найти растение")
         .onChange(of: path) { _, now in
             if now.isEmpty {
-                withAnimation(Motion.halo) { halos = true }
+                withAnimation(Motion.halo) { opening = nil }
             }
         }
     }
@@ -214,7 +215,7 @@ struct SearchView: View {
     /// Открыть растение: гашение и переход разными проходами — см.
     /// главную.
     private func show(_ id: Plant.ID) {
-        halos = false
+        opening = id
         Task { @MainActor in path.append(id) }
     }
 }

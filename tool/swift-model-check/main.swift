@@ -22,13 +22,13 @@ func plant(moisture: Double, dryingDays: Double = 7) -> Plant {
 
 print("склонение дней:")
 func label(_ d: Int) -> String { Plant.wateringLabel(days: d) }
-check(label(0),  "Следующий полив сегодня", "0 → сегодня")
-check(label(1),  "Следующий полив завтра",  "1 → завтра")
-check(label(2),  "Следующий полив через 2 дня",   "2 дня")
-check(label(5),  "Следующий полив через 5 дней",  "5 дней")
-check(label(11), "Следующий полив через 11 дней", "11 дней")
-check(label(21), "Следующий полив через 21 день", "21 день")
-check(label(22), "Следующий полив через 22 дня",  "22 дня")
+check(label(0),  "Следующий полив: сегодня", "0 → сегодня")
+check(label(1),  "Следующий полив: завтра",  "1 → завтра")
+check(label(2),  "Следующий полив: через 2 дня",   "2 дня")
+check(label(5),  "Следующий полив: через 5 дней",  "5 дней")
+check(label(11), "Следующий полив: через 11 дней", "11 дней")
+check(label(21), "Следующий полив: через 21 день", "21 день")
+check(label(22), "Следующий полив: через 22 дня",  "22 дня")
 
 print("данные из макета:")
 let bedroom = Seed.rooms[0]
@@ -36,7 +36,7 @@ check(bedroom.name, "Спальня", "первая комната")
 check("\(bedroom.plants.count)", "5", "растений в спальне")
 check(bedroom.plants[0].moistureLabel, "89%", "влажность Баксика")
 check(bedroom.plants[0].addedLabel, "Добавлен 2.11.2024", "дата добавления")
-check(bedroom.plants[0].wateringLabel, "Следующий полив через 8 дней",
+check(bedroom.plants[0].wateringLabel, "Следующий полив: через 8 дней",
       "у Баксика 89% при сушке за 9 суток дают 8 дней")
 check("\(Seed.rooms[1].plants.count)", "4", "растений в гостиной")
 check("\(Seed.rooms[2].plants.count)", "8", "растений на кухне")
@@ -101,7 +101,7 @@ print("полив:")
 garden.water("baksik")
 check(round2(garden.plant(id: "baksik")!.moisture), "1.00", "полив наполняет до краёв")
 check("\(garden.plant(id: "baksik")!.thirst)", "calm", "и снимает тревогу")
-check(garden.plant(id: "baksik")!.wateringLabel, "Следующий полив через 9 дней",
+check(garden.plant(id: "baksik")!.wateringLabel, "Следующий полив: через 9 дней",
       "срок пересчитался сам")
 
 print("переименование и удаление:")

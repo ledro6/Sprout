@@ -154,6 +154,21 @@ private struct SproutPattern: View {
     }
 }
 
+/// Глубина выреза. Ставит корень приложения, читает фон.
+///
+/// Через окружение, потому что число берётся у окна, а окно видно только
+/// из корня: экраны о нём не знают и знать не должны.
+private struct NotchKey: EnvironmentKey {
+    static let defaultValue: CGFloat = 0
+}
+
+extension EnvironmentValues {
+    var notch: CGFloat {
+        get { self[NotchKey.self] }
+        set { self[NotchKey.self] = newValue }
+    }
+}
+
 /// Фон экрана: узор и две белые растяжки поверх него.
 ///
 /// Растяжки взяты из макета один в один: сплошной белый до 40% высоты
@@ -165,6 +180,8 @@ private struct SproutPattern: View {
 /// равенству свойств, холст остался бы в старой теме. Рисовать его
 /// дёшево — узор уходит одной командой, — так что и экономить нечего.
 struct SproutBackground: View {
+    @Environment(\.notch) private var notch
+
     var body: some View {
         ZStack {
             Palette.background
@@ -184,7 +201,17 @@ struct SproutBackground: View {
                 }
                 .clipped()
 
-            VStack {
+            VStack(spacing: 0) {
+                // Полоса выреза без узора, и сход из неё в узор.
+                //
+                // Поверх этой полосы лежит подложка из корня —
+                // однотонная, ей нечем закрыть содержимое, кроме ровного
+                // цвета. Значит, ровным должен быть и фон под ней, иначе
+                // подложка читается заплаткой: узор упирается в её край и
+                // обрывается чертой через весь экран. Рисовать в самой
+                // подложке второй узор нельзя — у неё своя разметка, свой
+                // отсчёт и свой наклон, и совпасть с первым он не может.
+                notchWash
                 Spacer(minLength: 0)
                 wash
             }
@@ -192,6 +219,25 @@ struct SproutBackground: View {
         .ignoresSafeArea()
         .onAppear { Tilt.shared.watch() }
         .onDisappear { Tilt.shared.unwatch() }
+    }
+
+    /// Полоса без узора у выреза плюс сход из неё.
+    ///
+    /// Сплошная ровно на глубину выреза — на столько же, на сколько
+    /// подложка, — и дальше сход, чтобы узор проступал, а не начинался
+    /// чертой. Сход приходится на заголовок раздела, и это к лучшему:
+    /// узор за крупными буквами и без того лишний.
+    private var notchWash: some View {
+        VStack(spacing: 0) {
+            Palette.background
+                .frame(height: notch)
+            LinearGradient(
+                colors: [Palette.background, Palette.background.opacity(0)],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+            .frame(height: Metrics.notchFade)
+        }
     }
 
     /// Полоса, гасящая узор у нижнего края: узор не спорит с панелью

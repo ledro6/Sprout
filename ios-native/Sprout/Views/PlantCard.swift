@@ -24,33 +24,26 @@ struct PlantCard: View {
                     .lineLimit(1)
                     .truncationMode(.tail)
                 Spacer(minLength: 4)
-                // Смена процента идёт штатным переходом системы: старое
-                // число размывается и уступает место новому. Подмена
-                // опознаётся по самой подписи — от неё же и анимация.
-                //
-                // Стопка вокруг обязательна. Подмена — это удаление
-                // одного текста и вставка другого, и мгновение оба живы;
-                // в строке они встали бы рядом и толкнули кличку, а в
-                // стопке ложатся друг на друга.
-                ZStack(alignment: .trailing) {
-                    Text(plant.moistureLabel)
-                        .transition(.blurReplace)
-                        .id(plant.moistureLabel)
-                }
+                // Числовой переход системы: меняются только сами цифры,
+                // они пролистываются вверх и на ходу размываются, а знак
+                // процента стоит на месте. Подмены текста целиком тут
+                // нет — значит, нет и двух текстов разом, толкающих
+                // кличку вбок.
+                Text(plant.moistureLabel)
+                    .contentTransition(.numericText())
             }
             .font(Typography.cardTitle)
             .foregroundStyle(Palette.ink)
-            .animation(Motion.number, value: plant.moistureLabel)
+            .animation(Motion.number, value: plant.moisture)
 
             Text(plant.wateringLabel)
                 .font(Typography.cardCaption)
                 .foregroundStyle(Palette.ink)
-                .lineLimit(2)
-                // Наименьшая высота, а не жёсткая: подпись идёт за
-                // настройкой размера текста, и на крупной ей нужно
-                // больше двух строк в 24 пункта. Наименьшая при этом
-                // держит карточки одной высоты, когда подпись короткая.
-                .frame(minHeight: 24, alignment: .top)
+                // Одна строка во всех видах подписи. Самая длинная — «до
+                // 22 дней» — чуть шире карточки, и на неё одну текст
+                // ужимается; остальные встают как есть.
+                .lineLimit(1)
+                .minimumScaleFactor(0.7)
                 .frame(maxWidth: .infinity, alignment: .leading)
         }
         .padding(.horizontal, Metrics.cardPadding)
@@ -76,7 +69,8 @@ struct PlantCard: View {
         if plant.thirst != .calm {
             shape.sproutHalo(glowColour.opacity(glowStrength),
                              blur: Metrics.glowBlur)
-                .modifier(Pulse(active: plant.moisture <= 0))
+                .modifier(Pulse(active: plant.moisture <= 0,
+                                phase: plant.pulsePhase))
                 .opacity(halos ? 1 : 0)
         }
     }
@@ -104,6 +98,11 @@ struct PlantCard: View {
 private struct Pulse: ViewModifier {
     let active: Bool
 
+    /// Сдвиг фазы, 0…1. Своя у каждого растения: иначе все сухие на
+    /// экране дышали бы разом, а это читается одной поломкой, а не
+    /// несколькими растениями, которым нужна вода.
+    let phase: Double
+
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var dim = false
 
@@ -115,12 +114,69 @@ private struct Pulse: ViewModifier {
                     dim = false
                     return
                 }
+                // Задержка перед бесконечным повтором и есть сдвиг фазы:
+                // повтор начинается позже и дальше идёт со сдвигом
+                // навсегда.
                 withAnimation(
                     .easeInOut(duration: Motion.pulsePeriod)
                         .repeatForever(autoreverses: true)
+                        .delay(phase * Motion.pulsePeriod)
                 ) {
                     dim = true
                 }
+            }
+    }
+}
+
+/// Меню растения по долгому нажатию: то же, что в панели на экране
+/// растения, только не нужно туда заходить.
+///
+/// Отдельным типом, а не строками на каждом экране: меню одинаково на
+/// главной и в поиске, а держать при нём приходится и переименование, и
+/// подтверждение удаления.
+struct PlantMenu: ViewModifier {
+    let id: Plant.ID
+
+    @Environment(Garden.self) private var garden
+
+    @State private var renaming = false
+    @State private var draft = ""
+    @State private var deleting = false
+
+    private var plant: Plant? { garden.plant(id: id) }
+
+    func body(content: Content) -> some View {
+        content
+            .contextMenu {
+                Button {
+                    withAnimation(Motion.appear) { garden.water(id) }
+                } label: {
+                    Label("Полить сейчас", systemImage: "drop.fill")
+                }
+                Button {
+                    draft = plant?.name ?? ""
+                    renaming = true
+                } label: {
+                    Label("Переименовать", systemImage: "pencil")
+                }
+                Button(role: .destructive) { deleting = true } label: {
+                    Label("Удалить", systemImage: "trash")
+                }
+            }
+            .alert("Переименовать", isPresented: $renaming) {
+                TextField("Кличка", text: $draft)
+                Button("Отмена", role: .cancel) {}
+                Button("Сохранить") { garden.rename(id, to: draft) }
+            } message: {
+                Text("Как теперь зовут растение?")
+            }
+            .confirmationDialog("Удалить «\(plant?.name ?? "")»?",
+                                isPresented: $deleting,
+                                titleVisibility: .visible) {
+                Button("Удалить", role: .destructive) { garden.delete(id) }
+                Button("Отмена", role: .cancel) {}
+            } message: {
+                Text("Растение исчезнет из комнаты. Вернуть его будет нельзя.")
             }
     }
 }
