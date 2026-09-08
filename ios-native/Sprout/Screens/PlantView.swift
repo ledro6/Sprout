@@ -56,7 +56,11 @@ struct PlantView: View {
             ToolbarItem(placement: .topBarTrailing) { actions }
         }
         // Панель проступает сама, следом за разворачиванием карточки.
-        .onAppear { withAnimation(Motion.chrome) { chrome = true } }
+        //
+        // Отдельным проходом, а не прямо здесь: смену, случившуюся в том
+        // же проходе, где вью появилась, SwiftUI схлопывает — панель
+        // просто оказывалась на месте, и анимировать было нечего.
+        .onAppear { Task { @MainActor in chrome = true } }
         .alert("Переименовать", isPresented: $renaming) {
             TextField("Кличка", text: $draft)
             Button("Отмена", role: .cancel) {}
@@ -179,6 +183,11 @@ struct PlantView: View {
 /// встаёт на место, а панель над ней собирается из расфокуса. Одной
 /// прозрачности для этого мало — она читается затемнением, а не
 /// наведением резкости.
+///
+/// Анимация объявлена здесь, у самой вью, а не наведена снаружи через
+/// `withAnimation`. Содержимое панели живёт не в дереве SwiftUI, а внутри
+/// панели UIKit, и наведённая снаружи анимация до него не доходит: имя и
+/// кнопка просто оказывались на месте. Объявленная у вью — доходит.
 private struct Chrome: ViewModifier {
     let shown: Bool
 
@@ -188,5 +197,6 @@ private struct Chrome: ViewModifier {
         content
             .blur(radius: shown || reduceMotion ? 0 : Metrics.chromeBlur)
             .opacity(shown ? 1 : 0)
+            .animation(Motion.chrome, value: shown)
     }
 }

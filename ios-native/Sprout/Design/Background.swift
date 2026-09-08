@@ -235,24 +235,31 @@ private struct SproutPattern: View {
 
 /// Повод порадоваться: растение полили.
 ///
-/// Один на приложение. Держит саму волну — где она сейчас и откуда
-/// пошла, — а не только повод. Фон рисуется в двух местах: на экране и
-/// подложкой под вырезом. Веди каждый свою волну, они разошлись бы на
-/// кадр-другой, и по нижнему краю подложки стало бы видно шов.
+/// Один на приложение. Держит саму волну — когда началась и откуда, — а
+/// не только повод. Фон рисуется в двух местах: на экране и подложкой
+/// под вырезом. Веди каждый свою волну, они разошлись бы на кадр-другой,
+/// и по нижнему краю подложки стало бы видно шов.
 ///
 /// Кто, где и что полил, узору знать незачем — только точку, откуда
 /// расходиться. А поливают с двух экранов и из двух меню.
+///
+/// Хранится начало, а не «где волна сейчас». Здесь стоял свой шаг —
+/// цикл со сном по шестнадцать миллисекунд, — и волна от него дёргалась:
+/// сон отмеряет не меньше положенного, а не ровно, и его такт с
+/// обновлением экрана не совпадает. Одни кадры получали двойной шаг,
+/// другие ни одного. Теперь шага нет вовсе: время спрашивает сам экран,
+/// через `TimelineView`, и каждый кадр берёт долю ровно на свой момент.
 @Observable
 final class Cheer {
     static let shared = Cheer()
 
-    /// Где сейчас волна, 0…1. Пусто — волны нет.
-    private(set) var wave: Double?
+    /// Когда началась текущая волна. Пусто — волны нет.
+    private(set) var start: Date?
 
     /// Откуда она пошла — в координатах окна.
     private(set) var origin: CGPoint = .zero
 
-    /// Ход текущей волны. Поливать можно чаще, чем волна успевает
+    /// Чем волна кончится. Поливать можно чаще, чем она успевает
     /// отыграть, и новая должна отменять старую, а не спорить с ней.
     @ObservationIgnored private var run: Task<Void, Never>?
 
@@ -260,27 +267,23 @@ final class Cheer {
 
     /// Полили вот здесь. Точка — в координатах окна: узор отсчитывается
     /// от верхнего левого угла экрана, других координат он не знает.
-    ///
-    /// Волна идёт своим шагом, а не анимацией. Анимировать нечего:
-    /// рисунок зависит не от значения в конце, а от того, где волна
-    /// сейчас, — и узор приходится пересобирать каждый кадр, пока она
-    /// идёт.
     func now(from point: CGPoint) {
         run?.cancel()
         origin = point
+        start = Date()
         run = Task { @MainActor in
-            let started = Date()
-            while !Task.isCancelled {
-                let step = Date().timeIntervalSince(started)
-                    / Motion.cheerSeconds
-                guard step < 1 else { break }
-                wave = step
-                try? await Task.sleep(for: .milliseconds(16))
-            }
+            try? await Task.sleep(for: .seconds(Motion.cheerSeconds))
             // Прервали ради новой волны — она уже идёт, и гасить нечего.
             guard !Task.isCancelled else { return }
-            wave = nil
+            start = nil
         }
+    }
+
+    /// Где волна на этот момент, 0…1. Пусто — волны нет или уже отыграла.
+    func wave(at moment: Date) -> Double? {
+        guard let start else { return nil }
+        let step = moment.timeIntervalSince(start) / Motion.cheerSeconds
+        return step < 1 ? step : nil
     }
 }
 
@@ -335,11 +338,19 @@ private struct SproutField: View {
             // экрана.
             Color.clear
                 .overlay {
-                    SproutPattern(wave: Cheer.shared.wave,
-                                  origin: Cheer.shared.origin)
-                        .padding(-Metrics.parallax)
-                        .offset(x: Tilt.shared.shift.width,
-                                y: Tilt.shared.shift.height)
+                    // Долю волны берём у экрана, а не у своего таймера:
+                    // `TimelineView` будит содержимое ровно к кадру, и
+                    // каждый кадр получает свою долю, а не ту, что успел
+                    // положить сон. Пока волны нет, расписание на паузе и
+                    // не будит ничего.
+                    TimelineView(.animation(paused: Cheer.shared.start == nil)) {
+                        frame in
+                        SproutPattern(wave: Cheer.shared.wave(at: frame.date),
+                                      origin: Cheer.shared.origin)
+                    }
+                    .padding(-Metrics.parallax)
+                    .offset(x: Tilt.shared.shift.width,
+                            y: Tilt.shared.shift.height)
                 }
                 .clipped()
         }
