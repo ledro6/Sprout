@@ -1,3 +1,4 @@
+import Foundation
 import Observation
 import SwiftUI
 
@@ -28,6 +29,11 @@ enum SproutShapes {
         p.closeSubpath()
         return p
     }()
+
+    /// Середины фигур узора. Вокруг них фигурка и раздаётся, когда
+    /// растение полили: масштаб от угла увёл бы её с места.
+    static let leafCentre = CGPoint(x: 25.1033, y: 21.1164)
+    static let dropCentre = CGPoint(x: 15.2097, y: 21.1164)
 
     /// Коробка, в которой нарисован логотип в макете: группа «лого»,
     /// 74.92 × 137.51. Все точки ниже — в ней.
@@ -114,6 +120,16 @@ enum SproutShapes {
 /// видно, что цвет узора зависит от темы; без этой зависимости вью так и
 /// осталась бы «прежней» при переключении темы и не перерисовалась бы.
 private struct SproutPattern: View {
+    /// Где сейчас волна всплесков, 0…1. Пусто — волны нет, и узор
+    /// собирается как обычно.
+    ///
+    /// Свойство у вью, которая нарочно живёт без свойств: пока волны
+    /// нет, значение не меняется, и параллакс по-прежнему двигает
+    /// готовый холст, не перерисовывая его. Зато пока волна идёт, узор
+    /// пересобирается каждый кадр — иначе фигуркам нечем всплёскивать
+    /// поодиночке.
+    var cheer: Double?
+
     @Environment(\.colorScheme) private var scheme
 
     /// Шаг сетки из макета: ростки через 89.4 pt, капля посередине между
@@ -135,23 +151,92 @@ private struct SproutPattern: View {
     /// Раньше здесь было по команде заливки на каждый росток и каплю —
     /// под три сотни отдельных вызовов на кадр. Собранные в один контур,
     /// они уходят одной: рисуется столько же, а команд в двести раз
-    /// меньше.
+    /// меньше. Всплеск этого не ломает: у каждой фигурки свой масштаб, но
+    /// он уезжает в её собственное преобразование при добавлении в
+    /// контур, и заливка всё та же одна.
     private func pattern(covering size: CGSize) -> Path {
         var path = Path()
+        var row = 0
         var y = -pitchY
         while y < size.height + pitchY {
+            var col = 0
             var x = -pitchX
             while x < size.width + pitchX {
                 path.addPath(SproutShapes.leaf,
-                             transform: .init(translationX: x, y: y))
+                             transform: place(at: CGPoint(x: x, y: y),
+                                              centre: SproutShapes.leafCentre,
+                                              scale: pop(col, row, 1)))
                 path.addPath(SproutShapes.drop,
-                             transform: .init(translationX: x + dropOffsetX,
-                                              y: y))
+                             transform: place(at: CGPoint(x: x + dropOffsetX,
+                                                          y: y),
+                                              centre: SproutShapes.dropCentre,
+                                              scale: pop(col, row, 2)))
                 x += pitchX
+                col += 1
             }
             y += pitchY
+            row += 1
         }
         return path
+    }
+
+    /// Куда и в каком размере поставить фигурку. Масштаб — вокруг её
+    /// середины, иначе раздувшаяся фигурка уползала бы вправо и вниз.
+    private func place(at origin: CGPoint, centre: CGPoint,
+                       scale: CGFloat) -> CGAffineTransform {
+        guard scale != 1 else {
+            return CGAffineTransform(translationX: origin.x, y: origin.y)
+        }
+        return CGAffineTransform(translationX: origin.x + centre.x,
+                                 y: origin.y + centre.y)
+            .scaledBy(x: scale, y: scale)
+            .translatedBy(x: -centre.x, y: -centre.y)
+    }
+
+    /// Насколько фигурка сейчас раздалась.
+    ///
+    /// У каждой свой момент старта, своя длительность и свой размах — и
+    /// все три взяты из её же места в сетке. Волна от этого не выглядит
+    /// перебором по порядку: фигурки всплёскивают вразнобой, но все
+    /// укладываются в полторы секунды.
+    private func pop(_ col: Int, _ row: Int, _ salt: Int) -> CGFloat {
+        guard let cheer else { return 1 }
+        let span = Metrics.popSpan
+            * (0.4 + 0.6 * noise(col, row, salt &+ 7))
+        let start = noise(col, row, salt) * (1 - Metrics.popSpan)
+        let step = (cheer - start) / span
+        guard step > 0, step < 1 else { return 1 }
+        let amp = Metrics.popMin
+            + (Metrics.popMax - Metrics.popMin) * noise(col, row, salt &+ 13)
+        return CGFloat(1 + amp * sin(.pi * step))
+    }
+
+    /// Псевдослучайное 0…1 от места в сетке.
+    ///
+    /// От места, а не из генератора случайных чисел: узор пересобирается
+    /// на каждом кадре волны, и настоящая случайность меняла бы фигурке
+    /// её судьбу каждый кадр — вместо одного всплеска вышла бы дрожь.
+    private func noise(_ col: Int, _ row: Int, _ salt: Int) -> Double {
+        var bits = UInt64(truncatingIfNeeded:
+            col &* 73_856_093 ^ row &* 19_349_663 ^ salt &* 83_492_791)
+        bits ^= bits >> 33
+        bits = bits &* 0xff51_afd7_ed55_8ccd
+        bits ^= bits >> 33
+        return Double(bits % 1000) / 1000
+    }
+}
+
+/// Глубина выреза. Ставит корень приложения, читает фон.
+///
+/// Через окружение: число берётся у окна, а окно видно только из корня.
+private struct NotchKey: EnvironmentKey {
+    static let defaultValue: CGFloat = 0
+}
+
+extension EnvironmentValues {
+    var notch: CGFloat {
+        get { self[NotchKey.self] }
+        set { self[NotchKey.self] = newValue }
     }
 }
 
@@ -182,8 +267,15 @@ final class Cheer {
 /// равенству свойств, холст остался бы в старой теме. Рисовать его
 /// дёшево — узор уходит одной командой, — так что и экономить нечего.
 struct SproutBackground: View {
-    /// Насколько узор сейчас вздрогнул, −1…1.
-    @State private var cheer = 0.0
+    @Environment(\.notch) private var notch
+
+    /// Где сейчас волна всплесков, 0…1. Пусто — волны нет.
+    @State private var cheer: Double?
+
+    /// Когда началась текущая волна. По ней старый ход останавливается,
+    /// если пришла новая: поливать можно чаще, чем волна успевает
+    /// отыграть.
+    @State private var waveStart: Date?
 
     var body: some View {
         ZStack {
@@ -197,14 +289,25 @@ struct SproutBackground: View {
             // за край экрана.
             Color.clear
                 .overlay {
-                    SproutPattern()
+                    SproutPattern(cheer: cheer)
                         .padding(-Metrics.parallax)
                         .offset(x: Tilt.shared.shift.width,
                                 y: Tilt.shared.shift.height)
-                        .scaleEffect(1 + Metrics.cheerScale * cheer)
-                        .rotationEffect(.degrees(Metrics.cheerTilt * cheer))
                 }
                 .clipped()
+                // Узор сходит на нет у выреза — там его закрывает
+                // подложка из корня, ровным цветом и ровно на глубину
+                // выреза.
+                //
+                // Гасить узор здесь, а не подложкой, — единственный
+                // способ обойтись без стыка. Подложка и фон это два слоя
+                // с разной разметкой и разным отсчётом, и совместить их
+                // край в край не вышло ни разу. А так подложке нечего
+                // прикрывать: под ней узора уже нет, а ниже он проступает
+                // сам, и её собственный край не виден. Заодно ей больше
+                // не нужен сход, из-за которого она наползала на
+                // заголовок.
+                .mask(alignment: .top) { notchMask }
 
             VStack {
                 // Сверху фон ничем не гасится: там лежит подложка из
@@ -218,23 +321,42 @@ struct SproutBackground: View {
         .ignoresSafeArea()
         .onAppear { Tilt.shared.watch() }
         .onDisappear { Tilt.shared.unwatch() }
-        .onChange(of: Cheer.shared.beat) { _, _ in wobble() }
+        .onChange(of: Cheer.shared.beat) { _, _ in
+            Task { @MainActor in await splash() }
+        }
     }
 
-    /// Встряска: затухающие качания, каждое своей длительности.
-    ///
-    /// Цепочкой из задержек, а не одним движением: качание туда-обратно
-    /// одной анимацией не описать, а ключевые кадры ради пяти значений
-    /// заводить незачем. Каждая следующая анимация начинается там, где
-    /// кончилась предыдущая.
-    private func wobble() {
-        var delay = 0.0
-        for beat in Motion.cheerBeats {
-            withAnimation(.easeInOut(duration: beat.duration).delay(delay)) {
-                cheer = beat.value
-            }
-            delay += beat.duration
+    /// Чем узор гасится у выреза: прозрачно ровно на его глубину, дальше
+    /// сход, ниже — как есть.
+    private var notchMask: some View {
+        VStack(spacing: 0) {
+            Color.clear
+                .frame(height: notch)
+            LinearGradient(colors: [.clear, .black],
+                           startPoint: .top, endPoint: .bottom)
+                .frame(height: Metrics.notchFade)
+            Color.black
         }
+    }
+
+    /// Волна всплесков: каждая фигурка узора раздаётся и опадает в свой
+    /// черёд, вся волна укладывается в полторы секунды.
+    ///
+    /// Своим шагом, а не анимацией. Анимировать нечего: рисунок зависит
+    /// не от значения в конце, а от того, где волна сейчас, — и узор
+    /// приходится пересобирать каждый кадр, пока она идёт.
+    private func splash() async {
+        let started = Date()
+        waveStart = started
+        while waveStart == started {
+            let step = Date().timeIntervalSince(started) / Motion.cheerSeconds
+            guard step < 1 else { break }
+            cheer = step
+            try? await Task.sleep(for: .milliseconds(16))
+        }
+        guard waveStart == started else { return }
+        waveStart = nil
+        cheer = nil
     }
 
     /// Полоса, гасящая узор у нижнего края: узор не спорит с панелью

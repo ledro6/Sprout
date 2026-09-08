@@ -54,6 +54,9 @@ struct RootView: View {
         .tabBarMinimizeBehavior(.onScrollDown)
         .tint(Palette.accent)
         .environment(garden)
+        // Глубину выреза знает только корень — окна из экрана не видно, —
+        // а нужна она и фону: узор гаснет ровно под подложкой.
+        .environment(\.notch, notch)
         .task { await runClock() }
         // Тему не навязываем: обе половины палитры живут в Palette, и
         // приложение идёт за системой. Выбор в настройках появится
@@ -99,39 +102,15 @@ struct RootView: View {
     /// телефонов вырез разной глубины, а лишние пункты срезали бы верх
     /// заголовка. Откуда берётся число — см. `topInset`.
     private var cover: some View {
-        // Градиент сверху вниз, но над самим вырезом он держится
-        // сплошным и сходит только ниже. Из-за этого три остановки, а не
-        // две.
-        //
-        // Ровный градиент от края до края был прозрачен уже на середине
-        // выреза, и содержимое, уезжая под строку состояния, снова
-        // просвечивало — та самая поломка, с которой всё начиналось. А
-        // ровный цвет без схода обрывал узор под своим краем чертой через
-        // весь экран. Здесь и то и другое: полоса выреза закрыта наглухо,
-        // а дальше подложка тает, и узор проступает без стыка.
-        //
-        // Всё это одним слоем. Разложить закрытие и сход по двум слоям —
-        // подложке и фону — уже пробовали: у них разная разметка и разный
-        // отсчёт, и сходились они всегда мимо.
-        LinearGradient(
-            stops: [
-                .init(color: Palette.background, location: 0),
-                .init(color: Palette.background, location: solidStop),
-                .init(color: Palette.background.opacity(0), location: 1),
-            ],
-            startPoint: .top,
-            endPoint: .bottom
-        )
-        .frame(height: notch + Metrics.notchFade)
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-        .ignoresSafeArea()
-        .allowsHitTesting(false)
-    }
-
-    /// Докуда подложка держится сплошной, долей от всей своей высоты:
-    /// ровно по глубину выреза.
-    private var solidStop: CGFloat {
-        notch / max(notch + Metrics.notchFade, 1)
+        // Ровный цвет ровно на глубину выреза, без схода. Сход был бы
+        // лишним: узор под подложкой гасит сам фон, там ему нечего
+        // прикрывать, — а наползал этот сход на заголовок и приглушал
+        // его.
+        Palette.background
+            .frame(height: notch)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+            .ignoresSafeArea()
+            .allowsHitTesting(false)
     }
 
     /// Глубина выреза — у окна, а не у разметки.
