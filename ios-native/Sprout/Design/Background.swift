@@ -203,8 +203,10 @@ struct SproutBackground: View {
     /// содержимого, — а растяжка только гасила узор на добрых полтораста
     /// пунктов, там, где он должен просвечивать.
     private var wash: some View {
+        // Возврат явный: из-за строки выше тело перестаёт быть одним
+        // выражением, и неявный возврат SwiftUI на него не действует.
         let solid = Palette.background
-        LinearGradient(
+        return LinearGradient(
             stops: [
                 .init(color: solid.opacity(0), location: 0),
                 .init(color: solid, location: 1 - Metrics.washStop),
