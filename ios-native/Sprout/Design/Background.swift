@@ -208,6 +208,15 @@ private struct SproutPattern: View {
     /// первыми, дальние — следом, и по фону расходится кольцо. Ни размах,
     /// ни длительность у фигурок не разнятся. Раньше разнились, и обе
     /// вразнобой: кольца за этим видно не было, по экрану шла рябь.
+    ///
+    /// Проход не «раздалась и вернулась», а ямка — гребень — ямка. Пока
+    /// одна фигурка раздаётся, соседние по кольцу поджаты, и между ними
+    /// остаётся зазор: обод читается ободом, а не сплошным утолщением, и
+    /// фигурки не смыкаются боками.
+    ///
+    /// Отсюда и короткое окно всплеска: оно подобрано так, чтобы от ямки
+    /// до гребня было примерно одно деление сетки. Будь окно длиннее,
+    /// соседки попадали бы в одну фазу и раздавались бы разом.
     private func pop(at middle: CGPoint) -> CGFloat {
         guard let wave else { return 1 }
         let far = hypot(middle.x - source.x, middle.y - source.y)
@@ -215,7 +224,12 @@ private struct SproutPattern: View {
             * (1 - Metrics.popSpan)
         let step = (wave - start) / Metrics.popSpan
         guard step > 0, step < 1 else { return 1 }
-        return CGFloat(1 + Metrics.popAmp * sin(.pi * step))
+        // Полтора периода синуса: вниз, вверх, вниз — и ровно ноль на
+        // обоих концах окна, чтобы фигурка входила в него и выходила без
+        // скачка.
+        let swing = -sin(3 * .pi * step)
+        let amp = swing > 0 ? Metrics.popAmp : Metrics.popDip
+        return CGFloat(1 + amp * swing)
     }
 }
 
@@ -267,6 +281,20 @@ final class Cheer {
             guard !Task.isCancelled else { return }
             wave = nil
         }
+    }
+}
+
+/// Глубина выреза. Ставит корень приложения, читают экраны.
+///
+/// Через окружение: число берётся у окна, а окно видно только из корня.
+private struct NotchKey: EnvironmentKey {
+    static let defaultValue: CGFloat = 0
+}
+
+extension EnvironmentValues {
+    var notch: CGFloat {
+        get { self[NotchKey.self] }
+        set { self[NotchKey.self] = newValue }
     }
 }
 
@@ -370,6 +398,19 @@ struct SproutBackground: View {
     }
 }
 
+extension View {
+    /// Подложка под вырезом — экранам, у которых верх ничем другим не
+    /// занят.
+    ///
+    /// Главной она не нужна: там верх держит растяжка под строкой
+    /// комнаты, и она доходит до самого края экрана. Две подложки разом
+    /// не уживаются — растяжка гасит узор, а подложка показывает его во
+    /// всю силу, и на их границе шла бы черта поперёк экрана.
+    func sproutNotchCover() -> some View {
+        modifier(SproutNotchCover())
+    }
+}
+
 /// Подложка под вырезом: тот же фон, обрезанный по его глубине.
 ///
 /// Нужна она затем, чтобы под строку состояния не заезжало содержимое.
@@ -382,17 +423,20 @@ struct SproutBackground: View {
 /// рисует тот же фон и от того же угла окна, только обрезанный по
 /// вырезу: узор проходит под ней насквозь, шва нет, а карточки под неё
 /// всё так же не пролезают.
-struct SproutNotchCover: View {
-    /// Глубина выреза.
-    let depth: CGFloat
+private struct SproutNotchCover: ViewModifier {
+    @Environment(\.notch) private var notch
 
-    var body: some View {
-        // Обрезать нечего: узор внутри уже обрезан по своему слою, а
-        // ровный цвет ровно по размеру. Лишний `clipped` тут стоил бы
-        // отдельного прохода растеризации на каждый кадр волны.
-        SproutField()
-            .frame(height: depth)
-            .allowsHitTesting(false)
+    func body(content: Content) -> some View {
+        content.overlay(alignment: .top) {
+            // Обрезать нечего: узор внутри уже обрезан по своему слою, а
+            // ровный цвет ровно по размеру. Лишний `clipped` тут стоил бы
+            // отдельного прохода растеризации на каждый кадр волны.
+            SproutField()
+                .frame(height: notch)
+                .frame(maxHeight: .infinity, alignment: .top)
+                .ignoresSafeArea()
+                .allowsHitTesting(false)
+        }
     }
 }
 

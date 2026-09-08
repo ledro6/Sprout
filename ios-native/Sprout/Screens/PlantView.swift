@@ -27,6 +27,10 @@ struct PlantView: View {
     /// состоянием — см. `Spot`.
     @State private var spot = Spot()
 
+    /// Проступила ли верхняя панель. С неё начинается экран, но не с
+    /// первого кадра: см. `Motion.chrome`.
+    @State private var chrome = false
+
     private var plant: Plant? { garden.plant(id: plantID) }
 
     var body: some View {
@@ -48,8 +52,11 @@ struct PlantView: View {
         .navigationTitle(plant?.name ?? "")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
+            ToolbarItem(placement: .principal) { title }
             ToolbarItem(placement: .topBarTrailing) { actions }
         }
+        // Панель проступает сама, следом за разворачиванием карточки.
+        .onAppear { withAnimation(Motion.chrome) { chrome = true } }
         .alert("Переименовать", isPresented: $renaming) {
             TextField("Кличка", text: $draft)
             Button("Отмена", role: .cancel) {}
@@ -71,6 +78,21 @@ struct PlantView: View {
         }
     }
 
+    /// Заголовок панели — свой, а не системный.
+    ///
+    /// Системный появляется разом и на полную силу, и подступиться к нему
+    /// нечем: это не вью, а строка, которую панель рисует сама. Свой —
+    /// обычный текст, и проступает он тем же размытием, что и меню рядом.
+    /// Кнопка «назад» остаётся системной: за неё держится и жест возврата
+    /// свайпом, а его терять ради полусекунды размытия не стоит.
+    private var title: some View {
+        Text(plant?.name ?? "")
+            .font(Typography.navTitle)
+            .foregroundStyle(Palette.ink)
+            .lineLimit(1)
+            .modifier(Chrome(shown: chrome))
+    }
+
     /// Меню в панели.
     private var actions: some View {
         Menu {
@@ -89,6 +111,7 @@ struct PlantView: View {
         } label: {
             Image(systemName: "ellipsis")
         }
+        .modifier(Chrome(shown: chrome))
     }
 
     /// Полить: сад меняет влажность, а по узору от плашки с фото
@@ -147,5 +170,23 @@ struct PlantView: View {
         }
         .font(Typography.detail)
         .foregroundStyle(Palette.ink)
+    }
+}
+
+/// Проступание из размытия.
+///
+/// Так в Музыке появляется верх экрана, когда открываешь альбом: обложка
+/// встаёт на место, а панель над ней собирается из расфокуса. Одной
+/// прозрачности для этого мало — она читается затемнением, а не
+/// наведением резкости.
+private struct Chrome: ViewModifier {
+    let shown: Bool
+
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    func body(content: Content) -> some View {
+        content
+            .blur(radius: shown || reduceMotion ? 0 : Metrics.chromeBlur)
+            .opacity(shown ? 1 : 0)
     }
 }

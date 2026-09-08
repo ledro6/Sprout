@@ -54,14 +54,16 @@ struct RootView: View {
         .tabBarMinimizeBehavior(.onScrollDown)
         .tint(Palette.accent)
         .environment(garden)
+        // Глубину выреза знает только корень — окна из экрана не видно, —
+        // а нужна она и подложке, и растяжке на главной.
+        .environment(\.notch, notch)
         .task { await runClock() }
         // Тему не навязываем: обе половины палитры живут в Palette, и
         // приложение идёт за системой. Выбор в настройках появится
         // позже — он ляжет сюда же, отдельным preferredColorScheme.
         //
-        // Порядок наложений важен: подложка первой, плашка второй, — так
-        // плашка лежит поверх неё.
-        .overlay(alignment: .top) { cover }
+        // Плашка с логотипом лежит поверх всего: она общая для вкладок, а
+        // подложка под вырезом теперь у каждого экрана своя.
         .overlay(alignment: .top) { badge }
         .onAppear { notch = Self.topInset() }
         // На случай, если при первом появлении окна ещё не было: смена
@@ -86,27 +88,6 @@ struct RootView: View {
             try? await Task.sleep(for: .seconds(1))
             garden.advance()
         }
-    }
-
-    /// Подложка под вырезом: закрывает содержимое, которое уезжает под
-    /// строку состояния.
-    ///
-    /// Живёт в корне, а не на экранах. Нужна она всем вкладкам одинаково,
-    /// а главное — плашка с логотипом должна лежать поверх неё, и это
-    /// возможно, только пока обе в одном месте и в известном порядке.
-    ///
-    /// Высота — ровно глубина выреза. Числом её не задать: у разных
-    /// телефонов вырез разной глубины, а лишние пункты срезали бы верх
-    /// заголовка. Откуда берётся число — см. `topInset`.
-    private var cover: some View {
-        // Не ровный цвет, а тот же фон, обрезанный по вырезу: узор идёт
-        // под подложкой насквозь, и её нижний край не виден. Ровным
-        // цветом она читалась полосой, наклеенной поверх экрана, а сход
-        // вместо края давал приглушённый заголовок — см. `SproutNotchCover`.
-        SproutNotchCover(depth: notch)
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-            .ignoresSafeArea()
-            .allowsHitTesting(false)
     }
 
     /// Глубина выреза — у окна, а не у разметки.
@@ -193,6 +174,10 @@ struct SearchView: View {
                 .padding(.top, 14)
             }
             .background { SproutBackground() }
+            // Верх у поиска ничем не занят: растяжки со строкой комнаты
+            // здесь нет, и содержимое под строку состояния держит
+            // подложка.
+            .sproutNotchCover()
             .navigationDestination(for: Plant.ID.self) { id in
                 PlantView(plantID: id)
                     .navigationTransition(.zoom(sourceID: id, in: cardZoom))
@@ -232,6 +217,7 @@ struct Stub: View {
                 }
             }
             .background { SproutBackground() }
+            .sproutNotchCover()
             .toolbar(.hidden, for: .navigationBar)
         }
     }
