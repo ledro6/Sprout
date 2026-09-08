@@ -14,6 +14,11 @@ struct RoomPicker: View {
     let rooms: [String]
     @Binding var selection: Int
 
+    /// Размер подписи. Задаётся снаружи: на главном экране кнопка растёт
+    /// при прокрутке, дорастая до заголовка раздела, и размер приходит
+    /// оттуда пересчитанным на каждый кадр.
+    var size = Typography.roomSize
+
     var body: some View {
         Menu {
             Picker("Комната", selection: $selection) {
@@ -22,15 +27,19 @@ struct RoomPicker: View {
                 }
             }
         } label: {
-            HStack(spacing: 3) {
+            HStack(spacing: size / 6) {
                 Text(rooms[selection])
+                    .font(.system(size: size, weight: .semibold))
                 Image(systemName: "chevron.up.chevron.down")
-                    .font(.system(size: 15, weight: .semibold))
+                    // Стрелка чуть мельче подписи — как в макете, где при
+                    // 18 у подписи у неё было 15.
+                    .font(.system(size: size * 0.83, weight: .semibold))
             }
-            .font(Typography.room)
             .foregroundStyle(Palette.accent)
         }
-        .frame(height: 44, alignment: .leading)
+        // Не жёсткая высота, а наименьшая: 44 — площадь нажатия, а
+        // подпись бывает и выше её, когда дорастает до заголовка.
+        .frame(minHeight: 44, alignment: .leading)
     }
 }
 

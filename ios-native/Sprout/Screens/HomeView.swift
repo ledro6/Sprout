@@ -27,6 +27,28 @@ struct HomeView: View {
     /// разворачивается в экран.
     @Namespace private var cardZoom
 
+    /// Насколько экран прокручен от верха.
+    @State private var scrolled: CGFloat = 0
+
+    /// Высота заголовка раздела — путь, который он проходит, прежде чем
+    /// уйти под вырез. Не задана числом: заголовок крупный и растёт
+    /// вместе с настройкой размера текста.
+    @State private var titleHeight: CGFloat = 1
+
+    /// Размеры кнопки комнаты: в покое и доросшей до заголовка. Оба идут
+    /// за настройкой размера текста, каждый — за своим стилем, поэтому и
+    /// растут по-разному.
+    @ScaledMetric(relativeTo: .headline)
+    private var roomSize = Typography.roomSize
+    @ScaledMetric(relativeTo: .largeTitle)
+    private var roomGrown = Typography.roomGrown
+
+    /// Доля пути, пройденного заголовком: 0 — экран в покое, 1 — заголовок
+    /// ушёл целиком и строка комнаты встала на его место.
+    private var grown: CGFloat {
+        min(max(scrolled / titleHeight, 0), 1)
+    }
+
     private var room: Room { Garden.rooms[roomIndex] }
 
     var body: some View {
@@ -39,6 +61,8 @@ struct HomeView: View {
                 LazyVStack(alignment: .leading, spacing: 0,
                            pinnedViews: [.sectionHeaders]) {
                     SectionTitle("Главная")
+                        .onGeometryChange(for: CGFloat.self) { $0.size.height }
+                            action: { titleHeight = max($0, 1) }
                     Section {
                         grid
                     } header: {
@@ -46,10 +70,15 @@ struct HomeView: View {
                     }
                 }
             }
+            // Сколько уехало содержимое. Вставка сверху прибавлена,
+            // чтобы в покое выходил ноль: у прокрутки под безопасной
+            // зоной смещение стартует отрицательным.
+            .onScrollGeometryChange(for: CGFloat.self) {
+                $0.contentOffset.y + $0.contentInsets.top
+            } action: { _, offset in
+                scrolled = offset
+            }
             .background { SproutBackground() }
-            // Подложка поверх содержимого: то, что уезжает под вырез,
-            // должно там пропадать, а не просвечивать.
-            .overlay(alignment: .top) { TopCover() }
             // Панель сверху не нужна: заголовок раздела живёт в самом
             // содержимом. У экрана растения панель своя.
             .toolbar(.hidden, for: .navigationBar)
@@ -60,8 +89,12 @@ struct HomeView: View {
         }
     }
 
+    /// Строка комнаты. Пока заголовок уезжает, подпись комнаты растёт
+    /// ему навстречу и к концу пути становится ровно его размера: место
+    /// заголовка занимает не пустота, а название комнаты.
     private var roomBar: some View {
-        RoomPicker(rooms: Garden.rooms.map(\.name), selection: $roomIndex)
+        RoomPicker(rooms: Garden.rooms.map(\.name), selection: $roomIndex,
+                   size: roomSize + (roomGrown - roomSize) * grown)
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.horizontal, Metrics.contentMargin)
             .background(alignment: .top) { headerWash }
@@ -72,8 +105,8 @@ struct HomeView: View {
     ///
     /// Только под строку и только вниз. Вверх она не уходит: там стоит
     /// заголовок раздела, и поднятая растяжка забеливала его. Полосу над
-    /// строкой держит `TopCover`, и держит независимо от того, куда
-    /// доехала прокрутка.
+    /// строкой держит подложка в корне приложения, и держит независимо от
+    /// того, куда доехала прокрутка.
     ///
     /// Сход прицеплен к низу строки, а не задан абсолютной высотой, — так
     /// он не поедет, если подпись комнаты займёт другую высоту.

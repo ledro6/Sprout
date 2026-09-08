@@ -30,7 +30,11 @@ struct PlantCard: View {
                 .font(Typography.cardCaption)
                 .foregroundStyle(Palette.ink)
                 .lineLimit(2)
-                .frame(height: 24, alignment: .top)
+                // Наименьшая высота, а не жёсткая: подпись идёт за
+                // настройкой размера текста, и на крупной ей нужно
+                // больше двух строк в 24 пункта. Наименьшая при этом
+                // держит карточки одной высоты, когда подпись короткая.
+                .frame(minHeight: 24, alignment: .top)
                 .frame(maxWidth: .infinity, alignment: .leading)
         }
         .padding(.horizontal, Metrics.cardPadding)
