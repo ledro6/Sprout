@@ -104,11 +104,18 @@ struct PlantView: View {
         VStack(alignment: .leading, spacing: 14) {
             // Влажность первой строкой: она здесь единственное, что
             // меняется само, и смотреть на таймер удобнее всего тут.
-            fact("Влажность \(plant.moistureLabel)")
+            // Стопка — чтобы старая и новая строка на подмене легли друг
+            // на друга, а не встали одна под другой, раздвинув список.
+            ZStack(alignment: .leading) {
+                fact("Влажность \(plant.moistureLabel)")
+                    .transition(.blurReplace)
+                    .id(plant.moistureLabel)
+            }
             fact(plant.species)
             fact(plant.wateringLabel)
             fact(plant.addedLabel)
         }
+        .animation(Motion.number, value: plant.moistureLabel)
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.horizontal, 25)
         .padding(.vertical, 22)

@@ -24,10 +24,23 @@ struct PlantCard: View {
                     .lineLimit(1)
                     .truncationMode(.tail)
                 Spacer(minLength: 4)
-                Text(plant.moistureLabel)
+                // Смена процента идёт штатным переходом системы: старое
+                // число размывается и уступает место новому. Подмена
+                // опознаётся по самой подписи — от неё же и анимация.
+                //
+                // Стопка вокруг обязательна. Подмена — это удаление
+                // одного текста и вставка другого, и мгновение оба живы;
+                // в строке они встали бы рядом и толкнули кличку, а в
+                // стопке ложатся друг на друга.
+                ZStack(alignment: .trailing) {
+                    Text(plant.moistureLabel)
+                        .transition(.blurReplace)
+                        .id(plant.moistureLabel)
+                }
             }
             .font(Typography.cardTitle)
             .foregroundStyle(Palette.ink)
+            .animation(Motion.number, value: plant.moistureLabel)
 
             Text(plant.wateringLabel)
                 .font(Typography.cardCaption)
@@ -63,6 +76,7 @@ struct PlantCard: View {
         if plant.thirst != .calm {
             shape.sproutHalo(glowColour.opacity(glowStrength),
                              blur: Metrics.glowBlur)
+                .modifier(Pulse(active: plant.moisture <= 0))
                 .opacity(halos ? 1 : 0)
         }
     }
@@ -74,6 +88,40 @@ struct PlantCard: View {
     private var glowStrength: Double {
         Metrics.glowFaint
             + (Metrics.glowFull - Metrics.glowFaint) * plant.alarm
+    }
+}
+
+/// Пульс свечения у растения, досохшего до нуля.
+///
+/// Ноль — это уже не «скоро полить», а «проглядели», и ровная тень такое
+/// не отличает от девяти процентов. Пульс отличает: он единственное на
+/// экране, что движется само по себе, и взгляд цепляется за него даже
+/// боковым зрением.
+///
+/// Медленный намеренно. Быстрое мигание читается поломкой и раздражает,
+/// а на этом темпе — дыханием. При включённом «Уменьшении движения» не
+/// пульсирует вовсе: свечение и так на месте, а настройка ровно про это.
+private struct Pulse: ViewModifier {
+    let active: Bool
+
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @State private var dim = false
+
+    func body(content: Content) -> some View {
+        content
+            .opacity(active && dim ? Motion.pulseLow : 1)
+            .onChange(of: active, initial: true) { _, on in
+                guard on, !reduceMotion else {
+                    dim = false
+                    return
+                }
+                withAnimation(
+                    .easeInOut(duration: Motion.pulsePeriod)
+                        .repeatForever(autoreverses: true)
+                ) {
+                    dim = true
+                }
+            }
     }
 }
 

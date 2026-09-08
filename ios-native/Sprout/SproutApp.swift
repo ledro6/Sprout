@@ -99,9 +99,18 @@ struct RootView: View {
     /// телефонов вырез разной глубины, а лишние пункты срезали бы верх
     /// заголовка. Откуда берётся число — см. `topInset`.
     private var cover: some View {
-        Palette.background
-            .frame(height: notch)
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+        // Не плоский цвет, а тот же фон экрана, обрезанный по вырезу.
+        // Плоским он читался заплаткой: узор под ним обрывался ровной
+        // чертой через весь экран. А раз это тот же фон, в той же
+        // разметке и с тем же наклоном, узор в нём совпадает с тем, что
+        // идёт под содержимым, и шва не видно вовсе.
+        SproutBackground()
+            .mask(alignment: .top) {
+                Color.black
+                    .frame(height: notch)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity,
+                           alignment: .top)
+            }
             .ignoresSafeArea()
             .allowsHitTesting(false)
     }
@@ -158,12 +167,13 @@ struct SearchView: View {
     @Namespace private var cardZoom
 
     /// И то же гашение ореолов на время перехода — см. главную.
-    @State private var open: [Plant.ID] = []
+    @State private var path: [Plant.ID] = []
+    @State private var halos = true
 
     private var results: [Plant] { garden.search(query) }
 
     var body: some View {
-        NavigationStack(path: $open) {
+        NavigationStack(path: $path) {
             ScrollView {
                 // Без общего стеклянного контейнера — как на главной:
                 // он склеивает сетку в один слой, и карточке нечем
@@ -176,7 +186,7 @@ struct SearchView: View {
                     spacing: Metrics.gutterV
                 ) {
                     ForEach(results) { plant in
-                        NavigationLink(value: plant.id) {
+                        Button { show(plant.id) } label: {
                             PlantCard(plant: plant)
                         }
                         .buttonStyle(.plain)
@@ -185,8 +195,7 @@ struct SearchView: View {
                 }
                 .padding(.horizontal, Metrics.contentMargin)
                 .padding(.top, 14)
-                .environment(\.sproutHalos, open.isEmpty)
-                .animation(open.isEmpty ? Motion.halo : nil, value: open.isEmpty)
+                .environment(\.sproutHalos, halos)
             }
             .background { SproutBackground() }
             .navigationDestination(for: Plant.ID.self) { id in
@@ -195,6 +204,18 @@ struct SearchView: View {
             }
         }
         .searchable(text: $query, prompt: "Найти растение")
+        .onChange(of: path) { _, now in
+            if now.isEmpty {
+                withAnimation(Motion.halo) { halos = true }
+            }
+        }
+    }
+
+    /// Открыть растение: гашение и переход разными проходами — см.
+    /// главную.
+    private func show(_ id: Plant.ID) {
+        halos = false
+        Task { @MainActor in path.append(id) }
     }
 }
 
