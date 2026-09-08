@@ -51,12 +51,20 @@ struct PlantView: View {
         .background { SproutBackground() }
         .navigationTitle(plant?.name ?? "")
         .navigationBarTitleDisplayMode(.inline)
+        // Своя кнопка «назад», а не системная: системную не размыть — её
+        // рисует панель. Ценой этого идёт жест возврата свайпом от края:
+        // спрятав системную кнопку, SwiftUI выключает и его. Возврат
+        // потягиванием вниз остаётся — его держит само разворачивание
+        // карточки, а не панель.
+        .navigationBarBackButtonHidden(true)
         .toolbar {
+            // Без общей стеклянной подложки: её рисует панель, а не эти
+            // вью, и на размытие она не отзывалась — значок проступал, а
+            // капсула под ним стояла с первого кадра. Сняв её, капсулы
+            // рисуем сами, и проступают кнопки целиком.
+            ToolbarItem(placement: .topBarLeading) { back }
+                .sharedBackgroundVisibility(.hidden)
             ToolbarItem(placement: .principal) { title }
-            // Без общей стеклянной подложки: её рисует панель, а не эта
-            // вью, и на размытие она не отзывалась — кнопка проступала, а
-            // капсула под ней стояла с первого кадра. Сняв её, капсулу
-            // рисуем сами, и проступает кнопка целиком.
             ToolbarItem(placement: .topBarTrailing) { actions }
                 .sharedBackgroundVisibility(.hidden)
         }
@@ -87,6 +95,26 @@ struct PlantView: View {
         }
     }
 
+    /// Кнопка «назад».
+    ///
+    /// Уходит панель тем же размытием, что и приходила, только быстрее и
+    /// без задержки. Гасим до закрытия, а не после: экран во время
+    /// складывания ещё жив и рисуется, и размытие успевает отыграть
+    /// поверх него.
+    private var back: some View {
+        Button {
+            chrome = false
+            dismiss()
+        } label: {
+            Image(systemName: "chevron.backward")
+                .font(Typography.navTitle)
+                .frame(width: Metrics.barButton, height: Metrics.barButton)
+                .glassEffect(.regular.interactive(), in: Circle())
+        }
+        .accessibilityLabel("Назад")
+        .modifier(Chrome(shown: chrome))
+    }
+
     /// Заголовок панели — свой, а не системный.
     ///
     /// Системный появляется разом и на полную силу, и подступиться к нему
@@ -102,13 +130,6 @@ struct PlantView: View {
 
     /// Меню в панели. Капсула своя — см. `sharedBackgroundVisibility`
     /// выше.
-    ///
-    /// Кнопка «назад» осталась системной, со своей капсулой и без
-    /// проступания. Сделать своей её нельзя без потери: спрятав
-    /// системную, SwiftUI заодно выключает жест возврата свайпом, а
-    /// вернуть его можно только руками через UIKit. Полсекунды размытия
-    /// того не стоят, и панель она не портит — системный переход и так
-    /// вводит её плавно.
     private var actions: some View {
         Menu {
             Button { water() } label: {
@@ -213,6 +234,6 @@ private struct Chrome: ViewModifier {
         content
             .blur(radius: shown || reduceMotion ? 0 : Metrics.chromeBlur)
             .opacity(shown ? 1 : 0)
-            .animation(Motion.chrome, value: shown)
+            .animation(shown ? Motion.chrome : Motion.chromeOut, value: shown)
     }
 }
