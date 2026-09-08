@@ -165,13 +165,6 @@ private struct SproutPattern: View {
 /// равенству свойств, холст остался бы в старой теме. Рисовать его
 /// дёшево — узор уходит одной командой, — так что и экономить нечего.
 struct SproutBackground: View {
-    /// Гасить ли узор у верхнего края.
-    ///
-    /// На главном экране — нет: там верхнюю растяжку держит закреплённая
-    /// шапка, и вторая, из фона, сложилась бы с ней и добила бы узор до
-    /// белого именно там, где он должен просвечивать.
-    var topWash = true
-
     var body: some View {
         ZStack {
             Palette.background
@@ -192,11 +185,8 @@ struct SproutBackground: View {
                 .clipped()
 
             VStack {
-                if topWash {
-                    wash(fadingDown: true)
-                }
                 Spacer(minLength: 0)
-                wash(fadingDown: false)
+                wash
             }
         }
         .ignoresSafeArea()
@@ -204,27 +194,26 @@ struct SproutBackground: View {
         .onDisappear { Tilt.shared.unwatch() }
     }
 
-    /// Полоса, гасящая узор у края экрана.
+    /// Полоса, гасящая узор у нижнего края: узор не спорит с панелью
+    /// вкладок, а сама панель ни на что не опирается.
     ///
-    /// Верхняя уходит в прозрачность вниз, нижняя — вверх. Направление
-    /// важно: одинаковое для обеих давало у нижней сплошной белый сверху
-    /// и обрыв посреди экрана вместо мягкого схода к панели.
-    private func wash(fadingDown: Bool) -> some View {
+    /// Верхней такой полосы больше нет. В макете она есть, и здесь была,
+    /// но там ей нечего было держать, кроме края экрана. Край теперь
+    /// держит подложка в корне приложения — ровно по вырезу и поверх
+    /// содержимого, — а растяжка только гасила узор на добрых полтораста
+    /// пунктов, там, где он должен просвечивать.
+    private var wash: some View {
         let solid = Palette.background
-        let clear = Palette.background.opacity(0)
-        let stops: [Gradient.Stop] = fadingDown
-            ? [
-                .init(color: solid, location: 0),
-                .init(color: solid, location: Metrics.washStop),
-                .init(color: clear, location: 1),
-            ]
-            : [
-                .init(color: clear, location: 0),
+        LinearGradient(
+            stops: [
+                .init(color: solid.opacity(0), location: 0),
                 .init(color: solid, location: 1 - Metrics.washStop),
                 .init(color: solid, location: 1),
-            ]
-        return LinearGradient(stops: stops, startPoint: .top, endPoint: .bottom)
-            .frame(height: Metrics.washHeight)
+            ],
+            startPoint: .top,
+            endPoint: .bottom
+        )
+        .frame(height: Metrics.washHeight)
     }
 }
 
