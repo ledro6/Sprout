@@ -98,13 +98,22 @@ struct PlantCard: View {
 private struct Pulse: ViewModifier {
     let active: Bool
 
-    /// Сдвиг фазы, 0…1. Своя у каждого растения: иначе все сухие на
-    /// экране дышали бы разом, а это читается одной поломкой, а не
-    /// несколькими растениями, которым нужна вода.
+    /// Доля разброса, 0…1. Своя у каждого растения — считается от его
+    /// клички.
     let phase: Double
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var dim = false
+
+    /// Свой период у каждого растения, вокруг общего.
+    ///
+    /// Одного сдвига фазы мало: при одинаковом периоде карточки идут
+    /// параллельно, и разница читается небрежностью, а не несколькими
+    /// растениями. С разным периодом они расходятся и сходятся сами, и в
+    /// такт не собираются никогда.
+    private var period: Double {
+        Motion.pulsePeriod * (1 + Motion.pulseSpread * (phase - 0.5))
+    }
 
     func body(content: Content) -> some View {
         content
@@ -114,13 +123,9 @@ private struct Pulse: ViewModifier {
                     dim = false
                     return
                 }
-                // Задержка перед бесконечным повтором и есть сдвиг фазы:
-                // повтор начинается позже и дальше идёт со сдвигом
-                // навсегда.
                 withAnimation(
-                    .easeInOut(duration: Motion.pulsePeriod)
+                    .easeInOut(duration: period)
                         .repeatForever(autoreverses: true)
-                        .delay(phase * Motion.pulsePeriod)
                 ) {
                     dim = true
                 }
@@ -139,14 +144,23 @@ struct PlantMenu: ViewModifier {
 
     @Environment(Garden.self) private var garden
 
+    /// Что пришло снаружи: сетка гасит ореол у карточки, которую
+    /// открывают. Своё гашение накладывается на это, а не отменяет его.
+    @Environment(\.sproutHalos) private var halos
+
     @State private var renaming = false
     @State private var draft = ""
     @State private var deleting = false
+
+    /// Открыто ли меню. Ведём по предпросмотру: он живёт ровно столько
+    /// же, и другого признака у контекстного меню нет.
+    @State private var previewing = false
 
     private var plant: Plant? { garden.plant(id: id) }
 
     func body(content: Content) -> some View {
         content
+            .environment(\.sproutHalos, halos && !previewing)
             .contextMenu {
                 Button {
                     withAnimation(Motion.appear) { garden.water(id) }
@@ -162,6 +176,8 @@ struct PlantMenu: ViewModifier {
                 Button(role: .destructive) { deleting = true } label: {
                     Label("Удалить", systemImage: "trash")
                 }
+            } preview: {
+                preview
             }
             .alert("Переименовать", isPresented: $renaming) {
                 TextField("Кличка", text: $draft)
@@ -178,6 +194,27 @@ struct PlantMenu: ViewModifier {
             } message: {
                 Text("Растение исчезнет из комнаты. Вернуть его будет нельзя.")
             }
+    }
+
+    /// Предпросмотр для меню — свой, а не системный снимок.
+    ///
+    /// Снимок берётся с карточки как есть, вместе с ореолом, и в меню она
+    /// всплывает со свечением вокруг. Свой предпросмотр рисуется без него.
+    ///
+    /// Он же — единственный признак, по которому видно, что меню
+    /// закрылось: предпросмотр исчезает вместе с ним. Отсюда и возврат
+    /// ореола — тот же, что после закрытия экрана растения: секунду его
+    /// нет, потом он набирает яркость.
+    @ViewBuilder
+    private var preview: some View {
+        if let plant {
+            PlantCard(plant: plant)
+                .environment(\.sproutHalos, false)
+                .onAppear { previewing = true }
+                .onDisappear {
+                    withAnimation(Motion.halo) { previewing = false }
+                }
+        }
     }
 }
 
