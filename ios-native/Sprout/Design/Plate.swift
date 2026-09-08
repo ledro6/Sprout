@@ -24,6 +24,50 @@ extension Shape {
     }
 }
 
+/// Рисовать ли ореолы под плашками — тень и тревожное свечение.
+///
+/// Через окружение, а не свойством: спрашивают его и сама плашка, и
+/// карточка растения, и передавать флаг вручную сквозь всю сетку значило
+/// бы тащить его через вью, которым до него нет дела.
+private struct SproutHalosKey: EnvironmentKey {
+    static let defaultValue = true
+}
+
+extension EnvironmentValues {
+    /// Ореолы под плашками. Гасятся на время разворачивания карточки в
+    /// экран: они лежат отдельными размытыми слоями и в переходе не
+    /// перетекают вместе с карточкой, а смазываются за ней хвостом.
+    var sproutHalos: Bool {
+        get { self[SproutHalosKey.self] }
+        set { self[SproutHalosKey.self] = newValue }
+    }
+}
+
+/// Материал плашек. Отдельным типом, а не одной цепочкой в расширении:
+/// ему нужно читать окружение, а расширению вью читать нечего.
+private struct SproutPlate<S: Shape>: ViewModifier {
+    let shape: S
+    let interactive: Bool
+
+    @Environment(\.sproutHalos) private var halos
+
+    func body(content: Content) -> some View {
+        content
+            .glassEffect(interactive ? .clear.interactive() : .clear, in: shape)
+            .background { shape.fill(Palette.plateFill) }
+            .background {
+                shape.sproutHalo(Palette.shadow,
+                                 blur: Metrics.plateShadowBlur,
+                                 offsetY: Metrics.plateShadowY)
+                    .opacity(halos ? 1 : 0)
+            }
+            // Стекло рисуется по форме, но нажатия ловит рамка вью —
+            // очерчиваем плашку, чтобы тап у скруглённого угла не
+            // проходил мимо.
+            .contentShape(shape)
+    }
+}
+
 extension View {
     /// Материал плашек: системное стекло iOS поверх тени из макета.
     ///
@@ -39,16 +83,6 @@ extension View {
     /// рисуется в `.background`, откуда стекло её честно берёт.
     func sproutPlate(in shape: some Shape,
                      interactive: Bool = false) -> some View {
-        glassEffect(interactive ? .clear.interactive() : .clear, in: shape)
-            .background { shape.fill(Palette.plateFill) }
-            .background {
-                shape.sproutHalo(Palette.shadow,
-                                 blur: Metrics.plateShadowBlur,
-                                 offsetY: Metrics.plateShadowY)
-            }
-            // Стекло рисуется по форме, но нажатия ловит рамка вью —
-            // очерчиваем плашку, чтобы тап у скруглённого угла не
-            // проходил мимо.
-            .contentShape(shape)
+        modifier(SproutPlate(shape: shape, interactive: interactive))
     }
 }

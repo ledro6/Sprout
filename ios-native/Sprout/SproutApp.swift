@@ -157,10 +157,13 @@ struct SearchView: View {
     /// То же разворачивание карточки в экран, что и на главной.
     @Namespace private var cardZoom
 
+    /// И то же гашение ореолов на время перехода — см. главную.
+    @State private var open: [Plant.ID] = []
+
     private var results: [Plant] { garden.search(query) }
 
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $open) {
             ScrollView {
                 // Без общего стеклянного контейнера — как на главной:
                 // он склеивает сетку в один слой, и карточке нечем
@@ -182,6 +185,8 @@ struct SearchView: View {
                 }
                 .padding(.horizontal, Metrics.contentMargin)
                 .padding(.top, 14)
+                .environment(\.sproutHalos, open.isEmpty)
+                .animation(open.isEmpty ? Motion.halo : nil, value: open.isEmpty)
             }
             .background { SproutBackground() }
             .navigationDestination(for: Plant.ID.self) { id in

@@ -8,6 +8,9 @@ import SwiftUI
 struct PlantCard: View {
     let plant: Plant
 
+    /// Гасятся вместе с тенью плашки — тем же флагом из окружения.
+    @Environment(\.sproutHalos) private var halos
+
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Image(plant.photo)
@@ -60,6 +63,7 @@ struct PlantCard: View {
         if plant.thirst != .calm {
             shape.sproutHalo(glowColour.opacity(glowStrength),
                              blur: Metrics.glowBlur)
+                .opacity(halos ? 1 : 0)
         }
     }
 
