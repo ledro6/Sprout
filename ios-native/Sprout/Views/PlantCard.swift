@@ -102,12 +102,12 @@ struct PlantGlow<S: Shape>: ViewModifier {
                                     phase: plant.pulsePhase))
             }
             if splashing {
-                // Всплеск расходится кольцом: доля падает, ореол чуть
-                // растёт и гаснет. Растёт вместе с вырезом, поэтому
-                // светится не вся плашка, а расширяющийся ободок вокруг.
-                shape.sproutHalo(Palette.water.opacity(Metrics.glowSplash),
-                                 blur: Metrics.glowBlur)
-                    .scaleEffect(1 + Metrics.splashSpread * (1 - splash))
+                // Всплеск не расходится, а стягивается: в начале свечение
+                // широкое и размытое, к концу сходится к обычному ореолу
+                // и гаснет. Расходись оно — уехало бы за плашку, и вместо
+                // свечения читалась бы вторая рамка со своим краем.
+                shape.sproutHalo(Palette.splash.opacity(Metrics.glowSplash),
+                                 blur: splashBlur)
                     .opacity(splash)
             }
         }
@@ -123,10 +123,17 @@ struct PlantGlow<S: Shape>: ViewModifier {
             + (Metrics.glowFull - Metrics.glowFaint) * plant.alarm
     }
 
-    /// Полили: ореол вспыхивает голубым во всю силу и расходится.
+    /// Размытие всплеска: широкое в начале, обычное к концу.
+    private var splashBlur: CGFloat {
+        Metrics.glowBlur * (1 + Metrics.splashSpread * CGFloat(splash))
+    }
+
+    /// Полили: ореол вспыхивает синим во всю силу и стягивается, а узор
+    /// на заднем плане вздрагивает за компанию.
     private func flash() {
         splashing = true
         splash = 1
+        Cheer.shared.now()
         withAnimation(Motion.splash) { splash = 0 }
         // Слой снимаем, когда всплеск отыграл. По самой доле этого не
         // узнать: она станет нулём в теле вью сразу.

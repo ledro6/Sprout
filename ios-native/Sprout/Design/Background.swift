@@ -1,3 +1,4 @@
+import Observation
 import SwiftUI
 
 /// Фоновый узор: чередование ростка и капли.
@@ -154,6 +155,22 @@ private struct SproutPattern: View {
     }
 }
 
+/// Повод порадоваться: растение полили.
+///
+/// Один на приложение и без данных — только счётчик поводов. Узор на
+/// фоне подписан на него и вздрагивает; кто, где и что полил, ему знать
+/// незачем, а поливают с двух экранов и из двух меню.
+@Observable
+final class Cheer {
+    static let shared = Cheer()
+
+    private(set) var beat = 0
+
+    private init() {}
+
+    func now() { beat += 1 }
+}
+
 /// Фон экрана: узор и две белые растяжки поверх него.
 ///
 /// Растяжки взяты из макета один в один: сплошной белый до 40% высоты
@@ -165,6 +182,9 @@ private struct SproutPattern: View {
 /// равенству свойств, холст остался бы в старой теме. Рисовать его
 /// дёшево — узор уходит одной командой, — так что и экономить нечего.
 struct SproutBackground: View {
+    /// Насколько узор сейчас вздрогнул, −1…1.
+    @State private var cheer = 0.0
+
     var body: some View {
         ZStack {
             Palette.background
@@ -181,6 +201,8 @@ struct SproutBackground: View {
                         .padding(-Metrics.parallax)
                         .offset(x: Tilt.shared.shift.width,
                                 y: Tilt.shared.shift.height)
+                        .scaleEffect(1 + Metrics.cheerScale * cheer)
+                        .rotationEffect(.degrees(Metrics.cheerTilt * cheer))
                 }
                 .clipped()
 
@@ -196,6 +218,23 @@ struct SproutBackground: View {
         .ignoresSafeArea()
         .onAppear { Tilt.shared.watch() }
         .onDisappear { Tilt.shared.unwatch() }
+        .onChange(of: Cheer.shared.beat) { _, _ in wobble() }
+    }
+
+    /// Встряска: затухающие качания, каждое своей длительности.
+    ///
+    /// Цепочкой из задержек, а не одним движением: качание туда-обратно
+    /// одной анимацией не описать, а ключевые кадры ради пяти значений
+    /// заводить незачем. Каждая следующая анимация начинается там, где
+    /// кончилась предыдущая.
+    private func wobble() {
+        var delay = 0.0
+        for beat in Motion.cheerBeats {
+            withAnimation(.easeInOut(duration: beat.duration).delay(delay)) {
+                cheer = beat.value
+            }
+            delay += beat.duration
+        }
     }
 
     /// Полоса, гасящая узор у нижнего края: узор не спорит с панелью
