@@ -13,13 +13,12 @@ struct PlantView: View {
 
     var body: some View {
         ScrollView {
-            // Обе плашки стеклянные — контейнер сводит их в один проход
-            // рисования. Нулевой шаг: сливаться им незачем.
-            GlassEffectContainer(spacing: 0) {
-                VStack(spacing: 44) {
-                    photo
-                    facts
-                }
+            // Без стеклянного контейнера: этот экран — приёмная сторона
+            // разворачивания карточки, и склеивать его содержимое в один
+            // слой значит ломать переход с той стороны, куда он ведёт.
+            VStack(spacing: 44) {
+                photo
+                facts
             }
             .padding(.horizontal, Metrics.margin)
             .padding(.top, 14)

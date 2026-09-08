@@ -127,13 +127,14 @@ struct SproutBackground: View {
 
     var body: some View {
         ZStack {
-            // Непрозрачный: холст закрашивает каждый пиксель сам, и
-            // системе не нужно смешивать его с тем, что под ним. Это
-            // самый большой слой в приложении, и белый фон переехал
-            // внутрь холста — отдельным слоем он был лишним.
-            Canvas(opaque: true) { context, size in
-                context.fill(Path(CGRect(origin: .zero, size: size)),
-                             with: .color(Palette.background))
+            Palette.background
+
+            // Холст прозрачный. Непрозрачным он рисуется быстрее, но
+            // непрозрачному нельзя отдавать прозрачное — так написано и
+            // в документации Canvas, — а узор именно такой: он просвечен
+            // на треть. Альфа в таком холсте теряется, и растяжки внизу
+            // и вверху ложатся не на тот фон, под который считались.
+            Canvas { context, size in
                 context.fill(pattern(covering: size),
                              with: .color(Palette.pattern))
             }

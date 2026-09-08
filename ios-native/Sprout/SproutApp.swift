@@ -82,23 +82,22 @@ struct SearchView: View {
     var body: some View {
         NavigationStack {
             ScrollView {
-                // Стекло найденных карточек — одним проходом, как на
-                // главной.
-                GlassEffectContainer(spacing: 0) {
-                    LazyVGrid(
-                        columns: [
-                            GridItem(.flexible(), spacing: Metrics.gutterH),
-                            GridItem(.flexible(), spacing: Metrics.gutterH),
-                        ],
-                        spacing: Metrics.gutterV
-                    ) {
-                        ForEach(results) { plant in
-                            NavigationLink(value: plant) {
-                                PlantCard(plant: plant)
-                            }
-                            .buttonStyle(.plain)
-                            .matchedTransitionSource(id: plant.id, in: cardZoom)
+                // Без общего стеклянного контейнера — как на главной:
+                // он склеивает сетку в один слой, и карточке нечем
+                // разворачиваться в экран.
+                LazyVGrid(
+                    columns: [
+                        GridItem(.flexible(), spacing: Metrics.gutterH),
+                        GridItem(.flexible(), spacing: Metrics.gutterH),
+                    ],
+                    spacing: Metrics.gutterV
+                ) {
+                    ForEach(results) { plant in
+                        NavigationLink(value: plant) {
+                            PlantCard(plant: plant)
                         }
+                        .buttonStyle(.plain)
+                        .matchedTransitionSource(id: plant.id, in: cardZoom)
                     }
                 }
                 .padding(.horizontal, Metrics.contentMargin)
