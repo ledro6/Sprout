@@ -131,6 +131,9 @@ struct Stub: View {
                 }
             }
             .background { SproutBackground() }
+            // Та же подложка, что на главной: заголовок читается на
+            // сплошном, а уезжающее под вырез там и пропадает.
+            .overlay(alignment: .top) { TopCover() }
             .toolbar(.hidden, for: .navigationBar)
         }
     }
