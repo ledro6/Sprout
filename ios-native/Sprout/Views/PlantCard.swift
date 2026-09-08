@@ -8,9 +8,6 @@ import SwiftUI
 struct PlantCard: View {
     let plant: Plant
 
-    /// Гасятся вместе с тенью плашки — тем же флагом из окружения.
-    @Environment(\.sproutHalos) private var halos
-
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Image(plant.photo)
@@ -49,39 +46,94 @@ struct PlantCard: View {
         .padding(.horizontal, Metrics.cardPadding)
         .padding(.vertical, 10)
         .sproutPlate(in: shape, interactive: true)
-        .background { glow }
+        .modifier(PlantGlow(plant: plant, shape: shape))
     }
 
     private var shape: RoundedRectangle {
         RoundedRectangle(cornerRadius: Metrics.cardRadius, style: .continuous)
     }
+}
 
-    /// Тревожная тень: тот же ореол, что и обычная, только цветной и без
-    /// смещения — он лежит вокруг карточки ровным кольцом, а внутри она
-    /// остаётся нейтральной.
+/// Тень под плашкой растения: тревожная и всплеск при поливе.
+///
+/// Одна на оба экрана. На витрине и на самом растении состояние у
+/// плашки то же самое, и считаться оно должно одинаково — иначе одна и
+/// та же влажность читалась бы там и там по-разному.
+///
+/// Тревожная — тот же ореол, что и обычная тень, только цветной и без
+/// смещения: он лежит вокруг плашки ровным кольцом, а внутри она
+/// остаётся нейтральной. Цвет ступенькой: оранжевый, пока влаги больше
+/// двадцати процентов, красный ниже. Сила плавно, из самой влажности,
+/// поэтому с каждым процентом тень ярче, а на смене цвета яркость не
+/// прыгает: красное подхватывает там, где кончилось оранжевое.
+struct PlantGlow<S: Shape>: ViewModifier {
+    let plant: Plant
+    let shape: S
+
+    /// Гасится вместе с тенью плашки — тем же флагом из окружения.
+    @Environment(\.sproutHalos) private var halos
+
+    /// Идёт ли сейчас всплеск и насколько он ещё ярок.
     ///
-    /// Цвет ступенькой: оранжевый, пока влаги больше двадцати процентов,
-    /// красный ниже. Сила — плавно, из самой влажности, поэтому с каждым
-    /// процентом тень заметно ярче, а на смене цвета яркость не прыгает:
-    /// красное подхватывает ровно там, где кончилось оранжевое.
-    @ViewBuilder
-    private var glow: some View {
-        if plant.thirst != .calm {
-            shape.sproutHalo(glowColour.opacity(glowStrength),
-                             blur: Metrics.glowBlur)
-                .modifier(Pulse(active: plant.moisture <= 0,
-                                phase: plant.pulsePhase))
-                .opacity(halos ? 1 : 0)
-        }
+    /// Два состояния, а не одно: доля нужна для яркости, а признак — для
+    /// того, чтобы убрать слой совсем. Гасить слой по нулевой доле
+    /// нельзя, тело вью видит конечное значение сразу, и всплеск исчез бы
+    /// в тот же кадр, не начавшись.
+    @State private var splashing = false
+    @State private var splash: Double = 0
+
+    func body(content: Content) -> some View {
+        content
+            .background { glow }
+            // Полив ловим по самой влажности: поднять её больше нечему, а
+            // поливают из двух меню и с двух экранов — всплеск должен
+            // быть один и тот же, откуда бы ни пришёл.
+            .onChange(of: plant.moisture) { was, now in
+                if now > was { flash() }
+            }
     }
 
-    private var glowColour: Color {
+    private var glow: some View {
+        ZStack {
+            if plant.thirst != .calm {
+                shape.sproutHalo(alarmColour.opacity(alarmStrength),
+                                 blur: Metrics.glowBlur)
+                    .modifier(Pulse(active: plant.moisture <= 0,
+                                    phase: plant.pulsePhase))
+            }
+            if splashing {
+                // Всплеск расходится кольцом: доля падает, ореол чуть
+                // растёт и гаснет. Растёт вместе с вырезом, поэтому
+                // светится не вся плашка, а расширяющийся ободок вокруг.
+                shape.sproutHalo(Palette.water.opacity(Metrics.glowSplash),
+                                 blur: Metrics.glowBlur)
+                    .scaleEffect(1 + Metrics.splashSpread * (1 - splash))
+                    .opacity(splash)
+            }
+        }
+        .opacity(halos ? 1 : 0)
+    }
+
+    private var alarmColour: Color {
         plant.thirst == .alarm ? Palette.alarm : Palette.warn
     }
 
-    private var glowStrength: Double {
+    private var alarmStrength: Double {
         Metrics.glowFaint
             + (Metrics.glowFull - Metrics.glowFaint) * plant.alarm
+    }
+
+    /// Полили: ореол вспыхивает голубым во всю силу и расходится.
+    private func flash() {
+        splashing = true
+        splash = 1
+        withAnimation(Motion.splash) { splash = 0 }
+        // Слой снимаем, когда всплеск отыграл. По самой доле этого не
+        // узнать: она станет нулём в теле вью сразу.
+        Task { @MainActor in
+            try? await Task.sleep(for: .seconds(Motion.splashSeconds))
+            splashing = false
+        }
     }
 }
 
