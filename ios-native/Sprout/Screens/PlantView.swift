@@ -91,21 +91,13 @@ struct PlantView: View {
         // Растение удалили — экран закрывается сам: показывать больше
         // нечего, а пустым он выглядел бы поломкой.
         .onChange(of: plant == nil) { _, gone in
-            if gone { dismiss() }
+            if gone { close() }
         }
     }
 
     /// Кнопка «назад».
-    ///
-    /// Уходит панель тем же размытием, что и приходила, только быстрее и
-    /// без задержки. Гасим до закрытия, а не после: экран во время
-    /// складывания ещё жив и рисуется, и размытие успевает отыграть
-    /// поверх него.
     private var back: some View {
-        Button {
-            chrome = false
-            dismiss()
-        } label: {
+        Button { close() } label: {
             Image(systemName: "chevron.backward")
                 .font(Typography.navTitle)
                 .frame(width: Metrics.barButton, height: Metrics.barButton)
@@ -153,6 +145,25 @@ struct PlantView: View {
                 .glassEffect(.regular.interactive(), in: Circle())
         }
         .modifier(Chrome(shown: chrome))
+    }
+
+    /// Закрыть экран, дав панели раствориться.
+    ///
+    /// Уходит она тем же размытием, что и приходила, только быстрее и без
+    /// задержки. А вот закрытие эту задержку ждёт — иначе ухода просто не
+    /// видно: панель рисует UIKit, и на время складывания он снимает с
+    /// неё кадр. Начни складывание сразу — в кадр попала бы панель целой
+    /// и резкой.
+    ///
+    /// Уходом при этом закрывается не всякий возврат. Потянув экран вниз,
+    /// его закрывает само разворачивание карточки, мимо этой кнопки, — и
+    /// панель уезжает вместе со всем экраном, размывать её там незачем.
+    private func close() {
+        chrome = false
+        Task { @MainActor in
+            try? await Task.sleep(for: .seconds(Motion.chromeLead))
+            dismiss()
+        }
     }
 
     /// Полить: сад меняет влажность, а по узору от плашки с фото
