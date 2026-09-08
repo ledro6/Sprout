@@ -102,7 +102,27 @@ struct CardAppear: ViewModifier {
     let onShown: () -> Void
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
-    @State private var shown = false
+
+    /// Стоит ли карточка на своём месте.
+    ///
+    /// Начальное значение приходит из журнала сетки, а не «нет». Ленивая
+    /// сетка выбрасывает уехавшие за край карточки и создаёт их заново, и
+    /// с «нет» такая карточка первым кадром рисовалась прозрачной и
+    /// сдвинутой: `onChange` с `initial` срабатывает уже после отрисовки,
+    /// и на место она вставала только следующим кадром. Прокрутка идёт со
+    /// своей анимацией, эта подстановка в неё попадала — и появление
+    /// играло заново на каждом проходе. Теперь первый же кадр верный, и
+    /// подставлять нечего.
+    @State private var shown: Bool
+
+    init(index: Int, room: Int, animates: Bool,
+         onShown: @escaping () -> Void) {
+        self.index = index
+        self.room = room
+        self.animates = animates
+        self.onShown = onShown
+        _shown = State(initialValue: !animates)
+    }
 
     func body(content: Content) -> some View {
         content
