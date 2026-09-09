@@ -129,8 +129,8 @@ private struct SproutPattern: View {
     /// всплёскивать поодиночке.
     var wave: Double?
 
-    /// Откуда волна пошла — в координатах окна.
-    var origin: CGPoint
+    /// Откуда волна пошла — плашка политого растения, в координатах окна.
+    var source: CGRect
 
     @Environment(\.colorScheme) private var scheme
 
@@ -148,15 +148,22 @@ private struct SproutPattern: View {
         .id(scheme)
     }
 
-    /// Место нажатия в координатах холста.
+    /// Плашка, от которой пошла волна, в координатах холста.
     ///
     /// Холст начинается выше и левее экрана ровно на размах параллакса —
     /// отсюда сдвиг. Сам параллакс в пересчёт не берётся: он не больше
     /// четырнадцати пунктов, а волна расходится на сотни, и на её ходе
     /// такой сдвиг не читается.
-    private var source: CGPoint {
-        CGPoint(x: origin.x + Metrics.parallax,
-                y: origin.y + Metrics.parallax)
+    private var plate: CGRect {
+        source.offsetBy(dx: Metrics.parallax, dy: Metrics.parallax)
+    }
+
+    /// Насколько фигурка отстоит от плашки. Внутри плашки и по её краю —
+    /// ноль: волна трогается со всей плашки разом, а не из точки.
+    private func distance(from middle: CGPoint) -> CGFloat {
+        let dx = max(plate.minX - middle.x, 0, middle.x - plate.maxX)
+        let dy = max(plate.minY - middle.y, 0, middle.y - plate.maxY)
+        return hypot(dx, dy)
     }
 
     /// Весь узор одним контуром.
@@ -220,7 +227,7 @@ private struct SproutPattern: View {
     /// вплотную за соседним, и это читалось перещёлкиванием.
     private func pop(at middle: CGPoint) -> CGFloat {
         guard let wave else { return 1 }
-        let far = hypot(middle.x - source.x, middle.y - source.y)
+        let far = distance(from: middle)
         let start = Double(min(far / Metrics.waveReach, 1))
             * (1 - Metrics.popSpan)
         let step = (wave - start) / Metrics.popSpan
@@ -263,8 +270,14 @@ final class Cheer {
     /// Когда началась текущая волна. Пусто — волны нет.
     private(set) var start: Date?
 
-    /// Откуда она пошла — в координатах окна.
-    private(set) var origin: CGPoint = .zero
+    /// Откуда она пошла — плашка политого растения, в координатах окна.
+    ///
+    /// Плашка, а не её середина. От середины волна доходила до узора
+    /// вокруг плашки не сразу — сама плашка её и закрывала, — и всплеск
+    /// на фоне запаздывал за голубой тенью на четверть секунды. Событие
+    /// от этого читалось растянутым: сперва тень, потом, отдельно, фон.
+    /// Считая от края, узор рядом с плашкой трогается вместе с тенью.
+    private(set) var source: CGRect = .zero
 
     /// Чем волна кончится. Поливать можно чаще, чем она успевает
     /// отыграть, и новая должна отменять старую, а не спорить с ней.
@@ -272,11 +285,11 @@ final class Cheer {
 
     private init() {}
 
-    /// Полили вот здесь. Точка — в координатах окна: узор отсчитывается
+    /// Полили вот здесь. Плашка — в координатах окна: узор отсчитывается
     /// от верхнего левого угла экрана, других координат он не знает.
-    func now(from point: CGPoint) {
+    func now(from plate: CGRect) {
         run?.cancel()
-        origin = point
+        source = plate
         start = Date()
         run = Task { @MainActor in
             try? await Task.sleep(for: .seconds(Motion.cheerSeconds))
@@ -342,9 +355,10 @@ final class Launch {
         ran = true
         try? await Task.sleep(for: .seconds(Motion.welcomeHold))
         withAnimation(Motion.welcomeLeave) { greeting = false }
-        // Ступени идут не после заставки, а из-под неё: пока она тает,
-        // узор с заголовком уже встают на места, и экран не собирается
-        // на глазах у пустоты.
+        // Ступени ждут, пока заставка сойдёт совсем. Здесь они шли
+        // из-под неё — и первых двух, узора и заголовка, попросту не было
+        // видно: они успевали встать на места, пока заставка ещё тает.
+        try? await Task.sleep(for: .seconds(Motion.welcomeLeaveSeconds))
         for _ in 1...Self.last {
             withAnimation(Motion.enter) { step += 1 }
             try? await Task.sleep(for: .seconds(Motion.enterStep))
@@ -398,8 +412,6 @@ struct Enter: ViewModifier {
 final class Spot {
     var rect: CGRect = .zero
 
-    /// Середина замера — отсюда и расходится волна.
-    var middle: CGPoint { CGPoint(x: rect.midX, y: rect.midY) }
 }
 
 /// Фон как таковой: ровный цвет и узор поверх него.
@@ -428,7 +440,7 @@ private struct SproutField: View {
                     TimelineView(.animation(paused: Cheer.shared.start == nil)) {
                         frame in
                         SproutPattern(wave: Cheer.shared.wave(at: frame.date),
-                                      origin: Cheer.shared.origin)
+                                      source: Cheer.shared.source)
                     }
                     .padding(-Metrics.parallax)
                     .offset(x: Tilt.shared.shift.width,
@@ -545,7 +557,7 @@ private struct SproutNotchCover: ViewModifier {
 /// шире, чем та же группа на отдельном экране логотипа. То есть в макете
 /// логотип вписан в плашку с разным масштабом по осям, поэтому здесь две
 /// шкалы, а не одна.
-struct SproutLogo: View {
+struct SproutLogo: View, Animatable {
     /// Высота логотипа: в плашке макета 21.1.
     ///
     /// Ровно коробка контуров, без запаса. Обводка выходит за неё только
@@ -565,6 +577,44 @@ struct SproutLogo: View {
     static let plain: CGFloat =
         (SproutShapes.logoBox.width + SproutShapes.logoStroke)
             / SproutShapes.logoBox.height
+
+    /// Насколько логотип собрался, 0…1. Единица — весь, как в плашке.
+    ///
+    /// Числом, а не набором флагов: рисует все части один холст, и своей
+    /// анимации у части быть не может. Число снаружи меняется ровно, а
+    /// разъезжаются части задержкой — у каждой свой отрезок внутри хода.
+    var reveal: Double = 1
+
+    /// Анимируется именно эта доля. Без этого SwiftUI менял бы её
+    /// скачком: холст — не фигура, промежуточных значений сам он для неё
+    /// не считает.
+    var animatableData: Double {
+        get { reveal }
+        set { reveal = newValue }
+    }
+
+    /// Части в порядке появления — снизу вверх, как растёт росток. Лист
+    /// со своим стеблем не делится: это одна фигура, просто в макете
+    /// нарисована двумя контурами.
+    private static let parts: [(leaves: [Int], drops: [Int])] = [
+        (leaves: [2, 3], drops: []),
+        (leaves: [0, 1], drops: []),
+        (leaves: [4], drops: []),
+        (leaves: [], drops: [0]),
+        (leaves: [], drops: [1]),
+    ]
+
+    /// Насколько собралась часть под этим номером.
+    private func grown(_ index: Int) -> Double {
+        guard reveal < 1 else { return 1 }
+        let span = 1 - Double(Self.parts.count - 1) * Motion.logoLag
+        let step = (reveal - Double(index) * Motion.logoLag) / span
+        guard step > 0 else { return 0 }
+        guard step < 1 else { return 1 }
+        // Быстрый приход и мягкая посадка: пружина здесь не годится —
+        // частей пять, и отскок пятерых вразнобой читался бы дрожью.
+        return 1 - pow(1 - step, 3)
+    }
 
     var body: some View {
         Canvas { context, size in
@@ -586,12 +636,37 @@ struct SproutLogo: View {
                 path.applying(scale).offsetBy(dx: pad * sx, dy: 0)
             }
 
-            for leaf in SproutShapes.logoLeaves {
-                context.stroke(place(leaf), with: .color(Palette.green),
-                               style: style)
-            }
-            for drop in SproutShapes.logoDrops {
-                context.fill(place(drop), with: .color(Palette.water))
+            for (index, part) in Self.parts.enumerated() {
+                let t = grown(index)
+                guard t > 0 else { continue }
+                let leaves = part.leaves.map {
+                    place(SproutShapes.logoLeaves[$0])
+                }
+                let drops = part.drops.map { place(SproutShapes.logoDrops[$0]) }
+
+                // Часть подрастает вокруг собственной середины: от общей
+                // она бы не росла, а съезжалась к центру логотипа.
+                var layer = context
+                if t < 1, let box = (leaves + drops)
+                    .map(\.boundingRect)
+                    .reduce(nil, { (all: CGRect?, one) in
+                        all.map { $0.union(one) } ?? one
+                    }) {
+                    let scale = Motion.logoScale
+                        + (1 - Motion.logoScale) * CGFloat(t)
+                    layer.opacity = t
+                    layer.translateBy(x: box.midX, y: box.midY)
+                    layer.scaleBy(x: scale, y: scale)
+                    layer.translateBy(x: -box.midX, y: -box.midY)
+                }
+
+                for leaf in leaves {
+                    layer.stroke(leaf, with: .color(Palette.green),
+                                 style: style)
+                }
+                for drop in drops {
+                    layer.fill(drop, with: .color(Palette.water))
+                }
             }
         }
         .frame(width: height * aspect, height: height)

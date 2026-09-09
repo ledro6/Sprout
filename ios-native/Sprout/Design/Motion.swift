@@ -123,11 +123,27 @@ enum Motion {
     /// запуске не было чёрного экрана, а не затем, чтобы её разглядывали.
     static let welcomeIn = Animation.spring(duration: 0.55, bounce: 0.18)
     static let welcomeStep = 0.22
-    static let welcomeHold = 1.5
-    static let welcomeLeave = Animation.easeOut(duration: 0.45)
+    static let welcomeHold = 1.6
+    static let welcomeLeaveSeconds = 0.45
+    static let welcomeLeave = Animation.easeOut(duration: welcomeLeaveSeconds)
 
     /// Насколько мелким приходит элемент заставки.
     static let welcomeScale: CGFloat = 0.86
+
+    /// Логотип собирается по частям: лист со стеблем, следующий лист,
+    /// верхний листок, капля, вторая капля — снизу вверх, как растёт
+    /// росток.
+    ///
+    /// Ход у частей общий и ровный, а расходятся они задержкой: у каждой
+    /// свой отрезок внутри этого хода, сдвинутый на `logoLag`. Своей
+    /// анимации у части быть не может — рисует их всех один холст, и
+    /// снаружи у него одно-единственное число.
+    static let logoSeconds = 0.85
+    static let logoLag = 0.13
+
+    /// Насколько мелкой приходит часть логотипа. Мельче, чем текст: у
+    /// части своя середина, и рост от неё виден лучше, чем у строки.
+    static let logoScale: CGFloat = 0.7
 
     /// Вход самого приложения, ступень за ступенью: узор, заголовок,
     /// комната, сетка, панель вкладок. Шаг мельче, чем у заставки: это
