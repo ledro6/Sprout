@@ -132,6 +132,14 @@ private struct SproutPattern: View {
     /// Откуда волна пошла — в координатах окна.
     var origin: CGPoint
 
+    /// Насколько узор взошёл при запуске, 0…1.
+    ///
+    /// Всходит он по фигурке: у каждой свой черёд, очередь идёт снизу
+    /// вверх. Ростом от нуля, а не проявлением, — узор рисуется одной
+    /// заливкой на весь экран, своей прозрачности у фигурки быть не
+    /// может, а свой размер может: он и так уезжает в её преобразование.
+    var bloom: Double
+
     @Environment(\.colorScheme) private var scheme
 
     /// Шаг сетки из макета: ростки через 89.4 pt, капля посередине между
@@ -174,9 +182,9 @@ private struct SproutPattern: View {
             var x = -pitchX
             while x < size.width + pitchX {
                 add(SproutShapes.leaf, at: CGPoint(x: x, y: y),
-                    centre: SproutShapes.leafCentre, to: &path)
+                    centre: SproutShapes.leafCentre, over: size, to: &path)
                 add(SproutShapes.drop, at: CGPoint(x: x + dropOffsetX, y: y),
-                    centre: SproutShapes.dropCentre, to: &path)
+                    centre: SproutShapes.dropCentre, over: size, to: &path)
                 x += pitchX
             }
             y += pitchY
@@ -186,9 +194,10 @@ private struct SproutPattern: View {
 
     /// Поставить фигурку в общий контур: на своё место и в своём размере.
     private func add(_ shape: Path, at corner: CGPoint, centre: CGPoint,
-                     to path: inout Path) {
+                     over size: CGSize, to path: inout Path) {
         let middle = CGPoint(x: corner.x + centre.x, y: corner.y + centre.y)
-        let scale = pop(at: middle)
+        let scale = pop(at: middle) * sprouted(at: middle, over: size)
+        guard scale > 0 else { return }
         guard scale != 1 else {
             path.addPath(shape, transform: CGAffineTransform(
                 translationX: corner.x, y: corner.y))
@@ -200,6 +209,25 @@ private struct SproutPattern: View {
             CGAffineTransform(translationX: middle.x, y: middle.y)
                 .scaledBy(x: scale, y: scale)
                 .translatedBy(x: -centre.x, y: -centre.y))
+    }
+
+    /// Насколько фигурка взошла при запуске.
+    ///
+    /// Черёд у каждой свой и берётся из её же места: очередь идёт снизу
+    /// вверх и чуть слева направо. Не построчно: строго по рядам это
+    /// читалось бы бегущей строкой, а с наклоном — всходами.
+    private func sprouted(at middle: CGPoint, over size: CGSize) -> CGFloat {
+        guard bloom < 1 else { return 1 }
+        guard bloom > 0 else { return 0 }
+        let up = 1 - Double(middle.y / max(size.height, 1))
+        let right = Double(middle.x / max(size.width, 1))
+        let turn = min(max(up * 0.78 + right * 0.22, 0), 1)
+        let step = (bloom - turn * (1 - Metrics.bloomSpan)) / Metrics.bloomSpan
+        guard step > 0 else { return 0 }
+        guard step < 1 else { return 1 }
+        // Быстрый выход из нуля и мягкая посадка: та же кривая, что у
+        // частей логотипа на заставке.
+        return CGFloat(1 - pow(1 - step, 3))
     }
 
     /// Насколько фигурка сейчас раздалась.
@@ -235,8 +263,13 @@ private struct SproutPattern: View {
         // на краю окна скорость падает с 9.4 до 0.03, а на самом
         // движении сказывается едва.
         let swing = -sin(3 * .pi * step) * sin(.pi * step)
-        let amp = swing > 0 ? Metrics.popAmp : Metrics.popDip
-        return CGFloat(1 + amp * swing)
+        // Размах переходит в поджим плавно, а не по знаку. По знаку
+        // множитель прыгал втрое, трижды за проход, и фигурка на
+        // возврате к своему размеру спотыкалась: значение на стыке не
+        // прыгало, а наклон прыгал.
+        let mean = (Metrics.popAmp + Metrics.popDip) / 2
+        let half = (Metrics.popAmp - Metrics.popDip) / 2
+        return CGFloat(1 + swing * (mean + half * tanh(swing / Metrics.popBlend)))
     }
 }
 
@@ -348,6 +381,15 @@ final class Launch {
     /// Показывать ли заставку.
     private(set) var greeting = true
 
+    /// Когда узор начал всходить. Пусто — либо ещё не начал, либо уже
+    /// весь на месте.
+    ///
+    /// Часами, а не долей в состоянии вью: фон рисуется в двух местах —
+    /// на экране и подложкой под вырезом, — и веди каждый свои всходы,
+    /// они разошлись бы на кадр-другой. Ровно та же причина, что у
+    /// волны, см. `Cheer`.
+    private(set) var bloomStart: Date?
+
     /// Последняя ступень — панель вкладок.
     static let last = 5
 
@@ -369,8 +411,23 @@ final class Launch {
         try? await Task.sleep(for: .seconds(Motion.welcomeLeaveSeconds))
         for _ in 1...Self.last {
             withAnimation(Motion.enter) { step += 1 }
+            // Первая ступень — узор, и всходит он своим ходом, по
+            // фигурке. Ступень при этом обычная: она открывает всходам
+            // дорогу, а рисует их сам узор.
+            if step == 1 { bloomStart = Date() }
             try? await Task.sleep(for: .seconds(Motion.enterStep))
         }
+        // Всходы к этому времени ещё идут; дождёмся и погасим часы, чтобы
+        // расписание холста встало на паузу.
+        try? await Task.sleep(for: .seconds(Motion.bloomSeconds))
+        bloomStart = nil
+    }
+
+    /// Насколько узор взошёл к этому мгновению, 0…1.
+    func bloom(at moment: Date) -> Double {
+        guard let bloomStart else { return step >= 1 ? 1 : 0 }
+        let done = moment.timeIntervalSince(bloomStart) / Motion.bloomSeconds
+        return done < 1 ? done : 1
     }
 }
 
@@ -386,27 +443,17 @@ struct Enter: ViewModifier {
     /// Насколько элемент приходит снизу.
     let rise: CGFloat
 
-    /// И насколько крупнее своего места. Единица — не крупнее.
-    ///
-    /// Нужно это одному узору. Он лежит подкладкой во весь экран и всего
-    /// восьмипроцентной плотности: проявляясь одной прозрачностью, он
-    /// проявлялся незаметно — полсекунды еле видной ряби на тёмном фоне
-    /// глаз попросту не ловит. Съезд с подъёмом и наездом видно.
-    let zoom: CGFloat
-
     @State private var shown: Bool
 
-    init(step: Int, rise: CGFloat = Motion.enterRise, zoom: CGFloat = 1) {
+    init(step: Int, rise: CGFloat = Motion.enterRise) {
         self.step = step
         self.rise = rise
-        self.zoom = zoom
         _shown = State(initialValue: Launch.shared.step >= step)
     }
 
     func body(content: Content) -> some View {
         content
             .opacity(shown ? 1 : 0)
-            .scaleEffect(shown ? 1 : zoom)
             .offset(y: shown ? 0 : rise)
             .onChange(of: Launch.shared.step >= step) { _, open in
                 withAnimation(Motion.enter) { shown = open }
@@ -454,24 +501,23 @@ private struct SproutField: View {
                     // каждый кадр получает свою долю, а не ту, что успел
                     // положить сон. Пока волны нет, расписание на паузе и
                     // не будит ничего.
-                    TimelineView(.animation(paused: Cheer.shared.start == nil)) {
+                    // Холст будят и волна от полива, и всходы при
+                    // запуске. Нет ни того ни другого — расписание на
+                    // паузе и не будит ничего.
+                    //
+                    // Ступени `Enter` узору не досталось: он не
+                    // проявляется слоем, а всходит по фигурке, и доля
+                    // всходов приходит сюда тем же путём, что доля волны.
+                    TimelineView(.animation(paused: Cheer.shared.start == nil
+                                            && Launch.shared.bloomStart == nil)) {
                         frame in
                         SproutPattern(wave: Cheer.shared.wave(at: frame.date),
-                                      origin: Cheer.shared.origin)
+                                      origin: Cheer.shared.origin,
+                                      bloom: Launch.shared.bloom(at: frame.date))
                     }
                     .padding(-Metrics.parallax)
                     .offset(x: Tilt.shared.shift.width,
                             y: Tilt.shared.shift.height)
-                    // Первая ступень запуска. Ровный фон при этом стоит
-                    // с самого начала — приезжает только узор.
-                    //
-                    // Подъём не больше запаса холста: тот шире экрана на
-                    // размах параллакса, и на столько же узор может
-                    // отъехать, ничего не обнажив. Остаток снизу
-                    // закрывает растяжка под панелью вкладок.
-                    .modifier(Enter(step: 1,
-                                    rise: Motion.enterRise,
-                                    zoom: Motion.patternZoom))
                 }
                 .clipped()
         }
