@@ -73,21 +73,20 @@ struct PlantGlow<S: Shape>: ViewModifier {
     /// Гасится вместе с тенью плашки — тем же флагом из окружения.
     @Environment(\.sproutHalos) private var halos
 
-    /// Идёт ли сейчас всплеск и насколько он ещё ярок.
+    /// Идёт ли сейчас блик и где он на плашке.
     ///
-    /// Два состояния, а не одно: доля нужна для яркости, а признак — для
-    /// того, чтобы убрать слой совсем. Гасить слой по нулевой доле
-    /// нельзя, тело вью видит конечное значение сразу, и всплеск исчез бы
-    /// в тот же кадр, не начавшись.
-    @State private var splashing = false
-    @State private var splash: Double = 0
+    /// Два состояния, а не одно: доля нужна для места, а признак — для
+    /// того, чтобы убрать слой совсем, когда блик прошёл.
+    @State private var shining = false
+    @State private var sweep: Double = 0
 
     func body(content: Content) -> some View {
         content
             .background { glow }
+            .overlay { if shining { Sheen(shape: shape, sweep: sweep) } }
             // Полив ловим по самой влажности: поднять её больше нечему, а
-            // поливают из двух меню и с двух экранов — всплеск должен
-            // быть один и тот же, откуда бы ни пришёл.
+            // поливают из двух меню и с двух экранов — блик должен быть
+            // один и тот же, откуда бы ни пришёл.
             .onChange(of: plant.moisture) { was, now in
                 if now > was { flash() }
             }
@@ -100,15 +99,6 @@ struct PlantGlow<S: Shape>: ViewModifier {
                                  blur: Metrics.glowBlur)
                     .modifier(Pulse(active: plant.moisture <= 0,
                                     phase: plant.pulsePhase))
-            }
-            if splashing {
-                // Всплеск не расходится, а стягивается: в начале свечение
-                // широкое и размытое, к концу сходится к обычному ореолу
-                // и гаснет. Расходись оно — уехало бы за плашку, и вместо
-                // свечения читалась бы вторая рамка со своим краем.
-                shape.sproutHalo(Palette.splash.opacity(Metrics.glowSplash),
-                                 blur: splashBlur)
-                    .opacity(splash)
             }
         }
         .opacity(halos ? 1 : 0)
@@ -123,12 +113,11 @@ struct PlantGlow<S: Shape>: ViewModifier {
             + (Metrics.glowFull - Metrics.glowFaint) * plant.alarm
     }
 
-    /// Размытие всплеска: широкое в начале, обычное к концу.
-    private var splashBlur: CGFloat {
-        Metrics.glowBlur * (1 + Metrics.splashSpread * CGFloat(splash))
-    }
-
-    /// Полили: ореол вспыхивает синим во всю силу и стягивается.
+    /// Полили: по плашке проходит синий блик.
+    ///
+    /// Слой ставим одним проходом, а ход блика пускаем следующим. В одном
+    /// SwiftUI бы их схлопнул: у только что вставленной вью нет прежнего
+    /// значения, перебирать не от чего, и блик оказался бы сразу в конце.
     ///
     /// Волну по фону отсюда не пускаем, хотя раньше пускали. Полив ловится
     /// по влажности, а её подъём видят все плашки этого растения разом —
@@ -136,15 +125,57 @@ struct PlantGlow<S: Shape>: ViewModifier {
     /// волну первым, не определено, а точка у волны от этого разная. Зовёт
     /// её теперь та кнопка, которую нажали.
     private func flash() {
-        splashing = true
-        splash = 1
-        withAnimation(Motion.splash) { splash = 0 }
-        // Слой снимаем, когда всплеск отыграл. По самой доле этого не
-        // узнать: она станет нулём в теле вью сразу.
+        sweep = 0
+        shining = true
         Task { @MainActor in
-            try? await Task.sleep(for: .seconds(Motion.splashSeconds))
-            splashing = false
+            withAnimation(.linear(duration: Motion.sheenSeconds)) { sweep = 1 }
+            try? await Task.sleep(for: .seconds(Motion.sheenSeconds))
+            shining = false
         }
+    }
+}
+
+/// Блик по плашке: узкая косая полоса света, проходящая от края до края.
+///
+/// Так в мультиках показывают, что предмет блеснул. Здесь этим отмечается
+/// полив — вместо синей тени, которая вспыхивала под плашкой и гасла.
+///
+/// Полоса не отдельная вью, а три остановки одной заливки: ползут по
+/// диагонали их места, а не сама полоса. Отдельную пришлось бы вертеть,
+/// растягивать под размер плашки и обрезать по её форме, — а так форма и
+/// есть та фигура, которую заливаем.
+///
+/// Доля объявлена `animatableData`. Места остановок SwiftUI сам не
+/// перебирает: заливка для него не набор чисел, а цвет, — и без этого
+/// блик прыгал бы из конца в конец.
+private struct Sheen<S: Shape>: View, Animatable {
+    let shape: S
+    var sweep: Double
+
+    var animatableData: Double {
+        get { sweep }
+        set { sweep = newValue }
+    }
+
+    var body: some View {
+        shape.fill(band).allowsHitTesting(false)
+    }
+
+    /// Ход считается с запасом на полосу: в начале она целиком за одним
+    /// краем плашки, в конце — целиком за другим.
+    private var band: LinearGradient {
+        let half = Metrics.sheenBand
+        let mid = sweep * (1 + 2 * half) - half
+        func stop(_ tone: Double, _ at: Double) -> Gradient.Stop {
+            Gradient.Stop(color: Palette.splash.opacity(tone),
+                          location: CGFloat(min(max(at, 0), 1)))
+        }
+        return LinearGradient(
+            stops: [stop(0, mid - half),
+                    stop(Metrics.sheenPeak, mid),
+                    stop(0, mid + half)],
+            startPoint: .topLeading,
+            endPoint: .bottomTrailing)
     }
 }
 

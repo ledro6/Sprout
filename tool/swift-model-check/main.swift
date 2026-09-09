@@ -33,13 +33,13 @@ check(label(22), "Следующий полив: через 22 дня",  "22 д�
 print("данные из макета:")
 let bedroom = Seed.rooms[0]
 check(bedroom.name, "Спальня", "первая комната")
-check("\(bedroom.plants.count)", "5", "растений в спальне")
+check("\(bedroom.plants.count)", "8", "растений в спальне")
 check(bedroom.plants[0].moistureLabel, "89%", "влажность Баксика")
 check(bedroom.plants[0].addedLabel, "Добавлен 2.11.2024", "дата добавления")
 check(bedroom.plants[0].wateringLabel, "Следующий полив: через 8 дней",
       "у Баксика 89% при сушке за 9 суток дают 8 дней")
-check("\(Seed.rooms[1].plants.count)", "4", "растений в гостиной")
-check("\(Seed.rooms[2].plants.count)", "8", "растений на кухне")
+check("\(Seed.rooms[1].plants.count)", "7", "растений в гостиной")
+check("\(Seed.rooms[2].plants.count)", "11", "растений на кухне")
 
 print("пороги тревоги:")
 func thirst(_ m: Double) -> String { "\(plant(moisture: m).thirst)" }
@@ -111,7 +111,7 @@ garden.rename("baksik", to: "   ")
 check(garden.plant(id: "baksik")!.name, "Барсик", "пустое имя не сохраняется")
 garden.delete("baksik")
 check(garden.plant(id: "baksik") == nil, "удалённое растение исчезает")
-check("\(garden.rooms[0].plants.count)", "4", "и уходит из своей комнаты")
+check("\(garden.rooms[0].plants.count)", "7", "и уходит из своей комнаты")
 
 print("поиск по всей квартире:")
 check("\(Seed.search("лера", in: Seed.rooms).count)", "1", "«лера» находит одно")
