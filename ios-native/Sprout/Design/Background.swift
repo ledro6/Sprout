@@ -129,8 +129,8 @@ private struct SproutPattern: View {
     /// всплёскивать поодиночке.
     var wave: Double?
 
-    /// Откуда волна пошла — плашка политого растения, в координатах окна.
-    var source: CGRect
+    /// Откуда волна пошла — в координатах окна.
+    var origin: CGPoint
 
     @Environment(\.colorScheme) private var scheme
 
@@ -148,22 +148,15 @@ private struct SproutPattern: View {
         .id(scheme)
     }
 
-    /// Плашка, от которой пошла волна, в координатах холста.
+    /// Место нажатия в координатах холста.
     ///
     /// Холст начинается выше и левее экрана ровно на размах параллакса —
     /// отсюда сдвиг. Сам параллакс в пересчёт не берётся: он не больше
     /// четырнадцати пунктов, а волна расходится на сотни, и на её ходе
     /// такой сдвиг не читается.
-    private var plate: CGRect {
-        source.offsetBy(dx: Metrics.parallax, dy: Metrics.parallax)
-    }
-
-    /// Насколько фигурка отстоит от плашки. Внутри плашки и по её краю —
-    /// ноль: волна трогается со всей плашки разом, а не из точки.
-    private func distance(from middle: CGPoint) -> CGFloat {
-        let dx = max(plate.minX - middle.x, 0, middle.x - plate.maxX)
-        let dy = max(plate.minY - middle.y, 0, middle.y - plate.maxY)
-        return hypot(dx, dy)
+    private var source: CGPoint {
+        CGPoint(x: origin.x + Metrics.parallax,
+                y: origin.y + Metrics.parallax)
     }
 
     /// Весь узор одним контуром.
@@ -227,7 +220,7 @@ private struct SproutPattern: View {
     /// вплотную за соседним, и это читалось перещёлкиванием.
     private func pop(at middle: CGPoint) -> CGFloat {
         guard let wave else { return 1 }
-        let far = distance(from: middle)
+        let far = hypot(middle.x - source.x, middle.y - source.y)
         let start = Double(min(far / Metrics.waveReach, 1))
             * (1 - Metrics.popSpan)
         let step = (wave - start) / Metrics.popSpan
@@ -270,14 +263,8 @@ final class Cheer {
     /// Когда началась текущая волна. Пусто — волны нет.
     private(set) var start: Date?
 
-    /// Откуда она пошла — плашка политого растения, в координатах окна.
-    ///
-    /// Плашка, а не её середина. От середины волна доходила до узора
-    /// вокруг плашки не сразу — сама плашка её и закрывала, — и всплеск
-    /// на фоне запаздывал за голубой тенью на четверть секунды. Событие
-    /// от этого читалось растянутым: сперва тень, потом, отдельно, фон.
-    /// Считая от края, узор рядом с плашкой трогается вместе с тенью.
-    private(set) var source: CGRect = .zero
+    /// Откуда она пошла — в координатах окна.
+    private(set) var origin: CGPoint = .zero
 
     /// Чем волна кончится. Поливать можно чаще, чем она успевает
     /// отыграть, и новая должна отменять старую, а не спорить с ней.
@@ -287,16 +274,37 @@ final class Cheer {
 
     /// Полили вот здесь. Плашка — в координатах окна: узор отсчитывается
     /// от верхнего левого угла экрана, других координат он не знает.
+    ///
+    /// Расходится волна по-прежнему из середины плашки, кругами. Но
+    /// начинается не с нуля, а с форой ровно на путь от середины до края:
+    /// под плашкой узора всё равно не видно, и без форы узор рядом с ней
+    /// трогался четвертью секунды позже голубой тени — событие читалось
+    /// растянутым, сперва тень, потом, отдельно, фон.
+    ///
+    /// Форе негде себя выдать: она вся уходит на то, что закрыто плашкой,
+    /// а первая же видимая фигурка застаёт волну в самом начале своего
+    /// окна и трогается с нуля, как и раньше.
     func now(from plate: CGRect) {
         run?.cancel()
-        source = plate
-        start = Date()
+        origin = CGPoint(x: plate.midX, y: plate.midY)
+        let lead = Self.lead(across: plate)
+        start = Date().addingTimeInterval(-lead)
         run = Task { @MainActor in
-            try? await Task.sleep(for: .seconds(Motion.cheerSeconds))
+            try? await Task.sleep(for: .seconds(Motion.cheerSeconds - lead))
             // Прервали ради новой волны — она уже идёт, и гасить нечего.
             guard !Task.isCancelled else { return }
             start = nil
         }
+    }
+
+    /// Сколько волне идти от середины плашки до её края.
+    ///
+    /// По вписанной окружности, а не по описанной: так фронт к началу
+    /// стоит внутри плашки со всех сторон, и наружу ничего не выпрыгивает.
+    private static func lead(across plate: CGRect) -> Double {
+        let radius = Double(min(plate.width, plate.height)) / 2
+        return radius / Double(Metrics.waveReach)
+            * (1 - Metrics.popSpan) * Motion.cheerSeconds
     }
 
     /// Где волна на этот момент, 0…1. Пусто — волны нет или уже отыграла.
@@ -375,21 +383,30 @@ final class Launch {
 struct Enter: ViewModifier {
     let step: Int
 
-    /// Насколько элемент приходит снизу. Узору подъём ни к чему: он лежит
-    /// подкладкой во весь экран, и ехать ему некуда.
+    /// Насколько элемент приходит снизу.
     let rise: CGFloat
+
+    /// И насколько крупнее своего места. Единица — не крупнее.
+    ///
+    /// Нужно это одному узору. Он лежит подкладкой во весь экран и всего
+    /// восьмипроцентной плотности: проявляясь одной прозрачностью, он
+    /// проявлялся незаметно — полсекунды еле видной ряби на тёмном фоне
+    /// глаз попросту не ловит. Съезд с подъёмом и наездом видно.
+    let zoom: CGFloat
 
     @State private var shown: Bool
 
-    init(step: Int, rise: CGFloat = Motion.enterRise) {
+    init(step: Int, rise: CGFloat = Motion.enterRise, zoom: CGFloat = 1) {
         self.step = step
         self.rise = rise
+        self.zoom = zoom
         _shown = State(initialValue: Launch.shared.step >= step)
     }
 
     func body(content: Content) -> some View {
         content
             .opacity(shown ? 1 : 0)
+            .scaleEffect(shown ? 1 : zoom)
             .offset(y: shown ? 0 : rise)
             .onChange(of: Launch.shared.step >= step) { _, open in
                 withAnimation(Motion.enter) { shown = open }
@@ -440,14 +457,21 @@ private struct SproutField: View {
                     TimelineView(.animation(paused: Cheer.shared.start == nil)) {
                         frame in
                         SproutPattern(wave: Cheer.shared.wave(at: frame.date),
-                                      source: Cheer.shared.source)
+                                      origin: Cheer.shared.origin)
                     }
                     .padding(-Metrics.parallax)
                     .offset(x: Tilt.shared.shift.width,
                             y: Tilt.shared.shift.height)
-                    // Первая ступень запуска. Ровный фон при этом стоит с
-                    // самого начала — проступает только узор.
-                    .modifier(Enter(step: 1, rise: 0))
+                    // Первая ступень запуска. Ровный фон при этом стоит
+                    // с самого начала — приезжает только узор.
+                    //
+                    // Подъём не больше запаса холста: тот шире экрана на
+                    // размах параллакса, и на столько же узор может
+                    // отъехать, ничего не обнажив. Остаток снизу
+                    // закрывает растяжка под панелью вкладок.
+                    .modifier(Enter(step: 1,
+                                    rise: Motion.enterRise,
+                                    zoom: Motion.patternZoom))
                 }
                 .clipped()
         }
