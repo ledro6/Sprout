@@ -95,15 +95,17 @@ struct SettingsView: View {
             ForEach(0 ..< Settings.shapeCount, id: \.self) { index in
                 let on = settings.shapes.contains(index)
                 Button {
-                    // Клетка перекрашивается сразу, а узор за ней всходит
-                    // заново — тем же появлением, что и при запуске.
-                    // Просто подменить фигурки было нельзя: узор во весь
-                    // экран, и подмена в нём читается рывком.
+                    // Клетка перекрашивается сразу, а узор за ней меняется
+                    // волной: прежние фигурки уходят с одной стороны, и с
+                    // той же стороны следом приходят новые. Просто
+                    // подменить их было нельзя — узор во весь экран, и
+                    // подмена в нём читается рывком.
+                    let before = settings.chosen
                     var changed = false
                     withAnimation(Motion.pill) {
                         changed = settings.toggle(shape: index)
                     }
-                    if changed { Launch.shared.sprout() }
+                    if changed { Launch.shared.reshape(from: before) }
                 } label: {
                     SproutPiece(index: index)
                         .fill(on ? Palette.green
@@ -320,12 +322,17 @@ private struct PillOption<Value: Hashable>: Identifiable {
 /// Ряд кнопок, из которых выбрана одна.
 ///
 /// Своё, а не `Picker(.segmented)`: тот рисует серый системный
-/// переключатель, который на стеклянной плашке выглядит наклейкой. Здесь
-/// подложка та же, что у плашки, а выбранное отмечено синим — тем же
-/// синим, которым в приложении отмечена открытая комната и активная
-/// вкладка.
+/// переключатель, который на стеклянной плашке выглядит наклейкой.
+/// Подложка здесь та же, что у плашки.
 ///
-/// Синяя капсула не появляется на новом месте, а переезжает: у неё общая
+/// Выбранное отмечено стеклом, а не заливкой. Синяя капсула тут была и
+/// убрана: сплошной цвет закрывал собой узор, и ряд читался наклейкой не
+/// хуже системного. Стекло же показывает, что под ним, — ровно так iOS
+/// отмечает открытую вкладку в нижней панели. Цветом при этом остаётся
+/// сама подпись: синим, тем же, что у открытой комнаты и активной
+/// вкладки.
+///
+/// Капсула не появляется на новом месте, а переезжает: у неё общая
 /// личность на весь ряд, и SwiftUI переносит её сам. Появляйся она
 /// заново, выбор читался бы перещёлкиванием, а не движением.
 private struct Pills<Value: Hashable>: View {
@@ -345,13 +352,14 @@ private struct Pills<Value: Hashable>: View {
                         .font(Typography.pill)
                         .lineLimit(1)
                         .minimumScaleFactor(0.75)
-                        .foregroundStyle(picked ? Color.white : Palette.ink)
+                        .foregroundStyle(picked ? Palette.accent : Palette.ink)
                         .frame(maxWidth: .infinity)
                         .frame(height: Metrics.pillHeight)
                         .background {
                             if picked {
                                 Capsule()
-                                    .fill(Palette.accent)
+                                    .fill(.clear)
+                                    .glassEffect(.regular, in: .capsule)
                                     .matchedGeometryEffect(id: "picked",
                                                            in: slide)
                             }

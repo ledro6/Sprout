@@ -248,6 +248,9 @@ private struct SproutPattern: View {
     /// Как они разложены по сетке. Своя на каждый запуск — см. `Weave`.
     var weave: Weave
 
+    /// Идёт ли сейчас смена набора и как далеко зашла.
+    var swap: Reshape?
+
     @Environment(\.colorScheme) private var scheme
 
     /// Шаг сетки из макета: ячейки через 89.4 pt, ряды через 46.7 pt.
@@ -279,13 +282,29 @@ private struct SproutPattern: View {
 
     var body: some View {
         Canvas { context, size in
-            for (step, layer) in pattern(covering: size).enumerated()
-            where !layer.isEmpty {
-                let level = Double(step) / Double(Self.tints - 1)
-                context.fill(layer, with: .color(Palette.pattern(splash: level)))
+            let layers = pattern(covering: size)
+            // Свечение — те же синие фигурки, размытые, под ними самими.
+            // Отдельным слоем, потому что размытие в холсте берёт всё, что
+            // в слой попало, а зелёному узору размываться незачем.
+            context.drawLayer { halo in
+                halo.addFilter(.blur(radius: Metrics.splashGlow))
+                for (step, layer) in layers.enumerated()
+                where step > 0 && !layer.isEmpty {
+                    halo.fill(layer,
+                              with: .color(Palette.splashGlow(level(step))))
+                }
+            }
+            for (step, layer) in layers.enumerated() where !layer.isEmpty {
+                context.fill(layer,
+                             with: .color(Palette.pattern(splash: level(step))))
             }
         }
         .id(scheme)
+    }
+
+    /// Насколько посинела фигурка на этой ступени, 0…1.
+    private func level(_ step: Int) -> Double {
+        Double(step) / Double(Self.tints - 1)
     }
 
     /// Место нажатия в координатах холста.
@@ -315,6 +334,10 @@ private struct SproutPattern: View {
         // без узора это не фон этого приложения.
         let picked = shapes.filter(SproutShapes.pieces.indices.contains)
         let list = picked.isEmpty ? [0] : picked
+        let leaving = swap?.from.filter(SproutShapes.pieces.indices.contains)
+        // Середина по вертикали у всех фигурок общая: они и нарисованы в
+        // коробках одной высоты, оттого и стоят рядами.
+        let centreY = SproutShapes.leafCentre.y
         var row = 0
         var y = -pitchY
         while y < size.height + pitchY {
@@ -322,12 +345,23 @@ private struct SproutPattern: View {
             var x = -pitchX
             while x < size.width + pitchX {
                 for (slot, anchor) in anchors.enumerated() {
-                    let piece = SproutShapes.pieces[list[
-                        weave.index(column: column, slot: slot, row: row,
-                                    of: list.count)]]
-                    add(piece, at: CGPoint(x: x + anchor,
-                                           y: y + piece.centre.y),
-                        over: size, to: &layers)
+                    let middle = CGPoint(x: x + anchor, y: y + centreY)
+                    let grow = pop(at: middle)
+                    var scale = grow
+                    var here = list
+                    var mesh = weave
+                    if let swap, let leaving, !leaving.isEmpty {
+                        let (share, old) = change(swap, at: middle, over: size)
+                        scale *= share
+                        if old { here = leaving; mesh = swap.fromWeave }
+                    } else {
+                        scale *= sprouted(at: middle, over: size)
+                    }
+                    guard scale > 0 else { continue }
+                    let index = mesh.index(column: column, slot: slot,
+                                           row: row, of: here.count)
+                    add(SproutShapes.pieces[here[index]], at: middle,
+                        scale: scale, tint: tint(of: grow), to: &layers)
                 }
                 x += pitchX
                 column += 1
@@ -341,11 +375,7 @@ private struct SproutPattern: View {
     /// Поставить фигурку в свой слой: серединой на своё место, в своём
     /// размере и своего цвета.
     private func add(_ piece: SproutShapes.Piece, at middle: CGPoint,
-                     over size: CGSize, to layers: inout [Path]) {
-        let grow = pop(at: middle)
-        let scale = grow * sprouted(at: middle, over: size)
-        guard scale > 0 else { return }
-        let tint = self.tint(of: grow)
+                     scale: CGFloat, tint: Int, to layers: inout [Path]) {
         guard scale != 1 else {
             layers[tint].addPath(piece.path, transform: CGAffineTransform(
                 translationX: middle.x - piece.centre.x,
@@ -358,6 +388,50 @@ private struct SproutPattern: View {
             CGAffineTransform(translationX: middle.x, y: middle.y)
                 .scaledBy(x: scale, y: scale)
                 .translatedBy(x: -piece.centre.x, y: -piece.centre.y))
+    }
+
+    /// Как фигурка переживает смену набора: во сколько раз она сейчас
+    /// меньше себя и чей набор ещё рисует — прежний или новый.
+    ///
+    /// Проход у фигурки один и делится пополам: сперва она сжимается до
+    /// нуля, потом из нуля же вырастает — уже другой. Обе кривые у нуля
+    /// крутые, поэтому сквозь него фигурка проскакивает быстро и пустого
+    /// места на её клетке почти не бывает.
+    ///
+    /// Очередь идёт по выбранной стороне, как и всходы, — и волна ухода с
+    /// волной прихода идут внахлёст: пока дальний край ещё стоит прежним,
+    /// ближний уже стоит новым.
+    private func change(_ swap: Reshape, at middle: CGPoint,
+                        over size: CGSize) -> (CGFloat, Bool) {
+        let turn = queue(at: middle, over: size, angle: swap.angle)
+        let step = (swap.step - turn * (1 - Metrics.swapSpan)) / Metrics.swapSpan
+        guard step > 0 else { return (1, true) }
+        guard step < 1 else { return (1, false) }
+        guard step >= 0.5 else {
+            let x = step * 2
+            return (CGFloat(1 - x * x * x), true)
+        }
+        let x = (step - 0.5) * 2
+        return (CGFloat(1 - pow(1 - x, 3)), false)
+    }
+
+    /// Черёд фигурки в очереди, 0…1: ноль у той, с которой всё
+    /// начинается, единица у самой дальней.
+    ///
+    /// Место считается от размера холста, а не экрана. Холст у подложки
+    /// под вырезом свой, куда ниже, и очередь в ней пойдёт своя — но на
+    /// главной подложки нет, а всходы бывают только на запуске, то есть
+    /// только на главной.
+    private func queue(at middle: CGPoint, over size: CGSize,
+                       angle: Double) -> Double {
+        let x = Double(middle.x / max(size.width, 1)) - 0.5
+        let y = Double(middle.y / max(size.height, 1)) - 0.5
+        let dx = cos(angle), dy = sin(angle)
+        // Проекция на направление, растянутая на весь ход. У косого
+        // направления размах шире, чем у прямого, и без пересчёта часть
+        // хода уходила бы впустую.
+        let reach = (abs(dx) + abs(dy)) / 2
+        return min(max((x * dx + y * dy) / (2 * reach) + 0.5, 0), 1)
     }
 
     /// Насколько фигурка посинела — ступенью от нуля до последней.
@@ -389,14 +463,7 @@ private struct SproutPattern: View {
     private func sprouted(at middle: CGPoint, over size: CGSize) -> CGFloat {
         guard bloom < 1 else { return 1 }
         guard bloom > 0 else { return 0 }
-        let x = Double(middle.x / max(size.width, 1)) - 0.5
-        let y = Double(middle.y / max(size.height, 1)) - 0.5
-        let dx = cos(bloomAngle), dy = sin(bloomAngle)
-        // Проекция на направление, растянутая на весь ход. У косого
-        // направления размах шире, чем у прямого, и без пересчёта часть
-        // хода уходила бы впустую.
-        let reach = (abs(dx) + abs(dy)) / 2
-        let turn = min(max((x * dx + y * dy) / (2 * reach) + 0.5, 0), 1)
+        let turn = queue(at: middle, over: size, angle: bloomAngle)
         let step = (bloom - turn * (1 - Metrics.bloomSpan)) / Metrics.bloomSpan
         guard step > 0 else { return 0 }
         guard step < 1 else { return 1 }
@@ -537,6 +604,26 @@ extension EnvironmentValues {
     }
 }
 
+/// Смена набора фигурок в узоре: чем узор был и как далеко зашла подмена.
+///
+/// Прежний набор приходится держать вместе с новым: фигурки не
+/// подменяются разом, а уходят волной и той же волной возвращаются, и
+/// пока волна не прошла, на экране стоят оба набора — впереди прежний,
+/// позади новый.
+///
+/// Раскладка у прежнего своя: она считается от числа фигурок, а их стало
+/// другое количество. Без неё уходящий узор перед самым уходом
+/// перетасовался бы.
+struct Reshape {
+    /// Что было в узоре до смены.
+    var from: [Int]
+    var fromWeave: Weave
+    /// С какой стороны идёт волна, в радианах. Своя на каждую смену.
+    var angle: Double
+    /// Насколько смена прошла, 0…1.
+    var step: Double
+}
+
 /// Запуск приложения: заставка и ступени, которыми собирается экран.
 ///
 /// Один на приложение и создаётся один раз за его жизнь — потому
@@ -567,6 +654,12 @@ final class Launch {
     @ObservationIgnored private let twistX = Int.random(in: 0 ..< 64)
     @ObservationIgnored private let twistY = Int.random(in: 0 ..< 64)
     @ObservationIgnored private let twistStart = Int.random(in: 0 ..< 64)
+
+    /// Когда началась смена набора фигурок. Пусто — не менялся.
+    private(set) var swapStart: Date?
+
+    @ObservationIgnored private var swapAngle = 0.0
+    @ObservationIgnored private var swapFrom: [Int] = []
 
     /// Раскладка узора для такого числа фигурок.
     ///
@@ -619,13 +712,42 @@ final class Launch {
         }
     }
 
-    /// Пустить всходы заново — с новой стороны и по всей сетке.
+    /// Сменить набор фигурок: прежний уходит волной, новый той же волной
+    /// приходит следом.
     ///
-    /// Зовётся, когда в настройках меняют набор фигурок. Новая фигурка
-    /// иначе просто оказывалась бы на местах прежней, кадром: узор — вещь
-    /// на весь экран, и подмена в нём читается рывком. Всходы — то же
-    /// появление, что и при запуске, и здесь оно означает ровно то же:
-    /// узор собрался заново.
+    /// Зовётся из настроек. Подменить фигурки кадром было нельзя: узор —
+    /// вещь на весь экран, и подмена в нём читается рывком. Но и всходов,
+    /// как при запуске, здесь мало: они начинаются с пустого экрана, а
+    /// тут экран не пустой, и прежнему узору надо сперва уйти.
+    ///
+    /// Сторона своя на каждую смену: одно и то же направление на третий
+    /// раз читается заставкой, а не сменой.
+    @MainActor
+    func reshape(from before: [Int]) {
+        swapFrom = before
+        swapAngle = Double.random(in: 0 ..< 2 * Double.pi)
+        swapStart = Date()
+        blooming?.cancel()
+        blooming = Task { @MainActor in
+            try? await Task.sleep(for: .seconds(Motion.swapSeconds))
+            guard !Task.isCancelled else { return }
+            swapStart = nil
+        }
+    }
+
+    /// Где сейчас смена набора. Пусто — её нет.
+    func reshape(at moment: Date) -> Reshape? {
+        guard let swapStart else { return nil }
+        let done = moment.timeIntervalSince(swapStart) / Motion.swapSeconds
+        guard done < 1 else { return nil }
+        return Reshape(from: swapFrom,
+                       fromWeave: weave(for: swapFrom.count),
+                       angle: swapAngle,
+                       step: done)
+    }
+
+    /// Пустить всходы — с новой стороны и по всей сетке. Зовётся при
+    /// запуске: узор всходит на пустом экране.
     @MainActor
     func sprout() {
         bloomAngle = Double.random(in: 0 ..< 2 * Double.pi)
@@ -735,15 +857,17 @@ private struct SproutField: View {
                     // Ступени `Enter` узору не досталось: он не
                     // проявляется слоем, а всходит по фигурке, и доля
                     // всходов приходит сюда тем же путём, что доля волны.
-                    TimelineView(.animation(paused: Cheer.shared.start == nil
-                                            && Launch.shared.bloomStart == nil)) {
-                        frame in
+                    TimelineView(.animation(
+                        paused: Cheer.shared.start == nil
+                            && Launch.shared.bloomStart == nil
+                            && Launch.shared.swapStart == nil)) { frame in
                         SproutPattern(wave: Cheer.shared.wave(at: frame.date),
                                       origin: Cheer.shared.origin,
                                       bloomAngle: Launch.shared.bloomAngle,
                                       bloom: Launch.shared.bloom(at: frame.date),
                                       shapes: shapes,
-                                      weave: weave)
+                                      weave: weave,
+                                      swap: Launch.shared.reshape(at: frame.date))
                     }
                     .padding(-Metrics.parallax)
                     .offset(x: Tilt.shared.shift.width,
