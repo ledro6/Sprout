@@ -185,7 +185,7 @@ struct SettingsView: View {
         SettingsGroup("О приложении") {
             NavigationLink { PrivacyView() } label: {
                 SettingsLink("Политика конфиденциальности",
-                             icon: "hand.raised")
+                             icon: "checkmark.shield")
             }
             .buttonStyle(.plain)
 
