@@ -73,27 +73,31 @@ struct SettingsView: View {
 
             SettingsBlock(
                 "Фигурки на фоне",
-                note: "Нажмите на фигурку — узор возьмёт её и все, что левее."
+                note: "Нажмите на фигурку, чтобы убрать её из узора или "
+                    + "вернуть. Хотя бы одна нужна."
             ) {
                 pieces
             }
         }
     }
 
-    /// Ряд из четырёх фигурок узора.
+    /// Названия фигурок — для тех, кто слушает экран, а не смотрит.
+    private static let shapeNames = ["Росток", "Капля", "Цветок", "Горшок"]
+
+    /// Ряд из четырёх фигурок узора: каждая включается сама по себе.
     ///
-    /// Выбирается не набор, а докуда идти по ряду: нажали на третью —
-    /// в узоре росток, капля и цветок. Набором вразнобой можно было бы
-    /// оставить один горшок без ростка, а узор этого приложения
-    /// начинается с ростка — см. `Settings.patternKinds`.
+    /// Порядок в ряду — тот же, что в узоре, и он не меняется от выбора:
+    /// выключенная фигурка остаётся на своём месте приглушённой, а не
+    /// уезжает из ряда. Иначе кнопки перескакивали бы под пальцем, и
+    /// попасть по нужной со второго раза было бы нельзя.
     private var pieces: some View {
         HStack(spacing: 8) {
-            ForEach(Settings.kinds, id: \.self) { count in
-                let on = count <= settings.patternKinds
+            ForEach(0 ..< Settings.shapeCount, id: \.self) { index in
+                let on = settings.shapes.contains(index)
                 Button {
-                    withAnimation(Motion.pill) { settings.choose(kinds: count) }
+                    withAnimation(Motion.pill) { settings.toggle(shape: index) }
                 } label: {
-                    SproutPiece(index: count - 1)
+                    SproutPiece(index: index)
                         .fill(on ? Palette.green
                               : Palette.ink.opacity(Metrics.pieceOff))
                         .frame(height: Metrics.pieceTile)
@@ -107,7 +111,8 @@ struct SettingsView: View {
                         }
                 }
                 .buttonStyle(.plain)
-                .accessibilityLabel("Фигурок в узоре: \(count)")
+                .accessibilityLabel(Self.shapeNames[index])
+                .accessibilityAddTraits(on ? .isSelected : [])
             }
         }
     }

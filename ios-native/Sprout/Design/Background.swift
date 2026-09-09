@@ -241,8 +241,9 @@ private struct SproutPattern: View {
     /// может, а свой размер может: он и так уезжает в её преобразование.
     var bloom: Double
 
-    /// Сколько разных фигурок в узоре, 1…4. Приходит из настроек.
-    var kinds: Int
+    /// Какие фигурки в узоре — их номера, по порядку. Приходит из
+    /// настроек.
+    var shapes: [Int]
 
     @Environment(\.colorScheme) private var scheme
 
@@ -292,9 +293,11 @@ private struct SproutPattern: View {
     private func pattern(covering size: CGSize) -> Path {
         var path = Path()
         // Настройке не доверяем на слово: узор рисуется каждый кадр
-        // волны, и промах по границам обошёлся бы падением, а не
-        // кривым рисунком.
-        let count = min(max(kinds, 1), SproutShapes.pieces.count)
+        // волны, и промах по границам обошёлся бы падением, а не кривым
+        // рисунком. Пустой набор тоже отводим — рисовать нечем, а фон
+        // без узора это не фон этого приложения.
+        let picked = shapes.filter(SproutShapes.pieces.indices.contains)
+        let list = picked.isEmpty ? [0] : picked
         var row = 0
         var y = -pitchY
         while y < size.height + pitchY {
@@ -302,8 +305,8 @@ private struct SproutPattern: View {
             var x = -pitchX
             while x < size.width + pitchX {
                 for (slot, anchor) in anchors.enumerated() {
-                    let piece = SproutShapes.pieces[order(column, slot, row)
-                                                    % count]
+                    let piece = SproutShapes.pieces[
+                        list[order(column, slot, row) % list.count]]
                     add(piece, at: CGPoint(x: x + anchor,
                                            y: y + piece.centre.y),
                         over: size, to: &path)
@@ -317,13 +320,13 @@ private struct SproutPattern: View {
         return path
     }
 
-    /// Какой по счёту фигурке стоять в этом месте сетки.
+    /// Какая по счёту из выбранных фигурок стоит в этом месте сетки.
     ///
     /// Место в ряду даёт `2·столбец + гнездо` — сплошную нумерацию гнёзд
-    /// слева направо. Ряд добавляет два: при двух фигурках это ничего не
-    /// меняет — чётное по чётному, — то есть узор из макета остаётся
-    /// ровно таким, каким был, росток и капля через одну. А при трёх и
-    /// четырёх соседние ряды сдвигаются друг относительно друга, и
+    /// слева направо. Ряд добавляет два: когда выбраны две фигурки, это
+    /// ничего не меняет — чётное по чётному, — то есть узор из макета
+    /// остаётся ровно таким, каким был, росток и капля через одну. А при
+    /// трёх и четырёх соседние ряды сдвигаются друг относительно друга, и
     /// фигурки идут наискось, а не столбиками.
     private func order(_ column: Int, _ slot: Int, _ row: Int) -> Int {
         2 * column + slot + 2 * row
@@ -641,12 +644,12 @@ private struct SproutField: View {
         // Настройку читаем здесь, в теле поля, а не внутри расписания
         // ниже. Внутри её читало бы содержимое `TimelineView`, а оно
         // пересобирается по кадрам расписания — и на паузе, когда нет ни
-        // волны, ни всходов, смена числа фигурок могла бы остаться
+        // волны, ни всходов, смена набора фигурок могла бы остаться
         // незамеченной. Прочитанная телом, она перерисовывает узор сразу.
         //
         // Возврат явный: из-за строки выше тело перестаёт быть одним
         // выражением.
-        let kinds = Settings.shared.patternKinds
+        let shapes = Settings.shared.chosen
         return ZStack {
             Palette.background
 
@@ -677,7 +680,7 @@ private struct SproutField: View {
                                       origin: Cheer.shared.origin,
                                       bloomAngle: Launch.shared.bloomAngle,
                                       bloom: Launch.shared.bloom(at: frame.date),
-                                      kinds: kinds)
+                                      shapes: shapes)
                     }
                     .padding(-Metrics.parallax)
                     .offset(x: Tilt.shared.shift.width,

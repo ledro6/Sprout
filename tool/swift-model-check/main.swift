@@ -126,30 +126,47 @@ check("\(Seed.search("монстера", in: Seed.rooms).count)", "2", "ищет
 check("\(Seed.search("   ", in: Seed.rooms).count)", "0", "пустой запрос ничего не возвращает")
 
 print("настройки: значения по умолчанию и границы:")
+let keys = ["theme", "patternKinds", "patternShapes", "reminders",
+            "remindThreshold"]
 let store = UserDefaults.standard
-for key in ["theme", "patternKinds", "reminders", "remindThreshold"] {
-    store.removeObject(forKey: key)
-}
+for key in keys { store.removeObject(forKey: key) }
 let fresh = Settings(store: store)
 check("\(fresh.theme)", "system", "тема по умолчанию — за системой")
-check("\(fresh.patternKinds)", "2", "фигурок по умолчанию две — узор макета")
+check("\(fresh.chosen)", "[0, 1]", "в узоре росток и капля — узор макета")
 check(fresh.reminders == false, "напоминания по умолчанию выключены")
 check(round2(fresh.threshold), "0.20", "порог по умолчанию — двадцать процентов")
-fresh.choose(kinds: 9)
-check("\(fresh.patternKinds)", "4", "больше четырёх фигурок не бывает")
-fresh.choose(kinds: 0)
-check("\(fresh.patternKinds)", "1", "меньше одной — тоже")
+
+print("фигурки узора включаются по одной:")
+fresh.toggle(shape: 2)
+check("\(fresh.chosen)", "[0, 1, 2]", "цветок добавился к двум прежним")
+fresh.toggle(shape: 0)
+check("\(fresh.chosen)", "[1, 2]", "росток убрался — узор и без него живёт")
+fresh.toggle(shape: 1)
+check("\(fresh.chosen)", "[2]", "остался один цветок")
+fresh.toggle(shape: 2)
+check("\(fresh.chosen)", "[2]", "последнюю выключить нельзя: пустого фона не бывает")
+fresh.toggle(shape: 9)
+check("\(fresh.chosen)", "[2]", "несуществующая фигурка ничего не меняет")
 
 print("настройки переживают запуск:")
 fresh.theme = .dark
-fresh.choose(kinds: 3)
+fresh.toggle(shape: 3)
 fresh.reminders = true
 fresh.threshold = 0.3
 let reopened = Settings(store: store)
 check("\(reopened.theme)", "dark", "тема прочиталась обратно")
-check("\(reopened.patternKinds)", "3", "и число фигурок")
+check("\(reopened.chosen)", "[2, 3]", "и набор фигурок")
 check(reopened.reminders, "и переключатель напоминаний")
 check(round2(reopened.threshold), "0.30", "и порог")
+
+print("прежняя настройка «сколько фигурок» переносится в набор:")
+for key in keys { store.removeObject(forKey: key) }
+store.set(3, forKey: "patternKinds")
+check("\(Settings(store: store).chosen)", "[0, 1, 2]",
+      "«три» стали первыми тремя, а не сбросом на умолчание")
+store.set(99, forKey: "patternKinds")
+check("\(Settings(store: store).chosen)", "[0, 1]",
+      "мусор в старом ключе — берём умолчание")
 
 print("срок напоминания:")
 func delay(_ moisture: Double, _ dryingDays: Double = 7,

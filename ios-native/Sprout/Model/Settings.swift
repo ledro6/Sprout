@@ -54,17 +54,13 @@ final class Settings {
         }
     }
 
-    /// Сколько разных фигурок в узоре: от одной до четырёх.
-    ///
-    /// Не набор, а количество: фигурки идут в заданном порядке — росток,
-    /// капля, цветок, горшок, — и настройка отвечает на вопрос «докуда».
-    /// Выбором вразнобой можно было бы оставить один горшок без ростка, а
-    /// узор этого приложения начинается с ростка.
-    ///
-    /// Двойка по умолчанию: ровно тот узор из макета, что был здесь до
-    /// настройки, — росток и капля через одну.
-    static let kinds = 1...4
-    static let defaultKinds = 2
+    /// Сколько всего фигурок нарисовано — росток, капля, цветок, горшок.
+    /// Их номера совпадают с порядком в `SproutShapes.pieces`.
+    static let shapeCount = 4
+
+    /// Что в узоре, пока не выбрали другое: росток и капля — ровно тот
+    /// узор из макета, что был здесь до всякой настройки.
+    static let defaultShapes: Set<Int> = [0, 1]
 
     /// Пороги напоминания, доли влажности. Двадцать процентов посередине
     /// и по умолчанию: это и есть порог, на котором тревожная тень
@@ -76,15 +72,27 @@ final class Settings {
         didSet { store.set(theme.rawValue, forKey: Key.theme) }
     }
 
-    /// Ставится через `choose(kinds:)`, а не присваиванием.
+    /// Какие фигурки в узоре, номерами.
     ///
-    /// Загонять число в границы прямо в наблюдателе нельзя: `@Observable`
-    /// превращает свойство в вычисляемое, и присваивание из его же
-    /// наблюдателя снова зовёт установщик — рекурсия до переполнения
-    /// стека. Проверено падением на прогоне модели.
-    private(set) var patternKinds: Int {
-        didSet { store.set(patternKinds, forKey: Key.kinds) }
+    /// Набор, а не количество. Сперва настройка отвечала на вопрос
+    /// «докуда идти по ряду» — фигурки включались слева направо, и
+    /// оставить одну каплю без ростка было нельзя. Причина была та, что
+    /// узор этого приложения начинается с ростка; но это довод за то,
+    /// каким узор приходит по умолчанию, а не за то, каким его нельзя
+    /// сделать. Теперь каждая фигурка включается сама по себе.
+    ///
+    /// Ставится через `toggle(shape:)`: присваивание из наблюдателя
+    /// снова звало бы установщик — `@Observable` превращает свойство в
+    /// вычисляемое, и выходит рекурсия до переполнения стека. Проверено
+    /// падением на прогоне модели.
+    private(set) var shapes: Set<Int> {
+        didSet { store.set(Self.mask(of: shapes), forKey: Key.shapes) }
     }
+
+    /// Выбранные фигурки по порядку. Узор раскладывает их именно так —
+    /// росток раньше капли, капля раньше цветка, — чтобы при одном и том
+    /// же выборе узор всегда был одним и тем же.
+    var chosen: [Int] { shapes.sorted() }
 
     /// Напоминать ли о поливе. Само разрешение на уведомления спрашивает
     /// экран настроек — в тот миг, когда переключатель включают, а не при
@@ -99,19 +107,43 @@ final class Settings {
         didSet { store.set(threshold, forKey: Key.threshold) }
     }
 
-    /// Выбрать, сколько фигурок в узоре. Число загоняется в границы
-    /// здесь: снаружи его берут из ряда кнопок, но настройка переживает
-    /// обновления приложения, а фигурок в нём может стать меньше.
-    func choose(kinds: Int) {
-        patternKinds = min(max(kinds, Self.kinds.lowerBound),
-                           Self.kinds.upperBound)
+    /// Включить или выключить фигурку.
+    ///
+    /// Последнюю выключить нельзя, и это не придирка: пустой набор — это
+    /// голый фон, а узор здесь не украшение, а сам фон и есть. Нажатие на
+    /// единственную включённую поэтому ничего не делает — так же, как
+    /// нажатие на уже выбранную тему.
+    func toggle(shape: Int) {
+        guard (0 ..< Self.shapeCount).contains(shape) else { return }
+        if shapes.contains(shape) {
+            guard shapes.count > 1 else { return }
+            shapes.remove(shape)
+        } else {
+            shapes.insert(shape)
+        }
+    }
+
+    /// Набор в число и обратно: в `UserDefaults` кладётся битовая маска.
+    ///
+    /// Маской, а не списком номеров: список пришлось бы кодировать и
+    /// разбирать, а маска — то же самое одним числом, которое ключ и так
+    /// умеет хранить. Четыре фигурки укладываются в четыре бита.
+    private static func mask(of shapes: Set<Int>) -> Int {
+        shapes.reduce(0) { $0 | (1 << $1) }
+    }
+
+    private static func shapes(from mask: Int) -> Set<Int> {
+        Set((0 ..< shapeCount).filter { mask & (1 << $0) != 0 })
     }
 
     @ObservationIgnored private let store: UserDefaults
 
     private enum Key {
         static let theme = "theme"
+        /// Прежний ключ — количество фигурок. Читается один раз, ради
+        /// тех, у кого настройка уже сохранена.
         static let kinds = "patternKinds"
+        static let shapes = "patternShapes"
         static let reminders = "reminders"
         static let threshold = "remindThreshold"
     }
@@ -123,9 +155,18 @@ final class Settings {
         theme = Theme(rawValue: store.string(forKey: Key.theme) ?? "")
             ?? .system
         // Ноль здесь значит «ключа нет»: `UserDefaults` не различает
-        // отсутствие и ноль, а нулевого количества фигурок не бывает.
-        let saved = store.integer(forKey: Key.kinds)
-        patternKinds = Self.kinds.contains(saved) ? saved : Self.defaultKinds
+        // отсутствие и ноль, а пустого набора фигурок не бывает.
+        let mask = store.integer(forKey: Key.shapes)
+        if mask != 0 {
+            shapes = Self.shapes(from: mask)
+        } else {
+            // Настройка старого вида — «сколько фигурок слева направо».
+            // Переводим её в набор, чтобы у тех, кто уже выбирал, узор не
+            // сбросился на умолчание.
+            let count = store.integer(forKey: Key.kinds)
+            shapes = (1 ... Self.shapeCount).contains(count)
+                ? Set(0 ..< count) : Self.defaultShapes
+        }
         reminders = store.bool(forKey: Key.reminders)
         let level = store.double(forKey: Key.threshold)
         threshold = Self.thresholds.contains(level) ? level
