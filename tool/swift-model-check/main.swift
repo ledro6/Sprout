@@ -19,6 +19,12 @@ func plant(moisture: Double, dryingDays: Double = 7) -> Plant {
           dryingDays: dryingDays,
           addedOn: DateComponents(year: 2024, month: 1, day: 1))
 }
+func plantNamed(_ name: String, moisture: Double,
+                dryingDays: Double) -> Plant {
+    Plant(id: name, name: name, species: "x", moisture: moisture,
+          dryingDays: dryingDays,
+          addedOn: DateComponents(year: 2024, month: 1, day: 1))
+}
 
 print("склонение дней:")
 func label(_ d: Int) -> String { Plant.wateringLabel(days: d) }
@@ -118,6 +124,87 @@ check("\(Seed.search("лера", in: Seed.rooms).count)", "1", "«лера» н�
 check("\(Seed.search("баксик", in: Seed.rooms).count)", "2", "«баксик» находит два")
 check("\(Seed.search("монстера", in: Seed.rooms).count)", "2", "ищет и по виду")
 check("\(Seed.search("   ", in: Seed.rooms).count)", "0", "пустой запрос ничего не возвращает")
+
+print("настройки: значения по умолчанию и границы:")
+let store = UserDefaults.standard
+for key in ["theme", "patternKinds", "reminders", "remindThreshold"] {
+    store.removeObject(forKey: key)
+}
+let fresh = Settings(store: store)
+check("\(fresh.theme)", "system", "тема по умолчанию — за системой")
+check("\(fresh.patternKinds)", "2", "фигурок по умолчанию две — узор макета")
+check(fresh.reminders == false, "напоминания по умолчанию выключены")
+check(round2(fresh.threshold), "0.20", "порог по умолчанию — двадцать процентов")
+fresh.choose(kinds: 9)
+check("\(fresh.patternKinds)", "4", "больше четырёх фигурок не бывает")
+fresh.choose(kinds: 0)
+check("\(fresh.patternKinds)", "1", "меньше одной — тоже")
+
+print("настройки переживают запуск:")
+fresh.theme = .dark
+fresh.choose(kinds: 3)
+fresh.reminders = true
+fresh.threshold = 0.3
+let reopened = Settings(store: store)
+check("\(reopened.theme)", "dark", "тема прочиталась обратно")
+check("\(reopened.patternKinds)", "3", "и число фигурок")
+check(reopened.reminders, "и переключатель напоминаний")
+check(round2(reopened.threshold), "0.30", "и порог")
+
+print("срок напоминания:")
+func delay(_ moisture: Double, _ dryingDays: Double = 7,
+           _ threshold: Double = 0.2) -> String {
+    guard let seconds = Reminder.delay(
+        for: plant(moisture: moisture, dryingDays: dryingDays),
+        threshold: threshold)
+    else { return "никогда" }
+    return round2(seconds)
+}
+// Час сада проходит за секунду: 0.3 от семи суток — это 2.1 суток сада,
+// то есть 50.4 суток по 24 «часа»-секунды.
+check(delay(0.50), "50.40", "с 50% до 20% при недельной сушке — 50.4 секунды")
+check(delay(0.50, 14), "100.80", "вдвое медленнее сохнет — вдвое дольше ждать")
+check(delay(0.20), "0.00", "ровно на пороге — уже пора")
+check(delay(0.05), "0.00", "ниже порога — тем более")
+check(delay(0.50, 0), "никогда", "без скорости сушки срока нет")
+check(delay(0.50, 7, 0.4), "16.80", "порог выше — ждать меньше")
+
+print("кого будить первым:")
+let thirsty = [
+    Room(name: "Комната", plants: [
+        plantNamed("Тихоня", moisture: 0.9, dryingDays: 7),
+        plantNamed("Борис", moisture: 0.25, dryingDays: 5),
+        plantNamed("Сумка", moisture: 0.05, dryingDays: 6),
+        plantNamed("Кефир", moisture: 0.1, dryingDays: 6),
+    ]),
+]
+let due = Reminder.next(in: thirsty, threshold: 0.2)!
+check(due.plant.name, "Сумка", "первой — та, что уже суше всех")
+check("\(due.others)", "1", "и с ней ещё одна такая же")
+check(round2(due.after), "15.00", "срок не раньше, чем через четверть минуты")
+check(Reminder.text(for: due), "«Сумка» и ещё 1 растение просят воды",
+      "строка уведомления с соседями")
+
+let single = Reminder.next(in: [Room(name: "Комната", plants: [
+    plantNamed("Борис", moisture: 0.5, dryingDays: 5),
+])], threshold: 0.2)!
+check(single.plant.name, "Борис", "в одиночку — он один и есть")
+check("\(single.others)", "0", "соседей нет")
+check(round2(single.after), "36.00", "0.3 от пяти суток — 36 секунд")
+check(Reminder.text(for: single), "«Борис» просит воды", "строка про одного")
+
+check(Reminder.next(in: [], threshold: 0.2) == nil,
+      "в пустой квартире будить некого")
+
+print("склонение растений в уведомлении:")
+func many(_ n: Int) -> String {
+    Reminder.text(for: Reminder.Due(plant: plantNamed("Х", moisture: 0,
+                                                      dryingDays: 1),
+                                    others: n, after: 0))
+}
+check(many(1), "«Х» и ещё 1 растение просят воды", "1 растение")
+check(many(2), "«Х» и ещё 2 растения просят воды", "2 растения")
+check(many(5), "«Х» и ещё 5 растений просят воды", "5 растений")
 
 if failed > 0 {
     print("\nне сошлось: \(failed)")

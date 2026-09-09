@@ -30,6 +30,10 @@ struct RootView: View {
     /// состояния. Ровно на столько нужна подложка.
     @State private var notch: CGFloat = 0
 
+    /// Настройки: тема отсюда правит всем окном. Не в окружении — см.
+    /// `Settings`.
+    private let settings = Settings.shared
+
     @Environment(\.scenePhase) private var phase
 
     var body: some View {
@@ -59,10 +63,11 @@ struct RootView: View {
         .environment(\.notch, notch)
         .task { await runClock() }
         .task { await Launch.shared.run() }
-        // Тему не навязываем: обе половины палитры живут в Palette, и
-        // приложение идёт за системой. Выбор в настройках появится
-        // позже — он ляжет сюда же, отдельным preferredColorScheme.
-        //
+        // Тема. Пусто — идём за системой: обе половины палитры живут в
+        // `Palette`, и до этой настройки приложение всегда шло за
+        // телефоном. Здесь, в корне, а не на экране: настройка должна
+        // достать и до листа с самими настройками, и до заставки.
+        .preferredColorScheme(scheme)
         // Порядок наложений: сперва заставка — она закрывает
         // поднимающееся приложение целиком, — а плашка поверх неё. Плашка
         // есть и на приветственном экране макета, так что закрывать её
@@ -80,7 +85,38 @@ struct RootView: View {
                 // могут в любой момент и разрешения не спросят.
                 garden.save()
             }
+            remind(active: now == .active)
         }
+    }
+
+    /// Какую тему навязать окну. Пусто — никакой, идём за системой.
+    private var scheme: ColorScheme? {
+        switch settings.theme {
+        case .system: nil
+        case .light: .light
+        case .dark: .dark
+        }
+    }
+
+    /// Расписание напоминаний о поливе.
+    ///
+    /// Ставится, когда приложение уходит с экрана, и снимается, когда оно
+    /// возвращается. Пока на сад смотрят, напоминать не о чем: проценты
+    /// подсыхают прямо на карточках, и уведомление поверх открытого
+    /// приложения было бы шумом. А к возвращению срок всё равно устарел —
+    /// сад успел подсохнуть, пока приложение стояло закрытым.
+    ///
+    /// Слепок комнат снимается здесь, на главной очереди, и уже он
+    /// уходит считать: сад — наблюдаемый класс, и трогать его из другой
+    /// задачи нечего.
+    private func remind(active: Bool) {
+        guard settings.reminders, !active else {
+            Notifier.clear()
+            return
+        }
+        let rooms = garden.rooms
+        let threshold = settings.threshold
+        Task { await Notifier.schedule(in: rooms, threshold: threshold) }
     }
 
     /// Часы сада: раз в секунду отдаём ему прошедшее время, и почва

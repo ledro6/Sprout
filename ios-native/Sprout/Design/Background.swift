@@ -2,10 +2,13 @@ import Foundation
 import Observation
 import SwiftUI
 
-/// Фоновый узор: чередование ростка и капли.
+/// Фигурки фонового узора и логотипа.
 ///
-/// Контуры не нарисованы на глаз — это те же кривые, что в макете. Figma
-/// отдаёт их в fillGeometry при запросе с geometry=paths, отсюда и взяты.
+/// Росток, капля и логотип не нарисованы на глаз — это те же кривые, что
+/// в макете. Figma отдаёт их в fillGeometry при запросе с geometry=paths,
+/// отсюда и взяты. Цветок и горшок в макете не рисовались: их добавила
+/// настройка «сколько фигурок в узоре», и они построены по числам — см.
+/// каждый из них.
 enum SproutShapes {
     /// Росток: два листа, сходящихся к общей точке внизу.
     ///
@@ -31,9 +34,104 @@ enum SproutShapes {
     }()
 
     /// Середины фигур узора. Вокруг них фигурка и раздаётся, когда
-    /// растение полили: масштаб от угла увёл бы её с места.
+    /// растение полили: масштаб от угла увёл бы её с места. Ими же
+    /// фигурка ставится на своё место в сетке — см. `SproutPattern`.
     static let leafCentre = CGPoint(x: 25.1033, y: 21.1164)
     static let dropCentre = CGPoint(x: 15.2097, y: 21.1164)
+
+    /// Середина двух дорисованных фигурок. Обе нарисованы в коробке
+    /// капли — 30.42 в ширину, — и середина у них общая с ней.
+    ///
+    /// Ширина здесь не вкус, а условие. Фигурки стоят в сетке через
+    /// 44.3 pt серединами, а на гребне волны раздаются в 1.15 раза,
+    /// пока соседняя ещё держит 1.06: половины должны уложиться в
+    /// промежуток. У ростка с каплей они укладываются впритык — 28.87
+    /// плюс 16.12 против 44.99, — и всё, что не шире капли, встаёт в те
+    /// же зазоры, ничего не задев.
+    static let addedCentre = CGPoint(x: 15.2097, y: 21.1164)
+
+    /// Цветок: пять лепестков по кругу и сердцевина.
+    ///
+    /// Не обведён по макету — в макете его нет, — а построен: пять
+    /// одинаковых кругов, расставленных через 72° на расстоянии 8.4 от
+    /// середины, плюс круг посередине. Радиус лепестка 6.8 подобран так,
+    /// чтобы соседние заходили друг за друга и силуэт вышел сплошным, а
+    /// не гирляндой из шариков: их середины отстоят на 9.87, и при 6.8
+    /// пересечение есть, а очертания лепестков ещё читаются.
+    ///
+    /// Половина ширины — 8.4·cos 18° + 6.8 = 14.79, чуть меньше капли:
+    /// в зазоры сетки цветок проходит с запасом.
+    ///
+    /// Сердцевина нужна, потому что сами лепестки середины не
+    /// закрывают: 8.4 больше 6.8, и в центре оставалась бы дырка
+    /// звёздочкой в четыре пункта. На восьми процентах плотности это
+    /// читалось бы браком заливки, а не рисунком.
+    static let flower: Path = {
+        var p = Path()
+        let middle = addedCentre
+        let reach = 8.4, petal = 6.8
+        for step in 0 ..< 5 {
+            // Первый лепесток смотрит вверх: цветок с лепестком строго
+            // сверху стоит ровно, а повёрнутый на полшага — валится вбок.
+            let angle = -Double.pi / 2 + Double(step) * 2 * .pi / 5
+            let spot = CGPoint(x: middle.x + reach * cos(angle),
+                               y: middle.y + reach * sin(angle))
+            p.addEllipse(in: CGRect(x: spot.x - petal, y: spot.y - petal,
+                                    width: 2 * petal, height: 2 * petal))
+        }
+        p.addEllipse(in: CGRect(x: middle.x - 4.6, y: middle.y - 4.6,
+                                width: 9.2, height: 9.2))
+        return p
+    }()
+
+    /// Горшок: ободок и сужающееся книзу тулово.
+    ///
+    /// Тоже построен, а не обведён. Ободок во всю ширину коробки, тулово
+    /// на 3.4 уже с каждой стороны сверху и на 7.5 снизу — обычный конус
+    /// цветочного горшка. Свес ободка нужен именно такой: при двух
+    /// пунктах на тридцать он терялся и горшок читался просто трапецией.
+    /// Нижние углы скруглены на те же 1.6, что и ободок: острые углы в
+    /// узоре, где всё остальное собрано из дуг, кололи бы глаз.
+    ///
+    /// По высоте горшок занимает от 5.4 до 36.8 — те же 21.1 посередине,
+    /// что и у ростка с каплей, поэтому ряды остаются рядами.
+    static let pot: Path = {
+        var p = Path()
+        p.addRoundedRect(in: CGRect(x: 0, y: 5.4, width: 30.4193, height: 7.4),
+                         cornerSize: CGSize(width: 1.6, height: 1.6))
+        p.move(to: CGPoint(x: 3.4, y: 12.8))
+        p.addLine(to: CGPoint(x: 27.0, y: 12.8))
+        p.addLine(to: CGPoint(x: 22.85, y: 35.0))
+        p.addQuadCurve(to: CGPoint(x: 21.0, y: 36.8),
+                       control: CGPoint(x: 22.5, y: 36.8))
+        p.addLine(to: CGPoint(x: 9.4, y: 36.8))
+        p.addQuadCurve(to: CGPoint(x: 7.55, y: 35.0),
+                       control: CGPoint(x: 7.9, y: 36.8))
+        p.closeSubpath()
+        return p
+    }()
+
+    /// Фигурка узора: контур и его середина.
+    struct Piece {
+        var path: Path
+        var centre: CGPoint
+    }
+
+    /// Все фигурки узора по порядку. Настройка выбирает не набор, а
+    /// докуда по этому порядку идти: узор этого приложения начинается с
+    /// ростка, и оставить один горшок без ростка было бы уже не им.
+    static let pieces: [Piece] = [
+        Piece(path: leaf, centre: leafCentre),
+        Piece(path: drop, centre: dropCentre),
+        Piece(path: flower, centre: addedCentre),
+        Piece(path: pot, centre: addedCentre),
+    ]
+
+    /// Коробка, по которой фигурки сравниваются между собой: самая
+    /// широкая и самая высокая из них. По ней их и показывают рядом в
+    /// настройках — каждая в своём размере, как в узоре, а не растянутая
+    /// на всю клетку.
+    static let pieceBox = CGSize(width: 50.2067, height: 42.2327)
 
     /// Коробка, в которой нарисован логотип в макете: группа «лого»,
     /// 74.92 × 137.51. Все точки ниже — в ней.
@@ -143,13 +241,26 @@ private struct SproutPattern: View {
     /// может, а свой размер может: он и так уезжает в её преобразование.
     var bloom: Double
 
+    /// Сколько разных фигурок в узоре, 1…4. Приходит из настроек.
+    var kinds: Int
+
     @Environment(\.colorScheme) private var scheme
 
-    /// Шаг сетки из макета: ростки через 89.4 pt, капля посередине между
-    /// ними, ряды через 46.7 pt.
+    /// Шаг сетки из макета: ячейки через 89.4 pt, ряды через 46.7 pt.
     private let pitchX: CGFloat = 89.4
     private let pitchY: CGFloat = 46.68
-    private let dropOffsetX: CGFloat = 55
+
+    /// Где внутри ячейки стоят середины двух фигурок.
+    ///
+    /// Числа не новые: в макете росток стоит углом на нуле, капля — на
+    /// 55, и середины у них приходятся ровно сюда. Раньше фигурки
+    /// ставились углом, и это годилось, пока их было ровно две и каждая
+    /// знала своё место. Теперь на место может встать любая из четырёх, а
+    /// коробки у них разной ширины: поставленная углом широкая фигурка
+    /// уехала бы вправо и налезла на соседнюю ячейку. Середина же у всех
+    /// одна, и от неё они и раздаются на волне — то есть по ней и надо
+    /// расставлять.
+    private let anchors: [CGFloat] = [25.1033, 70.2097]
 
     var body: some View {
         Canvas { context, size in
@@ -180,38 +291,62 @@ private struct SproutPattern: View {
     /// контур, и заливка всё та же одна.
     private func pattern(covering size: CGSize) -> Path {
         var path = Path()
+        // Настройке не доверяем на слово: узор рисуется каждый кадр
+        // волны, и промах по границам обошёлся бы падением, а не
+        // кривым рисунком.
+        let count = min(max(kinds, 1), SproutShapes.pieces.count)
+        var row = 0
         var y = -pitchY
         while y < size.height + pitchY {
+            var column = 0
             var x = -pitchX
             while x < size.width + pitchX {
-                add(SproutShapes.leaf, at: CGPoint(x: x, y: y),
-                    centre: SproutShapes.leafCentre, over: size, to: &path)
-                add(SproutShapes.drop, at: CGPoint(x: x + dropOffsetX, y: y),
-                    centre: SproutShapes.dropCentre, over: size, to: &path)
+                for (slot, anchor) in anchors.enumerated() {
+                    let piece = SproutShapes.pieces[order(column, slot, row)
+                                                    % count]
+                    add(piece, at: CGPoint(x: x + anchor,
+                                           y: y + piece.centre.y),
+                        over: size, to: &path)
+                }
                 x += pitchX
+                column += 1
             }
             y += pitchY
+            row += 1
         }
         return path
     }
 
-    /// Поставить фигурку в общий контур: на своё место и в своём размере.
-    private func add(_ shape: Path, at corner: CGPoint, centre: CGPoint,
+    /// Какой по счёту фигурке стоять в этом месте сетки.
+    ///
+    /// Место в ряду даёт `2·столбец + гнездо` — сплошную нумерацию гнёзд
+    /// слева направо. Ряд добавляет два: при двух фигурках это ничего не
+    /// меняет — чётное по чётному, — то есть узор из макета остаётся
+    /// ровно таким, каким был, росток и капля через одну. А при трёх и
+    /// четырёх соседние ряды сдвигаются друг относительно друга, и
+    /// фигурки идут наискось, а не столбиками.
+    private func order(_ column: Int, _ slot: Int, _ row: Int) -> Int {
+        2 * column + slot + 2 * row
+    }
+
+    /// Поставить фигурку в общий контур: серединой на своё место и в
+    /// своём размере.
+    private func add(_ piece: SproutShapes.Piece, at middle: CGPoint,
                      over size: CGSize, to path: inout Path) {
-        let middle = CGPoint(x: corner.x + centre.x, y: corner.y + centre.y)
         let scale = pop(at: middle) * sprouted(at: middle, over: size)
         guard scale > 0 else { return }
         guard scale != 1 else {
-            path.addPath(shape, transform: CGAffineTransform(
-                translationX: corner.x, y: corner.y))
+            path.addPath(piece.path, transform: CGAffineTransform(
+                translationX: middle.x - piece.centre.x,
+                y: middle.y - piece.centre.y))
             return
         }
         // Раздаётся фигурка вокруг своей середины: от угла её уводило бы
         // вправо и вниз.
-        path.addPath(shape, transform:
+        path.addPath(piece.path, transform:
             CGAffineTransform(translationX: middle.x, y: middle.y)
                 .scaledBy(x: scale, y: scale)
-                .translatedBy(x: -centre.x, y: -centre.y))
+                .translatedBy(x: -piece.centre.x, y: -piece.centre.y))
     }
 
     /// Насколько фигурка взошла при запуске.
@@ -503,7 +638,16 @@ final class Spot {
 /// окна, поэтому узор в них стоит в одних и тех же точках.
 private struct SproutField: View {
     var body: some View {
-        ZStack {
+        // Настройку читаем здесь, в теле поля, а не внутри расписания
+        // ниже. Внутри её читало бы содержимое `TimelineView`, а оно
+        // пересобирается по кадрам расписания — и на паузе, когда нет ни
+        // волны, ни всходов, смена числа фигурок могла бы остаться
+        // незамеченной. Прочитанная телом, она перерисовывает узор сразу.
+        //
+        // Возврат явный: из-за строки выше тело перестаёт быть одним
+        // выражением.
+        let kinds = Settings.shared.patternKinds
+        return ZStack {
             Palette.background
 
             // Узор съезжает вслед за наклоном телефона. Холст для этого
@@ -532,7 +676,8 @@ private struct SproutField: View {
                         SproutPattern(wave: Cheer.shared.wave(at: frame.date),
                                       origin: Cheer.shared.origin,
                                       bloomAngle: Launch.shared.bloomAngle,
-                                      bloom: Launch.shared.bloom(at: frame.date))
+                                      bloom: Launch.shared.bloom(at: frame.date),
+                                      kinds: kinds)
                     }
                     .padding(-Metrics.parallax)
                     .offset(x: Tilt.shared.shift.width,
@@ -634,6 +779,31 @@ private struct SproutNotchCover: ViewModifier {
                 .ignoresSafeArea()
                 .allowsHitTesting(false)
         }
+    }
+}
+
+/// Одна фигурка узора сама по себе — для выбора в настройках.
+///
+/// Формой, а не холстом: фигурку там надо и залить, и приглушить, и
+/// вписать в клетку, а всё это форма умеет сама.
+///
+/// Масштаб общий на все четыре, а не «каждую враспор»: в узоре росток
+/// крупнее капли, и в выборе они должны отличаться так же. Растянутая на
+/// клетку капля обещала бы не ту фигурку, что появится на фоне.
+struct SproutPiece: Shape {
+    let index: Int
+
+    func path(in rect: CGRect) -> Path {
+        let pieces = SproutShapes.pieces
+        let piece = pieces[min(max(index, 0), pieces.count - 1)]
+        let box = SproutShapes.pieceBox
+        let scale = min(rect.width / box.width, rect.height / box.height)
+        // Ставим серединой в середину клетки — той же серединой, вокруг
+        // которой фигурка раздаётся на волне.
+        return piece.path.applying(
+            CGAffineTransform(translationX: rect.midX, y: rect.midY)
+                .scaledBy(x: scale, y: scale)
+                .translatedBy(x: -piece.centre.x, y: -piece.centre.y))
     }
 }
 

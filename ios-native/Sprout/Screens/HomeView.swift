@@ -51,6 +51,10 @@ struct HomeView: View {
     /// хвостом. Гасить надо проходом раньше.
     @State private var opening: Plant.ID?
 
+    /// Открыты ли настройки. Отдельным листом, а не вкладкой: настройки
+    /// — не место, где живут, а место, куда заходят и возвращаются.
+    @State private var settings = false
+
     /// Насколько экран прокручен от верха.
     @State private var scrolled: CGFloat = 0
 
@@ -143,6 +147,7 @@ struct HomeView: View {
                 withAnimation(Motion.halo) { opening = nil }
             }
         }
+        .sheet(isPresented: $settings) { SettingsView() }
     }
 
     /// Открыть растение.
@@ -161,11 +166,37 @@ struct HomeView: View {
     /// ему навстречу и к концу пути становится ровно его размера: место
     /// заголовка занимает не пустота, а название комнаты.
     private var roomBar: some View {
-        RoomPicker(rooms: garden.rooms.map(\.name), selection: $roomIndex,
-                   size: roomSize + (roomGrown - roomSize) * grown)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(.horizontal, Metrics.contentMargin)
-            .background(alignment: .top) { headerWash }
+        HStack(alignment: .center, spacing: 12) {
+            RoomPicker(rooms: garden.rooms.map(\.name), selection: $roomIndex,
+                       size: roomSize + (roomGrown - roomSize) * grown)
+                .frame(maxWidth: .infinity, alignment: .leading)
+            gear
+        }
+        .padding(.horizontal, Metrics.contentMargin)
+        .background(alignment: .top) { headerWash }
+    }
+
+    /// Кнопка настроек — справа сверху, в одном ряду с комнатой.
+    ///
+    /// Здесь, а не в панели навигации: панели на главной нет вовсе —
+    /// заголовок раздела живёт в самом содержимом, — а строка комнаты
+    /// закреплена и не уезжает при прокрутке. То есть кнопка стоит в
+    /// единственном месте главной, которое всегда наверху.
+    ///
+    /// Стекло своё, кружком: ровно то же, что у кнопок на экране
+    /// растения, где общую подложку панели пришлось снять. Размер тот же
+    /// — 44, площадь нажатия, — и кнопка не растёт вместе с подписью
+    /// комнаты: подпись дорастает до заголовка, а знак настроек знаком и
+    /// остаётся.
+    private var gear: some View {
+        Button { settings = true } label: {
+            Image(systemName: "gearshape")
+                .font(Typography.navTitle)
+                .foregroundStyle(Palette.ink)
+                .frame(width: Metrics.barButton, height: Metrics.barButton)
+                .glassEffect(.regular.interactive(), in: Circle())
+        }
+        .accessibilityLabel("Настройки")
     }
 
     /// Растяжка под строкой комнаты: от самого верха экрана до конца
