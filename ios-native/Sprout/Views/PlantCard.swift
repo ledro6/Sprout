@@ -47,9 +47,6 @@ struct PlantCard: View {
         }
         .padding(.horizontal, Metrics.cardPadding)
         .padding(.vertical, 10)
-        // Блик до плашки, ореол после: первый проходит между плашкой и
-        // содержимым, второй лежит за всей карточкой.
-        .modifier(PlantSheen(plant: plant, shape: shape))
         .sproutPlate(in: shape, interactive: true)
         .modifier(PlantGlow(plant: plant, shape: shape))
     }
@@ -103,100 +100,6 @@ struct PlantGlow<S: Shape>: ViewModifier {
             + (Metrics.glowFull - Metrics.glowFaint) * plant.alarm
     }
 
-}
-
-/// Блик при поливе: по плашке проходит синий отсвет.
-///
-/// Отдельным модификатором от тревожного ореола, потому что лежит в
-/// другом слое. Ореол — за плашкой, а блик между плашкой и её
-/// содержимым: он должен проходить под фотографией, а не поверх неё.
-/// Фотографии вырезаны, и блик виден вокруг растения и сквозь просветы в
-/// листве — так он и читается отсветом на самой плашке, а не синим
-/// фильтром, наброшенным на растение.
-///
-/// Отсюда и место в вёрстке: модификатор навешивается до `sproutPlate`,
-/// а не после. Плашка со своим стеклом уходит наружу, то есть назад, а
-/// блик остаётся впереди неё и позади содержимого.
-struct PlantSheen<S: Shape>: ViewModifier {
-    let plant: Plant
-    let shape: S
-
-    /// Идёт ли сейчас блик и где он на плашке.
-    ///
-    /// Два состояния, а не одно: доля нужна для места, а признак — для
-    /// того, чтобы убрать слой совсем, когда блик прошёл.
-    @State private var shining = false
-    @State private var sweep: Double = 0
-
-    func body(content: Content) -> some View {
-        content
-            .background { if shining { Sheen(shape: shape, sweep: sweep) } }
-            // Полив ловим по самой влажности: поднять её больше нечему, а
-            // поливают из двух меню и с двух экранов — блик должен быть
-            // один и тот же, откуда бы ни пришёл.
-            .onChange(of: plant.moisture) { was, now in
-                if now > was { flash() }
-            }
-    }
-
-    /// Полили: пускаем блик.
-    ///
-    /// Слой ставим одним проходом, а ход блика — следующим. В одном
-    /// SwiftUI бы их схлопнул: у только что вставленной вью нет прежнего
-    /// значения, перебирать не от чего, и блик оказался бы сразу в конце.
-    private func flash() {
-        sweep = 0
-        shining = true
-        Task { @MainActor in
-            withAnimation(.linear(duration: Motion.sheenSeconds)) { sweep = 1 }
-            try? await Task.sleep(for: .seconds(Motion.sheenSeconds))
-            shining = false
-        }
-    }
-}
-
-/// Сама полоса блика: узкая, косая, проходит от края плашки до края.
-///
-/// Так в мультиках показывают, что предмет блеснул. Здесь этим отмечается
-/// полив — вместо синей тени, которая вспыхивала под плашкой и гасла.
-///
-/// Полоса не отдельная вью, а три остановки одной заливки: ползут по
-/// диагонали их места, а не сама полоса. Отдельную пришлось бы вертеть,
-/// растягивать под размер плашки и обрезать по её форме, — а так форма и
-/// есть та фигура, которую заливаем.
-///
-/// Доля объявлена `animatableData`. Места остановок SwiftUI сам не
-/// перебирает: заливка для него не набор чисел, а цвет, — и без этого
-/// блик прыгал бы из конца в конец.
-private struct Sheen<S: Shape>: View, Animatable {
-    let shape: S
-    var sweep: Double
-
-    var animatableData: Double {
-        get { sweep }
-        set { sweep = newValue }
-    }
-
-    var body: some View {
-        shape.fill(band).allowsHitTesting(false)
-    }
-
-    /// Ход считается с запасом на полосу: в начале она целиком за одним
-    /// краем плашки, в конце — целиком за другим.
-    private var band: LinearGradient {
-        let half = Metrics.sheenBand
-        let mid = sweep * (1 + 2 * half) - half
-        func stop(_ tone: Double, _ at: Double) -> Gradient.Stop {
-            Gradient.Stop(color: Palette.splash.opacity(tone),
-                          location: CGFloat(min(max(at, 0), 1)))
-        }
-        return LinearGradient(
-            stops: [stop(0, mid - half),
-                    stop(Metrics.sheenPeak, mid),
-                    stop(0, mid + half)],
-            startPoint: .topLeading,
-            endPoint: .bottomTrailing)
-    }
 }
 
 /// Пульс свечения у растения, досохшего до нуля.

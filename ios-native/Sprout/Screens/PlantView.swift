@@ -194,8 +194,6 @@ struct PlantView: View {
             .padding(.vertical, 6)
             .frame(maxWidth: .infinity)
             .aspectRatio(336.0 / 347.0, contentMode: .fit)
-            // Блик до плашки: он проходит под фотографией, а не поверх.
-            .modifier(PlantSheen(plant: plant, shape: plate))
             .sproutPlate(in: plate)
             // Та же тень, что у карточки на витрине, и считается тем же
             // кодом. Только под плашкой с растением: у плашки со

@@ -245,6 +245,9 @@ private struct SproutPattern: View {
     /// настроек.
     var shapes: [Int]
 
+    /// Как они разложены по сетке. Своя на каждый запуск — см. `Weave`.
+    var weave: Weave
+
     @Environment(\.colorScheme) private var scheme
 
     /// Шаг сетки из макета: ячейки через 89.4 pt, ряды через 46.7 pt.
@@ -263,10 +266,24 @@ private struct SproutPattern: View {
     /// расставлять.
     private let anchors: [CGFloat] = [25.1033, 70.2097]
 
+    /// На сколько ступеней разбит переход от зелёного к синему.
+    ///
+    /// Ступенями, а не плавно у каждой фигурки. Холст заливает контур
+    /// одной командой на цвет, а цвет у каждой фигурки на волне свой:
+    /// плавно — значит по команде на фигурку, под три сотни на кадр,
+    /// ровно то, от чего этот холст в своё время и ушёл. Шесть ступеней —
+    /// шесть команд, а разницы между соседними ступенями глаз на
+    /// восьмипроцентной заливке не берёт: соседние фигурки и так
+    /// отличаются на восьмую долю прохода.
+    private static let tints = 6
+
     var body: some View {
         Canvas { context, size in
-            context.fill(pattern(covering: size),
-                         with: .color(Palette.pattern))
+            for (step, layer) in pattern(covering: size).enumerated()
+            where !layer.isEmpty {
+                let level = Double(step) / Double(Self.tints - 1)
+                context.fill(layer, with: .color(Palette.pattern(splash: level)))
+            }
         }
         .id(scheme)
     }
@@ -290,8 +307,8 @@ private struct SproutPattern: View {
     /// меньше. Волна этого не ломает: у каждой фигурки свой масштаб, но
     /// он уезжает в её собственное преобразование при добавлении в
     /// контур, и заливка всё та же одна.
-    private func pattern(covering size: CGSize) -> Path {
-        var path = Path()
+    private func pattern(covering size: CGSize) -> [Path] {
+        var layers = [Path](repeating: Path(), count: Self.tints)
         // Настройке не доверяем на слово: узор рисуется каждый кадр
         // волны, и промах по границам обошёлся бы падением, а не кривым
         // рисунком. Пустой набор тоже отводим — рисовать нечем, а фон
@@ -305,11 +322,12 @@ private struct SproutPattern: View {
             var x = -pitchX
             while x < size.width + pitchX {
                 for (slot, anchor) in anchors.enumerated() {
-                    let piece = SproutShapes.pieces[
-                        list[order(column, slot, row) % list.count]]
+                    let piece = SproutShapes.pieces[list[
+                        weave.index(column: column, slot: slot, row: row,
+                                    of: list.count)]]
                     add(piece, at: CGPoint(x: x + anchor,
                                            y: y + piece.centre.y),
-                        over: size, to: &path)
+                        over: size, to: &layers)
                 }
                 x += pitchX
                 column += 1
@@ -317,39 +335,44 @@ private struct SproutPattern: View {
             y += pitchY
             row += 1
         }
-        return path
+        return layers
     }
 
-    /// Какая по счёту из выбранных фигурок стоит в этом месте сетки.
-    ///
-    /// Место в ряду даёт `2·столбец + гнездо` — сплошную нумерацию гнёзд
-    /// слева направо. Ряд добавляет два: когда выбраны две фигурки, это
-    /// ничего не меняет — чётное по чётному, — то есть узор из макета
-    /// остаётся ровно таким, каким был, росток и капля через одну. А при
-    /// трёх и четырёх соседние ряды сдвигаются друг относительно друга, и
-    /// фигурки идут наискось, а не столбиками.
-    private func order(_ column: Int, _ slot: Int, _ row: Int) -> Int {
-        2 * column + slot + 2 * row
-    }
-
-    /// Поставить фигурку в общий контур: серединой на своё место и в
-    /// своём размере.
+    /// Поставить фигурку в свой слой: серединой на своё место, в своём
+    /// размере и своего цвета.
     private func add(_ piece: SproutShapes.Piece, at middle: CGPoint,
-                     over size: CGSize, to path: inout Path) {
-        let scale = pop(at: middle) * sprouted(at: middle, over: size)
+                     over size: CGSize, to layers: inout [Path]) {
+        let grow = pop(at: middle)
+        let scale = grow * sprouted(at: middle, over: size)
         guard scale > 0 else { return }
+        let tint = self.tint(of: grow)
         guard scale != 1 else {
-            path.addPath(piece.path, transform: CGAffineTransform(
+            layers[tint].addPath(piece.path, transform: CGAffineTransform(
                 translationX: middle.x - piece.centre.x,
                 y: middle.y - piece.centre.y))
             return
         }
         // Раздаётся фигурка вокруг своей середины: от угла её уводило бы
         // вправо и вниз.
-        path.addPath(piece.path, transform:
+        layers[tint].addPath(piece.path, transform:
             CGAffineTransform(translationX: middle.x, y: middle.y)
                 .scaledBy(x: scale, y: scale)
                 .translatedBy(x: -piece.centre.x, y: -piece.centre.y))
+    }
+
+    /// Насколько фигурка посинела — ступенью от нуля до последней.
+    ///
+    /// Считается от подъёма, а не от общего размера. Общий размер — это
+    /// ещё и всходы при запуске, и по нему всходящая фигурка синела бы
+    /// просто оттого, что не доросла.
+    ///
+    /// Поджатая остаётся зелёной: синеет только то, что поднялось. Волна
+    /// от этого читается синим гребнем между двумя зелёными ямками, а не
+    /// синей полосой во всю ширину прохода.
+    private func tint(of grow: CGFloat) -> Int {
+        guard grow > 1 else { return 0 }
+        let share = min(Double(grow - 1) / Metrics.popAmp, 1)
+        return Int((share * Double(Self.tints - 1)).rounded())
     }
 
     /// Насколько фигурка взошла при запуске.
@@ -533,9 +556,25 @@ final class Launch {
     /// Показывать ли заставку.
     private(set) var greeting = true
 
-    /// Откуда пойдут всходы, в радианах. Выбирается раз за запуск: на
-    /// третий раз всходы всегда снизу — это уже заставка, а не всходы.
-    @ObservationIgnored let bloomAngle = Double.random(in: 0 ..< 2 * Double.pi)
+    /// Откуда пойдут всходы, в радианах. Выбирается заново на каждые
+    /// всходы: на третий раз всходы всегда снизу — это уже заставка, а не
+    /// всходы.
+    @ObservationIgnored private(set) var bloomAngle =
+        Double.random(in: 0 ..< 2 * Double.pi)
+
+    /// Три числа, из которых складывается раскладка узора. Свои на каждый
+    /// запуск — оттого при каждом холодном пуске фигурки стоят иначе.
+    @ObservationIgnored private let twistX = Int.random(in: 0 ..< 64)
+    @ObservationIgnored private let twistY = Int.random(in: 0 ..< 64)
+    @ObservationIgnored private let twistStart = Int.random(in: 0 ..< 64)
+
+    /// Раскладка узора для такого числа фигурок.
+    ///
+    /// Считается из тех же трёх чисел, поэтому смена набора в настройках
+    /// не тасует узор заново: пока фигурок столько же, раскладка та же.
+    func weave(for count: Int) -> Weave {
+        Weave(count: count, twistX: twistX, twistY: twistY, start: twistStart)
+    }
 
     /// Когда узор начал всходить. Пусто — либо ещё не начал, либо уже
     /// весь на месте.
@@ -550,6 +589,11 @@ final class Launch {
     static let last = 5
 
     @ObservationIgnored private var ran = false
+
+    /// Задача, гасящая часы всходов. Одна на всех: всходы бывают и при
+    /// запуске, и при смене набора фигурок, и новая должна отменять
+    /// старую, а не спорить с ней.
+    @ObservationIgnored private var blooming: Task<Void, Never>?
 
     private init() {}
 
@@ -570,13 +614,30 @@ final class Launch {
             // Первая ступень — узор, и всходит он своим ходом, по
             // фигурке. Ступень при этом обычная: она открывает всходам
             // дорогу, а рисует их сам узор.
-            if step == 1 { bloomStart = Date() }
+            if step == 1 { sprout() }
             try? await Task.sleep(for: .seconds(Motion.enterStep))
         }
-        // Всходы к этому времени ещё идут; дождёмся и погасим часы, чтобы
-        // расписание холста встало на паузу.
-        try? await Task.sleep(for: .seconds(Motion.bloomSeconds))
-        bloomStart = nil
+    }
+
+    /// Пустить всходы заново — с новой стороны и по всей сетке.
+    ///
+    /// Зовётся, когда в настройках меняют набор фигурок. Новая фигурка
+    /// иначе просто оказывалась бы на местах прежней, кадром: узор — вещь
+    /// на весь экран, и подмена в нём читается рывком. Всходы — то же
+    /// появление, что и при запуске, и здесь оно означает ровно то же:
+    /// узор собрался заново.
+    @MainActor
+    func sprout() {
+        bloomAngle = Double.random(in: 0 ..< 2 * Double.pi)
+        bloomStart = Date()
+        blooming?.cancel()
+        // Дождёмся конца и погасим часы, чтобы расписание холста встало на
+        // паузу: пока всходов нет, будить его нечем.
+        blooming = Task { @MainActor in
+            try? await Task.sleep(for: .seconds(Motion.bloomSeconds))
+            guard !Task.isCancelled else { return }
+            bloomStart = nil
+        }
     }
 
     /// Насколько узор взошёл к этому мгновению, 0…1.
@@ -650,6 +711,7 @@ private struct SproutField: View {
         // Возврат явный: из-за строки выше тело перестаёт быть одним
         // выражением.
         let shapes = Settings.shared.chosen
+        let weave = Launch.shared.weave(for: shapes.count)
         return ZStack {
             Palette.background
 
@@ -680,7 +742,8 @@ private struct SproutField: View {
                                       origin: Cheer.shared.origin,
                                       bloomAngle: Launch.shared.bloomAngle,
                                       bloom: Launch.shared.bloom(at: frame.date),
-                                      shapes: shapes)
+                                      shapes: shapes,
+                                      weave: weave)
                     }
                     .padding(-Metrics.parallax)
                     .offset(x: Tilt.shared.shift.width,

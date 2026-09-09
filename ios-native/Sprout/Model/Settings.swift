@@ -113,14 +113,18 @@ final class Settings {
     /// голый фон, а узор здесь не украшение, а сам фон и есть. Нажатие на
     /// единственную включённую поэтому ничего не делает — так же, как
     /// нажатие на уже выбранную тему.
-    func toggle(shape: Int) {
-        guard (0 ..< Self.shapeCount).contains(shape) else { return }
+    /// Отвечает, изменилось ли что-нибудь: экран по этому ответу решает,
+    /// пускать ли узору всходы заново.
+    @discardableResult
+    func toggle(shape: Int) -> Bool {
+        guard (0 ..< Self.shapeCount).contains(shape) else { return false }
         if shapes.contains(shape) {
-            guard shapes.count > 1 else { return }
+            guard shapes.count > 1 else { return false }
             shapes.remove(shape)
         } else {
             shapes.insert(shape)
         }
+        return true
     }
 
     /// Набор в число и обратно: в `UserDefaults` кладётся битовая маска.

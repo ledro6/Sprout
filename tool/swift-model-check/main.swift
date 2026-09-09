@@ -168,6 +168,57 @@ store.set(99, forKey: "patternKinds")
 check("\(Settings(store: store).chosen)", "[0, 1]",
       "мусор в старом ключе — берём умолчание")
 
+print("раскладка узора: одинаковые не стоят рядом:")
+// Перебираем все раскладки, какие может выбрать запуск, и всю округу
+// каждой: соседей у узла четверо, но хватает правого и нижнего — левый и
+// верхний те же соседи, только с другой стороны.
+var clashes = 0
+var arrangements: [Int: Set<[Int]>] = [:]
+for count in 1...4 {
+    var seen = Set<[Int]>()
+    for twistX in 0 ..< 64 {
+        for twistY in 0 ..< 64 {
+            for start in 0 ..< 64 {
+                let weave = Weave(count: count, twistX: twistX,
+                                  twistY: twistY, start: start)
+                seen.insert([weave.stepX, weave.stepY, weave.shift])
+                guard count > 1 else { continue }
+                for row in -3...3 {
+                    for node in -6...6 {
+                        let here = weave.index(column: node / 2, slot: node % 2,
+                                               row: row, of: count)
+                        let right = weave.index(column: (node + 1) / 2,
+                                                slot: (node + 1) % 2,
+                                                row: row, of: count)
+                        let below = weave.index(column: node / 2, slot: node % 2,
+                                                row: row + 1, of: count)
+                        if here == right || here == below { clashes += 1 }
+                    }
+                }
+            }
+        }
+    }
+    arrangements[count] = seen
+}
+check("\(clashes)", "0", "ни в одной раскладке нет двух одинаковых рядом")
+check("\(arrangements[1]!.count)", "1", "при одной фигурке раскладка одна")
+check("\(arrangements[2]!.count)", "2",
+      "при двух — две: у шахматной доски других расцветок не бывает")
+check("\(arrangements[3]!.count)", "12", "при трёх — двенадцать")
+check("\(arrangements[4]!.count)", "16", "при четырёх — шестнадцать")
+
+let alone = Weave()
+check("\(alone.index(column: 3, slot: 1, row: 2, of: 1))", "0",
+      "одна фигурка стоит везде, что бы ни спросили")
+
+print("шаг раскладки взаимно прост с числом фигурок:")
+func divisor(_ a: Int, _ b: Int) -> Int { b == 0 ? a : divisor(b, a % b) }
+for count in 2...4 {
+    let steps = Set(arrangements[count]!.flatMap { [$0[0], $0[1]] })
+    check(steps.allSatisfy { divisor($0, count) == 1 },
+          "при \(count) фигурках шаг обходит все, а не через одну")
+}
+
 print("срок напоминания:")
 func delay(_ moisture: Double, _ dryingDays: Double = 7,
            _ threshold: Double = 0.2) -> String {

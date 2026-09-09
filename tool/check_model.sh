@@ -21,6 +21,7 @@ trap 'rm -rf "$OUT"' EXIT
   ios-native/Sprout/Model/Plants.swift \
   ios-native/Sprout/Model/Garden.swift \
   ios-native/Sprout/Model/Settings.swift \
+  ios-native/Sprout/Model/Weave.swift \
   ios-native/Sprout/Model/Reminders.swift \
   tool/swift-model-check/main.swift \
   -o "$OUT/check"

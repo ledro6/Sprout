@@ -95,7 +95,15 @@ struct SettingsView: View {
             ForEach(0 ..< Settings.shapeCount, id: \.self) { index in
                 let on = settings.shapes.contains(index)
                 Button {
-                    withAnimation(Motion.pill) { settings.toggle(shape: index) }
+                    // Клетка перекрашивается сразу, а узор за ней всходит
+                    // заново — тем же появлением, что и при запуске.
+                    // Просто подменить фигурки было нельзя: узор во весь
+                    // экран, и подмена в нём читается рывком.
+                    var changed = false
+                    withAnimation(Motion.pill) {
+                        changed = settings.toggle(shape: index)
+                    }
+                    if changed { Launch.shared.sprout() }
                 } label: {
                     SproutPiece(index: index)
                         .fill(on ? Palette.green
