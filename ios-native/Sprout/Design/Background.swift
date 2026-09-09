@@ -308,6 +308,81 @@ extension EnvironmentValues {
     }
 }
 
+/// Запуск приложения: заставка и ступени, которыми собирается экран.
+///
+/// Один на приложение и создаётся один раз за его жизнь — потому
+/// заставка и показывается только на холодном запуске. Вернувшись из
+/// фона, приложение застаёт `Launch` уже отыгравшим и собирается сразу.
+///
+/// Ступени номерами, а не набором флагов: их порядок и есть весь смысл —
+/// узор, заголовок, комната, сетка, панель вкладок. Каждый элемент знает
+/// только свой номер и ждёт, пока счётчик до него дойдёт.
+@Observable
+final class Launch {
+    static let shared = Launch()
+
+    /// Сколько ступеней открыто. Ноль — не открыто ничего.
+    private(set) var step = 0
+
+    /// Показывать ли заставку.
+    private(set) var greeting = true
+
+    /// Последняя ступень — панель вкладок.
+    static let last = 5
+
+    @ObservationIgnored private var ran = false
+
+    private init() {}
+
+    /// Отыграть запуск. Второй раз ничего не делает: экраны появляются и
+    /// исчезают, а запуск у приложения один.
+    @MainActor
+    func run() async {
+        guard !ran else { return }
+        ran = true
+        try? await Task.sleep(for: .seconds(Motion.welcomeHold))
+        withAnimation(Motion.welcomeLeave) { greeting = false }
+        // Ступени идут не после заставки, а из-под неё: пока она тает,
+        // узор с заголовком уже встают на места, и экран не собирается
+        // на глазах у пустоты.
+        for _ in 1...Self.last {
+            withAnimation(Motion.enter) { step += 1 }
+            try? await Task.sleep(for: .seconds(Motion.enterStep))
+        }
+    }
+}
+
+/// Ступень входа: пока её черёд не настал, элемента нет; настал — он
+/// поднимается на место.
+///
+/// Начальное значение берётся из счётчика, а не «нет». Сетка ленивая, и
+/// созданная позже карточка иначе всплывала бы заново — та же история,
+/// что и с появлением карточек.
+struct Enter: ViewModifier {
+    let step: Int
+
+    /// Насколько элемент приходит снизу. Узору подъём ни к чему: он лежит
+    /// подкладкой во весь экран, и ехать ему некуда.
+    let rise: CGFloat
+
+    @State private var shown: Bool
+
+    init(step: Int, rise: CGFloat = Motion.enterRise) {
+        self.step = step
+        self.rise = rise
+        _shown = State(initialValue: Launch.shared.step >= step)
+    }
+
+    func body(content: Content) -> some View {
+        content
+            .opacity(shown ? 1 : 0)
+            .offset(y: shown ? 0 : rise)
+            .onChange(of: Launch.shared.step >= step) { _, open in
+                withAnimation(Motion.enter) { shown = open }
+            }
+    }
+}
+
 /// Место на экране, которое никто не рисует.
 ///
 /// Где лежит карточка, нужно ровно в одну секунду — когда нажали
@@ -358,6 +433,9 @@ private struct SproutField: View {
                     .padding(-Metrics.parallax)
                     .offset(x: Tilt.shared.shift.width,
                             y: Tilt.shared.shift.height)
+                    // Первая ступень запуска. Ровный фон при этом стоит с
+                    // самого начала — проступает только узор.
+                    .modifier(Enter(step: 1, rise: 0))
                 }
                 .clipped()
         }
@@ -477,7 +555,16 @@ struct SproutLogo: View {
     /// толщины слева и справа и совпадает с ней по высоте.
     var height: CGFloat = 21.1
 
-    private static let aspect: CGFloat = 14.6986 / 21.1
+    /// Пропорции. По умолчанию плашечные: в плашке под вырезом макет
+    /// сжал логотип по ширине, и здесь это повторено. Сам по себе он не
+    /// сжат — для него есть `plain`, и с ним обе шкалы внутри совпадают,
+    /// то есть логотип не искажён.
+    var aspect: CGFloat = Self.badge
+
+    static let badge: CGFloat = 14.6986 / 21.1
+    static let plain: CGFloat =
+        (SproutShapes.logoBox.width + SproutShapes.logoStroke)
+            / SproutShapes.logoBox.height
 
     var body: some View {
         Canvas { context, size in
@@ -507,7 +594,7 @@ struct SproutLogo: View {
                 context.fill(place(drop), with: .color(Palette.water))
             }
         }
-        .frame(width: height * Self.aspect, height: height)
+        .frame(width: height * aspect, height: height)
         .accessibilityHidden(true)
     }
 }
