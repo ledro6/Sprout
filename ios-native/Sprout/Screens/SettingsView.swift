@@ -81,20 +81,13 @@ struct SettingsView: View {
 
             SettingsDivider()
 
-            SettingsBlock(
-                "Цвет узора",
-                note: "На фоне узор лежит куда бледнее — он и должен быть "
-                    + "еле заметен."
-            ) {
+            SettingsBlock("Цвет узора") {
                 tints(current: settings.patternTint) { settings.patternTint = $0 }
             }
 
             SettingsDivider()
 
-            SettingsBlock(
-                "Цвет волны",
-                note: "Этим цветом фигурки вспыхивают, когда растение полили."
-            ) {
+            SettingsBlock("Цвет волны") {
                 tints(current: settings.waveTint) { settings.waveTint = $0 }
             }
         }
@@ -301,13 +294,17 @@ private struct SettingsGroup<Content: View>: View {
     }
 }
 
-/// Название настройки, пояснение под ним и сам выбор.
+/// Название настройки, сам выбор и пояснение под ним.
+///
+/// Пояснение необязательно: у выбора цвета его нет вовсе. Там объяснять
+/// нечего — кружки говорят сами за себя, — а строка серого текста под
+/// каждым рядом делала плашку длиннее и мусорнее.
 private struct SettingsBlock<Control: View>: View {
     let title: String
-    let note: String
+    let note: String?
     let control: Control
 
-    init(_ title: String, note: String,
+    init(_ title: String, note: String? = nil,
          @ViewBuilder control: () -> Control) {
         self.title = title
         self.note = note
@@ -320,10 +317,12 @@ private struct SettingsBlock<Control: View>: View {
                 .font(Typography.settingRow)
                 .foregroundStyle(Palette.ink)
             control
-            Text(note)
-                .font(Typography.settingNote)
-                .foregroundStyle(.secondary)
-                .fixedSize(horizontal: false, vertical: true)
+            if let note {
+                Text(note)
+                    .font(Typography.settingNote)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
     }

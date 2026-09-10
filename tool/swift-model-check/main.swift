@@ -166,7 +166,7 @@ check("\(reopened.patternTint)", "rose", "и цвет узора")
 check("\(reopened.waveTint)", "amber", "и цвет волны")
 
 print("оттенки:")
-check("\(Tint.allCases.count)", "6", "шесть оттенков на выбор")
+check("\(Tint.allCases.count)", "5", "пять оттенков на выбор")
 check(Set(Tint.allCases.map(\.title)).count == Tint.allCases.count,
       "названия не повторяются")
 check(Set(Tint.allCases.map(\.pale)).count == Tint.allCases.count,
@@ -184,6 +184,16 @@ check(spread <= 0.01,
       "бледные ипостаси одной светлоты — разброс \(round2(spread))")
 check(Tint.allCases.allSatisfy { brightness($0.vivid) < brightness($0.pale) },
       "насыщенная ипостась всегда темнее бледной")
+// Насыщенная ипостась должна быть насыщенной на самом деле: ею идёт волна
+// и ею же лежит узор в тёмной теме, а бледный цвет там читается серым.
+// Мерим размахом каналов — у серого он ноль.
+func chroma(_ c: Channels) -> Double {
+    max(c.red, c.green, c.blue) - min(c.red, c.green, c.blue)
+}
+let dullest = Tint.allCases.min { chroma($0.vivid) < chroma($1.vivid) }!
+check(Tint.allCases.allSatisfy { chroma($0.vivid) >= 150 },
+      "самая тусклая насыщенная — \(dullest.title), размах "
+      + "\(Int(chroma(dullest.vivid)))")
 check("\(Tint(rawValue: 99) == nil)", "true", "мусор в ключе оттенком не станет")
 
 print("прежняя настройка «сколько фигурок» переносится в набор:")

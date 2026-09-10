@@ -18,7 +18,7 @@ import Foundation
 /// прогнать где угодно, где есть Swift. Палитра из них уже делает цвета,
 /// а `Color` есть только на платформах Apple.
 enum Tint: Int, CaseIterable, Identifiable, Sendable {
-    case green, blue, violet, amber, rose, graphite
+    case green, blue, violet, amber, rose
 
     var id: Int { rawValue }
 
@@ -35,7 +35,6 @@ enum Tint: Int, CaseIterable, Identifiable, Sendable {
         case .violet: "Сиреневый"
         case .amber: "Медовый"
         case .rose: "Розовый"
-        case .graphite: "Графит"
         }
     }
 
@@ -52,25 +51,30 @@ enum Tint: Int, CaseIterable, Identifiable, Sendable {
         switch self {
         case .green: Channels(207, 248, 201)
         case .blue: Channels(222, 238, 255)
-        case .violet: Channels(239, 233, 252)
-        case .amber: Channels(255, 234, 201)
-        case .rose: Channels(255, 230, 235)
-        case .graphite: Channels(235, 236, 237)
+        case .violet: Channels(240, 233, 254)
+        case .amber: Channels(255, 233, 208)
+        case .rose: Channels(255, 230, 236)
         }
     }
 
-    /// Насыщенная — ею идёт волна полива и свечение под ней.
+    /// Насыщенная — ею идёт волна полива, свечение под ней и весь узор в
+    /// тёмной теме.
     ///
-    /// Взяты системные цвета iOS, кроме зелёного: тот из логотипа
-    /// приложения.
+    /// Все взяты в девять десятых насыщенности и выше. Сперва здесь были
+    /// цвета помягче — зелёный из логотипа, системный сиреневый iOS, — и
+    /// на волне они читались не вспышкой, а подцветкой: гребень должен
+    /// быть виден с угла глаза. Синий не тронут: он и был на пределе,
+    /// это чистый системный #007AFF.
+    ///
+    /// Графит отсюда убран совсем. Серый в наборе цветов — это выбор «без
+    /// цвета», и на волне он не читался вовсе.
     var vivid: Channels {
         switch self {
-        case .green: Channels(55, 181, 81)
+        case .green: Channels(10, 199, 51)
         case .blue: Channels(0, 122, 255)
-        case .violet: Channels(132, 82, 235)
-        case .amber: Channels(255, 159, 10)
-        case .rose: Channels(255, 55, 95)
-        case .graphite: Channels(99, 105, 112)
+        case .violet: Channels(97, 24, 242)
+        case .amber: Channels(255, 136, 0)
+        case .rose: Channels(255, 13, 73)
         }
     }
 }
