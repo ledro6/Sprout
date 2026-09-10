@@ -53,6 +53,7 @@ Capabilities → Team** и нажать ⌘R. Отладочная сборка 
 | `ios-native/Sprout/Screens/SettingsView.swift` | настройки, политика конфиденциальности, сведения |
 | `tool/figma_extract.py` | выгрузка макета из Figma REST API |
 | `tool/make_icons.py` | иконки приложения из логотипов макета — светлая и тёмная |
+| `tool/check_tokens.py` | сверяет обращения к токенам с объявлениями |
 | `design/screens.json`, `design/tokens.json` | результат выгрузки — по нему сверяется вёрстка |
 
 ## Живой сад
@@ -715,9 +716,17 @@ macOS и Xcode нужны, чтобы собрать приложение, — �
 
 ```bash
 swiftc -parse $(find ios-native/Sprout -name '*.swift')   # синтаксис
+python3 tool/check_tokens.py ios-native/Sprout             # имена токенов
 tool/check_model.sh                                        # модель собрать и прогнать
 python3 tool/check_pbxproj.py ios-native/Sprout.xcodeproj/project.pbxproj
 ```
+
+Проверка имён появилась после того, как промах дошёл до Xcode: при
+переписывании `Palette` из неё вместе с ненужным вырезало `shadow` и
+`plateFill`, а `swiftc -parse` этого не увидел — он разбирает синтаксис, а
+имена не сверяет. Полная сверка требует компилятора со SwiftUI, то есть
+Mac; проверка берёт то, что можно взять без него, — статические члены
+типов приложения. Пропустить она может, приврать нет.
 
 Модель зависит только от Foundation, поэтому её можно собрать и
 **запустить** где угодно, где есть Swift: склонения, данные из макета,
