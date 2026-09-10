@@ -82,15 +82,31 @@ struct SettingsView: View {
             SettingsDivider()
 
             SettingsBlock("Цвет узора") {
-                tints(current: settings.patternTint) { settings.patternTint = $0 }
+                tints(current: settings.patternTint) { tint in
+                    repaint()
+                    settings.patternTint = tint
+                }
             }
 
             SettingsDivider()
 
             SettingsBlock("Цвет волны") {
-                tints(current: settings.waveTint) { settings.waveTint = $0 }
+                tints(current: settings.waveTint) { tint in
+                    repaint()
+                    settings.waveTint = tint
+                }
             }
         }
+    }
+
+    /// Запомнить цвет, от которого узор будет переливаться.
+    ///
+    /// Зовётся до того, как настройка поменяется: прежний цвет надо взять,
+    /// пока он ещё прежний. Волны здесь нет и не должно быть — цвет
+    /// меняется у той же фигурки, ей незачем уходить и приходить.
+    private func repaint() {
+        Repaint.shared.begin(base: settings.patternTint,
+                             wave: settings.waveTint)
     }
 
     /// Ряд кружков с оттенками.

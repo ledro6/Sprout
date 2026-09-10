@@ -196,6 +196,23 @@ check(Tint.allCases.allSatisfy { chroma($0.vivid) >= 150 },
       + "\(Int(chroma(dullest.vivid)))")
 check("\(Tint(rawValue: 99) == nil)", "true", "мусор в ключе оттенком не станет")
 
+print("смесь оттенков — ею идёт плавная смена цвета:")
+let rose = Shade(.rose), amber = Shade(.amber)
+check(Shade.mix(rose, amber, 0) == rose, "в начале перехода — прежний целиком")
+check(Shade.mix(rose, amber, 1) == amber, "в конце — новый целиком")
+check(Shade.mix(rose, amber, -5) == rose, "доля ниже нуля не откатывает дальше")
+check(Shade.mix(rose, amber, 5) == amber, "и выше единицы не забегает")
+let half = Shade.mix(rose, amber, 0.5)
+check("\(half.pale.red) \(half.pale.green) \(half.pale.blue)",
+      "255.0 231.5 222.0", "на середине — середина, канал за каналом")
+// Ипостаси смешиваются каждая со своей: смешай бледную с насыщенной, и
+// узор на середине перехода сошёл бы к серому.
+check(half.pale == Channels.mix(rose.pale, amber.pale, 0.5),
+      "бледная смешивается с бледной")
+check(half.vivid == Channels.mix(rose.vivid, amber.vivid, 0.5),
+      "насыщенная с насыщенной")
+check(Shade(.rose) != Shade(.amber), "разные оттенки дают разные смеси")
+
 print("прежняя настройка «сколько фигурок» переносится в набор:")
 for key in keys { store.removeObject(forKey: key) }
 store.set(3, forKey: "patternKinds")

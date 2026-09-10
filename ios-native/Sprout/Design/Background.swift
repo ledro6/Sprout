@@ -251,11 +251,12 @@ private struct SproutPattern: View {
     /// Идёт ли сейчас смена набора и как далеко зашла.
     var swap: Reshape?
 
-    /// Цвет узора в покое и цвет волны полива. Оба из настроек.
+    /// Цвет узора в покое и цвет волны полива. Оба из настроек, а пока
+    /// цвет меняется — смесь прежнего с новым, см. `Repaint`.
     ///
     /// Имена с хвостом: `wave` выше — это доля волны, а не её цвет.
-    var baseTint: Tint
-    var waveTint: Tint
+    var baseShade: Shade
+    var waveShade: Shade
 
     @Environment(\.colorScheme) private var scheme
 
@@ -297,12 +298,12 @@ private struct SproutPattern: View {
                 for (step, layer) in layers.enumerated()
                 where step > 0 && !layer.isEmpty {
                     halo.fill(layer, with: .color(
-                    Palette.glow(waveTint, level: level(step))))
+                    Palette.glow(waveShade, level: level(step))))
                 }
             }
             for (step, layer) in layers.enumerated() where !layer.isEmpty {
                 context.fill(layer, with: .color(Palette.pattern(
-                    baseTint, wave: waveTint, splash: level(step))))
+                    baseShade, wave: waveShade, splash: level(step))))
             }
         }
         .id(scheme)
@@ -610,6 +611,67 @@ extension EnvironmentValues {
     }
 }
 
+/// Смена цвета узора: плавный переход от прежней пары оттенков к новой.
+///
+/// Плавный, но без волны — в отличие от смены набора фигурок. Там на
+/// месте одной фигурки оказывается другая, и подмена кадром читается
+/// рывком, поэтому прежним приходится уходить, а новым приходить. Цвет же
+/// меняется у той же самой фигурки: ей довольно перелиться из прежнего
+/// цвета в новый, и уходить незачем.
+///
+/// Хранится начало перехода, а не доля. Фон рисуется в двух местах — на
+/// экране и подложкой под вырезом, — и веди каждый свой переход, они
+/// разошлись бы на кадр-другой. Та же причина, что у волны, см. `Cheer`.
+@Observable
+final class Repaint {
+    static let shared = Repaint()
+
+    /// Когда начался переход. Пусто — цвет стоит.
+    private(set) var start: Date?
+
+    /// Откуда переходим. Пара целиком: сменить могли и цвет узора, и цвет
+    /// волны, а перелиться должно то, что на экране.
+    @ObservationIgnored private(set) var from = Shade(Tint.defaultPattern)
+    @ObservationIgnored private(set) var fromWave = Shade(Tint.defaultWave)
+
+    @ObservationIgnored private var run: Task<Void, Never>?
+
+    private init() {}
+
+    /// Начать переход от этой пары.
+    ///
+    /// Зовётся до того, как настройка поменяется: прежний цвет надо
+    /// запомнить, пока он ещё прежний.
+    ///
+    /// Если переход уже идёт, отсчёт начинается не от полной прежней
+    /// пары, а от того, что сейчас на экране. Иначе второй выбор подряд
+    /// дёрнул бы узор назад, к цвету, от которого он уже наполовину ушёл.
+    @MainActor
+    func begin(base: Tint, wave: Tint, at moment: Date = Date()) {
+        let part = blend(at: moment)
+        from = part.map { Shade.mix(from, Shade(base), $0) } ?? Shade(base)
+        fromWave = part.map { Shade.mix(fromWave, Shade(wave), $0) }
+            ?? Shade(wave)
+        start = moment
+        run?.cancel()
+        run = Task { @MainActor in
+            try? await Task.sleep(for: .seconds(Motion.repaintSeconds))
+            guard !Task.isCancelled else { return }
+            start = nil
+        }
+    }
+
+    /// Насколько переход прошёл, 0…1. Пусто — перехода нет.
+    func blend(at moment: Date) -> Double? {
+        guard let start else { return nil }
+        let done = moment.timeIntervalSince(start) / Motion.repaintSeconds
+        guard done < 1 else { return nil }
+        // Плавно и на входе, и на выходе: цвет не должен трогаться с места
+        // рывком и не должен вставать как вкопанный.
+        return done * done * (3 - 2 * done)
+    }
+}
+
 /// Смена набора фигурок в узоре: чем узор был и как далеко зашла подмена.
 ///
 /// Прежний набор приходится держать вместе с новым: фигурки не
@@ -842,6 +904,7 @@ private struct SproutField: View {
         let weave = Launch.shared.weave(for: shapes.count)
         let baseTint = Settings.shared.patternTint
         let waveTint = Settings.shared.waveTint
+        let repainting = Repaint.shared.start != nil
         return ZStack {
             Palette.background
 
@@ -868,7 +931,11 @@ private struct SproutField: View {
                     TimelineView(.animation(
                         paused: Cheer.shared.start == nil
                             && Launch.shared.bloomStart == nil
-                            && Launch.shared.swapStart == nil)) { frame in
+                            && Launch.shared.swapStart == nil
+                            && !repainting)) { frame in
+                        // Пока цвет переливается, оттенки на экране — не
+                        // те, что в настройках, а смесь прежних с новыми.
+                        let part = Repaint.shared.blend(at: frame.date)
                         SproutPattern(wave: Cheer.shared.wave(at: frame.date),
                                       origin: Cheer.shared.origin,
                                       bloomAngle: Launch.shared.bloomAngle,
@@ -876,8 +943,12 @@ private struct SproutField: View {
                                       shapes: shapes,
                                       weave: weave,
                                       swap: Launch.shared.reshape(at: frame.date),
-                                      baseTint: baseTint,
-                                      waveTint: waveTint)
+                                      baseShade: shade(baseTint,
+                                                       from: Repaint.shared.from,
+                                                       part: part),
+                                      waveShade: shade(waveTint,
+                                                       from: Repaint.shared.fromWave,
+                                                       part: part))
                     }
                     .padding(-Metrics.parallax)
                     .offset(x: Tilt.shared.shift.width,
@@ -886,6 +957,13 @@ private struct SproutField: View {
                 .clipped()
         }
     }
+}
+
+/// Оттенок, каким его рисовать сейчас: сам по себе или смешанный с
+/// прежним, пока идёт переход.
+private func shade(_ tint: Tint, from: Shade, part: Double?) -> Shade {
+    guard let part else { return Shade(tint) }
+    return Shade.mix(from, Shade(tint), part)
 }
 
 /// Фон экрана: узор и белая растяжка внизу.

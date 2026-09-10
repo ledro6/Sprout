@@ -74,9 +74,9 @@ enum Palette {
     /// см. `Tint`.
     ///
     /// Темы разнятся не только долей, но и самой ипостасью оттенка. На
-    /// белом узор лежит бледной в 42%: сверху стекло плашек, и в треть
+    /// белом узор лежит бледной в 48%: сверху стекло плашек, и в треть
     /// силы он читался бледнее, чем в макете, где стекла нет. На сером —
-    /// насыщенной в 22%, и это не прихоть. Бледная ипостась почти белая,
+    /// насыщенной в 16.5%, и это не прихоть. Бледная ипостась почти белая,
     /// и малой долей на тёмном она даёт не свой цвет, а серый: зелёный,
     /// синий и розовый выходили в двух единицах друг от друга — узор был
     /// один и тот же, какой цвет ни выбери.
@@ -86,10 +86,11 @@ enum Palette {
     /// светлоте это перебор, но цвет на тёмном иначе не читается цветом
     /// вовсе, а ради него настройка и заведена.
     ///
-    /// Волна берётся плотнее покоя — 46% и 62%. Плотнее обязательно: узор
+    /// Волна берётся плотнее покоя — 46% и 62%. Доли у неё свои и при
+    /// подкрутке узора не двигаются: узор и волна настраиваются порознь. Плотнее обязательно: узор
     /// держится еле заметным нарочно, но всплеск это не фон, а событие, и
     /// взятый той же долей он читался бы не вспышкой, а выцветанием.
-    static func pattern(_ base: Tint, wave: Tint, splash level: Double)
+    static func pattern(_ base: Shade, wave: Shade, splash level: Double)
         -> Color {
         let k = min(max(level, 0), 1)
         return dual(blend(ink(base.pale, restLight),
@@ -103,7 +104,7 @@ enum Palette {
     /// Своя доля, а не та же: свечение размывается, и взятое долей самой
     /// волны оно после размытия не читалось бы вовсе. Растёт вместе с
     /// цветом — на покое его нет.
-    static func glow(_ wave: Tint, level: Double) -> Color {
+    static func glow(_ wave: Shade, level: Double) -> Color {
         let k = min(max(level, 0), 1)
         return dual(colour(wave.vivid, glowLight * k),
                     colour(wave.vivid, glowDark * k))
@@ -114,8 +115,8 @@ enum Palette {
     /// разглядеть.
     static func swatch(_ tint: Tint) -> Color { colour(tint.vivid, 1) }
 
-    private static let restLight = 0.42
-    private static let restDark = 0.22
+    private static let restLight = 0.48
+    private static let restDark = 0.165
     private static let splashLight = 0.46
     private static let splashDark = 0.62
     private static let glowLight = 0.5

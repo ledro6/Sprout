@@ -90,4 +90,41 @@ struct Channels: Hashable, Sendable {
         self.green = green
         self.blue = blue
     }
+
+    /// Смесь двух цветов: ноль — первый, единица — второй.
+    static func mix(_ from: Channels, _ to: Channels, _ k: Double) -> Channels {
+        let part = min(max(k, 0), 1)
+        return Channels(from.red + (to.red - from.red) * part,
+                        from.green + (to.green - from.green) * part,
+                        from.blue + (to.blue - from.blue) * part)
+    }
+}
+
+/// Оттенок, готовый к рисованию: обе ипостаси каналами.
+///
+/// Отдельно от `Tint`, потому что во время смены цвета на экране лежит не
+/// оттенок из списка, а смесь двух — и у неё номера в списке нет.
+///
+/// Смешиваются ипостаси по отдельности, каждая со своей: бледная с
+/// бледной, насыщенная с насыщенной. Иначе на середине перехода узор
+/// сходил бы к серому — смешай зелёную бледную с розовой насыщенной, и
+/// получишь ровно его.
+struct Shade: Equatable, Sendable {
+    var pale: Channels
+    var vivid: Channels
+
+    init(_ tint: Tint) {
+        pale = tint.pale
+        vivid = tint.vivid
+    }
+
+    init(pale: Channels, vivid: Channels) {
+        self.pale = pale
+        self.vivid = vivid
+    }
+
+    static func mix(_ from: Shade, _ to: Shade, _ k: Double) -> Shade {
+        Shade(pale: .mix(from.pale, to.pale, k),
+              vivid: .mix(from.vivid, to.vivid, k))
+    }
 }
