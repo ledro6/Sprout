@@ -127,12 +127,14 @@ check("\(Seed.search("   ", in: Seed.rooms).count)", "0", "пустой запр
 
 print("настройки: значения по умолчанию и границы:")
 let keys = ["theme", "patternKinds", "patternShapes", "reminders",
-            "remindThreshold"]
+            "remindThreshold", "patternTint", "waveTint"]
 let store = UserDefaults.standard
 for key in keys { store.removeObject(forKey: key) }
 let fresh = Settings(store: store)
 check("\(fresh.theme)", "system", "тема по умолчанию — за системой")
 check("\(fresh.chosen)", "[0, 1]", "в узоре росток и капля — узор макета")
+check("\(fresh.patternTint)", "green", "узор по умолчанию зелёный — цвет макета")
+check("\(fresh.waveTint)", "blue", "волна по умолчанию синяя")
 check(fresh.reminders == false, "напоминания по умолчанию выключены")
 check(round2(fresh.threshold), "0.20", "порог по умолчанию — двадцать процентов")
 
@@ -153,11 +155,36 @@ fresh.theme = .dark
 fresh.toggle(shape: 3)
 fresh.reminders = true
 fresh.threshold = 0.3
+fresh.patternTint = .rose
+fresh.waveTint = .amber
 let reopened = Settings(store: store)
 check("\(reopened.theme)", "dark", "тема прочиталась обратно")
 check("\(reopened.chosen)", "[2, 3]", "и набор фигурок")
 check(reopened.reminders, "и переключатель напоминаний")
 check(round2(reopened.threshold), "0.30", "и порог")
+check("\(reopened.patternTint)", "rose", "и цвет узора")
+check("\(reopened.waveTint)", "amber", "и цвет волны")
+
+print("оттенки:")
+check("\(Tint.allCases.count)", "6", "шесть оттенков на выбор")
+check(Set(Tint.allCases.map(\.title)).count == Tint.allCases.count,
+      "названия не повторяются")
+check(Set(Tint.allCases.map(\.pale)).count == Tint.allCases.count,
+      "бледные ипостаси не повторяются")
+check(Set(Tint.allCases.map(\.vivid)).count == Tint.allCases.count,
+      "насыщенные тоже")
+// Бледные держатся на одной светлоте: смена цвета не должна менять то,
+// насколько узор заметен. Считаем по формуле яркости для sRGB.
+func brightness(_ c: Channels) -> Double {
+    (0.2126 * c.red + 0.7152 * c.green + 0.0722 * c.blue) / 255
+}
+let pales = Tint.allCases.map { brightness($0.pale) }
+let spread = pales.max()! - pales.min()!
+check(spread <= 0.01,
+      "бледные ипостаси одной светлоты — разброс \(round2(spread))")
+check(Tint.allCases.allSatisfy { brightness($0.vivid) < brightness($0.pale) },
+      "насыщенная ипостась всегда темнее бледной")
+check("\(Tint(rawValue: 99) == nil)", "true", "мусор в ключе оттенком не станет")
 
 print("прежняя настройка «сколько фигурок» переносится в набор:")
 for key in keys { store.removeObject(forKey: key) }

@@ -251,6 +251,12 @@ private struct SproutPattern: View {
     /// Идёт ли сейчас смена набора и как далеко зашла.
     var swap: Reshape?
 
+    /// Цвет узора в покое и цвет волны полива. Оба из настроек.
+    ///
+    /// Имена с хвостом: `wave` выше — это доля волны, а не её цвет.
+    var baseTint: Tint
+    var waveTint: Tint
+
     @Environment(\.colorScheme) private var scheme
 
     /// Шаг сетки из макета: ячейки через 89.4 pt, ряды через 46.7 pt.
@@ -290,13 +296,13 @@ private struct SproutPattern: View {
                 halo.addFilter(.blur(radius: Metrics.splashGlow))
                 for (step, layer) in layers.enumerated()
                 where step > 0 && !layer.isEmpty {
-                    halo.fill(layer,
-                              with: .color(Palette.splashGlow(level(step))))
+                    halo.fill(layer, with: .color(
+                    Palette.glow(waveTint, level: level(step))))
                 }
             }
             for (step, layer) in layers.enumerated() where !layer.isEmpty {
-                context.fill(layer,
-                             with: .color(Palette.pattern(splash: level(step))))
+                context.fill(layer, with: .color(Palette.pattern(
+                    baseTint, wave: waveTint, splash: level(step))))
             }
         }
         .id(scheme)
@@ -834,6 +840,8 @@ private struct SproutField: View {
         // выражением.
         let shapes = Settings.shared.chosen
         let weave = Launch.shared.weave(for: shapes.count)
+        let baseTint = Settings.shared.patternTint
+        let waveTint = Settings.shared.waveTint
         return ZStack {
             Palette.background
 
@@ -867,7 +875,9 @@ private struct SproutField: View {
                                       bloom: Launch.shared.bloom(at: frame.date),
                                       shapes: shapes,
                                       weave: weave,
-                                      swap: Launch.shared.reshape(at: frame.date))
+                                      swap: Launch.shared.reshape(at: frame.date),
+                                      baseTint: baseTint,
+                                      waveTint: waveTint)
                     }
                     .padding(-Metrics.parallax)
                     .offset(x: Tilt.shared.shift.width,

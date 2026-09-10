@@ -78,6 +78,62 @@ struct SettingsView: View {
             ) {
                 pieces
             }
+
+            SettingsDivider()
+
+            SettingsBlock(
+                "Цвет узора",
+                note: "На фоне узор лежит куда бледнее — он и должен быть "
+                    + "еле заметен."
+            ) {
+                tints(current: settings.patternTint) { settings.patternTint = $0 }
+            }
+
+            SettingsDivider()
+
+            SettingsBlock(
+                "Цвет волны",
+                note: "Этим цветом фигурки вспыхивают, когда растение полили."
+            ) {
+                tints(current: settings.waveTint) { settings.waveTint = $0 }
+            }
+        }
+    }
+
+    /// Ряд кружков с оттенками.
+    ///
+    /// Кружок насыщенной ипостасью оттенка, а не бледной: выбирают
+    /// оттенок, а не силу, и бледный кружок на белой плашке было бы не
+    /// разглядеть. Тонкая обводка — чтобы светлые кружки не сливались с
+    /// плашкой совсем.
+    private func tints(current: Tint,
+                       pick: @escaping (Tint) -> Void) -> some View {
+        HStack(spacing: 6) {
+            ForEach(Tint.allCases) { tint in
+                let picked = tint == current
+                Button {
+                    withAnimation(Motion.pill) { pick(tint) }
+                } label: {
+                    Circle()
+                        .fill(Palette.swatch(tint))
+                        .overlay {
+                            Circle().strokeBorder(Palette.ink.opacity(0.12),
+                                                  lineWidth: 0.5)
+                        }
+                        .frame(width: Metrics.swatch, height: Metrics.swatch)
+                        .padding(4)
+                        .overlay {
+                            if picked {
+                                Circle().strokeBorder(Palette.accent,
+                                                      lineWidth: 2)
+                            }
+                        }
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel(tint.title)
+                .accessibilityAddTraits(picked ? .isSelected : [])
+            }
         }
     }
 
@@ -108,7 +164,9 @@ struct SettingsView: View {
                     if changed { Launch.shared.reshape(from: before) }
                 } label: {
                     SproutPiece(index: index)
-                        .fill(on ? Palette.green
+                        // Тем же цветом, что и выбран для узора: клетка
+                        // обещает не только фигурку, но и её цвет.
+                        .fill(on ? Palette.swatch(settings.patternTint)
                               : Palette.ink.opacity(Metrics.pieceOff))
                         .frame(height: Metrics.pieceTile)
                         .frame(maxWidth: .infinity)

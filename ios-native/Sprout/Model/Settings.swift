@@ -62,6 +62,21 @@ final class Settings {
     /// узор из макета, что был здесь до всякой настройки.
     static let defaultShapes: Set<Int> = [0, 1]
 
+    /// Цвет узора в покое и цвет волны полива. Оттенки — в `Tint`.
+    ///
+    /// Двумя настройками, а не одной: узор и волна лежат в разных ролях.
+    /// Узор — фон, ему положено быть еле заметным; волна — событие, ей
+    /// положено бросаться в глаза. Один общий цвет на обоих означал бы,
+    /// что волна и покой различаются только силой, а различаться они
+    /// должны и цветом тоже.
+    var patternTint: Tint {
+        didSet { store.set(patternTint.rawValue, forKey: Key.patternTint) }
+    }
+
+    var waveTint: Tint {
+        didSet { store.set(waveTint.rawValue, forKey: Key.waveTint) }
+    }
+
     /// Пороги напоминания, доли влажности. Двадцать процентов посередине
     /// и по умолчанию: это и есть порог, на котором тревожная тень
     /// краснеет, — см. `Thirst.alarmBelow`.
@@ -150,6 +165,19 @@ final class Settings {
         static let shapes = "patternShapes"
         static let reminders = "reminders"
         static let threshold = "remindThreshold"
+        static let patternTint = "patternTint"
+        static let waveTint = "waveTint"
+    }
+
+    /// Оттенок из хранилища. Пусто — ключа нет.
+    ///
+    /// Отсутствие приходится ловить отдельно: `UserDefaults` на нет
+    /// отвечает нулём, а ноль — это зелёный. У узора он же и по
+    /// умолчанию, и там разницы не видно, а у волны по умолчанию синий —
+    /// её бы такой ответ сбросил на зелёную при первом же запуске.
+    private static func tint(_ store: UserDefaults, _ key: String) -> Tint? {
+        guard store.object(forKey: key) != nil else { return nil }
+        return Tint(rawValue: store.integer(forKey: key))
     }
 
     /// Хранилище задаётся снаружи только ради проверок: им нужно своё,
@@ -171,6 +199,8 @@ final class Settings {
             shapes = (1 ... Self.shapeCount).contains(count)
                 ? Set(0 ..< count) : Self.defaultShapes
         }
+        patternTint = Self.tint(store, Key.patternTint) ?? Tint.defaultPattern
+        waveTint = Self.tint(store, Key.waveTint) ?? Tint.defaultWave
         reminders = store.bool(forKey: Key.reminders)
         let level = store.double(forKey: Key.threshold)
         threshold = Self.thresholds.contains(level) ? level
