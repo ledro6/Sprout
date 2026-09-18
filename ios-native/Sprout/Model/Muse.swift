@@ -1,3 +1,4 @@
+import Foundation
 import FoundationModels
 
 /// Подсказчик: языковая модель Apple, живущая прямо в телефоне.
