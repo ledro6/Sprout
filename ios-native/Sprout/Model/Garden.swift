@@ -135,6 +135,9 @@ final class Garden {
     /// завели, тоже — это возраст самого приложения у человека, а не
     /// возраст того, что в нём сейчас растёт.
     func erase() {
+        for shot in rooms.flatMap(\.plants).compactMap(\.shot) {
+            Shots.drop(shot)
+        }
         rooms = []
         log = []
         save()
@@ -158,10 +161,14 @@ final class Garden {
     }
 
     func delete(_ id: Plant.ID) {
+        // Снимок уходит вместе с растением: иначе Documents копил бы
+        // картинки, на которые больше никто не смотрит.
+        let shot = plant(id: id)?.shot
         for room in rooms.indices {
             rooms[room].plants.removeAll { $0.id == id }
         }
         save()
+        if let shot { Shots.drop(shot) }
     }
 
     private func change(_ id: Plant.ID, _ edit: (inout Plant) -> Void) {

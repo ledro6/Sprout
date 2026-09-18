@@ -49,7 +49,7 @@ struct RootView: View {
                 StatsView()
             }
             Tab("Добавить", systemImage: "plus.circle.fill") {
-                Stub(title: "Добавить")
+                AddView()
             }
             Tab("Профиль", systemImage: "person.fill") {
                 ProfileView()
@@ -273,29 +273,5 @@ struct SearchView: View {
     private func show(_ id: Plant.ID) {
         opening = id
         Task { @MainActor in path.append(id) }
-    }
-}
-
-/// Экранов для этих вкладок в макете нет — рисовать их «на глаз» значит
-/// придумывать дизайн, которого никто не рисовал. Пока честная заглушка.
-struct Stub: View {
-    let title: String
-
-    var body: some View {
-        NavigationStack {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 0) {
-                    SectionTitle(title)
-                    Text("Этого экрана в макете нет")
-                        .font(Typography.cardTitle)
-                        .foregroundStyle(.secondary)
-                        .frame(maxWidth: .infinity)
-                        .padding(.top, 140)
-                }
-            }
-            .background { SproutBackground() }
-            .sproutNotchCover()
-            .toolbar(.hidden, for: .navigationBar)
-        }
     }
 }

@@ -27,6 +27,8 @@ trap 'rm -rf "$OUT"' EXIT
   ios-native/Sprout/Model/Score.swift \
   ios-native/Sprout/Model/Reminders.swift \
   ios-native/Sprout/Model/Rival.swift \
+  ios-native/Sprout/Model/Species.swift \
+  ios-native/Sprout/Model/Shots.swift \
   tool/swift-model-check/main.swift \
   -o "$OUT/check"
 # Сад пишет себя в Documents хозяина. Домашняя папка на время проверки

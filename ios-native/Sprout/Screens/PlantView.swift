@@ -200,9 +200,7 @@ struct PlantView: View {
 
     /// Плашка с фото. В макете 336×347: квадратное фото плюс поля.
     private func photo(_ plant: Plant) -> some View {
-        Image(plant.photo)
-            .resizable()
-            .scaledToFit()
+        PlantPhoto(plant: plant, radius: Metrics.cardRadius - 6)
             .padding(.vertical, 6)
             .frame(maxWidth: .infinity)
             .aspectRatio(336.0 / 347.0, contentMode: .fit)

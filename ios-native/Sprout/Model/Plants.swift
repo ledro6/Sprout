@@ -46,6 +46,14 @@ struct Plant: Identifiable, Hashable, Codable {
     var addedOn: DateComponents
     var photo: String = "monstera"
 
+    /// Имя снимка, сделанного хозяином, — см. `Shots`. Пусто у растений
+    /// из макетного сада: у них картинка из ассетов, та самая `photo`.
+    ///
+    /// Необязательное поле, и это не мелочь: разбор `Codable` на
+    /// пропущенный необязательный ключ отвечает пустотой, а не падает, —
+    /// значит, сады, записанные прежними сборками, читаются как были.
+    var shot: String?
+
     /// Через сколько суток растение попросит воды.
     ///
     /// Считается из влажности, а не хранится: иначе после полива пришлось
@@ -108,14 +116,14 @@ struct Plant: Identifiable, Hashable, Codable {
     /// Номер случайный, а не из клички: кличек может быть две одинаковых —
     /// в макетном саду уже есть два Баксика, — а номер обязан быть один.
     static func new(name: String, species: String, dryingDays: Double,
-                    photo: String = "monstera",
+                    photo: String = "monstera", shot: String? = nil,
                     on day: Date = Date(),
                     calendar: Calendar = .current) -> Plant {
         Plant(id: UUID().uuidString, name: name, species: species,
               moisture: 1, dryingDays: dryingDays,
               addedOn: calendar.dateComponents([.year, .month, .day],
                                                from: day),
-              photo: photo)
+              photo: photo, shot: shot)
     }
 
     /// Русское склонение по числу: 1 день, 2 дня, 5 дней.

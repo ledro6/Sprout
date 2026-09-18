@@ -10,9 +10,7 @@ struct PlantCard: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Image(plant.photo)
-                .resizable()
-                .scaledToFit()
+            PlantPhoto(plant: plant)
                 .frame(maxWidth: .infinity)
                 .aspectRatio(1, contentMode: .fit)
 

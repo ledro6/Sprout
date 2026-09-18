@@ -527,6 +527,55 @@ check(table.rivals.map(\.name).joined(separator: ", "), "Святослав, Б�
       "убранный соперник уходит из таблицы")
 box.removePersistentDomain(forName: "check.rivals")
 
+print("что разглядел телефон:")
+func guessed(_ seen: [(String, Double)]) -> String {
+    Species.read(seen.map { Sighting(name: $0.0, confidence: $0.1) })?
+        .species ?? "—"
+}
+// Ярлыки приходят пачкой, и самый уверенный почти всегда самый общий.
+check(guessed([("plant", 0.91), ("houseplant", 0.44), ("cactus", 0.21)]),
+      "Кактус", "частное слово важнее уверенного общего")
+check(guessed([("plant", 0.91), ("houseplant", 0.44)]),
+      "Комнатное растение", "без частного берётся общее")
+check(guessed([("flowering_plant", 0.5)]), "Цветок",
+      "слово ищется внутри ярлыка, а не целиком")
+check(guessed([("rosemary", 0.5)]), "Розмарин",
+      "розмарин не путается с розой")
+check(guessed([("tree_fern", 0.5)]), "Папоротник",
+      "древовидный папоротник — папоротник")
+check(guessed([("cactus", 0.01), ("plant", 0.9)]), "Комнатное растение",
+      "слишком слабый ярлык в расчёт не идёт")
+check(guessed([("dog", 0.9), ("sofa", 0.4)]), "—",
+      "на снимке без растения вида нет")
+check(guessed([]), "—", "и на пустом ответе тоже")
+let prickly = Species.read([Sighting(name: "cactus", confidence: 0.3)])
+check("\(prickly?.dryingDays ?? 0)", "30.0",
+      "кактусу подставляется месяц, а не неделя")
+
+print("сроки полива:")
+check("\(Species.period(near: 30))", "30.0", "точное совпадение")
+check("\(Species.period(near: 8))", "7.0", "восемь суток округляются к семи")
+check("\(Species.period(near: 9))", "10.0", "девять — к десяти")
+check("\(Species.period(near: 200))", "60.0", "запредельное упирается в потолок")
+check(Species.periodLabel(1), "Раз в 1 день", "1 день")
+check(Species.periodLabel(3), "Раз в 3 дня", "3 дня")
+check(Species.periodLabel(7), "Раз в 7 дней", "7 дней")
+check(Species.periodLabel(21), "Раз в 21 день", "21 день")
+
+// Словарь не должен сам себе противоречить. Слова ищутся вхождением, и
+// если более общее стоит выше более частного, до частного очередь не
+// дойдёт никогда: «rose» выше «rosemary» — и розмарин навсегда роза.
+print("порядок словаря видов:")
+var shadowed: [String] = []
+for (i, entry) in Species.table.enumerated() {
+    for later in Species.table[(i + 1)...]
+    where later.word.contains(entry.word) {
+        shadowed.append("«\(later.word)» не достижимо из-за «\(entry.word)»")
+    }
+}
+check(shadowed.isEmpty,
+      "до каждого слова доходит очередь: \(shadowed)")
+
 if failed > 0 {
     print("\nне сошлось: \(failed)")
     exit(1)
