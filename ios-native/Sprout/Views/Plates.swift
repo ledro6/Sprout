@@ -87,6 +87,51 @@ struct SproutBlock<Control: View>: View {
     }
 }
 
+/// Крупное число с ярлыком под ним: «17 / Всего».
+///
+/// Ярлык, а не фраза. «17 поливов» пришлось бы склонять по числу — 1
+/// полив, 2 полива, 5 поливов, — и склонять пришлось бы на ходу, потому
+/// что число меняется. Ярлык не склоняется вовсе: под ним стоит любое
+/// число, и строка остаётся верной.
+///
+/// Число меняется числовым переходом системы — тем же, что у влажности на
+/// карточке: цифры пролистываются, а ярлык под ними стоит на месте.
+struct SproutFigure: View {
+    let value: Int
+    let caption: String
+
+    /// Необязательная приписка мельче ярлыка — «лучшая — 9».
+    var note: String?
+
+    init(_ value: Int, _ caption: String, note: String? = nil) {
+        self.value = value
+        self.caption = caption
+        self.note = note
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 1) {
+            Text("\(value)")
+                .font(Typography.figure)
+                .foregroundStyle(Palette.ink)
+                .contentTransition(.numericText())
+            Text(caption)
+                .font(Typography.figureCaption)
+                .foregroundStyle(.secondary)
+            if let note {
+                Text(note)
+                    .font(Typography.figureCaption)
+                    .foregroundStyle(.tertiary)
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .animation(Motion.number, value: value)
+        // Числу и ярлыку порознь озвучиваться незачем: вслух это одна
+        // строка — «17, всего».
+        .accessibilityElement(children: .combine)
+    }
+}
+
 /// Черта между настройками внутри одной плашки.
 ///
 /// Системная. Своя здесь была — прямоугольник в десятую долю чернил, — из

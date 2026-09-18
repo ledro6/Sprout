@@ -42,7 +42,7 @@ struct RootView: View {
                 HomeView()
             }
             Tab("Статистика", systemImage: "chart.bar.fill") {
-                Stub(title: "Статистика")
+                StatsView()
             }
             Tab("Добавить", systemImage: "plus.circle.fill") {
                 Stub(title: "Добавить")
