@@ -273,6 +273,115 @@ for count in 2...4 {
           "при \(count) фигурках шаг обходит все, а не через одну")
 }
 
+print("журнал поливов и статистика:")
+var clock = Calendar(identifier: .gregorian)
+clock.timeZone = TimeZone(identifier: "UTC")!
+let noon = clock.date(from: DateComponents(year: 2026, month: 9, day: 18,
+                                           hour: 12))!
+func day(_ back: Int, _ hour: Int = 10) -> Date {
+    clock.date(byAdding: .day, value: -back,
+               to: clock.date(bySettingHour: hour, minute: 0, second: 0,
+                              of: noon)!)!
+}
+func note(_ plant: String, _ back: Int) -> Watering {
+    Watering(plant: plant, when: day(back))
+}
+
+let plot = [
+    Room(name: "Спальня", plants: [plantNamed("Баксик", moisture: 1, dryingDays: 9),
+                                   plantNamed("Борис", moisture: 1, dryingDays: 5)]),
+    Room(name: "Кухня", plants: [plantNamed("Мурзик", moisture: 1, dryingDays: 7)]),
+]
+let journal = [note("Баксик", 0), note("Баксик", 0), note("Борис", 0),
+               note("Мурзик", 1), note("Баксик", 2),
+               note("Борис", 9), note("Борис", 20)]
+let score = Score.of(journal, rooms: plot, now: noon, calendar: clock)
+check("\(score.total)", "7", "всего поливов — весь журнал")
+check("\(score.today)", "3", "сегодня — только сегодняшние")
+check("\(score.week)", "5", "за неделю — шесть дней назад и ближе")
+check("\(score.days.count)", "14", "в ряду для графика ровно две недели")
+check(score.days.first!.day < score.days.last!.day, "ряд идёт от старого к новому")
+check("\(score.days.last!.count)", "3", "последний день ряда — сегодня")
+check("\(score.days.map(\.count).filter { $0 == 0 }.count)", "10",
+      "пустые дни в ряду есть: поливали в четыре дня из четырнадцати")
+
+print("череда дней:")
+check("\(score.streak)", "3", "сегодня, вчера и позавчера — это три подряд")
+let withGap = [note("Баксик", 0), note("Баксик", 2), note("Баксик", 3)]
+check("\(Score.of(withGap, rooms: plot, now: noon, calendar: clock).streak)",
+      "1", "вчерашний пропуск обрывает: в череде только сегодня")
+let inARow = [note("Баксик", 0), note("Баксик", 1), note("Баксик", 2)]
+check("\(Score.of(inARow, rooms: plot, now: noon, calendar: clock).streak)", "3",
+      "три дня подряд — череда в три")
+let sinceYesterday = [note("Баксик", 1), note("Баксик", 2)]
+check("\(Score.of(sinceYesterday, rooms: plot, now: noon, calendar: clock).streak)",
+      "2", "сегодня ещё не полили — череда жива, день не кончился")
+let stale = [note("Баксик", 2), note("Баксик", 3)]
+check("\(Score.of(stale, rooms: plot, now: noon, calendar: clock).streak)", "0",
+      "пропустили вчера целиком — череда оборвана")
+check("\(Score.of([], rooms: plot, now: noon, calendar: clock).streak)", "0",
+      "в пустом журнале череды нет")
+let twoRuns = [note("Баксик", 10), note("Баксик", 11), note("Баксик", 12),
+               note("Баксик", 13), note("Баксик", 0)]
+check("\(Score.of(twoRuns, rooms: plot, now: noon, calendar: clock).best)", "4",
+      "самая длинная череда — из прошлого, не из сегодняшнего дня")
+
+print("кого поливали чаще:")
+check("\(score.plants.map(\.name))", "[\"Баксик\", \"Борис\", \"Мурзик\"]",
+      "растения от большего к меньшему")
+check("\(score.plants.map(\.count))", "[3, 3, 1]", "и с их числами")
+check("\(score.rooms.map(\.name))", "[\"Спальня\", \"Кухня\"]",
+      "комнаты тоже")
+check("\(score.rooms.map(\.count))", "[6, 1]", "сумма по растениям комнаты")
+let quiet = Score.of([note("Баксик", 0)], rooms: plot, now: noon, calendar: clock)
+check("\(quiet.plants.count)", "1", "кого ни разу не полили, в списке нет")
+check("\(quiet.rooms.count)", "1", "и пустых комнат тоже")
+
+print("сад ведёт журнал:")
+let plot2 = Garden()
+let before = plot2.log.count
+plot2.water("pr")
+check("\(plot2.log.count - before)", "1", "полив добавил запись")
+check(plot2.log.last!.plant, "pr", "и записал, кого")
+check("\(plot2.score().total)", "\(plot2.log.count)", "статистика считает весь журнал")
+
+print("сад принимает новые растения:")
+let rooms0 = plot2.rooms.count
+let bed0 = plot2.rooms[0].plants.count
+plot2.add(Plant.new(name: "Ёжик", species: "Кактус", dryingDays: 30),
+          to: plot2.rooms[0].name)
+check("\(plot2.rooms[0].plants.count - bed0)", "1", "растение встало в комнату")
+plot2.add(Plant.new(name: "Пыль", species: "Фикус", dryingDays: 7),
+          to: "Кабинет")
+check("\(plot2.rooms.count - rooms0)", "1", "незнакомая комната заводится сама")
+check(plot2.rooms.last!.name, "Кабинет", "и с тем именем, что дали")
+check(Plant.new(name: "А", species: "Б", dryingDays: 1).id
+      != Plant.new(name: "А", species: "Б", dryingDays: 1).id,
+      "у двух одинаковых с виду растений номера разные")
+
+print("хозяин переименовывается:")
+plot2.rename(owner: "  Тёма  ")
+check(plot2.owner, "Тёма", "имя обрезается по краям")
+plot2.rename(owner: "   ")
+check(plot2.owner, "Тёма", "пустое не сохраняется")
+
+print("сад, записанный прежней сборкой, читается:")
+let old = """
+{"owner":"Святослав","savedAt":760000000,"rooms":[{"name":"Спальня","plants":[
+{"id":"x","name":"Икс","species":"Игрек","moisture":0.5,"dryingDays":7,
+"addedOn":{"year":2024,"month":1,"day":1},"photo":"monstera"}]}]}
+"""
+let decoder = JSONDecoder()
+if let revived = try? decoder.decode(GardenState.self,
+                                     from: Data(old.utf8)) {
+    check(revived.owner, "Святослав", "хозяин на месте")
+    check("\(revived.rooms[0].plants.count)", "1", "растения на месте")
+    check("\(revived.log.count)", "0", "журнала не было — он пуст, а не падение")
+    check(revived.since == revived.savedAt, "дату сада берём от записи")
+} else {
+    check(false, "старый сад разобрался")
+}
+
 print("фронт перехода: очередь по узору:")
 let canvas = CGSize(width: 400, height: 800)
 func turn(_ front: Front, _ x: Double, _ y: Double) -> Double {

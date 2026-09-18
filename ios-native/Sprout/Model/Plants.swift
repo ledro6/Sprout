@@ -103,6 +103,21 @@ struct Plant: Identifiable, Hashable, Codable {
         return "Следующий полив: \(days) " + plural(days, "день", "дня", "дней")
     }
 
+    /// Новое растение с собственным номером.
+    ///
+    /// Номер случайный, а не из клички: кличек может быть две одинаковых —
+    /// в макетном саду уже есть два Баксика, — а номер обязан быть один.
+    static func new(name: String, species: String, dryingDays: Double,
+                    photo: String = "monstera",
+                    on day: Date = Date(),
+                    calendar: Calendar = .current) -> Plant {
+        Plant(id: UUID().uuidString, name: name, species: species,
+              moisture: 1, dryingDays: dryingDays,
+              addedOn: calendar.dateComponents([.year, .month, .day],
+                                               from: day),
+              photo: photo)
+    }
+
     /// Русское склонение по числу: 1 день, 2 дня, 5 дней.
     static func plural(_ n: Int, _ one: String, _ few: String,
                        _ many: String) -> String {
@@ -131,6 +146,37 @@ struct GardenState: Codable {
     var rooms: [Room]
     /// Когда слепок сделали.
     var savedAt: Date
+
+    /// Журнал поливов: из него считается вся статистика.
+    var log: [Watering]
+
+    /// Когда завели сад. От неё считается его возраст в профиле.
+    var since: Date
+
+    init(owner: String, rooms: [Room], savedAt: Date,
+         log: [Watering] = [], since: Date = Date()) {
+        self.owner = owner
+        self.rooms = rooms
+        self.savedAt = savedAt
+        self.log = log
+        self.since = since
+    }
+
+    /// Разбор с оглядкой на прежние сады.
+    ///
+    /// Журнала и даты в файлах, записанных прежними сборками, нет, а
+    /// синтезированный разбор на отсутствующий ключ падает — и сад
+    /// хозяина после обновления начался бы заново, с макетных растений.
+    /// Поэтому оба читаются мягко: нет журнала — он пуст, нет даты —
+    /// считаем, что сад завели тогда же, когда записали.
+    init(from decoder: any Decoder) throws {
+        let box = try decoder.container(keyedBy: CodingKeys.self)
+        owner = try box.decode(String.self, forKey: .owner)
+        rooms = try box.decode([Room].self, forKey: .rooms)
+        savedAt = try box.decode(Date.self, forKey: .savedAt)
+        log = try box.decodeIfPresent([Watering].self, forKey: .log) ?? []
+        since = try box.decodeIfPresent(Date.self, forKey: .since) ?? savedAt
+    }
 }
 
 /// Начальные данные. Первые растения в каждой комнате — из макета, с теми
@@ -143,7 +189,8 @@ enum Seed {
     static let owner = "Святослав"
 
     static var state: GardenState {
-        GardenState(owner: owner, rooms: rooms, savedAt: Date())
+        GardenState(owner: owner, rooms: rooms, savedAt: Date(),
+                    log: [], since: Date())
     }
 
     static let rooms: [Room] = [

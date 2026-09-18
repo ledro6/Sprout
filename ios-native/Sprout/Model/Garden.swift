@@ -24,6 +24,12 @@ final class Garden {
     var owner: String
     var rooms: [Room]
 
+    /// Журнал поливов. Из него считается вся статистика — см. `Score`.
+    private(set) var log: [Watering]
+
+    /// Когда завели сад.
+    let since: Date
+
     /// Когда сад считали в прошлый раз. Не наблюдаемое: от его смены
     /// перерисовывать нечего.
     @ObservationIgnored private var lastTick = Date()
@@ -38,6 +44,8 @@ final class Garden {
         let state = Self.load() ?? Seed.state
         owner = state.owner
         rooms = state.rooms
+        log = state.log
+        since = state.since
         // Отсчёт начинается с запуска: что было до первого запуска, саду
         // знать неоткуда. А вот между запусками время идёт — вернувшись
         // из фона, сад отдаёт себе всё прошедшее разом. Иначе врали бы
@@ -80,8 +88,35 @@ final class Garden {
 
     // MARK: - Что с ними делают
 
-    func water(_ id: Plant.ID) {
+    func water(_ id: Plant.ID, at moment: Date = Date()) {
+        // Запись в журнал — до полива, а не после: `change` сам пишет сад
+        // на диск, и запись должна попасть в тот же файл.
+        log.append(Watering(plant: id, when: moment))
         change(id) { $0.moisture = 1 }
+    }
+
+    /// Что сад может рассказать о поливах.
+    func score(now: Date = Date(), calendar: Calendar = .current) -> Score {
+        Score.of(log, rooms: rooms, now: now, calendar: calendar)
+    }
+
+    /// Завести растение в комнате. Нет такой комнаты — заводим и её.
+    func add(_ plant: Plant, to room: String) {
+        if let index = rooms.firstIndex(where: { $0.name == room }) {
+            rooms[index].plants.append(plant)
+        } else {
+            rooms.append(Room(name: room, plants: [plant]))
+        }
+        save()
+    }
+
+    /// Переименовать хозяина. Пустое имя не сохраняем — по той же
+    /// причине, что и пустую кличку.
+    func rename(owner name: String) {
+        let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return }
+        owner = trimmed
+        save()
     }
 
     /// Пустое имя не сохраняем: безымянная карточка — это поломка, а не
@@ -113,7 +148,8 @@ final class Garden {
 
     /// Слепок сада.
     var state: GardenState {
-        GardenState(owner: owner, rooms: rooms, savedAt: Date())
+        GardenState(owner: owner, rooms: rooms, savedAt: Date(),
+                    log: log, since: since)
     }
 
     /// Записать сад на диск.
