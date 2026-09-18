@@ -263,6 +263,9 @@ private struct SproutPattern: View {
     /// Идёт ли сейчас смена цвета и как далеко зашла.
     var repaint: Recolour?
 
+    /// Кутерьма от тряски телефона. Пусто — её нет.
+    var frolic: Frolic?
+
     /// Цвет узора в покое и цвет волны полива. Оба из настроек, а пока
     /// цвет меняется — смесь прежнего с новым, см. `Repaint`.
     ///
@@ -308,6 +311,12 @@ private struct SproutPattern: View {
     /// покое занят ровно один из тридцати шести.
     private static let repaints = 6
 
+    /// Во время кутерьмы вторая половина номера слоя значит не ступень
+    /// перелива, а сам оттенок: беспорядочные фигурки берут номер оттенка
+    /// из `Tint`, а спокойные — вот этот, «как в настройках». Оттенков
+    /// пять, ступеней шесть, и свободный номер как раз один.
+    private static let plain = Tint.allCases.count
+
     var body: some View {
         Canvas { context, size in
             let layers = pattern(covering: size)
@@ -340,6 +349,14 @@ private struct SproutPattern: View {
 
     /// Цвета фигурки на этой ступени перелива.
     private func paint(_ step: Int) -> (base: Shade, wave: Shade) {
+        if frolic != nil {
+            // Кутерьма перекрашивает узор целиком на каждом такте, и
+            // перелива у неё нет: цвет меняется в тот же миг, когда
+            // фигурка проходит через ноль, — то есть когда её не видно.
+            guard step < Self.plain else { return (baseShade, waveShade) }
+            let tint = Tint.allCases[step]
+            return (Shade(tint), Shade(tint))
+        }
         guard let repaint else { return (baseShade, waveShade) }
         let part = Double(step) / Double(Self.repaints - 1)
         return (Shade.mix(repaint.from, repaint.to, part),
@@ -408,7 +425,23 @@ private struct SproutPattern: View {
                     var scale = grow
                     var here = list
                     var mesh = arrivingWeave
-                    if let swap, let leaving, !leaving.isEmpty {
+                    // Что показывает кутерьма: своя фигурка и свой
+                    // оттенок, не спрашивая ни настроек, ни раскладки.
+                    var wild: Int?
+                    var hue: Int?
+                    if let frolic {
+                        let turn = Front.point(heart(of: size))
+                            .turn(at: middle, over: size)
+                        let (state, shrink) = frolic.look(turn: turn)
+                        scale *= CGFloat(shrink)
+                        if Frolic.chaotic(state) {
+                            wild = Self.scramble(column, row, slot, state)
+                                % SproutShapes.pieces.count
+                            hue = state % Tint.allCases.count
+                        } else {
+                            hue = Self.plain
+                        }
+                    } else if let swap, let leaving, !leaving.isEmpty {
                         let (share, old) = change(swap, at: middle, over: size)
                         scale *= share
                         if old { here = leaving; mesh = swap.fromWeave }
@@ -416,12 +449,13 @@ private struct SproutPattern: View {
                         scale *= sprouted(at: middle, over: size)
                     }
                     guard scale > 0 else { continue }
-                    let index = mesh.index(column: column, slot: slot,
-                                           row: row, of: here.count)
-                    let slot = tint(of: grow) * Self.repaints
-                        + repainted(at: middle, over: size)
-                    add(SproutShapes.pieces[here[index]], at: middle,
-                        scale: scale, slot: slot, to: &layers)
+                    let piece = wild ?? here[mesh.index(column: column,
+                                                        slot: slot, row: row,
+                                                        of: here.count)]
+                    let layer = tint(of: grow) * Self.repaints
+                        + (hue ?? repainted(at: middle, over: size))
+                    add(SproutShapes.pieces[piece], at: middle,
+                        scale: scale, slot: layer, to: &layers)
                 }
                 x += pitchX
                 column += 1
@@ -430,6 +464,34 @@ private struct SproutPattern: View {
             row += 1
         }
         return layers
+    }
+
+    /// Середина холста — оттуда расходятся такты кутерьмы.
+    ///
+    /// Оттуда, потому что нажимать при тряске некуда: точки, из которой
+    /// пошло бы событие, здесь просто нет, а из угла кольцо читалось бы
+    /// перекосом.
+    private func heart(of size: CGSize) -> CGPoint {
+        CGPoint(x: size.width / 2, y: size.height / 2)
+    }
+
+    /// Какую фигурку показать этой клетке на этом такте кутерьмы.
+    ///
+    /// Не случайное число, а перемешанный номер клетки: случайное менялось
+    /// бы на каждом кадре, и фигурка мигала бы вместо того, чтобы стоять
+    /// такт. Это же делает кутерьму одинаковой в двух местах, где рисуется
+    /// фон, — на экране и в подложке под вырезом.
+    ///
+    /// Раскладку `Weave` кутерьма не спрашивает: правило «две одинаковых
+    /// не стоят рядом» держит узор, а здесь беспорядок и есть суть.
+    private static func scramble(_ column: Int, _ row: Int, _ slot: Int,
+                                 _ state: Int) -> Int {
+        var mix = column &* 73_856_093
+        mix ^= row &* 19_349_663
+        mix ^= slot &* 83_492_791
+        mix ^= state &* 2_654_435_761
+        mix ^= mix >> 13
+        return abs(mix)
     }
 
     /// Поставить фигурку в свой слой: серединой на своё место, в своём
@@ -1119,6 +1181,7 @@ private struct SproutField: View {
         let baseTint = Settings.shared.patternTint
         let waveTint = Settings.shared.waveTint
         let repainting = Repaint.shared.start != nil
+        let frenzied = Frenzy.shared.start != nil
         return ZStack {
             Palette.background
 
@@ -1146,7 +1209,7 @@ private struct SproutField: View {
                         paused: Cheer.shared.start == nil
                             && Launch.shared.bloomStart == nil
                             && Launch.shared.swapStart == nil
-                            && !repainting)) { frame in
+                            && !repainting && !frenzied)) { frame in
                         SproutPattern(wave: Cheer.shared.wave(at: frame.date),
                                       origin: Cheer.shared.origin,
                                       canvas: corner,
@@ -1157,6 +1220,8 @@ private struct SproutField: View {
                                       swap: Launch.shared.reshape(at: frame.date),
                                       repaint: Repaint.shared
                                           .recolour(at: frame.date),
+                                      frolic: Frenzy.shared
+                                          .frolic(at: frame.date),
                                       baseShade: Shade(baseTint),
                                       waveShade: Shade(waveTint))
                     }

@@ -435,6 +435,51 @@ for front in [corner, middle, inward, up,
 }
 check("\(outside)", "0", "черёд нигде не выходит за 0…1, даже за краем холста")
 
+print("кутерьма от тряски:")
+func look(_ elapsed: Double, _ turn: Double) -> (Int, Double) {
+    let seen = Frolic(elapsed: elapsed).look(turn: turn)
+    return (seen.state, (seen.scale * 1000).rounded() / 1000)
+}
+check("\(look(0, 0).0)", "0", "в самом начале узор ещё обычный")
+check("\(look(0, 0).1)", "1.0", "и в полный размер")
+check("\(look(-1, 0).0)", "0", "до начала — тоже")
+// Дальняя фигурка отстаёт ровно на такт: на этом и держится кольцо.
+check("\(look(Frolic.beat, 1).0)", "0", "дальняя в этот миг ещё не тронулась")
+check("\(look(Frolic.beat, 0).0)", "1", "а ближняя уже в первом беспорядке")
+check(look(Frolic.beat * 0.5, 0).1 < 0.05,
+      "к середине такта фигурка сжата почти в ноль")
+check(look(Frolic.beat * 0.25, 0).1 > 0.8,
+      "в первой четверти ещё почти целая — сквозь ноль она проскакивает")
+check("\(look(Frolic.beat * 0.75, 0).0)", "1",
+      "после нуля растёт уже следующим состоянием")
+
+// Кончается кутерьма тем же узором, с которого началась, — иначе в
+// настройках был бы выбран один набор, а на экране стоял бы другой.
+check("\(look(Frolic.seconds, 0).0)", "\(Frolic.beats)",
+      "у ближней последнее состояние — обычный узор")
+check("\(look(Frolic.seconds, 1).0)", "\(Frolic.beats)",
+      "и у дальней тоже, она успевает")
+check("\(look(Frolic.seconds, 1).1)", "1.0", "и в полный размер")
+check(!Frolic.chaotic(0) && !Frolic.chaotic(Frolic.beats),
+      "первое и последнее состояния — не беспорядок")
+check(Frolic.chaotic(1) && Frolic.chaotic(Frolic.beats - 1),
+      "а всё, что между ними, — беспорядок")
+
+// Размер нигде не выходит за 0…1: на нём держится вся раскладка.
+var wild = 0
+for tick in stride(from: -0.5, through: Frolic.seconds + 1, by: 0.01) {
+    for turn in stride(from: 0.0, through: 1.0, by: 0.05) {
+        let seen = Frolic(elapsed: tick).look(turn: turn)
+        if seen.scale < -1e-9 || seen.scale > 1 + 1e-9 || seen.scale.isNaN {
+            wild += 1
+        }
+        if seen.state < 0 || seen.state > Frolic.beats { wild += 1 }
+    }
+}
+check("\(wild)", "0", "размер и состояние нигде не выходят за свои границы")
+check(Frolic.seconds > 4.5 && Frolic.seconds < 5.5,
+      "вся кутерьма укладывается примерно в пять секунд")
+
 print("срок напоминания:")
 func delay(_ moisture: Double, _ dryingDays: Double = 7,
            _ threshold: Double = 0.2) -> String {

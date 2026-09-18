@@ -3,7 +3,8 @@ import Observation
 import SwiftUI
 import UIKit
 
-/// Наклон телефона — источник параллакса для фонового узора.
+/// Наклон телефона — источник параллакса для фонового узора, и он же
+/// слышит тряску.
 ///
 /// Один на всё приложение: датчик у телефона один, а фон рисуется на
 /// каждом экране. Экраны подписываются и отписываются, и пока не смотрит
@@ -39,6 +40,28 @@ final class Tilt {
     @ObservationIgnored private var watchers = 0
     @ObservationIgnored private var base: (x: Double, z: Double)?
 
+    /// Сколько секунд подряд телефон уже трясут.
+    @ObservationIgnored private var shaken = 0.0
+    @ObservationIgnored private var lastSample: Date?
+
+    /// С какой силы толчок считается тряской, в долях тяжести.
+    ///
+    /// Берётся `userAcceleration` — то, что осталось от датчика после
+    /// вычитания силы тяжести. В покое там сотые доли, при ходьбе с
+    /// телефоном в руке — до трети, так что порог в полторы тяжести
+    /// случайно не набрать: телефон надо именно трясти.
+    private static let shakeForce = 1.5
+
+    /// Сколько всего надо натрясти, чтобы узор пустился вразнос.
+    ///
+    /// Секунды не подряд, а в сумме: за взмах датчик выходит за порог
+    /// дважды — в начале и в конце, — а между ними рука на миг
+    /// останавливается. Копим то, что за порогом, и спускаем накопленное
+    /// вдвое быстрее, чем набираем: положил телефон — за секунду всё
+    /// забылось.
+    private static let shakeSeconds = 2.2
+    private static let shakeFade = 2.0
+
     private init() {}
 
     /// Экран показался и хочет параллакс.
@@ -53,9 +76,12 @@ final class Tilt {
 
         base = nil
         motion.deviceMotionUpdateInterval = 1.0 / 60
+        shaken = 0
+        lastSample = nil
         motion.startDeviceMotionUpdates(to: .main) { [weak self] data, _ in
-            guard let self, let gravity = data?.gravity else { return }
-            self.step(x: gravity.x, z: gravity.z)
+            guard let self, let data else { return }
+            self.step(x: data.gravity.x, z: data.gravity.z)
+            self.feel(data.userAcceleration)
         }
     }
 
@@ -65,6 +91,8 @@ final class Tilt {
         guard watchers == 0 else { return }
         motion.stopDeviceMotionUpdates()
         base = nil
+        shaken = 0
+        lastSample = nil
         shift = .zero
     }
 
@@ -88,6 +116,37 @@ final class Tilt {
         shift = CGSize(
             width: shift.width + (target.width - shift.width) * Self.ease,
             height: shift.height + (target.height - shift.height) * Self.ease)
+    }
+
+    /// Не трясут ли телефон.
+    ///
+    /// Натрясли — узор пускается вразнос: фигурки волной меняются на
+    /// другие и перекрашиваются, а через пять секунд всё возвращается на
+    /// место. См. `Frolic`.
+    ///
+    /// Слушается здесь, а не отдельным датчиком: `CMDeviceMotion` и так
+    /// уже идёт ради параллакса, и своего ускорения ему просить не нужно.
+    /// Отсюда же и уважение к «Уменьшению движения»: при нём датчик не
+    /// включается вовсе, значит и тряска не слышна.
+    private func feel(_ push: CMAcceleration) {
+        let now = Date()
+        // Промежуток берём у часов, а не «одна шестидесятая»: отсчёты
+        // задерживаются, и по числу отсчётов секунды считались бы
+        // неверно. Сверху ограничен — приложение могло простоять в фоне.
+        let gap = min(max(now.timeIntervalSince(lastSample ?? now), 0), 0.1)
+        lastSample = now
+
+        let force = sqrt(push.x * push.x + push.y * push.y + push.z * push.z)
+        guard force > Self.shakeForce else {
+            shaken = max(0, shaken - gap * Self.shakeFade)
+            return
+        }
+        shaken += gap
+        guard shaken >= Self.shakeSeconds else { return }
+        shaken = 0
+        // Пока кутерьма идёт, второй раз она не начнётся: трясти-то
+        // продолжают.
+        Frenzy.shared.begin()
     }
 
     private func limit(_ value: Double) -> CGFloat {
