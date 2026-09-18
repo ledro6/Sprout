@@ -21,5 +21,6 @@ struct SectionTitle: View {
             .padding(.horizontal, Metrics.contentMargin)
             .padding(.top, 4)
             .padding(.bottom, 6)
+            .sproutRide()
     }
 }

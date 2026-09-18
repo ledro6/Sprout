@@ -174,6 +174,7 @@ struct RootView: View {
     /// скриншотах, где вырез не снимается, она на своём месте.
     private var badge: some View {
         SproutBadge()
+            .sproutRide()
             .padding(.top, Metrics.badgeTop)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             .ignoresSafeArea()
@@ -219,6 +220,7 @@ struct SearchView: View {
                         .buttonStyle(.plain)
                         .modifier(PlantMenu(id: plant.id))
                         .environment(\.sproutHalos, opening != plant.id)
+                        .sproutRide()
                         .matchedTransitionSource(id: plant.id, in: cardZoom)
                     }
                 }

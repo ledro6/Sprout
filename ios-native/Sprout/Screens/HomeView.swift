@@ -170,6 +170,7 @@ struct HomeView: View {
             RoomPicker(rooms: garden.rooms.map(\.name), selection: $roomIndex,
                        size: roomSize + (roomGrown - roomSize) * grown)
                 .frame(maxWidth: .infinity, alignment: .leading)
+                .sproutRide()
             gear
         }
         .padding(.horizontal, Metrics.contentMargin)
@@ -218,6 +219,7 @@ struct HomeView: View {
         .buttonStyle(.glass)
         .buttonBorderShape(.circle)
         .accessibilityLabel("Настройки")
+        .sproutRide()
         .offset(y: -titleHeight * (1 - grown))
     }
 
@@ -298,6 +300,9 @@ struct HomeView: View {
                     room: roomIndex,
                     animates: !revealed.contains(item.element.id),
                     onShown: { revealed.insert(item.element.id) }))
+                // На гребне волны полива карточка подпрыгивает вместе со
+                // всем остальным, что лежит поверх узора.
+                .sproutRide()
                 .transition(.asymmetric(insertion: .identity, removal: .opacity))
                 // Отсюда карточка разворачивается в экран растения.
                 // Замер снимается с готовой геометрии, поэтому источник

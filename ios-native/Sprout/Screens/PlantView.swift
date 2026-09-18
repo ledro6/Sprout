@@ -123,6 +123,7 @@ struct PlantView: View {
         .buttonBorderShape(.circle)
         .accessibilityLabel("Назад")
         .modifier(Chrome(shown: chrome))
+        .sproutRide()
     }
 
     /// Заголовок панели — свой, а не системный.
@@ -136,6 +137,7 @@ struct PlantView: View {
             .foregroundStyle(Palette.ink)
             .lineLimit(1)
             .modifier(Chrome(shown: chrome))
+            .sproutRide()
     }
 
     /// Меню в панели. Стекло и размер — те же системные, что у «назад»:
@@ -164,6 +166,7 @@ struct PlantView: View {
         .buttonStyle(.glass)
         .buttonBorderShape(.circle)
         .modifier(Chrome(shown: chrome))
+        .sproutRide()
     }
 
     /// Закрыть экран, дав панели раствориться.
@@ -210,6 +213,9 @@ struct PlantView: View {
             .modifier(PlantGlow(plant: plant, shape: plate))
             .onGeometryChange(for: CGRect.self) { $0.frame(in: .global) }
                 action: { spot.rect = $0 }
+            // Плашка политого растения — та, из-под которой волна и
+            // выходит: её черёд нулевой, она подпрыгивает первой.
+            .sproutRide()
     }
 
     private func facts(_ plant: Plant) -> some View {
@@ -228,6 +234,7 @@ struct PlantView: View {
         .padding(.horizontal, 25)
         .padding(.vertical, 22)
         .sproutPlate(in: plate)
+        .sproutRide()
     }
 
     private var plate: RoundedRectangle {
