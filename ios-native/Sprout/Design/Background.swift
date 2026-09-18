@@ -230,8 +230,17 @@ private struct SproutPattern: View {
     /// Откуда волна пошла — в координатах окна.
     var origin: CGPoint
 
-    /// Откуда пошли всходы, в радианах. Своё на каждый запуск.
-    var bloomAngle: Double
+    /// Где угол самого холста в координатах окна.
+    ///
+    /// Нужен, чтобы пересчитать в координаты холста то, что замерили на
+    /// экране. У главной угол холста совпадает с углом окна, и пересчёт
+    /// там ничего не меняет. А лист настроек висит ниже окна — и без
+    /// пересчёта волна, пущенная из кружка с цветом, расходилась бы из
+    /// точки заметно выше него.
+    var canvas: CGPoint
+
+    /// Откуда пошли всходы. Своё на каждый запуск.
+    var bloomFront: Front
 
     /// Насколько узор взошёл при запуске, 0…1.
     ///
@@ -250,6 +259,9 @@ private struct SproutPattern: View {
 
     /// Идёт ли сейчас смена набора и как далеко зашла.
     var swap: Reshape?
+
+    /// Идёт ли сейчас смена цвета и как далеко зашла.
+    var repaint: Recolour?
 
     /// Цвет узора в покое и цвет волны полива. Оба из настроек, а пока
     /// цвет меняется — смесь прежнего с новым, см. `Repaint`.
@@ -287,6 +299,15 @@ private struct SproutPattern: View {
     /// отличаются на восьмую долю прохода.
     private static let tints = 6
 
+    /// На сколько ступеней разбит перелив из прежнего цвета в новый.
+    ///
+    /// По той же причине, что и синева: цвет у фигурки свой, а холст
+    /// заливает контур одной командой на цвет. Ступеней столько же, и
+    /// вместе они дают тридцать шесть слоёв — по слою на пару «сколько
+    /// посинела, насколько перекрасилась». Пустые слои не рисуются, и в
+    /// покое занят ровно один из тридцати шести.
+    private static let repaints = 6
+
     var body: some View {
         Canvas { context, size in
             let layers = pattern(covering: size)
@@ -295,15 +316,18 @@ private struct SproutPattern: View {
             // в слой попало, а зелёному узору размываться незачем.
             context.drawLayer { halo in
                 halo.addFilter(.blur(radius: Metrics.splashGlow))
-                for (step, layer) in layers.enumerated()
-                where step > 0 && !layer.isEmpty {
-                    halo.fill(layer, with: .color(
-                    Palette.glow(waveShade, level: level(step))))
+                for (slot, layer) in layers.enumerated() where !layer.isEmpty {
+                    let step = slot / Self.repaints
+                    guard step > 0 else { continue }
+                    halo.fill(layer, with: .color(Palette.glow(
+                        paint(slot % Self.repaints).wave, level: level(step))))
                 }
             }
-            for (step, layer) in layers.enumerated() where !layer.isEmpty {
+            for (slot, layer) in layers.enumerated() where !layer.isEmpty {
+                let colours = paint(slot % Self.repaints)
                 context.fill(layer, with: .color(Palette.pattern(
-                    baseShade, wave: waveShade, splash: level(step))))
+                    colours.base, wave: colours.wave,
+                    splash: level(slot / Self.repaints))))
             }
         }
         .id(scheme)
@@ -314,16 +338,34 @@ private struct SproutPattern: View {
         Double(step) / Double(Self.tints - 1)
     }
 
-    /// Место нажатия в координатах холста.
-    ///
-    /// Холст начинается выше и левее экрана ровно на размах параллакса —
-    /// отсюда сдвиг. Сам параллакс в пересчёт не берётся: он не больше
-    /// четырнадцати пунктов, а волна расходится на сотни, и на её ходе
-    /// такой сдвиг не читается.
-    private var source: CGPoint {
-        CGPoint(x: origin.x + Metrics.parallax,
-                y: origin.y + Metrics.parallax)
+    /// Цвета фигурки на этой ступени перелива.
+    private func paint(_ step: Int) -> (base: Shade, wave: Shade) {
+        guard let repaint else { return (baseShade, waveShade) }
+        let part = Double(step) / Double(Self.repaints - 1)
+        return (Shade.mix(repaint.from, baseShade, part),
+                Shade.mix(repaint.fromWave, waveShade, part))
     }
+
+    /// Точка окна в координатах холста.
+    ///
+    /// Холст начинается выше и левее своего места ровно на размах
+    /// параллакса — отсюда прибавка. Сам параллакс в пересчёт не берётся:
+    /// он не больше четырнадцати пунктов, а переход расходится на сотни, и
+    /// на его ходе такой сдвиг не читается.
+    private func local(_ point: CGPoint) -> CGPoint {
+        CGPoint(x: point.x - canvas.x + Metrics.parallax,
+                y: point.y - canvas.y + Metrics.parallax)
+    }
+
+    /// Фронт, пересчитанный в координаты холста: точку замеряли на
+    /// экране, а очередь раздаётся по холсту.
+    private func placed(_ front: Front) -> Front {
+        guard case let .point(spot) = front else { return front }
+        return .point(local(spot))
+    }
+
+    /// Место нажатия в координатах холста.
+    private var source: CGPoint { local(origin) }
 
     /// Весь узор одним контуром.
     ///
@@ -334,7 +376,8 @@ private struct SproutPattern: View {
     /// он уезжает в её собственное преобразование при добавлении в
     /// контур, и заливка всё та же одна.
     private func pattern(covering size: CGSize) -> [Path] {
-        var layers = [Path](repeating: Path(), count: Self.tints)
+        var layers = [Path](repeating: Path(),
+                            count: Self.tints * Self.repaints)
         // Настройке не доверяем на слово: узор рисуется каждый кадр
         // волны, и промах по границам обошёлся бы падением, а не кривым
         // рисунком. Пустой набор тоже отводим — рисовать нечем, а фон
@@ -367,8 +410,10 @@ private struct SproutPattern: View {
                     guard scale > 0 else { continue }
                     let index = mesh.index(column: column, slot: slot,
                                            row: row, of: here.count)
+                    let slot = tint(of: grow) * Self.repaints
+                        + repainted(at: middle, over: size)
                     add(SproutShapes.pieces[here[index]], at: middle,
-                        scale: scale, tint: tint(of: grow), to: &layers)
+                        scale: scale, slot: slot, to: &layers)
                 }
                 x += pitchX
                 column += 1
@@ -382,19 +427,36 @@ private struct SproutPattern: View {
     /// Поставить фигурку в свой слой: серединой на своё место, в своём
     /// размере и своего цвета.
     private func add(_ piece: SproutShapes.Piece, at middle: CGPoint,
-                     scale: CGFloat, tint: Int, to layers: inout [Path]) {
+                     scale: CGFloat, slot: Int, to layers: inout [Path]) {
         guard scale != 1 else {
-            layers[tint].addPath(piece.path, transform: CGAffineTransform(
+            layers[slot].addPath(piece.path, transform: CGAffineTransform(
                 translationX: middle.x - piece.centre.x,
                 y: middle.y - piece.centre.y))
             return
         }
         // Раздаётся фигурка вокруг своей середины: от угла её уводило бы
         // вправо и вниз.
-        layers[tint].addPath(piece.path, transform:
+        layers[slot].addPath(piece.path, transform:
             CGAffineTransform(translationX: middle.x, y: middle.y)
                 .scaledBy(x: scale, y: scale)
                 .translatedBy(x: -piece.centre.x, y: -piece.centre.y))
+    }
+
+    /// На какой ступени перелива сейчас фигурка.
+    ///
+    /// Цвет меняется не у всех разом, а фронтом: у той, до которой он уже
+    /// дошёл, цвет новый, у дальней ещё прежний, и между ними идёт полоса
+    /// перелива шириной в `repaintSpan` от всего перехода.
+    private func repainted(at middle: CGPoint, over size: CGSize) -> Int {
+        guard let repaint else { return Self.repaints - 1 }
+        let turn = placed(repaint.front).turn(at: middle, over: size)
+        let step = (repaint.step - turn * (1 - Metrics.repaintSpan))
+            / Metrics.repaintSpan
+        let part = min(max(step, 0), 1)
+        // Плавно и на входе, и на выходе: цвет не должен трогаться с места
+        // рывком и не должен вставать как вкопанный.
+        let eased = part * part * (3 - 2 * part)
+        return Int((eased * Double(Self.repaints - 1)).rounded())
     }
 
     /// Как фигурка переживает смену набора: во сколько раз она сейчас
@@ -405,12 +467,13 @@ private struct SproutPattern: View {
     /// крутые, поэтому сквозь него фигурка проскакивает быстро и пустого
     /// места на её клетке почти не бывает.
     ///
-    /// Очередь идёт по выбранной стороне, как и всходы, — и волна ухода с
-    /// волной прихода идут внахлёст: пока дальний край ещё стоит прежним,
-    /// ближний уже стоит новым.
+    /// Очередь раздаёт фронт — от клетки той фигурки, которую добавили,
+    /// или с краёв экрана, если её убрали. Волна ухода с волной прихода
+    /// идут внахлёст: пока дальний край ещё стоит прежним, ближний уже
+    /// стоит новым.
     private func change(_ swap: Reshape, at middle: CGPoint,
                         over size: CGSize) -> (CGFloat, Bool) {
-        let turn = queue(at: middle, over: size, angle: swap.angle)
+        let turn = placed(swap.front).turn(at: middle, over: size)
         let step = (swap.step - turn * (1 - Metrics.swapSpan)) / Metrics.swapSpan
         guard step > 0 else { return (1, true) }
         guard step < 1 else { return (1, false) }
@@ -420,25 +483,6 @@ private struct SproutPattern: View {
         }
         let x = (step - 0.5) * 2
         return (CGFloat(1 - pow(1 - x, 3)), false)
-    }
-
-    /// Черёд фигурки в очереди, 0…1: ноль у той, с которой всё
-    /// начинается, единица у самой дальней.
-    ///
-    /// Место считается от размера холста, а не экрана. Холст у подложки
-    /// под вырезом свой, куда ниже, и очередь в ней пойдёт своя — но на
-    /// главной подложки нет, а всходы бывают только на запуске, то есть
-    /// только на главной.
-    private func queue(at middle: CGPoint, over size: CGSize,
-                       angle: Double) -> Double {
-        let x = Double(middle.x / max(size.width, 1)) - 0.5
-        let y = Double(middle.y / max(size.height, 1)) - 0.5
-        let dx = cos(angle), dy = sin(angle)
-        // Проекция на направление, растянутая на весь ход. У косого
-        // направления размах шире, чем у прямого, и без пересчёта часть
-        // хода уходила бы впустую.
-        let reach = (abs(dx) + abs(dy)) / 2
-        return min(max((x * dx + y * dy) / (2 * reach) + 0.5, 0), 1)
     }
 
     /// Насколько фигурка посинела — ступенью от нуля до последней.
@@ -470,7 +514,7 @@ private struct SproutPattern: View {
     private func sprouted(at middle: CGPoint, over size: CGSize) -> CGFloat {
         guard bloom < 1 else { return 1 }
         guard bloom > 0 else { return 0 }
-        let turn = queue(at: middle, over: size, angle: bloomAngle)
+        let turn = bloomFront.turn(at: middle, over: size)
         let step = (bloom - turn * (1 - Metrics.bloomSpan)) / Metrics.bloomSpan
         guard step > 0 else { return 0 }
         guard step < 1 else { return 1 }
@@ -611,13 +655,33 @@ extension EnvironmentValues {
     }
 }
 
-/// Смена цвета узора: плавный переход от прежней пары оттенков к новой.
+/// Смена цвета узора: чем он был, откуда идёт переход и как далеко зашёл.
+struct Recolour {
+    /// Прежняя пара оттенков. Целиком: сменить могли и цвет узора, и цвет
+    /// волны, а перелиться должно то, что на экране.
+    var from: Shade
+    var fromWave: Shade
+
+    /// Откуда расходится перекраска.
+    var front: Front
+
+    /// Насколько переход прошёл, 0…1, без сглаживания: сглаживает его
+    /// сам узор, у каждой фигурки свой черёд.
+    var step: Double
+}
+
+/// Смена цвета узора: перекраска, расходящаяся от того кружка, который
+/// нажали.
 ///
-/// Плавный, но без волны — в отличие от смены набора фигурок. Там на
-/// месте одной фигурки оказывается другая, и подмена кадром читается
-/// рывком, поэтому прежним приходится уходить, а новым приходить. Цвет же
-/// меняется у той же самой фигурки: ей довольно перелиться из прежнего
-/// цвета в новый, и уходить незачем.
+/// Без роста и без ухода — в отличие от смены набора фигурок. Там на
+/// месте одной фигурки оказывается другая, и подмена читается рывком,
+/// поэтому прежним приходится уходить, а новым приходить. Цвет же
+/// меняется у той же самой фигурки: ей довольно перелиться.
+///
+/// Фронтом, а не всем узором разом. Разом — это «цвет взял и стал
+/// другим», и выбор ничем не связан с тем, что происходит на экране.
+/// Фронтом видно, что цвет пошёл именно из того кружка, по которому
+/// попал палец.
 ///
 /// Хранится начало перехода, а не доля. Фон рисуется в двух местах — на
 /// экране и подложкой под вырезом, — и веди каждый свой переход, они
@@ -629,16 +693,14 @@ final class Repaint {
     /// Когда начался переход. Пусто — цвет стоит.
     private(set) var start: Date?
 
-    /// Откуда переходим. Пара целиком: сменить могли и цвет узора, и цвет
-    /// волны, а перелиться должно то, что на экране.
-    @ObservationIgnored private(set) var from = Shade(Tint.defaultPattern)
-    @ObservationIgnored private(set) var fromWave = Shade(Tint.defaultWave)
-
+    @ObservationIgnored private var from = Shade(Tint.defaultPattern)
+    @ObservationIgnored private var fromWave = Shade(Tint.defaultWave)
+    @ObservationIgnored private var front = Front.edges
     @ObservationIgnored private var run: Task<Void, Never>?
 
     private init() {}
 
-    /// Начать переход от этой пары.
+    /// Начать переход от этой пары, расходящийся отсюда.
     ///
     /// Зовётся до того, как настройка поменяется: прежний цвет надо
     /// запомнить, пока он ещё прежний.
@@ -646,12 +708,18 @@ final class Repaint {
     /// Если переход уже идёт, отсчёт начинается не от полной прежней
     /// пары, а от того, что сейчас на экране. Иначе второй выбор подряд
     /// дёрнул бы узор назад, к цвету, от которого он уже наполовину ушёл.
+    /// Берём при этом середину фронта — какая фигурка где была, к этому
+    /// мигу уже не важно, важно откуда пойдёт новый.
     @MainActor
-    func begin(base: Tint, wave: Tint, at moment: Date = Date()) {
-        let part = blend(at: moment)
-        from = part.map { Shade.mix(from, Shade(base), $0) } ?? Shade(base)
-        fromWave = part.map { Shade.mix(fromWave, Shade(wave), $0) }
+    func begin(base: Tint, wave: Tint, from spot: CGPoint,
+               at moment: Date = Date()) {
+        let part = recolour(at: moment)?.step
+        let eased = part.map { $0 * $0 * (3 - 2 * $0) }
+        self.from = eased.map { Shade.mix(self.from, Shade(base), $0) }
+            ?? Shade(base)
+        fromWave = eased.map { Shade.mix(fromWave, Shade(wave), $0) }
             ?? Shade(wave)
+        front = .point(spot)
         start = moment
         run?.cancel()
         run = Task { @MainActor in
@@ -661,14 +729,13 @@ final class Repaint {
         }
     }
 
-    /// Насколько переход прошёл, 0…1. Пусто — перехода нет.
-    func blend(at moment: Date) -> Double? {
+    /// Где сейчас перекраска. Пусто — её нет.
+    func recolour(at moment: Date) -> Recolour? {
         guard let start else { return nil }
         let done = moment.timeIntervalSince(start) / Motion.repaintSeconds
         guard done < 1 else { return nil }
-        // Плавно и на входе, и на выходе: цвет не должен трогаться с места
-        // рывком и не должен вставать как вкопанный.
-        return done * done * (3 - 2 * done)
+        return Recolour(from: from, fromWave: fromWave, front: front,
+                        step: done)
     }
 }
 
@@ -682,12 +749,19 @@ final class Repaint {
 /// Раскладка у прежнего своя: она считается от числа фигурок, а их стало
 /// другое количество. Без неё уходящий узор перед самым уходом
 /// перетасовался бы.
+///
+/// Прежде смена шла полосой в случайную сторону, без оглядки на то, где
+/// нажали. Та версия — в «Точках возврата» README.
 struct Reshape {
     /// Что было в узоре до смены.
     var from: [Int]
     var fromWeave: Weave
-    /// С какой стороны идёт волна, в радианах. Своя на каждую смену.
-    var angle: Double
+    /// Откуда расходится смена.
+    ///
+    /// Добавили фигурку — из её клетки в настройках: узор берёт её
+    /// оттуда, где её выбрали. Убрали — с краёв экрана: уходящему
+    /// приходить неоткуда, и новый узор смыкается к середине.
+    var front: Front
     /// Насколько смена прошла, 0…1.
     var step: Double
 }
@@ -711,11 +785,14 @@ final class Launch {
     /// Показывать ли заставку.
     private(set) var greeting = true
 
-    /// Откуда пойдут всходы, в радианах. Выбирается заново на каждые
-    /// всходы: на третий раз всходы всегда снизу — это уже заставка, а не
-    /// всходы.
-    @ObservationIgnored private(set) var bloomAngle =
-        Double.random(in: 0 ..< 2 * Double.pi)
+    /// Откуда пойдут всходы. Полосой в случайную сторону, и сторона
+    /// выбирается заново на каждые всходы: на третий раз всходы всегда
+    /// снизу — это уже заставка, а не всходы.
+    ///
+    /// Полосой, а не из точки: при запуске нажимать было некуда, и точке
+    /// здесь взяться неоткуда.
+    @ObservationIgnored private(set) var bloomFront =
+        Front.sweep(Double.random(in: 0 ..< 2 * Double.pi))
 
     /// Три числа, из которых складывается раскладка узора. Свои на каждый
     /// запуск — оттого при каждом холодном пуске фигурки стоят иначе.
@@ -726,7 +803,7 @@ final class Launch {
     /// Когда началась смена набора фигурок. Пусто — не менялся.
     private(set) var swapStart: Date?
 
-    @ObservationIgnored private var swapAngle = 0.0
+    @ObservationIgnored private var swapFront = Front.edges
     @ObservationIgnored private var swapFrom: [Int] = []
 
     /// Раскладка узора для такого числа фигурок.
@@ -788,12 +865,13 @@ final class Launch {
     /// как при запуске, здесь мало: они начинаются с пустого экрана, а
     /// тут экран не пустой, и прежнему узору надо сперва уйти.
     ///
-    /// Сторона своя на каждую смену: одно и то же направление на третий
-    /// раз читается заставкой, а не сменой.
+    /// Откуда идёт смена, решает не случай, а то, что сделали. Добавили
+    /// фигурку — оттуда, где её выбрали: узор берёт её из той самой
+    /// клетки. Убрали — с краёв экрана: уходящему приходить неоткуда.
     @MainActor
-    func reshape(from before: [Int]) {
+    func reshape(from before: [Int], front: Front) {
         swapFrom = before
-        swapAngle = Double.random(in: 0 ..< 2 * Double.pi)
+        swapFront = front
         swapStart = Date()
         blooming?.cancel()
         blooming = Task { @MainActor in
@@ -810,7 +888,7 @@ final class Launch {
         guard done < 1 else { return nil }
         return Reshape(from: swapFrom,
                        fromWeave: weave(for: swapFrom.count),
-                       angle: swapAngle,
+                       front: swapFront,
                        step: done)
     }
 
@@ -818,7 +896,7 @@ final class Launch {
     /// запуске: узор всходит на пустом экране.
     @MainActor
     func sprout() {
-        bloomAngle = Double.random(in: 0 ..< 2 * Double.pi)
+        bloomFront = .sweep(Double.random(in: 0 ..< 2 * Double.pi))
         bloomStart = Date()
         blooming?.cancel()
         // Дождёмся конца и погасим часы, чтобы расписание холста встало на
@@ -891,6 +969,14 @@ final class Spot {
 /// подложкой под вырезом. Оба отсчитываются от верхнего левого угла
 /// окна, поэтому узор в них стоит в одних и тех же точках.
 private struct SproutField: View {
+    /// Где угол холста в координатах окна.
+    ///
+    /// Нужен, чтобы пересчитать в координаты холста замеренное на экране —
+    /// кружок цвета, клетку фигурки, плашку политого растения. У главной
+    /// угол холста совпадает с углом окна, а лист настроек висит ниже, и
+    /// без пересчёта переход расходился бы из точки выше нажатой.
+    @State private var corner: CGPoint = .zero
+
     var body: some View {
         // Настройку читаем здесь, в теле поля, а не внутри расписания
         // ниже. Внутри её читало бы содержимое `TimelineView`, а оно
@@ -933,22 +1019,18 @@ private struct SproutField: View {
                             && Launch.shared.bloomStart == nil
                             && Launch.shared.swapStart == nil
                             && !repainting)) { frame in
-                        // Пока цвет переливается, оттенки на экране — не
-                        // те, что в настройках, а смесь прежних с новыми.
-                        let part = Repaint.shared.blend(at: frame.date)
                         SproutPattern(wave: Cheer.shared.wave(at: frame.date),
                                       origin: Cheer.shared.origin,
-                                      bloomAngle: Launch.shared.bloomAngle,
+                                      canvas: corner,
+                                      bloomFront: Launch.shared.bloomFront,
                                       bloom: Launch.shared.bloom(at: frame.date),
                                       shapes: shapes,
                                       weave: weave,
                                       swap: Launch.shared.reshape(at: frame.date),
-                                      baseShade: shade(baseTint,
-                                                       from: Repaint.shared.from,
-                                                       part: part),
-                                      waveShade: shade(waveTint,
-                                                       from: Repaint.shared.fromWave,
-                                                       part: part))
+                                      repaint: Repaint.shared
+                                          .recolour(at: frame.date),
+                                      baseShade: Shade(baseTint),
+                                      waveShade: Shade(waveTint))
                     }
                     .padding(-Metrics.parallax)
                     .offset(x: Tilt.shared.shift.width,
@@ -956,14 +1038,9 @@ private struct SproutField: View {
                 }
                 .clipped()
         }
+        .onGeometryChange(for: CGPoint.self) { $0.frame(in: .global).origin }
+            action: { corner = $0 }
     }
-}
-
-/// Оттенок, каким его рисовать сейчас: сам по себе или смешанный с
-/// прежним, пока идёт переход.
-private func shade(_ tint: Tint, from: Shade, part: Double?) -> Shade {
-    guard let part else { return Shade(tint) }
-    return Shade.mix(from, Shade(tint), part)
 }
 
 /// Фон экрана: узор и белая растяжка внизу.

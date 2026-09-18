@@ -25,6 +25,11 @@ struct SettingsView: View {
     /// вернулся, и надо сказать, где это чинится.
     @State private var denied = false
 
+    /// Замеры клеток и кружков — см. `Spots`.
+    @State private var tileSpots = Spots()
+    @State private var patternSpots = Spots()
+    @State private var waveSpots = Spots()
+
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -86,8 +91,15 @@ struct SettingsView: View {
             SettingsDivider()
 
             SettingsBlock("Цвет узора") {
-                tints(current: settings.patternTint) { tint in
-                    repaint()
+                tints(current: settings.patternTint, spots: patternSpots) {
+                    tint, spot in
+                    // Перекраска расходится из того самого кружка, по
+                    // которому попал палец: прежний цвет надо взять до
+                    // того, как настройка сменится.
+                    Repaint.shared.begin(base: settings.patternTint,
+                                         wave: settings.waveTint,
+                                         from: CGPoint(x: spot.midX,
+                                                       y: spot.midY))
                     settings.patternTint = tint
                 }
             }
@@ -95,22 +107,17 @@ struct SettingsView: View {
             SettingsDivider()
 
             SettingsBlock("Цвет волны") {
-                tints(current: settings.waveTint) { tint in
-                    repaint()
+                tints(current: settings.waveTint, spots: waveSpots) {
+                    tint, spot in
+                    // Цвет волны в покое не виден нигде — его и показать
+                    // можно только волной. Пускаем её из кружка, и идёт
+                    // она уже новым цветом; узор при этом своего цвета не
+                    // меняет, его выбирают выше.
                     settings.waveTint = tint
+                    Cheer.shared.now(from: spot)
                 }
             }
         }
-    }
-
-    /// Запомнить цвет, от которого узор будет переливаться.
-    ///
-    /// Зовётся до того, как настройка поменяется: прежний цвет надо взять,
-    /// пока он ещё прежний. Волны здесь нет и не должно быть — цвет
-    /// меняется у той же фигурки, ей незачем уходить и приходить.
-    private func repaint() {
-        Repaint.shared.begin(base: settings.patternTint,
-                             wave: settings.waveTint)
     }
 
     /// Ряд кружков с оттенками.
@@ -119,13 +126,15 @@ struct SettingsView: View {
     /// оттенок, а не силу, и бледный кружок на белой плашке было бы не
     /// разглядеть. Тонкая обводка — чтобы светлые кружки не сливались с
     /// плашкой совсем.
-    private func tints(current: Tint,
-                       pick: @escaping (Tint) -> Void) -> some View {
+    private func tints(current: Tint, spots: Spots,
+                       pick: @escaping (Tint, CGRect) -> Void) -> some View {
         HStack(spacing: 6) {
             ForEach(Tint.allCases) { tint in
                 let picked = tint == current
                 Button {
-                    withAnimation(Motion.pill) { pick(tint) }
+                    withAnimation(Motion.pill) {
+                        pick(tint, spots.rect(tint.rawValue))
+                    }
                 } label: {
                     Circle()
                         .fill(Palette.swatch(tint))
@@ -146,6 +155,8 @@ struct SettingsView: View {
                 .buttonStyle(.plain)
                 .accessibilityLabel(tint.title)
                 .accessibilityAddTraits(picked ? .isSelected : [])
+                .onGeometryChange(for: CGRect.self) { $0.frame(in: .global) }
+                    action: { spots.put($0, at: tint.rawValue) }
             }
         }
     }
@@ -165,16 +176,21 @@ struct SettingsView: View {
                 let on = settings.shapes.contains(index)
                 Button {
                     // Клетка перекрашивается сразу, а узор за ней меняется
-                    // волной: прежние фигурки уходят с одной стороны, и с
-                    // той же стороны следом приходят новые. Просто
-                    // подменить их было нельзя — узор во весь экран, и
-                    // подмена в нём читается рывком.
+                    // волной. Добавили фигурку — волна идёт из этой самой
+                    // клетки: узор берёт её оттуда, где её выбрали. Убрали
+                    // — приходить ей неоткуда, и новый узор смыкается с
+                    // краёв экрана к середине.
                     let before = settings.chosen
                     var changed = false
                     withAnimation(Motion.pill) {
                         changed = settings.toggle(shape: index)
                     }
-                    if changed { Launch.shared.reshape(from: before) }
+                    guard changed else { return }
+                    let spot = tileSpots.rect(index)
+                    Launch.shared.reshape(
+                        from: before,
+                        front: on ? .edges
+                            : .point(CGPoint(x: spot.midX, y: spot.midY)))
                 } label: {
                     SproutPiece(index: index)
                         // Тем же цветом, что и выбран для узора: клетка
@@ -194,6 +210,8 @@ struct SettingsView: View {
                 .buttonStyle(.plain)
                 .accessibilityLabel(Self.shapeNames[index])
                 .accessibilityAddTraits(on ? .isSelected : [])
+                .onGeometryChange(for: CGRect.self) { $0.frame(in: .global) }
+                    action: { tileSpots.put($0, at: index) }
             }
         }
     }
@@ -316,6 +334,20 @@ private struct SettingsGroup<Content: View>: View {
                                               style: .continuous))
         }
     }
+}
+
+/// Где на экране лежат кружки цветов и клетки фигурок.
+///
+/// Нужны они ровно в миг нажатия — оттуда расходится переход по узору, — а
+/// меняются на каждом кадре прокрутки. Лежи замеры в состоянии вью, каждый
+/// такой кадр пересобирал бы экран ради чисел, которых в теле никто не
+/// читает. Та же причина, что у `Spot` на экране растения.
+final class Spots {
+    private var rects: [Int: CGRect] = [:]
+
+    func put(_ rect: CGRect, at key: Int) { rects[key] = rect }
+
+    func rect(_ key: Int) -> CGRect { rects[key] ?? .zero }
 }
 
 /// Название настройки, сам выбор и пояснение под ним.

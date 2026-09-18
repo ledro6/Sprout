@@ -273,6 +273,44 @@ for count in 2...4 {
           "при \(count) фигурках шаг обходит все, а не через одну")
 }
 
+print("фронт перехода: очередь по узору:")
+let canvas = CGSize(width: 400, height: 800)
+func turn(_ front: Front, _ x: Double, _ y: Double) -> Double {
+    front.turn(at: CGPoint(x: x, y: y), over: canvas)
+}
+let corner = Front.point(CGPoint(x: 0, y: 0))
+check(round2(turn(corner, 0, 0)), "0.00", "из угла: сам угол идёт первым")
+check(round2(turn(corner, 400, 800)), "1.00",
+      "и противоположный угол — последним, ровно на единице")
+let middle = Front.point(CGPoint(x: 200, y: 400))
+check(round2(turn(middle, 200, 400)), "0.00", "из середины: середина первой")
+check(round2(turn(middle, 0, 0)), "1.00", "углы последними")
+check(round2(turn(middle, 400, 0)), "1.00", "все четыре одинаково")
+
+let edges = Front.edges
+check(round2(turn(edges, 0, 400)), "0.00", "с краёв: кромка идёт первой")
+check(round2(turn(edges, 200, 0)), "0.00", "любая из четырёх")
+check(round2(turn(edges, 200, 400)), "1.00", "середина — последней")
+
+let up = Front.sweep(-Double.pi / 2)
+check(turn(up, 200, 800) < turn(up, 200, 0),
+      "полосой вверх: низ раньше верха — угол говорит, куда фронт идёт")
+check(round2(turn(up, 200, 800)), "0.00", "дальняя кромка ровно на нуле")
+check(round2(turn(up, 200, 0)), "1.00", "ближняя ровно на единице")
+
+// Чего бы фронт ни спросили, черёд остаётся долей: на нём держится вся
+// раскладка переходов по времени.
+var outside = 0
+for front in [corner, middle, edges, up, Front.point(CGPoint(x: -300, y: 900))] {
+    for x in stride(from: -200.0, through: 600, by: 25) {
+        for y in stride(from: -200.0, through: 1000, by: 25) {
+            let value = turn(front, x, y)
+            if value < 0 || value > 1 || value.isNaN { outside += 1 }
+        }
+    }
+}
+check("\(outside)", "0", "черёд нигде не выходит за 0…1, даже за краем холста")
+
 print("срок напоминания:")
 func delay(_ moisture: Double, _ dryingDays: Double = 7,
            _ threshold: Double = 0.2) -> String {
