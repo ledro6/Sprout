@@ -59,9 +59,10 @@ struct PlantView: View {
         .navigationBarBackButtonHidden(true)
         .toolbar {
             // Без общей стеклянной подложки: её рисует панель, а не эти
-            // вью, и на размытие она не отзывалась — значок проступал, а
-            // капсула под ним стояла с первого кадра. Сняв её, капсулы
-            // рисуем сами, и проступают кнопки целиком.
+            // кнопки, и на размытие она не отзывалась — значок проступал,
+            // а капсула под ним стояла с первого кадра. Сняв её, капсулу
+            // рисует каждая кнопка сама — тем же системным стеклом, но уже
+            // внутри вью, которую можно размыть.
             ToolbarItem(placement: .topBarLeading) { back }
                 .sharedBackgroundVisibility(.hidden)
             ToolbarItem(placement: .principal) { title }
@@ -106,13 +107,20 @@ struct PlantView: View {
     }
 
     /// Кнопка «назад».
+    ///
+    /// Стекло и размер — системные, стилем кнопки. Здесь стояла своя
+    /// сборка: квадрат в 44 пункта и материал, положенный на значок
+    /// руками. Материал был тот же самый, а вот всё остальное, что
+    /// приходит со стилем, приходилось бы писать самому — продавливание
+    /// под пальцем, отскок, блик за точкой касания, поведение при
+    /// «Уменьшении прозрачности».
     private var back: some View {
         Button { close() } label: {
             Image(systemName: "chevron.backward")
                 .font(Typography.navTitle)
-                .frame(width: Metrics.barButton, height: Metrics.barButton)
-                .glassEffect(.regular.interactive(), in: Circle())
         }
+        .buttonStyle(.glass)
+        .buttonBorderShape(.circle)
         .accessibilityLabel("Назад")
         .modifier(Chrome(shown: chrome))
     }
@@ -130,8 +138,8 @@ struct PlantView: View {
             .modifier(Chrome(shown: chrome))
     }
 
-    /// Меню в панели. Капсула своя — см. `sharedBackgroundVisibility`
-    /// выше.
+    /// Меню в панели. Стекло и размер — те же системные, что у «назад»:
+    /// `.button` заставляет меню принять стиль кнопки.
     private var actions: some View {
         Menu {
             Button { water() } label: {
@@ -148,12 +156,13 @@ struct PlantView: View {
             }
         } label: {
             // Цвет не задаём: кнопка идёт за общим оттенком приложения,
-            // как и системная «назад» рядом.
+            // как и «назад» рядом.
             Image(systemName: "ellipsis")
                 .font(Typography.navTitle)
-                .frame(width: Metrics.barButton, height: Metrics.barButton)
-                .glassEffect(.regular.interactive(), in: Circle())
         }
+        .menuStyle(.button)
+        .buttonStyle(.glass)
+        .buttonBorderShape(.circle)
         .modifier(Chrome(shown: chrome))
     }
 

@@ -63,10 +63,14 @@ struct SettingsView: View {
                 "Тема",
                 note: "«Система» — как настроен телефон."
             ) {
-                Pills(options: Settings.Theme.allCases.map {
-                    PillOption(value: $0, title: $0.short)
-                }, selection: Binding(get: { settings.theme },
-                                      set: { settings.theme = $0 }))
+                Picker("Тема", selection: Binding(get: { settings.theme },
+                                                  set: { settings.theme = $0 })) {
+                    ForEach(Settings.Theme.allCases) { theme in
+                        Text(theme.short).tag(theme)
+                    }
+                }
+                .pickerStyle(.segmented)
+                .labelsHidden()
             }
 
             SettingsDivider()
@@ -220,11 +224,15 @@ struct SettingsView: View {
                     "Когда напоминать",
                     note: "Влажность, ниже которой растение просит воды."
                 ) {
-                    Pills(options: Settings.thresholds.map {
-                        PillOption(value: $0,
-                                   title: "\(Int(($0 * 100).rounded()))%")
-                    }, selection: Binding(get: { settings.threshold },
-                                          set: { settings.threshold = $0 }))
+                    Picker("Когда напоминать",
+                           selection: Binding(get: { settings.threshold },
+                                              set: { settings.threshold = $0 })) {
+                        ForEach(Settings.thresholds, id: \.self) { level in
+                            Text("\(Int((level * 100).rounded()))%").tag(level)
+                        }
+                    }
+                    .pickerStyle(.segmented)
+                    .labelsHidden()
                 }
             }
         }
@@ -346,14 +354,14 @@ private struct SettingsBlock<Control: View>: View {
 
 /// Черта между настройками внутри одной плашки.
 ///
-/// Своя, а не системная: системная тянется во всю ширину вью, а плашка
-/// стеклянная, и черта во всю ширину упиралась бы в её скруглённый край.
+/// Системная. Своя здесь была — прямоугольник в десятую долю чернил, — из
+/// опасения, что системная растянется во всю ширину вью и упрётся в
+/// скруглённый край плашки. Опасение пустое: черта стоит внутри колонки с
+/// полями, её ширину задаёт колонка, и до края плашки черта не доходит.
+/// А толщину в пиксель, цвет под тему и поведение при «Увеличении
+/// контраста» система знает лучше.
 private struct SettingsDivider: View {
-    var body: some View {
-        Rectangle()
-            .fill(Palette.ink.opacity(0.1))
-            .frame(height: 1)
-    }
+    var body: some View { Divider() }
 }
 
 /// Строка, ведущая на другую страницу.
@@ -381,69 +389,6 @@ private struct SettingsLink: View {
                 .foregroundStyle(.tertiary)
         }
         .contentShape(Rectangle())
-    }
-}
-
-/// Один пункт в ряду выбора.
-private struct PillOption<Value: Hashable>: Identifiable {
-    let value: Value
-    let title: String
-
-    var id: Value { value }
-}
-
-/// Ряд кнопок, из которых выбрана одна.
-///
-/// Своё, а не `Picker(.segmented)`: тот рисует серый системный
-/// переключатель, который на стеклянной плашке выглядит наклейкой.
-/// Подложка здесь та же, что у плашки.
-///
-/// Выбранное отмечено стеклом, а не заливкой. Синяя капсула тут была и
-/// убрана: сплошной цвет закрывал собой узор, и ряд читался наклейкой не
-/// хуже системного. Стекло же показывает, что под ним, — ровно так iOS
-/// отмечает открытую вкладку в нижней панели. Цветом при этом остаётся
-/// сама подпись: синим, тем же, что у открытой комнаты и активной
-/// вкладки.
-///
-/// Капсула не появляется на новом месте, а переезжает: у неё общая
-/// личность на весь ряд, и SwiftUI переносит её сам. Появляйся она
-/// заново, выбор читался бы перещёлкиванием, а не движением.
-private struct Pills<Value: Hashable>: View {
-    let options: [PillOption<Value>]
-    @Binding var selection: Value
-
-    @Namespace private var slide
-
-    var body: some View {
-        HStack(spacing: 0) {
-            ForEach(options) { option in
-                let picked = option.value == selection
-                Button {
-                    withAnimation(Motion.pill) { selection = option.value }
-                } label: {
-                    Text(option.title)
-                        .font(Typography.pill)
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.75)
-                        .foregroundStyle(picked ? Palette.accent : Palette.ink)
-                        .frame(maxWidth: .infinity)
-                        .frame(height: Metrics.pillHeight)
-                        .background {
-                            if picked {
-                                Capsule()
-                                    .fill(.clear)
-                                    .glassEffect(.regular, in: .capsule)
-                                    .matchedGeometryEffect(id: "picked",
-                                                           in: slide)
-                            }
-                        }
-                        .contentShape(Capsule())
-                }
-                .buttonStyle(.plain)
-            }
-        }
-        .padding(Metrics.pillPadding)
-        .background { Capsule().fill(Palette.ink.opacity(0.07)) }
     }
 }
 
