@@ -98,6 +98,7 @@ struct SettingsView: View {
                     // того, как настройка сменится.
                     Repaint.shared.begin(base: settings.patternTint,
                                          wave: settings.waveTint,
+                                         to: tint, toWave: settings.waveTint,
                                          from: CGPoint(x: spot.midX,
                                                        y: spot.midY))
                     settings.patternTint = tint
@@ -113,8 +114,11 @@ struct SettingsView: View {
                     // можно только волной. Пускаем её из кружка, и идёт
                     // она уже новым цветом; узор при этом своего цвета не
                     // меняет, его выбирают выше.
+                    //
+                    // В очередь, а не поверх: ткнули второй кружок, пока
+                    // первая волна идёт, — вторая дождётся её.
                     settings.waveTint = tint
-                    Cheer.shared.now(from: spot)
+                    Cheer.shared.queue(from: spot)
                 }
             }
         }
@@ -188,7 +192,7 @@ struct SettingsView: View {
                     guard changed else { return }
                     let spot = tileSpots.rect(index)
                     Launch.shared.reshape(
-                        from: before,
+                        from: before, to: settings.chosen,
                         front: on ? .edges
                             : .point(CGPoint(x: spot.midX, y: spot.midY)))
                 } label: {

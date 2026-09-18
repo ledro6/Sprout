@@ -342,8 +342,8 @@ private struct SproutPattern: View {
     private func paint(_ step: Int) -> (base: Shade, wave: Shade) {
         guard let repaint else { return (baseShade, waveShade) }
         let part = Double(step) / Double(Self.repaints - 1)
-        return (Shade.mix(repaint.from, baseShade, part),
-                Shade.mix(repaint.fromWave, waveShade, part))
+        return (Shade.mix(repaint.from, repaint.to, part),
+                Shade.mix(repaint.fromWave, repaint.toWave, part))
     }
 
     /// Точка окна в координатах холста.
@@ -382,8 +382,13 @@ private struct SproutPattern: View {
         // волны, и промах по границам обошёлся бы падением, а не кривым
         // рисунком. Пустой набор тоже отводим — рисовать нечем, а фон
         // без узора это не фон этого приложения.
-        let picked = shapes.filter(SproutShapes.pieces.indices.contains)
+        // Цель берём у самого перехода, если он идёт, а не у настройки:
+        // переходы идут очередью, и настройка может быть уже на
+        // нажатие-другое впереди того, что сейчас на экране.
+        let picked = (swap?.to ?? shapes)
+            .filter(SproutShapes.pieces.indices.contains)
         let list = picked.isEmpty ? [0] : picked
+        let arrivingWeave = swap?.toWeave ?? weave
         let leaving = swap?.from.filter(SproutShapes.pieces.indices.contains)
         // Середина по вертикали у всех фигурок общая: они и нарисованы в
         // коробках одной высоты, оттого и стоят рядами.
@@ -399,7 +404,7 @@ private struct SproutPattern: View {
                     let grow = pop(at: middle)
                     var scale = grow
                     var here = list
-                    var mesh = weave
+                    var mesh = arrivingWeave
                     if let swap, let leaving, !leaving.isEmpty {
                         let (share, old) = change(swap, at: middle, over: size)
                         scale *= share
@@ -598,6 +603,38 @@ final class Cheer {
 
     private init() {}
 
+    /// Волны, ждущие своей очереди, и задача, что их пускает.
+    @ObservationIgnored private var waiting: [CGRect] = []
+    @ObservationIgnored private var queueRun: Task<Void, Never>?
+
+    /// Поставить волну за идущей, а если ни одной нет — пустить сразу.
+    ///
+    /// Так показывают выбранный цвет волны: ткнул второй кружок, пока
+    /// первая волна ещё идёт, — вторая дождётся её и пойдёт следом.
+    ///
+    /// Полив этим не пользуется, и нарочно: он событие в своём месте, и
+    /// новый полив должен отзываться сразу, а не ждать, пока доиграет
+    /// рябь от предыдущего.
+    @MainActor
+    func queue(from plate: CGRect) {
+        guard start != nil else { return now(from: plate) }
+        // Ждать может только одна: волна — не состояние, а событие, и
+        // копить их незачем. Третье нажатие подряд заменяет собой второе.
+        waiting = [plate]
+        guard queueRun == nil else { return }
+        queueRun = Task { @MainActor in
+            while !waiting.isEmpty {
+                if let step = wave(at: Date()) {
+                    try? await Task.sleep(for: .seconds(
+                        (1 - step) * Motion.cheerSeconds + Motion.changeGap))
+                }
+                if Task.isCancelled { break }
+                now(from: waiting.removeFirst())
+            }
+            queueRun = nil
+        }
+    }
+
     /// Полили вот здесь. Плашка — в координатах окна: узор отсчитывается
     /// от верхнего левого угла экрана, других координат он не знает.
     ///
@@ -662,6 +699,12 @@ struct Recolour {
     var from: Shade
     var fromWave: Shade
 
+    /// И та, к которой переливаемся. По той же причине, что у `Reshape`:
+    /// настройка уже показывает цель последнего нажатия, а переход этот
+    /// может быть не последним в очереди.
+    var to: Shade
+    var toWave: Shade
+
     /// Откуда расходится перекраска.
     var front: Front
 
@@ -690,12 +733,12 @@ struct Recolour {
 final class Repaint {
     static let shared = Repaint()
 
-    /// Когда начался переход. Пусто — цвет стоит.
+    /// Когда начался идущий переход. Пусто — цвет стоит.
     private(set) var start: Date?
 
-    @ObservationIgnored private var from = Shade(Tint.defaultPattern)
-    @ObservationIgnored private var fromWave = Shade(Tint.defaultWave)
-    @ObservationIgnored private var front = Front.edges
+    /// Тот, что идёт сейчас, и те, что ждут своей очереди.
+    @ObservationIgnored private var painting: Recolour?
+    @ObservationIgnored private var waiting: [Recolour] = []
     @ObservationIgnored private var run: Task<Void, Never>?
 
     private init() {}
@@ -705,37 +748,56 @@ final class Repaint {
     /// Зовётся до того, как настройка поменяется: прежний цвет надо
     /// запомнить, пока он ещё прежний.
     ///
-    /// Если переход уже идёт, отсчёт начинается не от полной прежней
-    /// пары, а от того, что сейчас на экране. Иначе второй выбор подряд
-    /// дёрнул бы узор назад, к цвету, от которого он уже наполовину ушёл.
-    /// Берём при этом середину фронта — какая фигурка где была, к этому
-    /// мигу уже не важно, важно откуда пойдёт новый.
+    /// Нажали второй раз, пока первая перекраска не отыграла, — вторая её
+    /// не обрывает, а встаёт следом. Обрыв виден сразу: половина экрана
+    /// осталась бы в прежнем цвете и прыгнула бы в новый кадром.
+    ///
+    /// Пары «откуда — куда» сцепляются сами: у каждого нажатия «откуда» —
+    /// это то, что настройка показывала до него, то есть «куда»
+    /// предыдущего. Помнить, что сейчас на экране, поэтому не нужно.
     @MainActor
-    func begin(base: Tint, wave: Tint, from spot: CGPoint,
-               at moment: Date = Date()) {
-        let part = recolour(at: moment)?.step
-        let eased = part.map { $0 * $0 * (3 - 2 * $0) }
-        self.from = eased.map { Shade.mix(self.from, Shade(base), $0) }
-            ?? Shade(base)
-        fromWave = eased.map { Shade.mix(fromWave, Shade(wave), $0) }
-            ?? Shade(wave)
-        front = .point(spot)
-        start = moment
-        run?.cancel()
+    func begin(base: Tint, wave: Tint, to shape: Tint, toWave: Tint,
+               from spot: CGPoint) {
+        // В очереди держим не больше одного. Третье нажатие подряд не
+        // копит хвост, а сливается со вторым: «откуда» остаётся у
+        // ждущего, «куда» и «откуда расходиться» берутся у нового. Цепочка
+        // от этого не рвётся — тот, кто ждал, всё равно начинался бы с
+        // того же места, — а пять нажатий не оборачиваются пятью
+        // переходами подряд.
+        if var last = waiting.popLast() {
+            last.to = Shade(shape)
+            last.toWave = Shade(toWave)
+            last.front = .point(spot)
+            waiting.append(last)
+        } else {
+            waiting.append(Recolour(from: Shade(base), fromWave: Shade(wave),
+                                    to: Shade(shape), toWave: Shade(toWave),
+                                    front: .point(spot), step: 0))
+        }
+        guard run == nil else { return }
         run = Task { @MainActor in
-            try? await Task.sleep(for: .seconds(Motion.repaintSeconds))
-            guard !Task.isCancelled else { return }
+            while !waiting.isEmpty {
+                painting = waiting.removeFirst()
+                start = Date()
+                // Ждём весь переход и промежуток за ним. Пока идёт
+                // промежуток, доля стоит на единице — узор держит цель
+                // отыгравшего, а не откатывается к настройке.
+                try? await Task.sleep(
+                    for: .seconds(Motion.repaintSeconds + Motion.changeGap))
+                if Task.isCancelled { break }
+            }
+            painting = nil
             start = nil
+            run = nil
         }
     }
 
     /// Где сейчас перекраска. Пусто — её нет.
     func recolour(at moment: Date) -> Recolour? {
-        guard let start else { return nil }
+        guard var now = painting, let start else { return nil }
         let done = moment.timeIntervalSince(start) / Motion.repaintSeconds
-        guard done < 1 else { return nil }
-        return Recolour(from: from, fromWave: fromWave, front: front,
-                        step: done)
+        now.step = min(max(done, 0), 1)
+        return now
     }
 }
 
@@ -756,6 +818,15 @@ struct Reshape {
     /// Что было в узоре до смены.
     var from: [Int]
     var fromWeave: Weave
+
+    /// И что станет после неё.
+    ///
+    /// Цель несёт сам переход, а не берётся из настройки. Настройка
+    /// меняется в тот же миг, когда нажали, — клетка должна загораться
+    /// сразу, — а узор отстаёт: переходы идут очередью, и пока играет
+    /// первый, настройка уже показывает цель последнего.
+    var to: [Int]
+    var toWeave: Weave
     /// Откуда расходится смена.
     ///
     /// Добавили фигурку — из её клетки в настройках: узор берёт её
@@ -803,8 +874,10 @@ final class Launch {
     /// Когда началась смена набора фигурок. Пусто — не менялся.
     private(set) var swapStart: Date?
 
-    @ObservationIgnored private var swapFront = Front.edges
-    @ObservationIgnored private var swapFrom: [Int] = []
+    /// Тот переход набора, что идёт сейчас, и те, что ждут очереди.
+    @ObservationIgnored private var swapping: Reshape?
+    @ObservationIgnored private var swaps: [Reshape] = []
+    @ObservationIgnored private var swapRun: Task<Void, Never>?
 
     /// Раскладка узора для такого числа фигурок.
     ///
@@ -868,28 +941,54 @@ final class Launch {
     /// Откуда идёт смена, решает не случай, а то, что сделали. Добавили
     /// фигурку — оттуда, где её выбрали: узор берёт её из той самой
     /// клетки. Убрали — с краёв экрана: уходящему приходить неоткуда.
+    /// Нажали второй раз, пока первая смена не отыграла, — вторая её не
+    /// обрывает, а встаёт следом. Обрыв тут виден особенно: половина
+    /// экрана осталась бы в позапрошлом наборе и прыгнула бы в новый
+    /// кадром.
+    ///
+    /// Пары «откуда — куда» сцепляются сами: у каждого нажатия «откуда» —
+    /// это то, что настройка показывала до него, то есть «куда»
+    /// предыдущего. Помнить, что сейчас на экране, поэтому не нужно.
     @MainActor
-    func reshape(from before: [Int], front: Front) {
-        swapFrom = before
-        swapFront = front
-        swapStart = Date()
-        blooming?.cancel()
-        blooming = Task { @MainActor in
-            try? await Task.sleep(for: .seconds(Motion.swapSeconds))
-            guard !Task.isCancelled else { return }
+    func reshape(from before: [Int], to after: [Int], front: Front) {
+        // В очереди держим не больше одного — см. `Repaint.begin`: третье
+        // нажатие подряд сливается со вторым, а не копит хвост.
+        if var last = swaps.popLast() {
+            last.to = after
+            last.toWeave = weave(for: after.count)
+            last.front = front
+            swaps.append(last)
+        } else {
+            swaps.append(Reshape(from: before,
+                                 fromWeave: weave(for: before.count),
+                                 to: after, toWeave: weave(for: after.count),
+                                 front: front, step: 0))
+        }
+        guard swapRun == nil else { return }
+        swapRun = Task { @MainActor in
+            while !swaps.isEmpty {
+                swapping = swaps.removeFirst()
+                swapStart = Date()
+                // Ждём весь переход и промежуток за ним. Пока идёт
+                // промежуток, доля стоит на единице — узор держит набор
+                // отыгравшего, а не откатывается к настройке, которая
+                // может быть уже на два нажатия впереди.
+                try? await Task.sleep(
+                    for: .seconds(Motion.swapSeconds + Motion.changeGap))
+                if Task.isCancelled { break }
+            }
+            swapping = nil
             swapStart = nil
+            swapRun = nil
         }
     }
 
     /// Где сейчас смена набора. Пусто — её нет.
     func reshape(at moment: Date) -> Reshape? {
-        guard let swapStart else { return nil }
+        guard var now = swapping, let swapStart else { return nil }
         let done = moment.timeIntervalSince(swapStart) / Motion.swapSeconds
-        guard done < 1 else { return nil }
-        return Reshape(from: swapFrom,
-                       fromWeave: weave(for: swapFrom.count),
-                       front: swapFront,
-                       step: done)
+        now.step = min(max(done, 0), 1)
+        return now
     }
 
     /// Пустить всходы — с новой стороны и по всей сетке. Зовётся при
