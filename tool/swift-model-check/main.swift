@@ -389,17 +389,31 @@ func turn(_ front: Front, _ x: Double, _ y: Double) -> Double {
 }
 let corner = Front.point(CGPoint(x: 0, y: 0))
 check(round2(turn(corner, 0, 0)), "0.00", "из угла: сам угол идёт первым")
-check(round2(turn(corner, 400, 800)), "1.00",
-      "и противоположный угол — последним, ровно на единице")
+check(round2(turn(corner, 900, 0)), "1.00",
+      "на мерке фронта — ровно единица")
+check(round2(turn(corner, 2000, 0)), "1.00", "дальше мерки — всё та же")
+// Мерка общая на все точки: от этого круг из середины и круг из угла
+// идут по экрану с одной скоростью — и с той же, что волна полива.
 let middle = Front.point(CGPoint(x: 200, y: 400))
 check(round2(turn(middle, 200, 400)), "0.00", "из середины: середина первой")
-check(round2(turn(middle, 0, 0)), "1.00", "углы последними")
-check(round2(turn(middle, 400, 0)), "1.00", "все четыре одинаково")
+check(round2(turn(middle, 200 + 450, 400)), "0.50",
+      "полмерки в сторону — половина черёда")
+check(round2(turn(corner, 450, 0)), "0.50",
+      "и из угла ровно столько же: скорость одна")
 
-let edges = Front.edges
-check(round2(turn(edges, 0, 400)), "0.00", "с краёв: кромка идёт первой")
-check(round2(turn(edges, 200, 0)), "0.00", "любая из четырёх")
-check(round2(turn(edges, 200, 400)), "1.00", "середина — последней")
+// Обратная волна: та же мерка, прочитанная наоборот.
+let inward = Front.collapse(CGPoint(x: 200, y: 400))
+check(round2(turn(inward, 200, 400)), "1.00",
+      "обратная: точка нажатия идёт последней — волна в неё садится")
+check(round2(turn(inward, 200 + 900, 400)), "0.00", "дальние — первыми")
+check(round2(turn(inward, 200 + 450, 400)), "0.50", "середина пути — посередине")
+var mirrored = 0
+for x in stride(from: -200.0, through: 600, by: 50) {
+    for y in stride(from: -200.0, through: 1000, by: 50) {
+        if abs(turn(middle, x, y) + turn(inward, x, y) - 1) > 1e-9 { mirrored += 1 }
+    }
+}
+check("\(mirrored)", "0", "прямая и обратная волны — зеркало друг друга")
 
 let up = Front.sweep(-Double.pi / 2)
 check(turn(up, 200, 800) < turn(up, 200, 0),
@@ -410,7 +424,8 @@ check(round2(turn(up, 200, 0)), "1.00", "ближняя ровно на един
 // Чего бы фронт ни спросили, черёд остаётся долей: на нём держится вся
 // раскладка переходов по времени.
 var outside = 0
-for front in [corner, middle, edges, up, Front.point(CGPoint(x: -300, y: 900))] {
+for front in [corner, middle, inward, up,
+              Front.point(CGPoint(x: -300, y: 900))] {
     for x in stride(from: -200.0, through: 600, by: 25) {
         for y in stride(from: -200.0, through: 1000, by: 25) {
             let value = turn(front, x, y)

@@ -88,9 +88,11 @@ extension View {
 /// значит очередь прыжков.
 ///
 /// Черёд считается той же формулой, что у фигурки узора: доля пути до
-/// элемента от размаха волны, умноженная на её длительность. Фора, с
-/// которой волна трогается из-под плашки политого растения, тоже учтена —
-/// от неё отсчёт и идёт.
+/// элемента от размаха волны. Но не с той же длительностью: очередь
+/// элементов сжата втрое — см. `Motion.rideHaste`. Порядок от этого тот
+/// же, а ждать своей очереди почти не приходится: прыжок должен читаться
+/// откликом на нажатие, а не событием, случившимся через две секунды
+/// после него.
 private struct Ride: ViewModifier {
     /// Насколько элемент сейчас приподнят.
     @State private var lift: CGFloat = 0
@@ -125,7 +127,9 @@ private struct Ride: ViewModifier {
                         middle.y - Cheer.shared.origin.y)
         let turn = Double(min(far / Metrics.waveReach, 1))
             * (1 - Metrics.popSpan)
-        let wait = turn * Motion.cheerSeconds - Date().timeIntervalSince(start)
+        // Очередь та же, что у узора, но сжатая — см. `Motion.rideHaste`.
+        let wait = turn * Motion.cheerSeconds * Motion.rideHaste
+            - Date().timeIntervalSince(start)
 
         hop.run?.cancel()
         hop.run = Task { @MainActor in

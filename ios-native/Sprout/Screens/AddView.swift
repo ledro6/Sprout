@@ -115,26 +115,40 @@ struct AddView: View {
         SproutGroup("Снимок") {
             well
 
+            // Все три в строку, и ни одна не переносится по слогам.
+            //
+            // Три подписи в ряд на узкий телефон не встают: «Снять»
+            // разрывалось на «Сня-» и «ть». Поэтому у третьей кнопки
+            // подписи нет вовсе — крестик говорит сам за себя, а вслух
+            // его называет `accessibilityLabel`; у двух оставшихся подписи
+            // короткие и запрет на перенос стоит явно.
             HStack(spacing: 10) {
                 PhotosPicker(selection: $item, matching: .images,
                              photoLibrary: .shared()) {
-                    Label("Из фото", systemImage: "photo.on.rectangle")
+                    Label("Фото", systemImage: "photo.on.rectangle")
+                        .lineLimit(1)
+                        .fixedSize()
                 }
                 .buttonStyle(.glass)
 
                 if Camera.exists {
                     Button { shooting = true } label: {
                         Label("Снять", systemImage: "camera")
+                            .lineLimit(1)
+                            .fixedSize()
                     }
                     .buttonStyle(.glass)
                 }
 
                 if shot != nil {
                     Button(role: .destructive) { forget() } label: {
-                        Label("Убрать", systemImage: "xmark")
+                        Image(systemName: "xmark")
                     }
                     .buttonStyle(.glass)
+                    .accessibilityLabel("Убрать снимок")
                 }
+
+                Spacer(minLength: 0)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
 

@@ -139,10 +139,11 @@ struct SettingsView: View {
                 let on = settings.shapes.contains(index)
                 Button {
                     // Клетка перекрашивается сразу, а узор за ней меняется
-                    // волной. Добавили фигурку — волна идёт из этой самой
-                    // клетки: узор берёт её оттуда, где её выбрали. Убрали
-                    // — приходить ей неоткуда, и новый узор смыкается с
-                    // краёв экрана к середине.
+                    // волной — той же самой, что и при поливе. Добавили
+                    // фигурку — волна расходится из этой самой клетки.
+                    // Убрали — та же волна, пущенная вспять: она сбегается
+                    // с краёв и садится ровно в ту клетку, по которой
+                    // попал палец.
                     let before = settings.chosen
                     var changed = false
                     withAnimation(Motion.pill) {
@@ -152,7 +153,8 @@ struct SettingsView: View {
                     let spot = tileSpots.rect(index)
                     Launch.shared.reshape(
                         from: before, to: settings.chosen,
-                        front: on ? .edges
+                        front: on
+                            ? .collapse(CGPoint(x: spot.midX, y: spot.midY))
                             : .point(CGPoint(x: spot.midX, y: spot.midY)))
                 } label: {
                     SproutPiece(index: index)

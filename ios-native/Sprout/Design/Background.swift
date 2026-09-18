@@ -360,8 +360,11 @@ private struct SproutPattern: View {
     /// Фронт, пересчитанный в координаты холста: точку замеряли на
     /// экране, а очередь раздаётся по холсту.
     private func placed(_ front: Front) -> Front {
-        guard case let .point(spot) = front else { return front }
-        return .point(local(spot))
+        switch front {
+        case let .point(spot): .point(local(spot))
+        case let .collapse(spot): .collapse(local(spot))
+        case .sweep: front
+        }
     }
 
     /// Место нажатия в координатах холста.
@@ -775,21 +778,37 @@ final class Repaint {
                                     front: .point(spot), step: 0))
         }
         guard run == nil else { return }
+        // Первый переход трогается прямо здесь, а не в задаче.
+        //
+        // Это не придирка к лишнему проходу, а починка мигания. Настройка
+        // меняется сразу за этим вызовом, в том же проходе; задача же
+        // просыпается следующим. Между ними был кадр, в котором перехода
+        // ещё нет, а настройка уже новая, — и весь узор на этот кадр
+        // вспыхивал новым цветом, чтобы тут же откатиться к прежнему и
+        // начать перекрашиваться по-честному. На экране это читалось
+        // дёрганьем фигурок.
+        step()
         run = Task { @MainActor in
-            while !waiting.isEmpty {
-                painting = waiting.removeFirst()
-                start = Date()
+            while painting != nil {
                 // Ждём весь переход и промежуток за ним. Пока идёт
                 // промежуток, доля стоит на единице — узор держит цель
                 // отыгравшего, а не откатывается к настройке.
                 try? await Task.sleep(
                     for: .seconds(Motion.repaintSeconds + Motion.changeGap))
                 if Task.isCancelled { break }
+                step()
             }
             painting = nil
             start = nil
             run = nil
         }
+    }
+
+    /// Пустить следующий переход из очереди. Очередь пуста — гасим.
+    @MainActor
+    private func step() {
+        painting = waiting.isEmpty ? nil : waiting.removeFirst()
+        start = painting == nil ? nil : Date()
     }
 
     /// Где сейчас перекраска. Пусто — её нет.
@@ -965,10 +984,12 @@ final class Launch {
                                  front: front, step: 0))
         }
         guard swapRun == nil else { return }
+        // Первая смена трогается прямо здесь — см. `Repaint.begin`: из-за
+        // прохода задержки узор на кадр показывал новый набор, а потом
+        // откатывался к прежнему и начинал смену заново.
+        swapStep()
         swapRun = Task { @MainActor in
-            while !swaps.isEmpty {
-                swapping = swaps.removeFirst()
-                swapStart = Date()
+            while swapping != nil {
                 // Ждём весь переход и промежуток за ним. Пока идёт
                 // промежуток, доля стоит на единице — узор держит набор
                 // отыгравшего, а не откатывается к настройке, которая
@@ -976,11 +997,19 @@ final class Launch {
                 try? await Task.sleep(
                     for: .seconds(Motion.swapSeconds + Motion.changeGap))
                 if Task.isCancelled { break }
+                swapStep()
             }
             swapping = nil
             swapStart = nil
             swapRun = nil
         }
+    }
+
+    /// Пустить следующую смену из очереди. Очередь пуста — гасим.
+    @MainActor
+    private func swapStep() {
+        swapping = swaps.isEmpty ? nil : swaps.removeFirst()
+        swapStart = swapping == nil ? nil : Date()
     }
 
     /// Где сейчас смена набора. Пусто — её нет.
