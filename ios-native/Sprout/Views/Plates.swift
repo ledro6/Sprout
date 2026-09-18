@@ -87,6 +87,62 @@ struct SproutBlock<Control: View>: View {
     }
 }
 
+/// Ряд кружков с оттенками.
+///
+/// Кружок насыщенной ипостасью оттенка, а не бледной: выбирают оттенок, а
+/// не силу, и бледный кружок на белой плашке было бы не разглядеть. Тонкая
+/// обводка — чтобы светлые кружки не сливались с плашкой совсем.
+///
+/// Замер кружка уходит выбирающему: почти всё, что выбирают цветом, надо
+/// потом показать волной, а волна расходится из того места, где по цвету
+/// попали пальцем. Экран сам решает, пускать ли её.
+struct SproutTints: View {
+    let current: Tint
+    let spots: Spots
+    let pick: (Tint, CGRect) -> Void
+
+    init(current: Tint, spots: Spots,
+         pick: @escaping (Tint, CGRect) -> Void) {
+        self.current = current
+        self.spots = spots
+        self.pick = pick
+    }
+
+    var body: some View {
+        HStack(spacing: 6) {
+            ForEach(Tint.allCases) { tint in
+                let picked = tint == current
+                Button {
+                    withAnimation(Motion.pill) {
+                        pick(tint, spots.rect(tint.rawValue))
+                    }
+                } label: {
+                    Circle()
+                        .fill(Palette.swatch(tint))
+                        .overlay {
+                            Circle().strokeBorder(Palette.ink.opacity(0.12),
+                                                  lineWidth: 0.5)
+                        }
+                        .frame(width: Metrics.swatch, height: Metrics.swatch)
+                        .padding(4)
+                        .overlay {
+                            if picked {
+                                Circle().strokeBorder(Palette.accent,
+                                                      lineWidth: 2)
+                            }
+                        }
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel(tint.title)
+                .accessibilityAddTraits(picked ? .isSelected : [])
+                .onGeometryChange(for: CGRect.self) { $0.frame(in: .global) }
+                    action: { spots.put($0, at: tint.rawValue) }
+            }
+        }
+    }
+}
+
 /// Крупное число с ярлыком под ним: «17 / Всего».
 ///
 /// Ярлык, а не фраза. «17 поливов» пришлось бы склонять по числу — 1

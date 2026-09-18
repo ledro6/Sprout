@@ -34,6 +34,10 @@ struct RootView: View {
     /// `Settings`.
     private let settings = Settings.shared
 
+    /// Замок. Не в окружении — см. `Settings`: он нужен и корню, и
+    /// профилю, а через окружение до корня не достать.
+    private let lock = Lock.shared
+
     @Environment(\.scenePhase) private var phase
 
     var body: some View {
@@ -48,7 +52,7 @@ struct RootView: View {
                 Stub(title: "Добавить")
             }
             Tab("Профиль", systemImage: "person.fill") {
-                Stub(title: "Профиль")
+                ProfileView()
             }
             Tab(role: .search) {
                 SearchView()
@@ -74,13 +78,23 @@ struct RootView: View {
         // заставкой нельзя.
         .overlay { welcome }
         .overlay(alignment: .top) { badge }
+        // Замок поверх всего, заставки в том числе: запертый сад не
+        // должен мелькнуть даже на время приветствия.
+        .overlay { padlock }
         .onAppear { notch = Self.topInset() }
         // На случай, если при первом появлении окна ещё не было: смена
         // состояния сцены — момент, когда оно точно есть.
         .onChange(of: phase) { _, now in
             if now == .active {
                 notch = Self.topInset()
+                // Вернулись к запертому саду — сразу спрашиваем ключ.
+                // Открытый сад этот вызов не трогает, см. `Lock.unlock`.
+                Task { await lock.unlock() }
             } else {
+                // Запираем на «неактивно», а не на «в фоне»: снимок для
+                // переключателя программ система делает раньше, чем
+                // приложение уходит в фон, и на нём остался бы весь сад.
+                lock.close()
                 // Уходим с экрана — записываем сад: выгрузить приложение
                 // могут в любой момент и разрешения не спросят.
                 garden.save()
@@ -127,6 +141,15 @@ struct RootView: View {
         while !Task.isCancelled {
             try? await Task.sleep(for: .seconds(1))
             garden.advance()
+        }
+    }
+
+    /// Запертый сад — поверх всего, что есть на экране.
+    @ViewBuilder
+    private var padlock: some View {
+        if lock.on, !lock.open {
+            LockView()
+                .transition(.opacity)
         }
     }
 

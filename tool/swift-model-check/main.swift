@@ -475,6 +475,58 @@ check(many(1), "«Х» и ещё 1 растение просят воды", "1 �
 check(many(2), "«Х» и ещё 2 растения просят воды", "2 растения")
 check(many(5), "«Х» и ещё 5 растений просят воды", "5 растений")
 
+print("код соперника:")
+let mine = Rival(name: "Святослав", total: 142, streak: 5, best: 9,
+                 plants: 27, day: 20_350)
+check(mine.code.hasPrefix(Rival.mark), "код начинается меткой с версией")
+check(!mine.code.contains("+") && !mine.code.contains("/")
+      && !mine.code.contains("="),
+      "в коде нет знаков, которые портит переписка")
+let back = Rival.read(mine.code)
+check(back?.name ?? "—", "Святослав", "кличка вернулась целой")
+check("\(back?.total ?? -1)", "142", "и счёт тоже")
+check("\(back?.streak ?? -1)", "5", "и череда")
+check("\(back?.best ?? -1)", "9", "и лучшая череда")
+check("\(back?.plants ?? -1)", "27", "и число растений")
+check("\(back?.day ?? -1)", "20350", "и день, которым помечен счёт")
+
+// Вставляют обычно всё сообщение целиком, а не один код.
+check(Rival.read(mine.card)?.name ?? "—", "Святослав",
+      "код находится внутри всего сообщения")
+check(Rival.read("Привет! \(mine.code). До связи")?.total ?? -1 == 142,
+      "точка после кода в код не входит")
+check(Rival.read("совсем не то") == nil, "в тексте без кода кода и нет")
+check(Rival.read("\(Rival.mark)не-код") == nil, "битый код не разбирается")
+check(mine.card.contains("142 полива"),
+      "в человеческой части счёт склонён по числу")
+
+print("таблица соперников:")
+let box = UserDefaults(suiteName: "check.rivals")!
+box.removePersistentDomain(forName: "check.rivals")
+let table = Friends(store: box)
+check("\(table.rivals.count)", "0", "пустая таблица на чистом месте")
+table.add(Rival(name: "Аня", total: 10, streak: 1, best: 1, plants: 2,
+                day: 20_350))
+table.add(Rival(name: "Боря", total: 30, streak: 2, best: 4, plants: 5,
+                day: 20_350))
+check(table.rivals.map(\.name).joined(separator: ", "), "Боря, Аня",
+      "порядок — от большего счёта к меньшему")
+table.add(Rival(name: "аня", total: 99, streak: 3, best: 3, plants: 2,
+                day: 20_351))
+check("\(table.rivals.count)", "2", "тот же друг не заводит второй строки")
+check(table.rivals.first?.name ?? "—", "аня", "новый счёт встал выше")
+check(Friends(store: box).rivals.count == 2, "таблица пережила перезапуск")
+check(table.take(mine.card, mine: "святослав") == nil,
+      "свой собственный код в соперники не берётся")
+check(table.take("тут кода нет", mine: "Аня") == nil,
+      "и текст без кода тоже")
+check(table.take(mine.card, mine: "Аня")?.name ?? "—", "Святослав",
+      "а чужой — берётся")
+table.remove("аня")
+check(table.rivals.map(\.name).joined(separator: ", "), "Святослав, Боря",
+      "убранный соперник уходит из таблицы")
+box.removePersistentDomain(forName: "check.rivals")
+
 if failed > 0 {
     print("\nне сошлось: \(failed)")
     exit(1)

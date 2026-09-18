@@ -91,8 +91,8 @@ struct SettingsView: View {
             SproutDivider()
 
             SproutBlock("Цвет узора") {
-                tints(current: settings.patternTint, spots: patternSpots) {
-                    tint, spot in
+                SproutTints(current: settings.patternTint,
+                            spots: patternSpots) { tint, spot in
                     // Перекраска расходится из того самого кружка, по
                     // которому попал палец: прежний цвет надо взять до
                     // того, как настройка сменится.
@@ -108,8 +108,8 @@ struct SettingsView: View {
             SproutDivider()
 
             SproutBlock("Цвет волны") {
-                tints(current: settings.waveTint, spots: waveSpots) {
-                    tint, spot in
+                SproutTints(current: settings.waveTint,
+                            spots: waveSpots) { tint, spot in
                     // Цвет волны в покое не виден нигде — его и показать
                     // можно только волной. Пускаем её из кружка, и идёт
                     // она уже новым цветом; узор при этом своего цвета не
@@ -120,47 +120,6 @@ struct SettingsView: View {
                     settings.waveTint = tint
                     Cheer.shared.queue(from: spot)
                 }
-            }
-        }
-    }
-
-    /// Ряд кружков с оттенками.
-    ///
-    /// Кружок насыщенной ипостасью оттенка, а не бледной: выбирают
-    /// оттенок, а не силу, и бледный кружок на белой плашке было бы не
-    /// разглядеть. Тонкая обводка — чтобы светлые кружки не сливались с
-    /// плашкой совсем.
-    private func tints(current: Tint, spots: Spots,
-                       pick: @escaping (Tint, CGRect) -> Void) -> some View {
-        HStack(spacing: 6) {
-            ForEach(Tint.allCases) { tint in
-                let picked = tint == current
-                Button {
-                    withAnimation(Motion.pill) {
-                        pick(tint, spots.rect(tint.rawValue))
-                    }
-                } label: {
-                    Circle()
-                        .fill(Palette.swatch(tint))
-                        .overlay {
-                            Circle().strokeBorder(Palette.ink.opacity(0.12),
-                                                  lineWidth: 0.5)
-                        }
-                        .frame(width: Metrics.swatch, height: Metrics.swatch)
-                        .padding(4)
-                        .overlay {
-                            if picked {
-                                Circle().strokeBorder(Palette.accent,
-                                                      lineWidth: 2)
-                            }
-                        }
-                        .frame(maxWidth: .infinity)
-                }
-                .buttonStyle(.plain)
-                .accessibilityLabel(tint.title)
-                .accessibilityAddTraits(picked ? .isSelected : [])
-                .onGeometryChange(for: CGRect.self) { $0.frame(in: .global) }
-                    action: { spots.put($0, at: tint.rawValue) }
             }
         }
     }

@@ -28,6 +28,10 @@ enum Tint: Int, CaseIterable, Identifiable, Sendable {
     static let defaultPattern = Tint.green
     static let defaultWave = Tint.blue
 
+    /// Кружок хозяина в профиле. Зелёный: это цвет самого приложения, и
+    /// пока человек не выбрал своего, пусть будет он.
+    static let defaultAvatar = Tint.green
+
     var title: String {
         switch self {
         case .green: "Зелёный"

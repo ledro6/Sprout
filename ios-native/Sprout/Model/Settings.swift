@@ -77,6 +77,16 @@ final class Settings {
         didSet { store.set(waveTint.rawValue, forKey: Key.waveTint) }
     }
 
+    /// Цвет кружка хозяина в профиле.
+    ///
+    /// Третьей настройкой, а не общей с узором: узор и волна — про фон, а
+    /// этот — про человека. Взяв цвет узора, кружок менялся бы от
+    /// настройки, которая к хозяину отношения не имеет, — и наоборот,
+    /// выбрать себе цвет было бы нельзя, не перекрасив весь фон.
+    var avatarTint: Tint {
+        didSet { store.set(avatarTint.rawValue, forKey: Key.avatarTint) }
+    }
+
     /// Пороги напоминания, доли влажности. Двадцать процентов посередине
     /// и по умолчанию: это и есть порог, на котором тревожная тень
     /// краснеет, — см. `Thirst.alarmBelow`.
@@ -167,6 +177,7 @@ final class Settings {
         static let threshold = "remindThreshold"
         static let patternTint = "patternTint"
         static let waveTint = "waveTint"
+        static let avatarTint = "avatarTint"
     }
 
     /// Оттенок из хранилища. Пусто — ключа нет.
@@ -201,6 +212,7 @@ final class Settings {
         }
         patternTint = Self.tint(store, Key.patternTint) ?? Tint.defaultPattern
         waveTint = Self.tint(store, Key.waveTint) ?? Tint.defaultWave
+        avatarTint = Self.tint(store, Key.avatarTint) ?? Tint.defaultAvatar
         reminders = store.bool(forKey: Key.reminders)
         let level = store.double(forKey: Key.threshold)
         threshold = Self.thresholds.contains(level) ? level
