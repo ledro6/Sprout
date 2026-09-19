@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 /// Карточка растения: фото, кличка, влажность и срок полива.
 ///
@@ -190,7 +191,7 @@ struct PlantMenu: ViewModifier {
     func body(content: Content) -> some View {
         content
             .onGeometryChange(for: CGRect.self) { $0.frame(in: .global) }
-                action: { spot.rect = $0 }
+                action: { keep($0) }
             .environment(\.sproutHalos, halos && !previewing)
             .contextMenu {
                 Button { water() } label: {
@@ -225,15 +226,54 @@ struct PlantMenu: ViewModifier {
             }
     }
 
+    /// Принять замер карточки — или не принять.
+    ///
+    /// Пустой замер отводим, и это не перестраховка. Открывая контекстное
+    /// меню, система вынимает карточку из разметки и поднимает её в свой
+    /// предпросмотр; на это время исходная вью отвечает то нулевым
+    /// прямоугольником, то геометрией уже поднятой копии. Приняв такой
+    /// замер, волна пошла бы из точки (0, 0) — то есть из левого верхнего
+    /// угла экрана, где стоит первая карточка сетки. Ровно так это и
+    /// выглядело: полил одно растение, а рябь пошла от другого.
+    ///
+    /// Пока меню открыто, не принимаем ничего: замер нужен тот, что был до
+    /// него, — карточка стоит на своём месте и никуда не делась.
+    private func keep(_ rect: CGRect) {
+        guard !previewing, rect.width > 0, rect.height > 0 else { return }
+        spot.rect = rect
+    }
+
     /// Полить: сад меняет влажность, а по узору от карточки расходится
     /// волна.
     ///
     /// Полив с анимацией: проценты прыгают к сотне разом, и без неё
     /// тревожная тень гасла бы щелчком.
     private func water() {
+        // Растения может уже не быть: меню держат открытым сколько угодно,
+        // а сад за это время могли и поправить.
+        guard garden.plant(id: id) != nil else { return }
         withAnimation(Motion.appear) { garden.water(id) }
-        Cheer.shared.now(from: spot.rect)
+        // Замера может не оказаться вовсе — карточку могли полить, не
+        // дождавшись первой разметки. Тогда волна идёт из середины экрана,
+        // а не из угла: из угла она читается поломкой, из середины —
+        // просто волной.
+        Cheer.shared.now(from: spot.rect == .zero ? Self.middle : spot.rect)
         Feel.water()
+    }
+
+    /// Середина экрана — запасное место для волны.
+    ///
+    /// Через окно, а не через `UIScreen.main`: тот помечен устаревшим ещё
+    /// в iOS 16, и приложение работает не с экраном, а со своим окном.
+    /// Тем же путём корень берёт глубину выреза.
+    private static var middle: CGRect {
+        let bounds = UIApplication.shared.connectedScenes
+            .compactMap { $0 as? UIWindowScene }
+            .flatMap(\.windows)
+            .first { $0.isKeyWindow }?
+            .bounds ?? .zero
+        return CGRect(x: bounds.midX - 1, y: bounds.midY - 1,
+                      width: 2, height: 2)
     }
 
     /// Предпросмотр для меню — свой, а не системный снимок.
@@ -249,6 +289,11 @@ struct PlantMenu: ViewModifier {
     private var preview: some View {
         if let plant {
             PlantCard(plant: plant)
+                // Ширина числом: предпросмотр — единственное место, где
+                // размера не предлагают вовсе, а спрашивают у содержимого.
+                // Без неё карточка сворачивалась бы по самому мелкому, что
+                // в ней есть.
+                .frame(width: Metrics.previewCard)
                 .environment(\.sproutHalos, false)
                 .onAppear { previewing = true }
                 .onDisappear {
