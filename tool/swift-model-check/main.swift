@@ -480,6 +480,37 @@ check("\(wild)", "0", "размер и состояние нигде не вых
 check(Frolic.seconds > 4.5 && Frolic.seconds < 5.5,
       "вся кутерьма укладывается примерно в пять секунд")
 
+print("что искали раньше:")
+let searches = UserDefaults(suiteName: "check.recents")!
+searches.removePersistentDomain(forName: "check.recents")
+let recent = Recents(store: searches)
+check("\(recent.queries.count)", "0", "на чистом месте искали ещё ничего")
+recent.remember("Баксик")
+recent.remember("Сумка")
+check(recent.queries.joined(separator: ", "), "Сумка, Баксик",
+      "свежий запрос идёт первым")
+recent.remember("баксик")
+check(recent.queries.joined(separator: ", "), "баксик, Сумка",
+      "повтор не заводит второй строки, а всплывает наверх")
+recent.remember("  Ко  ")
+check(recent.queries.first ?? "—", "Ко", "пробелы по краям обрезаются")
+recent.remember("к")
+check(recent.queries.first ?? "—", "Ко", "запрос в одну букву не запоминается")
+recent.remember("   ")
+check(recent.queries.first ?? "—", "Ко", "и пустой тоже")
+for name in ["Борис", "Тапок", "Шуба", "Соня", "Гоша"] { recent.remember(name) }
+check("\(recent.queries.count)", "\(Recents.keep)",
+      "список не растёт дальше отведённого")
+check(recent.queries.first ?? "—", "Гоша", "и обрезается снизу, а не сверху")
+check(Recents(store: searches).queries.count == Recents.keep,
+      "список пережил перезапуск")
+recent.forget("гоша")
+check(recent.queries.contains { $0 == "Гоша" } == false,
+      "забытый запрос уходит, и регистр ему не помеха")
+recent.clear()
+check("\(recent.queries.count)", "0", "и всё сразу тоже забывается")
+searches.removePersistentDomain(forName: "check.recents")
+
 print("срок напоминания:")
 func delay(_ moisture: Double, _ dryingDays: Double = 7,
            _ threshold: Double = 0.2) -> String {

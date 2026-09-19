@@ -211,11 +211,23 @@ struct RootView: View {
 /// Поиск по всей квартире.
 ///
 /// Поле ввода даёт система: у вкладки с ролью `.search` капсула сама
-/// раскрывается в строку поиска.
+/// раскрывается в строку поиска. В iOS 26 строка эта живёт внизу, у
+/// панели вкладок, а не под заголовком сверху — там же, где палец. Ради
+/// этого `searchable` и висит на содержимом внутри стека навигации, а не
+/// снаружи: снаружи система относит поле к самой вкладке и ставит его
+/// по-старому, сверху.
+///
+/// Крестик в поле, отмена, раскрытие и сворачивание — всё системное.
+/// Здешнего тут только то, чего система знать не может: что искали
+/// раньше и что делать, когда не нашлось ничего.
 struct SearchView: View {
     @Environment(Garden.self) private var garden
 
     @State private var query = ""
+
+    /// Что искали раньше — см. `Recents`. Не в окружении: список один на
+    /// приложение, как настройки.
+    private let recents = Recents.shared
 
     /// То же разворачивание карточки в экран, что и на главной.
     @Namespace private var cardZoom
@@ -224,34 +236,22 @@ struct SearchView: View {
     @State private var path: [Plant.ID] = []
     @State private var opening: Plant.ID?
 
+    private var asked: String {
+        query.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
     private var results: [Plant] { garden.search(query) }
 
     var body: some View {
         NavigationStack(path: $path) {
             ScrollView {
-                // Без общего стеклянного контейнера — как на главной:
-                // он склеивает сетку в один слой, и карточке нечем
-                // разворачиваться в экран.
-                LazyVGrid(
-                    columns: [
-                        GridItem(.flexible(), spacing: Metrics.gutterH),
-                        GridItem(.flexible(), spacing: Metrics.gutterH),
-                    ],
-                    spacing: Metrics.gutterV
-                ) {
-                    ForEach(results) { plant in
-                        Button { show(plant.id) } label: {
-                            PlantCard(plant: plant)
-                        }
-                        .buttonStyle(.plain)
-                        .modifier(PlantMenu(id: plant.id))
-                        .environment(\.sproutHalos, opening != plant.id)
-                        .sproutRide()
-                        .matchedTransitionSource(id: plant.id, in: cardZoom)
-                    }
+                if asked.isEmpty {
+                    history
+                } else if results.isEmpty {
+                    nothing
+                } else {
+                    grid
                 }
-                .padding(.horizontal, Metrics.contentMargin)
-                .padding(.top, 14)
             }
             .background { SproutBackground() }
             // Верх у поиска ничем не занят: растяжки со строкой комнаты
@@ -262,8 +262,22 @@ struct SearchView: View {
                 PlantView(plantID: id)
                     .navigationTransition(.zoom(sourceID: id, in: cardZoom))
             }
+            .searchable(text: $query, prompt: "Найти растение")
+            // Поле сворачивается в кнопку у панели вкладок и
+            // раскрывается по нажатию — как в iOS 26 везде.
+            .searchToolbarBehavior(.minimize)
+            // Прежние запросы — системной подсказкой под полем. Нажатие
+            // подставляет запрос целиком: за это отвечает
+            // `searchCompletion`, и своего кода тут нет вовсе.
+            .searchSuggestions {
+                ForEach(recents.queries, id: \.self) { past in
+                    Label(past, systemImage: "clock.arrow.circlepath")
+                        .searchCompletion(past)
+                }
+            }
+            // Нажали «Найти» — запрос был нужен, запоминаем.
+            .onSubmit(of: .search) { recents.remember(asked) }
         }
-        .searchable(text: $query, prompt: "Найти растение")
         .onChange(of: path) { _, now in
             if now.isEmpty {
                 withAnimation(Motion.halo) { opening = nil }
@@ -271,9 +285,126 @@ struct SearchView: View {
         }
     }
 
+    /// Что искали раньше — плашкой на самом экране, а не только
+    /// подсказкой под полем.
+    ///
+    /// Подсказка показывается, когда поле раскрыто; а до того экран
+    /// поиска пуст, и место на нём простаивает зря. Здесь список виден
+    /// сразу, не трогая поля.
+    @ViewBuilder
+    private var history: some View {
+        if recents.queries.isEmpty {
+            hint("Найдётся по кличке или по виду — «Баксик», «Монстера».",
+                 icon: "magnifyingglass")
+        } else {
+            // Отступ по бокам у заголовка свой — он его и держит, как на
+            // всех экранах, — поэтому внешнего поля у столбца нет, а
+            // плашка и кнопка отступают сами.
+            VStack(alignment: .leading, spacing: 0) {
+                SectionTitle("Недавно искали")
+                VStack(alignment: .leading, spacing: Metrics.rowGap) {
+                    ForEach(Array(recents.queries.enumerated()),
+                            id: \.element) { item in
+                        if item.offset > 0 { SproutDivider() }
+                        Button { again(item.element) } label: {
+                            SproutLink(item.element,
+                                       icon: "clock.arrow.circlepath")
+                        }
+                        .buttonStyle(.plain)
+                        // Забыть одну строку — долгим нажатием на неё,
+                        // как и всё остальное, что убирают в этом
+                        // приложении.
+                        .contextMenu {
+                            Button(role: .destructive) {
+                                withAnimation(Motion.pill) {
+                                    recents.forget(item.element)
+                                }
+                            } label: {
+                                Label("Забыть", systemImage: "xmark")
+                            }
+                        }
+                    }
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(Metrics.groupPadding)
+                .sproutPlate(in: RoundedRectangle(
+                    cornerRadius: Metrics.cardRadius, style: .continuous))
+                .padding(.horizontal, Metrics.contentMargin)
+                .sproutRide()
+
+                Button("Очистить") {
+                    withAnimation(Motion.pill) { recents.clear() }
+                }
+                .buttonStyle(.glass)
+                .font(Typography.settingNote)
+                .padding(.top, 14)
+                .padding(.horizontal, Metrics.contentMargin)
+            }
+            .padding(.bottom, 28)
+        }
+    }
+
+    /// Искали, но не нашли.
+    private var nothing: some View {
+        hint("По запросу «\(asked)» в квартире ничего не растёт.",
+             icon: "leaf")
+    }
+
+    /// Строка посреди пустого экрана — общая на обе подсказки.
+    private func hint(_ text: String, icon: String) -> some View {
+        VStack(spacing: 14) {
+            Image(systemName: icon)
+                .font(.system(size: 30, weight: .regular))
+                .foregroundStyle(.tertiary)
+            Text(text)
+                .font(Typography.settingNote)
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.horizontal, 48)
+        .padding(.top, 140)
+    }
+
+    private var grid: some View {
+        // Без общего стеклянного контейнера — как на главной: он
+        // склеивает сетку в один слой, и карточке нечем разворачиваться
+        // в экран.
+        LazyVGrid(
+            columns: [
+                GridItem(.flexible(), spacing: Metrics.gutterH),
+                GridItem(.flexible(), spacing: Metrics.gutterH),
+            ],
+            spacing: Metrics.gutterV
+        ) {
+            ForEach(results) { plant in
+                Button { show(plant.id) } label: {
+                    PlantCard(plant: plant)
+                }
+                .buttonStyle(.plain)
+                .modifier(PlantMenu(id: plant.id))
+                .environment(\.sproutHalos, opening != plant.id)
+                .sproutRide()
+                .matchedTransitionSource(id: plant.id, in: cardZoom)
+            }
+        }
+        .padding(.horizontal, Metrics.contentMargin)
+        .padding(.top, 14)
+        .padding(.bottom, 28)
+    }
+
+    /// Повторить прежний запрос.
+    private func again(_ past: String) {
+        query = past
+        recents.remember(past)
+    }
+
     /// Открыть растение: гашение и переход разными проходами — см.
-    /// главную.
+    /// главную. Заодно запоминаем запрос: нашли и открыли — значит, он
+    /// был нужен.
     private func show(_ id: Plant.ID) {
+        recents.remember(asked)
         opening = id
         Task { @MainActor in path.append(id) }
     }
