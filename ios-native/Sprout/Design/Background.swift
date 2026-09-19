@@ -1093,6 +1093,8 @@ final class Launch {
     func sprout() {
         bloomFront = .sweep(Double.random(in: 0 ..< 2 * Double.pi))
         bloomStart = Date()
+        // Узор поднимается фигурка за фигуркой, и рука слышит тот же ход.
+        Feel.sprout()
         blooming?.cancel()
         // Дождёмся конца и погасим часы, чтобы расписание холста встало на
         // паузу: пока всходов нет, будить его нечем.

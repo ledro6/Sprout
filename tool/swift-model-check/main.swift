@@ -401,19 +401,31 @@ check(round2(turn(middle, 200 + 450, 400)), "0.50",
 check(round2(turn(corner, 450, 0)), "0.50",
       "и из угла ровно столько же: скорость одна")
 
-// Обратная волна: та же мерка, прочитанная наоборот.
+// Обратная волна: дальние первыми, точка нажатия последней.
+//
+// Мерка у неё своя — до дальнего угла холста. С общей выходила задержка:
+// доля черёда приходилась на то, чего не видно, и после нажатия на экране
+// полсекунды не двигалось ничего.
 let inward = Front.collapse(CGPoint(x: 200, y: 400))
 check(round2(turn(inward, 200, 400)), "1.00",
       "обратная: точка нажатия идёт последней — волна в неё садится")
-check(round2(turn(inward, 200 + 900, 400)), "0.00", "дальние — первыми")
-check(round2(turn(inward, 200 + 450, 400)), "0.50", "середина пути — посередине")
-var mirrored = 0
-for x in stride(from: -200.0, through: 600, by: 50) {
-    for y in stride(from: -200.0, through: 1000, by: 50) {
-        if abs(turn(middle, x, y) + turn(inward, x, y) - 1) > 1e-9 { mirrored += 1 }
+check(round2(turn(inward, 0, 0)), "0.00",
+      "а самый дальний угол холста — ровно первым, без задержки")
+var late = 0
+for spot in [CGPoint(x: 0, y: 0), CGPoint(x: 200, y: 400),
+             CGPoint(x: 400, y: 800), CGPoint(x: 399, y: 1)] {
+    let back = Front.collapse(spot)
+    // У каждого холста найдётся фигурка, трогающаяся в ноль: иначе после
+    // нажатия на экране какое-то время не двигается ничего.
+    var first = 1.0
+    for x in stride(from: 0.0, through: 400, by: 10) {
+        for y in stride(from: 0.0, through: 800, by: 10) {
+            first = min(first, turn(back, x, y))
+        }
     }
+    if first > 1e-6 { late += 1 }
 }
-check("\(mirrored)", "0", "прямая и обратная волны — зеркало друг друга")
+check("\(late)", "0", "откуда ни нажми, волна трогается сразу")
 
 let up = Front.sweep(-Double.pi / 2)
 check(turn(up, 200, 800) < turn(up, 200, 0),
@@ -516,9 +528,24 @@ for (name, pulse) in Pulse.all {
     check(pulse.valid, "рисунок «\(name)» движок примет")
 }
 
+// Отклик — ряд тычков, а не ровный гул: волна по экрану идёт рядами
+// фигурок, и рука должна слышать ряды, а не среднюю их силу.
+let splash = Pulse.water
+let drops = splash.taps(over: 2.4)
+check(drops.count > 20, "за волну в руку уходит не один тычок, а десятки")
+check(drops.allSatisfy { $0.strength >= Pulse.faintest && $0.strength <= 1 },
+      "и все они в силах, которые движок покажет")
+check(zip(drops, drops.dropFirst()).allSatisfy { $0.at < $1.at },
+      "и идут по времени вперёд")
+check(round2(drops[1].at - drops[0].at), round2(1 / splash.rate),
+      "промежуток между тычками — обратная частота")
+check(drops.allSatisfy { $0.at <= 2.4 + 1e-9 },
+      "и ни один не выпадает за отведённое время")
+check(round2(splash.rate), "13.00",
+      "частота полива — сколько рядов узора волна поднимает за секунду")
+
 // Полив: всплеск и долгий уход. После горба сила только убывает — иначе
 // это не «волна уходит за край», а что-то ещё.
-let splash = Pulse.water
 var rising = 0
 var peak = 0.0
 for step in stride(from: 0.0, through: 1.0, by: 0.01) {
@@ -527,18 +554,30 @@ for step in stride(from: 0.0, through: 1.0, by: 0.01) {
     peak = max(peak, now)
 }
 check("\(rising)", "0", "полив после горба только слабеет")
-check(round2(splash.strength(at: 0)), "0.45", "начинается не с нуля: удар уже был")
-check(round2(splash.strength(at: 1)), "0.00", "и сходит на нет ровно к концу")
 check(splash.strike > 0.8, "и начинается резким ударом")
-check(round2(splash.strength(at: 0.195)), "0.61",
+check(splash.hum > 0 && splash.hum < 0.5,
+      "под дробью тихая подложка, чтобы между тычками рука не пустовала")
+check(round2(splash.strength(at: 0.195)), "0.70",
       "между точками огибающая идёт по прямой")
 
-// Всходы: наоборот — растёт и лопается хлопком.
+// Всходы: набирают и силу, и частоту тычков, и садятся хлопком.
+let rise = Pulse.sprout
+let seeds = rise.taps(over: 1.1)
+check(seeds.count > 8, "за всходы в руку уходит с десяток тычков")
+check(rise.strength(at: 0.55) > rise.strength(at: 0),
+      "всходы набирают силу к середине")
+check(rise.strength(at: 1) < rise.strength(at: 0.55),
+      "и садятся к концу")
+check("\(rise.strike)", "0.0",
+      "без удара в начале: всходы ничем не вызваны, вздрагивать не с чего")
+check("\(rise.hum)", "0.0", "и без гула — в руке только дробь")
+check(rise.finish > 0, "зато с мягким хлопком, когда узор встал")
+
+// Посадка: наоборот, растёт и лопается.
 let sprouting = Pulse.bloom
 check(sprouting.strength(at: 1) > sprouting.strength(at: 0),
-      "всходы, наоборот, набирают силу")
-check("\(sprouting.strike)", "0.0", "и без удара в начале — начинать нечему")
-check(sprouting.finish > 0.9, "зато с хлопком в конце")
+      "посадка набирает силу")
+check(sprouting.finish > 0.9, "и кончается хлопком")
 
 // Кутерьма: по бугру на такт, и бугры считаются из неё самой.
 let romp = Pulse.frenzy
@@ -553,36 +592,48 @@ check(zip(bumps, bumps.dropFirst()).allSatisfy { $0 < $1 },
       "каждый следующий бугор сильнее прежнего")
 check(round2(romp.strength(at: 1)), "0.00",
       "а под конец, когда узор садится на место, отклик стихает")
-// Бугры должны попадать на такты: разойдись эти два места — рука била бы
-// мимо того, что видно на экране.
 let firstBump = 0.4 / Double(Frolic.beats + 1) * Frolic.seconds
 check(round2(firstBump), round2(Frolic.beat * 0.4),
       "первый бугор приходится на первый такт")
 
-// Огибающая нигде не выходит за 0…1, чего бы у неё ни спросили.
+// Огибающая нигде не выходит за 0…1, чего бы у неё ни спросили, и ряд
+// тычков нигде не вырождается.
 var outOfRange = 0
 for (_, pulse) in Pulse.all {
     for step in stride(from: -0.5, through: 1.5, by: 0.01) {
         let value = pulse.strength(at: step)
         if value < 0 || value > 1 || value.isNaN { outOfRange += 1 }
     }
+    for span in [0.2, 0.55, 1.1, 2.4, 5.0] {
+        let row = pulse.taps(over: span)
+        if row.contains(where: { $0.at < 0 || $0.at > span + 1e-9
+            || $0.strength < 0 || $0.strength > 1 }) { outOfRange += 1 }
+    }
 }
-check("\(outOfRange)", "0", "сила нигде не выходит за 0…1")
+check("\(outOfRange)", "0", "сила и время тычков нигде не выходят за края")
+check(Pulse.water.taps(over: 0).isEmpty, "на нулевом времени тычков нет")
 
 // А негодный рисунок проверка обязана отвергнуть — иначе она ничего не
 // стоит.
-check(!Pulse(envelope: [Moment(0, 0.5)]).valid, "одна точка — не огибающая")
-check(!Pulse(envelope: [Moment(0, 0.5), Moment(0.6, 0.2)]).valid,
+func bad(_ pulse: Pulse) -> Bool { !pulse.valid }
+check(bad(Pulse(rate: 13, envelope: [Moment(0, 0.5)])),
+      "одна точка — не огибающая")
+check(bad(Pulse(rate: 13, envelope: [Moment(0, 0.5), Moment(0.6, 0.2)])),
       "огибающая обязана дойти до конца")
-check(!Pulse(envelope: [Moment(0.2, 0.5), Moment(1, 0.2)]).valid,
+check(bad(Pulse(rate: 13, envelope: [Moment(0.2, 0.5), Moment(1, 0.2)])),
       "и начаться в начале")
-check(!Pulse(envelope: [Moment(0, 0.5), Moment(0.7, 0.2),
-                        Moment(0.3, 0.9), Moment(1, 0)]).valid,
+check(bad(Pulse(rate: 13, envelope: [Moment(0, 0.5), Moment(0.7, 0.2),
+                                     Moment(0.3, 0.9), Moment(1, 0)])),
       "и идти только вперёд")
-check(!Pulse(strike: 1.4, envelope: [Moment(0, 0.5), Moment(1, 0)]).valid,
+check(bad(Pulse(rate: 13, strike: 1.4,
+                envelope: [Moment(0, 0.5), Moment(1, 0)])),
       "сила больше единицы движку не годится")
-check(!Pulse(envelope: [Moment(0, -0.2), Moment(1, 0)]).valid,
+check(bad(Pulse(rate: 13, envelope: [Moment(0, -0.2), Moment(1, 0)])),
       "и отрицательная тоже")
+check(bad(Pulse(rate: 0, envelope: [Moment(0, 0.5), Moment(1, 0)])),
+      "ряд без частоты — не ряд")
+check(bad(Pulse(rate: 200, envelope: [Moment(0, 0.5), Moment(1, 0)])),
+      "а двести тычков в секунду — уже не тычки")
 
 print("кадр из снимка:")
 let wide = CGSize(width: 4000, height: 3000)

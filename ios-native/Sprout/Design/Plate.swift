@@ -87,12 +87,12 @@ extension View {
 /// виден и по ним. Тем и держится: прыжок сам по себе ничего не значит,
 /// значит очередь прыжков.
 ///
-/// Черёд считается той же формулой, что у фигурки узора: доля пути до
-/// элемента от размаха волны. Но не с той же длительностью: очередь
-/// элементов сжата втрое — см. `Motion.rideHaste`. Порядок от этого тот
-/// же, а ждать своей очереди почти не приходится: прыжок должен читаться
-/// откликом на нажатие, а не событием, случившимся через две секунды
-/// после него.
+/// Черёд считается той же формулой, что у фигурки узора, и с той же
+/// длительностью: элемент подпрыгивает ровно тогда, когда под него
+/// приходит гребень. В этом весь смысл — прыжок сам по себе не значит
+/// ничего, значит совпадение прыжка с волной. Фора, с которой волна
+/// трогается из-под плашки политого растения, тоже учтена: от неё отсчёт
+/// и идёт.
 private struct Ride: ViewModifier {
     /// Насколько элемент сейчас приподнят.
     @State private var lift: CGFloat = 0
@@ -127,42 +127,21 @@ private struct Ride: ViewModifier {
                         middle.y - Cheer.shared.origin.y)
         let turn = Double(min(far / Metrics.waveReach, 1))
             * (1 - Metrics.popSpan)
-        // Очередь та же, что у узора, но сжатая — см. `Motion.rideHaste`,
-        // — и сверх неё у каждого элемента своя задержка, своя высота и
-        // своя упругость. Порядок волны от этого цел, а прыгают все врозь.
-        let own = scatter
-        let wait = turn * Motion.cheerSeconds * Motion.rideHaste
-            + own * Motion.rideScatter
-            - Date().timeIntervalSince(start)
-        // Выше прыжок — дольше подъём: скорость у всех одна, а размах
-        // свой, как у предметов разного веса на одной волне.
-        let stretch = 1 + Motion.rideSpread * (own - 0.5) * 2
-        let high = Metrics.ride * CGFloat(stretch)
-        let up = Motion.rideUpSeconds * stretch
+        // Черёд ровно тот же, что у фигурки узора под этим элементом: он
+        // подпрыгивает в тот миг, когда до него доходит гребень, — не
+        // раньше и не позже. Фора, с которой волна трогается из-под
+        // плашки политого растения, уже учтена в её начале.
+        let wait = turn * Motion.cheerSeconds - Date().timeIntervalSince(start)
 
         hop.run?.cancel()
         hop.run = Task { @MainActor in
             if wait > 0 { try? await Task.sleep(for: .seconds(wait)) }
             guard !Task.isCancelled else { return }
-            withAnimation(.spring(duration: up, bounce: 0.3)) { lift = -high }
-            try? await Task.sleep(for: .seconds(up))
+            withAnimation(Motion.rideUp) { lift = -Metrics.ride }
+            try? await Task.sleep(for: .seconds(Motion.rideUpSeconds))
             guard !Task.isCancelled else { return }
             withAnimation(Motion.rideDown) { lift = 0 }
         }
-    }
-
-    /// Своя доля у каждого элемента, 0…1.
-    ///
-    /// Считается из его места на экране: номера у модификатора взяться
-    /// неоткуда — он висит и на кнопке, и на заголовке, и на каждой
-    /// карточке сетки, — а место у каждого своё. Множители взяты с
-    /// золотого сечения и его дополнения: они несоизмеримы, поэтому
-    /// соседи по сетке, стоящие через ровный шаг, не получают одну и ту же
-    /// долю.
-    private var scatter: Double {
-        let mix = Double(spot.rect.midX) * 0.618_034
-            + Double(spot.rect.midY) * 0.381_966
-        return mix - mix.rounded(.down)
     }
 }
 

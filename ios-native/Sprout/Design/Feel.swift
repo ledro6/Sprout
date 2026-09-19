@@ -22,6 +22,12 @@ enum Feel {
     /// Посадили растение: из ничего нарастает и лопается хлопком.
     static func planted() { Engine.shared.play(.bloom, seconds: 0.55) }
 
+    /// Узор всходит при запуске: дробь, набирающая частоту, и мягкий
+    /// хлопок, когда последняя фигурка встала на место.
+    static func sprout() {
+        Engine.shared.play(.sprout, seconds: Motion.bloomSeconds)
+    }
+
     /// Затрясли: по бугру на каждый такт кутерьмы.
     static func frenzy() { Engine.shared.play(.frenzy, seconds: Frolic.seconds) }
 
@@ -120,38 +126,47 @@ private final class Engine {
 
     /// Рисунок в то, что понимает движок.
     ///
-    /// Гул — одно долгое событие в полную силу, а всю форму ему задаёт
-    /// кривая `hapticIntensityControl`: так и положено, событие с
-    /// заданной силой звучало бы ровно и угасать не умело бы.
+    /// Тычки — отдельные мгновенные события, каждое со своей силой.
+    /// Ровный гул под ними — одно долгое событие в полную силу, которому
+    /// форму задаёт кривая `hapticIntensityControl`: событие с заданной
+    /// силой звучало бы ровно и угасать не умело бы. Гула может и не быть
+    /// вовсе — тогда в руке только дробь.
     private func pattern(for pulse: Pulse,
                          seconds: Double) throws -> CHHapticPattern {
         var events: [CHHapticEvent] = []
         if pulse.strike > 0 {
             events.append(strike(pulse.strike, pulse.strikeEdge, at: 0))
         }
-        events.append(CHHapticEvent(
-            eventType: .hapticContinuous,
-            parameters: [
-                CHHapticEventParameter(parameterID: .hapticIntensity,
-                                       value: 1),
-                CHHapticEventParameter(parameterID: .hapticSharpness,
-                                       value: Float(pulse.edge)),
-            ],
-            relativeTime: 0,
-            duration: seconds))
+        for tap in pulse.taps(over: seconds) {
+            events.append(strike(tap.strength, tap.edge, at: tap.at))
+        }
         if pulse.finish > 0 {
             events.append(strike(pulse.finish, pulse.finishEdge,
                                  at: seconds))
         }
 
-        let curve = CHHapticParameterCurve(
-            parameterID: .hapticIntensityControl,
-            controlPoints: pulse.envelope.map {
-                CHHapticParameterCurve.ControlPoint(
-                    relativeTime: $0.at * seconds, value: Float($0.strength))
-            },
-            relativeTime: 0)
-        return try CHHapticPattern(events: events, parameterCurves: [curve])
+        var curves: [CHHapticParameterCurve] = []
+        if pulse.hum > 0 {
+            events.append(CHHapticEvent(
+                eventType: .hapticContinuous,
+                parameters: [
+                    CHHapticEventParameter(parameterID: .hapticIntensity,
+                                           value: 1),
+                    CHHapticEventParameter(parameterID: .hapticSharpness,
+                                           value: Float(pulse.edge)),
+                ],
+                relativeTime: 0,
+                duration: seconds))
+            curves.append(CHHapticParameterCurve(
+                parameterID: .hapticIntensityControl,
+                controlPoints: pulse.envelope.map {
+                    CHHapticParameterCurve.ControlPoint(
+                        relativeTime: $0.at * seconds,
+                        value: Float($0.strength * pulse.hum))
+                },
+                relativeTime: 0))
+        }
+        return try CHHapticPattern(events: events, parameterCurves: curves)
     }
 
     private func strike(_ force: Double, _ edge: Double,
