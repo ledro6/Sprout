@@ -160,7 +160,7 @@ struct RootView: View {
         if Launch.shared.greeting {
             // Нажатия она забирает себе: под ней уже стоит собранный
             // экран, и ткнуть в карточку сквозь заставку было бы можно.
-            Splash()
+            Splash(owner: garden.owner)
                 .transition(.opacity)
         }
     }

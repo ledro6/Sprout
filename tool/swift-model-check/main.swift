@@ -654,6 +654,31 @@ let deepest = Crop.of(image: wide, window: pane, scale: Crop.deepest,
 check(round2(tooClose.side), round2(deepest.side),
       "и приблизить дальше предела тоже")
 
+print("как приложение здоровается:")
+check(Seed.greeting(for: "Святослав"), "Добро пожаловать, Святослав!",
+      "назвавшегося встречаем по имени")
+check(Seed.greeting(for: ""), "Добро пожаловать!",
+      "а неназвавшегося — просто так, без хвоста из запятой")
+check(Seed.greeting(for: "   "), "Добро пожаловать!",
+      "пробелы именем не считаются")
+check(Seed.greeting(for: "  Аня  "), "Добро пожаловать, Аня!",
+      "а по краям обрезаются")
+check(Seed.owner.isEmpty,
+      "у нового сада имени нет: макетное «Святослав» встречало бы всех")
+
+// Подпись для тех мест, где без имени нельзя.
+let nameless = Garden()
+check(nameless.owner.isEmpty, "сад заводится безымянным")
+check(nameless.signed, Seed.stranger, "но подписаться ему есть чем")
+// Это не украшение: код с пустым именем обратно не разберётся, и
+// соперник пришёл бы в таблицу безымянным.
+let anon = Rival.mine(owner: nameless.signed, score: Score(), plants: 0)
+check(Rival.read(anon.code)?.name ?? "—", Seed.stranger,
+      "код неназвавшегося разбирается обратно")
+let broken = Rival.mine(owner: "", score: Score(), plants: 0)
+check(Rival.read(broken.code) == nil,
+      "а с пустым именем — нет, потому подпись и нужна")
+
 print("срок напоминания:")
 func delay(_ moisture: Double, _ dryingDays: Double = 7,
            _ threshold: Double = 0.2) -> String {

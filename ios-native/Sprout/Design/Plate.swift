@@ -127,19 +127,42 @@ private struct Ride: ViewModifier {
                         middle.y - Cheer.shared.origin.y)
         let turn = Double(min(far / Metrics.waveReach, 1))
             * (1 - Metrics.popSpan)
-        // Очередь та же, что у узора, но сжатая — см. `Motion.rideHaste`.
+        // Очередь та же, что у узора, но сжатая — см. `Motion.rideHaste`,
+        // — и сверх неё у каждого элемента своя задержка, своя высота и
+        // своя упругость. Порядок волны от этого цел, а прыгают все врозь.
+        let own = scatter
         let wait = turn * Motion.cheerSeconds * Motion.rideHaste
+            + own * Motion.rideScatter
             - Date().timeIntervalSince(start)
+        // Выше прыжок — дольше подъём: скорость у всех одна, а размах
+        // свой, как у предметов разного веса на одной волне.
+        let stretch = 1 + Motion.rideSpread * (own - 0.5) * 2
+        let high = Metrics.ride * CGFloat(stretch)
+        let up = Motion.rideUpSeconds * stretch
 
         hop.run?.cancel()
         hop.run = Task { @MainActor in
             if wait > 0 { try? await Task.sleep(for: .seconds(wait)) }
             guard !Task.isCancelled else { return }
-            withAnimation(Motion.rideUp) { lift = -Metrics.ride }
-            try? await Task.sleep(for: .seconds(Motion.rideUpSeconds))
+            withAnimation(.spring(duration: up, bounce: 0.3)) { lift = -high }
+            try? await Task.sleep(for: .seconds(up))
             guard !Task.isCancelled else { return }
             withAnimation(Motion.rideDown) { lift = 0 }
         }
+    }
+
+    /// Своя доля у каждого элемента, 0…1.
+    ///
+    /// Считается из его места на экране: номера у модификатора взяться
+    /// неоткуда — он висит и на кнопке, и на заголовке, и на каждой
+    /// карточке сетки, — а место у каждого своё. Множители взяты с
+    /// золотого сечения и его дополнения: они несоизмеримы, поэтому
+    /// соседи по сетке, стоящие через ровный шаг, не получают одну и ту же
+    /// долю.
+    private var scatter: Double {
+        let mix = Double(spot.rect.midX) * 0.618_034
+            + Double(spot.rect.midY) * 0.381_966
+        return mix - mix.rounded(.down)
     }
 }
 

@@ -683,9 +683,12 @@ final class Cheer {
     @MainActor
     func queue(from plate: CGRect) {
         guard start != nil else { return now(from: plate) }
-        // Ждать может только одна: волна — не состояние, а событие, и
-        // копить их незачем. Третье нажатие подряд заменяет собой второе.
-        waiting = [plate]
+        // Ждать могут несколько: нажал пять раз — пять волн и пройдёт,
+        // одна за другой. Но не сколько угодно: очередь — отклик на
+        // нажатия, а не их архив, и переполненная просто теряет самую
+        // позднюю, оставляя проход ровным.
+        if waiting.count >= Motion.queued { waiting.removeLast() }
+        waiting.append(plate)
         guard queueRun == nil else { return }
         queueRun = Task { @MainActor in
             while !waiting.isEmpty {
@@ -823,13 +826,15 @@ final class Repaint {
     @MainActor
     func begin(base: Tint, wave: Tint, to shape: Tint, toWave: Tint,
                from spot: CGPoint) {
-        // В очереди держим не больше одного. Третье нажатие подряд не
-        // копит хвост, а сливается со вторым: «откуда» остаётся у
-        // ждущего, «куда» и «откуда расходиться» берутся у нового. Цепочка
-        // от этого не рвётся — тот, кто ждал, всё равно начинался бы с
-        // того же места, — а пять нажатий не оборачиваются пятью
-        // переходами подряд.
-        if var last = waiting.popLast() {
+        // Ждут все нажатия, а не одно: ткнул три цвета подряд — узор
+        // перекрасится трижды, каждый раз из своего кружка. Пары
+        // «откуда — куда» сцепляются сами, и цепочка от этого не рвётся.
+        //
+        // Но очередь не бездонна. Переполнилась — последний ждущий
+        // перенимает цель нового: «откуда» остаётся у него, «куда» и
+        // «откуда расходиться» берутся у нового, хвост не растёт, а конец
+        // пути остаётся верным.
+        if waiting.count >= Motion.queued, var last = waiting.popLast() {
             last.to = Shade(shape)
             last.toWave = Shade(toWave)
             last.front = .point(spot)
@@ -1032,9 +1037,9 @@ final class Launch {
     /// предыдущего. Помнить, что сейчас на экране, поэтому не нужно.
     @MainActor
     func reshape(from before: [Int], to after: [Int], front: Front) {
-        // В очереди держим не больше одного — см. `Repaint.begin`: третье
-        // нажатие подряд сливается со вторым, а не копит хвост.
-        if var last = swaps.popLast() {
+        // Ждут все нажатия — см. `Repaint.begin`; переполнилась очередь —
+        // последний ждущий перенимает цель нового.
+        if swaps.count >= Motion.queued, var last = swaps.popLast() {
             last.to = after
             last.toWeave = weave(for: after.count)
             last.front = front

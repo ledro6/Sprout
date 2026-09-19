@@ -46,9 +46,14 @@ struct ProfileView: View {
     @State private var paste = Spot()
 
     private var me: Rival {
-        Rival.mine(owner: garden.owner, score: score,
+        // Подписью, а не именем: неназвавшийся всё равно должен как-то
+        // попасть и в таблицу, и в код для друзей — см. `Garden.signed`.
+        Rival.mine(owner: garden.signed, score: score,
                    plants: garden.plantCount)
     }
+
+    /// Назвался ли хозяин.
+    private var named: Bool { !garden.owner.isEmpty }
 
     var body: some View {
         NavigationStack {
@@ -87,7 +92,10 @@ struct ProfileView: View {
         .alert("Как вас зовут?", isPresented: $renaming) {
             TextField("Имя", text: $draft)
             Button("Отмена", role: .cancel) {}
-            Button("Сохранить") { garden.rename(owner: draft) }
+            Button("Сохранить") {
+                garden.rename(owner: draft)
+                Feel.done()
+            }
         } message: {
             Text("Имя стоит в профиле и уходит вместе со счётом друзьям.")
         }
@@ -109,24 +117,34 @@ struct ProfileView: View {
                     .fill(Palette.swatch(settings.avatarTint))
                     .frame(width: Metrics.avatar, height: Metrics.avatar)
                     .overlay {
-                        Text(letter)
-                            .font(Typography.avatar)
-                            .foregroundStyle(.white)
+                        // Неназвавшемуся — значок человека: пустой кружок
+                        // читался бы недогрузившейся картинкой, а не
+                        // «имени пока нет».
+                        if named {
+                            Text(letter)
+                                .font(Typography.avatar)
+                                .foregroundStyle(.white)
+                        } else {
+                            Image(systemName: "person.fill")
+                                .font(Typography.avatar)
+                                .foregroundStyle(.white)
+                        }
                     }
                     .accessibilityHidden(true)
                 VStack(alignment: .leading, spacing: 3) {
-                    Text(garden.owner)
+                    Text(named ? garden.owner : "Имя не задано")
                         .font(Typography.navTitle)
-                        .foregroundStyle(Palette.ink)
+                        .foregroundStyle(named ? Palette.ink : .secondary)
                         .lineLimit(1)
-                    Text("Сад с "
-                         + garden.since.formatted(.dateTime.day().month(.wide)
-                             .year()))
+                    Text(named
+                         ? "Сад с " + garden.since.formatted(
+                             .dateTime.day().month(.wide).year())
+                         : "Назовитесь — имя встретит вас при запуске")
                         .font(Typography.settingNote)
                         .foregroundStyle(.secondary)
                 }
                 Spacer(minLength: 8)
-                Button("Изменить") {
+                Button(named ? "Изменить" : "Назвать") {
                     draft = garden.owner
                     renaming = true
                 }
