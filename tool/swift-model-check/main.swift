@@ -584,6 +584,76 @@ check(!Pulse(strike: 1.4, envelope: [Moment(0, 0.5), Moment(1, 0)]).valid,
 check(!Pulse(envelope: [Moment(0, -0.2), Moment(1, 0)]).valid,
       "и отрицательная тоже")
 
+print("кадр из снимка:")
+let wide = CGSize(width: 4000, height: 3000)
+let tall = CGSize(width: 3000, height: 4000)
+let pane = 350.0
+
+// В покое кадр — середина снимка по короткой стороне.
+let centred = Crop.of(image: wide, window: pane, scale: 1, offset: .zero)
+check(round2(centred.side), "3000.00", "из широкого берётся квадрат по высоте")
+check(round2(centred.x), "500.00", "и стоит он ровно посередине")
+check(round2(centred.y), "0.00", "по высоте резать нечего")
+let upright = Crop.of(image: tall, window: pane, scale: 1, offset: .zero)
+check(round2(upright.side), "3000.00", "из высокого — по ширине")
+check(round2(upright.y), "500.00", "и тоже посередине")
+
+// Увеличение сужает кадр ровно во столько же раз.
+let closer = Crop.of(image: wide, window: pane, scale: 2, offset: .zero)
+check(round2(closer.side), "1500.00", "вдвое ближе — вдвое меньше кадр")
+check(round2(closer.x), "1250.00", "и он всё так же посередине")
+
+// Сдвиг двигает кадр в обратную сторону: тянут-то сам снимок.
+let moved = Crop.of(image: wide, window: pane, scale: 1,
+                    offset: CGSize(width: 100, height: 0))
+check(moved.x < centred.x, "потянули снимок вправо — кадр ушёл влево")
+
+// За край не пускает: пустого угла на карточке быть не должно.
+let shoved = Crop.of(image: wide, window: pane, scale: 1,
+                     offset: CGSize(width: 99_999, height: 99_999))
+check(round2(shoved.x), "0.00", "как ни тяни, кадр упирается в край снимка")
+check(shoved.inside(wide), "и остаётся внутри")
+let pinned = Crop.of(image: tall, window: pane, scale: 1,
+                     offset: CGSize(width: 0, height: -99_999))
+check(round2(pinned.y + pinned.side), "4000.00", "с другой стороны — тоже")
+
+// По короткой стороне двигать нечего вовсе.
+check(round2(Crop.slack(image: wide, window: pane, scale: 1).height), "0.00",
+      "у широкого снимка по высоте люфта нет")
+check(Crop.slack(image: wide, window: pane, scale: 1).width > 0,
+      "а по ширине есть")
+check(Crop.slack(image: wide, window: pane, scale: 2).height > 0,
+      "стоит увеличить — появляется и по высоте")
+
+// Чего бы ни попросили, кадр обязан лежать внутри снимка и быть
+// квадратным: на этом держатся одинаковые карточки в сетке.
+var escaped = 0
+for size in [wide, tall, CGSize(width: 1200, height: 1200),
+             CGSize(width: 800, height: 60)] {
+    for zoom in [0.2, 1.0, 1.7, 4.0, 9.0] {
+        for dx in stride(from: -900.0, through: 900, by: 75) {
+            for dy in stride(from: -900.0, through: 900, by: 75) {
+                let crop = Crop.of(image: size, window: pane, scale: zoom,
+                                   offset: CGSize(width: dx, height: dy))
+                if !crop.inside(size) || crop.side <= 0 || crop.side.isNaN {
+                    escaped += 1
+                }
+            }
+        }
+    }
+}
+check("\(escaped)", "0", "кадр нигде не вылезает за снимок")
+
+// Увеличение зажато сверху и снизу: меньше единицы снимок не закрыл бы
+// окно, больше предела — рассыпался бы на точки.
+let tooFar = Crop.of(image: wide, window: pane, scale: 0.1, offset: .zero)
+check(round2(tooFar.side), "3000.00", "уменьшить меньше «враспор» нельзя")
+let tooClose = Crop.of(image: wide, window: pane, scale: 99, offset: .zero)
+let deepest = Crop.of(image: wide, window: pane, scale: Crop.deepest,
+                      offset: .zero)
+check(round2(tooClose.side), round2(deepest.side),
+      "и приблизить дальше предела тоже")
+
 print("срок напоминания:")
 func delay(_ moisture: Double, _ dryingDays: Double = 7,
            _ threshold: Double = 0.2) -> String {

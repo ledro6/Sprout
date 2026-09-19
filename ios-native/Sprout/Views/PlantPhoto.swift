@@ -16,12 +16,22 @@ struct PlantPhoto: View {
 
     var body: some View {
         if let shot = plant.shot, let image = Snapshot.image(shot) {
-            // Снимок кадрируется по квадрату: фотографируют и вдоль, и
-            // поперёк, и вписанный целиком он оставлял бы на карточке
-            // пустые поля сверху и снизу.
-            Image(uiImage: image)
-                .resizable()
-                .scaledToFill()
+            // Снимок лежит в наложении на пустой цвет, а не сам по себе,
+            // и это не украшательство. `scaledToFill` сообщает о себе
+            // размер, который больше предложенного, — то есть картинка
+            // растягивает собой карточку, и в сетке ряд с ней расталкивает
+            // соседние. Пустой цвет берёт ровно предложенное, наложение
+            // обрезается по нему, и карточка выходит той же, что у всех.
+            //
+            // Сам снимок при этом уже квадратный: его обрезают при
+            // добавлении — см. `Trim`. Заливка здесь на случай старых
+            // снимков и косых пропорций, а не как способ верстать.
+            Color.clear
+                .overlay {
+                    Image(uiImage: image)
+                        .resizable()
+                        .scaledToFill()
+                }
                 .clipShape(RoundedRectangle(cornerRadius: radius,
                                             style: .continuous))
         } else {
@@ -47,6 +57,33 @@ enum Snapshot {
     /// ширину. Снимок с камеры вчетверо больше по стороне и в двадцать раз
     /// тяжелее, и хранить его целиком незачем.
     static let side: CGFloat = 1024
+
+    /// Вырезать из снимка выбранный кадр.
+    ///
+    /// Рисованием, а не `CGImage.cropping`: у снимка с камеры в
+    /// метаданных стоит поворот, и вырезанный напрямую кадр оказался бы
+    /// не там, где его выбирали. `UIImage.draw` про поворот знает.
+    static func cut(_ image: UIImage, to crop: Crop) -> UIImage {
+        // Сторона кадра — та, что выбрали, но не больше нашего предела и
+        // не меньше разумного: сильно приблизив, хозяин вырезает из
+        // снимка мелкий кусок, и растягивать его до тысячи точек незачем,
+        // а оставлять совсем крошечным — значит показать на карточке
+        // мыло.
+        let out = min(max(crop.side, 600), Double(side))
+        let size = CGSize(width: out, height: out)
+        let format = UIGraphicsImageRendererFormat.default()
+        format.scale = 1
+        return UIGraphicsImageRenderer(size: size, format: format)
+            .image { _ in
+                // Снимок рисуется целиком, но сдвинутым и увеличенным так,
+                // чтобы выбранный кадр лёг ровно на квадрат.
+                let zoom = out / crop.side
+                image.draw(in: CGRect(
+                    x: -crop.x * zoom, y: -crop.y * zoom,
+                    width: Double(image.size.width) * zoom,
+                    height: Double(image.size.height) * zoom))
+            }
+    }
 
     static func keep(_ image: UIImage) -> String? {
         guard let data = shrink(image).jpegData(compressionQuality: 0.85)

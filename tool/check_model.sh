@@ -26,6 +26,7 @@ trap 'rm -rf "$OUT"' EXIT
   ios-native/Sprout/Model/Front.swift \
   ios-native/Sprout/Model/Frolic.swift \
   ios-native/Sprout/Model/Pulse.swift \
+  ios-native/Sprout/Model/Crop.swift \
   ios-native/Sprout/Model/Recents.swift \
   ios-native/Sprout/Model/Score.swift \
   ios-native/Sprout/Model/Reminders.swift \

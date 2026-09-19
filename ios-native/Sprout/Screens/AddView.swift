@@ -19,8 +19,22 @@ struct AddView: View {
 
     /// Выбранный снимок и то, чем его выбирали.
     @State private var item: PhotosPickerItem?
-    @State private var shot: UIImage?
     @State private var shooting = false
+
+    /// Снимок как его дали — целиком, без обрезки. Держится затем, что
+    /// кадр можно перевыбрать: резать во второй раз из уже обрезанного
+    /// значило бы терять на каждом заходе.
+    @State private var raw: UIImage?
+
+    /// Только что снятое камерой: лист кадра поднимется, когда камера
+    /// закроется, — см. ниже, почему не сразу.
+    @State private var fresh: UIImage?
+
+    /// Открыт ли выбор кадра.
+    @State private var trimming = false
+
+    /// Обрезанный квадрат — он и ляжет на карточку.
+    @State private var shot: UIImage?
 
     /// Что система разглядела на снимке. Пусто — не разглядела ничего
     /// знакомого, и подсказывать нечего.
@@ -86,8 +100,21 @@ struct AddView: View {
         }
         .onAppear { if room.isEmpty { room = rooms.first ?? "Дом" } }
         .fullScreenCover(isPresented: $shooting) {
-            Camera { image in Task { await take(image) } }
+            Camera { image in fresh = image }
                 .ignoresSafeArea()
+        } onDismiss: {
+            // Кадр выбирают после того, как камера закрылась: два экрана,
+            // поднятых в одном проходе, система показывает как один — и
+            // вторым оказывается не тот.
+            guard let taken = fresh else { return }
+            fresh = nil
+            raw = taken
+            trimming = true
+        }
+        .sheet(isPresented: $trimming) {
+            if let raw {
+                Trim(image: raw) { cut in Task { await take(cut) } }
+            }
         }
         .alert("Новая комната", isPresented: $naming) {
             TextField("Название", text: $newRoom)
@@ -168,32 +195,44 @@ struct AddView: View {
     /// Квадрат, в котором лежит снимок. Пока его нет — росток на стекле:
     /// то же место, та же форма, и видно, куда встанет фотография.
     private var well: some View {
-        ZStack {
-            if let shot {
-                Image(uiImage: shot)
-                    .resizable()
-                    .scaledToFill()
-            } else {
-                SproutPiece(index: 0)
-                    .fill(Palette.ink.opacity(Metrics.pieceOff))
-                    .frame(width: 64, height: 64)
+        // Всё лежит наложениями на пустой цвет, а не стопкой: `scaledToFill`
+        // сообщает о себе размер больше предложенного, и в стопке снимок
+        // растянул бы собой окно. Пустой цвет берёт ровно предложенное, а
+        // наложения меряются по нему — то же решение, что и у карточки.
+        Color.clear
+            .overlay {
+                if let shot {
+                    Image(uiImage: shot)
+                        .resizable()
+                        .scaledToFill()
+                } else {
+                    SproutPiece(index: 0)
+                        .fill(Palette.ink.opacity(Metrics.pieceOff))
+                        .frame(width: 64, height: 64)
+                }
             }
-            if looking {
-                // Пока система разглядывает снимок — системный кружок
-                // ожидания поверх него.
-                ProgressView()
-                    .controlSize(.large)
-                    .padding(14)
-                    .sproutPlate(in: Circle())
+            .overlay {
+                if looking {
+                    // Пока система разглядывает снимок — системный кружок
+                    // ожидания поверх него.
+                    ProgressView()
+                        .controlSize(.large)
+                        .padding(14)
+                        .sproutPlate(in: Circle())
+                }
             }
-        }
         .frame(maxWidth: .infinity)
         .aspectRatio(1, contentMode: .fit)
         .clipShape(RoundedRectangle(cornerRadius: Metrics.cardRadius,
                                     style: .continuous))
         .sproutPlate(in: RoundedRectangle(cornerRadius: Metrics.cardRadius,
                                           style: .continuous))
+        .contentShape(Rectangle())
+        // Нажатие на сам снимок — перевыбрать кадр. Резать заново будут
+        // из непорезанного оригинала, а не из того, что уже вырезали.
+        .onTapGesture { if raw != nil { trimming = true } }
         .accessibilityLabel(shot == nil ? "Снимка нет" : "Снимок растения")
+        .accessibilityHint(shot == nil ? "" : "Нажмите, чтобы выбрать кадр")
     }
 
     /// Что система разглядела — строкой под кнопками.
@@ -372,10 +411,16 @@ struct AddView: View {
               let data = try? await chosen.loadTransferable(type: Data.self),
               let image = UIImage(data: data)
         else { return }
-        await take(image)
+        raw = image
+        // По той же причине, что и у камеры: выбор фотографии ещё
+        // закрывается своим листом, и поднятый в тот же миг лист кадра
+        // система просто не покажет. Чтение снимка иногда успевает занять
+        // это время само, а иногда нет, — ждём наверняка.
+        try? await Task.sleep(for: .milliseconds(350))
+        trimming = true
     }
 
-    /// Принять снимок и дать телефону его разглядеть.
+    /// Принять выбранный кадр и дать телефону его разглядеть.
     ///
     /// Подсказка не затирает вписанное руками: если вид уже вписан, его
     /// оставляют как есть. Срок полива подставляется только вместе с
@@ -401,6 +446,8 @@ struct AddView: View {
     private func forget() {
         withAnimation(Motion.appear) {
             shot = nil
+            raw = nil
+            fresh = nil
             item = nil
             guess = nil
         }
@@ -461,6 +508,8 @@ struct AddView: View {
             name = ""
             species = ""
             shot = nil
+            raw = nil
+            fresh = nil
             item = nil
             guess = nil
             care = nil
