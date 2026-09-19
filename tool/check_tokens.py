@@ -11,6 +11,12 @@
 берётся то, что можно взять без него, — статические члены типов
 приложения.
 
+Заодно ловит второй промах, тоже дошедший до Xcode: новый тип `Pulse` в
+модели встал рядом с давним `private struct Pulse` в карточке растения.
+Частный он или нет, для Swift неважно — оба объявлены в области модуля, и
+это «invalid redeclaration». Обращения при этом все были верные, так что
+первая проверка молчала.
+
 Разбор нарочно грубый: имена типов и их статические члены собираются
 регулярками. Пропустить он может, приврать — нет: если имя объявлено
 где-то в исходниках, оно найдётся.
@@ -29,6 +35,12 @@ DECL = re.compile(
     r"([A-Za-z_][A-Za-z0-9_]*)")
 TYPE = re.compile(r"^(?:public\s+|private\s+|final\s+)*"
                   r"(?:enum|struct|class|extension)\s+([A-Z][A-Za-z0-9_]*)")
+# То же, но только объявления — без `extension`, которых у одного типа
+# бывает сколько угодно.
+BORN = re.compile(r"^(?:public\s+|private\s+|fileprivate\s+|internal\s+"
+                  r"|final\s+)*"
+                  r"(?:enum|struct|class|actor|protocol)\s+"
+                  r"([A-Z][A-Za-z0-9_]*)")
 USE = re.compile(r"\b([A-Z][A-Za-z0-9_]*)\.([a-zA-Z_][A-Za-z0-9_]*)")
 
 
@@ -36,11 +48,18 @@ def main(root: str) -> int:
     files = sorted(Path(root).rglob("*.swift"))
     types: set[str] = set()
     members: set[str] = set()
+    born: dict[str, list[str]] = {}
     for path in files:
-        for line in path.read_text(encoding="utf-8").splitlines():
+        for number, line in enumerate(path.read_text(encoding="utf-8")
+                                      .splitlines(), 1):
             found = TYPE.match(line)
             if found:
                 types.add(found.group(1))
+            # Объявления верхнего уровня: вложенные в тип имена живут в
+            # своей области и столкнуться не могут, поэтому отступ важен.
+            found = BORN.match(line)
+            if found and not line[:1].isspace():
+                born.setdefault(found.group(1), []).append(f"{path}:{number}")
             found = DECL.match(line)
             if found:
                 members.add(found.group(1))
@@ -53,6 +72,12 @@ def main(root: str) -> int:
                             members.add(name)
 
     problems = []
+    # Два типа с одним именем в модуле Xcode не пускает, даже если один из
+    # них частный: `private` ограничивает доступ, а не область имени.
+    for name, where in sorted(born.items()):
+        if len(where) > 1:
+            problems.append(f"«{name}» объявлен дважды: " + ", ".join(where))
+
     for path in files:
         for number, line in enumerate(path.read_text(encoding="utf-8")
                                       .splitlines(), 1):
@@ -68,7 +93,7 @@ def main(root: str) -> int:
         print(f"\nне сошлось: {len(problems)}")
         return 1
     print(f"токены сходятся: {len(types)} типов, {len(members)} имён, "
-          f"{len(files)} файлов")
+          f"{len(born)} объявлений, {len(files)} файлов")
     return 0
 
 

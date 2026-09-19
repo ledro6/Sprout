@@ -88,8 +88,8 @@ struct PlantGlow<S: Shape>: ViewModifier {
             if plant.thirst != .calm {
                 shape.sproutHalo(alarmColour.opacity(alarmStrength),
                                  blur: Metrics.glowBlur)
-                    .modifier(Pulse(active: plant.moisture <= 0,
-                                    phase: plant.pulsePhase))
+                    .modifier(Breath(active: plant.moisture <= 0,
+                                     phase: plant.pulsePhase))
             }
         }
         .opacity(halos ? 1 : 0)
@@ -116,7 +116,11 @@ struct PlantGlow<S: Shape>: ViewModifier {
 /// Медленный намеренно. Быстрое мигание читается поломкой и раздражает,
 /// а на этом темпе — дыханием. При включённом «Уменьшении движения» не
 /// пульсирует вовсе: свечение и так на месте, а настройка ровно про это.
-private struct Pulse: ViewModifier {
+///
+/// Зовётся дыханием, а не пульсом, и не только по смыслу: `Pulse` в модели
+/// — форма отклика Taptic Engine, а два типа с одним именем в модуле
+/// Xcode не пускает, даже когда один из них частный.
+private struct Breath: ViewModifier {
     let active: Bool
 
     /// Доля разброса, 0…1. Своя у каждого растения — считается от его
