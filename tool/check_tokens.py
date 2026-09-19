@@ -17,6 +17,12 @@
 это «invalid redeclaration». Обращения при этом все были верные, так что
 первая проверка молчала.
 
+Третий промах — порядок замыканий. У `sheet` и `fullScreenCover`
+`onDismiss` объявлен ДО содержимого, а записанный вторым он туда не
+переставится: несколько замыканий подряд Swift раздаёт строго в том
+порядке, в каком они стоят у самого метода. Синтаксис при этом
+безупречный, и `swiftc -parse` молчит.
+
 Разбор нарочно грубый: имена типов и их статические члены собираются
 регулярками. Пропустить он может, приврать — нет: если имя объявлено
 где-то в исходниках, оно найдётся.
@@ -42,6 +48,12 @@ BORN = re.compile(r"^(?:public\s+|private\s+|fileprivate\s+|internal\s+"
                   r"(?:enum|struct|class|actor|protocol)\s+"
                   r"([A-Z][A-Za-z0-9_]*)")
 USE = re.compile(r"\b([A-Z][A-Za-z0-9_]*)\.([a-zA-Z_][A-Za-z0-9_]*)")
+
+# Замыкания, объявленные у SwiftUI до содержимого. Вторым такое замыкание
+# записать нельзя — переставить их Swift не даст. Список короткий нарочно:
+# сюда попадает то, на чём уже обожглись, а не всё, на чём можно.
+EARLY = ("onDismiss",)
+LATE = re.compile(r"^\s*\}\s*(" + "|".join(EARLY) + r")\s*:")
 
 
 def main(root: str) -> int:
@@ -82,6 +94,11 @@ def main(root: str) -> int:
         for number, line in enumerate(path.read_text(encoding="utf-8")
                                       .splitlines(), 1):
             code = line.split("//")[0]
+            found = LATE.match(code)
+            if found:
+                problems.append(
+                    f"{path}:{number}: «{found.group(1)}» записан вторым "
+                    "замыканием, а объявлен он до содержимого")
             for owner, member in USE.findall(code):
                 if owner not in types or member in GIVEN or member in members:
                     continue

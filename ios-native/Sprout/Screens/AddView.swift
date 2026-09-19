@@ -99,17 +99,12 @@ struct AddView: View {
             .toolbar(.hidden, for: .navigationBar)
         }
         .onAppear { if room.isEmpty { room = rooms.first ?? "Дом" } }
-        .fullScreenCover(isPresented: $shooting) {
+        // `onDismiss` идёт до содержимого — так он и объявлен, и двумя
+        // замыканиями подряд его не переставить: Swift раздаёт их в том
+        // порядке, в каком они записаны у самого метода.
+        .fullScreenCover(isPresented: $shooting, onDismiss: { snapped() }) {
             Camera { image in fresh = image }
                 .ignoresSafeArea()
-        } onDismiss: {
-            // Кадр выбирают после того, как камера закрылась: два экрана,
-            // поднятых в одном проходе, система показывает как один — и
-            // вторым оказывается не тот.
-            guard let taken = fresh else { return }
-            fresh = nil
-            raw = taken
-            trimming = true
         }
         .sheet(isPresented: $trimming) {
             if let raw {
@@ -403,6 +398,18 @@ struct AddView: View {
     private var wanted: String {
         let typed = species.trimmingCharacters(in: .whitespacesAndNewlines)
         return typed.isEmpty ? (guess?.species ?? "") : typed
+    }
+
+    /// Камера закрылась.
+    ///
+    /// Кадр выбирают здесь, а не прямо в камере: два экрана, поднятых в
+    /// одном проходе, система показывает как один — и вторым оказывается
+    /// не тот.
+    private func snapped() {
+        guard let image = fresh else { return }
+        fresh = nil
+        raw = image
+        trimming = true
     }
 
     @MainActor
