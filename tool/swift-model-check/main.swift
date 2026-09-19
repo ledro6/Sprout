@@ -511,6 +511,79 @@ recent.clear()
 check("\(recent.queries.count)", "0", "и всё сразу тоже забывается")
 searches.removePersistentDomain(forName: "check.recents")
 
+print("отклик в руке:")
+for (name, pulse) in Pulse.all {
+    check(pulse.valid, "рисунок «\(name)» движок примет")
+}
+
+// Полив: всплеск и долгий уход. После горба сила только убывает — иначе
+// это не «волна уходит за край», а что-то ещё.
+let splash = Pulse.water
+var rising = 0
+var peak = 0.0
+for step in stride(from: 0.0, through: 1.0, by: 0.01) {
+    let now = splash.strength(at: step)
+    if step > 0.15, now > peak + 1e-9 { rising += 1 }
+    peak = max(peak, now)
+}
+check("\(rising)", "0", "полив после горба только слабеет")
+check(round2(splash.strength(at: 0)), "0.45", "начинается не с нуля: удар уже был")
+check(round2(splash.strength(at: 1)), "0.00", "и сходит на нет ровно к концу")
+check(splash.strike > 0.8, "и начинается резким ударом")
+check(round2(splash.strength(at: 0.195)), "0.61",
+      "между точками огибающая идёт по прямой")
+
+// Всходы: наоборот — растёт и лопается хлопком.
+let sprouting = Pulse.bloom
+check(sprouting.strength(at: 1) > sprouting.strength(at: 0),
+      "всходы, наоборот, набирают силу")
+check("\(sprouting.strike)", "0.0", "и без удара в начале — начинать нечему")
+check(sprouting.finish > 0.9, "зато с хлопком в конце")
+
+// Кутерьма: по бугру на такт, и бугры считаются из неё самой.
+let romp = Pulse.frenzy
+check("\(romp.envelope.count)", "\(Frolic.beats * 2 + 1)",
+      "у кутерьмы по паре точек на такт и одна на хвост")
+var bumps: [Double] = []
+for beat in 0 ..< Frolic.beats {
+    let middle = (Double(beat) + 0.4) / Double(Frolic.beats + 1)
+    bumps.append(romp.strength(at: middle))
+}
+check(zip(bumps, bumps.dropFirst()).allSatisfy { $0 < $1 },
+      "каждый следующий бугор сильнее прежнего")
+check(round2(romp.strength(at: 1)), "0.00",
+      "а под конец, когда узор садится на место, отклик стихает")
+// Бугры должны попадать на такты: разойдись эти два места — рука била бы
+// мимо того, что видно на экране.
+let firstBump = 0.4 / Double(Frolic.beats + 1) * Frolic.seconds
+check(round2(firstBump), round2(Frolic.beat * 0.4),
+      "первый бугор приходится на первый такт")
+
+// Огибающая нигде не выходит за 0…1, чего бы у неё ни спросили.
+var outOfRange = 0
+for (_, pulse) in Pulse.all {
+    for step in stride(from: -0.5, through: 1.5, by: 0.01) {
+        let value = pulse.strength(at: step)
+        if value < 0 || value > 1 || value.isNaN { outOfRange += 1 }
+    }
+}
+check("\(outOfRange)", "0", "сила нигде не выходит за 0…1")
+
+// А негодный рисунок проверка обязана отвергнуть — иначе она ничего не
+// стоит.
+check(!Pulse(envelope: [Moment(0, 0.5)]).valid, "одна точка — не огибающая")
+check(!Pulse(envelope: [Moment(0, 0.5), Moment(0.6, 0.2)]).valid,
+      "огибающая обязана дойти до конца")
+check(!Pulse(envelope: [Moment(0.2, 0.5), Moment(1, 0.2)]).valid,
+      "и начаться в начале")
+check(!Pulse(envelope: [Moment(0, 0.5), Moment(0.7, 0.2),
+                        Moment(0.3, 0.9), Moment(1, 0)]).valid,
+      "и идти только вперёд")
+check(!Pulse(strike: 1.4, envelope: [Moment(0, 0.5), Moment(1, 0)]).valid,
+      "сила больше единицы движку не годится")
+check(!Pulse(envelope: [Moment(0, -0.2), Moment(1, 0)]).valid,
+      "и отрицательная тоже")
+
 print("срок напоминания:")
 func delay(_ moisture: Double, _ dryingDays: Double = 7,
            _ threshold: Double = 0.2) -> String {

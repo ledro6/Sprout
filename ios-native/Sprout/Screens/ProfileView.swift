@@ -145,6 +145,7 @@ struct ProfileView: View {
                 SproutTints(current: settings.avatarTint,
                             spots: swatches) { tint, _ in
                     settings.avatarTint = tint
+                    Feel.pick()
                 }
             }
         }
@@ -330,10 +331,12 @@ struct ProfileView: View {
                 ? "В скопированном нет кода Sprout. Скопируйте сообщение "
                     + "друга целиком — код лежит в нём последней строкой."
                 : "Это ваш собственный код: в таблице вы и так есть."
+            Feel.wrong()
             return
         }
         withAnimation(Motion.pill) { welcomed = rival }
         Cheer.shared.now(from: paste.rect)
+        Feel.done()
     }
 
     // MARK: - Замок
@@ -480,10 +483,12 @@ struct ProfileView: View {
                                                     from: data)
         else {
             trouble = "Это не файл сада Sprout."
+            Feel.wrong()
             return
         }
         withAnimation(Motion.appear) { garden.restore(state) }
         recount()
         makeBackup()
+        Feel.done()
     }
 }

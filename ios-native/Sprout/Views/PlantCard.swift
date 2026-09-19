@@ -229,6 +229,7 @@ struct PlantMenu: ViewModifier {
     private func water() {
         withAnimation(Motion.appear) { garden.water(id) }
         Cheer.shared.now(from: spot.rect)
+        Feel.water()
     }
 
     /// Предпросмотр для меню — свой, а не системный снимок.

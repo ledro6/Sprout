@@ -145,8 +145,10 @@ final class Tilt {
         guard shaken >= Self.shakeSeconds else { return }
         shaken = 0
         // Пока кутерьма идёт, второй раз она не начнётся: трясти-то
-        // продолжают.
-        Frenzy.shared.begin()
+        // продолжают. Отклик в руке идёт только с настоящим началом —
+        // иначе он бил бы каждые две секунды, пока телефон в руке.
+        guard Frenzy.shared.begin() else { return }
+        Task { @MainActor in Feel.frenzy() }
     }
 
     private func limit(_ value: Double) -> CGFloat {

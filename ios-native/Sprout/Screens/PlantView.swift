@@ -196,6 +196,7 @@ struct PlantView: View {
     private func water() {
         withAnimation(Motion.appear) { garden.water(plantID) }
         Cheer.shared.now(from: spot.rect)
+        Feel.water()
     }
 
     /// Плашка с фото. В макете 336×347: квадратное фото плюс поля.

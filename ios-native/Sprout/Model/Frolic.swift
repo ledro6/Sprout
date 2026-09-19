@@ -86,8 +86,12 @@ final class Frenzy {
 
     /// Затрясли. Пока кутерьма идёт, второй раз не начинаем: трясти
     /// продолжают и после того, как она пошла.
-    func begin(at moment: Date = Date()) {
-        guard start == nil else { return }
+    ///
+    /// Отвечает, тронулась ли: отклик в руке должен пойти вместе с ней, а
+    /// не на каждое подряд встряхивание.
+    @discardableResult
+    func begin(at moment: Date = Date()) -> Bool {
+        guard start == nil else { return false }
         start = moment
         run?.cancel()
         run = Task { @MainActor in
@@ -95,6 +99,7 @@ final class Frenzy {
             guard !Task.isCancelled else { return }
             start = nil
         }
+        return true
     }
 
     /// Где кутерьма на этот момент. Пусто — её нет или уже отыграла.

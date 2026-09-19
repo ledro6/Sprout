@@ -444,6 +444,7 @@ struct AddView: View {
         withAnimation(Motion.appear) { garden.add(seedling, to: place) }
         // Новое растение — событие, а события здесь показываются волной.
         Cheer.shared.now(from: button.rect)
+        Feel.planted()
         typing = false
         planted = Planted(
             name: nickname,

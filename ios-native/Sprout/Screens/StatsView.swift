@@ -201,6 +201,10 @@ struct StatsView: View {
                         guard let day, waved != day else { return }
                         waved = day
                         splash(on: day, proxy: proxy, geometry: geometry)
+                        // Щелчок, а не отклик полива: столбик выбирают, а
+                        // не поливают, и двухсекундный гул под пальцем,
+                        // ведущим вдоль графика, был бы не к месту.
+                        Feel.pick()
                     }
             }
         }

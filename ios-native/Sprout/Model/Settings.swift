@@ -119,6 +119,17 @@ final class Settings {
     /// же выборе узор всегда был одним и тем же.
     var chosen: [Int] { shapes.sorted() }
 
+    /// Отзываться ли в руке.
+    ///
+    /// Своя настройка, хотя у телефона есть и общая — «Системная
+    /// вибрация» в настройках звука. Она гасит системные отклики, но не
+    /// рисунки `CoreHaptics`: их телефон считает содержимым приложения и
+    /// проигрывает всё равно. Полив, всходы и кутерьма — как раз рисунки,
+    /// и выключить их можно было бы только здесь.
+    var haptics: Bool {
+        didSet { store.set(!haptics, forKey: Key.hushed) }
+    }
+
     /// Напоминать ли о поливе. Само разрешение на уведомления спрашивает
     /// экран настроек — в тот миг, когда переключатель включают, а не при
     /// запуске: спрашивать до того, как человек попросил, невежливо, и
@@ -178,6 +189,9 @@ final class Settings {
         static let patternTint = "patternTint"
         static let waveTint = "waveTint"
         static let avatarTint = "avatarTint"
+        /// Наоборот, «без отклика»: `UserDefaults` на отсутствие ключа
+        /// отвечает `false`, а отклик по умолчанию включён.
+        static let hushed = "hushedHaptics"
     }
 
     /// Оттенок из хранилища. Пусто — ключа нет.
@@ -213,6 +227,7 @@ final class Settings {
         patternTint = Self.tint(store, Key.patternTint) ?? Tint.defaultPattern
         waveTint = Self.tint(store, Key.waveTint) ?? Tint.defaultWave
         avatarTint = Self.tint(store, Key.avatarTint) ?? Tint.defaultAvatar
+        haptics = !store.bool(forKey: Key.hushed)
         reminders = store.bool(forKey: Key.reminders)
         let level = store.double(forKey: Key.threshold)
         threshold = Self.thresholds.contains(level) ? level

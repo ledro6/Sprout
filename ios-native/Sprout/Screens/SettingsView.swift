@@ -76,6 +76,9 @@ struct SettingsView: View {
                 }
                 .pickerStyle(.segmented)
                 .labelsHidden()
+                // Сегментам щелчок нужен свой: `UISegmentedControl`, в
+                // отличие от переключателя и меню, сам не отзывается.
+                .onChange(of: settings.theme) { _, _ in Feel.pick() }
             }
 
             SproutDivider()
@@ -90,12 +93,31 @@ struct SettingsView: View {
 
             SproutDivider()
 
+            HStack(alignment: .center, spacing: 12) {
+                VStack(alignment: .leading, spacing: 3) {
+                    Text("Отклик в руке")
+                        .font(Typography.settingRow)
+                        .foregroundStyle(Palette.ink)
+                    Text("Полив, всходы и волна отзываются вибрацией.")
+                        .font(Typography.settingNote)
+                        .foregroundStyle(.secondary)
+                }
+                Spacer(minLength: 0)
+                Toggle("Отклик в руке", isOn: Binding(
+                    get: { settings.haptics },
+                    set: { settings.haptics = $0 }))
+                    .labelsHidden()
+            }
+
+            SproutDivider()
+
             SproutBlock("Цвет узора") {
                 SproutTints(current: settings.patternTint,
                             spots: patternSpots) { tint, spot in
                     // Перекраска расходится из того самого кружка, по
                     // которому попал палец: прежний цвет надо взять до
                     // того, как настройка сменится.
+                    Feel.pick()
                     Repaint.shared.begin(base: settings.patternTint,
                                          wave: settings.waveTint,
                                          to: tint, toWave: settings.waveTint,
@@ -119,6 +141,7 @@ struct SettingsView: View {
                     // первая волна идёт, — вторая дождётся её.
                     settings.waveTint = tint
                     Cheer.shared.queue(from: spot)
+                    Feel.pick()
                 }
             }
         }
@@ -150,6 +173,7 @@ struct SettingsView: View {
                         changed = settings.toggle(shape: index)
                     }
                     guard changed else { return }
+                    Feel.pick()
                     let spot = tileSpots.rect(index)
                     Launch.shared.reshape(
                         from: before, to: settings.chosen,
