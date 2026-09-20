@@ -43,7 +43,7 @@ struct StatsView: View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 0) {
-                    SectionTitle("Статистика")
+                    SproutHead("Статистика")
                     VStack(alignment: .leading, spacing: Metrics.groupGap) {
                         if score.total == 0 {
                             blank
@@ -247,57 +247,72 @@ struct StatsView: View {
 
     // MARK: - По комнатам
 
-    /// Горизонтальные полосы по комнатам, с числом на конце каждой.
+    /// Полосы по комнатам: название, сама полоса и число над ней.
     ///
-    /// Число подписано прямо у полосы, а не вынесено на ось: полос три-четыре,
-    /// и ось со шкалой внизу заставляла бы глаз ходить туда-сюда ради того же
-    /// самого числа. Ось поэтому убрана целиком.
+    /// Своими руками, а не графиком, и это отступление намеренное.
+    /// Горизонтальный `BarMark` с подписями по оси и числом за концом
+    /// полосы выглядел на телефоне плохо: подписи комнат система рисует
+    /// вполсилы, и на светлом узоре они тонули, а число за концом полосы
+    /// обрезалось краем плашки, сколько запаса ни давай. Здесь же ровно
+    /// три строки, каждая из подписи, дорожки и заполнения, — графику тут
+    /// нечего добавить, кроме своих полей.
     private var byRoom: some View {
         SproutGroup("По комнатам") {
-            Chart(score.rooms) { tally in
-                BarMark(
-                    x: .value("Поливов", tally.count),
-                    y: .value("Комната", tally.name)
-                )
-                .foregroundStyle(colour)
-                .cornerRadius(4, style: .continuous)
-                .annotation(position: .trailing, alignment: .leading) {
-                    Text("\(tally.count)")
-                        .font(Typography.figureCaption)
-                        .foregroundStyle(.secondary)
-                }
-                .accessibilityLabel(tally.name)
-                .accessibilityValue("\(tally.count)")
-            }
-            // Запас справа: число стоит за концом полосы, и без запаса
-            // самое длинное из них обрезалось бы краем плашки.
-            .chartXScale(domain: 0 ... roomCeiling)
-            .chartXAxis(.hidden)
-            .chartYAxis {
-                AxisMarks(position: .leading) { _ in
-                    AxisValueLabel()
+            VStack(alignment: .leading, spacing: Metrics.rowGap) {
+                ForEach(score.rooms) { tally in
+                    VStack(alignment: .leading, spacing: 6) {
+                        HStack(spacing: 8) {
+                            Text(tally.name)
+                                .font(Typography.settingRow)
+                                .foregroundStyle(Palette.ink)
+                                .lineLimit(1)
+                            Spacer(minLength: 8)
+                            Text("\(tally.count)")
+                                .font(Typography.settingRow)
+                                .foregroundStyle(.secondary)
+                                .contentTransition(.numericText())
+                        }
+                        bar(share(tally))
+                    }
+                    .accessibilityElement(children: .combine)
                 }
             }
-            // Полоса на комнату плюс поле — иначе полосы слипаются.
-            .frame(height: CGFloat(score.rooms.count) * 32 + 8)
         }
         .sproutRide()
     }
 
-    // MARK: - По растениям
+    /// Дорожка и заполнение поверх неё.
+    ///
+    /// Дорожка нужна: без неё у комнаты с одним поливом полосы почти нет, и
+    /// строка читается пустой, а не малой.
+    private func bar(_ share: Double) -> some View {
+        Capsule()
+            .fill(Palette.ink.opacity(0.08))
+            .frame(height: 10)
+            .overlay(alignment: .leading) {
+                GeometryReader { geometry in
+                    Capsule()
+                        .fill(colour)
+                        // Не меньше высоты: короче капсула вырождается в
+                        // точку и перестаёт читаться полосой.
+                        .frame(width: max(geometry.size.width * share, 10))
+                }
+            }
+            .animation(Motion.number, value: share)
+    }
+
+    /// Какую долю от самой политой комнаты занимает эта.
+    private func share(_ tally: Tally) -> Double {
+        let most = score.rooms.map(\.count).max() ?? 0
+        guard most > 0 else { return 0 }
+        return Double(tally.count) / Double(most)
+    }
 
     /// Кому достаётся чаще: пятёрка, а не весь сад.
     ///
     /// Пятёрка потому, что это список победителей, а не перепись: три
     /// десятка строк тут никто не дочитает, а нижние из них всё равно
     /// отличались бы на один полив.
-    /// Потолок оси у полос комнат: самое большое число плюс пятая часть
-    /// сверху — ровно на подпись, что стоит за концом полосы.
-    private var roomCeiling: Int {
-        let most = score.rooms.map(\.count).max() ?? 0
-        return Int((Double(most) * 1.22).rounded(.up)) + 1
-    }
-
     private var byPlant: some View {
         SproutGroup("Кому достаётся больше") {
             VStack(alignment: .leading, spacing: Metrics.rowGap) {

@@ -78,7 +78,7 @@ struct AddView: View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 0) {
-                    SectionTitle("Добавить")
+                    SproutHead("Добавить")
                     VStack(alignment: .leading, spacing: Metrics.groupGap) {
                         picture
                         about

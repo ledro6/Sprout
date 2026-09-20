@@ -245,12 +245,15 @@ struct SearchView: View {
     var body: some View {
         NavigationStack(path: $path) {
             ScrollView {
-                if asked.isEmpty {
-                    history
-                } else if results.isEmpty {
-                    nothing
-                } else {
-                    grid
+                VStack(alignment: .leading, spacing: 0) {
+                    SproutHead("Поиск")
+                    if asked.isEmpty {
+                        history
+                    } else if results.isEmpty {
+                        nothing
+                    } else {
+                        grid
+                    }
                 }
             }
             .background { SproutBackground() }
@@ -297,12 +300,8 @@ struct SearchView: View {
             hint("Найдётся по кличке или по виду — «Баксик», «Монстера».",
                  icon: "magnifyingglass")
         } else {
-            // Отступ по бокам у заголовка свой — он его и держит, как на
-            // всех экранах, — поэтому внешнего поля у столбца нет, а
-            // плашка и кнопка отступают сами.
-            VStack(alignment: .leading, spacing: 0) {
-                SectionTitle("Недавно искали")
-                VStack(alignment: .leading, spacing: Metrics.rowGap) {
+            VStack(alignment: .leading, spacing: 14) {
+                SproutGroup("Недавно искали") {
                     ForEach(Array(recents.queries.enumerated()),
                             id: \.element) { item in
                         if item.offset > 0 { SproutDivider() }
@@ -311,9 +310,8 @@ struct SearchView: View {
                                        icon: "clock.arrow.circlepath")
                         }
                         .buttonStyle(.plain)
-                        // Забыть одну строку — долгим нажатием на неё,
-                        // как и всё остальное, что убирают в этом
-                        // приложении.
+                        // Забыть одну строку — долгим нажатием на неё, как
+                        // и всё остальное, что убирают в этом приложении.
                         .contextMenu {
                             Button(role: .destructive) {
                                 withAnimation(Motion.pill) {
@@ -325,11 +323,6 @@ struct SearchView: View {
                         }
                     }
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(Metrics.groupPadding)
-                .sproutPlate(in: RoundedRectangle(
-                    cornerRadius: Metrics.cardRadius, style: .continuous))
-                .padding(.horizontal, Metrics.contentMargin)
                 .sproutRide()
 
                 Button("Очистить") {
@@ -337,9 +330,9 @@ struct SearchView: View {
                 }
                 .buttonStyle(.glass)
                 .font(Typography.settingNote)
-                .padding(.top, 14)
-                .padding(.horizontal, Metrics.contentMargin)
             }
+            .padding(.horizontal, Metrics.contentMargin)
+            .padding(.top, 8)
             .padding(.bottom, 28)
         }
     }
@@ -379,14 +372,9 @@ struct SearchView: View {
             spacing: Metrics.gutterV
         ) {
             ForEach(results) { plant in
-                Button { show(plant.id) } label: {
-                    PlantCard(plant: plant)
-                }
-                .buttonStyle(.plain)
-                .modifier(PlantMenu(id: plant.id))
-                .environment(\.sproutHalos, opening != plant.id)
-                .sproutRide()
-                .matchedTransitionSource(id: plant.id, in: cardZoom)
+                PlantTile(plant: plant, opening: opening, zoom: cardZoom,
+                          open: show)
+                    .id(plant.id)
             }
         }
         .padding(.horizontal, Metrics.contentMargin)

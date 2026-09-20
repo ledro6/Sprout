@@ -210,17 +210,9 @@ struct HomeView: View {
     /// и на прокрутке. Оставь её в своей строке — уехала бы вниз; положи
     /// в строку заголовка — уехала бы с ним за край.
     private var gear: some View {
-        Button { settings = true } label: {
-            Image(systemName: "gearshape")
-                .font(.system(size: Metrics.gearGlyph, weight: .semibold))
-                .foregroundStyle(Palette.ink)
-                .frame(width: Metrics.gearBox, height: Metrics.gearBox)
-        }
-        .buttonStyle(.glass)
-        .buttonBorderShape(.circle)
-        .accessibilityLabel("Настройки")
-        .sproutRide()
-        .offset(y: -titleHeight * (1 - grown))
+        SproutGear { settings = true }
+            .sproutRide()
+            .offset(y: -titleHeight * (1 - grown))
     }
 
     /// Растяжка под строкой комнаты: от самого верха экрана до конца
@@ -282,32 +274,18 @@ struct HomeView: View {
             spacing: Metrics.gutterV
         ) {
             ForEach(Array(room.plants.enumerated()), id: \.element.id) { item in
-                Button { show(item.element.id) } label: {
-                    PlantCard(plant: item.element)
-                }
-                .buttonStyle(.plain)
-                // Долгое нажатие — системное меню растения.
-                .modifier(PlantMenu(id: item.element.id))
-                // Ореолы гасит только у той карточки, что открывается.
-                .environment(\.sproutHalos, opening != item.element.id)
-                // Появление ведёт сама карточка — от номера комнаты, а не
-                // от появления вью: вернувшись в уже открытую комнату,
-                // SwiftUI переиспользует карточку вместе с состоянием.
-                // Играет один раз: кто показался, тот при обратной
-                // прокрутке стоит на месте.
-                .modifier(CardAppear(
-                    index: item.offset,
-                    room: roomIndex,
-                    animates: !revealed.contains(item.element.id),
-                    onShown: { revealed.insert(item.element.id) }))
-                // На гребне волны полива карточка подпрыгивает вместе со
-                // всем остальным, что лежит поверх узора.
-                .sproutRide()
-                .transition(.asymmetric(insertion: .identity, removal: .opacity))
-                // Отсюда карточка разворачивается в экран растения.
-                // Замер снимается с готовой геометрии, поэтому источник
-                // навешен последним.
-                .matchedTransitionSource(id: item.element.id, in: cardZoom)
+                PlantTile(plant: item.element,
+                          opening: opening,
+                          zoom: cardZoom,
+                          open: show,
+                          index: item.offset,
+                          room: roomIndex,
+                          appears: !revealed.contains(item.element.id),
+                          onShown: { revealed.insert(item.element.id) })
+                    // Явная личность у каждой карточки: без неё ленивая
+                    // сетка подсовывала контекстному меню чужой узел — см.
+                    // `PlantTile`.
+                    .id(item.element.id)
             }
         }
         // Ровно на свес растяжки: в покое сход до карточек не

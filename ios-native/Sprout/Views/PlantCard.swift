@@ -159,6 +159,26 @@ private struct Breath: ViewModifier {
     }
 }
 
+/// Где какая карточка лежит на экране — по номеру растения.
+///
+/// Общий на приложение, а не состояние карточки, и это не экономия.
+/// Состояние карточки принадлежит её месту в сетке, а не растению:
+/// ленивая сетка создаёт и выбрасывает карточки на ходу, и замер, снятый
+/// одной, мог достаться другой — волна уходила не от того растения,
+/// которое полили. Здесь замер лежит под номером растения: кого поливают,
+/// от того волна и идёт, чья бы вью его ни снимала.
+final class Cards {
+    static let shared = Cards()
+
+    private var rects: [Plant.ID: CGRect] = [:]
+
+    private init() {}
+
+    func put(_ rect: CGRect, for id: Plant.ID) { rects[id] = rect }
+
+    func rect(_ id: Plant.ID) -> CGRect { rects[id] ?? .zero }
+}
+
 /// Меню растения по долгому нажатию: то же, что в панели на экране
 /// растения, только не нужно туда заходить.
 ///
@@ -182,9 +202,6 @@ struct PlantMenu: ViewModifier {
     /// же, и другого признака у контекстного меню нет.
     @State private var previewing = false
 
-    /// Где карточка лежит на экране. Отсюда по фону расходится волна:
-    /// нажали на карточку — от неё и пошло. Не состоянием — см. `Spot`.
-    @State private var spot = Spot()
 
     private var plant: Plant? { garden.plant(id: id) }
 
@@ -240,7 +257,7 @@ struct PlantMenu: ViewModifier {
     /// него, — карточка стоит на своём месте и никуда не делась.
     private func keep(_ rect: CGRect) {
         guard !previewing, rect.width > 0, rect.height > 0 else { return }
-        spot.rect = rect
+        Cards.shared.put(rect, for: id)
     }
 
     /// Полить: сад меняет влажность, а по узору от карточки расходится
@@ -257,7 +274,8 @@ struct PlantMenu: ViewModifier {
         // дождавшись первой разметки. Тогда волна идёт из середины экрана,
         // а не из угла: из угла она читается поломкой, из середины —
         // просто волной.
-        Cheer.shared.now(from: spot.rect == .zero ? Self.middle : spot.rect)
+        let spot = Cards.shared.rect(id)
+        Cheer.shared.now(from: spot == .zero ? Self.middle : spot)
         Feel.water()
     }
 

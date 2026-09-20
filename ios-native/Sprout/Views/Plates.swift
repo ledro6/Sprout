@@ -87,6 +87,70 @@ struct SproutBlock<Control: View>: View {
     }
 }
 
+/// Кнопка настроек — круглая, стеклянная, системная.
+///
+/// Стекло не своё, а `.buttonStyle(.glass)` с круглой каймой: вместе с ним
+/// приходит и продавливание под пальцем, и отскок пружиной, и блик,
+/// который идёт за точкой касания, и подмена материала при «Уменьшении
+/// прозрачности». Ничего из этого руками не повторяется.
+///
+/// Размер кнопки задаёт коробка значка: системная кнопка меряет себя по
+/// содержимому. Сама шестерёнка нарисована крупнее коробки и выходит за
+/// неё — так знак заметнее, а кнопка прежняя.
+struct SproutGear: View {
+    let open: () -> Void
+
+    var body: some View {
+        Button(action: open) {
+            Image(systemName: "gearshape")
+                .font(.system(size: Metrics.gearGlyph, weight: .semibold))
+                .foregroundStyle(Palette.ink)
+                .frame(width: Metrics.gearBox, height: Metrics.gearBox)
+        }
+        .buttonStyle(.glass)
+        .buttonBorderShape(.circle)
+        .accessibilityLabel("Настройки")
+    }
+}
+
+/// Заголовок раздела и кнопка настроек справа от него.
+///
+/// Настройки должны открываться с любого экрана, а не с одной только
+/// главной: это не «настройки главной», а настройки приложения, и
+/// уходить за ними на другую вкладку — лишний ход.
+///
+/// Лист свой у каждого экрана, и это не расточительство: лист принадлежит
+/// тому, кто его поднял, и общий на приложение пришлось бы тащить через
+/// корень ради кнопки, которая и так на месте.
+///
+/// На главной этого типа нет: там кнопка живёт в закреплённой строке
+/// комнаты и хитро смещается, чтобы стоять вровень с заголовком и в покое,
+/// и на прокрутке. Здесь прокручивается всё вместе, и хитрость не нужна.
+struct SproutHead: View {
+    let title: String
+
+    @State private var open = false
+
+    init(_ title: String) {
+        self.title = title
+    }
+
+    var body: some View {
+        HStack(alignment: .center, spacing: 12) {
+            Text(title)
+                .font(.largeTitle.bold())
+                .foregroundStyle(Palette.ink)
+                .frame(maxWidth: .infinity, alignment: .leading)
+            SproutGear { open = true }
+        }
+        .padding(.horizontal, Metrics.contentMargin)
+        .padding(.top, 4)
+        .padding(.bottom, 6)
+        .sproutRide()
+        .sheet(isPresented: $open) { SettingsView() }
+    }
+}
+
 /// Ряд кружков с оттенками.
 ///
 /// Кружок насыщенной ипостасью оттенка, а не бледной: выбирают оттенок, а

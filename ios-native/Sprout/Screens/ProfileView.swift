@@ -59,7 +59,7 @@ struct ProfileView: View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 0) {
-                    SectionTitle("Профиль")
+                    SproutHead("Профиль")
                     VStack(alignment: .leading, spacing: Metrics.groupGap) {
                         person
                         plot
