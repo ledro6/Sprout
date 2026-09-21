@@ -24,6 +24,21 @@ final class Tilt {
     /// Куда уехал узор, в пунктах. Больше `Metrics.parallax` не бывает.
     private(set) var shift: CGSize = .zero
 
+    /// Тот же сдвиг, огрублённый до полупункта.
+    ///
+    /// По нему фигурки расходятся между собой — см. `Sway`, — а это
+    /// значит пересборку холста: поправка у каждой фигурки своя, одним
+    /// `offset` её не сделать. Огрубление затем и нужно, чтобы холст не
+    /// пересобирался на каждую сотую долю пункта: до фигурки от общего
+    /// сдвига доходит меньше десятой, и полупункта ей хватает с запасом.
+    ///
+    /// Само присвоение под проверкой: `@Observable` будит зависимых на
+    /// каждую запись, даже если записали то же самое.
+    private(set) var sway: CGSize = .zero
+
+    /// Шаг огрубления.
+    private static let swayStep: CGFloat = 0.5
+
     /// Насколько наклон превращается в пункты. Полный размах набирается
     /// примерно за 17° — заметно рукой, но не требует размахивать.
     private static let gain = Metrics.parallax / 0.3
@@ -94,6 +109,7 @@ final class Tilt {
         shaken = 0
         lastSample = nil
         shift = .zero
+        sway = .zero
     }
 
     /// Очередной отсчёт силы тяжести в осях телефона.
@@ -116,6 +132,15 @@ final class Tilt {
         shift = CGSize(
             width: shift.width + (target.width - shift.width) * Self.ease,
             height: shift.height + (target.height - shift.height) * Self.ease)
+
+        let rough = CGSize(width: Self.rough(shift.width),
+                           height: Self.rough(shift.height))
+        if rough != sway { sway = rough }
+    }
+
+    /// Округление до шага огрубления.
+    private static func rough(_ value: CGFloat) -> CGFloat {
+        (value / swayStep).rounded() * swayStep
     }
 
     /// Не трясут ли телефон.

@@ -24,6 +24,7 @@ trap 'rm -rf "$OUT"' EXIT
   ios-native/Sprout/Model/Weave.swift \
   ios-native/Sprout/Model/Tint.swift \
   ios-native/Sprout/Model/Front.swift \
+  ios-native/Sprout/Model/Sway.swift \
   ios-native/Sprout/Model/Frolic.swift \
   ios-native/Sprout/Model/Pulse.swift \
   ios-native/Sprout/Model/Crop.swift \

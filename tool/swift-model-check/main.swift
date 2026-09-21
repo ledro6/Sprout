@@ -886,6 +886,96 @@ for (i, entry) in Species.table.enumerated() {
 check(shadowed.isEmpty,
       "до каждого слова доходит очередь: \(shadowed)")
 
+print("разъезд фигурок при параллаксе:")
+
+// Доля у фигурки одна и та же во всех кадрах: считается по месту в
+// сетке, а не разыгрывается. Дрогни она — фигурка дрожала бы на месте.
+check(Sway.of(column: 3, row: 5, slot: 1)
+        == Sway.of(column: 3, row: 5, slot: 1),
+      "у одной и той же фигурки доля одна и та же")
+
+var swayMin = 2.0, swayMax = -2.0, swaySum = 0.0, swayBig = 0, swaySmall = 0
+var swayCount = 0
+var swaySeen = Set<String>()
+for column in 0..<40 {
+    for row in 0..<40 {
+        for slot in 0..<2 {
+            let part = Sway.of(column: column, row: row, slot: slot)
+            for value in [Double(part.x), Double(part.y)] {
+                swayMin = min(swayMin, value)
+                swayMax = max(swayMax, value)
+                swaySum += value
+                if abs(value) > 0.5 { swayBig += 1 }
+                if abs(value) < 0.1 { swaySmall += 1 }
+                swayCount += 1
+            }
+            swaySeen.insert("\(round2(Double(part.x))),\(round2(Double(part.y)))")
+        }
+    }
+}
+check(swayMin >= -1 && swayMax <= 1,
+      "доля не выходит за −1…1: \(round2(swayMin))…\(round2(swayMax))")
+check(swayMin < -0.9 && swayMax > 0.9,
+      "полный размах кому-то достаётся: \(round2(swayMin))…\(round2(swayMax))")
+check(abs(swaySum / Double(swayCount)) < 0.02,
+      "в среднем ноль — узор не уезжает целиком: "
+      + "\(round2(swaySum / Double(swayCount)))")
+// Куб на то и куб: разъезжаются «некоторые», а не все. Доля тех, кому
+// досталось больше половины размаха, у куба равномерного шума считается
+// точно: это 1 − ∛0.5, то есть 20.6%. Ждём её же — так проверка ловит и
+// потерянный куб (при ровном шуме вышло бы 50%), и съехавший шум.
+check(abs(Double(swayBig) / Double(swayCount) - 0.206) < 0.02,
+      "заметно расходится пятая часть, как и положено кубу: "
+      + "\(round2(Double(swayBig) * 100 / Double(swayCount)))%")
+check(Double(swaySmall) / Double(swayCount) > 0.4,
+      "почти половина стоит на месте: "
+      + "\(round2(Double(swaySmall) * 100 / Double(swayCount)))%")
+// Соседи по ряду должны расходиться: в этом вся затея. Считаем пары, у
+// которых доли по горизонтали разошлись хотя бы на десятую размаха, —
+// именно они и меняют расстояние между фигурками.
+var apartPairs = 0, allPairs = 0
+for column in 0..<39 {
+    for row in 0..<40 {
+        for slot in 0..<2 {
+            let here = Sway.of(column: column, row: row, slot: slot)
+            let next = Sway.of(column: column + 1, row: row, slot: slot)
+            if abs(Double(here.x) - Double(next.x)) > 0.1 { apartPairs += 1 }
+            allPairs += 1
+        }
+    }
+}
+check(Double(apartPairs) / Double(allPairs) > 0.4,
+      "соседи расходятся, а не едут вместе: "
+      + "\(round2(Double(apartPairs) * 100 / Double(allPairs)))% пар")
+check(swaySeen.count > 2000,
+      "долей много разных, а не десяток: \(swaySeen.count) из 3200")
+
+// Поправка не превышает своей доли общего сдвига и ходит в обе стороны
+// поровну: качнул туда — подошли, качнул обратно — отошли ровно на то же.
+let full = CGSize(width: 14, height: 14)
+var driftMax = 0.0
+for column in 0..<40 {
+    for row in 0..<40 {
+        for slot in 0..<2 {
+            let there = Sway.drift(full, column: column, row: row, slot: slot)
+            let back = Sway.drift(CGSize(width: -14, height: -14),
+                                  column: column, row: row, slot: slot)
+            driftMax = max(driftMax,
+                           max(abs(Double(there.width)),
+                               abs(Double(there.height))))
+            if abs(Double(there.width) + Double(back.width)) > 0.0001 {
+                check(false, "обратный наклон уводит не туда же")
+            }
+        }
+    }
+}
+check(driftMax <= 14 * Double(Sway.share) + 0.0001,
+      "поправка не больше своей доли: \(round2(driftMax)) pt")
+check(driftMax > 1.0,
+      "и не настолько мала, чтобы её не было вовсе: \(round2(driftMax)) pt")
+check(Sway.drift(.zero, column: 1, row: 1, slot: 0) == .zero,
+      "узор стоит — фигурки стоят тоже")
+
 if failed > 0 {
     print("\nне сошлось: \(failed)")
     exit(1)

@@ -221,10 +221,12 @@ private struct SproutPattern: View {
     /// Где сейчас волна всплесков, 0…1. Пусто — волны нет, и узор
     /// собирается как обычно.
     ///
-    /// Пока волны нет, значение не меняется, и параллакс по-прежнему
-    /// двигает готовый холст, не перерисовывая его. Зато пока волна идёт,
-    /// узор пересобирается каждый кадр — иначе фигуркам нечем
-    /// всплёскивать поодиночке.
+    /// Пока волны нет, значение не меняется, и общий сдвиг параллакса
+    /// по-прежнему двигает готовый холст, не перерисовывая его: холст
+    /// пересобирается только когда сдвиг пройдёт полпункта и фигуркам
+    /// пора разъехаться заново — см. `Tilt.sway`. Зато пока волна идёт,
+    /// узор пересобирается каждый кадр: иначе фигуркам нечем всплёскивать
+    /// поодиночке.
     var wave: Double?
 
     /// Откуда волна пошла — в координатах окна.
@@ -272,6 +274,13 @@ private struct SproutPattern: View {
     /// Имена с хвостом: `wave` выше — это доля волны, а не её цвет.
     var baseShade: Shade
     var waveShade: Shade
+
+    /// Общий сдвиг узора от наклона телефона — огрублённый, см. `Tilt`.
+    ///
+    /// Сам сдвиг делает `offset` снаружи, и холсту он не нужен. Сюда
+    /// приходит затем, чтобы у каждой фигурки вышла своя поправка к нему:
+    /// разъезд у всех разный, одним `offset` его не сделать. См. `Sway`.
+    var drift: CGSize = .zero
 
     @Environment(\.colorScheme) private var scheme
 
@@ -454,7 +463,21 @@ private struct SproutPattern: View {
                                                         of: here.count)]
                     let layer = tint(of: grow) * Self.repaints
                         + (hue ?? repainted(at: middle, over: size))
-                    add(SproutShapes.pieces[piece], at: middle,
+                    // Место в сетке остаётся местом в сетке: по нему
+                    // считаются и черёд волны, и всходы, и перекраска —
+                    // переходы должны идти по ровной сетке, а не по
+                    // разъехавшимся фигуркам. Разъезд достаётся только
+                    // тому месту, куда фигурку кладут.
+                    let seat: CGPoint
+                    if drift == .zero {
+                        seat = middle
+                    } else {
+                        let apart = Sway.drift(drift, column: column,
+                                               row: row, slot: slot)
+                        seat = CGPoint(x: middle.x + apart.width,
+                                       y: middle.y + apart.height)
+                    }
+                    add(SproutShapes.pieces[piece], at: seat,
                         scale: scale, slot: layer, to: &layers)
                 }
                 x += pitchX
@@ -1230,7 +1253,8 @@ private struct SproutField: View {
                                       frolic: Frenzy.shared
                                           .frolic(at: frame.date),
                                       baseShade: Shade(baseTint),
-                                      waveShade: Shade(waveTint))
+                                      waveShade: Shade(waveTint),
+                                      drift: Tilt.shared.sway)
                     }
                     .padding(-Metrics.parallax)
                     .offset(x: Tilt.shared.shift.width,
