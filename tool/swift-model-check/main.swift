@@ -127,7 +127,8 @@ check("\(Seed.search("   ", in: Seed.rooms).count)", "0", "пустой запр
 
 print("настройки: значения по умолчанию и границы:")
 let keys = ["theme", "patternKinds", "patternShapes", "reminders",
-            "remindThreshold", "patternTint", "waveTint"]
+            "remindThreshold", "patternTint", "waveTint",
+            "hushedHaptics", "stillPattern", "stiffShapes"]
 let store = UserDefaults.standard
 for key in keys { store.removeObject(forKey: key) }
 let fresh = Settings(store: store)
@@ -136,6 +137,9 @@ check("\(fresh.chosen)", "[0, 1]", "в узоре росток и капля —
 check("\(fresh.patternTint)", "green", "узор по умолчанию зелёный — цвет макета")
 check("\(fresh.waveTint)", "blue", "волна по умолчанию синяя")
 check(fresh.reminders == false, "напоминания по умолчанию выключены")
+check(fresh.haptics, "отклик в руке по умолчанию включён")
+check(fresh.parallax, "узор по умолчанию едет за наклоном")
+check(fresh.sway, "и фигурки по умолчанию расходятся")
 check(round2(fresh.threshold), "0.20", "порог по умолчанию — двадцать процентов")
 
 print("фигурки узора включаются по одной:")
@@ -164,6 +168,14 @@ check(reopened.reminders, "и переключатель напоминаний"
 check(round2(reopened.threshold), "0.30", "и порог")
 check("\(reopened.patternTint)", "rose", "и цвет узора")
 check("\(reopened.waveTint)", "amber", "и цвет волны")
+fresh.parallax = false
+fresh.sway = false
+let stilled = Settings(store: store)
+check(stilled.parallax == false, "выключенный параллакс прочитался обратно")
+check(stilled.sway == false, "и выключенный разъезд")
+fresh.parallax = true
+fresh.sway = true
+check(Settings(store: store).parallax, "и включённый обратно тоже")
 
 print("оттенки:")
 check("\(Tint.allCases.count)", "5", "пять оттенков на выбор")
@@ -920,15 +932,16 @@ check(swayMin < -0.9 && swayMax > 0.9,
 check(abs(swaySum / Double(swayCount)) < 0.02,
       "в среднем ноль — узор не уезжает целиком: "
       + "\(round2(swaySum / Double(swayCount)))")
-// Куб на то и куб: разъезжаются «некоторые», а не все. Доля тех, кому
-// досталось больше половины размаха, у куба равномерного шума считается
-// точно: это 1 − ∛0.5, то есть 20.6%. Ждём её же — так проверка ловит и
-// потерянный куб (при ровном шуме вышло бы 50%), и съехавший шум.
-check(abs(Double(swayBig) / Double(swayCount) - 0.206) < 0.02,
-      "заметно расходится пятая часть, как и положено кубу: "
+// Квадрат со знаком на то и квадрат: доли подобраны к нулю, но не так
+// круто, как кубом. Обе доли считаются точно и потому проверяются точно:
+// больше половины размаха достаётся 1 − √0.5 = 29.3% фигурок, а меньше
+// десятой остаётся у √0.1 = 31.6%. Так проверка ловит и подмену кривой
+// (ровный шум дал бы 50% и 5%), и съехавший шум.
+check(abs(Double(swayBig) / Double(swayCount) - 0.293) < 0.02,
+      "заметно расходится почти треть: "
       + "\(round2(Double(swayBig) * 100 / Double(swayCount)))%")
-check(Double(swaySmall) / Double(swayCount) > 0.4,
-      "почти половина стоит на месте: "
+check(abs(Double(swaySmall) / Double(swayCount) - 0.316) < 0.02,
+      "и примерно столько же стоит на месте: "
       + "\(round2(Double(swaySmall) * 100 / Double(swayCount)))%")
 // Соседи по ряду должны расходиться: в этом вся затея. Считаем пары, у
 // которых доли по горизонтали разошлись хотя бы на десятую размаха, —
@@ -971,8 +984,13 @@ for column in 0..<40 {
 }
 check(driftMax <= 14 * Double(Sway.share) + 0.0001,
       "поправка не больше своей доли: \(round2(driftMax)) pt")
-check(driftMax > 1.0,
-      "и не настолько мала, чтобы её не было вовсе: \(round2(driftMax)) pt")
+// Разъезд должно быть видно: между серединами соседних фигурок 45 pt, и
+// на просвет между ними должно приходиться заметно больше пункта.
+check(driftMax > 3.5,
+      "и её видно, а не приходится искать: \(round2(driftMax)) pt")
+check(driftMax * 2 < 45 * 0.5,
+      "но соседи не лезут друг на друга: "
+      + "\(round2(driftMax * 2)) pt на просвете в 45")
 check(Sway.drift(.zero, column: 1, row: 1, slot: 0) == .zero,
       "узор стоит — фигурки стоят тоже")
 

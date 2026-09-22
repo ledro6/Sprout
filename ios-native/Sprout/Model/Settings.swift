@@ -130,6 +130,29 @@ final class Settings {
         didSet { store.set(!haptics, forKey: Key.hushed) }
     }
 
+    /// Двигать ли узор вслед за наклоном телефона.
+    ///
+    /// Своя настройка, хотя есть и системное «Уменьшение движения». То
+    /// выключает движение во всём приложении разом — и всходы, и волну, и
+    /// прыжки; а мешать может один только фон, который ползёт под руками
+    /// сам по себе. Эта настройка выключает ровно его.
+    ///
+    /// Датчик при этом не гасится: тряску он слышит тем же потоком, а её
+    /// не просили выключать. Выключенный параллакс просто не двигает
+    /// узор.
+    var parallax: Bool {
+        didSet { store.set(!parallax, forKey: Key.stillPattern) }
+    }
+
+    /// Расходятся ли фигурки между собой, пока узор едет.
+    ///
+    /// Отдельно от самого параллакса: разъезд — то, что в нём заметнее
+    /// всего, и отказаться от него, оставив узору общий ход, должно быть
+    /// можно. Выключенный разъезд возвращает прежнее: узор едет куском.
+    var sway: Bool {
+        didSet { store.set(!sway, forKey: Key.stiffShapes) }
+    }
+
     /// Напоминать ли о поливе. Само разрешение на уведомления спрашивает
     /// экран настроек — в тот миг, когда переключатель включают, а не при
     /// запуске: спрашивать до того, как человек попросил, невежливо, и
@@ -192,6 +215,10 @@ final class Settings {
         /// Наоборот, «без отклика»: `UserDefaults` на отсутствие ключа
         /// отвечает `false`, а отклик по умолчанию включён.
         static let hushed = "hushedHaptics"
+        /// Тоже наоборот: узор едет за наклоном по умолчанию.
+        static let stillPattern = "stillPattern"
+        /// И тоже: фигурки расходятся по умолчанию.
+        static let stiffShapes = "stiffShapes"
     }
 
     /// Оттенок из хранилища. Пусто — ключа нет.
@@ -228,6 +255,8 @@ final class Settings {
         waveTint = Self.tint(store, Key.waveTint) ?? Tint.defaultWave
         avatarTint = Self.tint(store, Key.avatarTint) ?? Tint.defaultAvatar
         haptics = !store.bool(forKey: Key.hushed)
+        parallax = !store.bool(forKey: Key.stillPattern)
+        sway = !store.bool(forKey: Key.stiffShapes)
         reminders = store.bool(forKey: Key.reminders)
         let level = store.double(forKey: Key.threshold)
         threshold = Self.thresholds.contains(level) ? level

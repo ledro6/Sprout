@@ -1254,7 +1254,8 @@ private struct SproutField: View {
                                           .frolic(at: frame.date),
                                       baseShade: Shade(baseTint),
                                       waveShade: Shade(waveTint),
-                                      drift: Tilt.shared.sway)
+                                      drift: Settings.shared.sway
+                                          ? Tilt.shared.sway : .zero)
                     }
                     .padding(-Metrics.parallax)
                     .offset(x: Tilt.shared.shift.width,
@@ -1293,6 +1294,11 @@ struct SproutBackground: View {
         .ignoresSafeArea()
         .onAppear { Tilt.shared.watch() }
         .onDisappear { Tilt.shared.unwatch() }
+        // Настройку кладём датчику отсюда: он про хранилище не знает.
+        // `initial` — чтобы выключенный параллакс не ждал первой смены.
+        .onChange(of: Settings.shared.parallax, initial: true) { _, on in
+            Tilt.shared.parallax = on
+        }
     }
 
     /// Полоса, гасящая узор у нижнего края: узор не спорит с панелью

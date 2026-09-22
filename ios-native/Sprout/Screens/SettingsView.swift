@@ -111,6 +111,50 @@ struct SettingsView: View {
 
             SproutDivider()
 
+            HStack(alignment: .center, spacing: 12) {
+                VStack(alignment: .leading, spacing: 3) {
+                    Text("Узор за наклоном")
+                        .font(Typography.settingRow)
+                        .foregroundStyle(Palette.ink)
+                    Text("Фон едет вслед за тем, как держат телефон. "
+                         + "Выключите, если от этого рябит.")
+                        .font(Typography.settingNote)
+                        .foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                Spacer(minLength: 0)
+                Toggle("Узор за наклоном", isOn: Binding(
+                    get: { settings.parallax },
+                    set: { settings.parallax = $0 }))
+                    .labelsHidden()
+            }
+
+            SproutDivider()
+
+            HStack(alignment: .center, spacing: 12) {
+                VStack(alignment: .leading, spacing: 3) {
+                    Text("Фигурки живут порознь")
+                        .font(Typography.settingRow)
+                        .foregroundStyle(Palette.ink)
+                    Text("Пока узор едет, одни фигурки подходят к соседям, "
+                         + "другие отстают. Выключите — узор поедет "
+                         + "одним куском.")
+                        .font(Typography.settingNote)
+                        .foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                Spacer(minLength: 0)
+                // Разъезд живёт внутри параллакса: выключен он — нечему и
+                // расходиться, и переключатель гаснет вместе с ним.
+                Toggle("Фигурки живут порознь", isOn: Binding(
+                    get: { settings.sway },
+                    set: { settings.sway = $0 }))
+                    .labelsHidden()
+                    .disabled(!settings.parallax)
+            }
+
+            SproutDivider()
+
             SproutBlock("Цвет узора") {
                 SproutTints(current: settings.patternTint,
                             spots: patternSpots) { tint, spot in

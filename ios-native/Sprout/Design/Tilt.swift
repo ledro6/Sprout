@@ -39,6 +39,21 @@ final class Tilt {
     /// Шаг огрубления.
     private static let swayStep: CGFloat = 0.5
 
+    /// Двигать ли узор. Настройку кладёт сюда фон: датчик не знает про
+    /// хранилище, а `Settings` — про датчик.
+    ///
+    /// Выключенный параллакс не гасит датчик: тем же потоком слышится
+    /// тряска, а её выключать не просили. Узор просто встаёт на место —
+    /// и встаёт сразу, а не доезжает по инерции: выключатель на то и
+    /// выключатель.
+    var parallax = true {
+        didSet {
+            guard parallax != oldValue, !parallax else { return }
+            shift = .zero
+            sway = .zero
+        }
+    }
+
     /// Насколько наклон превращается в пункты. Полный размах набирается
     /// примерно за 17° — заметно рукой, но не требует размахивать.
     private static let gain = Metrics.parallax / 0.3
@@ -124,6 +139,8 @@ final class Tilt {
         }
         base = (seen.x + (x - seen.x) * Self.baseEase,
                 seen.z + (z - seen.z) * Self.baseEase)
+
+        guard parallax else { return }
 
         // Узор едет против наклона — так он читается лежащим за экраном,
         // а не наклеенным на него.
