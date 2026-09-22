@@ -24,20 +24,34 @@ final class Tilt {
     /// Куда уехал узор, в пунктах. Больше `Metrics.parallax` не бывает.
     private(set) var shift: CGSize = .zero
 
-    /// Тот же сдвиг, огрублённый до полупункта.
+    /// Насколько каждый слой фигурок разошёлся с узором, огрублённое до
+    /// полупункта.
     ///
-    /// По нему фигурки расходятся между собой — см. `Sway`, — а это
-    /// значит пересборку холста: поправка у каждой фигурки своя, одним
-    /// `offset` её не сделать. Огрубление затем и нужно, чтобы холст не
-    /// пересобирался на каждую сотую долю пункта: до фигурки от общего
-    /// сдвига доходит меньше десятой, и полупункта ей хватает с запасом.
+    /// Слоёв несколько, у каждого своя вязкость — см. `Sway`. Пока
+    /// телефон качают, слои расходятся, и фигурки плывут порознь; в покое
+    /// все нули, и узор стоит ровной сеткой.
+    ///
+    /// Это пересборка холста: у слоёв сдвиги разные, одним `offset` их не
+    /// сделать. Огрубление затем и нужно, чтобы холст не пересобирался на
+    /// каждую сотую долю пункта.
     ///
     /// Само присвоение под проверкой: `@Observable` будит зависимых на
     /// каждую запись, даже если записали то же самое.
-    private(set) var sway: CGSize = .zero
+    private(set) var lag: [CGSize] = []
+
+    /// Номер захода. Меняется в покое, и с ним меняется, каким фигуркам
+    /// достанется какая вязкость: плывут каждый раз другие.
+    private(set) var era = 0
 
     /// Шаг огрубления.
     private static let swayStep: CGFloat = 0.5
+
+    /// Где сейчас стоит каждый слой. Не наблюдается: наружу уходит не
+    /// место слоя, а его расхождение с узором.
+    @ObservationIgnored private var places: [CGSize] = []
+
+    /// Сколько секунд подряд узор уже стоит ровно.
+    @ObservationIgnored private var calm = 0.0
 
     /// Двигать ли узор. Настройку кладёт сюда фон: датчик не знает про
     /// хранилище, а `Settings` — про датчик.
@@ -50,7 +64,9 @@ final class Tilt {
         didSet {
             guard parallax != oldValue, !parallax else { return }
             shift = .zero
-            sway = .zero
+            lag = []
+            places = []
+            calm = 0
         }
     }
 
@@ -124,7 +140,9 @@ final class Tilt {
         shaken = 0
         lastSample = nil
         shift = .zero
-        sway = .zero
+        lag = []
+        places = []
+        calm = 0
     }
 
     /// Очередной отсчёт силы тяжести в осях телефона.
@@ -150,14 +168,30 @@ final class Tilt {
             width: shift.width + (target.width - shift.width) * Self.ease,
             height: shift.height + (target.height - shift.height) * Self.ease)
 
-        let rough = CGSize(width: Self.rough(shift.width),
-                           height: Self.rough(shift.height))
-        if rough != sway { sway = rough }
+        // Слои плывут к той же цели, что и узор, но каждый со своей
+        // вязкостью: отсюда и разъезд, и доплывание после наклона.
+        if places.count != Sway.eases.count { places = Sway.rest(at: shift) }
+        places = Sway.settle(places, toward: target)
+        let fresh = Sway.lag(places, behind: shift).map(Self.rough)
+        if fresh != lag { lag = fresh }
+
+        // Жребий перебрасывается только в покое: слой — это вязкость, и
+        // смена её на ходу дёрнула бы фигурку скачком.
+        if fresh.allSatisfy({ $0.width == 0 && $0.height == 0 }) {
+            calm += motion.deviceMotionUpdateInterval
+            if calm >= Sway.shuffleSeconds {
+                calm = 0
+                era &+= 1
+            }
+        } else {
+            calm = 0
+        }
     }
 
     /// Округление до шага огрубления.
-    private static func rough(_ value: CGFloat) -> CGFloat {
-        (value / swayStep).rounded() * swayStep
+    private static func rough(_ size: CGSize) -> CGSize {
+        CGSize(width: (size.width / swayStep).rounded() * swayStep,
+               height: (size.height / swayStep).rounded() * swayStep)
     }
 
     /// Не трясут ли телефон.

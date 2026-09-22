@@ -898,101 +898,89 @@ for (i, entry) in Species.table.enumerated() {
 check(shadowed.isEmpty,
       "до каждого слова доходит очередь: \(shadowed)")
 
-print("разъезд фигурок при параллаксе:")
+print("фигурки плывут в вязкой среде:")
 
-// Доля у фигурки одна и та же во всех кадрах: считается по месту в
-// сетке, а не разыгрывается. Дрогни она — фигурка дрожала бы на месте.
-check(Sway.of(column: 3, row: 5, slot: 1)
-        == Sway.of(column: 3, row: 5, slot: 1),
-      "у одной и той же фигурки доля одна и та же")
+// Жребий внутри захода неизменен: дрогни он — фигурка дрожала бы на месте.
+check(Sway.layer(column: 3, row: 5, slot: 1, era: 2)
+        == Sway.layer(column: 3, row: 5, slot: 1, era: 2),
+      "внутри захода слой у фигурки один и тот же")
 
-var swayMin = 2.0, swayMax = -2.0, swaySum = 0.0, swayBig = 0, swaySmall = 0
-var swayCount = 0
-var swaySeen = Set<String>()
+var swayByLayer = [Int](repeating: 0, count: Sway.eases.count)
+var swayMoved = 0, swayCells = 0
 for column in 0..<40 {
     for row in 0..<40 {
         for slot in 0..<2 {
-            let part = Sway.of(column: column, row: row, slot: slot)
-            for value in [Double(part.x), Double(part.y)] {
-                swayMin = min(swayMin, value)
-                swayMax = max(swayMax, value)
-                swaySum += value
-                if abs(value) > 0.5 { swayBig += 1 }
-                if abs(value) < 0.1 { swaySmall += 1 }
-                swayCount += 1
+            let here = Sway.layer(column: column, row: row, slot: slot, era: 0)
+            swayByLayer[here] += 1
+            if Sway.layer(column: column, row: row, slot: slot, era: 1) != here {
+                swayMoved += 1
             }
-            swaySeen.insert("\(round2(Double(part.x))),\(round2(Double(part.y)))")
+            swayCells += 1
         }
     }
 }
-check(swayMin >= -1 && swayMax <= 1,
-      "доля не выходит за −1…1: \(round2(swayMin))…\(round2(swayMax))")
-check(swayMin < -0.9 && swayMax > 0.9,
-      "полный размах кому-то достаётся: \(round2(swayMin))…\(round2(swayMax))")
-check(abs(swaySum / Double(swayCount)) < 0.02,
-      "в среднем ноль — узор не уезжает целиком: "
-      + "\(round2(swaySum / Double(swayCount)))")
-// Квадрат со знаком на то и квадрат: доли подобраны к нулю, но не так
-// круто, как кубом. Обе доли считаются точно и потому проверяются точно:
-// больше половины размаха достаётся 1 − √0.5 = 29.3% фигурок, а меньше
-// десятой остаётся у √0.1 = 31.6%. Так проверка ловит и подмену кривой
-// (ровный шум дал бы 50% и 5%), и съехавший шум.
-check(abs(Double(swayBig) / Double(swayCount) - 0.293) < 0.02,
-      "заметно расходится почти треть: "
-      + "\(round2(Double(swayBig) * 100 / Double(swayCount)))%")
-check(abs(Double(swaySmall) / Double(swayCount) - 0.316) < 0.02,
-      "и примерно столько же стоит на месте: "
-      + "\(round2(Double(swaySmall) * 100 / Double(swayCount)))%")
-// Соседи по ряду должны расходиться: в этом вся затея. Считаем пары, у
-// которых доли по горизонтали разошлись хотя бы на десятую размаха, —
-// именно они и меняют расстояние между фигурками.
-var apartPairs = 0, allPairs = 0
-for column in 0..<39 {
-    for row in 0..<40 {
-        for slot in 0..<2 {
-            let here = Sway.of(column: column, row: row, slot: slot)
-            let next = Sway.of(column: column + 1, row: row, slot: slot)
-            if abs(Double(here.x) - Double(next.x)) > 0.1 { apartPairs += 1 }
-            allPairs += 1
-        }
-    }
+check(swayByLayer.allSatisfy { $0 > 0 }, "все слои кому-то достались: \(swayByLayer)")
+let swayEvenly = swayByLayer.allSatisfy {
+    abs(Double($0) / Double(swayCells) - 0.2) < 0.03
 }
-check(Double(apartPairs) / Double(allPairs) > 0.4,
-      "соседи расходятся, а не едут вместе: "
-      + "\(round2(Double(apartPairs) * 100 / Double(allPairs)))% пар")
-check(swaySeen.count > 2000,
-      "долей много разных, а не десяток: \(swaySeen.count) из 3200")
+check(swayEvenly, "и достались поровну: \(swayByLayer.map { round2(Double($0) * 100 / Double(swayCells)) })")
+check(Double(swayMoved) / Double(swayCells) > 0.6,
+      "со сменой захода плывут другие: сменили слой "
+      + "\(round2(Double(swayMoved) * 100 / Double(swayCells)))%")
 
-// Поправка не превышает своей доли общего сдвига и ходит в обе стороны
-// поровну: качнул туда — подошли, качнул обратно — отошли ровно на то же.
-let full = CGSize(width: 14, height: 14)
-var driftMax = 0.0
-for column in 0..<40 {
-    for row in 0..<40 {
-        for slot in 0..<2 {
-            let there = Sway.drift(full, column: column, row: row, slot: slot)
-            let back = Sway.drift(CGSize(width: -14, height: -14),
-                                  column: column, row: row, slot: slot)
-            driftMax = max(driftMax,
-                           max(abs(Double(there.width)),
-                               abs(Double(there.height))))
-            if abs(Double(there.width) + Double(back.width)) > 0.0001 {
-                check(false, "обратный наклон уводит не туда же")
-            }
-        }
+// Прогон качка: цель разгоняется полсекунды, дальше телефон держат ровно.
+// Узор идёт к цели с вязкостью 0.12 — той же, что у среднего слоя.
+var swayCommon = CGSize.zero
+var swayPlaces = Sway.rest(at: .zero)
+var swayPeak = [Double](repeating: 0, count: Sway.eases.count)
+var swayPeakFrame = [Int](repeating: 0, count: Sway.eases.count)
+var swayAfter = 0.0
+var swayLate = 0.0
+let swayRamp = 30, swayHold = 90
+for swayFrame in 0..<(swayRamp + swayHold) {
+    let swayGoal = CGFloat(min(Double(swayFrame) / Double(swayRamp), 1) * 14)
+    let swayTarget = CGSize(width: swayGoal, height: swayGoal)
+    swayCommon = CGSize(width: swayCommon.width + (swayTarget.width - swayCommon.width) * 0.12,
+                    height: swayCommon.height + (swayTarget.height - swayCommon.height) * 0.12)
+    swayPlaces = Sway.settle(swayPlaces, toward: swayTarget)
+    let swayStep = Sway.lag(swayPlaces, behind: swayCommon)
+    for (i, value) in swayStep.enumerated() {
+        let size = abs(Double(value.width))
+        if size > swayPeak[i] { swayPeak[i] = size; swayPeakFrame[i] = swayFrame }
+    }
+    if swayFrame == swayRamp + 45 {
+        swayAfter = swayStep.map { abs(Double($0.width)) }.max() ?? 0
+    }
+    if swayFrame == swayRamp + 90 {
+        swayLate = swayStep.map { abs(Double($0.width)) }.max() ?? 0
     }
 }
-check(driftMax <= 14 * Double(Sway.share) + 0.0001,
-      "поправка не больше своей доли: \(round2(driftMax)) pt")
-// Разъезд должно быть видно: между серединами соседних фигурок 45 pt, и
-// на просвет между ними должно приходиться заметно больше пункта.
-check(driftMax > 3.5,
-      "и её видно, а не приходится искать: \(round2(driftMax)) pt")
-check(driftMax * 2 < 45 * 0.5,
-      "но соседи не лезут друг на друга: "
-      + "\(round2(driftMax * 2)) pt на просвете в 45")
-check(Sway.drift(.zero, column: 1, row: 1, slot: 0) == .zero,
-      "узор стоит — фигурки стоят тоже")
+check(swayPeak[2] < 0.001,
+      "слой вровень с узором никуда не уезжает: \(round2(swayPeak[2])) pt")
+check(swayPeak[0] > 1.0 && swayPeak[4] > 2.5,
+      "лёгкий уходит вперёд, тяжёлый отстаёт: "
+      + "\(round2(swayPeak[0])) и \(round2(swayPeak[4])) pt")
+check(swayPeak.allSatisfy { $0 <= Double(Sway.limit) + 0.001 },
+      "и никто не выходит за упор в \(Int(Sway.limit)) pt")
+check(swayPeakFrame[4] >= swayRamp - 6,
+      "тяжёлый расходится сильнее всего на исходе наклона, а не в начале: "
+      + "кадр \(swayPeakFrame[4]) из \(swayRamp)")
+// Доплывание: у самого тяжёлого слоя постоянная времени 1/0.045 ≈ 22
+// кадра, так что через три четверти секунды после наклона от разъезда
+// остаётся около пункта, а ещё через столько же — почти ничего. Это и
+// значит «плывут по инерции»: движение видно и после того, как телефон
+// замер, но оно не длится вечно.
+check(swayAfter > 0.3 && swayAfter < 1.5,
+      "через три четверти секунды после наклона фигурки ещё плывут: "
+      + "\(round2(swayAfter)) pt")
+check(swayLate < 0.3,
+      "а через полторы — уже сошлись: \(round2(swayLate)) pt")
+
+// В покое разъезда нет вовсе — узор стоит ровной сеткой.
+let swayStill = Sway.lag(Sway.rest(at: CGSize(width: 9, height: -4)),
+                     behind: CGSize(width: 9, height: -4))
+check(swayStill.allSatisfy { $0.width == 0 && $0.height == 0 },
+      "стоячий узор — ровная сетка")
 
 if failed > 0 {
     print("\nне сошлось: \(failed)")

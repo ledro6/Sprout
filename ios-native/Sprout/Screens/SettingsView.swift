@@ -136,9 +136,9 @@ struct SettingsView: View {
                     Text("Фигурки живут порознь")
                         .font(Typography.settingRow)
                         .foregroundStyle(Palette.ink)
-                    Text("Пока узор едет, одни фигурки подходят к соседям, "
-                         + "другие отстают. Выключите — узор поедет "
-                         + "одним куском.")
+                    Text("Фигурки плывут в фоне порознь и доплывают, "
+                         + "когда телефон уже замер. Выключите — узор "
+                         + "поедет одним куском.")
                         .font(Typography.settingNote)
                         .foregroundStyle(.secondary)
                         .fixedSize(horizontal: false, vertical: true)

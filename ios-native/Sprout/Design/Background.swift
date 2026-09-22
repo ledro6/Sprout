@@ -275,12 +275,16 @@ private struct SproutPattern: View {
     var baseShade: Shade
     var waveShade: Shade
 
-    /// Общий сдвиг узора от наклона телефона — огрублённый, см. `Tilt`.
+    /// Насколько разошёлся с узором каждый слой фигурок, см. `Sway`.
     ///
-    /// Сам сдвиг делает `offset` снаружи, и холсту он не нужен. Сюда
-    /// приходит затем, чтобы у каждой фигурки вышла своя поправка к нему:
-    /// разъезд у всех разный, одним `offset` его не сделать. См. `Sway`.
-    var drift: CGSize = .zero
+    /// Общий сдвиг узора делает `offset` снаружи, и холсту он не нужен.
+    /// Сюда приходит только расхождение слоёв: фигурки плывут порознь, и
+    /// одним `offset` их не развести. Пусто — разъезд выключен, и узор
+    /// едет куском, как раньше.
+    var lag: [CGSize] = []
+
+    /// Номер захода: от него зависит, какой фигурке достанется какой слой.
+    var era = 0
 
     @Environment(\.colorScheme) private var scheme
 
@@ -466,14 +470,14 @@ private struct SproutPattern: View {
                     // Место в сетке остаётся местом в сетке: по нему
                     // считаются и черёд волны, и всходы, и перекраска —
                     // переходы должны идти по ровной сетке, а не по
-                    // разъехавшимся фигуркам. Разъезд достаётся только
-                    // тому месту, куда фигурку кладут.
+                    // уплывшим фигуркам. Разъезд достаётся только тому
+                    // месту, куда фигурку кладут.
                     let seat: CGPoint
-                    if drift == .zero {
+                    if lag.isEmpty {
                         seat = middle
                     } else {
-                        let apart = Sway.drift(drift, column: column,
-                                               row: row, slot: slot)
+                        let apart = lag[Sway.layer(column: column, row: row,
+                                                   slot: slot, era: era)]
                         seat = CGPoint(x: middle.x + apart.width,
                                        y: middle.y + apart.height)
                     }
@@ -1254,8 +1258,9 @@ private struct SproutField: View {
                                           .frolic(at: frame.date),
                                       baseShade: Shade(baseTint),
                                       waveShade: Shade(waveTint),
-                                      drift: Settings.shared.sway
-                                          ? Tilt.shared.sway : .zero)
+                                      lag: Settings.shared.sway
+                                          ? Tilt.shared.lag : [],
+                                      era: Tilt.shared.era)
                     }
                     .padding(-Metrics.parallax)
                     .offset(x: Tilt.shared.shift.width,
