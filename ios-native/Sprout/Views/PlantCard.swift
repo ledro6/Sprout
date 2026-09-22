@@ -179,6 +179,28 @@ final class Cards {
     func rect(_ id: Plant.ID) -> CGRect { rects[id] ?? .zero }
 }
 
+/// Кто сейчас лежит в этой ячейке сетки.
+///
+/// Ссылка, а не значение, и это починка, а не украшение. Контекстное меню
+/// живёт не в SwiftUI, а в UIKit: система ставит на вью распознаватель
+/// долгого нажатия и держит при нём замыкания, собранные тогда, когда
+/// распознаватель ставился. Ленивая сетка переиспользует вью под другое
+/// растение — и замыкания у распознавателя остаются от прежнего. Нажатие
+/// на нижнюю карточку поливало верхнюю: ту, что стояла в этой ячейке до
+/// прокрутки.
+///
+/// Явный `id` у карточки этого не лечит: он задаёт личность узлу SwiftUI,
+/// а замыкание уже запечатано в чужом распознавателе, и номер растения в
+/// нём — копия, снятая в прошлой жизни ячейки.
+///
+/// Значение из запечатанного замыкания не вытащить. Ссылку — можно: она
+/// одна и та же, а в ней всегда лежит тот, кто в ячейке сейчас. Живёт
+/// ссылка в `@State`, то есть принадлежит месту в сетке — ровно как и
+/// распознаватель, который её держит.
+final class Tenant {
+    var id: Plant.ID = ""
+}
+
 /// Меню растения по долгому нажатию: то же, что в панели на экране
 /// растения, только не нужно туда заходить.
 ///
@@ -202,11 +224,16 @@ struct PlantMenu: ViewModifier {
     /// же, и другого признака у контекстного меню нет.
     @State private var previewing = false
 
+    /// Кто в этой ячейке сейчас. См. `Tenant`.
+    @State private var tenant = Tenant()
 
-    private var plant: Plant? { garden.plant(id: id) }
+    private var plant: Plant? { garden.plant(id: tenant.id) }
 
     func body(content: Content) -> some View {
         content
+            // Заселяем ячейку до всего остального: замыкания меню могут
+            // быть какими угодно старыми, а читают они отсюда.
+            .onChange(of: id, initial: true) { _, now in tenant.id = now }
             .onGeometryChange(for: CGRect.self) { $0.frame(in: .global) }
                 action: { keep($0) }
             .environment(\.sproutHalos, halos && !previewing)
@@ -215,7 +242,7 @@ struct PlantMenu: ViewModifier {
                     Label("Полить сейчас", systemImage: "drop.fill")
                 }
                 Button {
-                    draft = plant?.name ?? ""
+                    draft = garden.plant(id: tenant.id)?.name ?? ""
                     renaming = true
                 } label: {
                     Label("Переименовать", systemImage: "pencil")
@@ -229,14 +256,16 @@ struct PlantMenu: ViewModifier {
             .alert("Переименовать", isPresented: $renaming) {
                 TextField("Кличка", text: $draft)
                 Button("Отмена", role: .cancel) {}
-                Button("Сохранить") { garden.rename(id, to: draft) }
+                Button("Сохранить") { garden.rename(tenant.id, to: draft) }
             } message: {
                 Text("Как теперь зовут растение?")
             }
             .confirmationDialog("Удалить «\(plant?.name ?? "")»?",
                                 isPresented: $deleting,
                                 titleVisibility: .visible) {
-                Button("Удалить", role: .destructive) { garden.delete(id) }
+                Button("Удалить", role: .destructive) {
+                    garden.delete(tenant.id)
+                }
                 Button("Отмена", role: .cancel) {}
             } message: {
                 Text("Растение исчезнет из комнаты. Вернуть его будет нельзя.")
@@ -257,7 +286,7 @@ struct PlantMenu: ViewModifier {
     /// него, — карточка стоит на своём месте и никуда не делась.
     private func keep(_ rect: CGRect) {
         guard !previewing, rect.width > 0, rect.height > 0 else { return }
-        Cards.shared.put(rect, for: id)
+        Cards.shared.put(rect, for: tenant.id)
     }
 
     /// Полить: сад меняет влажность, а по узору от карточки расходится
@@ -268,13 +297,16 @@ struct PlantMenu: ViewModifier {
     private func water() {
         // Растения может уже не быть: меню держат открытым сколько угодно,
         // а сад за это время могли и поправить.
-        guard garden.plant(id: id) != nil else { return }
-        withAnimation(Motion.appear) { garden.water(id) }
+        // Номер берём у жильца, а не у самого модификатора: в замыкании
+        // меню может быть запечатан номер прежнего растения этой ячейки.
+        let who = tenant.id
+        guard garden.plant(id: who) != nil else { return }
+        withAnimation(Motion.appear) { garden.water(who) }
         // Замера может не оказаться вовсе — карточку могли полить, не
         // дождавшись первой разметки. Тогда волна идёт из середины экрана,
         // а не из угла: из угла она читается поломкой, из середины —
         // просто волной.
-        let spot = Cards.shared.rect(id)
+        let spot = Cards.shared.rect(who)
         Cheer.shared.now(from: spot == .zero ? Self.middle : spot)
         Feel.water()
     }
