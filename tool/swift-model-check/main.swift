@@ -1265,99 +1265,293 @@ do {
           "а влажность не тронута")
 }
 
+/// Доля граней, чей обход согласен с нормалями вершин, и всё ли в сетке
+/// конечно, единично и в своих границах.
+func sound(_ mesh: Mesh3D) -> (agree: Double, intact: Bool) {
+    var agree = 0
+    var faces = 0
+    for face in stride(from: 0, to: mesh.indices.count, by: 3) {
+        let a = Int(mesh.indices[face])
+        let b = Int(mesh.indices[face + 1])
+        let c = Int(mesh.indices[face + 2])
+        let normal = (mesh.positions[b] - mesh.positions[a])
+            .crossed(mesh.positions[c] - mesh.positions[a])
+        guard normal.size > 1e-12 else { continue }
+        faces += 1
+        let average = mesh.normals[a] + mesh.normals[b] + mesh.normals[c]
+        if normal.dotted(average) > 0 { agree += 1 }
+    }
+    let intact = mesh.indices.count % 3 == 0
+        && mesh.normals.count == mesh.positions.count
+        && mesh.uvs.count == mesh.positions.count
+        && mesh.indices.allSatisfy { Int($0) < mesh.positions.count }
+        && mesh.positions.allSatisfy { $0.x.isFinite && $0.y.isFinite
+            && $0.z.isFinite }
+        && mesh.normals.allSatisfy { abs($0.size - 1) < 1e-3 }
+        && mesh.uvs.allSatisfy { $0.x.isFinite && $0.y.isFinite }
+    return (faces == 0 ? 1 : Double(agree) / Double(faces), intact)
+}
+
 print("объёмные формы: сетки целы и смотрят наружу:")
 do {
-    /// Доля граней, чей обход согласен с нормалями вершин, и всё ли в
-    /// сетке конечно, единично и в своих границах.
-    func sound(_ mesh: Mesh3D) -> (agree: Double, intact: Bool) {
-        var agree = 0
-        var faces = 0
-        for face in stride(from: 0, to: mesh.indices.count, by: 3) {
-            let a = Int(mesh.indices[face])
-            let b = Int(mesh.indices[face + 1])
-            let c = Int(mesh.indices[face + 2])
-            let normal = (mesh.positions[b] - mesh.positions[a])
-                .crossed(mesh.positions[c] - mesh.positions[a])
-            guard normal.size > 1e-12 else { continue }
-            faces += 1
-            let average = mesh.normals[a] + mesh.normals[b] + mesh.normals[c]
-            if normal.dotted(average) > 0 { agree += 1 }
-        }
-        let intact = mesh.indices.count % 3 == 0
-            && mesh.normals.count == mesh.positions.count
-            && mesh.indices.allSatisfy { Int($0) < mesh.positions.count }
-            && mesh.positions.allSatisfy { $0.x.isFinite && $0.y.isFinite
-                && $0.z.isFinite }
-            && mesh.normals.allSatisfy { abs($0.size - 1) < 1e-3 }
-        return (faces == 0 ? 0 : Double(agree) / Double(faces), intact)
-    }
     let shapes: [(String, Mesh3D)] = [
-        ("горшок", Greenhouse.potMesh), ("земля", Greenhouse.soilMesh),
-        ("лист", Sculpt.leaf(length: 0.1, width: 0.07, arch: 0.2, fold: 0.2,
-                             outline: .heart)),
+        ("горшок", Sculpt.lathe(Grower.profile(.classic), segments: 48)),
+        ("лист", Sculpt.card(length: 0.1, width: 0.07,
+                             bend: Sculpt.Bend(arch: 0.2, fold: 0.2, wave: 0.02),
+                             hug: { Leafart.half(.heart, $0) })),
+        ("мясистый лист", Sculpt.fleshy(length: 0.1, width: 0.03,
+                                        thickness: 0.01, arch: 0.1) {
+            pow(sin(Float.pi * pow($0, 0.5)), 1.3)
+        }),
         ("стебель", Sculpt.tube([Vec3(0, 0, 0), Vec3(0.02, 0.05, 0),
                                  Vec3(0.03, 0.1, 0.01)], sides: 6) { _ in 0.004 }),
+        ("шарик", Sculpt.ball(radius: 0.01)),
+        ("колючка", Sculpt.spike(radius: 0.001, height: 0.01)),
         ("кольцо", Sculpt.arc(inner: 0.1, outer: 0.11, sweep: 0.6)),
-        ("цветок", Sculpt.blossom(petals: 6, size: 0.04, cup: 0.8,
-                                  heart: 0.008).petals),
         ("лейка", WateringCan.mesh),
     ]
     for (name, mesh) in shapes {
         let (agree, intact) = sound(mesh)
         check(intact && agree > 0.97, "\(name): сетка цела, грани наружу")
     }
-    let wall = Greenhouse.potMesh.positions.indices.first {
-        let p = Greenhouse.potMesh.positions[$0]
-        return abs(p.y - 0.06) < 0.02 && (p.x * p.x + p.z * p.z) > 0.004
+    let pot = Sculpt.lathe(Grower.profile(.classic), segments: 48)
+    let wall = pot.positions.indices.first {
+        let p = pot.positions[$0]
+        return abs(p.y - 0.062) < 0.005 && (p.x * p.x + p.z * p.z) > 0.004
     }!
-    let wallPoint = Greenhouse.potMesh.positions[wall]
-    let wallNormal = Greenhouse.potMesh.normals[wall]
-    check(wallNormal.x * wallPoint.x + wallNormal.z * wallPoint.z > 0,
+    check(pot.normals[wall].x * pot.positions[wall].x
+          + pot.normals[wall].z * pot.positions[wall].z > 0,
           "стенка горшка светится снаружи")
     check(Sculpt.arc(inner: 0.1, outer: 0.11, sweep: 0).isEmpty,
           "пустое кольцо — пустая сетка")
     let spun = Vec3(1, 0, 0).turned(around: Vec3(0, 1, 0), by: Float.pi / 2)
     check(round2(Double(spun.z)), "-1.00",
           "поворот по правой руке, как у simd_quatf")
+    let leaf = Sculpt.card(length: 0.1, width: 0.06, bend: Sculpt.Bend())
+    let tangents = leaf.tangents()
+    check(zip(tangents, leaf.normals).allSatisfy {
+        abs($0.size - 1) < 1e-3 && abs($0.dotted($1)) < 1e-3
+    }, "касательные единичные и лежат в плоскости листа")
+    let pose = Pose(base: Vec3(1, 0, 0), yaw: Float.pi / 2, rise: 0.3, size: 2)
+    check(abs(pose.place(Vec3(0, 0, 0)).x - 1) < 1e-6,
+          "поза: начало детали встаёт в точку крепления")
 }
 
-print("объёмные растения по видам:")
+print("текстуры рисуются своими руками:")
 do {
-    check(Greenhouse.habit(of: "Монстера") == .broad, "монстера — крупные листья")
-    check(Greenhouse.habit(of: "Кактус") == .cactus, "кактус")
-    check(Greenhouse.habit(of: "Папоротник") == .fern, "папоротник — вайи")
-    check(Greenhouse.habit(of: "Драцена") == .blades, "драцена — длинные листья")
-    check(Greenhouse.habit(of: "Алоэ") == .rosette, "алоэ — розетка")
-    check(Greenhouse.habit(of: "Базилик") == .bush, "базилик — кустик")
-    check(Greenhouse.habit(of: "Баобаб") == .broad, "незнакомый — крупные листья")
-    check(Greenhouse.bloom(of: "Розмарин") == nil, "розмарин не цветёт розой")
-    check(Greenhouse.bloom(of: "Тюльпан") != nil, "тюльпан цветёт")
-
-    let species = Set(Seed.rooms.flatMap(\.plants).map(\.species)
-                      + Species.table.map(\.species))
-    var odd: [String] = []
-    for name in species.sorted() {
-        let plant = Plant.new(name: "x", species: name, dryingDays: 7)
-        let grown = Greenhouse.grow(plant)
-        let points = grown.sprigs.flatMap { sprig in
-            sprig.parts.flatMap { $0.mesh.positions.map { sprig.place($0) } }
-        }
-        let finite = points.allSatisfy { $0.x.isFinite && $0.y.isFinite }
-        let leafy = !grown.sprigs.isEmpty || !grown.body.isEmpty
-        if !(finite && leafy && grown.height > 0.16 && grown.height < 0.6
-             && grown.spread < 0.36) {
-            odd.append("\(name) \(grown.height) \(grown.spread)")
-        }
+    var square = Picture(width: 20, height: 20)
+    square.fill([SIMD2(0.25, 0.25), SIMD2(0.75, 0.25), SIMD2(0.75, 0.75),
+                 SIMD2(0.25, 0.75)], Ink(1, 0, 0, 1))
+    check(abs(square.opaque - 0.25) < 0.01, "квадрат в четверть — четверть закрашена")
+    check(square.ink(at: 10, 10).x > 0.99 && square.ink(at: 1, 1).w == 0,
+          "внутри красное, снаружи пусто")
+    var disc = Picture(width: 100, height: 100)
+    disc.disc(SIMD2(0.5, 0.5), radius: 0.3, Ink(0, 1, 0, 1))
+    check(abs(disc.opaque - Float.pi * 0.09) < 0.02, "круг — пи эр квадрат")
+    disc.disc(SIMD2(0.5, 0.5), radius: 0.1, Ink(0, 0, 0, 1), blend: .erase)
+    check(disc.ink(at: 50, 50).w < 0.01, "стирание оставляет дыру")
+    let flat = Relief(width: 8, height: 8).normals(strength: 5)
+    let middle = flat.ink(at: 4, 4)
+    check(abs(middle.x - 0.5) < 0.01 && abs(middle.z - 1) < 0.01,
+          "ровный рельеф — нормаль прямо вверх")
+    var hill = Relief(width: 32, height: 32)
+    hill.stroke([SIMD2(0.5, 0), SIMD2(0.5, 1)], width: { _ in 0.2 }, by: 1)
+    let slope = hill.normals(strength: 5).ink(at: 12, 16)
+    check(slope.x < 0.45, "слева от гребня нормаль смотрит влево")
+    var tile = Picture(width: 64, height: 8)
+    tile.shade { uv, _ in
+        let n = Noise.fractal(uv.x, uv.y, cells: 4, seed: 3)
+        return Ink(n, n, n, 1)
     }
-    check(odd.isEmpty, "каждый вид вырастает в разумный куст: \(odd)")
+    check(abs(tile.ink(at: 0, 4).x - tile.ink(at: 63, 4).x) < 0.1,
+          "шум сходится на шве горшка")
 
-    let one = Greenhouse.grow(Seed.rooms[0].plants[0])
-    let again = Greenhouse.grow(Seed.rooms[0].plants[0])
-    let twin = Greenhouse.grow(Seed.rooms[2].plants[4])
-    check(one.sprigs.map(\.yaw) == again.sprigs.map(\.yaw)
-          && one.height == again.height, "одно растение — всегда один облик")
-    check(one.sprigs.map(\.yaw) != twin.sprigs.map(\.yaw),
-          "у двух Баксиков облик разный")
+    let monstera = LeafLook(outline: .heart, aspect: 0.9, veins: .pinnate(7),
+                            base: Channels(34, 104, 50), slits: 6, holes: 4)
+    var whole = monstera
+    whole.slits = 0
+    whole.holes = 0
+    let cut = Leafart.leaf(monstera, seed: 1, height: 256)
+    let solid = Leafart.leaf(whole, seed: 1, height: 256)
+    check(solid.color.opaque > 0.35 && solid.color.opaque < 0.85,
+          "лист занимает свою долю картинки: \(solid.color.opaque)")
+    check(cut.color.opaque < solid.color.opaque - 0.03,
+          "прорези и окошки монстеры — настоящие дыры")
+    check(cut.normal.width == cut.color.width / 2, "рельеф вдвое мельче цвета")
+    let fern = Leafart.frond(Channels(66, 136, 58), seed: 2)
+    check(fern.opaque > 0.2 && fern.opaque < 0.8, "вайя — перышки, а не заливка")
+}
+
+print("двадцать видов в объёме:")
+do {
+    check(Preset.of("Монстера") == .monstera, "монстера")
+    check(Preset.of("Каменная роза") == .echeveria, "каменная роза — суккулент")
+    check(Preset.of("Розмарин") == .herbs, "розмарин — пряные травы")
+    check(Preset.of("Роза") == .pelargonium, "роза — цветущий куст")
+    check(Preset.of("Тюльпан") == .tulip, "тюльпан")
+    check(Preset.of("Баобаб") == .spathiphyllum, "незнакомый — спатифиллум")
+    check(Preset.allCases.allSatisfy { Preset.of($0.title) == $0 },
+          "своё же название каждый вид узнаёт")
+    check(Preset.allCases.count == 20, "видов ровно двадцать")
+    let species = Set(Seed.rooms.flatMap(\.plants).map(\.species))
+    check(species.allSatisfy { name in
+        Preset.allCases.contains(Preset.of(name))
+    }, "каждый вид сада сводится к одному из двадцати")
+
+    var slow: [String] = []
+    var odd: [String] = []
+    var total = 0
+    for preset in Preset.allCases {
+        let started = Date()
+        let kit = Botany.grow(.stock(preset), species: preset.title)
+        let spent = Date().timeIntervalSince(started)
+        total += kit.triangles
+        if spent > 1.5 { slow.append("\(preset) \(round2(spent)) с") }
+        let meshes = kit.meshes.map(sound)
+        let broken = meshes.filter { !$0.intact || $0.agree < 0.9 }.count
+        let indexed = kit.pieces.allSatisfy {
+            $0.mesh < kit.meshes.count && $0.look < kit.looks.count
+        } && kit.looks.allSatisfy {
+            ($0.color ?? 0) < kit.pictures.count
+                && ($0.normal ?? 0) < kit.pictures.count
+        }
+        if broken > 0 || !indexed || kit.triangles < 8_000
+            || kit.triangles > 400_000 || kit.height < 0.14
+            || kit.height > 0.75 || kit.spread > 0.45 {
+            odd.append("\(preset): треугольников \(kit.triangles), высота "
+                + "\(round2(Double(kit.height))), размах "
+                + "\(round2(Double(kit.spread))), битых сеток \(broken)")
+        }
+        print("    \(preset.title): \(kit.triangles) треугольников, "
+              + "\(kit.pieces.count) деталей, \(kit.pictures.count) картинок, "
+              + "\(round2(spent)) с")
+    }
+    check(odd.isEmpty, "каждый вид вырастает целым и в разумных размерах: \(odd)")
+    check(slow.isEmpty, "и быстро: \(slow)")
+    check(total > 20 * 15_000, "и детально: в среднем \(total / 20) треугольников")
+
+    let one = Botany.grow(.stock("Монстера"), species: "Монстера")
+    let again = Botany.grow(.stock("Монстера"), species: "Монстера")
+    check(one == again, "один чертёж — одна и та же модель")
+    let traits = Traits(leaf: Channels(90, 160, 60), variegation: nil,
+                        flower: Channels(250, 200, 40), pot: Channels(40, 40, 44),
+                        density: 1.3, stretch: 1.2)
+    let mine = Botany.grow(Blueprint(preset: .monstera, traits: traits,
+                                     seed: "мой"), species: "Монстера")
+    check(mine.pieces.count > one.pieces.count, "густая листва со снимка — гуще")
+    check(mine.height > one.height, "вытянутая со снимка — выше")
+
+    let file = one.encoded()
+    check(Kit(file) == one, "модель переживает файл: \(file.count / 1024) КБ")
+    check(Kit(file.prefix(100)) == nil, "обрезанный файл — нет модели, а не падение")
+    var foreign = file
+    foreign[4] = 99
+    check(Kit(foreign) == nil, "файл другой версии не читается")
+
+    let stock = Blueprint.stock("Монстера")
+    check(stock.traits == nil && stock.preset == .monstera, "готовая модель вида")
+    check(Blueprint.stock("Кактус").fingerprint != stock.fingerprint,
+          "у разных чертежей разные имена файлов")
+}
+
+print("снимок для модели:")
+do {
+    /// Горшок терракотой внизу, зелёная листва сверху, красные цветы и
+    /// шахматная рябь листьев — чтобы снимок был резким.
+    func photo(blur: Int = 0, dark: Bool = false) -> [UInt8] {
+        let size = 96
+        var pixels = [UInt8](repeating: 235, count: size * size * 4)
+        for y in 0 ..< size {
+            for x in 0 ..< size {
+                let at = (y * size + x) * 4
+                var color: (UInt8, UInt8, UInt8) = (235, 235, 235)
+                let dx = x - size / 2
+                if y > 64 && abs(dx) < 22 {
+                    color = (190, 100, 64)
+                } else if y > 12 && y <= 64 && abs(dx) < 34 {
+                    let ripple = (x / 3 + y / 3) % 2 == 0
+                    color = ripple ? (46, 128, 52) : (70, 160, 70)
+                    if (x - 30) * (x - 30) + (y - 24) * (y - 24) < 30 {
+                        color = (220, 30, 50)
+                    }
+                }
+                if dark { color = (color.0 / 12, color.1 / 12, color.2 / 12) }
+                pixels[at] = color.0
+                pixels[at + 1] = color.1
+                pixels[at + 2] = color.2
+                pixels[at + 3] = 255
+            }
+        }
+        guard blur > 0 else { return pixels }
+        var out = pixels
+        for y in 0 ..< size {
+            for x in 0 ..< size {
+                for channel in 0 ..< 3 {
+                    var sum = 0
+                    var count = 0
+                    for yy in max(y - blur, 0) ... min(y + blur, size - 1) {
+                        for xx in max(x - blur, 0) ... min(x + blur, size - 1) {
+                            sum += Int(pixels[(yy * size + xx) * 4 + channel])
+                            count += 1
+                        }
+                    }
+                    out[(y * size + x) * 4 + channel] = UInt8(sum / count)
+                }
+            }
+        }
+        return out
+    }
+    var mask = [UInt8](repeating: 0, count: 96 * 96)
+    for y in 12 ..< 96 {
+        for x in 0 ..< 96 where abs(x - 48) < 34 { mask[y * 96 + x] = 255 }
+    }
+    let sharp = Sample.read(rgba: photo(), mask: mask, width: 96, height: 96)
+    check(sharp.verdict == .fine, "резкий снимок годится")
+    if let traits = sharp.traits {
+        check(traits.leaf.green > traits.leaf.red + 40, "лист зелёный")
+        check((traits.pot?.red ?? 0) > 150, "горшок терракотовый")
+        check((traits.flower?.red ?? 0) > 180
+              && (traits.flower?.green ?? 255) < 90, "цветы красные")
+        check(traits.density >= 0.75 && traits.density <= 1.35
+              && traits.stretch >= 0.8 && traits.stretch <= 1.3,
+              "густота и вытянутость в своих границах")
+    } else {
+        check(false, "черты сняты")
+    }
+    let blurry = Sample.read(rgba: photo(blur: 4), mask: mask, width: 96,
+                             height: 96)
+    check(blurry.verdict == .blurry && blurry.traits == nil,
+          "мыльный — готовая модель")
+    check(Sample.read(rgba: photo(dark: true), mask: mask, width: 96,
+                      height: 96).verdict == .dark, "тёмный — тоже")
+    let gray = [UInt8](repeating: 128, count: 96 * 96 * 4)
+    check(Sample.read(rgba: gray, mask: nil, width: 96, height: 96).traits == nil,
+          "на сером растения нет")
+    check(Sample.read(rgba: photo(), mask: nil, width: 96, height: 96)
+          .verdict == .fine, "без маски — середина кадра")
+}
+
+print("растение носит свой чертёж:")
+do {
+    let traits = Traits(leaf: Channels(90, 160, 60), variegation: nil,
+                        flower: nil, pot: nil, density: 1, stretch: 1)
+    let planted = Plant.new(name: "Новый", species: "Фикус", dryingDays: 7,
+                            traits: traits, id: "новый-1")
+    check(planted.plan?.seed == "новый-1" && planted.plan?.preset == .ficus,
+          "по снимку — чертёж с зерном из номера")
+    check(Plant.new(name: "Без", species: "Фикус", dryingDays: 7).plan == nil,
+          "без снимка чертежа нет")
+    check(Plant.new(name: "Без", species: "Фикус", dryingDays: 7)
+          .blueprint == .stock("Фикус"), "и растёт готовая модель вида")
+    let file = try! JSONEncoder().encode(planted)
+    check(try! JSONDecoder().decode(Plant.self, from: file).plan == planted.plan,
+          "чертёж переживает запуск")
+    let garden = Garden()
+    garden.add(planted, to: "Кабинет")
+    garden.tune("новый-1", name: "Новый", species: "Кактус", dryingDays: 7)
+    let changed = garden.plant(id: "новый-1")!.plan
+    check(changed?.preset == .cactus && changed?.traits == traits,
+          "сменили вид — меняется модель, черты со снимка остаются")
 }
 
 print("объёмное растение живёт влажностью:")
@@ -1375,7 +1569,17 @@ do {
     check(steady, "и никнет всё сильнее, без скачков назад")
     check(Greenhouse.wilt(0.5) == 0 && round2(Greenhouse.wilt(0)) == "0.70",
           "желтеет с порога тревоги и не до конца")
-    check(Greenhouse.soilColor(1) == Greenhouse.wetSoil, "политая земля тёмная")
+    check(Greenhouse.wetTint(1) == Greenhouse.wetShade, "политая земля тёмная")
+    check(Greenhouse.wetTint(0) == Channels(255, 255, 255), "сухая — как нарисована")
+    check(Greenhouse.wither(1) == 0 && Greenhouse.wither(0.5) == 0,
+          "политый лист не вянет")
+    check(Greenhouse.wither(0) == 1, "сухой — до конца")
+    check(Greenhouse.wither(0.3) > 0 && Greenhouse.wither(0.3) < 1,
+          "между ними — ступенью")
+    let green = Picture(width: 2, height: 2, fill: Ink(0.2, 0.55, 0.22, 1))
+    let dry = green.withered(1).ink(at: 0, 0)
+    check(dry.x > dry.z && dry.x > 0.3 && dry.w == 1,
+          "увядший рисунок — в солому, прозрачность та же")
     check(Greenhouse.ringColor(0.8) == Greenhouse.calmRing, "кольцо голубое")
     check(Greenhouse.ringColor(0.05).red > 250, "у сухого — красное")
     check(Greenhouse.unfurl(0) == 0 && Greenhouse.unfurl(1) == 1,

@@ -111,6 +111,7 @@ struct PlantAR: View {
     private var hint: String {
         switch stage.phase {
         case .searching: "Медленно ведите телефоном над полом или столом"
+        case .aiming where !stage.ready: "Готовлю модель растения…"
         case .aiming: "Нажмите — и растение встанет сюда"
         case .placed: "Двумя пальцами — повернуть, щипком — размер"
         case .watering: "Поливаем…"
@@ -147,7 +148,8 @@ struct PlantAR: View {
                 .buttonStyle(.glassProminent)
             }
         }
-        .disabled(stage.phase == .watering)
+        .disabled(stage.phase == .watering
+                  || (stage.phase == .aiming && !stage.ready))
         .frame(maxWidth: .infinity)
         .padding(.bottom, 12)
     }

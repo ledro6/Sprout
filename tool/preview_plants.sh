@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
-# Рисует объёмные растения без телефона: лист политых, лист сухих и полив.
+# Рисует двадцать готовых моделей без телефона: лист политых и лист сухих.
 #
 #     tool/preview_plants.sh [папка]
 #
-# Собирает модель с выгрузкой из tool/plant-preview/ и отрисовывает её
-# растеризатором на numpy. Формы, позы, увядание и струя — те же, что в
-# сцене; свет и материалы — грубее, чем в RealityKit.
+# Собирает модель с растеризатором из tool/plant-preview/ и рисует каждый
+# вид с текстурами и вырезами. Свет грубее, чем в RealityKit, формы и
+# рисунок — те же.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
@@ -20,9 +20,17 @@ MODEL=$(sed -n 's|^ *\(ios-native/Sprout/Model/[A-Za-z]*\.swift\) \\$|\1|p' \
   tool/check_model.sh)
 # shellcheck disable=SC2086
 "$SWIFTC" -O $MODEL tool/plant-preview/main.swift -o "$BUILD/preview"
-"$BUILD/preview" "$OUT/wet" 1
-"$BUILD/preview" "$OUT/dry" 0.1
-python3 tool/plant-preview/render.py "$OUT/wet" 0 1 2 3 4 5 6 7 8 9 10 11
-python3 tool/plant-preview/render.py "$OUT/dry" 0 1 2 3 4 5 6 7 pour
+ALL="monstera ficus sansevieria zamioculcas spathiphyllum orchid aloe cactus
+echeveria jade dracaena palm fern ivy chlorophytum violet begonia pelargonium
+herbs tulip"
+DRY="monstera spathiphyllum ficus fern ivy"
+# shellcheck disable=SC2086
+"$BUILD/preview" "$OUT/wet" 1 $ALL
+# shellcheck disable=SC2086
+"$BUILD/preview" "$OUT/dry" 0.05 $DRY
+# shellcheck disable=SC2086
+python3 tool/plant-preview/render.py "$OUT/wet" $ALL
+# shellcheck disable=SC2086
+python3 tool/plant-preview/render.py "$OUT/dry" $DRY
 echo "$OUT/wet/sheet.png"
 echo "$OUT/dry/sheet.png"

@@ -49,7 +49,7 @@ enum Tint: Int, CaseIterable, Identifiable, Sendable {
     }
 }
 
-struct Channels: Hashable, Sendable {
+struct Channels: Hashable, Codable, Sendable {
     var red: Double
     var green: Double
     var blue: Double

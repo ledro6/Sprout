@@ -38,6 +38,10 @@ struct Plant: Identifiable, Hashable, Codable {
     /// Заметка хозяина. Необязательная по той же причине, что и `shot`.
     var note: String?
 
+    /// Чертёж объёмной модели, снятый при посадке; нет — готовая модель
+    /// вида, см. `blueprint`.
+    var plan: Blueprint?
+
     /// Из влажности, а не хранится: два числа рано или поздно разошлись бы.
     var daysUntilWatering: Int {
         max(0, Int((moisture * dryingDays).rounded()))
@@ -89,15 +93,21 @@ struct Plant: Identifiable, Hashable, Codable {
     }
 
     /// Номер случайный: кличек бывает две одинаковых.
+    /// Номер можно дать свой — чертёж модели берёт из него зерно ещё до
+    /// посадки.
     static func new(name: String, species: String, dryingDays: Double,
                     photo: String = "monstera", shot: String? = nil,
+                    traits: Traits? = nil, id: String = UUID().uuidString,
                     on day: Date = Date(),
                     calendar: Calendar = .current) -> Plant {
-        Plant(id: UUID().uuidString, name: name, species: species,
+        Plant(id: id, name: name, species: species,
               moisture: 1, dryingDays: dryingDays,
               addedOn: calendar.dateComponents([.year, .month, .day],
                                                from: day),
-              photo: photo, shot: shot)
+              photo: photo, shot: shot,
+              plan: traits.map {
+                  Blueprint(preset: .of(species), traits: $0, seed: id)
+              })
     }
 
     static func plural(_ n: Int, _ one: String, _ few: String,

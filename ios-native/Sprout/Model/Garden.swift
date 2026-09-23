@@ -180,7 +180,11 @@ final class Garden {
         let kind = species.trimmingCharacters(in: .whitespacesAndNewlines)
         change(id) { plant in
             if !nickname.isEmpty { plant.name = nickname }
-            if !kind.isEmpty { plant.species = kind }
+            if !kind.isEmpty, kind != plant.species {
+                plant.species = kind
+                // Черты со снимка остаются, меняется только вид модели.
+                plant.plan?.preset = .of(kind)
+            }
             plant.retime(dryingDays)
         }
         if !nickname.isEmpty, nickname != old.name { roster += 1 }

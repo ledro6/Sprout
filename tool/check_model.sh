@@ -36,6 +36,11 @@ trap 'rm -rf "$OUT"' EXIT
   ios-native/Sprout/Model/Species.swift \
   ios-native/Sprout/Model/Shots.swift \
   ios-native/Sprout/Model/Sculpt.swift \
+  ios-native/Sprout/Model/Canvas.swift \
+  ios-native/Sprout/Model/Leafart.swift \
+  ios-native/Sprout/Model/Kit.swift \
+  ios-native/Sprout/Model/Botany.swift \
+  ios-native/Sprout/Model/Sample.swift \
   ios-native/Sprout/Model/Greenhouse.swift \
   tool/swift-model-check/main.swift \
   -o "$OUT/check"

@@ -221,6 +221,10 @@ struct PlantSettingsView: View {
                         dryingDays: period)
             garden.relocate(plantID, to: room)
         }
+        // Сменился вид — сменилась и модель: собираем её заранее.
+        if let tuned = garden.plant(id: plantID) {
+            Task(priority: .utility) { await Workshop.shared.prepare(tuned) }
+        }
         if edited { Feel.done() }
         dismiss()
     }

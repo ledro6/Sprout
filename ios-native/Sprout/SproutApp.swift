@@ -53,6 +53,12 @@ struct RootView: View {
         .task { await runClock() }
         .task { await Launch.shared.run() }
         .task { Chime.warm() }
+        // Модели для сада в AR — заранее, в фоне; недостающие собираются,
+        // лишние уходят.
+        .task(priority: .background) {
+            let plants = garden.rooms.flatMap(\.plants)
+            await Workshop.shared.tend(plants)
+        }
         // Состав сада сменился — пересказываем Siri клички.
         .onChange(of: garden.roster, initial: true) { _, _ in
             SproutShortcuts.updateAppShortcutParameters()

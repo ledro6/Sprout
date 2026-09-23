@@ -35,9 +35,13 @@ final class Stage {
     @ObservationIgnored private var tapper: Tapper?
     @ObservationIgnored private var watcher: Watcher?
 
+    /// Модель готова — её можно ставить. Собрана заранее, при посадке или
+    /// при запуске; здесь она только достаётся из кэша.
+    private(set) var ready = false
+
     @ObservationIgnored private weak var garden: Garden?
     @ObservationIgnored private var plantID: Plant.ID = ""
-    @ObservationIgnored private var specimen: Specimen?
+    @ObservationIgnored private var kit: Kit?
     @ObservationIgnored private var tint = Tint.defaultWave.vivid
 
     @ObservationIgnored private var reticle: Entity?
@@ -46,10 +50,11 @@ final class Stage {
     @ObservationIgnored private var anchor: AnchorEntity?
     @ObservationIgnored private var root: ModelEntity?
     @ObservationIgnored private var frame: Entity?
-    @ObservationIgnored private var soil: ModelEntity?
-    @ObservationIgnored private var trunk: ModelEntity?
     @ObservationIgnored private var ring: ModelEntity?
-    @ObservationIgnored private var leaves: [Leaf] = []
+    @ObservationIgnored private var parts: [Part] = []
+    /// Детали по материалам: увядание перекрашивает их разом.
+    @ObservationIgnored private var dressed: [Int: [ModelEntity]] = [:]
+    @ObservationIgnored private var textures: [String: TextureResource] = [:]
     @ObservationIgnored private var can: ModelEntity?
     @ObservationIgnored private var drops: [Drop] = []
 
@@ -59,7 +64,8 @@ final class Stage {
     /// Влажность на сцене: догоняет настоящую плавно — после полива листья
     /// поднимаются, а не прыгают.
     @ObservationIgnored private var shown: Double = 1
-    @ObservationIgnored private var painted: Double = -1
+    @ObservationIgnored private var withered: Float = -1
+    @ObservationIgnored private var wetted: Double = -1
     @ObservationIgnored private var ringed: Double = -1
     /// Куда льёт лейка: вправо от взгляда — её видно сбоку, вместе со струёй.
     @ObservationIgnored private var toward = Vec3(1, 0, 0)
@@ -72,11 +78,10 @@ final class Stage {
     private static let pool = 220
     private static let drop: Float = 0.0032
 
-    /// Лист, вайя или цветок в сцене: шарнир у основания и части цветом.
-    private struct Leaf {
+    /// Деталь в сцене: шарнир на месте крепления и то, как она живёт.
+    private struct Part {
         let pivot: Entity
-        let parts: [(entity: ModelEntity, color: Channels, wilts: Bool)]
-        let sprig: Sprig
+        let piece: Piece
     }
 
     private struct Drop {
@@ -87,9 +92,20 @@ final class Stage {
     func cast(_ plant: Plant, in garden: Garden) {
         self.garden = garden
         plantID = plant.id
-        specimen = Greenhouse.grow(plant)
         shown = plant.moisture
         tint = Settings.shared.waveTint.vivid
+        // Пока камера ищет пол, модель достаётся из кэша — или собирается,
+        // если её там нет.
+        Task { @MainActor [weak self] in
+            let kit = await Workshop.shared.kit(for: plant)
+            guard let self else { return }
+            self.kit = kit
+            // Текстуры — тоже заранее: иначе нажатие «Поставить» споткнулось
+            // бы на их создании.
+            withered = Greenhouse.wither(shown)
+            for look in kit.looks { _ = material(look) }
+            ready = true
+        }
     }
 
     // MARK: - Сессия
@@ -202,7 +218,7 @@ final class Stage {
     }
 
     private func live(_ dt: Double) {
-        guard let view, let root, let frame, let specimen else { return }
+        guard let view, let root, let frame, let kit else { return }
         // Щипок границ не знает — держим размер разумным.
         let scale = min(max(root.scale.x, 0.35), 3)
         if root.scale.x != scale { root.scale = SIMD3(repeating: scale) }
@@ -213,22 +229,24 @@ final class Stage {
         shown += (actual - shown) * (1 - exp(-dt * 2.2))
         let sag = Greenhouse.sag(shown)
         let still = UIAccessibility.isReduceMotionEnabled
-        for leaf in leaves {
-            let sprig = leaf.sprig
+        // Пока растение распускается, двигаются все детали; потом — только
+        // живые: горшку и земле каждый кадр незачем.
+        let growing = clock - planted < 2
+        for part in parts where growing || part.piece.lives {
+            let piece = part.piece
             let open = Greenhouse.unfurl(
-                (clock - planted - Double(sprig.delay) * 0.5) / 0.7)
-            leaf.pivot.scale = SIMD3(repeating: Float(max(open, 0.001)))
-            let wave = sin(clock * 1.3 + Double(sprig.phase) * 2 * .pi)
-            let sway = still ? 0 : 0.035 * Float(wave) * (1 - 0.5 * sag)
-            leaf.pivot.orientation =
-                simd_quatf(angle: sprig.yaw, axis: Self.up)
-                * simd_quatf(angle: sprig.rise - sprig.sag * sag + sway,
-                             axis: Vec3(0, 0, 1))
+                (clock - planted - Double(piece.delay) * 0.5) / 0.7)
+            part.pivot.scale = SIMD3(repeating: piece.pose.size
+                * Float(max(open, 0.001)))
+            let wave = sin(clock * 1.3 + Double(piece.phase) * 2 * .pi)
+            let sway = still ? 0 : piece.sway * Float(wave) * (1 - 0.5 * sag)
+            part.pivot.orientation = orientation(piece.pose,
+                                                 lean: piece.sag * sag - sway)
         }
-        if abs(shown - painted) > 0.01 { repaint() }
+        repaint()
         if abs(shown - ringed) > 0.004 { reshape() }
 
-        let crown = frame.convert(position: Vec3(0, specimen.height + 0.03, 0),
+        let crown = frame.convert(position: Vec3(0, kit.height + 0.03, 0),
                                   to: nil)
         let point = view.project(crown)
         if let point, let old = tag, abs(point.x - old.x) < 0.5,
@@ -245,12 +263,12 @@ final class Stage {
     // MARK: - Поставить
 
     func place() {
-        guard phase == .aiming, let view, let aim, let specimen else { return }
+        guard phase == .aiming, ready, let view, let aim, let kit else { return }
         let anchor = AnchorEntity(world: aim)
         let root = ModelEntity()
         let box = ShapeResource.generateBox(size: SIMD3(
-            specimen.spread * 2, specimen.height, specimen.spread * 2))
-            .offsetBy(translation: SIMD3(0, specimen.height / 2, 0))
+            kit.spread * 2, kit.height, kit.spread * 2))
+            .offsetBy(translation: SIMD3(0, kit.height / 2, 0))
         root.collision = CollisionComponent(shapes: [box])
         // Лицом к камере: у растения нет переда, но так первым виден тот же
         // бок, что и на фото в приложении.
@@ -260,7 +278,7 @@ final class Stage {
         let frame = Entity()
         frame.scale = SIMD3(repeating: 0.001)
         root.addChild(frame)
-        build(specimen, into: frame)
+        build(kit, into: frame)
         anchor.addChild(root)
         view.scene.addAnchor(anchor)
         _ = view.installGestures([.rotation, .scale, .translation], for: root)
@@ -268,7 +286,6 @@ final class Stage {
         self.anchor = anchor
         self.root = root
         self.frame = frame
-        painted = -1
         ringed = -1
         drops = []
         can = nil
@@ -286,10 +303,9 @@ final class Stage {
         anchor = nil
         root = nil
         frame = nil
-        soil = nil
-        trunk = nil
         ring = nil
-        leaves = []
+        parts = []
+        dressed = [:]
         can = nil
         drops = []
         tag = nil
@@ -299,7 +315,7 @@ final class Stage {
     // MARK: - Полить
 
     func water() {
-        guard phase == .placed, let view, let anchor, let root, let specimen
+        guard phase == .placed, let view, let anchor, let root, let kit
         else { return }
         let camera = anchor.convert(position: view.cameraTransform.translation,
                                     from: nil)
@@ -307,7 +323,7 @@ final class Stage {
         look.y = 0
         let ahead = look.size > 0.01 ? look.unit : Vec3(0, 0, -1)
         toward = ahead.crossed(Self.up).unit
-        lift = Pouring.clearance(over: specimen.height)
+        lift = Pouring.clearance(over: kit.height)
         wet = false
         streaming = false
         owed = 0
@@ -446,22 +462,23 @@ final class Stage {
 
     // MARK: - Краски
 
+    /// Увядание — ступенями рисунка, земля темнеет оттенком. Перекраска —
+    /// только когда ступень или влажность правда сменились.
     private func repaint() {
-        painted = shown
-        for leaf in leaves {
-            for part in leaf.parts where part.wilts {
-                part.entity.model?.materials = [paint(
-                    Greenhouse.leafColor(part.color, moisture: shown),
-                    rough: 0.55)]
+        guard let kit else { return }
+        let wither = Greenhouse.wither(shown)
+        let rewilt = wither != withered
+        let rewet = abs(shown - wetted) > 0.01
+        guard rewilt || rewet else { return }
+        withered = wither
+        if rewet { wetted = shown }
+        for (index, look) in kit.looks.enumerated()
+            where (look.wilts && rewilt) || (look.wets && rewet) {
+            let material = self.material(look)
+            for entity in dressed[index] ?? [] {
+                entity.model?.materials = [material]
             }
         }
-        if let specimen, let trunk {
-            trunk.model?.materials = [paint(
-                Greenhouse.leafColor(specimen.bodyColor, moisture: shown),
-                rough: 0.5)]
-        }
-        soil?.model?.materials = [paint(Greenhouse.soilColor(shown),
-                                        rough: 0.95)]
     }
 
     /// Кольцо влажности на полу вокруг горшка: дуга — доля, цвет — тревога.
@@ -482,40 +499,26 @@ final class Stage {
 
     // MARK: - Сборка
 
-    private func build(_ specimen: Specimen, into frame: Entity) {
-        if let pot = model(specimen.pot, paint(specimen.potColor,
-                                               rough: specimen.potRough)) {
-            shadow(pot)
-            frame.addChild(pot)
-        }
-        soil = model(specimen.soil, paint(Greenhouse.soilColor(shown),
-                                          rough: 0.95))
-        if let soil { frame.addChild(soil) }
-        if let stems = model(specimen.stems, paint(specimen.stemColor,
-                                                   rough: 0.7)) {
-            shadow(stems)
-            frame.addChild(stems)
-        }
-        trunk = model(specimen.body, paint(specimen.bodyColor, rough: 0.5))
-        if let trunk {
-            shadow(trunk)
-            frame.addChild(trunk)
-        }
-        leaves = specimen.sprigs.map { sprig -> Leaf in
+    private func build(_ kit: Kit, into frame: Entity) {
+        withered = Greenhouse.wither(shown)
+        wetted = shown
+        let meshes = kit.meshes.map { resource($0) }
+        let materials = kit.looks.map { material($0) }
+        let sag = Greenhouse.sag(shown)
+        dressed = [:]
+        parts = kit.pieces.compactMap { piece -> Part? in
+            guard let mesh = meshes[piece.mesh] else { return nil }
+            let model = ModelEntity(mesh: mesh,
+                                    materials: [materials[piece.look]])
+            shadow(model)
+            dressed[piece.look, default: []].append(model)
             let pivot = Entity()
-            pivot.position = sprig.base
+            pivot.position = piece.pose.base
+            pivot.orientation = orientation(piece.pose, lean: piece.sag * sag)
             pivot.scale = SIMD3(repeating: 0.001)
-            let parts = sprig.parts.compactMap {
-                part -> (entity: ModelEntity, color: Channels, wilts: Bool)? in
-                guard let entity = model(part.mesh, paint(part.color,
-                                                          rough: 0.55))
-                else { return nil }
-                shadow(entity)
-                pivot.addChild(entity)
-                return (entity, part.color, part.wilts)
-            }
+            pivot.addChild(model)
             frame.addChild(pivot)
-            return Leaf(pivot: pivot, parts: parts, sprig: sprig)
+            return Part(pivot: pivot, piece: piece)
         }
         if let track = model(Sculpt.arc(inner: 0.098, outer: 0.11, sweep: 1,
                                         lift: 0.002),
@@ -528,6 +531,103 @@ final class Stage {
                                                      opacity: 0.95)])
         frame.addChild(ring)
         self.ring = ring
+    }
+
+    /// Тот же порядок, что `Pose.turn`: свой поворот, подъём, поворот вокруг
+    /// вертикали.
+    private func orientation(_ pose: Pose, lean: Float) -> simd_quatf {
+        let yaw = simd_quatf(angle: pose.yaw, axis: Pose.y)
+        let rise = simd_quatf(angle: pose.rise - lean, axis: Pose.z)
+        let roll = simd_quatf(angle: pose.roll, axis: Pose.x)
+        return yaw * rise * roll
+    }
+
+    // MARK: - Материалы
+
+    /// Материал из набора: рисунок, рельеф жилок, лак, вырез по контуру.
+    /// Вырез — порогом прозрачности: край листа резкий, а листья не
+    /// сортируются как стекло.
+    private func material(_ look: Look) -> PhysicallyBasedMaterial {
+        var material = PhysicallyBasedMaterial()
+        var tint = look.tint
+        if look.wets {
+            let wet = Greenhouse.wetTint(shown)
+            tint = Channels(tint.red * wet.red / 255, tint.green * wet.green / 255,
+                            tint.blue * wet.blue / 255)
+        }
+        let color = look.color.flatMap {
+            texture($0, wither: look.wilts ? withered : 0, semantic: .color)
+        }
+        material.baseColor = .init(tint: Self.color(tint),
+                                   texture: color.map { .init($0) })
+        if let index = look.normal,
+           let relief = texture(index, wither: 0, semantic: .normal) {
+            material.normal = .init(texture: .init(relief))
+        }
+        material.roughness = .init(floatLiteral: look.rough)
+        material.metallic = .init(floatLiteral: 0)
+        if look.gloss > 0 {
+            material.clearcoat = .init(floatLiteral: look.gloss)
+            material.clearcoatRoughness = .init(floatLiteral: 0.12)
+        }
+        if look.cutout, let index = look.color, let alpha = mask(index) {
+            material.blending = .transparent(
+                opacity: .init(scale: 1, texture: .init(alpha)))
+            material.opacityThreshold = 0.5
+        } else if look.opacity < 1 {
+            material.blending = .transparent(
+                opacity: .init(floatLiteral: look.opacity))
+        }
+        return material
+    }
+
+    private func texture(_ index: Int, wither: Float,
+                         semantic: TextureResource.Semantic) -> TextureResource? {
+        let key = "\(index)-\(wither)"
+        if let known = textures[key] { return known }
+        guard let kit, index < kit.pictures.count else { return nil }
+        let picture = wither > 0 ? kit.pictures[index].withered(wither)
+            : kit.pictures[index]
+        guard let image = Self.image(picture),
+              let made = try? TextureResource.generate(
+                  from: image, options: .init(semantic: semantic))
+        else { return nil }
+        textures[key] = made
+        return made
+    }
+
+    /// Прозрачность отдельной картинкой, серой: какой бы канал ни читал
+    /// материал, в нём контур.
+    private func mask(_ index: Int) -> TextureResource? {
+        let key = "\(index)-mask"
+        if let known = textures[key] { return known }
+        guard let kit, index < kit.pictures.count else { return nil }
+        var picture = kit.pictures[index]
+        for at in stride(from: 0, to: picture.pixels.count, by: 4) {
+            let alpha = picture.pixels[at + 3]
+            picture.pixels[at] = alpha
+            picture.pixels[at + 1] = alpha
+            picture.pixels[at + 2] = alpha
+        }
+        guard let image = Self.image(picture),
+              let made = try? TextureResource.generate(
+                  from: image, options: .init(semantic: .raw))
+        else { return nil }
+        textures[key] = made
+        return made
+    }
+
+    private static func image(_ picture: Picture) -> CGImage? {
+        guard let provider = CGDataProvider(data: Data(picture.pixels) as CFData)
+        else { return nil }
+        return CGImage(width: picture.width, height: picture.height,
+                       bitsPerComponent: 8, bitsPerPixel: 32,
+                       bytesPerRow: picture.width * 4,
+                       space: CGColorSpaceCreateDeviceRGB(),
+                       bitmapInfo: CGBitmapInfo(
+                           rawValue: CGImageAlphaInfo.last.rawValue),
+                       provider: provider, decode: nil,
+                       shouldInterpolate: true, intent: .defaultIntent)
     }
 
     private func makeReticle() -> Entity {
@@ -583,6 +683,11 @@ final class Stage {
         var descriptor = MeshDescriptor(name: "sprout")
         descriptor.positions = MeshBuffers.Positions(mesh.positions)
         descriptor.normals = MeshBuffers.Normals(mesh.normals)
+        if mesh.uvs.count == mesh.positions.count {
+            descriptor.textureCoordinates = MeshBuffers.TextureCoordinates(
+                mesh.uvs)
+            descriptor.tangents = MeshBuffers.Tangents(mesh.tangents())
+        }
         descriptor.primitives = .triangles(mesh.indices)
         return try? MeshResource.generate(from: [descriptor])
     }

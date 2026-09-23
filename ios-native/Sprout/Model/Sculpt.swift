@@ -35,14 +35,42 @@ extension SIMD3 where Scalar == Float {
     }
 }
 
-/// Сетка: точки, нормали и треугольники тройками номеров. Лицевая сторона —
-/// та, откуда обход идёт против часовой стрелки.
+/// Поза детали: размер, поворот вокруг своей оси, подъём, поворот вокруг
+/// вертикали и место. Тот же порядок, что у шарнира в сцене.
+struct Pose: Equatable, Sendable {
+    var base = Vec3.zero
+    var yaw: Float = 0
+    var rise: Float = 0
+    var roll: Float = 0
+    var size: Float = 1
+
+    static let x = Vec3(1, 0, 0)
+    static let y = Vec3(0, 1, 0)
+    static let z = Vec3(0, 0, 1)
+
+    func turn(_ direction: Vec3, lean: Float = 0) -> Vec3 {
+        direction.turned(around: Pose.x, by: roll)
+            .turned(around: Pose.z, by: rise - lean)
+            .turned(around: Pose.y, by: yaw)
+    }
+
+    func place(_ point: Vec3, lean: Float = 0) -> Vec3 {
+        turn(point * size, lean: lean) + base
+    }
+}
+
+/// Сетка: точки, нормали, координаты текстуры и треугольники тройками
+/// номеров. Лицевая сторона — та, откуда обход идёт против часовой стрелки.
+/// Текстура: u — поперёк, v — снизу вверх, как в USD.
 struct Mesh3D: Equatable, Sendable {
     var positions: [Vec3] = []
     var normals: [Vec3] = []
+    var uvs: [SIMD2<Float>] = []
     var indices: [UInt32] = []
 
     var isEmpty: Bool { indices.isEmpty }
+
+    var triangles: Int { indices.count / 3 }
 
     var top: Float { positions.map(\.y).max() ?? 0 }
 
@@ -50,6 +78,7 @@ struct Mesh3D: Equatable, Sendable {
         let base = UInt32(positions.count)
         positions += other.positions
         normals += other.normals
+        uvs += other.uvs
         indices += other.indices.map { $0 + base }
     }
 
@@ -63,6 +92,30 @@ struct Mesh3D: Equatable, Sendable {
     func moved(by offset: Vec3) -> Mesh3D {
         var out = self
         out.positions = positions.map { $0 + offset }
+        return out
+    }
+
+    func posed(_ pose: Pose, lean: Float = 0) -> Mesh3D {
+        var out = self
+        out.positions = positions.map { pose.place($0, lean: lean) }
+        out.normals = normals.map { pose.turn($0, lean: lean) }
+        return out
+    }
+
+    /// Растянуть по осям; нормали — обратно растяжению, чтобы свет не врал.
+    func stretched(_ factor: Vec3) -> Mesh3D {
+        var out = self
+        out.positions = positions.map { $0 * factor }
+        out.normals = normals.map { ($0 / factor).unit }
+        return out
+    }
+
+    /// Текстура сверху, как проекция на пол: для земли и камешков.
+    func mappedFromAbove(radius: Float) -> Mesh3D {
+        var out = self
+        out.uvs = positions.map {
+            SIMD2(0.5 + $0.x / (2 * radius), 0.5 + $0.z / (2 * radius))
+        }
         return out
     }
 
@@ -83,6 +136,34 @@ struct Mesh3D: Equatable, Sendable {
         normals = sums.map(\.unit)
     }
 
+    /// Касательные вдоль u — для карты нормалей: по ним рельеф жилок знает,
+    /// куда у текстуры право. Перпендикулярны нормали.
+    func tangents() -> [Vec3] {
+        var sums = [Vec3](repeating: .zero, count: positions.count)
+        for face in stride(from: 0, to: indices.count, by: 3) {
+            let a = Int(indices[face])
+            let b = Int(indices[face + 1])
+            let c = Int(indices[face + 2])
+            let edge1 = positions[b] - positions[a]
+            let edge2 = positions[c] - positions[a]
+            let step1 = uvs[b] - uvs[a]
+            let step2 = uvs[c] - uvs[a]
+            let det = step1.x * step2.y - step2.x * step1.y
+            guard abs(det) > 1e-12 else { continue }
+            let along: Vec3 = (edge1 * step2.y - edge2 * step1.y) / det
+            sums[a] += along
+            sums[b] += along
+            sums[c] += along
+        }
+        return zip(sums, normals).map { sum, normal in
+            let flat = sum - normal * normal.dotted(sum)
+            if flat.size > 1e-9 { return flat.unit }
+            // Вырожденное — любая перпендикулярная.
+            let helper = abs(normal.x) < 0.9 ? Pose.x : Pose.y
+            return normal.crossed(helper).unit
+        }
+    }
+
     /// С изнанкой: те же точки, нормали наружу с другой стороны и обратный
     /// обход. Лист видно с обеих сторон, а отсечение задних граней остаётся —
     /// с ним свет на изнанке честный.
@@ -101,6 +182,20 @@ struct Mesh3D: Equatable, Sendable {
         both.merge(back)
         return both
     }
+
+    /// Сетка из рядов по `columns` точек: соседние ряды — полосой
+    /// треугольников. Общая для всех форм с сеткой.
+    mutating func weave(rows: Int, columns: Int, flip: Bool = false) {
+        for row in 0 ..< rows - 1 {
+            for column in 0 ..< columns - 1 {
+                let a = UInt32(row * columns + column)
+                let b = a + 1
+                let c = UInt32((row + 1) * columns + column)
+                let d = c + 1
+                indices += flip ? [a, b, c, b, d, c] : [a, c, b, b, c, d]
+            }
+        }
+    }
 }
 
 /// Формы для объёмного сада. Здесь только арифметика, без RealityKit, —
@@ -109,135 +204,167 @@ enum Sculpt {
     /// Тело вращения: профиль — точки (радиус, высота) — обходит ось Y.
     /// Нормаль смотрит вправо от хода профиля: вверх по внешней стенке —
     /// наружу, вниз по внутренней — внутрь. Рёбра — как у кактуса: радиус
-    /// гуляет по кругу.
+    /// гуляет по кругу. Шов текстуры — лишний столбец, а нормали на шве
+    /// сведены: иначе по горшку шла бы складка.
     static func lathe(_ profile: [SIMD2<Float>], segments: Int,
                       ribs: Int = 0, ribDepth: Float = 0) -> Mesh3D {
         var mesh = Mesh3D()
-        for point in profile {
-            for step in 0 ..< segments {
+        var lengths: [Float] = [0]
+        for index in 1 ..< max(profile.count, 1) {
+            let step = profile[index] - profile[index - 1]
+            lengths.append(lengths[index - 1]
+                + (step * step).sum().squareRoot())
+        }
+        let total = max(lengths.last ?? 1, 1e-6)
+        let columns = segments + 1
+        for (ring, point) in profile.enumerated() {
+            for step in 0 ... segments {
                 let angle = 2 * Float.pi * Float(step) / Float(segments)
                 let rib = 1 + ribDepth * cos(Float(ribs) * angle)
                 let radius = point.x * rib
                 mesh.positions.append(Vec3(radius * cos(angle), point.y,
                                            radius * sin(angle)))
+                mesh.uvs.append(SIMD2(Float(step) / Float(segments),
+                                      lengths[ring] / total))
             }
         }
-        for ring in 0 ..< max(profile.count - 1, 0) {
-            for step in 0 ..< segments {
-                let a = UInt32(ring * segments + step)
-                let b = UInt32(ring * segments + (step + 1) % segments)
-                let c = UInt32((ring + 1) * segments + step)
-                let d = UInt32((ring + 1) * segments + (step + 1) % segments)
-                mesh.indices += [a, c, b, b, c, d]
-            }
+        mesh.weave(rows: profile.count, columns: columns)
+        // Нормали — по сетке, сваренной на шве: иначе лишний столбец не
+        // знал бы соседей с другой стороны, а центр донышка остался бы без
+        // граней вовсе.
+        var welded = mesh
+        welded.indices = mesh.indices.map {
+            Int($0) % columns == segments ? $0 - UInt32(segments) : $0
         }
-        mesh.smooth()
+        welded.smooth()
+        mesh.normals = welded.normals
+        for ring in 0 ..< profile.count {
+            mesh.normals[ring * columns + segments] = mesh.normals[ring * columns]
+        }
         return mesh
     }
 
-    /// Трубка вдоль пути: стебель, носик лейки, ручка. Кольца несёт
+    /// Трубка вдоль пути: стебель, черешок, ствол. Кольца несёт
     /// параллельный перенос — без него трубку перекручивало бы на изгибах.
-    static func tube(_ path: [Vec3], sides: Int,
+    /// Текстура вдоль идёт в метрах, поделённых на `repeat`: кора не
+    /// растягивается на длинном стволе.
+    static func tube(_ path: [Vec3], sides: Int, repeat span: Float = 0.1,
                      radius: (Float) -> Float) -> Mesh3D {
         guard path.count > 1 else { return Mesh3D() }
         var mesh = Mesh3D()
         let last = path.count - 1
-        var tangent = (path[1] - path[0]).unit
-        let helper = abs(tangent.y) < 0.9 ? Vec3(0, 1, 0) : Vec3(1, 0, 0)
-        var side = tangent.crossed(helper).unit
+        var side = (path[1] - path[0]).unit.crossed(
+            abs((path[1] - path[0]).unit.y) < 0.9 ? Pose.y : Pose.x).unit
+        var travelled: Float = 0
         for (index, point) in path.enumerated() {
             let ahead = path[min(index + 1, last)]
             let behind = path[max(index - 1, 0)]
-            let next = (ahead - behind).unit
+            let tangent = (ahead - behind).unit
             // Прежнюю боковую ось очищаем от нового хода — это и есть
             // параллельный перенос.
-            side = (side - next * side.dotted(next)).unit
-            tangent = next
+            side = (side - tangent * side.dotted(tangent)).unit
             let other = tangent.crossed(side)
+            if index > 0 { travelled += (point - path[index - 1]).size }
             let r = radius(Float(index) / Float(last))
-            for step in 0 ..< sides {
+            for step in 0 ... sides {
                 let angle = 2 * Float.pi * Float(step) / Float(sides)
                 let normal = side * cos(angle) + other * sin(angle)
                 mesh.positions.append(point + normal * r)
                 mesh.normals.append(normal)
+                mesh.uvs.append(SIMD2(Float(step) / Float(sides),
+                                      travelled / span))
             }
         }
-        for ring in 0 ..< last {
-            for step in 0 ..< sides {
-                let a = UInt32(ring * sides + step)
-                let b = UInt32(ring * sides + (step + 1) % sides)
-                let c = UInt32((ring + 1) * sides + step)
-                let d = UInt32((ring + 1) * sides + (step + 1) % sides)
-                mesh.indices += [a, b, c, b, d, c]
-            }
-        }
+        mesh.weave(rows: path.count, columns: sides + 1, flip: true)
         return mesh
     }
 
-    /// Очертание листа: ширина как доля от наибольшей по ходу от черешка
-    /// (0) к кончику (1).
-    enum Outline {
-        case oval, blade, heart, petal
-
-        func width(_ t: Float) -> Float {
-            let t = min(max(t, 0), 1)
-            switch self {
-            case .oval: return pow(sin(Float.pi * t), 0.75)
-            case .blade: return min(1, t * 7) * pow(1 - t, 0.55)
-            case .heart: return sin(Float.pi * pow(t, 0.7))
-            case .petal: return pow(sin(Float.pi * pow(t, 0.6)), 0.6)
-            }
-        }
+    /// Изгиб листовой пластины. Всё — в долях: изгиб опускает кончик на
+    /// долю длины, складка поднимает края к жилке, чаша — края вверх
+    /// дугой, волна — рябь по краю, закрутка — поворот к кончику.
+    struct Bend: Equatable, Sendable {
+        var arch: Float = 0.2
+        var fold: Float = 0.15
+        var cup: Float = 0
+        var wave: Float = 0
+        var waves: Float = 5
+        var twist: Float = 0
     }
 
-    /// Лист вдоль +X, черешок в начале координат, ширина — по Z. Изгиб
-    /// опускает кончик, складка приподнимает края к жилке.
-    static func leaf(length: Float, width: Float, arch: Float, fold: Float,
-                     outline: Outline, steps: Int = 12) -> Mesh3D {
-        let across: [Float] = [-1, -0.5, 0, 0.5, 1]
+    /// Лист-карточка вдоль +X, черешок в начале координат, ширина — по Z.
+    /// Очертание рисует прозрачность текстуры, а сетка лишь облегает его с
+    /// запасом: так край листа точный, а точек мало. `hug` — полуширина по
+    /// длине в долях; нулевая — прямоугольник.
+    static func card(length: Float, width: Float, bend: Bend,
+                     rows: Int = 20, columns: Int = 9,
+                     hug: ((Float) -> Float)? = nil) -> Mesh3D {
         var mesh = Mesh3D()
-        for row in 0 ... steps {
-            let t = Float(row) / Float(steps)
-            let half = width / 2 * outline.width(t)
-            for u in across {
-                let rise = -arch * length * t * t + fold * abs(u) * half
-                mesh.positions.append(Vec3(t * length, rise, u * half))
+        for row in 0 ..< rows {
+            let t = Float(row) / Float(rows - 1)
+            let reach = min(1, (hug?(t) ?? 1) * 1.12 + 0.04)
+            for column in 0 ..< columns {
+                let s = (Float(column) / Float(columns - 1)) * 2 - 1
+                let across = s * reach
+                let z = across * width / 2
+                let edge = abs(across)
+                let ripple = bend.wave * width
+                    * sin(t * bend.waves * 2 * .pi) * edge * edge
+                let y = -bend.arch * length * t * t
+                    + bend.fold * edge * width / 2
+                    + bend.cup * edge * edge * width / 2 + ripple
+                var point = Vec3(t * length, y, z)
+                if bend.twist != 0 {
+                    point = point.turned(around: Pose.x, by: bend.twist * t)
+                }
+                mesh.positions.append(point)
+                mesh.uvs.append(SIMD2(0.5 + across / 2, t))
             }
         }
-        let columns = across.count
-        for row in 0 ..< steps {
-            for column in 0 ..< columns - 1 {
-                let a = UInt32(row * columns + column)
-                let b = a + 1
-                let c = UInt32((row + 1) * columns + column)
-                let d = c + 1
-                mesh.indices += [a, b, c, b, d, c]
-            }
-        }
+        mesh.weave(rows: rows, columns: columns, flip: true)
         mesh.smooth()
         return mesh.twoSided()
     }
 
-    /// Цветок, раскрытый вдоль +X: лепестки кругом, чашечка — насколько они
-    /// сомкнуты (0 — плоский, к π/2 — бутон), и серединка.
-    static func blossom(petals: Int, size: Float, cup: Float,
-                        heart: Float) -> (petals: Mesh3D, heart: Mesh3D) {
-        var ring = Mesh3D()
-        let open = Float.pi / 2 - cup
-        for index in 0 ..< petals {
-            let petal = leaf(length: size, width: size * 0.62,
-                             arch: -0.12, fold: 0.18, outline: .petal,
-                             steps: 8)
-                // Из плоскости головки вверх, к её оси.
-                .turned(around: Vec3(0, 0, 1), by: open)
-                .turned(around: Vec3(1, 0, 0),
-                        by: 2 * Float.pi * Float(index) / Float(petals))
-            ring.merge(petal)
+    /// Мясистый лист: сечение — эллипс, от основания к острому кончику.
+    /// Алоэ, эхеверия, толстянка. `shape` — полуширина по длине.
+    static func fleshy(length: Float, width: Float, thickness: Float,
+                       arch: Float, rows: Int = 16, sides: Int = 14,
+                       shape: (Float) -> Float) -> Mesh3D {
+        var mesh = Mesh3D()
+        for row in 0 ..< rows {
+            let t = Float(row) / Float(rows - 1)
+            let half = width / 2 * shape(t)
+            let deep = thickness / 2 * pow(shape(t), 0.8)
+            let lift = -arch * length * t * t
+            for step in 0 ... sides {
+                let angle = 2 * Float.pi * Float(step) / Float(sides)
+                // Сверху площе: сечение как у настоящего листа алоэ.
+                let upper = sin(angle) > 0 ? 0.55 : 1
+                mesh.positions.append(Vec3(
+                    t * length, lift + sin(angle) * deep * Float(upper),
+                    cos(angle) * half))
+                mesh.uvs.append(SIMD2(Float(step) / Float(sides), t))
+            }
         }
-        let dome = lathe([SIMD2(heart, 0), SIMD2(heart * 0.8, heart * 0.5),
-                          SIMD2(0, heart * 0.75)], segments: 12)
-            .turned(around: Vec3(0, 0, 1), by: -Float.pi / 2)
-        return (ring, dome)
+        mesh.weave(rows: rows, columns: sides + 1)
+        mesh.smooth()
+        return mesh
+    }
+
+    /// Шар или эллипсоид — бутон, камешек, серединка.
+    static func ball(radius: Float, segments: Int = 12,
+                     rings: Int = 8) -> Mesh3D {
+        let profile = (0 ... rings).map { ring -> SIMD2<Float> in
+            let angle = Float.pi * (Float(ring) / Float(rings) - 0.5)
+            return SIMD2(radius * cos(angle), radius * sin(angle))
+        }
+        return lathe(profile, segments: segments)
+    }
+
+    /// Конус вдоль +Y — колючка, зубец, шип.
+    static func spike(radius: Float, height: Float, sides: Int = 5) -> Mesh3D {
+        lathe([SIMD2(0, 0), SIMD2(radius, 0), SIMD2(0, height)],
+              segments: sides)
     }
 
     /// Дуга кольца на полу, лицом вверх; `sweep` — доля круга от «двенадцати
@@ -251,10 +378,12 @@ enum Sculpt {
         for step in 0 ... steps {
             let angle = -Float.pi / 2
                 + 2 * Float.pi * share * Float(step) / Float(steps)
-            for radius in [inner, outer] {
+            for (index, radius) in [inner, outer].enumerated() {
                 mesh.positions.append(Vec3(radius * cos(angle), lift,
                                            radius * sin(angle)))
                 mesh.normals.append(Vec3(0, 1, 0))
+                mesh.uvs.append(SIMD2(Float(index),
+                                      Float(step) / Float(steps)))
             }
         }
         for step in 0 ..< steps {
@@ -265,5 +394,17 @@ enum Sculpt {
             mesh.indices += [a, c, b, b, c, d]
         }
         return mesh
+    }
+
+    /// Квадратичная кривая Безье — стебель или черешок с одним изгибом.
+    static func curve(_ a: Vec3, _ b: Vec3, _ c: Vec3,
+                      steps: Int = 10) -> [Vec3] {
+        (0 ... steps).map { step in
+            let t = Float(step) / Float(steps)
+            let first: Vec3 = a * ((1 - t) * (1 - t))
+            let middle: Vec3 = b * (2 * (1 - t) * t)
+            let last: Vec3 = c * (t * t)
+            return first + middle + last
+        }
     }
 }
