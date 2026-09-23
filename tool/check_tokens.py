@@ -51,6 +51,7 @@ BORN = re.compile(r"^(?:public\s+|private\s+|fileprivate\s+|internal\s+"
                   r"(?:enum|struct|class|actor|protocol)\s+"
                   r"([A-Z][A-Za-z0-9_]*)")
 USE = re.compile(r"\b([A-Z][A-Za-z0-9_]*)\.([a-zA-Z_][A-Za-z0-9_]*)")
+SELECTOR = re.compile(r"#selector\([^)]*\)")
 
 # Замыкания, объявленные у SwiftUI до содержимого. Вторым такое замыкание
 # записать нельзя — переставить их Swift не даст. Список короткий нарочно:
@@ -97,6 +98,9 @@ def main(root: str) -> int:
         for number, line in enumerate(path.read_text(encoding="utf-8")
                                       .splitlines(), 1):
             code = line.split("//")[0]
+            # `#selector(Tapper.fire)` ссылается на метод объекта для
+            # Objective-C, а не на статический член — сверять нечего.
+            code = SELECTOR.sub("", code)
             found = LATE.match(code)
             if found:
                 problems.append(

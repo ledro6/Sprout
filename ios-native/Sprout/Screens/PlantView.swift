@@ -17,6 +17,8 @@ struct PlantView: View {
 
     @State private var tuning = false
 
+    @State private var staging = false
+
     /// Заметка правится на месте и ложится в сад, когда поле отпускают.
     @State private var noteDraft = ""
     @FocusState private var writing: Bool
@@ -94,6 +96,9 @@ struct PlantView: View {
         }
         .sheet(isPresented: $tuning) {
             PlantSettingsView(plantID: plantID).environment(garden)
+        }
+        .fullScreenCover(isPresented: $staging) {
+            PlantAR(plantID: plantID).environment(garden)
         }
         // Растение удалили — экран закрывается сам; вернуть можно с плашки
         // внизу.
@@ -242,6 +247,16 @@ struct PlantView: View {
             .aspectRatio(336.0 / 347.0, contentMode: .fit)
             .sproutPlate(in: plate)
             .modifier(PlantGlow(plant: plant, shape: plate))
+            .overlay(alignment: .bottomTrailing) {
+                if PlantAR.available {
+                    Button { staging = true } label: {
+                        Label("Посмотреть в AR", systemImage: "arkit")
+                            .font(Typography.settingNote)
+                    }
+                    .buttonStyle(.glass)
+                    .padding(16)
+                }
+            }
             .onGeometryChange(for: CGRect.self) { $0.frame(in: .global) }
                 action: { spot.rect = $0 }
             // Отсюда волна трогается — эта плашка подпрыгивает первой.

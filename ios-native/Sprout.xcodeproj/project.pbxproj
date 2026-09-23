@@ -177,7 +177,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = Sprout;
 				INFOPLIST_KEY_NSFaceIDUsageDescription = "Чтобы открывать запертый сад по лицу.";
-				INFOPLIST_KEY_NSCameraUsageDescription = "Чтобы снять растение, которое вы добавляете в сад.";
+				INFOPLIST_KEY_NSCameraUsageDescription = "Чтобы снять растение для сада и поставить его в комнату в дополненной реальности.";
 				INFOPLIST_KEY_NSMotionUsageDescription = "Наклон телефона чуть двигает узор на фоне.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_BackgroundColor = Launch;
@@ -208,7 +208,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = Sprout;
 				INFOPLIST_KEY_NSFaceIDUsageDescription = "Чтобы открывать запертый сад по лицу.";
-				INFOPLIST_KEY_NSCameraUsageDescription = "Чтобы снять растение, которое вы добавляете в сад.";
+				INFOPLIST_KEY_NSCameraUsageDescription = "Чтобы снять растение для сада и поставить его в комнату в дополненной реальности.";
 				INFOPLIST_KEY_NSMotionUsageDescription = "Наклон телефона чуть двигает узор на фоне.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_BackgroundColor = Launch;

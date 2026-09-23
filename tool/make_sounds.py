@@ -162,6 +162,34 @@ def wrong():
                (0.12, 0.85 * bounce(330, 0.25, 0.07)))
 
 
+def stream(rng):
+    """Струя из лейки: журчание — полоса шума, которая дрожит, — и капли,
+    бьющие по земле. Длится столько же, сколько льёт лейка в сцене."""
+    seconds = 2.2
+    n = int(seconds * RATE)
+    noise = rng.uniform(-1, 1, n)
+    high = 1 - np.exp(-2 * np.pi * 2600 / RATE)
+    low = 1 - np.exp(-2 * np.pi * 420 / RATE)
+    band = np.zeros(n)
+    a = b = 0.0
+    for i in range(n):
+        a += high * (noise[i] - a)
+        b += low * (noise[i] - b)
+        band[i] = a - b
+    t = clock(seconds)
+    # Журчание не ровное: громкость дрожит с частотой в несколько герц.
+    wobble = 0.7 + 0.3 * np.sin(2 * np.pi * 9 * t) * np.sin(2 * np.pi * 2.3 * t)
+    shape = np.minimum(t / 0.15, 1) * np.minimum((seconds - t) / 0.45, 1)
+    water = band * wobble * np.clip(shape, 0, 1)
+    parts = [(0.0, water)]
+    for _ in range(26):
+        start = rng.uniform(0.12, seconds - 0.3)
+        low_note = rng.uniform(700, 1100)
+        parts.append((start, rng.uniform(0.08, 0.2)
+                      * drop(low_note, low_note * 2.1, 0.03, 0.12, 0.025)))
+    return mix(seconds, *parts)
+
+
 def frolic(rng):
     """Кутерьма от тряски: по такту узора — прыгающие ноты, в последнем
     такте — аккорд, которым узор садится на место. Такт тот же, что у
@@ -184,7 +212,7 @@ def frolic(rng):
 
 LOUDNESS = {
     'pour': 0.55, 'plant': 0.45, 'toss': 0.40, 'undo': 0.42,
-    'save': 0.38, 'wrong': 0.36, 'frolic': 0.38,
+    'save': 0.38, 'wrong': 0.36, 'frolic': 0.38, 'stream': 0.3,
 }
 
 
@@ -234,7 +262,7 @@ def main():
     sounds = {
         'pour': pour(), 'plant': plant(), 'toss': toss(rng),
         'undo': undo(), 'save': save(), 'wrong': wrong(),
-        'frolic': frolic(rng),
+        'frolic': frolic(rng), 'stream': stream(rng),
     }
 
     os.makedirs(ROOT, exist_ok=True)

@@ -173,6 +173,9 @@ struct PlantMenu: ViewModifier {
     /// Чьи настройки открыты — номер берётся у жильца в миг нажатия.
     @State private var tuning: Plant.ID?
 
+    /// Кого смотрят в дополненной реальности — так же, у жильца.
+    @State private var staging: Plant.ID?
+
     /// Открыто ли меню — по предпросмотру: другого признака у контекстного
     /// меню нет.
     @State private var previewing = false
@@ -212,6 +215,13 @@ struct PlantMenu: ViewModifier {
                     PlantSettingsView(plantID: tuning).environment(garden)
                 }
             }
+            .fullScreenCover(isPresented: Binding(
+                get: { staging != nil },
+                set: { if !$0 { staging = nil } })) {
+                if let staging {
+                    PlantAR(plantID: staging).environment(garden)
+                }
+            }
     }
 
     /// Ветвлением, а не пустым списком: пустое меню всё равно может подняться
@@ -231,6 +241,11 @@ struct PlantMenu: ViewModifier {
                 }
                 Button { tuning = tenant.id } label: {
                     Label("Настройки", systemImage: "slider.horizontal.3")
+                }
+                if PlantAR.available {
+                    Button { staging = tenant.id } label: {
+                        Label("Посмотреть в AR", systemImage: "arkit")
+                    }
                 }
                 // Комнаты — по номеру узла: пункты строятся при каждой сборке
                 // тела. Запечатываются только нажатия, и они идут через

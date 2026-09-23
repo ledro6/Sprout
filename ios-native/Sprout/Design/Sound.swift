@@ -5,7 +5,7 @@ import UIKit
 /// ресурсов наборами данных. Играют через `Feel` — вместе с откликом в руке,
 /// но со своей настройкой.
 enum Chime: String, CaseIterable {
-    case pour, plant, toss, undo, save, wrong, frolic
+    case pour, plant, toss, undo, save, wrong, frolic, stream
 
     @MainActor
     func play() { Speaker.shared.play(self) }

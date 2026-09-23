@@ -1265,6 +1265,176 @@ do {
           "а влажность не тронута")
 }
 
+print("объёмные формы: сетки целы и смотрят наружу:")
+do {
+    /// Доля граней, чей обход согласен с нормалями вершин, и всё ли в
+    /// сетке конечно, единично и в своих границах.
+    func sound(_ mesh: Mesh3D) -> (agree: Double, intact: Bool) {
+        var agree = 0
+        var faces = 0
+        for face in stride(from: 0, to: mesh.indices.count, by: 3) {
+            let a = Int(mesh.indices[face])
+            let b = Int(mesh.indices[face + 1])
+            let c = Int(mesh.indices[face + 2])
+            let normal = (mesh.positions[b] - mesh.positions[a])
+                .crossed(mesh.positions[c] - mesh.positions[a])
+            guard normal.size > 1e-12 else { continue }
+            faces += 1
+            let average = mesh.normals[a] + mesh.normals[b] + mesh.normals[c]
+            if normal.dotted(average) > 0 { agree += 1 }
+        }
+        let intact = mesh.indices.count % 3 == 0
+            && mesh.normals.count == mesh.positions.count
+            && mesh.indices.allSatisfy { Int($0) < mesh.positions.count }
+            && mesh.positions.allSatisfy { $0.x.isFinite && $0.y.isFinite
+                && $0.z.isFinite }
+            && mesh.normals.allSatisfy { abs($0.size - 1) < 1e-3 }
+        return (faces == 0 ? 0 : Double(agree) / Double(faces), intact)
+    }
+    let shapes: [(String, Mesh3D)] = [
+        ("горшок", Greenhouse.potMesh), ("земля", Greenhouse.soilMesh),
+        ("лист", Sculpt.leaf(length: 0.1, width: 0.07, arch: 0.2, fold: 0.2,
+                             outline: .heart)),
+        ("стебель", Sculpt.tube([Vec3(0, 0, 0), Vec3(0.02, 0.05, 0),
+                                 Vec3(0.03, 0.1, 0.01)], sides: 6) { _ in 0.004 }),
+        ("кольцо", Sculpt.arc(inner: 0.1, outer: 0.11, sweep: 0.6)),
+        ("цветок", Sculpt.blossom(petals: 6, size: 0.04, cup: 0.8,
+                                  heart: 0.008).petals),
+        ("лейка", WateringCan.mesh),
+    ]
+    for (name, mesh) in shapes {
+        let (agree, intact) = sound(mesh)
+        check(intact && agree > 0.97, "\(name): сетка цела, грани наружу")
+    }
+    let wall = Greenhouse.potMesh.positions.indices.first {
+        let p = Greenhouse.potMesh.positions[$0]
+        return abs(p.y - 0.06) < 0.02 && (p.x * p.x + p.z * p.z) > 0.004
+    }!
+    let wallPoint = Greenhouse.potMesh.positions[wall]
+    let wallNormal = Greenhouse.potMesh.normals[wall]
+    check(wallNormal.x * wallPoint.x + wallNormal.z * wallPoint.z > 0,
+          "стенка горшка светится снаружи")
+    check(Sculpt.arc(inner: 0.1, outer: 0.11, sweep: 0).isEmpty,
+          "пустое кольцо — пустая сетка")
+    let spun = Vec3(1, 0, 0).turned(around: Vec3(0, 1, 0), by: Float.pi / 2)
+    check(round2(Double(spun.z)), "-1.00",
+          "поворот по правой руке, как у simd_quatf")
+}
+
+print("объёмные растения по видам:")
+do {
+    check(Greenhouse.habit(of: "Монстера") == .broad, "монстера — крупные листья")
+    check(Greenhouse.habit(of: "Кактус") == .cactus, "кактус")
+    check(Greenhouse.habit(of: "Папоротник") == .fern, "папоротник — вайи")
+    check(Greenhouse.habit(of: "Драцена") == .blades, "драцена — длинные листья")
+    check(Greenhouse.habit(of: "Алоэ") == .rosette, "алоэ — розетка")
+    check(Greenhouse.habit(of: "Базилик") == .bush, "базилик — кустик")
+    check(Greenhouse.habit(of: "Баобаб") == .broad, "незнакомый — крупные листья")
+    check(Greenhouse.bloom(of: "Розмарин") == nil, "розмарин не цветёт розой")
+    check(Greenhouse.bloom(of: "Тюльпан") != nil, "тюльпан цветёт")
+
+    let species = Set(Seed.rooms.flatMap(\.plants).map(\.species)
+                      + Species.table.map(\.species))
+    var odd: [String] = []
+    for name in species.sorted() {
+        let plant = Plant.new(name: "x", species: name, dryingDays: 7)
+        let grown = Greenhouse.grow(plant)
+        let points = grown.sprigs.flatMap { sprig in
+            sprig.parts.flatMap { $0.mesh.positions.map { sprig.place($0) } }
+        }
+        let finite = points.allSatisfy { $0.x.isFinite && $0.y.isFinite }
+        let leafy = !grown.sprigs.isEmpty || !grown.body.isEmpty
+        if !(finite && leafy && grown.height > 0.16 && grown.height < 0.6
+             && grown.spread < 0.36) {
+            odd.append("\(name) \(grown.height) \(grown.spread)")
+        }
+    }
+    check(odd.isEmpty, "каждый вид вырастает в разумный куст: \(odd)")
+
+    let one = Greenhouse.grow(Seed.rooms[0].plants[0])
+    let again = Greenhouse.grow(Seed.rooms[0].plants[0])
+    let twin = Greenhouse.grow(Seed.rooms[2].plants[4])
+    check(one.sprigs.map(\.yaw) == again.sprigs.map(\.yaw)
+          && one.height == again.height, "одно растение — всегда один облик")
+    check(one.sprigs.map(\.yaw) != twin.sprigs.map(\.yaw),
+          "у двух Баксиков облик разный")
+}
+
+print("объёмное растение живёт влажностью:")
+do {
+    check(Greenhouse.sag(1) == 0 && Greenhouse.sag(0.5) == 0,
+          "политое не никнет")
+    check(Greenhouse.sag(0) == 1, "сухое никнет до конца")
+    var steady = true
+    var last: Float = -1
+    for step in 0 ... 20 {
+        let now = Greenhouse.sag(1 - Double(step) / 20)
+        if now < last { steady = false }
+        last = now
+    }
+    check(steady, "и никнет всё сильнее, без скачков назад")
+    check(Greenhouse.wilt(0.5) == 0 && round2(Greenhouse.wilt(0)) == "0.70",
+          "желтеет с порога тревоги и не до конца")
+    check(Greenhouse.soilColor(1) == Greenhouse.wetSoil, "политая земля тёмная")
+    check(Greenhouse.ringColor(0.8) == Greenhouse.calmRing, "кольцо голубое")
+    check(Greenhouse.ringColor(0.05).red > 250, "у сухого — красное")
+    check(Greenhouse.unfurl(0) == 0 && Greenhouse.unfurl(1) == 1,
+          "появление от нуля до единицы")
+    let peak = (0 ... 100).map { Greenhouse.unfurl(Double($0) / 100) }.max()!
+    check(peak > 1.05 && peak < 1.15, "с перелётом, но небольшим")
+}
+
+print("полив лейкой:")
+do {
+    check(Pouring.pose(at: 0).size == 0, "лейка появляется из ничего")
+    let middle = Pouring.pose(at: Pouring.arrive + Pouring.tiltIn + 1)
+    check(middle.emit && middle.tilt == Pouring.angle, "в середине льёт")
+    check(Pouring.pose(at: Pouring.total).size == 0, "и улетает")
+    var jumps = 0
+    var previous = Pouring.pose(at: 0)
+    for step in 1 ... 1_000 {
+        let now = Pouring.pose(at: Pouring.total * Double(step) / 1_000)
+        if abs(now.tilt - previous.tilt) > 0.1
+            || abs(now.travel - previous.travel) > 0.1 { jumps += 1 }
+        previous = now
+    }
+    check(jumps == 0, "без рывков")
+
+    var generator = Seeded("полив")
+    for (scale, clearance) in [(Float(0.35), Pouring.lowest),
+                               (1, Pouring.lowest), (2.5, Pouring.lowest),
+                               (1, Pouring.clearance(over: 0.45))] {
+        let origin = Pouring.origin(scale: scale, clearance: clearance)
+        let tip = Pouring.spout(from: origin, tilt: Pouring.angle,
+                                scale: scale)
+        let want = Pouring.tip(scale: scale, clearance: clearance)
+        check(abs(tip.x - want.x) < 1e-5 && abs(tip.y - want.y) < 1e-5,
+              "кончик носика там, где задумано (размер \(scale))")
+        var inside = 0
+        let floor = Greenhouse.soil * scale
+        for _ in 0 ..< 300 {
+            let launch = Pouring.launch(scale: scale)
+                * Float.random(in: 0.94 ... 1.06, using: &generator)
+            let side = Float.random(in: -0.03 ... 0.03, using: &generator)
+                * Pouring.speed * scale.squareRoot()
+            var drop = Droplet(
+                position: Vec3(tip.x, tip.y,
+                               Float.random(in: -0.004 ... 0.004,
+                                            using: &generator) * scale),
+                velocity: Vec3(launch.x, launch.y, side))
+            while drop.position.y > floor && drop.age < 3 { drop.fall(1 / 240) }
+            let reach = (drop.position.x * drop.position.x
+                + drop.position.z * drop.position.z).squareRoot()
+            if reach < Greenhouse.potInner * scale * 0.85 { inside += 1 }
+        }
+        check(inside >= 294,
+              "струя попадает в горшок: \(inside) из 300 (размер \(scale))")
+    }
+    let origin = Pouring.origin(scale: 1, clearance: Pouring.clearance(over: 0.4))
+    check(origin.y - 0.06 > 0.4 - Greenhouse.soil,
+          "над высоким растением лейка висит выше листвы")
+}
+
 if failed > 0 {
     print("\nне сошлось: \(failed)")
     exit(1)
