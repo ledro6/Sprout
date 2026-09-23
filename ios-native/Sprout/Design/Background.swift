@@ -286,6 +286,10 @@ private struct SproutPattern: View {
     /// Номер захода: от него зависит, какой фигурке достанется какой слой.
     var era = 0
 
+    /// Тлеет ли узор красным, пока удаление можно отменить, и как далеко
+    /// зашло. Пусто — не тлеет. См. `Ember`.
+    var ember: Smoulder?
+
     @Environment(\.colorScheme) private var scheme
 
     /// Шаг сетки из макета: ячейки через 89.4 pt, ряды через 46.7 pt.
@@ -330,26 +334,38 @@ private struct SproutPattern: View {
     /// пять, ступеней шесть, и свободный номер как раз один.
     private static let plain = Tint.allCases.count
 
+    /// На сколько ступеней разбито тление — от своего цвета до
+    /// ярко-красного.
+    ///
+    /// Той же ступенью, что синева и перелив, и по той же причине: цвет у
+    /// каждой фигурки свой, а холст заливает контур одной командой на
+    /// цвет. Ступени — третий множитель слоя, и заводится он только пока
+    /// узор тлеет: в покое слоёв столько же, сколько было.
+    private static let embers = 6
+
     var body: some View {
         Canvas { context, size in
             let layers = pattern(covering: size)
             // Свечение — те же синие фигурки, размытые, под ними самими.
             // Отдельным слоем, потому что размытие в холсте берёт всё, что
-            // в слой попало, а зелёному узору размываться незачем.
+            // в слой попало, а зелёному узору размываться незачем. Тлеющие
+            // светятся тоже — красным.
             context.drawLayer { halo in
                 halo.addFilter(.blur(radius: Metrics.splashGlow))
                 for (slot, layer) in layers.enumerated() where !layer.isEmpty {
-                    let step = slot / Self.repaints
-                    guard step > 0 else { continue }
+                    let (step, tone, burn) = split(slot)
+                    guard step > 0 || burn > 0 else { continue }
                     halo.fill(layer, with: .color(Palette.glow(
-                        paint(slot % Self.repaints).wave, level: level(step))))
+                        paint(tone).wave, level: level(step),
+                        ember: heat(burn))))
                 }
             }
             for (slot, layer) in layers.enumerated() where !layer.isEmpty {
-                let colours = paint(slot % Self.repaints)
+                let (step, tone, burn) = split(slot)
+                let colours = paint(tone)
                 context.fill(layer, with: .color(Palette.pattern(
                     colours.base, wave: colours.wave,
-                    splash: level(slot / Self.repaints))))
+                    splash: level(step), ember: heat(burn))))
             }
         }
         .id(scheme)
@@ -358,6 +374,21 @@ private struct SproutPattern: View {
     /// Насколько посинела фигурка на этой ступени, 0…1.
     private func level(_ step: Int) -> Double {
         Double(step) / Double(Self.tints - 1)
+    }
+
+    /// Сколько ступеней тления сейчас в ходу: одна, пока узор не тлеет.
+    private var embers: Int { ember == nil ? 1 : Self.embers }
+
+    /// Номер слоя по частям: ступень синевы, ступень перелива, ступень
+    /// тления.
+    private func split(_ slot: Int) -> (step: Int, tone: Int, burn: Int) {
+        let rest = slot / embers
+        return (rest / Self.repaints, rest % Self.repaints, slot % embers)
+    }
+
+    /// Насколько фигурка тлеет на этой ступени, 0…1.
+    private func heat(_ burn: Int) -> Double {
+        embers > 1 ? Double(burn) / Double(embers - 1) : 0
     }
 
     /// Цвета фигурки на этой ступени перелива.
@@ -410,7 +441,7 @@ private struct SproutPattern: View {
     /// контур, и заливка всё та же одна.
     private func pattern(covering size: CGSize) -> [Path] {
         var layers = [Path](repeating: Path(),
-                            count: Self.tints * Self.repaints)
+                            count: Self.tints * Self.repaints * embers)
         // Настройке не доверяем на слово: узор рисуется каждый кадр
         // волны, и промах по границам обошёлся бы падением, а не кривым
         // рисунком. Пустой набор тоже отводим — рисовать нечем, а фон
@@ -465,8 +496,9 @@ private struct SproutPattern: View {
                     let piece = wild ?? here[mesh.index(column: column,
                                                         slot: slot, row: row,
                                                         of: here.count)]
-                    let layer = tint(of: grow) * Self.repaints
-                        + (hue ?? repainted(at: middle, over: size))
+                    let layer = (tint(of: grow) * Self.repaints
+                        + (hue ?? repainted(at: middle, over: size)))
+                        * embers + burned(at: middle, over: size)
                     // Место в сетке остаётся местом в сетке: по нему
                     // считаются и черёд волны, и всходы, и перекраска —
                     // переходы должны идти по ровной сетке, а не по
@@ -580,6 +612,35 @@ private struct SproutPattern: View {
         }
         let x = (step - 0.5) * 2
         return (CGFloat(1 - pow(1 - x, 3)), false)
+    }
+
+    /// На какой ступени тления сейчас фигурка.
+    ///
+    /// Разгорается узор от места убранной карточки наружу — той же
+    /// волной, что и полив, только вдвое шире (`Metrics.emberSpan`) и
+    /// растянутой на весь отсчёт: к его концу красным залит весь экран, и
+    /// то, сколько осталось, видно и без цифры.
+    ///
+    /// Гаснет обратной волной, сбегаясь туда, откуда разгорелось: вернули
+    /// растение — красное стекает обратно в его карточку; отсчёт кончился —
+    /// стекает в место, где она стояла, и исчезает вместе с ней.
+    private func burned(at middle: CGPoint, over size: CGSize) -> Int {
+        guard let ember else { return 0 }
+        let from = local(ember.origin)
+        let span = Metrics.emberSpan
+        let out = Front.point(from).turn(at: middle, over: size)
+        var lit = eased((ember.rise - out * (1 - span)) / span)
+        if ember.fall > 0 {
+            let back = Front.collapse(from).turn(at: middle, over: size)
+            lit *= 1 - eased((ember.fall - back * (1 - span)) / span)
+        }
+        return Int((lit * Double(Self.embers - 1)).rounded())
+    }
+
+    /// Плавный вход и плавный выход — та же кривая, что у перелива цвета.
+    private func eased(_ value: Double) -> Double {
+        let part = min(max(value, 0), 1)
+        return part * part * (3 - 2 * part)
     }
 
     /// Насколько фигурка посинела — ступенью от нуля до последней.
@@ -771,6 +832,93 @@ final class Cheer {
         let step = moment.timeIntervalSince(start) / Motion.cheerSeconds
         return step < 1 ? step : nil
     }
+}
+
+/// Узор тлеет красным, пока удаление можно отменить.
+///
+/// Убрали растение — и от места, где стояла его карточка, по узору
+/// медленно разливается ярко-красный. Разливается весь отсчёт, пять
+/// секунд, и к концу заливает экран целиком: сколько времени осталось,
+/// видно краем глаза, не глядя на цифру. Кончился отсчёт или растение
+/// вернули — узор гаснет обратно, к своему цвету.
+///
+/// Один на приложение, как и `Cheer`: фон рисуется в двух местах — экраном
+/// и подложкой под вырезом, — и тлеть они должны одинаково, без шва.
+/// Держит начало и конец, а не «насколько сейчас»: долю на каждый кадр
+/// спрашивает сам экран, см. `smoulder(at:)`.
+@Observable
+final class Ember {
+    static let shared = Ember()
+
+    /// Когда загорелось. Пусто — не тлеет.
+    private(set) var start: Date?
+
+    /// Откуда разгорается — середина убранной карточки, в координатах
+    /// окна.
+    private(set) var origin: CGPoint = .zero
+
+    /// Когда стало гаснуть. Пусто — ещё разгорается.
+    ///
+    /// Не наблюдаемое: экран спрашивает долю каждый кадр, пока узор
+    /// тлеет, а чтобы расписание кадров не встало, хватает `start`.
+    @ObservationIgnored private var fade: Date?
+
+    /// Докуда успело разгореться к тому мигу, как стало гаснуть: гаснет
+    /// оттуда, а не с полного красного.
+    @ObservationIgnored private var reached = 0.0
+
+    /// Чем погасание кончится. Новое удаление должно его отменять.
+    @ObservationIgnored private var run: Task<Void, Never>?
+
+    private init() {}
+
+    /// Загореться от этой карточки. Плашка — в координатах окна.
+    ///
+    /// Если узор ещё догорал от прошлого удаления, начинает заново: новое
+    /// удаление — новый отсчёт, и красное должно идти от новой карточки.
+    @MainActor
+    func light(from plate: CGRect) {
+        run?.cancel()
+        origin = CGPoint(x: plate.midX, y: plate.midY)
+        fade = nil
+        reached = 0
+        start = Date()
+    }
+
+    /// Погаснуть — отсчёт кончился или растение вернули.
+    @MainActor
+    func douse() {
+        guard let start, fade == nil else { return }
+        reached = min(Date().timeIntervalSince(start) / Motion.undoSeconds, 1)
+        fade = Date()
+        run = Task { @MainActor in
+            try? await Task.sleep(for: .seconds(Motion.emberOutSeconds))
+            guard !Task.isCancelled else { return }
+            self.start = nil
+            self.fade = nil
+        }
+    }
+
+    /// Где тление на этот момент. Пусто — не тлеет или уже погасло.
+    func smoulder(at moment: Date) -> Smoulder? {
+        guard let start else { return nil }
+        guard let fade else {
+            let rise = moment.timeIntervalSince(start) / Motion.undoSeconds
+            return Smoulder(origin: origin, rise: min(max(rise, 0), 1),
+                            fall: 0)
+        }
+        let fall = moment.timeIntervalSince(fade) / Motion.emberOutSeconds
+        guard fall < 1 else { return nil }
+        return Smoulder(origin: origin, rise: reached, fall: max(fall, 0))
+    }
+}
+
+/// Тление в один момент: откуда, насколько разгорелось, насколько
+/// погасло. Обе доли — 0…1.
+struct Smoulder {
+    var origin: CGPoint
+    var rise: Double
+    var fall: Double
 }
 
 /// Глубина выреза. Ставит корень приложения, читают экраны.
@@ -1141,7 +1289,11 @@ final class Launch {
 }
 
 /// Ступень входа: пока её черёд не настал, элемента нет; настал — он
-/// поднимается на место.
+/// поднимается на место и собирается из размытия.
+///
+/// Размытие — то же, что у всего текста приложения: заголовок и строка
+/// комнаты не проявляются, а наводятся на резкость, как цифры в системном
+/// переходе. При «Уменьшении движения» только проявляются.
 ///
 /// Начальное значение берётся из счётчика, а не «нет». Сетка ленивая, и
 /// созданная позже карточка иначе всплывала бы заново — та же история,
@@ -1154,6 +1306,8 @@ struct Enter: ViewModifier {
 
     @State private var shown: Bool
 
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
     init(step: Int, rise: CGFloat = Motion.enterRise) {
         self.step = step
         self.rise = rise
@@ -1163,6 +1317,7 @@ struct Enter: ViewModifier {
     func body(content: Content) -> some View {
         content
             .opacity(shown ? 1 : 0)
+            .blur(radius: shown || reduceMotion ? 0 : Metrics.textBlur)
             .offset(y: shown ? 0 : rise)
             .onChange(of: Launch.shared.step >= step) { _, open in
                 withAnimation(Motion.enter) { shown = open }
@@ -1243,6 +1398,7 @@ private struct SproutField: View {
                         paused: Cheer.shared.start == nil
                             && Launch.shared.bloomStart == nil
                             && Launch.shared.swapStart == nil
+                            && Ember.shared.start == nil
                             && !repainting && !frenzied)) { frame in
                         SproutPattern(wave: Cheer.shared.wave(at: frame.date),
                                       origin: Cheer.shared.origin,
@@ -1260,7 +1416,9 @@ private struct SproutField: View {
                                       waveShade: Shade(waveTint),
                                       lag: Settings.shared.sway
                                           ? Tilt.shared.lag : [],
-                                      era: Tilt.shared.era)
+                                      era: Tilt.shared.era,
+                                      ember: Ember.shared
+                                          .smoulder(at: frame.date))
                     }
                     .padding(-Metrics.parallax)
                     .offset(x: Tilt.shared.shift.width,

@@ -30,6 +30,7 @@ trap 'rm -rf "$OUT"' EXIT
   ios-native/Sprout/Model/Crop.swift \
   ios-native/Sprout/Model/Recents.swift \
   ios-native/Sprout/Model/Score.swift \
+  ios-native/Sprout/Model/Diary.swift \
   ios-native/Sprout/Model/Reminders.swift \
   ios-native/Sprout/Model/Rival.swift \
   ios-native/Sprout/Model/Species.swift \

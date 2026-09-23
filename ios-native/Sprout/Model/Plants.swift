@@ -145,6 +145,18 @@ struct Room: Identifiable, Hashable, Codable {
     var plants: [Plant]
 }
 
+/// Что убрали из сада и откуда — чтобы вернуть ровно туда же.
+///
+/// Место запоминается дважды: номером в комнате и номером самой комнаты.
+/// Второй нужен на случай, если за время отсчёта комнаты не стало, — см.
+/// `Garden.putBack`.
+struct Removal: Equatable {
+    var plant: Plant
+    var room: String
+    var roomIndex: Int
+    var index: Int
+}
+
 /// Всё, что сад помнит между запусками.
 ///
 /// Отдельный тип, а не сам сад: сад — наблюдаемый класс, живущий в
@@ -308,6 +320,83 @@ enum Seed {
                   addedOn: DateComponents(year: 2024, month: 10, day: 5)),
         ]),
     ]
+
+    /// Кому пора полить сегодня — от самого сухого.
+    ///
+    /// «Сегодня» — тем же счётом, что и подпись на карточке: у кого там
+    /// написано «Следующий полив: сегодня», тот здесь и есть. Двух разных
+    /// «сегодня» у приложения быть не должно.
+    static func due(in rooms: [Room]) -> [Plant] {
+        rooms.flatMap(\.plants)
+            .filter { $0.daysUntilWatering == 0 }
+            .sorted { $0.moisture < $1.moisture }
+    }
+
+    /// Ответ на «кого полить?» — одной фразой, чтобы её можно было
+    /// прочесть вслух.
+    ///
+    /// Больше пяти имён подряд на слух не держатся: четыре самых сухих
+    /// называются, остальные — числом.
+    static func dueLine(_ plants: [Plant]) -> String {
+        let names = plants.map(\.name)
+        switch names.count {
+        case 0:
+            return "Сегодня поливать никого не нужно."
+        case 1:
+            return "Сегодня ждёт воды \(names[0])."
+        case 2 ... 5:
+            return "Сегодня ждут воды "
+                + names.dropLast().joined(separator: ", ")
+                + " и \(names[names.count - 1])."
+        default:
+            let rest = names.count - 4
+            return "Сегодня ждут воды "
+                + names.prefix(4).joined(separator: ", ")
+                + " и ещё \(rest) "
+                + Plant.plural(rest, "растение", "растения", "растений") + "."
+        }
+    }
+
+    /// Растения по сказанному вслух.
+    ///
+    /// Голосом кличку говорят не так, как пишут: «Полей Баксика»,
+    /// «Полей Василису». Точное совпадение здесь не нашло бы никого,
+    /// поэтому кличка сравнивается по основе: без последней гласной и с
+    /// запасом в пару букв на окончание. «Соня» узнаётся в «Соню»,
+    /// «Баксик» — в «Баксика», а «Пр» так и остаётся «Пр».
+    ///
+    /// Кличка из нескольких слов находится, когда нашлось каждое её
+    /// слово. Двух одинаковых кличек в саду бывает сколько угодно — тогда
+    /// находятся все, и выбирать между ними спросит сама Siri.
+    static func spoken(_ phrase: String, in rooms: [Room]) -> [Plant] {
+        let said = words(phrase)
+        guard !said.isEmpty else { return [] }
+        return rooms.flatMap(\.plants).filter { plant in
+            let name = words(plant.name)
+            return !name.isEmpty && name.allSatisfy { part in
+                said.contains { heard(part, in: $0) }
+            }
+        }
+    }
+
+    /// Слова строки — строчными и с «е» вместо «ё»: голос их не различает,
+    /// а пишут по-разному.
+    private static func words(_ text: String) -> [String] {
+        text.lowercased()
+            .replacingOccurrences(of: "ё", with: "е")
+            .split { !$0.isLetter && !$0.isNumber }
+            .map(String.init)
+    }
+
+    /// Узнаётся ли слово клички в сказанном слове.
+    private static func heard(_ part: String, in word: String) -> Bool {
+        if word == part { return true }
+        var stem = part
+        if stem.count > 3, let last = stem.last, "аяоеиыуюйь".contains(last) {
+            stem.removeLast()
+        }
+        return word.hasPrefix(stem) && abs(word.count - part.count) <= 2
+    }
 
     /// Поиск по всей квартире: искать растение по имени логично не только
     /// в открытой комнате.

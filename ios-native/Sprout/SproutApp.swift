@@ -1,3 +1,4 @@
+import AppIntents
 import SwiftUI
 import UIKit
 
@@ -23,8 +24,9 @@ struct SproutApp: App {
 /// сначала доигрывала системную анимацию, а поверх шла моя. Раз штатная
 /// одинакова для всех вкладок, ничего для этого делать и не нужно.
 struct RootView: View {
-    /// Сад живёт здесь и виден всем вкладкам.
-    @State private var garden = Garden()
+    /// Сад виден всем вкладкам. Сам он общий — см. `Garden.shared`: с ним
+    /// говорит и Siri, и говорить они должны с одним и тем же садом.
+    @State private var garden = Garden.shared
 
     /// Глубина выреза: сколько система отводит сверху под строку
     /// состояния. Ровно на столько нужна подложка.
@@ -42,20 +44,21 @@ struct RootView: View {
 
     var body: some View {
         TabView {
+            // Плашка отмены — на каждой вкладке: см. `sproutUndo`.
             Tab("Главная", systemImage: "house.fill") {
-                HomeView()
+                HomeView().sproutUndo()
             }
             Tab("Статистика", systemImage: "chart.bar.fill") {
-                StatsView()
+                StatsView().sproutUndo()
             }
             Tab("Добавить", systemImage: "plus.circle.fill") {
-                AddView()
+                AddView().sproutUndo()
             }
             Tab("Профиль", systemImage: "person.fill") {
-                ProfileView()
+                ProfileView().sproutUndo()
             }
             Tab(role: .search) {
-                SearchView()
+                SearchView().sproutUndo()
             }
         }
         // Панель уезжает вниз при прокрутке — штатное поведение iOS 26.
@@ -67,6 +70,11 @@ struct RootView: View {
         .environment(\.notch, notch)
         .task { await runClock() }
         .task { await Launch.shared.run() }
+        // Siri знает растения по кличкам — и узнаёт о новых, когда состав
+        // сада меняется: посадили, переименовали, удалили, вернули.
+        .onChange(of: garden.roster, initial: true) { _, _ in
+            SproutShortcuts.updateAppShortcutParameters()
+        }
         // Тема. Пусто — идём за системой: обе половины палитры живут в
         // `Palette`, и до этой настройки приложение всегда шло за
         // телефоном. Здесь, в корне, а не на экране: настройка должна
@@ -99,6 +107,10 @@ struct RootView: View {
                 // могут в любой момент и разрешения не спросят.
                 garden.save()
             }
+            // Ушли в фон — удалённое уходит насовсем. Не на «неактивно»:
+            // туда попадают и шторка, и «Пункт управления», и спросить
+            // Face ID, а отсчёт ради них обрывать незачем.
+            if now == .background { Bin.shared.commit() }
             remind(active: now == .active)
         }
     }
@@ -240,7 +252,10 @@ struct SearchView: View {
         query.trimmingCharacters(in: .whitespacesAndNewlines)
     }
 
-    private var results: [Plant] { garden.search(query) }
+    /// Находки — в том же порядке, что выбран на главной.
+    private var results: [Plant] {
+        Settings.shared.order.arrange(garden.search(query))
+    }
 
     var body: some View {
         NavigationStack(path: $path) {
@@ -310,6 +325,9 @@ struct SearchView: View {
                                        icon: "clock.arrow.circlepath")
                         }
                         .buttonStyle(.plain)
+                        // Забытая строка уходит системным размытием, как и
+                        // весь текст приложения, а не просто гаснет.
+                        .transition(.blurReplace)
                         // Забыть одну строку — долгим нажатием на неё, как
                         // и всё остальное, что убирают в этом приложении.
                         .contextMenu {

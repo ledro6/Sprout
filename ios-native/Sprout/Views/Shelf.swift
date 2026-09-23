@@ -61,13 +61,17 @@ struct PlantRow: View {
                     .font(Typography.cardTitle)
                     .lineLimit(1)
                     .truncationMode(.tail)
+                    .contentTransition(.numericText())
                 Text(plant.wateringLabel)
                     .font(Typography.cardCaption)
                     .lineLimit(1)
                     .minimumScaleFactor(0.7)
+                    .contentTransition(.numericText())
+                    .animation(Motion.number, value: plant.daysUntilWatering)
             }
             .foregroundStyle(Palette.ink)
             .frame(maxWidth: .infinity, alignment: .leading)
+            .modifier(Sharpen())
 
             // Тот же числовой переход, что на карточке: пролистываются
             // только цифры, знак процента стоит на месте.
@@ -76,6 +80,7 @@ struct PlantRow: View {
                 .foregroundStyle(Palette.ink)
                 .contentTransition(.numericText())
                 .animation(Motion.number, value: plant.moisture)
+                .modifier(Sharpen())
 
             if editing {
                 // Ручка — знак, а не сама хватка: тащить можно за всю

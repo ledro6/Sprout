@@ -16,9 +16,12 @@ struct PlantCard: View {
                 .aspectRatio(1, contentMode: .fit)
 
             HStack {
+                // Кличку меняют переименованием — она собирается из
+                // размытия тем же переходом, что и проценты рядом.
                 Text(plant.name)
                     .lineLimit(1)
                     .truncationMode(.tail)
+                    .contentTransition(.numericText())
                 Spacer(minLength: 4)
                 // Числовой переход системы: меняются только сами цифры,
                 // они пролистываются вверх и на ходу размываются, а знак
@@ -31,6 +34,7 @@ struct PlantCard: View {
             .font(Typography.cardTitle)
             .foregroundStyle(Palette.ink)
             .animation(Motion.number, value: plant.moisture)
+            .modifier(Sharpen())
 
             Text(plant.wateringLabel)
                 .font(Typography.cardCaption)
@@ -42,7 +46,12 @@ struct PlantCard: View {
                 // крупного шрифта в настройках.
                 .lineLimit(1)
                 .minimumScaleFactor(0.7)
+                // Полили — «сегодня» сменяется сроком системным
+                // размытием цифр, а не щелчком.
+                .contentTransition(.numericText())
+                .animation(Motion.number, value: plant.daysUntilWatering)
                 .frame(maxWidth: .infinity, alignment: .leading)
+                .modifier(Sharpen())
         }
         .padding(.horizontal, Metrics.cardPadding)
         .padding(.vertical, 10)
@@ -206,7 +215,10 @@ final class Tenant {
 ///
 /// Отдельным типом, а не строками на каждом экране: меню одинаково на
 /// главной и в поиске, а держать при нём приходится и переименование, и
-/// подтверждение удаления.
+/// переезд в новую комнату.
+///
+/// Удаление больше не спрашивает подтверждения: растение уходит сразу, и
+/// пять секунд его можно вернуть с плашки внизу — см. `Bin`.
 struct PlantMenu: ViewModifier {
     let id: Plant.ID
 
@@ -223,7 +235,10 @@ struct PlantMenu: ViewModifier {
 
     @State private var renaming = false
     @State private var draft = ""
-    @State private var deleting = false
+
+    /// Спрашивают ли имя новой комнаты, куда переезжать.
+    @State private var moving = false
+    @State private var roomDraft = ""
 
     /// Открыто ли меню. Ведём по предпросмотру: он живёт ровно столько
     /// же, и другого признака у контекстного меню нет.
@@ -245,19 +260,22 @@ struct PlantMenu: ViewModifier {
             .alert("Переименовать", isPresented: $renaming) {
                 TextField("Кличка", text: $draft)
                 Button("Отмена", role: .cancel) {}
-                Button("Сохранить") { garden.rename(tenant.id, to: draft) }
+                Button("Сохранить") {
+                    // С анимацией: новая кличка на карточке собирается из
+                    // размытия, а не подменяется щелчком.
+                    withAnimation(Motion.number) {
+                        garden.rename(tenant.id, to: draft)
+                    }
+                }
             } message: {
                 Text("Как теперь зовут растение?")
             }
-            .confirmationDialog("Удалить «\(plant?.name ?? "")»?",
-                                isPresented: $deleting,
-                                titleVisibility: .visible) {
-                Button("Удалить", role: .destructive) {
-                    garden.delete(tenant.id)
-                }
+            .alert("Новая комната", isPresented: $moving) {
+                TextField("Балкон", text: $roomDraft)
                 Button("Отмена", role: .cancel) {}
+                Button("Переехать") { relocate(to: roomDraft) }
             } message: {
-                Text("Растение исчезнет из комнаты. Вернуть его будет нельзя.")
+                Text("Растение переедет туда, и комната появится в списке.")
             }
     }
 
@@ -279,7 +297,18 @@ struct PlantMenu: ViewModifier {
                 } label: {
                     Label("Переименовать", systemImage: "pencil")
                 }
-                Button(role: .destructive) { deleting = true } label: {
+                // Комнаты — по номеру этого узла, а не жильца: пункты
+                // строятся заново при каждой сборке тела, и номер здесь
+                // всегда свежий. Запечатываются только нажатия, и они
+                // идут через жильца.
+                MoveMenu(current: garden.roomName(of: id),
+                         rooms: garden.rooms.map(\.name),
+                         move: relocate,
+                         ask: {
+                             roomDraft = ""
+                             moving = true
+                         })
+                Button(role: .destructive) { toss() } label: {
                     Label("Удалить", systemImage: "trash")
                 }
             } preview: {
@@ -325,23 +354,22 @@ struct PlantMenu: ViewModifier {
         // а не из угла: из угла она читается поломкой, из середины —
         // просто волной.
         let spot = Cards.shared.rect(who)
-        Cheer.shared.now(from: spot == .zero ? Self.middle : spot)
+        Cheer.shared.now(from: spot == .zero ? Screen.middle : spot)
         Feel.water()
     }
 
-    /// Середина экрана — запасное место для волны.
-    ///
-    /// Через окно, а не через `UIScreen.main`: тот помечен устаревшим ещё
-    /// в iOS 16, и приложение работает не с экраном, а со своим окном.
-    /// Тем же путём корень берёт глубину выреза.
-    private static var middle: CGRect {
-        let bounds = UIApplication.shared.connectedScenes
-            .compactMap { $0 as? UIWindowScene }
-            .flatMap(\.windows)
-            .first { $0.isKeyWindow }?
-            .bounds ?? .zero
-        return CGRect(x: bounds.midX - 1, y: bounds.midY - 1,
-                      width: 2, height: 2)
+    /// Удалить — сразу, с возможностью вернуть, и красным по узору от
+    /// этой карточки. См. `Bin`.
+    private func toss() {
+        let who = tenant.id
+        Bin.shared.toss(who, from: Cards.shared.rect(who), in: garden)
+    }
+
+    /// Перевезти в другую комнату. На главной карточка уходит из сетки —
+    /// в этой комнате растения больше нет.
+    private func relocate(to room: String) {
+        let who = tenant.id
+        withAnimation(Motion.appear) { garden.relocate(who, to: room) }
     }
 
     /// Предпросмотр для меню — свой, а не системный снимок.
@@ -434,6 +462,11 @@ struct CardAppear: ViewModifier {
             .opacity(shown ? 1 : 0)
             .scaleEffect(shown ? 1 : Motion.scale, anchor: .top)
             .offset(y: shown ? 0 : Motion.rise)
+            // Текст карточки собирается из размытия, пока она всплывает, —
+            // см. `Sharpen`. Через окружение, а не размытием всей карточки:
+            // размывать стекло незачем, а фото в размытии читалось бы
+            // пятном.
+            .environment(\.sproutSharp, shown)
             .onChange(of: room, initial: true) { _, _ in restart() }
     }
 
@@ -454,5 +487,35 @@ struct CardAppear: ViewModifier {
                 shown = true
             }
         }
+    }
+}
+
+/// Собран ли текст на карточке — или ещё размыт, пока она всплывает.
+private struct SproutSharpKey: EnvironmentKey {
+    static let defaultValue = true
+}
+
+extension EnvironmentValues {
+    /// Текст карточки навёлся на резкость. Ставит появление карточки —
+    /// `CardAppear`, читает `Sharpen`.
+    var sproutSharp: Bool {
+        get { self[SproutSharpKey.self] }
+        set { self[SproutSharpKey.self] = newValue }
+    }
+}
+
+/// Текст, который собирается из размытия вместе с появлением карточки.
+///
+/// Появление само по себе — подъём, приближение и проявление, — а текст
+/// поверх него ещё и наводится на резкость, как цифры в системном
+/// переходе: весь текст в приложении появляется размытием, и карточки не
+/// исключение. Размывается только текст — стекло и фото приходят как
+/// приходили.
+struct Sharpen: ViewModifier {
+    @Environment(\.sproutSharp) private var sharp
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    func body(content: Content) -> some View {
+        content.blur(radius: sharp || reduceMotion ? 0 : Metrics.textBlur)
     }
 }

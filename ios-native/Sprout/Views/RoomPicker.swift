@@ -19,6 +19,19 @@ struct RoomPicker: View {
     /// оттуда пересчитанным на каждый кадр.
     var size = Typography.roomSize
 
+    /// Открыть правку комнат. Пусто — пункта в меню нет.
+    var onEdit: (() -> Void)? = nil
+
+    /// Подпись выбранной комнаты.
+    ///
+    /// Номер придерживаем в границах: комнату могут удалить, и на кадр,
+    /// пока главная не перевела выбор на соседнюю, номер смотрит мимо
+    /// списка.
+    private var chosen: String {
+        rooms.indices.contains(selection) ? rooms[selection]
+            : rooms.last ?? ""
+    }
+
     var body: some View {
         Menu {
             Picker("Комната", selection: $selection) {
@@ -26,10 +39,21 @@ struct RoomPicker: View {
                     Text(rooms[index]).tag(index)
                 }
             }
+            if let onEdit {
+                Divider()
+                Button { onEdit() } label: {
+                    Label("Изменить комнаты…", systemImage: "pencil")
+                }
+            }
         } label: {
             HStack(spacing: size / 6) {
-                Text(rooms[selection])
+                Text(chosen)
                     .font(.system(size: size, weight: .semibold))
+                    // Сменили комнату — её имя собирается из размытия тем
+                    // же системным переходом, что и цифры, а не
+                    // подменяется щелчком.
+                    .contentTransition(.numericText())
+                    .animation(Motion.number, value: selection)
                     // Доросшая до заголовка подпись делит строку с тремя
                     // кнопками, и длинной комнате — «Гостиной» — места в
                     // ней может не хватить. Тогда подпись чуть ужимается,
@@ -70,5 +94,37 @@ struct SproutBadge: View {
         .padding(.trailing, 7.6)
         .frame(height: 28)
         .background(Palette.greenSoft, in: .capsule)
+    }
+}
+
+/// Пункт «Переехать» — подменю со всеми комнатами, кроме той, где растение
+/// живёт сейчас, и «Новой комнатой» внизу.
+///
+/// Один на меню карточки и меню экрана растения: переезжают из обоих
+/// мест, и выглядеть пункт должен одинаково.
+struct MoveMenu: View {
+    /// Где растение сейчас. Этой комнаты в списке нет — переезжать в неё
+    /// некуда.
+    let current: String?
+    let rooms: [String]
+
+    /// Переехать в эту комнату.
+    let move: (String) -> Void
+
+    /// Спросить имя новой комнаты.
+    let ask: () -> Void
+
+    var body: some View {
+        Menu {
+            ForEach(rooms.filter { $0 != current }, id: \.self) { name in
+                Button(name) { move(name) }
+            }
+            Divider()
+            Button { ask() } label: {
+                Label("Новая комната…", systemImage: "plus")
+            }
+        } label: {
+            Label("Переехать", systemImage: "door.left.hand.open")
+        }
     }
 }

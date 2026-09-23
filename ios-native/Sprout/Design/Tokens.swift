@@ -78,13 +78,21 @@ enum Palette {
     /// взятый той же долей он читался бы не вспышкой, а выцветанием. Доли
     /// у неё свои и при подкрутке узора не двигаются: узор и волна
     /// настраиваются порознь.
-    static func pattern(_ base: Shade, wave: Shade, splash level: Double)
-        -> Color {
+    ///
+    /// Поверх всего этого — тление, `ember`: пока удаление можно
+    /// отменить, фигурка разгорается ярко-красным. Тление берёт цвет, какой
+    /// у фигурки есть, — покоя или волны — и ведёт его к красному, а не
+    /// подменяет: полив посреди отсчёта виден и на красном.
+    static func pattern(_ base: Shade, wave: Shade, splash level: Double,
+                        ember: Double = 0) -> Color {
         let k = min(max(level, 0), 1)
-        return dual(blend(ink(base.pale, restLight),
-                          ink(wave.vivid, splashLight), k),
-                    blend(ink(base.vivid, restDark),
-                          ink(wave.vivid, splashDark), k))
+        let e = min(max(ember, 0), 1)
+        return dual(paint(mixed(mixed(ink(base.pale, restLight),
+                                      ink(wave.vivid, splashLight), k),
+                                emberLight, e)),
+                    paint(mixed(mixed(ink(base.vivid, restDark),
+                                      ink(wave.vivid, splashDark), k),
+                                emberDark, e)))
     }
 
     /// Свечение вокруг фигурки на гребне волны.
@@ -92,10 +100,18 @@ enum Palette {
     /// Своя доля, а не та же: свечение размывается, и взятое долей самой
     /// волны оно после размытия не читалось бы вовсе. Растёт вместе с
     /// цветом — на покое его нет.
-    static func glow(_ wave: Shade, level: Double) -> Color {
+    ///
+    /// Тлеющая фигурка светится красным — сильнее, чем на гребне: гребень
+    /// проходит за полсекунды, а тление держится весь отсчёт, и должно
+    /// читаться тревогой, а не бликом.
+    static func glow(_ wave: Shade, level: Double, ember: Double = 0)
+        -> Color {
         let k = min(max(level, 0), 1)
-        return dual(colour(wave.vivid, glowLight * k),
-                    colour(wave.vivid, glowDark * k))
+        let e = min(max(ember, 0), 1)
+        return dual(paint(mixed(ink(wave.vivid, glowLight * k),
+                                emberGlowLight, e)),
+                    paint(mixed(ink(wave.vivid, glowDark * k),
+                                emberGlowDark, e)))
     }
 
     /// Кружок оттенка в настройках. Насыщенной ипостасью: выбирают
@@ -110,6 +126,18 @@ enum Palette {
     private static let glowLight = 0.5
     private static let glowDark = 0.7
 
+    /// Ярко-красный тления — и сама фигурка, и свечение вокруг неё.
+    ///
+    /// Плотнее всего, что бывает в узоре: узор держится еле заметным, но
+    /// тление — не фон, а предупреждение, и растение, которое вот-вот
+    /// уйдёт насовсем, должно быть видно краем глаза. В тёмной теме
+    /// красный светлее и плотнее — на сером он иначе глохнет, как и
+    /// тревожная тень под карточкой.
+    private static let emberLight: Ink = (255, 45, 35, 0.8)
+    private static let emberDark: Ink = (255, 72, 60, 0.88)
+    private static let emberGlowLight: Ink = (255, 45, 35, 0.55)
+    private static let emberGlowDark: Ink = (255, 72, 60, 0.75)
+
     private typealias Ink = (r: Double, g: Double, b: Double, a: Double)
 
     private static func ink(_ c: Channels, _ a: Double) -> Ink {
@@ -121,12 +149,16 @@ enum Palette {
             .opacity(a)
     }
 
-    private static func blend(_ from: Ink, _ to: Ink, _ k: Double) -> Color {
+    /// Смесь двух чернил — каналы и плотность порознь.
+    private static func mixed(_ from: Ink, _ to: Ink, _ k: Double) -> Ink {
         let mix = { (a: Double, b: Double) in a + (b - a) * k }
-        return Color(red: mix(from.r, to.r) / 255,
-                     green: mix(from.g, to.g) / 255,
-                     blue: mix(from.b, to.b) / 255)
-            .opacity(mix(from.a, to.a))
+        return (mix(from.r, to.r), mix(from.g, to.g), mix(from.b, to.b),
+                mix(from.a, to.a))
+    }
+
+    private static func paint(_ ink: Ink) -> Color {
+        Color(red: ink.r / 255, green: ink.g / 255, blue: ink.b / 255)
+            .opacity(ink.a)
     }
 
     /// Тревожная тень под карточкой, пока влаги от 40 до 20 процентов.
@@ -210,6 +242,12 @@ enum Typography {
     /// Числами, а не шрифтами: между ними идёт плавный перебор.
     static let roomSize: CGFloat = 17
     static let roomGrown: CGFloat = 34
+
+    /// Плашка отмены: что случилось, с кем, число в кольце и «Вернуть».
+    static let toastTitle = Font.system(.subheadline, weight: .semibold)
+    static let toastNote = Font.system(.footnote)
+    static let toastCount = Font.system(.caption, weight: .bold)
+    static let toastAction = Font.system(.body, weight: .semibold)
 }
 
 /// Размеры и отступы макета в логических пикселях.
@@ -408,6 +446,33 @@ enum Metrics {
     /// сетке тогда так и осталось бы пустым, а бледная карточка — просто
     /// бледная, и с первым же касанием она снова своя.
     static let ghost = 0.3
+
+    /// Кольцо отсчёта на плашке отмены и толщина его линии.
+    static let ring: CGFloat = 30
+    static let ringLine: CGFloat = 2.5
+
+    /// Насколько плашка отмены отстоит от панели вкладок.
+    static let toastGap: CGFloat = 10
+
+    /// Какую долю тления занимает разгорание одной фигурки.
+    ///
+    /// Вдвое больше, чем у всплеска на волне полива, — так и просили:
+    /// волна вдвое шире. Фигурка разгорается дольше, и соседние по кругу
+    /// разгораются внахлёст, так что по узору идёт не кольцо, а широкий
+    /// разлив красного, который к концу отсчёта заливает весь экран.
+    static let emberSpan = popSpan * 2
+
+    /// Насколько размыт текст, который ещё не появился.
+    ///
+    /// Мельче размытия панели на экране растения: там размывается стекло
+    /// кнопок целиком, здесь — строки, и при той же силе они не
+    /// собирались бы из расфокуса, а проступали из пятна.
+    static let textBlur: CGFloat = 8
+
+    /// Промежуток между строками истории поливов на экране растения.
+    /// Теснее, чем между строками сведений: это одна запись за другой, а
+    /// не разные факты.
+    static let diaryGap: CGFloat = 10
 
     /// Ширина карточки в предпросмотре контекстного меню.
     ///

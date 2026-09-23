@@ -175,10 +175,15 @@ struct AddView: View {
             .frame(maxWidth: .infinity, alignment: .leading)
 
             if let sighting {
+                // Догадка телефона приходит системным размытием, а новая
+                // сменяет прежнюю тем же переходом: у строки своя личность
+                // на каждый текст.
                 Text(sighting)
                     .font(Typography.settingNote)
                     .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
+                    .id(sighting)
+                    .transition(.blurReplace)
             }
         }
         .sproutRide()
@@ -354,6 +359,8 @@ struct AddView: View {
 
                 if let care {
                     Paragraph(care)
+                        .id(care)
+                        .transition(.blurReplace)
                 }
 
                 Paragraph("Пишет языковая модель Apple прямо на телефоне, "

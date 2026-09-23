@@ -1,6 +1,7 @@
 import SwiftUI
 
-/// Экран одного растения: большое фото и карточка со сведениями.
+/// Экран одного растения: большое фото, карточка со сведениями и история
+/// поливов.
 ///
 /// Растение берётся из сада по номеру, а не передаётся копией: его тут же
 /// поливают и переименовывают, а почва вдобавок подсыхает сама — экран
@@ -20,7 +21,10 @@ struct PlantView: View {
 
     @State private var renaming = false
     @State private var draft = ""
-    @State private var deleting = false
+
+    /// Спрашивают ли имя новой комнаты, куда переезжать.
+    @State private var moving = false
+    @State private var roomDraft = ""
 
     /// Где на экране лежит плашка с фото. Отсюда по узору расходится
     /// волна: полив виден на ней, от неё же он и идёт по фону. Не
@@ -42,6 +46,7 @@ struct PlantView: View {
                 VStack(spacing: 44) {
                     photo(plant)
                     facts(plant)
+                    diary(plant)
                 }
                 .padding(.horizontal, Metrics.margin)
                 .padding(.top, 14)
@@ -88,19 +93,24 @@ struct PlantView: View {
         .alert("Переименовать", isPresented: $renaming) {
             TextField("Кличка", text: $draft)
             Button("Отмена", role: .cancel) {}
-            Button("Сохранить") { garden.rename(plantID, to: draft) }
+            Button("Сохранить") {
+                withAnimation(Motion.number) {
+                    garden.rename(plantID, to: draft)
+                }
+            }
         } message: {
             Text("Как теперь зовут растение?")
         }
-        .confirmationDialog("Удалить «\(plant?.name ?? "")»?",
-                            isPresented: $deleting, titleVisibility: .visible) {
-            Button("Удалить", role: .destructive) { garden.delete(plantID) }
+        .alert("Новая комната", isPresented: $moving) {
+            TextField("Балкон", text: $roomDraft)
             Button("Отмена", role: .cancel) {}
+            Button("Переехать") { relocate(to: roomDraft) }
         } message: {
-            Text("Растение исчезнет из комнаты. Вернуть его будет нельзя.")
+            Text("Растение переедет туда, и комната появится в списке.")
         }
         // Растение удалили — экран закрывается сам: показывать больше
-        // нечего, а пустым он выглядел бы поломкой.
+        // нечего, а пустым он выглядел бы поломкой. Вернуть его можно с
+        // плашки внизу — уже на том экране, откуда сюда пришли.
         .onChange(of: plant == nil) { _, gone in
             if gone { close() }
         }
@@ -136,6 +146,8 @@ struct PlantView: View {
             .font(Typography.navTitle)
             .foregroundStyle(Palette.ink)
             .lineLimit(1)
+            // Переименовали — новая кличка собирается из размытия.
+            .contentTransition(.numericText())
             .modifier(Chrome(shown: chrome))
             .sproutRide()
     }
@@ -153,7 +165,16 @@ struct PlantView: View {
             } label: {
                 Label("Переименовать", systemImage: "pencil")
             }
-            Button(role: .destructive) { deleting = true } label: {
+            MoveMenu(current: garden.roomName(of: plantID),
+                     rooms: garden.rooms.map(\.name),
+                     move: relocate,
+                     ask: {
+                         roomDraft = ""
+                         moving = true
+                     })
+            // Без подтверждения: растение уходит сразу, а вернуть его
+            // можно с плашки — см. `Bin`.
+            Button(role: .destructive) { toss() } label: {
                 Label("Удалить", systemImage: "trash")
             }
         } label: {
@@ -199,6 +220,16 @@ struct PlantView: View {
         Feel.water()
     }
 
+    /// Удалить. Красное по узору идёт от плашки с фото — от того места,
+    /// где растение и было видно.
+    private func toss() {
+        Bin.shared.toss(plantID, from: spot.rect, in: garden)
+    }
+
+    private func relocate(to room: String) {
+        withAnimation(Motion.number) { garden.relocate(plantID, to: room) }
+    }
+
     /// Плашка с фото. В макете 336×347: квадратное фото плюс поля.
     private func photo(_ plant: Plant) -> some View {
         PlantPhoto(plant: plant, radius: Metrics.cardRadius - 6)
@@ -225,7 +256,15 @@ struct PlantView: View {
             fact("Влажность \(plant.moistureLabel)")
                 .contentTransition(.numericText())
             fact(plant.species)
+            // Срок полива и комната меняются от действий на этом же
+            // экране — полили, перевезли, — и меняются тем же системным
+            // размытием, что и проценты, а не щелчком.
             fact(plant.wateringLabel)
+                .contentTransition(.numericText())
+            if let room = garden.roomName(of: plant.id) {
+                fact("Комната «\(room)»")
+                    .contentTransition(.numericText())
+            }
             fact(plant.addedLabel)
         }
         .animation(Motion.number, value: plant.moisture)
@@ -234,6 +273,79 @@ struct PlantView: View {
         .padding(.vertical, 22)
         .sproutPlate(in: plate)
         .sproutRide()
+    }
+
+    /// История поливов: сколько всего, как часто и последние поливы
+    /// строками.
+    ///
+    /// Всё здесь появляется системным размытием. Полили с этого экрана — и
+    /// новая строка не въезжает сверху и не проявляется, а собирается из
+    /// расфокуса (`blurReplace`), а число поливов и частота меняются тем
+    /// же переходом цифр, что и проценты влажности. Самая старая строка,
+    /// которой больше нет места, уходит тем же размытием.
+    private func diary(_ plant: Plant) -> some View {
+        let diary = Diary.of(garden.log, plant: plant.id)
+        return VStack(alignment: .leading, spacing: Metrics.diaryGap) {
+            Text("Поливы")
+                .font(Typography.groupTitle)
+                .foregroundStyle(.secondary)
+            if diary.entries.isEmpty {
+                Text("Поливов ещё не было. Полить можно из меню сверху.")
+                    .font(Typography.settingNote)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .transition(.blurReplace)
+            } else {
+                tally(diary)
+                    .transition(.blurReplace)
+                ForEach(Array(diary.entries.prefix(Diary.shown)),
+                        id: \.self) { moment in
+                    entry(moment)
+                        .transition(.blurReplace)
+                }
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.horizontal, 25)
+        .padding(.vertical, 22)
+        .sproutPlate(in: plate)
+        .sproutRide()
+    }
+
+    /// Сколько всего и как часто — двумя числами в ряд.
+    private func tally(_ diary: Diary) -> some View {
+        HStack(alignment: .firstTextBaseline, spacing: 28) {
+            figure("\(diary.total)", caption: "Всего")
+            if let average = diary.average {
+                figure(Diary.rhythm(average), caption: "В среднем")
+                    .transition(.blurReplace)
+            }
+        }
+        .padding(.bottom, 4)
+    }
+
+    private func figure(_ value: String, caption: String) -> some View {
+        VStack(alignment: .leading, spacing: 2) {
+            Text(value)
+                .font(Typography.detail)
+                .foregroundStyle(Palette.ink)
+                .contentTransition(.numericText())
+            Text(caption)
+                .font(Typography.figureCaption)
+                .foregroundStyle(.secondary)
+        }
+    }
+
+    /// Один полив: капля и когда.
+    private func entry(_ moment: Date) -> some View {
+        HStack(spacing: 10) {
+            Image(systemName: "drop.fill")
+                .font(Typography.settingNote)
+                .foregroundStyle(Palette.water)
+            Text(Diary.label(moment))
+                .font(Typography.settingRow)
+                .foregroundStyle(Palette.ink)
+        }
     }
 
     private var plate: RoundedRectangle {

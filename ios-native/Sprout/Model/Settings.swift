@@ -72,16 +72,90 @@ final class Settings {
             }
         }
 
-        /// Подпись кнопки, которая сюда переключает.
-        var action: String {
+        var title: String {
             switch self {
-            case .grid: "Показать плиткой"
-            case .list: "Показать списком"
+            case .grid: "Плиткой"
+            case .list: "Списком"
+            }
+        }
+    }
+
+    /// В каком порядке лежат растения.
+    ///
+    /// «Вручную» первым и по умолчанию: это порядок, который хозяин
+    /// расставил сам, перетаскиванием, и до сортировки растения лежали
+    /// именно так. Остальные его не трогают — они только показывают
+    /// растения иначе; вернёшься к ручному, и всё стоит, как стояло.
+    enum Order: String, CaseIterable, Identifiable {
+        case manual, thirsty, name, newest
+
+        var id: String { rawValue }
+
+        var title: String {
+            switch self {
+            case .manual: "Вручную"
+            case .thirsty: "Сначала сухие"
+            case .name: "По имени"
+            case .newest: "Сначала новые"
             }
         }
 
-        /// Второй из двух — тот, на который переключает кнопка.
-        var other: Look { self == .grid ? .list : .grid }
+        var icon: String {
+            switch self {
+            case .manual: "hand.draw"
+            case .thirsty: "drop"
+            case .name: "textformat"
+            case .newest: "calendar"
+            }
+        }
+
+        /// Разложить растения в этом порядке.
+        ///
+        /// Равные остаются так, как стояли вручную: иначе два растения с
+        /// одним сроком полива менялись бы местами от пересборки к
+        /// пересборке, и сетка дёргалась бы на ровном месте. Поэтому
+        /// сравнение всегда доходит до места в ручном порядке.
+        ///
+        /// «Сначала сухие» — по тому, сколько осталось до полива, а не по
+        /// процентам. Двадцать процентов у папоротника — это день, у
+        /// кактуса — две недели, и первым должен идти тот, кому воды
+        /// нужно раньше.
+        func arrange(_ plants: [Plant]) -> [Plant] {
+            let lined = Array(plants.enumerated())
+            let sorted: [(offset: Int, element: Plant)]
+            switch self {
+            case .manual:
+                return plants
+            case .thirsty:
+                sorted = lined.sorted { a, b in
+                    let x = a.element.moisture * a.element.dryingDays
+                    let y = b.element.moisture * b.element.dryingDays
+                    return x != y ? x < y : a.offset < b.offset
+                }
+            case .name:
+                sorted = lined.sorted { a, b in
+                    switch a.element.name
+                        .localizedStandardCompare(b.element.name) {
+                    case .orderedAscending: true
+                    case .orderedDescending: false
+                    case .orderedSame: a.offset < b.offset
+                    }
+                }
+            case .newest:
+                sorted = lined.sorted { a, b in
+                    let x = Self.day(a.element.addedOn)
+                    let y = Self.day(b.element.addedOn)
+                    return x != y ? x > y : a.offset < b.offset
+                }
+            }
+            return sorted.map(\.element)
+        }
+
+        /// День посадки одним числом: 2 ноября 2024 — 20241102.
+        private static func day(_ date: DateComponents) -> Int {
+            (date.year ?? 0) * 10_000 + (date.month ?? 0) * 100
+                + (date.day ?? 0)
+        }
     }
 
     /// Сколько всего фигурок нарисовано — росток, капля, цветок, горшок.
@@ -134,6 +208,11 @@ final class Settings {
     /// так же.
     var look: Look {
         didSet { store.set(look.rawValue, forKey: Key.look) }
+    }
+
+    /// Порядок растений — тоже один на главную и поиск.
+    var order: Order {
+        didSet { store.set(order.rawValue, forKey: Key.order) }
     }
 
     /// Какие фигурки в узоре, номерами.
@@ -243,6 +322,7 @@ final class Settings {
     private enum Key {
         static let theme = "theme"
         static let look = "plantLook"
+        static let order = "plantOrder"
         /// Прежний ключ — количество фигурок. Читается один раз, ради
         /// тех, у кого настройка уже сохранена.
         static let kinds = "patternKinds"
@@ -279,6 +359,8 @@ final class Settings {
         theme = Theme(rawValue: store.string(forKey: Key.theme) ?? "")
             ?? .system
         look = Look(rawValue: store.string(forKey: Key.look) ?? "") ?? .grid
+        order = Order(rawValue: store.string(forKey: Key.order) ?? "")
+            ?? .manual
         // Ноль здесь значит «ключа нет»: `UserDefaults` не различает
         // отсутствие и ноль, а пустого набора фигурок не бывает.
         let mask = store.integer(forKey: Key.shapes)

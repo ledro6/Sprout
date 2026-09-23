@@ -32,8 +32,11 @@ import sys
 from pathlib import Path
 
 # Синтезируется компилятором или приходит из протоколов — объявления нет.
+# `updateAppShortcutParameters` — из `AppShortcutsProvider`: команды Siri
+# объявлены в приложении, а их пересказ системе — в самом App Intents.
 GIVEN = {"allCases", "self", "init", "rawValue", "ID", "id", "Type",
-         "Element", "shared", "min", "max", "zero", "infinity", "pi"}
+         "Element", "shared", "min", "max", "zero", "infinity", "pi",
+         "updateAppShortcutParameters"}
 
 DECL = re.compile(
     r"^\s*(?:public\s+|private\s+|fileprivate\s+|internal\s+)?"

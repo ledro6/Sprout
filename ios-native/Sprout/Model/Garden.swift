@@ -21,11 +21,31 @@ final class Garden {
     /// Захочется медленнее — это единственное число, которое надо трогать.
     static let speed: Double = 3_600
 
+    /// Сад приложения — один на всех, кто с ним говорит.
+    ///
+    /// Один, а не у корня интерфейса свой, и это ради Siri. Команда
+    /// «Полей Баксика» исполняется в том же процессе, что и приложение, но
+    /// не на его экранах: приложение может быть закрыто, и тогда система
+    /// поднимает его в фоне, без единого окна. Сад, живущий в корне
+    /// интерфейса, в этом случае не создался бы вовсе, а создайся команда
+    /// свой — поливала бы копию, и открытое приложение этого не увидело
+    /// бы. Общий заводится при первом обращении, откуда бы оно ни пришло.
+    static let shared = Garden()
+
     var owner: String
     var rooms: [Room]
 
     /// Журнал поливов. Из него считается вся статистика — см. `Score`.
     private(set) var log: [Watering]
+
+    /// Сколько раз менялся состав сада: растения, их клички, комнаты.
+    ///
+    /// Не для показа. По нему корень узнаёт, что пора пересказать Siri,
+    /// какие растения есть в саду. Следить ради этого за самими комнатами
+    /// нельзя: влажность в них меняется ежесекундно, и корень
+    /// пересобирался бы каждую секунду. Счётчик же трогают только
+    /// действия хозяина.
+    private(set) var roster = 0
 
     /// Когда завели сад. Не константа только ради переноса: сад,
     /// принесённый с прежнего телефона, приносит с собой и свой возраст.
@@ -119,6 +139,7 @@ final class Garden {
         } else {
             rooms.append(Room(name: room, plants: [plant]))
         }
+        roster += 1
         save()
     }
 
@@ -134,6 +155,7 @@ final class Garden {
         rooms = state.rooms
         log = state.log
         since = state.since
+        roster += 1
         save()
     }
 
@@ -148,6 +170,7 @@ final class Garden {
         }
         rooms = []
         log = []
+        roster += 1
         save()
     }
 
@@ -166,6 +189,7 @@ final class Garden {
         let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return }
         change(id) { $0.name = trimmed }
+        roster += 1
     }
 
     /// Переставить растение на место другого — в той же комнате.
@@ -195,15 +219,144 @@ final class Garden {
         }
     }
 
+    /// Удалить растение насовсем — вместе со снимком.
+    ///
+    /// С экранов так больше не удаляют: там растение сперва убирают
+    /// (`remove`), и пять секунд его можно вернуть. Насовсем — это то, что
+    /// происходит по истечении этих секунд, и то, чем пользуется проверка
+    /// модели.
     func delete(_ id: Plant.ID) {
+        guard let gone = remove(id) else { return }
         // Снимок уходит вместе с растением: иначе Documents копил бы
         // картинки, на которые больше никто не смотрит.
-        let shot = plant(id: id)?.shot
+        if let shot = gone.plant.shot { Shots.drop(shot) }
+    }
+
+    /// Убрать растение из сада, запомнив, откуда его взяли.
+    ///
+    /// Снимок остаётся на диске: убранное ещё могут вернуть, а снимок —
+    /// единственное в растении, чего из памяти не восстановить. Его
+    /// выбрасывает тот, кто решает, что возврата уже не будет.
+    ///
+    /// Журнал поливов не трогаем. Статистика — это история, и поливы
+    /// удалённого растения в ней были; а вернись растение — его поливы
+    /// оказываются на месте сами.
+    @discardableResult
+    func remove(_ id: Plant.ID) -> Removal? {
         for room in rooms.indices {
-            rooms[room].plants.removeAll { $0.id == id }
+            guard let index = rooms[room].plants.firstIndex(where: {
+                $0.id == id
+            }) else { continue }
+            let plant = rooms[room].plants.remove(at: index)
+            roster += 1
+            save()
+            return Removal(plant: plant, room: rooms[room].name,
+                           roomIndex: room, index: index)
         }
+        return nil
+    }
+
+    /// Вернуть убранное — на то же место в той же комнате.
+    ///
+    /// Комнаты за это время могло не стать — её удалили, пока шёл отсчёт.
+    /// Тогда она заводится заново там, где стояла: возвращают растение, а
+    /// не повод его искать. Уже вернувшееся второй раз не встаёт.
+    func putBack(_ gone: Removal) {
+        guard plant(id: gone.plant.id) == nil else { return }
+        if let room = rooms.firstIndex(where: { $0.name == gone.room }) {
+            let index = min(gone.index, rooms[room].plants.count)
+            rooms[room].plants.insert(gone.plant, at: index)
+        } else {
+            let index = min(gone.roomIndex, rooms.count)
+            rooms.insert(Room(name: gone.room, plants: [gone.plant]),
+                         at: index)
+        }
+        roster += 1
         save()
-        if let shot { Shots.drop(shot) }
+    }
+
+    // MARK: - Комнаты
+
+    /// Занято ли имя комнаты. Без оглядки на регистр: «Кухня» и «кухня»
+    /// в одном саду читались бы одной комнатой, раздвоившейся по ошибке.
+    private func taken(_ name: String, except old: String? = nil) -> Bool {
+        rooms.contains {
+            $0.name != old
+                && $0.name.compare(name, options: .caseInsensitive) == .orderedSame
+        }
+    }
+
+    /// Завести пустую комнату. Отвечает, завелась ли: пустое имя и имя,
+    /// которое уже занято, не годятся.
+    @discardableResult
+    func addRoom(_ name: String) -> Bool {
+        let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty, !taken(trimmed) else { return false }
+        rooms.append(Room(name: trimmed, plants: []))
+        roster += 1
+        save()
+        return true
+    }
+
+    /// Переименовать комнату. Отвечает, получилось ли, — экран по ответу
+    /// решает, оставить ли вписанное или вернуть прежнее имя.
+    ///
+    /// Имя комнаты — её личность (`Room.id`), поэтому пустым или чужим
+    /// оно быть не может. Своё же имя, вписанное заново, — не ошибка.
+    @discardableResult
+    func renameRoom(_ old: String, to name: String) -> Bool {
+        let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty,
+              let index = rooms.firstIndex(where: { $0.name == old })
+        else { return false }
+        guard trimmed != old else { return true }
+        guard !taken(trimmed, except: old) else { return false }
+        rooms[index].name = trimmed
+        roster += 1
+        save()
+        return true
+    }
+
+    /// Переставить комнаты — так, как это делает список iOS: взятые
+    /// встают перед тем местом, куда их опустили.
+    ///
+    /// Своими руками, а не через `move(fromOffsets:toOffset:)`: тот
+    /// приходит из SwiftUI, а модель собирается и без него.
+    func moveRooms(from source: IndexSet, to destination: Int) {
+        let moving = source.sorted().filter(rooms.indices.contains)
+            .map { rooms[$0] }
+        guard !moving.isEmpty else { return }
+        var rest = rooms.enumerated()
+            .filter { !source.contains($0.offset) }
+            .map(\.element)
+        let before = source.filter { $0 < destination }.count
+        let at = min(max(destination - before, 0), rest.count)
+        rest.insert(contentsOf: moving, at: at)
+        guard rest.map(\.name) != rooms.map(\.name) else { return }
+        rooms = rest
+        save()
+    }
+
+    /// Удалить комнату со всем, что в ней растёт, — и снимки с ними.
+    func deleteRoom(_ name: String) {
+        guard let index = rooms.firstIndex(where: { $0.name == name })
+        else { return }
+        let gone = rooms.remove(at: index)
+        roster += 1
+        save()
+        for shot in gone.plants.compactMap(\.shot) { Shots.drop(shot) }
+    }
+
+    /// Перевезти растение в другую комнату — в конец её ряда.
+    ///
+    /// В конец, а не на то же место: номер места в другой комнате ничего
+    /// не значит, а в конце новосёла видно сразу. Такой комнаты нет —
+    /// заводим, как при посадке.
+    func relocate(_ id: Plant.ID, to room: String) {
+        let target = room.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !target.isEmpty, roomName(of: id) != target,
+              let gone = remove(id) else { return }
+        add(gone.plant, to: target)
     }
 
     private func change(_ id: Plant.ID, _ edit: (inout Plant) -> Void) {

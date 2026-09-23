@@ -163,12 +163,13 @@ print("настройки: значения по умолчанию и гран�
 let keys = ["theme", "patternKinds", "patternShapes", "reminders",
             "remindThreshold", "patternTint", "waveTint",
             "hushedHaptics", "stillPattern", "stiffShapes",
-            "plantLook"]
+            "plantLook", "plantOrder"]
 let store = UserDefaults.standard
 for key in keys { store.removeObject(forKey: key) }
 let fresh = Settings(store: store)
 check("\(fresh.theme)", "system", "тема по умолчанию — за системой")
 check("\(fresh.look)", "grid", "растения по умолчанию плиткой — как в макете")
+check("\(fresh.order)", "manual", "и в том порядке, в каком их расставили")
 check("\(fresh.chosen)", "[0, 1]", "в узоре росток и капля — узор макета")
 check("\(fresh.patternTint)", "green", "узор по умолчанию зелёный — цвет макета")
 check("\(fresh.waveTint)", "blue", "волна по умолчанию синяя")
@@ -193,6 +194,7 @@ check("\(fresh.chosen)", "[2]", "несуществующая фигурка н�
 print("настройки переживают запуск:")
 fresh.theme = .dark
 fresh.look = .list
+fresh.order = .thirsty
 fresh.toggle(shape: 3)
 fresh.reminders = true
 fresh.threshold = 0.3
@@ -201,6 +203,7 @@ fresh.waveTint = .amber
 let reopened = Settings(store: store)
 check("\(reopened.theme)", "dark", "тема прочиталась обратно")
 check("\(reopened.look)", "list", "и вид списком")
+check("\(reopened.order)", "thirsty", "и порядок «сначала сухие»")
 check("\(reopened.chosen)", "[2, 3]", "и набор фигурок")
 check(reopened.reminders, "и переключатель напоминаний")
 check(round2(reopened.threshold), "0.30", "и порог")
@@ -1019,6 +1022,186 @@ let swayStill = Sway.lag(Sway.rest(at: CGSize(width: 9, height: -4)),
                      behind: CGSize(width: 9, height: -4))
 check(swayStill.allSatisfy { $0.width == 0 && $0.height == 0 },
       "стоячий узор — ровная сетка")
+
+
+print("убрать и вернуть:")
+do {
+    let yard = Garden()
+    yard.rooms = Seed.rooms
+    let roster = yard.roster
+    let bedroom = yard.rooms[0].plants.map(\.id)
+    let gone = yard.remove("tapok")!
+    check(gone.room == "Спальня" && gone.index == 2 && gone.roomIndex == 0,
+          "запомнилось, откуда взяли")
+    check(yard.plant(id: "tapok") == nil, "убранного в саду нет")
+    check(yard.roster > roster, "состав сада сменился — Siri узнает")
+    yard.putBack(gone)
+    check(yard.rooms[0].plants.map(\.id) == bedroom,
+          "вернулось ровно на своё место")
+    yard.putBack(gone)
+    check(yard.rooms[0].plants.filter { $0.id == "tapok" }.count == 1,
+          "второй раз не встаёт")
+    let lone = yard.remove("murzik")!
+    yard.deleteRoom("Кухня")
+    yard.putBack(lone)
+    check(yard.rooms.map(\.name) == ["Спальня", "Гостиная", "Кухня"],
+          "комнату удалили, пока шёл отсчёт, — она заводится там, где стояла")
+    check(yard.rooms[2].plants.map(\.id) == ["murzik"],
+          "и в ней — вернувшееся растение")
+    check(yard.remove("никого-нет") == nil, "чужой номер убрать нельзя")
+}
+
+print("комнаты:")
+do {
+    let yard = Garden()
+    yard.rooms = Seed.rooms
+    check(yard.addRoom("  Балкон "), "новая комната заводится")
+    check(yard.rooms.last?.name == "Балкон"
+          && yard.rooms.last?.plants.isEmpty == true,
+          "пустой и с обрезанным именем")
+    check(!yard.addRoom("балкон"), "занятое имя не годится — без оглядки на регистр")
+    check(!yard.addRoom("   "), "пустое тоже")
+    check(yard.renameRoom("Балкон", to: "Лоджия"), "переименовать можно")
+    check(!yard.renameRoom("Лоджия", to: "кухня"), "в чужое имя — нельзя")
+    check(yard.renameRoom("Лоджия", to: "Лоджия"), "своё имя заново — не ошибка")
+    check(!yard.renameRoom("Лоджия", to: " "), "в пустое — нельзя")
+    check(!yard.renameRoom("Чулан", to: "Кладовка"), "несуществующую — тоже")
+    yard.moveRooms(from: IndexSet(integer: 3), to: 0)
+    check(yard.rooms.map(\.name) == ["Лоджия", "Спальня", "Гостиная", "Кухня"],
+          "последняя встала первой")
+    yard.moveRooms(from: IndexSet(integer: 0), to: 4)
+    check(yard.rooms.map(\.name) == ["Спальня", "Гостиная", "Кухня", "Лоджия"],
+          "и обратно в конец — как в списке iOS")
+    yard.moveRooms(from: IndexSet([0, 2]), to: 4)
+    check(yard.rooms.map(\.name) == ["Гостиная", "Лоджия", "Спальня", "Кухня"],
+          "две разом — в том же порядке, в каком стояли")
+    yard.relocate("baksik", to: "Лоджия")
+    check(yard.roomName(of: "baksik") == "Лоджия"
+          && yard.rooms[1].plants.map(\.id) == ["baksik"],
+          "переехал — в новую комнату")
+    let before = yard.rooms.map { $0.plants.map(\.id) }
+    yard.relocate("baksik", to: "Лоджия")
+    check(yard.rooms.map { $0.plants.map(\.id) } == before,
+          "в свою же комнату — ничего не меняется")
+    yard.relocate("pr", to: "Чердак")
+    check(yard.rooms.last?.name == "Чердак"
+          && yard.rooms.last?.plants.map(\.id) == ["pr"],
+          "в новую — комната заводится")
+    let count = yard.plantCount
+    yard.deleteRoom("Кухня")
+    check(!yard.rooms.contains { $0.name == "Кухня" }
+          && yard.plantCount == count - 11,
+          "удалённая комната уносит свои растения")
+}
+
+print("порядок растений:")
+do {
+    let bedroom = Seed.rooms[0].plants
+    check(Settings.Order.manual.arrange(bedroom).map(\.id) == bedroom.map(\.id),
+          "вручную — как расставили")
+    check(Settings.Order.thirsty.arrange(bedroom).map(\.id)
+          == ["boris", "pr", "kompot", "vasilisa", "shuba", "tapok",
+              "shnurok", "baksik"],
+          "сначала сухие — по сроку полива, а не по процентам")
+    check(Settings.Order.name.arrange(bedroom).map(\.name)
+          == ["Баксик", "Борис", "Василиса", "Компот", "Пр", "Тапок",
+              "Шнурок", "Шуба"],
+          "по имени — по алфавиту")
+    check(Settings.Order.newest.arrange(bedroom).map(\.id)
+          == ["shuba", "kompot", "tapok", "vasilisa", "pr", "shnurok",
+              "baksik", "boris"],
+          "сначала новые — по дню посадки")
+    let day = DateComponents(year: 2025, month: 1, day: 1)
+    let twins = [
+        Plant(id: "a", name: "Б", species: "", moisture: 0.5,
+              dryingDays: 4, addedOn: day),
+        Plant(id: "b", name: "А", species: "", moisture: 0.25,
+              dryingDays: 8, addedOn: day),
+    ]
+    check(Settings.Order.thirsty.arrange(twins).map(\.id) == ["a", "b"],
+          "равные сроки остаются, как стояли вручную")
+    check(Settings.Order.newest.arrange(twins).map(\.id) == ["a", "b"],
+          "и равные дни посадки тоже")
+    check(Settings.Order.name.arrange(twins).map(\.id) == ["b", "a"],
+          "а по имени — всё-таки по имени")
+}
+
+print("журнал растения:")
+do {
+    var moscow = Calendar(identifier: .gregorian)
+    moscow.timeZone = TimeZone(identifier: "Europe/Moscow")!
+    func at(_ day: Int, _ hour: Int, _ minute: Int,
+            month: Int = 9, year: Int = 2026) -> Date {
+        moscow.date(from: DateComponents(year: year, month: month, day: day,
+                                         hour: hour, minute: minute))!
+    }
+    let now = at(23, 15, 30)
+    check(Diary.label(at(23, 14, 5), now: now, calendar: moscow),
+          "Сегодня, 14:05", "сегодня")
+    check(Diary.label(at(22, 9, 12), now: now, calendar: moscow),
+          "Вчера, 9:12", "вчера — и часы без нуля впереди")
+    check(Diary.label(at(22, 0, 0), now: now, calendar: moscow),
+          "Вчера, 0:00", "полночь")
+    check(Diary.label(at(20, 18, 40), now: now, calendar: moscow),
+          "20 сентября, 18:40", "в этом году — без года")
+    check(Diary.label(at(2, 7, 0, month: 11, year: 2025), now: now,
+                      calendar: moscow),
+          "2 ноября 2025, 7:00", "в прошлом году — с годом")
+    let log = [
+        Watering(plant: "x", when: at(20, 12, 0)),
+        Watering(plant: "y", when: at(21, 12, 0)),
+        Watering(plant: "x", when: at(23, 12, 0)),
+        Watering(plant: "x", when: at(22, 0, 0)),
+    ]
+    let diary = Diary.of(log, plant: "x")
+    check(diary.entries == [at(23, 12, 0), at(22, 0, 0), at(20, 12, 0)],
+          "только его поливы, от свежего к давнему")
+    check(diary.total == 3, "всего три")
+    check(diary.average == 1.5 * 86_400, "в среднем — раз в полтора дня")
+    check(Diary.of(log, plant: "y").average == nil,
+          "из одного полива среднего не посчитать")
+    check(Diary.rhythm(30), "чаще раза в минуту", "совсем часто")
+    check(Diary.rhythm(60), "раз в минуту", "минута")
+    check(Diary.rhythm(20 * 60), "раз в 20 мин", "минуты")
+    check(Diary.rhythm(3_600), "раз в час", "час")
+    check(Diary.rhythm(5 * 3_600), "раз в 5 ч", "часы")
+    check(Diary.rhythm(1.2 * 86_400), "раз в день", "день")
+    check(Diary.rhythm(1.5 * 86_400), "раз в 2 дня", "полтора дня — уже два")
+    check(Diary.rhythm(5 * 86_400), "раз в 5 дней", "дни")
+}
+
+print("кого полить сегодня:")
+do {
+    let due = Seed.due(in: Seed.rooms)
+    check(due.map(\.id) == ["sumka", "kefir", "boris"],
+          "те, у кого на карточке «сегодня», — от самого сухого")
+    check(Seed.dueLine(due), "Сегодня ждут воды Сумка, Кефир и Борис.",
+          "три имени")
+    check(Seed.dueLine(Array(due.prefix(2))), "Сегодня ждут воды Сумка и Кефир.",
+          "два имени")
+    check(Seed.dueLine(Array(due.prefix(1))), "Сегодня ждёт воды Сумка.",
+          "одно — и глагол в единственном")
+    check(Seed.dueLine([]), "Сегодня поливать никого не нужно.", "никого")
+    check(Seed.dueLine(Array(Seed.rooms[0].plants.prefix(7))),
+          "Сегодня ждут воды Баксик, Пр, Тапок, Борис и ещё 3 растения.",
+          "больше пяти — остальные числом")
+}
+
+print("растение по сказанному:")
+do {
+    func heard(_ phrase: String) -> [String] {
+        Seed.spoken(phrase, in: Seed.rooms).map(\.id)
+    }
+    check(heard("Баксика") == ["baksik", "baksik-2"],
+          "«Баксика» — оба Баксика, выбирать спросит Siri")
+    check(heard("Василису") == ["vasilisa"], "«Василису»")
+    check(heard("Соню") == ["sonya"], "«Соню»")
+    check(heard("Петровича") == ["petrovich"], "«Петровича»")
+    check(heard("полей грушу") == ["grusha"], "кличка внутри фразы")
+    check(heard("Пр") == ["pr"], "короткая кличка — как есть")
+    check(heard("снег") == ["sneg"], "несклоняемое — тоже")
+    check(heard("").isEmpty && heard("   ").isEmpty, "пустое — никого")
+}
 
 if failed > 0 {
     print("\nне сошлось: \(failed)")

@@ -271,6 +271,7 @@ struct SettingsView: View {
 
             if settings.reminders {
                 SproutDivider()
+                    .transition(.opacity)
                 SproutBlock(
                     "Когда напоминать",
                     note: "Влажность, ниже которой растение просит воды."
@@ -285,6 +286,8 @@ struct SettingsView: View {
                     .pickerStyle(.segmented)
                     .labelsHidden()
                 }
+                // Приходит системным размытием, как и весь текст.
+                .transition(.blurReplace)
             }
         }
         // Порог приезжает и уезжает вместе с переключателем: он к нему и

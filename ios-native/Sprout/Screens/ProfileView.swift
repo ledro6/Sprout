@@ -273,6 +273,7 @@ struct ProfileView: View {
                 if item.offset > 0 { SproutDivider() }
                 if item.element.id == me.id {
                     row(item.offset + 1, item.element)
+                        .transition(.blurReplace)
                 } else {
                     // Меню только на чужой строке: пустое контекстное меню
                     // на своей всё равно открывалось бы по долгому нажатию,
@@ -288,6 +289,9 @@ struct ProfileView: View {
                                       systemImage: "person.slash")
                             }
                         }
+                        // Пришёл соперник или его убрали — строка приходит
+                        // и уходит системным размытием.
+                        .transition(.blurReplace)
                 }
             }
         }
@@ -305,6 +309,7 @@ struct ProfileView: View {
             Text("\(place)")
                 .font(Typography.figureCaption)
                 .foregroundStyle(.tertiary)
+                .contentTransition(.numericText())
                 .frame(width: 16, alignment: .trailing)
             VStack(alignment: .leading, spacing: 1) {
                 Text(rival.name)

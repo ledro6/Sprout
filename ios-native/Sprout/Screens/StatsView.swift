@@ -45,13 +45,21 @@ struct StatsView: View {
                 VStack(alignment: .leading, spacing: 0) {
                     SproutHead("Статистика")
                     VStack(alignment: .leading, spacing: Metrics.groupGap) {
+                        // Первый полив сменяет пустую плашку счётом — тем же
+                        // системным размытием, что и весь текст.
                         if score.total == 0 {
                             blank
+                                .transition(.blurReplace)
                         } else {
                             summary
+                                .transition(.blurReplace)
                             fortnight
-                            if !score.rooms.isEmpty { byRoom }
-                            if !score.plants.isEmpty { byPlant }
+                            if !score.rooms.isEmpty {
+                                byRoom.transition(.blurReplace)
+                            }
+                            if !score.plants.isEmpty {
+                                byPlant.transition(.blurReplace)
+                            }
                         }
                     }
                     .padding(.horizontal, Metrics.contentMargin)
@@ -275,6 +283,7 @@ struct StatsView: View {
                         bar(share(tally))
                     }
                     .accessibilityElement(children: .combine)
+                    .transition(.blurReplace)
                 }
             }
         }
@@ -323,6 +332,7 @@ struct StatsView: View {
                         Text("\(item.offset + 1)")
                             .font(Typography.figureCaption)
                             .foregroundStyle(.tertiary)
+                            .contentTransition(.numericText())
                             .frame(width: 16, alignment: .trailing)
                         Text(item.element.name)
                             .font(Typography.settingRow)
@@ -335,6 +345,7 @@ struct StatsView: View {
                             .contentTransition(.numericText())
                     }
                     .accessibilityElement(children: .combine)
+                    .transition(.blurReplace)
                 }
             }
         }

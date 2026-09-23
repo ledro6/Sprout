@@ -242,6 +242,8 @@ struct SproutFigure: View {
                 Text(note)
                     .font(Typography.figureCaption)
                     .foregroundStyle(.tertiary)
+                    .contentTransition(.numericText())
+                    .transition(.blurReplace)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)

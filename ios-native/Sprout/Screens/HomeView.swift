@@ -57,6 +57,9 @@ struct HomeView: View {
     /// — не место, где живут, а место, куда заходят и возвращаются.
     @State private var settings = false
 
+    /// Открыта ли правка комнат — тоже листом, по той же причине.
+    @State private var roomsOpen = false
+
     /// Правят ли сейчас порядок растений.
     ///
     /// Режимом, а не всегда: долгое нажатие на карточку уже занято её
@@ -96,8 +99,18 @@ struct HomeView: View {
 
     /// Открытая комната. Номер придерживаем в границах: комнат может
     /// стать меньше, а выбор остаться прежним.
-    private var room: Room {
-        garden.rooms[min(roomIndex, max(garden.rooms.count - 1, 0))]
+    ///
+    /// Комнат может не быть вовсе — сад стёрли в профиле или удалили
+    /// последнюю комнату. Тогда и открывать нечего: прежде здесь было
+    /// обращение к первой комнате пустого списка, и главная падала.
+    private var room: Room? {
+        guard !garden.rooms.isEmpty else { return nil }
+        return garden.rooms[min(roomIndex, garden.rooms.count - 1)]
+    }
+
+    /// Растения открытой комнаты — в выбранном порядке.
+    private var plants: [Plant] {
+        Settings.shared.order.arrange(room?.plants ?? [])
     }
 
     var body: some View {
@@ -167,7 +180,42 @@ struct HomeView: View {
                 withAnimation(Motion.halo) { opening = nil }
             }
         }
+        // Сменили комнату — растения другие, и всплыть должны все.
+        .onChange(of: roomIndex) { _, _ in revealed.removeAll() }
+        // Комнаты переставили, переименовали или удалили — выбор остаётся
+        // на той же комнате, а не на том же номере.
+        .onChange(of: garden.rooms.map(\.name)) { old, new in
+            follow(from: old, to: new)
+        }
+        // Растение ушло из комнаты — удалили или перевезли. Из журнала
+        // показанных оно уходит тоже: вернут его — и оно всплывёт на своё
+        // место так же, как всплывало при открытии комнаты, а не
+        // появится щелчком.
+        .onChange(of: room?.plants.map(\.id) ?? []) { old, new in
+            revealed.subtract(Set(old).subtracting(new))
+        }
         .sheet(isPresented: $settings) { SettingsView() }
+        // Сад передаём листу явно. Лист и так наследует окружение того,
+        // кто его показал, но без сада правка комнат не откроется вовсе —
+        // падением, — и полагаться тут на наследование незачем.
+        .sheet(isPresented: $roomsOpen) { RoomsView().environment(garden) }
+    }
+
+    /// Удержать выбор на той же комнате, что бы ни случилось со списком.
+    ///
+    /// Нашлась по имени — встаём на её новый номер. Не нашлась, а комнат
+    /// столько же — её переименовали, номер прежний. Комнат стало меньше —
+    /// выбранную удалили, и встаём на соседнюю.
+    private func follow(from old: [String], to new: [String]) {
+        guard old.indices.contains(roomIndex) else {
+            roomIndex = min(roomIndex, max(new.count - 1, 0))
+            return
+        }
+        if let index = new.firstIndex(of: old[roomIndex]) {
+            roomIndex = index
+        } else if old.count != new.count {
+            roomIndex = min(roomIndex, max(new.count - 1, 0))
+        }
     }
 
     /// Открыть растение.
@@ -187,10 +235,19 @@ struct HomeView: View {
     /// заголовка занимает не пустота, а название комнаты.
     private var roomBar: some View {
         HStack(alignment: .center, spacing: 12) {
-            RoomPicker(rooms: garden.rooms.map(\.name), selection: $roomIndex,
-                       size: roomSize + (roomGrown - roomSize) * grown)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .sproutRide()
+            if garden.rooms.isEmpty {
+                // Выбирать не из чего, но место под строкой должно
+                // остаться: на нём держатся кнопки справа.
+                Color.clear
+                    .frame(maxWidth: .infinity, minHeight: 44)
+            } else {
+                RoomPicker(rooms: garden.rooms.map(\.name),
+                           selection: $roomIndex,
+                           size: roomSize + (roomGrown - roomSize) * grown,
+                           onEdit: { roomsOpen = true })
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .sproutRide()
+            }
             corner
         }
         .padding(.horizontal, Metrics.contentMargin)
@@ -236,7 +293,7 @@ struct HomeView: View {
     /// на главной, которое всегда наверху.
     private var corner: some View {
         HStack(spacing: Metrics.cornerGap) {
-            lookButton
+            viewMenu
             editButton
             SproutGear { settings = true }
         }
@@ -244,28 +301,71 @@ struct HomeView: View {
         .offset(y: -titleHeight * (1 - grown))
     }
 
-    /// Плиткой или списком. Значок — того вида, на который переключит:
-    /// тот, что сейчас, и так на экране.
+    /// Вид и порядок — одним меню, как в «Файлах»: сверху «плиткой или
+    /// списком», под ними — в каком порядке.
+    ///
+    /// Значок на кнопке — того вида, что сейчас на экране. Кнопка не
+    /// переключает, а открывает меню, и значок говорит, что в нём сейчас
+    /// выбрано.
     ///
     /// Смена вида заново проигрывает волну появления: карточки не
     /// перетекают в строки, а уходят и приходят, и волна показывает, что
-    /// это те же растения, просто разложенные иначе.
-    private var lookButton: some View {
-        Button {
-            withAnimation(Motion.arrange) {
-                revealed.removeAll()
-                Settings.shared.look = look.other
+    /// это те же растения, просто разложенные иначе. Смена порядка —
+    /// наоборот, перекладка тех же карточек пружиной: растения остались,
+    /// поменялись только места.
+    private var viewMenu: some View {
+        Menu {
+            Section("Вид") {
+                Picker("Вид", selection: Binding(
+                    get: { look },
+                    set: { chosen in
+                        withAnimation(Motion.arrange) {
+                            revealed.removeAll()
+                            Settings.shared.look = chosen
+                        }
+                    }
+                )) {
+                    ForEach(Settings.Look.allCases) { item in
+                        Label(item.title, systemImage: item.icon).tag(item)
+                    }
+                }
+            }
+            Section("Порядок") {
+                Picker("Порядок", selection: Binding(
+                    get: { Settings.shared.order },
+                    set: { sort($0) }
+                )) {
+                    ForEach(Settings.Order.allCases) { item in
+                        Label(item.title, systemImage: item.icon).tag(item)
+                    }
+                }
             }
         } label: {
-            Image(systemName: look.other.icon)
+            Image(systemName: look.icon)
                 .font(.system(size: Metrics.cornerGlyph, weight: .semibold))
                 .foregroundStyle(Palette.ink)
                 .frame(width: Metrics.gearBox, height: Metrics.gearBox)
                 .contentTransition(.symbolEffect(.replace))
         }
+        .menuStyle(.button)
         .buttonStyle(.glass)
         .buttonBorderShape(.circle)
-        .accessibilityLabel(look.other.action)
+        .accessibilityLabel("Вид и порядок")
+    }
+
+    /// Выбрать порядок.
+    ///
+    /// Не ручной порядок заканчивает правку: тащить карточку по сетке,
+    /// которую тут же пересортируют, бессмысленно — она встала бы не
+    /// туда, куда её опустили.
+    private func sort(_ order: Settings.Order) {
+        withAnimation(Motion.arrange) {
+            Settings.shared.order = order
+            if order != .manual {
+                editing = false
+                dragged = nil
+            }
+        }
     }
 
     /// «Изменить» — и «Готово», пока правят.
@@ -292,7 +392,14 @@ struct HomeView: View {
             .buttonStyle(.glassProminent)
         } else {
             Button {
-                withAnimation(Motion.arrange) { editing = true }
+                // Расставлять руками — значит выбрать ручной порядок. Если
+                // растения лежали по имени или по сроку, сетка
+                // перекладывается в ручной порядок прямо сейчас, и тащат
+                // уже по нему.
+                withAnimation(Motion.arrange) {
+                    editing = true
+                    Settings.shared.order = .manual
+                }
             } label: {
                 Text("Изменить")
                     .frame(height: Metrics.gearBox)
@@ -352,39 +459,75 @@ struct HomeView: View {
     /// волна появления играла не по карточкам, а по всей сетке разом.
     /// Карточки к тому же намеренно не сливаются краями — то есть от
     /// контейнера здесь и не нужно ничего, кроме прохода.
+    @ViewBuilder
     private var shelf: some View {
-        Shelf(look) {
-            ForEach(Array(room.plants.enumerated()), id: \.element.id) { item in
-                PlantTile(plant: item.element,
-                          look: look,
-                          opening: opening,
-                          zoom: cardZoom,
-                          open: show,
-                          index: item.offset,
-                          room: roomIndex,
-                          appears: !revealed.contains(item.element.id),
-                          onShown: { revealed.insert(item.element.id) },
-                          editing: editing,
-                          dragged: $dragged,
-                          move: shift,
-                          drop: land)
-                    // Явная личность у каждой карточки: без неё ленивая
-                    // сетка подсовывала контекстному меню чужой узел — см.
-                    // `PlantTile`.
-                    .id(item.element.id)
+        if plants.isEmpty {
+            empty
+        } else {
+            Shelf(look) {
+                ForEach(Array(plants.enumerated()), id: \.element.id) { item in
+                    PlantTile(plant: item.element,
+                              look: look,
+                              opening: opening,
+                              zoom: cardZoom,
+                              open: show,
+                              index: item.offset,
+                              room: roomIndex,
+                              appears: !revealed.contains(item.element.id),
+                              onShown: { revealed.insert(item.element.id) },
+                              editing: editing,
+                              dragged: $dragged,
+                              move: shift,
+                              drop: land)
+                        // Явная личность у каждой карточки: без неё ленивая
+                        // сетка подсовывала контекстному меню чужой узел — см.
+                        // `PlantTile`.
+                        .id(item.element.id)
+                }
+            }
+            // Ровно на свес растяжки: в покое сход до карточек не
+            // дотягивается, а уезжающим наверх есть где раствориться.
+            .padding(.top, Metrics.headerWashDrop)
+            .padding(.horizontal, Metrics.contentMargin)
+            .padding(.bottom, 24)
+            // Затухание уходящим карточкам. Без этого их нечем анимировать:
+            // переход у них описан, но анимации в области видимости нет, и
+            // старая комната просто пропадала кадром.
+            .animation(Motion.leave, value: roomIndex)
+        }
+    }
+
+    /// Пустая комната — или пустой сад.
+    ///
+    /// Не пустое место, а строка о том, что делать: пустой экран без
+    /// единого слова читается поломкой, а не пустой комнатой. Приходит тем
+    /// же системным размытием, что и весь текст приложения.
+    private var empty: some View {
+        // Строкой заранее: собранная прямо в `Text` из тернарного и
+        // сложений, она заставляла бы компилятор перебирать все
+        // перегрузки `Text` для каждого куска.
+        let note: String = garden.rooms.isEmpty
+            ? "В саду пока ничего не растёт. Посадите первое растение во вкладке «Добавить»."
+            : "В этой комнате пока ничего не растёт. Посадите сюда растение во вкладке «Добавить» или перевезите из другой комнаты."
+        return VStack(spacing: 14) {
+            Image(systemName: "leaf")
+                .font(.system(size: 30, weight: .regular))
+                .foregroundStyle(.tertiary)
+            Text(note)
+                .font(Typography.settingNote)
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+                .fixedSize(horizontal: false, vertical: true)
+            if garden.rooms.isEmpty {
+                Button("Завести комнату") { roomsOpen = true }
+                    .buttonStyle(.glass)
+                    .font(Typography.settingNote)
             }
         }
-        // Ровно на свес растяжки: в покое сход до карточек не
-        // дотягивается, а уезжающим наверх есть где раствориться.
-        .padding(.top, Metrics.headerWashDrop)
-        .padding(.horizontal, Metrics.contentMargin)
-        .padding(.bottom, 24)
-        // Затухание уходящим карточкам. Без этого их нечем анимировать:
-        // переход у них описан, но анимации в области видимости нет, и
-        // старая комната просто пропадала кадром.
-        .animation(Motion.leave, value: roomIndex)
-        // Сменили комнату — растения другие, и всплыть должны все.
-        .onChange(of: roomIndex) { _, _ in revealed.removeAll() }
+        .frame(maxWidth: .infinity)
+        .padding(.horizontal, 48)
+        .padding(.top, 120)
+        .transition(.blurReplace)
     }
 
     /// Перетаскиваемое растение зашло на чужое место — соседи
