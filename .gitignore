@@ -10,14 +10,10 @@ xcuserdata/
 *.p12
 *.p8
 
-# Выгрузка из Figma: raw.json огромный, рендеры бинарные.
-# Разобранный дизайн (screens.json/tokens.json) держим в репозитории —
-# по нему видно, из чего собран интерфейс.
-design/raw.json
-design/png/
-# Растровые заливки из макета: то, что нужно приложению, уже лежит
-# в ios-native/Sprout/Assets.xcassets.
-design/img/
+# Выгрузка из Figma (tool/figma_extract.py) — вся генерируется заново.
+# Источник правды — сам макет, а то, что нужно приложению, уже лежит в
+# коде и в ios-native/Sprout/Assets.xcassets.
+design/
 
 # Секреты. Токен Figma живёт только в окружении.
 .env

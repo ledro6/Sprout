@@ -114,7 +114,7 @@ garden.rename("baksik", to: "  Барсик  ")
 check(garden.plant(id: "baksik")!.name, "Барсик", "имя обрезается по краям")
 garden.rename("baksik", to: "   ")
 check(garden.plant(id: "baksik")!.name, "Барсик", "пустое имя не сохраняется")
-garden.delete("baksik")
+garden.remove("baksik")
 check(garden.plant(id: "baksik") == nil, "удалённое растение исчезает")
 check("\(garden.rooms[0].plants.count)", "7", "и уходит из своей комнаты")
 

@@ -117,10 +117,6 @@ enum Palette {
 /// текста». Числа макета сместились на пункт-другой к ближайшему стилю (18 →
 /// 17, 21 → 20, 10 → 11).
 enum Typography {
-    /// В макете 18 semibold. На главной размер перебирается плавно — не
-    /// отсюда.
-    static let room = Font.system(.headline)
-
     static let cardTitle = Font.system(.callout, weight: .medium)
 
     static let cardCaption = Font.system(.caption2)
