@@ -360,20 +360,12 @@ struct SearchView: View {
         .padding(.top, 140)
     }
 
+    /// Находки — тем же видом, что и на главной: плиткой или списком.
     private var grid: some View {
-        // Без общего стеклянного контейнера — как на главной: он
-        // склеивает сетку в один слой, и карточке нечем разворачиваться
-        // в экран.
-        LazyVGrid(
-            columns: [
-                GridItem(.flexible(), spacing: Metrics.gutterH),
-                GridItem(.flexible(), spacing: Metrics.gutterH),
-            ],
-            spacing: Metrics.gutterV
-        ) {
+        Shelf(Settings.shared.look) {
             ForEach(results) { plant in
-                PlantTile(plant: plant, opening: opening, zoom: cardZoom,
-                          open: show)
+                PlantTile(plant: plant, look: Settings.shared.look,
+                          opening: opening, zoom: cardZoom, open: show)
                     .id(plant.id)
             }
         }

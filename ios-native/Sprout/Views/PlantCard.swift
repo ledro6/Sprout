@@ -210,6 +210,11 @@ final class Tenant {
 struct PlantMenu: ViewModifier {
     let id: Plant.ID
 
+    /// Есть ли меню вообще. Пока правят порядок, его нет: долгое нажатие
+    /// там поднимает карточку, чтобы её перетащить, и меню, всплывшее
+    /// под пальцем, только мешало бы.
+    var enabled = true
+
     @Environment(Garden.self) private var garden
 
     /// Что пришло снаружи: сетка гасит ореол у карточки, которую
@@ -230,29 +235,13 @@ struct PlantMenu: ViewModifier {
     private var plant: Plant? { garden.plant(id: tenant.id) }
 
     func body(content: Content) -> some View {
-        content
+        menu(content
             // Заселяем ячейку до всего остального: замыкания меню могут
             // быть какими угодно старыми, а читают они отсюда.
             .onChange(of: id, initial: true) { _, now in tenant.id = now }
             .onGeometryChange(for: CGRect.self) { $0.frame(in: .global) }
                 action: { keep($0) }
-            .environment(\.sproutHalos, halos && !previewing)
-            .contextMenu {
-                Button { water() } label: {
-                    Label("Полить сейчас", systemImage: "drop.fill")
-                }
-                Button {
-                    draft = garden.plant(id: tenant.id)?.name ?? ""
-                    renaming = true
-                } label: {
-                    Label("Переименовать", systemImage: "pencil")
-                }
-                Button(role: .destructive) { deleting = true } label: {
-                    Label("Удалить", systemImage: "trash")
-                }
-            } preview: {
-                preview
-            }
+            .environment(\.sproutHalos, halos && !previewing))
             .alert("Переименовать", isPresented: $renaming) {
                 TextField("Кличка", text: $draft)
                 Button("Отмена", role: .cancel) {}
@@ -270,6 +259,35 @@ struct PlantMenu: ViewModifier {
             } message: {
                 Text("Растение исчезнет из комнаты. Вернуть его будет нельзя.")
             }
+    }
+
+    /// Само меню — или ничего, пока правят порядок.
+    ///
+    /// Ветвлением, а не пустым списком пунктов: пустое меню система всё
+    /// равно может поднять одним предпросмотром, и перетаскивание с ним
+    /// спорило бы за одно и то же удержание.
+    @ViewBuilder
+    private func menu(_ base: some View) -> some View {
+        if enabled {
+            base.contextMenu {
+                Button { water() } label: {
+                    Label("Полить сейчас", systemImage: "drop.fill")
+                }
+                Button {
+                    draft = garden.plant(id: tenant.id)?.name ?? ""
+                    renaming = true
+                } label: {
+                    Label("Переименовать", systemImage: "pencil")
+                }
+                Button(role: .destructive) { deleting = true } label: {
+                    Label("Удалить", systemImage: "trash")
+                }
+            } preview: {
+                preview
+            }
+        } else {
+            base
+        }
     }
 
     /// Принять замер карточки — или не принять.

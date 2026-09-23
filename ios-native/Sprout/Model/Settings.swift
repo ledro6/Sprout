@@ -54,6 +54,36 @@ final class Settings {
         }
     }
 
+    /// Как лежат растения: плиткой или списком.
+    ///
+    /// Плитка первая и по умолчанию: в ней главная и рисовалась, и в ней
+    /// видно главное — само растение. Список нужен, когда растений много:
+    /// в плитке их на экране шесть, в списке вдвое больше, и найти своё
+    /// глазами проще.
+    enum Look: String, CaseIterable, Identifiable {
+        case grid, list
+
+        var id: String { rawValue }
+
+        var icon: String {
+            switch self {
+            case .grid: "square.grid.2x2"
+            case .list: "list.bullet"
+            }
+        }
+
+        /// Подпись кнопки, которая сюда переключает.
+        var action: String {
+            switch self {
+            case .grid: "Показать плиткой"
+            case .list: "Показать списком"
+            }
+        }
+
+        /// Второй из двух — тот, на который переключает кнопка.
+        var other: Look { self == .grid ? .list : .grid }
+    }
+
     /// Сколько всего фигурок нарисовано — росток, капля, цветок, горшок.
     /// Их номера совпадают с порядком в `SproutShapes.pieces`.
     static let shapeCount = 4
@@ -95,6 +125,15 @@ final class Settings {
 
     var theme: Theme {
         didSet { store.set(theme.rawValue, forKey: Key.theme) }
+    }
+
+    /// Вид растений — на главной и в поиске разом.
+    ///
+    /// Один на оба экрана: это не свойство комнаты, а то, как хозяину
+    /// удобнее смотреть на свои растения, и в поиске он хочет видеть их
+    /// так же.
+    var look: Look {
+        didSet { store.set(look.rawValue, forKey: Key.look) }
     }
 
     /// Какие фигурки в узоре, номерами.
@@ -203,6 +242,7 @@ final class Settings {
 
     private enum Key {
         static let theme = "theme"
+        static let look = "plantLook"
         /// Прежний ключ — количество фигурок. Читается один раз, ради
         /// тех, у кого настройка уже сохранена.
         static let kinds = "patternKinds"
@@ -238,6 +278,7 @@ final class Settings {
         self.store = store
         theme = Theme(rawValue: store.string(forKey: Key.theme) ?? "")
             ?? .system
+        look = Look(rawValue: store.string(forKey: Key.look) ?? "") ?? .grid
         // Ноль здесь значит «ключа нет»: `UserDefaults` не различает
         // отсутствие и ноль, а пустого набора фигурок не бывает.
         let mask = store.integer(forKey: Key.shapes)

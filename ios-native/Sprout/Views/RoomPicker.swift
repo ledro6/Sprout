@@ -30,6 +30,13 @@ struct RoomPicker: View {
             HStack(spacing: size / 6) {
                 Text(rooms[selection])
                     .font(.system(size: size, weight: .semibold))
+                    // Доросшая до заголовка подпись делит строку с тремя
+                    // кнопками, и длинной комнате — «Гостиной» — места в
+                    // ней может не хватить. Тогда подпись чуть ужимается,
+                    // а не обрезается многоточием: комнату должно быть
+                    // видно целиком.
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.6)
                 Image(systemName: "chevron.up.chevron.down")
                     // Стрелка чуть мельче подписи — как в макете, где при
                     // 18 у подписи у неё было 15.

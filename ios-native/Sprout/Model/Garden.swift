@@ -168,6 +168,33 @@ final class Garden {
         change(id) { $0.name = trimmed }
     }
 
+    /// Переставить растение на место другого — в той же комнате.
+    ///
+    /// Не «вставить перед», а «занять место»: так ведёт себя перестановка
+    /// на экране «Домой». Тащишь вперёд — растение встаёт за тем, над кем
+    /// его держат, и сосед отступает назад; тащишь назад — встаёт перед
+    /// ним, и сосед отступает вперёд. Сетка при этом перекладывается
+    /// прямо под пальцем, на каждом переходе через соседа, а не одним
+    /// махом в конце.
+    ///
+    /// Между комнатами не переносит: комнату на главной видно одну, и
+    /// тащить растению некуда, кроме как по ней. Переезд в другую комнату
+    /// — другое действие, и прятать его в перетаскивание незачем.
+    func move(_ id: Plant.ID, to target: Plant.ID) {
+        guard id != target else { return }
+        for room in rooms.indices {
+            let plants = rooms[room].plants
+            guard let from = plants.firstIndex(where: { $0.id == id })
+            else { continue }
+            guard let to = plants.firstIndex(where: { $0.id == target })
+            else { return }
+            let plant = rooms[room].plants.remove(at: from)
+            rooms[room].plants.insert(plant, at: to)
+            save()
+            return
+        }
+    }
+
     func delete(_ id: Plant.ID) {
         // Снимок уходит вместе с растением: иначе Documents копил бы
         // картинки, на которые больше никто не смотрит.

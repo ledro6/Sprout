@@ -1,6 +1,8 @@
 import SwiftUI
+import UniformTypeIdentifiers
 
-/// Главная: заголовок раздела, выбор комнаты и сетка растений.
+/// Главная: заголовок раздела, выбор комнаты и растения — плиткой или
+/// списком.
 struct HomeView: View {
     @Environment(Garden.self) private var garden
 
@@ -55,6 +57,18 @@ struct HomeView: View {
     /// — не место, где живут, а место, куда заходят и возвращаются.
     @State private var settings = false
 
+    /// Правят ли сейчас порядок растений.
+    ///
+    /// Режимом, а не всегда: долгое нажатие на карточку уже занято её
+    /// меню — полить, переименовать, удалить, — и перетаскивание с ним
+    /// спорило бы за одно и то же удержание. Как на экране «Домой»:
+    /// сперва «Изменить», потом двигать.
+    @State private var editing = false
+
+    /// Кого сейчас тащат. Один на всю полку: бледнеть должна только его
+    /// карточка, а знать, над кем его держат, должна каждая.
+    @State private var dragged: Plant.ID?
+
     /// Насколько экран прокручен от верха.
     @State private var scrolled: CGFloat = 0
 
@@ -76,6 +90,9 @@ struct HomeView: View {
     private var grown: CGFloat {
         min(max(scrolled / titleHeight, 0), 1)
     }
+
+    /// Как лежат растения — плиткой или списком. См. `Settings.Look`.
+    private var look: Settings.Look { Settings.shared.look }
 
     /// Открытая комната. Номер придерживаем в границах: комнат может
     /// стать меньше, а выбор остаться прежним.
@@ -106,7 +123,7 @@ struct HomeView: View {
                         // отыграла бы под заставкой, и на экран они
                         // выехали бы разом.
                         if Launch.shared.step >= 4 {
-                            grid
+                            shelf
                         }
                     } header: {
                         roomBar
@@ -122,6 +139,9 @@ struct HomeView: View {
             } action: { _, offset in
                 scrolled = offset
             }
+            // Отпустить карточку можно где угодно на экране, а не только
+            // над другой карточкой, — см. `Rest`.
+            .onDrop(of: [.text], delegate: Rest(dragged: $dragged, drop: land))
             .background { SproutBackground() }
             // Панель сверху не нужна: заголовок раздела живёт в самом
             // содержимом. У экрана растения панель своя.
@@ -171,13 +191,14 @@ struct HomeView: View {
                        size: roomSize + (roomGrown - roomSize) * grown)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .sproutRide()
-            gear
+            corner
         }
         .padding(.horizontal, Metrics.contentMargin)
         .background(alignment: .top) { headerWash }
     }
 
-    /// Кнопка настроек — справа сверху, в одном ряду с комнатой.
+    /// Кнопки справа сверху: вид, правка порядка и настройки — в одном
+    /// ряду с комнатой.
     ///
     /// Здесь, а не в панели навигации: панели на главной нет вовсе —
     /// заголовок раздела живёт в самом содержимом, — а строка комнаты
@@ -209,10 +230,75 @@ struct HomeView: View {
     /// кнопка не двигается вовсе: стоит на одном месте экрана и в покое,
     /// и на прокрутке. Оставь её в своей строке — уехала бы вниз; положи
     /// в строку заголовка — уехала бы с ним за край.
-    private var gear: some View {
-        SproutGear { settings = true }
-            .sproutRide()
-            .offset(y: -titleHeight * (1 - grown))
+    ///
+    /// Вид и правка встали рядом с шестерёнкой и едут вместе с ней: это
+    /// те же кнопки «для всего экрана», и место у них то же — единственное
+    /// на главной, которое всегда наверху.
+    private var corner: some View {
+        HStack(spacing: Metrics.cornerGap) {
+            lookButton
+            editButton
+            SproutGear { settings = true }
+        }
+        .sproutRide()
+        .offset(y: -titleHeight * (1 - grown))
+    }
+
+    /// Плиткой или списком. Значок — того вида, на который переключит:
+    /// тот, что сейчас, и так на экране.
+    ///
+    /// Смена вида заново проигрывает волну появления: карточки не
+    /// перетекают в строки, а уходят и приходят, и волна показывает, что
+    /// это те же растения, просто разложенные иначе.
+    private var lookButton: some View {
+        Button {
+            withAnimation(Motion.arrange) {
+                revealed.removeAll()
+                Settings.shared.look = look.other
+            }
+        } label: {
+            Image(systemName: look.other.icon)
+                .font(.system(size: Metrics.cornerGlyph, weight: .semibold))
+                .foregroundStyle(Palette.ink)
+                .frame(width: Metrics.gearBox, height: Metrics.gearBox)
+                .contentTransition(.symbolEffect(.replace))
+        }
+        .buttonStyle(.glass)
+        .buttonBorderShape(.circle)
+        .accessibilityLabel(look.other.action)
+    }
+
+    /// «Изменить» — и «Готово», пока правят.
+    ///
+    /// «Готово» выделено — синим стеклом, как у системных кнопок,
+    /// которыми заканчивают правку: пока оно горит, экран не в покое, и
+    /// это должно быть видно с первого взгляда.
+    ///
+    /// Высота подписи — та же коробка, что у значков: без неё текстовая
+    /// кнопка выходила бы на пару пунктов ниже соседних круглых.
+    @ViewBuilder
+    private var editButton: some View {
+        if editing {
+            Button {
+                withAnimation(Motion.arrange) {
+                    editing = false
+                    dragged = nil
+                }
+            } label: {
+                Text("Готово")
+                    .fontWeight(.semibold)
+                    .frame(height: Metrics.gearBox)
+            }
+            .buttonStyle(.glassProminent)
+        } else {
+            Button {
+                withAnimation(Motion.arrange) { editing = true }
+            } label: {
+                Text("Изменить")
+                    .frame(height: Metrics.gearBox)
+            }
+            .buttonStyle(.glass)
+        }
     }
 
     /// Растяжка под строкой комнаты: от самого верха экрана до конца
@@ -256,32 +342,32 @@ struct HomeView: View {
         .allowsHitTesting(false)
     }
 
-    /// Сетка без общего стеклянного контейнера.
+    /// Растения комнаты — плиткой или списком. См. `Shelf`.
     ///
-    /// Контейнер сводил стекло всех карточек в один проход рисования —
-    /// экономия настоящая, но платить за неё пришлось тем, ради чего
-    /// экран и делался. Он собирает содержимое в один слой, и обе
-    /// анимации карточки шли через него: разворачивание в экран теряло
-    /// источник, а волна появления играла не по карточкам, а по всей
-    /// сетке разом. Карточки к тому же намеренно не сливаются краями —
-    /// то есть от контейнера здесь и не нужно ничего, кроме прохода.
-    private var grid: some View {
-        LazyVGrid(
-            columns: [
-                GridItem(.flexible(), spacing: Metrics.gutterH),
-                GridItem(.flexible(), spacing: Metrics.gutterH),
-            ],
-            spacing: Metrics.gutterV
-        ) {
+    /// Общего стеклянного контейнера нет, и это не забыто. Контейнер
+    /// сводил стекло всех карточек в один проход рисования — экономия
+    /// настоящая, но платить за неё пришлось тем, ради чего экран и
+    /// делался. Он собирает содержимое в один слой, и обе анимации
+    /// карточки шли через него: разворачивание в экран теряло источник, а
+    /// волна появления играла не по карточкам, а по всей сетке разом.
+    /// Карточки к тому же намеренно не сливаются краями — то есть от
+    /// контейнера здесь и не нужно ничего, кроме прохода.
+    private var shelf: some View {
+        Shelf(look) {
             ForEach(Array(room.plants.enumerated()), id: \.element.id) { item in
                 PlantTile(plant: item.element,
+                          look: look,
                           opening: opening,
                           zoom: cardZoom,
                           open: show,
                           index: item.offset,
                           room: roomIndex,
                           appears: !revealed.contains(item.element.id),
-                          onShown: { revealed.insert(item.element.id) })
+                          onShown: { revealed.insert(item.element.id) },
+                          editing: editing,
+                          dragged: $dragged,
+                          move: shift,
+                          drop: land)
                     // Явная личность у каждой карточки: без неё ленивая
                     // сетка подсовывала контекстному меню чужой узел — см.
                     // `PlantTile`.
@@ -299,5 +385,17 @@ struct HomeView: View {
         .animation(Motion.leave, value: roomIndex)
         // Сменили комнату — растения другие, и всплыть должны все.
         .onChange(of: roomIndex) { _, _ in revealed.removeAll() }
+    }
+
+    /// Перетаскиваемое растение зашло на чужое место — соседи
+    /// расступаются.
+    private func shift(_ who: Plant.ID, _ spot: Plant.ID) {
+        withAnimation(Motion.arrange) { garden.move(who, to: spot) }
+    }
+
+    /// Карточку отпустили: она уже на своём новом месте, осталось вернуть
+    /// ей цвет.
+    private func land() {
+        withAnimation(Motion.arrange) { dragged = nil }
     }
 }

@@ -119,6 +119,40 @@ garden.delete("baksik")
 check(garden.plant(id: "baksik") == nil, "удалённое растение исчезает")
 check("\(garden.rooms[0].plants.count)", "7", "и уходит из своей комнаты")
 
+print("перестановка в комнате:")
+/// Номера растений комнаты по порядку — так порядок читается глазами.
+func lineup(_ room: Int) -> [String] { garden.rooms[room].plants.map(\.id) }
+let lined = lineup(0)
+let (p1, p2, p3, p4) = (lined[0], lined[1], lined[2], lined[3])
+garden.move(p1, to: p3)
+check(lineup(0)[0 ..< 4] == [p2, p3, p1, p4][...],
+      "вперёд — встаёт за тем, над кем держат, сосед отступает назад")
+garden.move(p1, to: p2)
+check(lineup(0)[0 ..< 4] == [p1, p2, p3, p4][...],
+      "назад — встаёт перед ним, и порядок вернулся")
+garden.move(p4, to: p1)
+check(lineup(0)[0 ..< 4] == [p4, p1, p2, p3][...],
+      "с конца в начало — остальные сдвинулись на одно")
+check(lineup(0).count == lined.count && Set(lineup(0)) == Set(lined),
+      "никто не потерялся и не задвоился")
+let kitchenLine = lineup(2)
+garden.move(p1, to: kitchenLine[0])
+check(lineup(0)[0 ..< 4] == [p4, p1, p2, p3][...]
+      && lineup(2) == kitchenLine, "в чужую комнату не переносит")
+garden.move(p1, to: p1)
+check(lineup(0)[0 ..< 4] == [p4, p1, p2, p3][...],
+      "на своё же место — ничего не меняется")
+garden.move("никого-нет", to: p1)
+check(lineup(0)[0 ..< 4] == [p4, p1, p2, p3][...],
+      "чужой номер ничего не трогает")
+let shuffled = lineup(0)
+// Через слепок, а не через новый сад: на Linux папка документов не
+// идёт за подменённым HOME, и файл сада проверке не достать.
+let lineupFile = try! JSONEncoder().encode(garden.state)
+let lineupBack = try! JSONDecoder().decode(GardenState.self, from: lineupFile)
+check(lineupBack.rooms[0].plants.map(\.id) == shuffled,
+      "порядок ложится в файл сада и читается обратно")
+
 print("поиск по всей квартире:")
 check("\(Seed.search("лера", in: Seed.rooms).count)", "1", "«лера» находит одно")
 check("\(Seed.search("баксик", in: Seed.rooms).count)", "2", "«баксик» находит два")
@@ -128,11 +162,13 @@ check("\(Seed.search("   ", in: Seed.rooms).count)", "0", "пустой запр
 print("настройки: значения по умолчанию и границы:")
 let keys = ["theme", "patternKinds", "patternShapes", "reminders",
             "remindThreshold", "patternTint", "waveTint",
-            "hushedHaptics", "stillPattern", "stiffShapes"]
+            "hushedHaptics", "stillPattern", "stiffShapes",
+            "plantLook"]
 let store = UserDefaults.standard
 for key in keys { store.removeObject(forKey: key) }
 let fresh = Settings(store: store)
 check("\(fresh.theme)", "system", "тема по умолчанию — за системой")
+check("\(fresh.look)", "grid", "растения по умолчанию плиткой — как в макете")
 check("\(fresh.chosen)", "[0, 1]", "в узоре росток и капля — узор макета")
 check("\(fresh.patternTint)", "green", "узор по умолчанию зелёный — цвет макета")
 check("\(fresh.waveTint)", "blue", "волна по умолчанию синяя")
@@ -156,6 +192,7 @@ check("\(fresh.chosen)", "[2]", "несуществующая фигурка н�
 
 print("настройки переживают запуск:")
 fresh.theme = .dark
+fresh.look = .list
 fresh.toggle(shape: 3)
 fresh.reminders = true
 fresh.threshold = 0.3
@@ -163,6 +200,7 @@ fresh.patternTint = .rose
 fresh.waveTint = .amber
 let reopened = Settings(store: store)
 check("\(reopened.theme)", "dark", "тема прочиталась обратно")
+check("\(reopened.look)", "list", "и вид списком")
 check("\(reopened.chosen)", "[2, 3]", "и набор фигурок")
 check(reopened.reminders, "и переключатель напоминаний")
 check(round2(reopened.threshold), "0.30", "и порог")

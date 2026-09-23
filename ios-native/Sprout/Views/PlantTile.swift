@@ -1,6 +1,7 @@
 import SwiftUI
 
-/// Карточка растения в сетке — со всем, что к ней прилагается.
+/// Растение на полке — карточкой в сетке или строкой в списке, со всем,
+/// что к нему прилагается.
 ///
 /// Отдельный тип, а не цепочка модификаторов прямо в `ForEach`, и это
 /// починка, а не наведение порядка.
@@ -18,6 +19,9 @@ import SwiftUI
 struct PlantTile: View {
     let plant: Plant
 
+    /// Карточкой в сетке или строкой в списке.
+    var look: Settings.Look = .grid
+
     /// Что сейчас разворачивается в экран — у этой карточки гасится ореол.
     let opening: Plant.ID?
 
@@ -33,13 +37,26 @@ struct PlantTile: View {
     var appears = false
     var onShown: () -> Void = {}
 
+    /// Правка порядка. На поиске её нет: там растения лежат по находкам,
+    /// и переставлять там нечего.
+    var editing = false
+    var dragged: Binding<Plant.ID?> = .constant(nil)
+    var move: (Plant.ID, Plant.ID) -> Void = { _, _ in }
+    var drop: () -> Void = {}
+
     var body: some View {
-        Button { open(plant.id) } label: {
-            PlantCard(plant: plant)
+        // В правке нажатие не открывает растение: оно там — начало
+        // перетаскивания, и уехать с экрана посреди него было бы
+        // обидно.
+        Button { if !editing { open(plant.id) } } label: {
+            label
         }
         .buttonStyle(.plain)
-        // Долгое нажатие — системное меню растения.
-        .modifier(PlantMenu(id: plant.id))
+        // Долгое нажатие — системное меню растения, а в правке —
+        // перетаскивание.
+        .modifier(PlantMenu(id: plant.id, enabled: !editing))
+        .modifier(Arrange(id: plant.id, look: look, on: editing,
+                          dragged: dragged, move: move, drop: drop))
         // Ореолы гасит только у той карточки, что открывается.
         .environment(\.sproutHalos, opening != plant.id)
         // Появление ведёт сама карточка — от номера комнаты, а не от
@@ -56,5 +73,20 @@ struct PlantTile: View {
         // снимается с готовой геометрии, поэтому источник навешен
         // последним.
         .matchedTransitionSource(id: plant.id, in: zoom)
+    }
+
+    /// Сама карточка или строка. Качается только карточка: у строки в
+    /// правке есть ручка, как в списках iOS, а качание — язык сетки
+    /// значков.
+    @ViewBuilder
+    private var label: some View {
+        switch look {
+        case .grid:
+            PlantCard(plant: plant)
+                .modifier(Jiggle(on: editing, index: index,
+                                 phase: plant.pulsePhase))
+        case .list:
+            PlantRow(plant: plant, editing: editing)
+        }
     }
 }
