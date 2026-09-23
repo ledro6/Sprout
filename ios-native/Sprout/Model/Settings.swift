@@ -183,6 +183,12 @@ final class Settings {
         didSet { store.set(!haptics, forKey: Key.hushed) }
     }
 
+    /// Беззвучный режим телефона звуки глушит и так; это — чтобы молчали и
+    /// со включённым звонком.
+    var sounds: Bool {
+        didSet { store.set(!sounds, forKey: Key.muted) }
+    }
+
     /// Своя, а не «Уменьшение движения»: то выключает всё, а мешать может
     /// один фон. Датчик не гасится — тряску выключать не просили.
     var parallax: Bool {
@@ -245,6 +251,8 @@ final class Settings {
         /// отвечает `false`, а отклик по умолчанию включён.
         static let hushed = "hushedHaptics"
         /// Тоже наоборот.
+        static let muted = "mutedSounds"
+        /// Тоже наоборот.
         static let stillPattern = "stillPattern"
         static let stiffShapes = "stiffShapes"
     }
@@ -279,6 +287,7 @@ final class Settings {
         waveTint = Self.tint(store, Key.waveTint) ?? Tint.defaultWave
         avatarTint = Self.tint(store, Key.avatarTint) ?? Tint.defaultAvatar
         haptics = !store.bool(forKey: Key.hushed)
+        sounds = !store.bool(forKey: Key.muted)
         parallax = !store.bool(forKey: Key.stillPattern)
         sway = !store.bool(forKey: Key.stiffShapes)
         reminders = store.bool(forKey: Key.reminders)

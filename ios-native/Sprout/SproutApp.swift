@@ -52,6 +52,7 @@ struct RootView: View {
         .environment(\.notch, notch)
         .task { await runClock() }
         .task { await Launch.shared.run() }
+        .task { Chime.warm() }
         // Состав сада сменился — пересказываем Siri клички.
         .onChange(of: garden.roster, initial: true) { _, _ in
             SproutShortcuts.updateAppShortcutParameters()

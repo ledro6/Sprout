@@ -101,6 +101,30 @@ struct SettingsView: View {
 
             HStack(alignment: .center, spacing: 12) {
                 VStack(alignment: .leading, spacing: 3) {
+                    Text("Звуки")
+                        .font(Typography.settingRow)
+                        .foregroundStyle(Palette.ink)
+                    Text("Полив, посадка, удаление и возврат звучат. "
+                         + "В беззвучном режиме телефона молчат.")
+                        .font(Typography.settingNote)
+                        .foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                Spacer(minLength: 0)
+                // Включили — сразу слышно, как звучит.
+                Toggle("Звуки", isOn: Binding(
+                    get: { settings.sounds },
+                    set: {
+                        settings.sounds = $0
+                        if $0 { Chime.pour.play() }
+                    }))
+                    .labelsHidden()
+            }
+
+            SproutDivider()
+
+            HStack(alignment: .center, spacing: 12) {
+                VStack(alignment: .leading, spacing: 3) {
                     Text("Узор за наклоном")
                         .font(Typography.settingRow)
                         .foregroundStyle(Palette.ink)

@@ -1,8 +1,8 @@
 import SwiftUI
 
-/// Экран растения: фото, сведения и история поливов. Растение берётся из сада
-/// по номеру, а не копией: его поливают и переименовывают прямо здесь, а
-/// почва подсыхает сама.
+/// Экран растения: фото, сведения, заметки и история поливов. Растение
+/// берётся из сада по номеру, а не копией: его поливают и правят прямо здесь,
+/// а почва подсыхает сама.
 struct PlantView: View {
     let plantID: Plant.ID
 
@@ -14,6 +14,12 @@ struct PlantView: View {
 
     @State private var moving = false
     @State private var roomDraft = ""
+
+    @State private var tuning = false
+
+    /// Заметка правится на месте и ложится в сад, когда поле отпускают.
+    @State private var noteDraft = ""
+    @FocusState private var writing: Bool
 
     /// Отсюда идёт волна полива. Не состоянием — см. `Spot`.
     @State private var spot = Spot()
@@ -30,6 +36,7 @@ struct PlantView: View {
                 VStack(spacing: 44) {
                     photo(plant)
                     facts(plant)
+                    notes
                     diary(plant)
                 }
                 .padding(.horizontal, Metrics.margin)
@@ -37,6 +44,7 @@ struct PlantView: View {
                 .padding(.bottom, 40)
             }
         }
+        .scrollDismissesKeyboard(.interactively)
         .background { SproutBackground() }
         .navigationTitle(plant?.name ?? "")
         .navigationBarTitleDisplayMode(.inline)
@@ -51,11 +59,16 @@ struct PlantView: View {
             ToolbarItem(placement: .principal) { title }
             ToolbarItem(placement: .topBarTrailing) { actions }
                 .sharedBackgroundVisibility(.hidden)
+            ToolbarItemGroup(placement: .keyboard) {
+                Spacer()
+                Button("Готово") { writing = false }
+            }
         }
         // Панель проступает, отстав от разворачивания карточки. Отставание
         // здесь, а не задержкой анимации — иначе с задержкой шёл бы и уход; и
         // отдельным проходом — смену в проходе появления SwiftUI схлопывает.
         .onAppear {
+            noteDraft = plant?.note ?? ""
             Task { @MainActor in
                 try? await Task.sleep(for: .seconds(Motion.chromeDelay))
                 chrome = true
@@ -79,11 +92,19 @@ struct PlantView: View {
         } message: {
             Text("Растение переедет туда, и комната появится в списке.")
         }
+        .sheet(isPresented: $tuning) {
+            PlantSettingsView(plantID: plantID).environment(garden)
+        }
         // Растение удалили — экран закрывается сам; вернуть можно с плашки
         // внизу.
         .onChange(of: plant == nil) { _, gone in
             if gone { close() }
         }
+        .onChange(of: writing) { _, now in
+            if !now { keepNote() }
+        }
+        // Закрыли экран, не отпустив поле, — заметка всё равно сохраняется.
+        .onDisappear { keepNote() }
     }
 
     private var back: some View {
@@ -121,6 +142,9 @@ struct PlantView: View {
             } label: {
                 Label("Переименовать", systemImage: "pencil")
             }
+            Button { tuning = true } label: {
+                Label("Настройки", systemImage: "slider.horizontal.3")
+            }
             MoveMenu(current: garden.roomName(of: plantID),
                      rooms: garden.rooms.map(\.name),
                      move: relocate,
@@ -146,6 +170,8 @@ struct PlantView: View {
     /// неё кадр, и иначе в нём была бы резкая панель. Потянули экран вниз —
     /// закрывает само разворачивание, мимо этого.
     private func close() {
+        writing = false
+        keepNote()
         chrome = false
         Task { @MainActor in
             try? await Task.sleep(for: .seconds(Motion.chromeLead))
@@ -155,7 +181,7 @@ struct PlantView: View {
 
     /// Полив с анимацией, иначе тревожная тень гасла бы щелчком.
     private func water() {
-        withAnimation(Motion.appear) { garden.water(plantID) }
+        guard Bin.shared.water(plantID, in: garden) else { return }
         Cheer.shared.now(from: spot.rect)
         Feel.water()
     }
@@ -167,6 +193,45 @@ struct PlantView: View {
 
     private func relocate(to room: String) {
         withAnimation(Motion.number) { garden.relocate(plantID, to: room) }
+    }
+
+    /// Звук — только если заметка правда изменилась: отпустить поле ещё не
+    /// значит что-то сохранить.
+    private func keepNote() {
+        guard let plant else { return }
+        let before = plant.note
+        garden.note(plantID, noteDraft)
+        let after = garden.plant(id: plantID)?.note
+        noteDraft = after ?? ""
+        if after != before { Feel.done() }
+    }
+
+    /// Шёпотом, как в «Заметках»: крупная подсказка читалась бы уже записанным.
+    private var notes: some View {
+        VStack(alignment: .leading, spacing: Metrics.diaryGap) {
+            Text("Заметки")
+                .font(Typography.groupTitle)
+                .foregroundStyle(.secondary)
+            TextField("Пересадка, удобрения, где любит стоять…",
+                      text: $noteDraft, axis: .vertical)
+                .textFieldStyle(.plain)
+                .font(Typography.settingRow)
+                .foregroundStyle(Palette.ink)
+                .lineLimit(1 ... 12)
+                .focused($writing)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.horizontal, 25)
+        .padding(.vertical, 22)
+        .sproutPlate(in: plate)
+        .sproutRide()
+    }
+
+    private func forget(_ moment: Date) {
+        withAnimation(Motion.appear) {
+            garden.forget(Watering(plant: plantID, when: moment))
+        }
+        Feel.toss()
     }
 
     /// В макете 336×347: квадратное фото плюс поля.
@@ -226,6 +291,11 @@ struct PlantView: View {
                     entry(moment)
                         .transition(.blurReplace)
                 }
+                Text("Ошибочную запись удалит долгое нажатие.")
+                    .font(Typography.settingNote)
+                    .foregroundStyle(.secondary)
+                    .padding(.top, 4)
+                    .transition(.blurReplace)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -258,6 +328,8 @@ struct PlantView: View {
         }
     }
 
+    /// Удалить — долгим нажатием: запись маленькая, смахивание по ней
+    /// спорило бы с прокруткой.
     private func entry(_ moment: Date) -> some View {
         HStack(spacing: 10) {
             Image(systemName: "drop.fill")
@@ -266,6 +338,14 @@ struct PlantView: View {
             Text(Diary.label(moment))
                 .font(Typography.settingRow)
                 .foregroundStyle(Palette.ink)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .contentShape(.contextMenuPreview,
+                      RoundedRectangle(cornerRadius: 12, style: .continuous))
+        .contextMenu {
+            Button(role: .destructive) { forget(moment) } label: {
+                Label("Удалить запись", systemImage: "trash")
+            }
         }
     }
 

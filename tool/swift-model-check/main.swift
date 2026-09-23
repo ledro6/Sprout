@@ -160,7 +160,7 @@ print("настройки: значения по умолчанию и гран�
 let keys = ["theme", "patternKinds", "patternShapes", "reminders",
             "remindThreshold", "patternTint", "waveTint",
             "hushedHaptics", "stillPattern", "stiffShapes",
-            "plantLook", "plantOrder"]
+            "plantLook", "plantOrder", "mutedSounds"]
 let store = UserDefaults.standard
 for key in keys { store.removeObject(forKey: key) }
 let fresh = Settings(store: store)
@@ -172,6 +172,7 @@ check("\(fresh.patternTint)", "green", "узор по умолчанию зел�
 check("\(fresh.waveTint)", "blue", "волна по умолчанию синяя")
 check(fresh.reminders == false, "напоминания по умолчанию выключены")
 check(fresh.haptics, "отклик в руке по умолчанию включён")
+check(fresh.sounds, "звуки по умолчанию включены")
 check(fresh.parallax, "узор по умолчанию едет за наклоном")
 check(fresh.sway, "и фигурки по умолчанию расходятся")
 check(round2(fresh.threshold), "0.20", "порог по умолчанию — двадцать процентов")
@@ -208,11 +209,14 @@ check("\(reopened.patternTint)", "rose", "и цвет узора")
 check("\(reopened.waveTint)", "amber", "и цвет волны")
 fresh.parallax = false
 fresh.sway = false
+fresh.sounds = false
 let stilled = Settings(store: store)
 check(stilled.parallax == false, "выключенный параллакс прочитался обратно")
 check(stilled.sway == false, "и выключенный разъезд")
+check(stilled.sounds == false, "и выключенные звуки")
 fresh.parallax = true
 fresh.sway = true
+fresh.sounds = true
 check(Settings(store: store).parallax, "и включённый обратно тоже")
 
 print("оттенки:")
@@ -1160,6 +1164,105 @@ do {
     check(heard("Пр") == ["pr"], "короткая кличка — как есть")
     check(heard("снег") == ["sneg"], "несклоняемое — тоже")
     check(heard("").isEmpty && heard("   ").isEmpty, "пустое — никого")
+}
+
+print("новый срок полива:")
+do {
+    var fern = plant(moisture: 4.0 / 7, dryingDays: 7)
+    fern.retime(14)
+    check(round2(fern.moisture), round2(11.0 / 14),
+          "сохло три дня из недели — из двух недель остаётся одиннадцать")
+    check("\(fern.daysUntilWatering)", "11", "срок на карточке тоже")
+    var cactus = plant(moisture: 0, dryingDays: 7)
+    cactus.retime(28)
+    check(round2(cactus.moisture), "0.75", "сухой при месячном сроке — не сухой")
+    var basil = plant(moisture: 0.5, dryingDays: 10)
+    basil.retime(4)
+    check(round2(basil.moisture), "0.00", "короче, чем уже сохло, — досуха")
+    var same = plant(moisture: 0.3, dryingDays: 7)
+    same.retime(7)
+    same.retime(0)
+    check(round2(same.moisture) == "0.30" && same.dryingDays == 7,
+          "тот же или нулевой срок ничего не меняет")
+}
+
+print("сроки в настройках растения:")
+do {
+    check(Species.periodLabel(7), "Раз в 7 дней", "целое")
+    check(Species.periodLabel(3), "Раз в 3 дня", "целое, «дня»")
+    check(Species.periodLabel(6.5), "Раз в 6,5 дня", "дробное")
+    check(Species.periodLabel(10.4), "Раз в 10,4 дня", "дробное больше десяти")
+    check(Species.choices(with: [7, 0]) == Species.periods,
+          "свой срок уже в ряду, нулевой не в счёт")
+    let odd = Species.choices(with: [6.5, 4.5, 6.5])
+    check(odd.contains(6.5) && odd.contains(4.5) && odd == odd.sorted()
+          && odd.count == Species.periods.count + 2,
+          "чужие сроки встают в ряд по порядку и без повторов")
+    check(Species.usual(for: " кактус ") == 30, "обычный срок вида")
+    check(Species.usual(for: "Баобаб") == nil, "незнакомый вид — без срока")
+}
+
+print("настройки растения:")
+do {
+    let garden = Garden()
+    let roster = garden.roster
+    garden.tune("baksik", name: "  Бакс ", species: "Роза", dryingDays: 18)
+    let bax = garden.plant(id: "baksik")!
+    check(bax.name, "Бакс", "кличка обрезается")
+    check(bax.species, "Роза", "вид сменился")
+    check(bax.dryingDays == 18, "срок сменился")
+    check(garden.roster > roster, "новую кличку узнает и Siri")
+    garden.tune("baksik", name: " ", species: "", dryingDays: 18)
+    let kept = garden.plant(id: "baksik")!
+    check(kept.name == "Бакс" && kept.species == "Роза",
+          "пустые кличка и вид остаются прежними")
+}
+
+print("заметки:")
+do {
+    let garden = Garden()
+    garden.note("pr", "  Пересадил в мае.\nУдобрять раз в месяц.  \n")
+    check(garden.plant(id: "pr")!.note ?? "",
+          "Пересадил в мае.\nУдобрять раз в месяц.", "обрезается по краям")
+    check(garden.search("удобрять").map(\.id) == ["pr"],
+          "поиск находит и по заметке")
+    garden.note("pr", "   ")
+    check(garden.plant(id: "pr")!.note == nil, "пустая — стёрта")
+    var noted = Seed.rooms[0].plants[0]
+    noted.note = "Любит свет"
+    let file = try! JSONEncoder().encode(noted)
+    let back = try! JSONDecoder().decode(Plant.self, from: file)
+    check(back.note ?? "", "Любит свет", "заметка переживает запуск")
+}
+
+print("отмена полива:")
+do {
+    let garden = Garden()
+    let before = garden.plant(id: "sumka")!.moisture
+    let count = garden.log.count
+    let moment = Date()
+    let pour = garden.water("sumka", at: moment)!
+    check(round2(pour.moisture), round2(before), "полив помнит, что было")
+    check(pour.name, "Сумка", "и кличку — для плашки")
+    garden.advance(to: Date().addingTimeInterval(2))
+    let dried = 1 - garden.plant(id: "sumka")!.moisture
+    garden.unwater(pour)
+    check(round2(garden.plant(id: "sumka")!.moisture),
+          round2(max(0, before - dried)),
+          "влажность прежняя, за вычетом высохшего за отсчёт")
+    check(garden.log.count == count, "запись ушла из журнала")
+    check(garden.water("нет такого") == nil, "чужой номер не поливается")
+    check(garden.log.count == count, "и в журнал не пишется")
+
+    let first = Watering(plant: "pr", when: moment.addingTimeInterval(-60))
+    garden.water("pr", at: first.when)
+    garden.water("pr", at: moment)
+    let wet = garden.plant(id: "pr")!.moisture
+    garden.forget(first)
+    check(Diary.of(garden.log, plant: "pr").entries == [moment],
+          "ошибочная запись стёрта из истории, другая осталась")
+    check(garden.plant(id: "pr")!.moisture == wet,
+          "а влажность не тронута")
 }
 
 if failed > 0 {

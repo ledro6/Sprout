@@ -170,6 +170,9 @@ struct PlantMenu: ViewModifier {
     @State private var moving = false
     @State private var roomDraft = ""
 
+    /// Чьи настройки открыты — номер берётся у жильца в миг нажатия.
+    @State private var tuning: Plant.ID?
+
     /// Открыто ли меню — по предпросмотру: другого признака у контекстного
     /// меню нет.
     @State private var previewing = false
@@ -203,6 +206,12 @@ struct PlantMenu: ViewModifier {
             } message: {
                 Text("Растение переедет туда, и комната появится в списке.")
             }
+            .sheet(isPresented: Binding(get: { tuning != nil },
+                                        set: { if !$0 { tuning = nil } })) {
+                if let tuning {
+                    PlantSettingsView(plantID: tuning).environment(garden)
+                }
+            }
     }
 
     /// Ветвлением, а не пустым списком: пустое меню всё равно может подняться
@@ -219,6 +228,9 @@ struct PlantMenu: ViewModifier {
                     renaming = true
                 } label: {
                     Label("Переименовать", systemImage: "pencil")
+                }
+                Button { tuning = tenant.id } label: {
+                    Label("Настройки", systemImage: "slider.horizontal.3")
                 }
                 // Комнаты — по номеру узла: пункты строятся при каждой сборке
                 // тела. Запечатываются только нажатия, и они идут через
@@ -253,8 +265,7 @@ struct PlantMenu: ViewModifier {
         // Номер — у жильца: в замыкании меню может быть номер прежнего
         // растения ячейки. И растения может уже не быть.
         let who = tenant.id
-        guard garden.plant(id: who) != nil else { return }
-        withAnimation(Motion.appear) { garden.water(who) }
+        guard Bin.shared.water(who, in: garden) else { return }
         // Замера нет — волна из середины экрана: из угла она читается
         // поломкой.
         let spot = Cards.shared.rect(who)

@@ -35,6 +35,9 @@ struct Plant: Identifiable, Hashable, Codable {
     /// Необязательное — так сады прежних сборок читаются как были.
     var shot: String?
 
+    /// Заметка хозяина. Необязательная по той же причине, что и `shot`.
+    var note: String?
+
     /// Из влажности, а не хранится: два числа рано или поздно разошлись бы.
     var daysUntilWatering: Int {
         max(0, Int((moisture * dryingDays).rounded()))
@@ -59,6 +62,16 @@ struct Plant: Identifiable, Hashable, Codable {
     mutating func dry(days: Double) {
         guard dryingDays > 0, days > 0 else { return }
         moisture = max(0, moisture - days / dryingDays)
+    }
+
+    /// Новый срок считается от того же полива: сколько дней земля уже сохла,
+    /// столько и остаётся, а влажность пересчитывается под новый срок. Иначе
+    /// сухой кактус, переставленный с недели на месяц, так и стоял бы сухим.
+    mutating func retime(_ days: Double) {
+        guard days > 0, days != dryingDays else { return }
+        let dried = (1 - moisture) * dryingDays
+        dryingDays = days
+        moisture = min(1, max(0, 1 - dried / days))
     }
 
     /// От клички: у соседних сухих растений пульс не должен совпадать — в
@@ -112,6 +125,14 @@ struct Removal: Equatable {
     var room: String
     var roomIndex: Int
     var index: Int
+}
+
+/// Полив, который ещё можно отменить: влажность до него и запись в журнале.
+struct Pour: Equatable {
+    var plant: Plant.ID
+    var name: String
+    var moisture: Double
+    var when: Date
 }
 
 /// Слепок сада для файла.
@@ -319,6 +340,7 @@ enum Seed {
         return rooms.flatMap(\.plants).filter {
             $0.name.lowercased().contains(text)
                 || $0.species.lowercased().contains(text)
+                || ($0.note?.lowercased().contains(text) ?? false)
         }
     }
 }

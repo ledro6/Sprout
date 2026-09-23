@@ -80,7 +80,7 @@ struct WaterPlant: AppIntent {
         guard garden.plant(id: plant.id) != nil else {
             return .result(dialog: "Растения «\(plant.name)» в саду больше нет.")
         }
-        withAnimation(Motion.appear) { garden.water(plant.id) }
+        withAnimation(Motion.appear) { _ = garden.water(plant.id) }
         if UIApplication.shared.applicationState == .active {
             let spot = Cards.shared.rect(plant.id)
             Cheer.shared.now(from: spot == .zero ? Screen.middle : spot)

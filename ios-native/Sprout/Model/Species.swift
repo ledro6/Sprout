@@ -88,9 +88,31 @@ enum Species {
         periods.min { abs($0 - days) < abs($1 - days) } ?? 7
     }
 
+    /// Сроки на выбор в настройках растения. Нынешний срок растения и
+    /// обычный для вида встают в ряд, даже если они не из него: иначе открыть
+    /// настройки значило бы потерять свой срок.
+    static func choices(with extras: [Double]) -> [Double] {
+        Set(periods + extras.filter { $0 > 0 }).sorted()
+    }
+
+    /// Дробное — одним знаком и в родительном: «6,5 дня».
     static func periodLabel(_ days: Double) -> String {
-        let whole = Int(days.rounded())
-        return "Раз в \(whole) "
-            + Plant.plural(whole, "день", "дня", "дней")
+        let whole = days.rounded()
+        guard abs(days - whole) < 0.05 else {
+            let tenths = Int((days * 10).rounded())
+            return "Раз в \(tenths / 10),\(tenths % 10) дня"
+        }
+        let count = Int(whole)
+        return "Раз в \(count) "
+            + Plant.plural(count, "день", "дня", "дней")
+    }
+
+    /// Обычный срок для вида, вписанного по-русски, — из той же таблицы.
+    static func usual(for species: String) -> Double? {
+        let name = species.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !name.isEmpty else { return nil }
+        return table.first {
+            $0.species.compare(name, options: .caseInsensitive) == .orderedSame
+        }?.days
     }
 }

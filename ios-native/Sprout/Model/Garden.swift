@@ -83,11 +83,40 @@ final class Garden {
 
     // MARK: - Что с ними делают
 
-    func water(_ id: Plant.ID, at moment: Date = Date()) {
+    /// Отвечает, что было до полива, — для отмены, см. `unwater`.
+    @discardableResult
+    func water(_ id: Plant.ID, at moment: Date = Date()) -> Pour? {
+        guard let before = plant(id: id) else { return nil }
         // Запись в журнал — до полива: `change` пишет файл, и запись должна в
         // него попасть.
         log.append(Watering(plant: id, when: moment))
         change(id) { $0.moisture = 1 }
+        return Pour(plant: id, name: before.name, moisture: before.moisture,
+                    when: moment)
+    }
+
+    /// Запись уходит из журнала, влажность — на прежнюю, за вычетом того, что
+    /// земля успела высохнуть за отсчёт.
+    func unwater(_ pour: Pour) {
+        if let index = log.lastIndex(of: Watering(plant: pour.plant,
+                                                   when: pour.when)) {
+            log.remove(at: index)
+        }
+        guard plant(id: pour.plant) != nil else {
+            save()
+            return
+        }
+        change(pour.plant) {
+            $0.moisture = max(0, pour.moisture - (1 - $0.moisture))
+        }
+    }
+
+    /// Ошибочная запись из истории. Влажность не трогаем: для свежей ошибки
+    /// есть отмена, а старая давно высохла.
+    func forget(_ entry: Watering) {
+        guard let index = log.lastIndex(of: entry) else { return }
+        log.remove(at: index)
+        save()
     }
 
     func score(now: Date = Date(), calendar: Calendar = .current) -> Score {
@@ -140,6 +169,29 @@ final class Garden {
         guard !trimmed.isEmpty else { return }
         change(id) { $0.name = trimmed }
         roster += 1
+    }
+
+    /// Настройки растения. Пустые кличка и вид остаются прежними, срок
+    /// пересчитывает влажность — см. `Plant.retime`.
+    func tune(_ id: Plant.ID, name: String, species: String,
+              dryingDays: Double) {
+        guard let old = plant(id: id) else { return }
+        let nickname = name.trimmingCharacters(in: .whitespacesAndNewlines)
+        let kind = species.trimmingCharacters(in: .whitespacesAndNewlines)
+        change(id) { plant in
+            if !nickname.isEmpty { plant.name = nickname }
+            if !kind.isEmpty { plant.species = kind }
+            plant.retime(dryingDays)
+        }
+        if !nickname.isEmpty, nickname != old.name { roster += 1 }
+    }
+
+    /// Пустая заметка — её нет.
+    func note(_ id: Plant.ID, _ text: String) {
+        let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        let kept: String? = trimmed.isEmpty ? nil : trimmed
+        guard let plant = plant(id: id), plant.note != kept else { return }
+        change(id) { $0.note = kept }
     }
 
     /// Растение занимает место другого, как на экране «Домой»: вперёд —

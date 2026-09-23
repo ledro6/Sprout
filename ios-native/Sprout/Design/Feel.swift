@@ -1,21 +1,43 @@
 import CoreHaptics
 import UIKit
 
-/// Отклик в руке. Выбор, успех и ошибка — системные `UIFeedbackGenerator`, их
-/// узнаёт любой. Полив, всходы и кутерьма — рисунки `CoreHaptics`: они длятся
-/// и угасают вместе с волной, а системные отклики мгновенные. Сами рисунки —
-/// в модели, см. `Pulse`.
+/// Отклик в руке и на слух. Выбор, успех и ошибка — системные
+/// `UIFeedbackGenerator`, их узнаёт любой. Полив, всходы и кутерьма — рисунки
+/// `CoreHaptics`: они длятся и угасают вместе с волной, а системные отклики
+/// мгновенные. Сами рисунки — в модели, см. `Pulse`; звуки — см. `Chime`.
+/// Выбор и всходы без звука: выбор щёлкает сам, а всходы идут и при запуске.
 @MainActor
 enum Feel {
-    static func water() { Engine.shared.play(.water, seconds: Motion.cheerSeconds) }
+    static func water() {
+        Engine.shared.play(.water, seconds: Motion.cheerSeconds)
+        Chime.pour.play()
+    }
 
-    static func planted() { Engine.shared.play(.bloom, seconds: 0.55) }
+    static func planted() {
+        Engine.shared.play(.bloom, seconds: 0.55)
+        Chime.plant.play()
+    }
 
     static func sprout() {
         Engine.shared.play(.sprout, seconds: Motion.bloomSeconds)
     }
 
-    static func frenzy() { Engine.shared.play(.frenzy, seconds: Frolic.seconds) }
+    static func frenzy() {
+        Engine.shared.play(.frenzy, seconds: Frolic.seconds)
+        Chime.frolic.play()
+    }
+
+    /// Удалили — растение или запись из истории.
+    static func toss() {
+        notify(.warning)
+        Chime.toss.play()
+    }
+
+    /// Отменили удаление или полив.
+    static func back() {
+        pick()
+        Chime.undo.play()
+    }
 
     /// Выбрали из нескольких — щелчок барабана. Переключателям и системным
     /// меню он не нужен: они отзываются сами.
@@ -26,9 +48,15 @@ enum Feel {
         Engine.selection.prepare()
     }
 
-    static func done() { notify(.success) }
+    static func done() {
+        notify(.success)
+        Chime.save.play()
+    }
 
-    static func wrong() { notify(.error) }
+    static func wrong() {
+        notify(.error)
+        Chime.wrong.play()
+    }
 
     private static func notify(_ kind: UINotificationFeedbackGenerator
         .FeedbackType) {

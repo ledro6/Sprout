@@ -1,16 +1,47 @@
 import SwiftUI
 import UIKit
 
-/// Убранное растение, которое ещё можно вернуть.
+/// Что ещё можно отменить: удаление или полив.
+enum Slip: Equatable {
+    case removal(Removal)
+    case pour(Pour)
+
+    /// Личность плашки: следующее действие сменяет её размытием, даже если
+    /// растение то же.
+    var key: String {
+        switch self {
+        case .removal(let gone): "removal-\(gone.plant.id)"
+        case .pour(let pour):
+            "pour-\(pour.plant)-\(pour.when.timeIntervalSinceReferenceDate)"
+        }
+    }
+
+    var title: String {
+        switch self {
+        case .removal: "Растение удалено"
+        case .pour: "Полито"
+        }
+    }
+
+    var name: String {
+        switch self {
+        case .removal(let gone): gone.plant.name
+        case .pour(let pour): pour.name
+        }
+    }
+}
+
+/// Последнее удаление или полив, которые ещё можно отменить.
 ///
 /// Удаление не спрашивает «вы уверены?»: растение уходит из сада сразу, а
 /// здесь пять секунд лежат оно и его место. Снимок с диска выбрасывается
-/// только по истечении отсчёта — его одного не восстановить.
+/// только по истечении отсчёта — его одного не восстановить. Полив так же:
+/// промахнулись карточкой — пять секунд, чтобы вернуть влажность и журнал.
 @Observable
 final class Bin {
     static let shared = Bin()
 
-    private(set) var pending: Removal?
+    private(set) var pending: Slip?
 
     private(set) var left = 0
 
@@ -31,12 +62,31 @@ final class Bin {
         guard let gone = withAnimation(Motion.appear, { garden.remove(id) })
         else { return }
         self.garden = garden
-        pending = gone
-        since = Date()
-        left = Int(Motion.undoSeconds)
         Ember.shared.light(from: plate == .zero ? Screen.middle : plate)
         let line = "Растение «\(gone.plant.name)» удалено. Его можно вернуть."
         UIAccessibility.post(notification: .announcement, argument: line)
+        Feel.toss()
+        count(.removal(gone))
+    }
+
+    /// Волна и отклик — у того, кто поливал: откуда пускать волну, знает он.
+    /// Отвечает, полилось ли.
+    @MainActor
+    @discardableResult
+    func water(_ id: Plant.ID, in garden: Garden) -> Bool {
+        commit()
+        guard let pour = withAnimation(Motion.appear, { garden.water(id) })
+        else { return false }
+        self.garden = garden
+        count(.pour(pour))
+        return true
+    }
+
+    @MainActor
+    private func count(_ slip: Slip) {
+        pending = slip
+        since = Date()
+        left = Int(Motion.undoSeconds)
         run = Task { @MainActor [weak self] in
             for second in stride(from: Int(Motion.undoSeconds) - 1,
                                  through: 0, by: -1) {
@@ -53,22 +103,32 @@ final class Bin {
 
     @MainActor
     func undo() {
-        guard let gone = pending else { return }
+        guard let slip = pending else { return }
         run?.cancel()
-        withAnimation(Motion.appear) { garden?.putBack(gone) }
+        withAnimation(Motion.appear) { restore(slip) }
         pending = nil
         since = nil
         Ember.shared.douse()
-        Feel.pick()
+        Feel.back()
     }
 
-    /// Зовётся и раньше срока — при следующем удалении и уходе в фон:
+    private func restore(_ slip: Slip) {
+        guard let garden else { return }
+        switch slip {
+        case .removal(let gone): garden.putBack(gone)
+        case .pour(let pour): garden.unwater(pour)
+        }
+    }
+
+    /// Зовётся и раньше срока — при следующем действии и уходе в фон:
     /// выгрузят приложение — и снимок остался бы на диске сиротой.
     @MainActor
     func commit() {
-        guard let gone = pending else { return }
+        guard let slip = pending else { return }
         run?.cancel()
-        if let shot = gone.plant.shot { Shots.drop(shot) }
+        if case .removal(let gone) = slip, let shot = gone.plant.shot {
+            Shots.drop(shot)
+        }
         pending = nil
         since = nil
         Ember.shared.douse()
@@ -105,24 +165,24 @@ private struct UndoToast: View {
 
     var body: some View {
         ZStack {
-            if let gone = bin.pending {
-                plate(gone)
-                    .id(gone.plant.id)
+            if let slip = bin.pending {
+                plate(slip)
+                    .id(slip.key)
                     .transition(.blurReplace)
             }
         }
-        .animation(Motion.toast, value: bin.pending?.plant.id)
+        .animation(Motion.toast, value: bin.pending?.key)
     }
 
-    private func plate(_ gone: Removal) -> some View {
+    private func plate(_ slip: Slip) -> some View {
         HStack(spacing: 12) {
-            Countdown(since: bin.since, left: bin.left)
+            Countdown(since: bin.since, left: bin.left, tint: tint(slip))
 
             VStack(alignment: .leading, spacing: 1) {
-                Text("Растение удалено")
+                Text(slip.title)
                     .font(Typography.toastTitle)
                     .foregroundStyle(Palette.ink)
-                Text(gone.plant.name)
+                Text(slip.name)
                     .font(Typography.toastNote)
                     .foregroundStyle(.secondary)
                     .lineLimit(1)
@@ -150,21 +210,30 @@ private struct UndoToast: View {
         .padding(.bottom, Metrics.toastGap)
         .accessibilityElement(children: .contain)
     }
+
+    /// Красное — к красному узору удаления, голубое — к воде.
+    private func tint(_ slip: Slip) -> Color {
+        switch slip {
+        case .removal: Palette.alarm
+        case .pour: Palette.water
+        }
+    }
 }
 
 /// Кольцо убывает по кадрам, число сменяется раз в секунду переходом цифр.
 private struct Countdown: View {
     let since: Date?
     let left: Int
+    let tint: Color
 
     var body: some View {
         ZStack {
             Circle()
-                .stroke(Palette.alarm.opacity(0.22), lineWidth: Metrics.ringLine)
+                .stroke(tint.opacity(0.22), lineWidth: Metrics.ringLine)
             TimelineView(.animation(paused: since == nil)) { frame in
                 Circle()
                     .trim(from: 0, to: remaining(at: frame.date))
-                    .stroke(Palette.alarm,
+                    .stroke(tint,
                             style: StrokeStyle(lineWidth: Metrics.ringLine,
                                                lineCap: .round))
                     .rotationEffect(.degrees(-90))
@@ -172,7 +241,7 @@ private struct Countdown: View {
             Text("\(left)")
                 .font(Typography.toastCount)
                 .monospacedDigit()
-                .foregroundStyle(Palette.alarm)
+                .foregroundStyle(tint)
                 .contentTransition(.numericText(countsDown: true))
         }
         .frame(width: Metrics.ring, height: Metrics.ring)
