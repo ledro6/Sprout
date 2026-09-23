@@ -1,14 +1,8 @@
 import SwiftUI
 import UIKit
 
-/// Камера — системная, из UIKit.
-///
-/// В SwiftUI камеры нет: `PhotosPicker` умеет только библиотеку. Своей
-/// камеры здесь и не нужно — снимок делается системным экраном, тем же,
-/// что во всех приложениях, со всеми его вспышками и переключениями.
-///
-/// Есть она не везде: в симуляторе камеры нет вовсе, и кнопку туда
-/// показывать нельзя — см. `Camera.exists`.
+/// Системная камера из UIKit: в SwiftUI её нет, `PhotosPicker` умеет только
+/// библиотеку. В симуляторе камеры нет — см. `Camera.exists`.
 struct Camera: UIViewControllerRepresentable {
     let onShot: (UIImage) -> Void
 
@@ -30,8 +24,6 @@ struct Camera: UIViewControllerRepresentable {
 
     func makeCoordinator() -> Shutter { Shutter(self) }
 
-    /// Посредник между UIKit и SwiftUI: снимок приходит делегатом, а
-    /// закрывается экран тем же `dismiss`, что и любой лист.
     final class Shutter: NSObject, UIImagePickerControllerDelegate,
                          UINavigationControllerDelegate {
         private let camera: Camera

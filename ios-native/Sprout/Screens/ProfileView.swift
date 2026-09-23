@@ -1,17 +1,9 @@
 import SwiftUI
 import UniformTypeIdentifiers
 
-/// Профиль: хозяин, его сад, соперники и замок.
-///
-/// Учётной записи у Sprout нет — ни сервера, ни регистрации, ни облака, —
-/// и экран этого не изображает. «Вход» здесь один настоящий: замок на
-/// приложении, который открывает система по лицу или код-паролю.
-/// Соревнование с друзьями тоже настоящее, только идёт оно перепиской:
-/// друг присылает свой счёт строкой, вы вставляете её, и он встаёт в
-/// таблицу рядом с вами — см. `Rival`.
-///
-/// Собран из тех же плашек, что настройки и статистика, лежит на том же
-/// узоре и подпрыгивает на той же волне полива.
+/// Профиль: хозяин, сад, соперники и замок. Учётной записи нет, и экран её не
+/// изображает: «вход» — это замок на приложении, а соперники приходят
+/// перепиской, см. `Rival`.
 struct ProfileView: View {
     @Environment(Garden.self) private var garden
     @Environment(\.scenePhase) private var phase
@@ -20,8 +12,7 @@ struct ProfileView: View {
     private let friends = Friends.shared
     private let lock = Lock.shared
 
-    /// Итог по поливам — см. `StatsView`: в теле его считать нельзя, сад
-    /// сушится раз в секунду.
+    /// Итог по поливам — не в теле: сад сушится раз в секунду.
     @State private var score = Score()
 
     @State private var renaming = false
@@ -31,28 +22,23 @@ struct ProfileView: View {
     @State private var erasing = false
     @State private var importing = false
 
-    /// Что пошло не так при вставке кода. Пусто — всё сошлось.
     @State private var trouble: String?
 
-    /// Кого только что позвали в соперники — чтобы сказать об этом.
     @State private var welcomed: Rival?
 
-    /// Файл с садом для отправки. Пересобирается при каждом появлении
-    /// экрана: сад меняется, а слепок должен быть свежим.
+    /// Пересобирается при каждом появлении экрана, чтобы слепок был свежим.
     @State private var backup: URL?
 
-    /// Замеры кружков цвета и кнопки вставки — оттуда расходится волна.
     @State private var swatches = Spots()
     @State private var paste = Spot()
 
     private var me: Rival {
-        // Подписью, а не именем: неназвавшийся всё равно должен как-то
-        // попасть и в таблицу, и в код для друзей — см. `Garden.signed`.
+        // Подписью, а не именем: неназвавшийся тоже должен попасть в таблицу
+        // и в код.
         Rival.mine(owner: garden.signed, score: score,
                    plants: garden.plantCount)
     }
 
-    /// Назвался ли хозяин.
     private var named: Bool { !garden.owner.isEmpty }
 
     var body: some View {
@@ -105,11 +91,7 @@ struct ProfileView: View {
 
     // MARK: - Хозяин
 
-    /// Кружок с буквой, имя и день, с которого ведётся сад.
-    ///
-    /// Кружок с буквой, а не фотография: фотографии хозяина у приложения
-    /// нет и спрашивать её незачем — Sprout про растения, а не про людей.
-    /// Буква же есть всегда, и цвет ей выбирают тут же, ниже.
+    /// Кружок с буквой, а не фото: Sprout про растения, а не про людей.
     private var person: some View {
         SproutGroup("Хозяин") {
             HStack(spacing: 14) {
@@ -118,8 +100,7 @@ struct ProfileView: View {
                     .frame(width: Metrics.avatar, height: Metrics.avatar)
                     .overlay {
                         // Неназвавшемуся — значок человека: пустой кружок
-                        // читался бы недогрузившейся картинкой, а не
-                        // «имени пока нет».
+                        // читался бы недогрузившейся картинкой.
                         if named {
                             Text(letter)
                                 .font(Typography.avatar)
@@ -155,11 +136,8 @@ struct ProfileView: View {
             SproutDivider()
 
             SproutBlock("Цвет") {
-                // Волны отсюда не идёт, и нарочно. Волна показывает цвет
-                // узора и цвет всплеска; кружок хозяина ни тем, ни другим
-                // не красится, и волна в чужом цвете обещала бы не то, что
-                // выбрали. Сам кружок при этом перетекает пружиной — её
-                // ставит `SproutTints`.
+                // Волны отсюда нет нарочно: кружок хозяина не красит ни узор,
+                // ни всплеск.
                 SproutTints(current: settings.avatarTint,
                             spots: swatches) { tint, _ in
                     settings.avatarTint = tint
@@ -170,8 +148,6 @@ struct ProfileView: View {
         .sproutRide()
     }
 
-    /// Первая буква имени. Пустого имени сад не сохраняет, но на всякий
-    /// случай у кружка есть и запасная.
     private var letter: String {
         String(garden.owner.trimmingCharacters(in: .whitespaces)
             .prefix(1)).uppercased(with: Locale.current)
@@ -179,9 +155,8 @@ struct ProfileView: View {
 
     // MARK: - Сад
 
-    /// Размер сада тремя числами. Поливы сюда не идут — им отведён целый
-    /// экран статистики, и повторять его тут значило бы заводить второе
-    /// место, где та же правда может разойтись.
+    /// Размер сада. Поливы — только на экране статистики, чтобы одна и та же
+    /// правда не жила в двух местах.
     private var plot: some View {
         SproutGroup("Сад") {
             Grid(alignment: .leading, horizontalSpacing: 12) {
@@ -195,8 +170,7 @@ struct ProfileView: View {
         .sproutRide()
     }
 
-    /// Сколько суток саду. По календарю, а не делением секунд: сутки
-    /// бывают в 23 и 25 часов, и на переводе часов деление ошиблось бы.
+    /// По календарю, а не делением секунд: сутки бывают в 23 и 25 часов.
     private var age: Int {
         let calendar = Calendar.current
         let from = calendar.startOfDay(for: garden.since)
@@ -218,10 +192,9 @@ struct ProfileView: View {
                 }
                 .buttonStyle(.glass)
 
-                // Системная кнопка вставки: она не спрашивает разрешения
-                // и не показывает баннера «вставлено из…», потому что
-                // нажал её человек, а не приложение. Своя кнопка, читающая
-                // буфер сама, каждый раз дёргала бы предупреждение iOS.
+                // Системная кнопка вставки не показывает баннера «вставлено
+                // из…»; своя, читающая буфер сама, дёргала бы предупреждение
+                // iOS.
                 PasteButton(payloadType: String.self) { items in
                     guard let text = items.first else { return }
                     Task { @MainActor in invite(text) }
@@ -260,13 +233,11 @@ struct ProfileView: View {
         }
     }
 
-    /// День, которым помечен присланный счёт.
     private func stamp(_ rival: Rival?) -> String {
         guard let rival else { return "" }
         return rival.stamp.formatted(.dateTime.day().month(.wide))
     }
 
-    /// Таблица: вы и все, кого позвали, от большего счёта к меньшему.
     private var table: some View {
         VStack(alignment: .leading, spacing: Metrics.rowGap) {
             ForEach(Array(standings.enumerated()), id: \.element.id) { item in
@@ -275,9 +246,8 @@ struct ProfileView: View {
                     row(item.offset + 1, item.element)
                         .transition(.blurReplace)
                 } else {
-                    // Меню только на чужой строке: пустое контекстное меню
-                    // на своей всё равно открывалось бы по долгому нажатию,
-                    // показывая пустоту.
+                    // Меню только на чужой строке: пустое на своей всё равно
+                    // открывалось бы.
                     row(item.offset + 1, item.element)
                         .contextMenu {
                             Button(role: .destructive) {
@@ -289,16 +259,14 @@ struct ProfileView: View {
                                       systemImage: "person.slash")
                             }
                         }
-                        // Пришёл соперник или его убрали — строка приходит
-                        // и уходит системным размытием.
                         .transition(.blurReplace)
                 }
             }
         }
     }
 
-    /// Вы и соперники в одном порядке. Своя строка считается заново на
-    /// каждом поливе, чужие стоят такими, какими их прислали.
+    /// Своя строка пересчитывается на каждом поливе, чужие — какими их
+    /// прислали.
     private var standings: [Rival] {
         ([me] + friends.rivals.filter { $0.id != me.id })
             .sorted { ($0.total, $1.name) > ($1.total, $0.name) }
@@ -335,19 +303,15 @@ struct ProfileView: View {
         .accessibilityElement(children: .combine)
     }
 
-    /// Подпись под кличкой: у себя — «вы», у соперника — день, которым
-    /// помечен присланный счёт. Своя строка живая, чужая настолько свежа,
-    /// насколько свеж код, и умалчивать об этом нельзя.
+    /// Чужая строка свежа настолько, насколько свеж код, — об этом говорит
+    /// дата под кличкой.
     private func note(for rival: Rival) -> String {
         guard rival.id != me.id else { return "вы" }
         return "счёт от "
             + rival.stamp.formatted(.dateTime.day().month(.abbreviated))
     }
 
-    /// Разобрать вставленное и поставить в таблицу.
-    ///
-    /// Удалось — по узору идёт волна от кнопки вставки: новый соперник
-    /// это событие, а события здесь показываются волной.
+    /// Удалось — от кнопки вставки идёт волна.
     private func invite(_ text: String) {
         guard let rival = friends.take(text, mine: garden.owner) else {
             trouble = Rival.read(text) == nil
@@ -377,9 +341,7 @@ struct ProfileView: View {
                         .fixedSize(horizontal: false, vertical: true)
                 }
                 Spacer(minLength: 8)
-                // Подпись настоящая, хоть и спрятана: её читает вслух
-                // VoiceOver — переключатель без неё зовётся просто
-                // «переключатель».
+                // Подпись спрятана, но нужна VoiceOver.
                 Toggle("Запирать приложение",
                        isOn: Binding(get: { lock.on },
                                      set: { lock.on = $0 }))
@@ -406,7 +368,6 @@ struct ProfileView: View {
         .sproutRide()
     }
 
-    /// Что написано под переключателем замка.
     private var lockNote: String {
         guard lock.ready else {
             return "На этом телефоне не настроен ни Face ID, ни код-пароль "
@@ -476,10 +437,7 @@ struct ProfileView: View {
         }
     }
 
-    /// Слепок сада во временный файл — его и отдаёт «Сохранить».
-    ///
-    /// Во временную папку, а не рядом с самим садом: этот файл живёт
-    /// ровно до отправки, и место ему там, где система сама приберёт.
+    /// Во временную папку: файл живёт до отправки, и прибирает его система.
     private func makeBackup() {
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.prettyPrinted, .withoutEscapingSlashes]
@@ -492,11 +450,8 @@ struct ProfileView: View {
         backup = file
     }
 
-    /// Принять сад из файла.
-    ///
-    /// Файл приходит из чужой песочницы, и читать его можно только
-    /// попросив доступ — иначе система откажет молча, а экран показал бы
-    /// «файл не читается» на целом файле.
+    /// Файл из чужой песочницы читается только с запросом доступа, иначе
+    /// система откажет молча.
     private func take(file result: Result<URL, any Error>) {
         guard case let .success(url) = result else { return }
         let opened = url.startAccessingSecurityScopedResource()

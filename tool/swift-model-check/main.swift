@@ -9,8 +9,7 @@ func check(_ got: Bool, _ what: String) {
     if got { print("  ✓ \(what)") }
     else { print("  ✗ \(what)"); failed += 1 }
 }
-/// Округление для сравнения дробей: считаем до сотых, чтобы не спорить
-/// с последним битом.
+/// До сотых — чтобы не спорить с последним битом.
 func round2(_ value: Double) -> String {
     String(format: "%.2f", (value * 100).rounded() / 100)
 }
@@ -120,7 +119,6 @@ check(garden.plant(id: "baksik") == nil, "удалённое растение и
 check("\(garden.rooms[0].plants.count)", "7", "и уходит из своей комнаты")
 
 print("перестановка в комнате:")
-/// Номера растений комнаты по порядку — так порядок читается глазами.
 func lineup(_ room: Int) -> [String] { garden.rooms[room].plants.map(\.id) }
 let lined = lineup(0)
 let (p1, p2, p3, p4) = (lined[0], lined[1], lined[2], lined[3])
@@ -146,8 +144,7 @@ garden.move("никого-нет", to: p1)
 check(lineup(0)[0 ..< 4] == [p4, p1, p2, p3][...],
       "чужой номер ничего не трогает")
 let shuffled = lineup(0)
-// Через слепок, а не через новый сад: на Linux папка документов не
-// идёт за подменённым HOME, и файл сада проверке не достать.
+// Через слепок: на Linux папка документов не идёт за подменённым HOME.
 let lineupFile = try! JSONEncoder().encode(garden.state)
 let lineupBack = try! JSONDecoder().decode(GardenState.self, from: lineupFile)
 check(lineupBack.rooms[0].plants.map(\.id) == shuffled,
@@ -226,8 +223,8 @@ check(Set(Tint.allCases.map(\.pale)).count == Tint.allCases.count,
       "бледные ипостаси не повторяются")
 check(Set(Tint.allCases.map(\.vivid)).count == Tint.allCases.count,
       "насыщенные тоже")
-// Бледные держатся на одной светлоте: смена цвета не должна менять то,
-// насколько узор заметен. Считаем по формуле яркости для sRGB.
+// Бледные — на одной светлоте (по формуле для sRGB): смена цвета не должна
+// менять заметность узора.
 func brightness(_ c: Channels) -> Double {
     (0.2126 * c.red + 0.7152 * c.green + 0.0722 * c.blue) / 255
 }
@@ -237,9 +234,7 @@ check(spread <= 0.01,
       "бледные ипостаси одной светлоты — разброс \(round2(spread))")
 check(Tint.allCases.allSatisfy { brightness($0.vivid) < brightness($0.pale) },
       "насыщенная ипостась всегда темнее бледной")
-// Насыщенная ипостась должна быть насыщенной на самом деле: ею идёт волна
-// и ею же лежит узор в тёмной теме, а бледный цвет там читается серым.
-// Мерим размахом каналов — у серого он ноль.
+// Насыщенная должна быть насыщенной: размах каналов у серого — ноль.
 func chroma(_ c: Channels) -> Double {
     max(c.red, c.green, c.blue) - min(c.red, c.green, c.blue)
 }
@@ -258,8 +253,8 @@ check(Shade.mix(rose, amber, 5) == amber, "и выше единицы не за�
 let half = Shade.mix(rose, amber, 0.5)
 check("\(half.pale.red) \(half.pale.green) \(half.pale.blue)",
       "255.0 231.5 222.0", "на середине — середина, канал за каналом")
-// Ипостаси смешиваются каждая со своей: смешай бледную с насыщенной, и
-// узор на середине перехода сошёл бы к серому.
+// Ипостаси смешиваются каждая со своей — иначе середина перехода уходила бы в
+// серый.
 check(half.pale == Channels.mix(rose.pale, amber.pale, 0.5),
       "бледная смешивается с бледной")
 check(half.vivid == Channels.mix(rose.vivid, amber.vivid, 0.5),
@@ -276,9 +271,8 @@ check("\(Settings(store: store).chosen)", "[0, 1]",
       "мусор в старом ключе — берём умолчание")
 
 print("раскладка узора: одинаковые не стоят рядом:")
-// Перебираем все раскладки, какие может выбрать запуск, и всю округу
-// каждой: соседей у узла четверо, но хватает правого и нижнего — левый и
-// верхний те же соседи, только с другой стороны.
+// Все раскладки запуска и вся округа каждой; хватает правого и нижнего
+// соседа.
 var clashes = 0
 var arrangements: [Int: Set<[Int]>] = [:]
 for count in 1...4 {
@@ -445,8 +439,7 @@ check(round2(turn(corner, 0, 0)), "0.00", "из угла: сам угол идё
 check(round2(turn(corner, 900, 0)), "1.00",
       "на мерке фронта — ровно единица")
 check(round2(turn(corner, 2000, 0)), "1.00", "дальше мерки — всё та же")
-// Мерка общая на все точки: от этого круг из середины и круг из угла
-// идут по экрану с одной скоростью — и с той же, что волна полива.
+// Мерка общая: круг из середины и из угла идут с одной скоростью.
 let middle = Front.point(CGPoint(x: 200, y: 400))
 check(round2(turn(middle, 200, 400)), "0.00", "из середины: середина первой")
 check(round2(turn(middle, 200 + 450, 400)), "0.50",
@@ -454,11 +447,8 @@ check(round2(turn(middle, 200 + 450, 400)), "0.50",
 check(round2(turn(corner, 450, 0)), "0.50",
       "и из угла ровно столько же: скорость одна")
 
-// Обратная волна: дальние первыми, точка нажатия последней.
-//
-// Мерка у неё своя — до дальнего угла холста. С общей выходила задержка:
-// доля черёда приходилась на то, чего не видно, и после нажатия на экране
-// полсекунды не двигалось ничего.
+// Обратная волна: дальние первыми, точка нажатия последней; мерка — до
+// дальнего угла холста.
 let inward = Front.collapse(CGPoint(x: 200, y: 400))
 check(round2(turn(inward, 200, 400)), "1.00",
       "обратная: точка нажатия идёт последней — волна в неё садится")
@@ -468,8 +458,7 @@ var late = 0
 for spot in [CGPoint(x: 0, y: 0), CGPoint(x: 200, y: 400),
              CGPoint(x: 400, y: 800), CGPoint(x: 399, y: 1)] {
     let back = Front.collapse(spot)
-    // У каждого холста найдётся фигурка, трогающаяся в ноль: иначе после
-    // нажатия на экране какое-то время не двигается ничего.
+    // У каждого холста есть фигурка, трогающаяся в ноль.
     var first = 1.0
     for x in stride(from: 0.0, through: 400, by: 10) {
         for y in stride(from: 0.0, through: 800, by: 10) {
@@ -486,8 +475,7 @@ check(turn(up, 200, 800) < turn(up, 200, 0),
 check(round2(turn(up, 200, 800)), "0.00", "дальняя кромка ровно на нуле")
 check(round2(turn(up, 200, 0)), "1.00", "ближняя ровно на единице")
 
-// Чего бы фронт ни спросили, черёд остаётся долей: на нём держится вся
-// раскладка переходов по времени.
+// Черёд всегда остаётся долей 0…1.
 var outside = 0
 for front in [corner, middle, inward, up,
               Front.point(CGPoint(x: -300, y: 900))] {
@@ -508,7 +496,6 @@ func look(_ elapsed: Double, _ turn: Double) -> (Int, Double) {
 check("\(look(0, 0).0)", "0", "в самом начале узор ещё обычный")
 check("\(look(0, 0).1)", "1.0", "и в полный размер")
 check("\(look(-1, 0).0)", "0", "до начала — тоже")
-// Дальняя фигурка отстаёт ровно на такт: на этом и держится кольцо.
 check("\(look(Frolic.beat, 1).0)", "0", "дальняя в этот миг ещё не тронулась")
 check("\(look(Frolic.beat, 0).0)", "1", "а ближняя уже в первом беспорядке")
 check(look(Frolic.beat * 0.5, 0).1 < 0.05,
@@ -518,8 +505,7 @@ check(look(Frolic.beat * 0.25, 0).1 > 0.8,
 check("\(look(Frolic.beat * 0.75, 0).0)", "1",
       "после нуля растёт уже следующим состоянием")
 
-// Кончается кутерьма тем же узором, с которого началась, — иначе в
-// настройках был бы выбран один набор, а на экране стоял бы другой.
+// Кончается тем же узором, с которого началась.
 check("\(look(Frolic.seconds, 0).0)", "\(Frolic.beats)",
       "у ближней последнее состояние — обычный узор")
 check("\(look(Frolic.seconds, 1).0)", "\(Frolic.beats)",
@@ -530,7 +516,6 @@ check(!Frolic.chaotic(0) && !Frolic.chaotic(Frolic.beats),
 check(Frolic.chaotic(1) && Frolic.chaotic(Frolic.beats - 1),
       "а всё, что между ними, — беспорядок")
 
-// Размер нигде не выходит за 0…1: на нём держится вся раскладка.
 var wild = 0
 for tick in stride(from: -0.5, through: Frolic.seconds + 1, by: 0.01) {
     for turn in stride(from: 0.0, through: 1.0, by: 0.05) {
@@ -581,8 +566,7 @@ for (name, pulse) in Pulse.all {
     check(pulse.valid, "рисунок «\(name)» движок примет")
 }
 
-// Отклик — ряд тычков, а не ровный гул: волна по экрану идёт рядами
-// фигурок, и рука должна слышать ряды, а не среднюю их силу.
+// Ряд тычков, а не ровный гул: рука должна слышать ряды фигурок.
 let splash = Pulse.water
 let drops = splash.taps(over: 2.4)
 check(drops.count > 20, "за волну в руку уходит не один тычок, а десятки")
@@ -597,8 +581,7 @@ check(drops.allSatisfy { $0.at <= 2.4 + 1e-9 },
 check(round2(splash.rate), "13.00",
       "частота полива — сколько рядов узора волна поднимает за секунду")
 
-// Полив: всплеск и долгий уход. После горба сила только убывает — иначе
-// это не «волна уходит за край», а что-то ещё.
+// После горба сила только убывает.
 var rising = 0
 var peak = 0.0
 for step in stride(from: 0.0, through: 1.0, by: 0.01) {
@@ -613,7 +596,6 @@ check(splash.hum > 0 && splash.hum < 0.5,
 check(round2(splash.strength(at: 0.195)), "0.70",
       "между точками огибающая идёт по прямой")
 
-// Всходы: набирают и силу, и частоту тычков, и садятся хлопком.
 let rise = Pulse.sprout
 let seeds = rise.taps(over: 1.1)
 check(seeds.count > 8, "за всходы в руку уходит с десяток тычков")
@@ -626,13 +608,11 @@ check("\(rise.strike)", "0.0",
 check("\(rise.hum)", "0.0", "и без гула — в руке только дробь")
 check(rise.finish > 0, "зато с мягким хлопком, когда узор встал")
 
-// Посадка: наоборот, растёт и лопается.
 let sprouting = Pulse.bloom
 check(sprouting.strength(at: 1) > sprouting.strength(at: 0),
       "посадка набирает силу")
 check(sprouting.finish > 0.9, "и кончается хлопком")
 
-// Кутерьма: по бугру на такт, и бугры считаются из неё самой.
 let romp = Pulse.frenzy
 check("\(romp.envelope.count)", "\(Frolic.beats * 2 + 1)",
       "у кутерьмы по паре точек на такт и одна на хвост")
@@ -649,8 +629,6 @@ let firstBump = 0.4 / Double(Frolic.beats + 1) * Frolic.seconds
 check(round2(firstBump), round2(Frolic.beat * 0.4),
       "первый бугор приходится на первый такт")
 
-// Огибающая нигде не выходит за 0…1, чего бы у неё ни спросили, и ряд
-// тычков нигде не вырождается.
 var outOfRange = 0
 for (_, pulse) in Pulse.all {
     for step in stride(from: -0.5, through: 1.5, by: 0.01) {
@@ -666,8 +644,7 @@ for (_, pulse) in Pulse.all {
 check("\(outOfRange)", "0", "сила и время тычков нигде не выходят за края")
 check(Pulse.water.taps(over: 0).isEmpty, "на нулевом времени тычков нет")
 
-// А негодный рисунок проверка обязана отвергнуть — иначе она ничего не
-// стоит.
+// Негодный рисунок проверка обязана отвергнуть.
 func bad(_ pulse: Pulse) -> Bool { !pulse.valid }
 check(bad(Pulse(rate: 13, envelope: [Moment(0, 0.5)])),
       "одна точка — не огибающая")
@@ -693,7 +670,6 @@ let wide = CGSize(width: 4000, height: 3000)
 let tall = CGSize(width: 3000, height: 4000)
 let pane = 350.0
 
-// В покое кадр — середина снимка по короткой стороне.
 let centred = Crop.of(image: wide, window: pane, scale: 1, offset: .zero)
 check(round2(centred.side), "3000.00", "из широкого берётся квадрат по высоте")
 check(round2(centred.x), "500.00", "и стоит он ровно посередине")
@@ -702,17 +678,15 @@ let upright = Crop.of(image: tall, window: pane, scale: 1, offset: .zero)
 check(round2(upright.side), "3000.00", "из высокого — по ширине")
 check(round2(upright.y), "500.00", "и тоже посередине")
 
-// Увеличение сужает кадр ровно во столько же раз.
 let closer = Crop.of(image: wide, window: pane, scale: 2, offset: .zero)
 check(round2(closer.side), "1500.00", "вдвое ближе — вдвое меньше кадр")
 check(round2(closer.x), "1250.00", "и он всё так же посередине")
 
-// Сдвиг двигает кадр в обратную сторону: тянут-то сам снимок.
+// Сдвиг двигает кадр в обратную сторону: тянут сам снимок.
 let moved = Crop.of(image: wide, window: pane, scale: 1,
                     offset: CGSize(width: 100, height: 0))
 check(moved.x < centred.x, "потянули снимок вправо — кадр ушёл влево")
 
-// За край не пускает: пустого угла на карточке быть не должно.
 let shoved = Crop.of(image: wide, window: pane, scale: 1,
                      offset: CGSize(width: 99_999, height: 99_999))
 check(round2(shoved.x), "0.00", "как ни тяни, кадр упирается в край снимка")
@@ -721,7 +695,6 @@ let pinned = Crop.of(image: tall, window: pane, scale: 1,
                      offset: CGSize(width: 0, height: -99_999))
 check(round2(pinned.y + pinned.side), "4000.00", "с другой стороны — тоже")
 
-// По короткой стороне двигать нечего вовсе.
 check(round2(Crop.slack(image: wide, window: pane, scale: 1).height), "0.00",
       "у широкого снимка по высоте люфта нет")
 check(Crop.slack(image: wide, window: pane, scale: 1).width > 0,
@@ -729,8 +702,7 @@ check(Crop.slack(image: wide, window: pane, scale: 1).width > 0,
 check(Crop.slack(image: wide, window: pane, scale: 2).height > 0,
       "стоит увеличить — появляется и по высоте")
 
-// Чего бы ни попросили, кадр обязан лежать внутри снимка и быть
-// квадратным: на этом держатся одинаковые карточки в сетке.
+// Кадр всегда внутри снимка и квадратный.
 var escaped = 0
 for size in [wide, tall, CGSize(width: 1200, height: 1200),
              CGSize(width: 800, height: 60)] {
@@ -748,8 +720,7 @@ for size in [wide, tall, CGSize(width: 1200, height: 1200),
 }
 check("\(escaped)", "0", "кадр нигде не вылезает за снимок")
 
-// Увеличение зажато сверху и снизу: меньше единицы снимок не закрыл бы
-// окно, больше предела — рассыпался бы на точки.
+// Меньше единицы снимок не закрыл бы окно, больше предела — рассыпался бы.
 let tooFar = Crop.of(image: wide, window: pane, scale: 0.1, offset: .zero)
 check(round2(tooFar.side), "3000.00", "уменьшить меньше «враспор» нельзя")
 let tooClose = Crop.of(image: wide, window: pane, scale: 99, offset: .zero)
@@ -770,12 +741,10 @@ check(Seed.greeting(for: "  Аня  "), "Добро пожаловать, Аня
 check(Seed.owner.isEmpty,
       "у нового сада имени нет: макетное «Святослав» встречало бы всех")
 
-// Подпись для тех мест, где без имени нельзя.
 let nameless = Garden()
 check(nameless.owner.isEmpty, "сад заводится безымянным")
 check(nameless.signed, Seed.stranger, "но подписаться ему есть чем")
-// Это не украшение: код с пустым именем обратно не разберётся, и
-// соперник пришёл бы в таблицу безымянным.
+// Код с пустым именем обратно не разберётся.
 let anon = Rival.mine(owner: nameless.signed, score: Score(), plants: 0)
 check(Rival.read(anon.code)?.name ?? "—", Seed.stranger,
       "код неназвавшегося разбирается обратно")
@@ -792,8 +761,8 @@ func delay(_ moisture: Double, _ dryingDays: Double = 7,
     else { return "никогда" }
     return round2(seconds)
 }
-// Час сада проходит за секунду: 0.3 от семи суток — это 2.1 суток сада,
-// то есть 50.4 суток по 24 «часа»-секунды.
+// Час сада за секунду: 0.3 от семи суток — 2.1 суток сада, то есть 50.4
+// секунды.
 check(delay(0.50), "50.40", "с 50% до 20% при недельной сушке — 50.4 секунды")
 check(delay(0.50, 14), "100.80", "вдвое медленнее сохнет — вдвое дольше ждать")
 check(delay(0.20), "0.00", "ровно на пороге — уже пора")
@@ -853,7 +822,6 @@ check("\(back?.best ?? -1)", "9", "и лучшая череда")
 check("\(back?.plants ?? -1)", "27", "и число растений")
 check("\(back?.day ?? -1)", "20350", "и день, которым помечен счёт")
 
-// Вставляют обычно всё сообщение целиком, а не один код.
 check(Rival.read(mine.card)?.name ?? "—", "Святослав",
       "код находится внутри всего сообщения")
 check(Rival.read("Привет! \(mine.code). До связи")?.total ?? -1 == 142,
@@ -895,7 +863,6 @@ func guessed(_ seen: [(String, Double)]) -> String {
     Species.read(seen.map { Sighting(name: $0.0, confidence: $0.1) })?
         .species ?? "—"
 }
-// Ярлыки приходят пачкой, и самый уверенный почти всегда самый общий.
 check(guessed([("plant", 0.91), ("houseplant", 0.44), ("cactus", 0.21)]),
       "Кактус", "частное слово важнее уверенного общего")
 check(guessed([("plant", 0.91), ("houseplant", 0.44)]),
@@ -925,9 +892,8 @@ check(Species.periodLabel(3), "Раз в 3 дня", "3 дня")
 check(Species.periodLabel(7), "Раз в 7 дней", "7 дней")
 check(Species.periodLabel(21), "Раз в 21 день", "21 день")
 
-// Словарь не должен сам себе противоречить. Слова ищутся вхождением, и
-// если более общее стоит выше более частного, до частного очередь не
-// дойдёт никогда: «rose» выше «rosemary» — и розмарин навсегда роза.
+// Слово, внутри которого есть другое слово словаря, должно стоять выше него:
+// «rose» выше «rosemary» — и розмарин навсегда роза.
 print("порядок словаря видов:")
 var shadowed: [String] = []
 for (i, entry) in Species.table.enumerated() {
@@ -941,7 +907,6 @@ check(shadowed.isEmpty,
 
 print("фигурки плывут в вязкой среде:")
 
-// Жребий внутри захода неизменен: дрогни он — фигурка дрожала бы на месте.
 check(Sway.layer(column: 3, row: 5, slot: 1, era: 2)
         == Sway.layer(column: 3, row: 5, slot: 1, era: 2),
       "внутри захода слой у фигурки один и тот же")
@@ -969,8 +934,7 @@ check(Double(swayMoved) / Double(swayCells) > 0.6,
       "со сменой захода плывут другие: сменили слой "
       + "\(round2(Double(swayMoved) * 100 / Double(swayCells)))%")
 
-// Прогон качка: цель разгоняется полсекунды, дальше телефон держат ровно.
-// Узор идёт к цели с вязкостью 0.12 — той же, что у среднего слоя.
+// Качок: цель разгоняется полсекунды, дальше телефон держат ровно.
 var swayCommon = CGSize.zero
 var swayPlaces = Sway.rest(at: .zero)
 var swayPeak = [Double](repeating: 0, count: Sway.eases.count)
@@ -1006,23 +970,18 @@ check(swayPeak.allSatisfy { $0 <= Double(Sway.limit) + 0.001 },
 check(swayPeakFrame[4] >= swayRamp - 6,
       "тяжёлый расходится сильнее всего на исходе наклона, а не в начале: "
       + "кадр \(swayPeakFrame[4]) из \(swayRamp)")
-// Доплывание: у самого тяжёлого слоя постоянная времени 1/0.045 ≈ 22
-// кадра, так что через три четверти секунды после наклона от разъезда
-// остаётся около пункта, а ещё через столько же — почти ничего. Это и
-// значит «плывут по инерции»: движение видно и после того, как телефон
-// замер, но оно не длится вечно.
+// Доплывание: у тяжёлого слоя постоянная ~22 кадра — через ¾ секунды ещё
+// около пункта, через полторы почти ноль.
 check(swayAfter > 0.3 && swayAfter < 1.5,
       "через три четверти секунды после наклона фигурки ещё плывут: "
       + "\(round2(swayAfter)) pt")
 check(swayLate < 0.3,
       "а через полторы — уже сошлись: \(round2(swayLate)) pt")
 
-// В покое разъезда нет вовсе — узор стоит ровной сеткой.
 let swayStill = Sway.lag(Sway.rest(at: CGSize(width: 9, height: -4)),
                      behind: CGSize(width: 9, height: -4))
 check(swayStill.allSatisfy { $0.width == 0 && $0.height == 0 },
       "стоячий узор — ровная сетка")
-
 
 print("убрать и вернуть:")
 do {

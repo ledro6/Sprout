@@ -2,42 +2,26 @@ import PhotosUI
 import SwiftUI
 import UIKit
 
-/// Добавить растение: снимок, кличка, вид, комната и как часто поливать.
-///
-/// Снимок разглядывает сам телефон — классификатор Apple из Vision, — и по
-/// увиденному подсказывает вид и срок полива. Подсказывает, а не решает:
-/// оба поля правятся руками. Если на телефоне есть Apple Intelligence,
-/// здесь же появляется языковая модель: она придумывает кличку и пишет
-/// совет по уходу. Обе считают прямо на телефоне и ничего никуда не
-/// отправляют — иначе им здесь было бы не место, см. политику
-/// конфиденциальности.
-///
-/// Собран из тех же плашек, что настройки, статистика и профиль, лежит на
-/// том же узоре и подпрыгивает на той же волне полива.
+/// Добавить растение. Вид и срок полива подсказывает классификатор Vision,
+/// кличку и совет — языковая модель, если есть Apple Intelligence; всё прямо
+/// на телефоне, и оба поля правятся руками.
 struct AddView: View {
     @Environment(Garden.self) private var garden
 
-    /// Выбранный снимок и то, чем его выбирали.
     @State private var item: PhotosPickerItem?
     @State private var shooting = false
 
-    /// Снимок как его дали — целиком, без обрезки. Держится затем, что
-    /// кадр можно перевыбрать: резать во второй раз из уже обрезанного
-    /// значило бы терять на каждом заходе.
+    /// Снимок целиком: кадр можно перевыбрать, а резать заново из обрезанного
+    /// — терять на каждом заходе.
     @State private var raw: UIImage?
 
-    /// Только что снятое камерой: лист кадра поднимется, когда камера
-    /// закроется, — см. ниже, почему не сразу.
+    /// Лист кадра поднимается после закрытия камеры — см. `snapped`.
     @State private var fresh: UIImage?
 
-    /// Открыт ли выбор кадра.
     @State private var trimming = false
 
-    /// Обрезанный квадрат — он и ляжет на карточку.
     @State private var shot: UIImage?
 
-    /// Что система разглядела на снимке. Пусто — не разглядела ничего
-    /// знакомого, и подсказывать нечего.
     @State private var guess: Guess?
     @State private var looking = false
 
@@ -46,28 +30,21 @@ struct AddView: View {
     @State private var room = ""
     @State private var period: Double = 7
 
-    /// Заводят новую комнату.
     @State private var naming = false
     @State private var newRoom = ""
 
-    /// Совет от языковой модели и то, что она сейчас думает.
     @State private var care: String?
     @State private var thinking = false
 
-    /// Кого только что посадили — чтобы сказать об этом.
-    ///
-    /// Вместе с готовой строкой, а не одной кличкой: поля к тому времени
-    /// уже очищены под следующее растение, и собирать строку из них было
-    /// бы поздно — она рассказала бы про пустую форму.
+    /// Строка готова заранее: к моменту показа поля уже очищены под следующее
+    /// растение.
     @State private var planted: Planted?
 
-    /// Что сказать о только что посаженном.
     private struct Planted {
         var name: String
         var note: String
     }
 
-    /// Где кнопка «Посадить»: оттуда по узору идёт волна.
     @State private var button = Spot()
 
     @FocusState private var typing: Bool
@@ -91,17 +68,15 @@ struct AddView: View {
                     .padding(.bottom, 28)
                 }
             }
-            // Клавиатура уезжает от движения пальца — иначе до кнопки
-            // «Посадить» из последнего поля не добраться.
+            // Иначе до кнопки «Посадить» из последнего поля не добраться.
             .scrollDismissesKeyboard(.interactively)
             .background { SproutBackground() }
             .sproutNotchCover()
             .toolbar(.hidden, for: .navigationBar)
         }
         .onAppear { if room.isEmpty { room = rooms.first ?? "Дом" } }
-        // `onDismiss` идёт до содержимого — так он и объявлен, и двумя
-        // замыканиями подряд его не переставить: Swift раздаёт их в том
-        // порядке, в каком они записаны у самого метода.
+        // `onDismiss` объявлен до содержимого — вторым замыканием его не
+        // переставить.
         .fullScreenCover(isPresented: $shooting, onDismiss: { snapped() }) {
             Camera { image in fresh = image }
                 .ignoresSafeArea()
@@ -137,13 +112,8 @@ struct AddView: View {
         SproutGroup("Снимок") {
             well
 
-            // Все три в строку, и ни одна не переносится по слогам.
-            //
-            // Три подписи в ряд на узкий телефон не встают: «Снять»
-            // разрывалось на «Сня-» и «ть». Поэтому у третьей кнопки
-            // подписи нет вовсе — крестик говорит сам за себя, а вслух
-            // его называет `accessibilityLabel`; у двух оставшихся подписи
-            // короткие и запрет на перенос стоит явно.
+            // У третьей кнопки подписи нет: три подписи в ряд на узком
+            // телефоне переносились по слогам.
             HStack(spacing: 10) {
                 PhotosPicker(selection: $item, matching: .images,
                              photoLibrary: .shared()) {
@@ -175,9 +145,6 @@ struct AddView: View {
             .frame(maxWidth: .infinity, alignment: .leading)
 
             if let sighting {
-                // Догадка телефона приходит системным размытием, а новая
-                // сменяет прежнюю тем же переходом: у строки своя личность
-                // на каждый текст.
                 Text(sighting)
                     .font(Typography.settingNote)
                     .foregroundStyle(.secondary)
@@ -192,13 +159,10 @@ struct AddView: View {
         }
     }
 
-    /// Квадрат, в котором лежит снимок. Пока его нет — росток на стекле:
-    /// то же место, та же форма, и видно, куда встанет фотография.
+    /// Пока снимка нет — росток на том же месте.
     private var well: some View {
-        // Всё лежит наложениями на пустой цвет, а не стопкой: `scaledToFill`
-        // сообщает о себе размер больше предложенного, и в стопке снимок
-        // растянул бы собой окно. Пустой цвет берёт ровно предложенное, а
-        // наложения меряются по нему — то же решение, что и у карточки.
+        // Наложениями на пустой цвет, а не стопкой: `scaledToFill` растянул
+        // бы окно.
         Color.clear
             .overlay {
                 if let shot {
@@ -213,8 +177,6 @@ struct AddView: View {
             }
             .overlay {
                 if looking {
-                    // Пока система разглядывает снимок — системный кружок
-                    // ожидания поверх него.
                     ProgressView()
                         .controlSize(.large)
                         .padding(14)
@@ -228,19 +190,14 @@ struct AddView: View {
         .sproutPlate(in: RoundedRectangle(cornerRadius: Metrics.cardRadius,
                                           style: .continuous))
         .contentShape(Rectangle())
-        // Нажатие на сам снимок — перевыбрать кадр. Резать заново будут
-        // из непорезанного оригинала, а не из того, что уже вырезали.
+        // Перевыбрать кадр — из непорезанного оригинала.
         .onTapGesture { if raw != nil { trimming = true } }
         .accessibilityLabel(shot == nil ? "Снимка нет" : "Снимок растения")
         .accessibilityHint(shot == nil ? "" : "Нажмите, чтобы выбрать кадр")
     }
 
-    /// Что система разглядела — строкой под кнопками.
-    ///
-    /// С долей уверенности, а не просто «это кактус». Классификатор
-    /// ошибается, и выдавать его догадку за ответ значит врать: он
-    /// различает кактус и папоротник, но замиокулькас от сансевиерии не
-    /// отличит.
+    /// С долей уверенности: классификатор ошибается, и выдавать догадку за
+    /// ответ — врать.
     private var sighting: String? {
         guard shot != nil, !looking else { return nil }
         guard let guess else {
@@ -323,7 +280,6 @@ struct AddView: View {
         .sproutRide()
     }
 
-    /// Строка выбора под меню — тем же синим, что и остальные выборы.
     private func field(_ text: String) -> some View {
         HStack(spacing: 6) {
             Text(text)
@@ -337,9 +293,7 @@ struct AddView: View {
 
     // MARK: - Совет
 
-    /// Совет по уходу — от языковой модели Apple, если она на этом
-    /// телефоне есть. Если её нет, здесь стоит объяснение, а не
-    /// неработающая кнопка.
+    /// Без модели на телефоне — объяснение, а не неработающая кнопка.
     @ViewBuilder
     private var advice: some View {
         if Muse.ready {
@@ -400,18 +354,14 @@ struct AddView: View {
 
     // MARK: - Что происходит
 
-    /// Вид, по которому спрашивают модель: вписанный руками, а если поле
-    /// пустое — тот, что подсказал классификатор.
+    /// Вписанный вид, а если поле пустое — подсказанный классификатором.
     private var wanted: String {
         let typed = species.trimmingCharacters(in: .whitespacesAndNewlines)
         return typed.isEmpty ? (guess?.species ?? "") : typed
     }
 
-    /// Камера закрылась.
-    ///
-    /// Кадр выбирают здесь, а не прямо в камере: два экрана, поднятых в
-    /// одном проходе, система показывает как один — и вторым оказывается
-    /// не тот.
+    /// Кадр выбирают после камеры, а не в ней: два экрана, поднятых в одном
+    /// проходе, система показывает как один.
     private func snapped() {
         guard let image = fresh else { return }
         fresh = nil
@@ -426,19 +376,14 @@ struct AddView: View {
               let image = UIImage(data: data)
         else { return }
         raw = image
-        // По той же причине, что и у камеры: выбор фотографии ещё
-        // закрывается своим листом, и поднятый в тот же миг лист кадра
-        // система просто не покажет. Чтение снимка иногда успевает занять
-        // это время само, а иногда нет, — ждём наверняка.
+        // Лист выбора фото ещё закрывается, и поднятый в тот же миг лист
+        // кадра система не покажет.
         try? await Task.sleep(for: .milliseconds(350))
         trimming = true
     }
 
-    /// Принять выбранный кадр и дать телефону его разглядеть.
-    ///
-    /// Подсказка не затирает вписанное руками: если вид уже вписан, его
-    /// оставляют как есть. Срок полива подставляется только вместе с
-    /// видом — сам по себе он ничего не значит.
+    /// Подсказка не затирает вписанный руками вид; срок подставляется только
+    /// вместе с видом.
     @MainActor
     private func take(_ image: UIImage) async {
         withAnimation(Motion.appear) {
@@ -486,11 +431,8 @@ struct AddView: View {
         withAnimation(Motion.appear) { care = text }
     }
 
-    /// Посадить.
-    ///
-    /// Снимок кладётся на диск только здесь, в последний миг: выбранных и
-    /// передуманных снимков за сеанс бывает несколько, и складывать в
-    /// Documents все значило бы копить мусор, который никто не уберёт.
+    /// Снимок кладётся на диск только здесь: передуманные снимки копились бы
+    /// в Documents мусором.
     private func plant() {
         let nickname = name.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !nickname.isEmpty else { return }
@@ -503,7 +445,6 @@ struct AddView: View {
         let seedling = Plant.new(name: nickname, species: kind,
                                  dryingDays: period, shot: saved)
         withAnimation(Motion.appear) { garden.add(seedling, to: place) }
-        // Новое растение — событие, а события здесь показываются волной.
         Cheer.shared.now(from: button.rect)
         Feel.planted()
         typing = false
@@ -515,8 +456,7 @@ struct AddView: View {
         reset()
     }
 
-    /// Поля под следующее растение. Комната остаётся: сажают обычно
-    /// подряд и в одно место.
+    /// Комната остаётся: сажают обычно подряд и в одно место.
     private func reset() {
         withAnimation(Motion.appear) {
             name = ""

@@ -1,17 +1,8 @@
 import Foundation
 import Observation
 
-/// Счёт соперника — друга, который прислал свой код.
-///
-/// Сервера у Sprout нет, и учётной записи тоже. Таблица соперников всё
-/// равно возможна: друг присылает строку со своим счётом, вы вставляете
-/// её здесь, и его результат встаёт рядом с вашим. Обновится он тогда,
-/// когда друг пришлёт код снова.
-///
-/// Честнее, чем «онлайн-таблица», которой не было бы: настоящая требует
-/// сервера, учётных записей и платного аккаунта разработчика, а эта
-/// работает сегодня, без сети вовсе, и переписка идёт там, где друзья и
-/// так переписываются.
+/// Счёт друга, который прислал свой код. Сервера у Sprout нет: друг присылает
+/// строку в переписке, вы вставляете её, и его счёт встаёт рядом с вашим.
 struct Rival: Codable, Identifiable, Hashable, Sendable {
     var name: String
     var total: Int
@@ -19,15 +10,12 @@ struct Rival: Codable, Identifiable, Hashable, Sendable {
     var best: Int
     var plants: Int
 
-    /// Сутки от 1 января 1970 — когда сняли счёт.
-    ///
-    /// Днями, а не датой: код передают в переписке, и каждый лишний знак
-    /// в нём виден. Дата в JSON занимает семнадцать знаков, день — пять, а
-    /// точнее дня здесь ничего и не нужно.
+    /// Сутки от 1970 года, а не дата: каждый знак кода виден в переписке, а
+    /// точнее дня не нужно.
     var day: Int
 
-    /// По кличке, без оглядки на регистр: один и тот же друг, приславший
-    /// код дважды, должен занять одну строку, а не две.
+    /// Без оглядки на регистр: друг, приславший код дважды, занимает одну
+    /// строку.
     var id: String { name.lowercased() }
 
     var stamp: Date { Date(timeIntervalSince1970: Double(day) * 86_400) }
@@ -37,12 +25,10 @@ struct Rival: Codable, Identifiable, Hashable, Sendable {
         case best = "b", plants = "p", day = "d"
     }
 
-    /// Сутки, в которые попадает эта дата.
     static func day(of moment: Date) -> Int {
         Int((moment.timeIntervalSince1970 / 86_400).rounded(.down))
     }
 
-    /// Свой счёт — тот, что уходит друзьям.
     static func mine(owner: String, score: Score, plants: Int,
                      on moment: Date = Date()) -> Rival {
         Rival(name: owner, total: score.total, streak: score.streak,
@@ -51,15 +37,11 @@ struct Rival: Codable, Identifiable, Hashable, Sendable {
 
     // MARK: - Код
 
-    /// С чего начинается код. Версия в самой метке: поменяется набор
-    /// полей — поменяется и она, и старый код не разберётся молча не тем.
+    /// Версия в метке: сменится набор полей — старый код не разберётся молча
+    /// не тем.
     static let mark = "SPROUT1."
 
-    /// Строка, которую отправляют другу.
-    ///
-    /// Сперва человеческая часть, потом код. Человеческая нужна затем,
-    /// что сообщение читает человек: получить в чате одну строку
-    /// нечитаемых знаков — то же, что получить вложение без подписи.
+    /// Сперва человеческая часть, потом код: сообщение читает человек.
     var card: String {
         let waterings = Plant.plural(total, "полив", "полива", "поливов")
         let days = Plant.plural(streak, "день", "дня", "дней")
@@ -72,23 +54,14 @@ struct Rival: Codable, Identifiable, Hashable, Sendable {
         """
     }
 
-    /// Сам код: метка и слепок счёта в base64url.
-    ///
-    /// base64url, а не обычный base64: обычный кладёт в строку «+» и «/»,
-    /// а их переписка и браузеры любят превращать во что угодно. В
-    /// base64url их место занимают «-» и «_», и строка проходит через
-    /// чужие руки целой.
+    /// base64url, а не base64: «+» и «/» переписка и браузеры портят.
     var code: String {
         guard let data = try? JSONEncoder().encode(self) else { return "" }
         return Self.mark + Self.pack(data)
     }
 
-    /// Найти код в присланном тексте и разобрать его.
-    ///
-    /// Именно найти, а не разобрать целиком: вставляют обычно всё
-    /// сообщение, вместе с человеческой частью, а иногда и вместе с
-    /// «переслано от…». Ищем метку, берём от неё всё, что похоже на код, и
-    /// на этом останавливаемся.
+    /// Ищем метку, а не разбираем текст целиком: вставляют обычно всё
+    /// сообщение.
     static func read(_ text: String) -> Rival? {
         for piece in text.split(whereSeparator: \.isWhitespace) {
             guard let start = piece.range(of: mark) else { continue }
@@ -102,8 +75,6 @@ struct Rival: Codable, Identifiable, Hashable, Sendable {
         return nil
     }
 
-    /// Знаки base64url. Всё, что не из них, — уже не код: точка в конце
-    /// предложения, закрывающая скобка, перевод строки.
     private static func allowed(_ c: Character) -> Bool {
         c.isASCII && (c.isLetter || c.isNumber || c == "-" || c == "_")
     }
@@ -120,23 +91,17 @@ struct Rival: Codable, Identifiable, Hashable, Sendable {
         var text = token
             .replacingOccurrences(of: "-", with: "+")
             .replacingOccurrences(of: "_", with: "/")
-        // Хвост из «=» base64url не передаёт — дописываем обратно.
+        // Хвост из «=» base64url не передаёт — дописываем.
         while text.count % 4 != 0 { text.append("=") }
         return Data(base64Encoded: text)
     }
 }
 
-/// Соперники, которых уже позвали.
-///
-/// В `UserDefaults`, а не в файле сада: это не сад. Сад — растения
-/// хозяина, им место в Documents и в резервной копии; присланные счета
-/// друзей — несколько строк, которые надо помнить между запусками, и это
-/// ровно то, для чего `UserDefaults` и есть.
+/// Позванные соперники — в `UserDefaults`: это не данные сада.
 @Observable
 final class Friends {
     static let shared = Friends()
 
-    /// От большего счёта к меньшему — таблица и есть порядок.
     private(set) var rivals: [Rival] = []
 
     @ObservationIgnored private let store: UserDefaults
@@ -150,11 +115,8 @@ final class Friends {
         }
     }
 
-    /// Разобрать присланное и поставить в таблицу.
-    ///
-    /// Своё имя в соперники не берём: строка хозяина в таблице и так
-    /// есть, живая, а вставленный собственный код застыл бы рядом с ней
-    /// вторым, устаревшим «вами».
+    /// Свой код в соперники не берём: строка хозяина в таблице уже есть,
+    /// живая.
     @discardableResult
     func take(_ text: String, mine owner: String) -> Rival? {
         guard let rival = Rival.read(text) else { return nil }
@@ -163,8 +125,7 @@ final class Friends {
         return rival
     }
 
-    /// Прислал код тот, кто уже в таблице, — заменяем строку целиком.
-    /// Счёт у друга один, и двух строк на него быть не может.
+    /// Тот, кто уже в таблице, заменяется целиком: счёт у друга один.
     func add(_ rival: Rival) {
         var next = rivals.filter { $0.id != rival.id }
         next.append(rival)
@@ -187,8 +148,8 @@ final class Friends {
         store.set(data, forKey: Self.key)
     }
 
-    /// Порядок таблицы: по поливам, а при равенстве — по кличке, чтобы
-    /// строки не перескакивали местами от запуска к запуску.
+    /// При равенстве — по кличке, чтобы строки не перескакивали от запуска к
+    /// запуску.
     private static func ranked(_ list: [Rival]) -> [Rival] {
         list.sorted { ($0.total, $1.name) > ($1.total, $0.name) }
     }

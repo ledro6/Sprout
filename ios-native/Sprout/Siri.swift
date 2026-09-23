@@ -2,18 +2,13 @@ import AppIntents
 import SwiftUI
 import UIKit
 
-/// Команды Siri и «Команд»: полить растение и узнать, кого полить сегодня.
-///
-/// Живут в самом приложении, а не в отдельном расширении: им нужен сад, а
-/// сад лежит здесь. Приложение закрыто — система поднимает его в фоне, без
-/// окна, и команда говорит с тем же общим садом (`Garden.shared`), что и
-/// экраны. Открыто — полив из Siri виден на карточке сразу.
-///
-/// Фразы русские: язык разработки приложения — русский, и Siri на русском
-/// ищет команды по ним. В каждой есть имя приложения — без него система
-/// фразу не примет: так Siri отличает команду Sprout от чужой.
+// Команды Siri: полить растение и узнать, кого полить сегодня.
+//
+// Живут в самом приложении, без расширения: закрытое приложение система
+// поднимает в фоне, и команда говорит с тем же `Garden.shared`, что и
+// экраны. В каждой фразе обязательно имя приложения.
 
-/// Растение — таким, каким его знает Siri: кличка и комната.
+/// Растение для Siri: кличка и комната.
 struct PlantEntity: AppEntity {
     static let typeDisplayRepresentation: TypeDisplayRepresentation = "Растение"
     static let defaultQuery = PlantQuery()
@@ -34,11 +29,7 @@ struct PlantEntity: AppEntity {
     }
 }
 
-/// Где Siri ищет растения.
-///
-/// Каждый ответ читает сад на главной очереди: сад — наблюдаемый класс
-/// интерфейса, и трогать его из чужой очереди нельзя. Наружу уходят
-/// готовые слепки — клички и комнаты, — а не сами растения.
+/// Сад читается на главной очереди, наружу уходят слепки.
 struct PlantQuery: EntityStringQuery {
     func entities(for identifiers: [PlantEntity.ID]) async throws
         -> [PlantEntity] {
@@ -51,8 +42,7 @@ struct PlantQuery: EntityStringQuery {
         }
     }
 
-    /// По сказанному — с поправкой на падеж: «Полей Баксика». См.
-    /// `Seed.spoken`.
+    /// С поправкой на падеж — см. `Seed.spoken`.
     func entities(matching string: String) async throws -> [PlantEntity] {
         await MainActor.run {
             let garden = Garden.shared
@@ -62,7 +52,6 @@ struct PlantQuery: EntityStringQuery {
         }
     }
 
-    /// Все растения сада — из них Siri и берёт клички для фраз.
     func suggestedEntities() async throws -> [PlantEntity] {
         await MainActor.run {
             Garden.shared.rooms.flatMap { room in
@@ -72,11 +61,9 @@ struct PlantQuery: EntityStringQuery {
     }
 }
 
-/// «Полей Баксика».
 struct WaterPlant: AppIntent {
     static let title: LocalizedStringResource = "Полить растение"
-    // Одной строкой, а не сложением: описание — ресурс для перевода, и
-    // собранную из кусков строку система за ресурс не примет.
+    // Одной строкой: собранную сложением строку система за ресурс не примет.
     static let description: IntentDescription? = IntentDescription(
         "Отмечает полив: влажность встаёт на сто процентов, а полив попадает в журнал.")
 
@@ -87,15 +74,13 @@ struct WaterPlant: AppIntent {
     @MainActor
     func perform() async throws -> some IntentResult & ProvidesDialog {
         let garden = Garden.shared
-        // Сперва отдаём саду прошедшее время: приложение могло стоять в
-        // фоне, и без этого полив лёг бы на устаревшую влажность.
+        // Приложение могло стоять в фоне — сперва отдаём саду прошедшее
+        // время.
         garden.advance()
         guard garden.plant(id: plant.id) != nil else {
             return .result(dialog: "Растения «\(plant.name)» в саду больше нет.")
         }
         withAnimation(Motion.appear) { garden.water(plant.id) }
-        // Приложение на экране — полив виден и там: по узору от карточки
-        // идёт та же волна, что и от нажатия.
         if UIApplication.shared.applicationState == .active {
             let spot = Cards.shared.rect(plant.id)
             Cheer.shared.now(from: spot == .zero ? Screen.middle : spot)
@@ -104,7 +89,6 @@ struct WaterPlant: AppIntent {
     }
 }
 
-/// «Кого полить сегодня?»
 struct WhoNeedsWater: AppIntent {
     static let title: LocalizedStringResource = "Кого полить сегодня"
     static let description: IntentDescription? = IntentDescription(
@@ -119,14 +103,9 @@ struct WhoNeedsWater: AppIntent {
     }
 }
 
-/// Фразы, по которым Siri узнаёт команды без всякой настройки.
-///
-/// Кличка после слова «растение» остаётся в именительном падеже —
-/// «Полей растение Баксик», — и её Siri узнаёт наверняка. Без него кличку
-/// говорят в винительном — «Полей Баксика», — и тогда её ищет
-/// `PlantQuery` с поправкой на окончание. А сказанное совсем без клички —
-/// «Полить растение в Sprout» — Siri переспросит: «Какое растение
-/// полить?».
+/// После слова «растение» кличка остаётся в именительном — «Полей растение
+/// Баксик». Без него она в винительном, и её ищет `PlantQuery`. Без клички
+/// Siri переспросит.
 struct SproutShortcuts: AppShortcutsProvider {
     static var appShortcuts: [AppShortcut] {
         AppShortcut(

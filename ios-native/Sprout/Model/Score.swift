@@ -1,17 +1,12 @@
 import Foundation
 
-/// Одна запись журнала: кого полили и когда.
-///
-/// Время настоящее, а не садовое. Час сада проходит здесь за секунду — по
-/// садовым часам «сегодня» кончалось бы каждые двадцать четыре секунды, и
-/// «сколько полил за неделю» не значило бы ничего. Хозяин спрашивает про
-/// свои дни, значит и считать надо в своих.
+/// Запись журнала: кого полили и когда. Время настоящее, а не садовое: по
+/// садовым часам «сегодня» кончалось бы каждые 24 секунды.
 struct Watering: Codable, Hashable, Sendable {
     var plant: Plant.ID
     var when: Date
 }
 
-/// Итог по одной строке — комнате, растению, дню.
 struct Tally: Identifiable, Hashable, Sendable {
     var name: String
     var count: Int
@@ -19,7 +14,6 @@ struct Tally: Identifiable, Hashable, Sendable {
     var id: String { name }
 }
 
-/// Сколько полили в этот день.
 struct Chore: Identifiable, Hashable, Sendable {
     var day: Date
     var count: Int
@@ -27,37 +21,27 @@ struct Chore: Identifiable, Hashable, Sendable {
     var id: Date { day }
 }
 
-/// Всё, что сад может рассказать о поливах.
-///
-/// Считается из журнала, а не копится счётчиками. Счётчики пришлось бы
-/// держать согласованными с журналом, и рано или поздно они разошлись бы —
-/// та же причина, по которой срок полива считается из влажности, а не
-/// хранится рядом с ней.
+/// Всё, что сад может рассказать о поливах. Считается из журнала, а не
+/// копится счётчиками, которые рано или поздно разошлись бы с ним.
 struct Score: Sendable {
-    /// Сколько поливов всего, сегодня и за последние семь дней.
     var total = 0
     var today = 0
     var week = 0
 
-    /// Дней подряд с поливом и самая длинная такая череда за всё время.
     var streak = 0
     var best = 0
 
-    /// По комнатам и по растениям — от большего к меньшему.
     var rooms: [Tally] = []
     var plants: [Tally] = []
 
-    /// Последние две недели по дням, от старого к новому. Дни без полива
-    /// в ряду тоже есть: без них график врал бы о промежутках.
+    /// Две недели от старого к новому, пустые дни тоже: без них график врал
+    /// бы о промежутках.
     var days: [Chore] = []
 
-    /// Сколько дней ряд для графика.
     static let span = 14
 
-    /// Посчитать всё разом.
-    ///
-    /// Календарь и «сейчас» приходят снаружи: иначе прогон модели зависел
-    /// бы от того, в каком часовом поясе и в какой день его запустили.
+    /// Календарь и «сейчас» — снаружи, чтобы прогон модели не зависел от
+    /// часового пояса и дня запуска.
     static func of(_ log: [Watering], rooms: [Room],
                    now: Date = Date(),
                    calendar: Calendar = .current) -> Score {
@@ -70,7 +54,6 @@ struct Score: Sendable {
             ?? midnight
         score.week = log.count { $0.when >= weekAgo }
 
-        // Дни, в которые хоть раз полили.
         var byDay: [Date: Int] = [:]
         for note in log {
             let day = calendar.startOfDay(for: note.when)
@@ -80,14 +63,12 @@ struct Score: Sendable {
                                    calendar: calendar)
         score.best = Self.best(days: Set(byDay.keys), calendar: calendar)
 
-        // Ряд для графика: две недели подряд, включая пустые дни.
         score.days = (0 ..< Self.span).reversed().compactMap { back in
             guard let day = calendar.date(byAdding: .day, value: -back,
                                           to: midnight) else { return nil }
             return Chore(day: day, count: byDay[day] ?? 0)
         }
 
-        // По комнатам и растениям.
         var byPlant: [Plant.ID: Int] = [:]
         for note in log { byPlant[note.plant, default: 0] += 1 }
         score.rooms = rooms.map { room in
@@ -105,10 +86,8 @@ struct Score: Sendable {
         return score
     }
 
-    /// Дней подряд с поливом, считая назад от сегодня.
-    ///
-    /// Сегодняшний пропуск череду ещё не рвёт: день не кончился, полить
-    /// можно. Рвёт пропущенный вчерашний — вот он уже прошёл целиком.
+    /// Сегодняшний пропуск череду не рвёт — день не кончился; рвёт
+    /// пропущенный вчерашний.
     private static func streak(from midnight: Date, days: Set<Date>,
                                calendar: Calendar) -> Int {
         var day = midnight
@@ -129,12 +108,11 @@ struct Score: Sendable {
         return run
     }
 
-    /// Самая длинная череда за всё время.
     private static func best(days: Set<Date>, calendar: Calendar) -> Int {
         var longest = 0
         for day in days {
-            // Считаем только от начала череды — иначе каждый день внутри
-            // неё пересчитывал бы её заново.
+            // Считаем только от начала череды, иначе каждый её день
+            // пересчитывал бы её заново.
             let before = calendar.date(byAdding: .day, value: -1, to: day)
             if let before, days.contains(before) { continue }
             var run = 0
