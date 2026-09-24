@@ -25,23 +25,33 @@ struct SettingsView: View {
 
     var body: some View {
         NavigationStack {
-            ScrollView {
-                VStack(alignment: .leading, spacing: Metrics.groupGap) {
-                    look
-                    backdrop
-                    feel
-                    watering
-                    protection
-                    about
+            ScrollViewReader { reader in
+                ScrollView {
+                    VStack(alignment: .leading, spacing: Metrics.groupGap) {
+                        look
+                            .hintSpot(.settingsLook)
+                        backdrop
+                            .hintSpot(.settingsBackdrop)
+                        feel
+                        watering
+                            .hintSpot(.settingsWatering)
+                        protection
+                        about
+                            .hintSpot(.settingsAbout)
+                    }
+                    .padding(.horizontal, Metrics.contentMargin)
+                    .padding(.top, 4)
+                    .padding(.bottom, 40)
                 }
-                .padding(.horizontal, Metrics.contentMargin)
-                .padding(.top, 4)
-                .padding(.bottom, 40)
+                .background { SproutBackground() }
+                .walk(.settings, scroll: reader)
             }
-            .background { SproutBackground() }
             .navigationTitle("Настройки")
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    WalkButton(walk: .settings)
+                }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Готово") { dismiss() }
                 }
@@ -356,6 +366,18 @@ struct SettingsView: View {
 
             NavigationLink { GlossaryView() } label: {
                 SproutLink("Словарик", icon: "character.book.closed")
+            }
+            .buttonStyle(.plain)
+
+            SproutDivider()
+
+            // Все экраны снова подскажут при заходе; этот — сразу, чтобы
+            // было видно, что сработало.
+            Button {
+                settings.rewalk()
+                Coach.shared.start(.settings)
+            } label: {
+                SproutLink("Показать подсказки снова", icon: "lightbulb")
             }
             .buttonStyle(.plain)
 

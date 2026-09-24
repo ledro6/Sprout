@@ -42,23 +42,30 @@ struct ProfileView: View {
 
     var body: some View {
         NavigationStack {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 0) {
-                    SproutHead("Профиль")
-                    VStack(alignment: .leading, spacing: Metrics.groupGap) {
-                        person
-                        plot
-                        rivals
-                        more
+            ScrollViewReader { reader in
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 0) {
+                        SproutHead("Профиль", walk: .profile)
+                        VStack(alignment: .leading, spacing: Metrics.groupGap) {
+                            person
+                                .hintSpot(.profilePerson)
+                            plot
+                                .hintSpot(.profilePlot)
+                            rivals
+                                .hintSpot(.profileRivals)
+                            more
+                                .hintSpot(.profileMore)
+                        }
+                        .padding(.horizontal, Metrics.contentMargin)
+                        .padding(.top, 8)
+                        .padding(.bottom, 28)
                     }
-                    .padding(.horizontal, Metrics.contentMargin)
-                    .padding(.top, 8)
-                    .padding(.bottom, 28)
                 }
+                .background { SproutBackground() }
+                .sproutNotchCover()
+                .toolbar(.hidden, for: .navigationBar)
+                .walk(.profile, scroll: reader)
             }
-            .background { SproutBackground() }
-            .sproutNotchCover()
-            .toolbar(.hidden, for: .navigationBar)
         }
         .onAppear {
             recount()

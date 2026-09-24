@@ -145,14 +145,17 @@ struct SproutGear: View {
 }
 
 /// Заголовок раздела и кнопка настроек — на каждом экране, кроме главной: там
-/// кнопка живёт в закреплённой строке комнаты.
+/// кнопка живёт в закреплённой строке комнаты. У экрана с подсказками рядом
+/// «?» — показать их ещё раз.
 struct SproutHead: View {
     let title: LocalizedStringKey
+    let walk: Walk?
 
     @State private var open = false
 
-    init(_ title: LocalizedStringKey) {
+    init(_ title: LocalizedStringKey, walk: Walk? = nil) {
         self.title = title
+        self.walk = walk
     }
 
     var body: some View {
@@ -161,6 +164,7 @@ struct SproutHead: View {
                 .font(.largeTitle.bold())
                 .foregroundStyle(Palette.ink)
                 .frame(maxWidth: .infinity, alignment: .leading)
+            if let walk { WalkButton(walk: walk) }
             SproutGear { open = true }
         }
         .padding(.horizontal, Metrics.contentMargin)

@@ -31,34 +31,42 @@ struct PlantView: View {
     private var plant: Plant? { garden.plant(id: plantID) }
 
     var body: some View {
-        ScrollView {
-            if let plant {
-                // Без стеклянного контейнера: он склеил бы экран в один слой
-                // и сломал разворачивание карточки.
-                VStack(spacing: Metrics.plantGap) {
-                    photo(plant)
-                    VStack(spacing: Metrics.actionGap) {
-                        pour
-                        tools(plant)
+        ScrollViewReader { reader in
+            ScrollView {
+                if let plant {
+                    // Без стеклянного контейнера: он склеил бы экран в один слой
+                    // и сломал разворачивание карточки.
+                    VStack(spacing: Metrics.plantGap) {
+                        photo(plant)
+                            .hintSpot(.plantPhoto)
+                        VStack(spacing: Metrics.actionGap) {
+                            pour
+                                .hintSpot(.plantPour)
+                            tools(plant)
+                                .hintSpot(.plantTools)
+                        }
+                        if let days = Rhythm.suggest(for: plant, log: garden.log) {
+                            rhythm(plant, days: days)
+                                .transition(.blurReplace)
+                        }
+                        care(plant)
+                        facts(plant)
+                        notes
+                            .hintSpot(.plantNotes)
+                        diary(plant)
+                            .hintSpot(.plantDiary)
                     }
-                    if let days = Rhythm.suggest(for: plant, log: garden.log) {
-                        rhythm(plant, days: days)
-                            .transition(.blurReplace)
-                    }
-                    care(plant)
-                    facts(plant)
-                    notes
-                    diary(plant)
+                    .animation(Motion.enter,
+                               value: Rhythm.suggest(for: plant, log: garden.log))
+                    .padding(.horizontal, Metrics.margin)
+                    .padding(.top, 14)
+                    .padding(.bottom, 40)
                 }
-                .animation(Motion.enter,
-                           value: Rhythm.suggest(for: plant, log: garden.log))
-                .padding(.horizontal, Metrics.margin)
-                .padding(.top, 14)
-                .padding(.bottom, 40)
             }
+            .scrollDismissesKeyboard(.interactively)
+            .background { SproutBackground() }
+            .walk(.plant, scroll: reader)
         }
-        .scrollDismissesKeyboard(.interactively)
-        .background { SproutBackground() }
         .navigationTitle(plant?.name ?? "")
         .navigationBarTitleDisplayMode(.inline)
         // Своя кнопка «назад»: системную не размыть. Жест свайпа от края при
@@ -161,6 +169,9 @@ struct PlantView: View {
             }
             Button { tuning = true } label: {
                 Label("Настройки", systemImage: "slider.horizontal.3")
+            }
+            Button { Coach.shared.start(.plant) } label: {
+                Label("Подсказки", systemImage: "questionmark.circle")
             }
             MoveMenu(current: garden.roomName(of: plantID),
                      rooms: garden.rooms.map(\.name),

@@ -223,6 +223,18 @@ final class Settings {
         didSet { store.set(toured, forKey: Key.toured) }
     }
 
+    /// Экраны, чьи подсказки уже показаны, — см. `Walk`. Показать снова —
+    /// значит забыть их все.
+    private(set) var walked: Set<String> {
+        didSet { store.set(walked.sorted(), forKey: Key.walked) }
+    }
+
+    func seen(_ walk: Walk) -> Bool { walked.contains(walk.rawValue) }
+
+    func mark(_ walk: Walk) { walked.insert(walk.rawValue) }
+
+    func rewalk() { walked = [] }
+
     /// Последнюю не выключить: пустой набор — голый фон. Отвечает, изменилось
     /// ли что-нибудь, — по нему экран решает, пускать ли всходы.
     @discardableResult
@@ -274,6 +286,7 @@ final class Settings {
         /// Тоже наоборот: время года учитывается по умолчанию.
         static let flatYear = "ignoreSeasons"
         static let toured = "toured"
+        static let walked = "walkedScreens"
     }
 
     /// Отсутствие ключа ловим отдельно: `UserDefaults` отвечает нулём, а ноль
@@ -319,5 +332,6 @@ final class Settings {
         threshold = Self.thresholds.contains(level) ? level
             : Self.defaultThreshold
         toured = store.bool(forKey: Key.toured)
+        walked = Set(store.stringArray(forKey: Key.walked) ?? [])
     }
 }

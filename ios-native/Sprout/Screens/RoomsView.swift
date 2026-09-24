@@ -42,6 +42,7 @@ struct RoomsView: View {
             }
             .listStyle(.plain)
             .scrollContentBackground(.hidden)
+            .hintSpot(.roomsList)
             .background { SproutBackground() }
             .environment(\.editMode, .constant(.active))
             .overlay {
@@ -53,6 +54,7 @@ struct RoomsView: View {
                         .transition(.blurReplace)
                 }
             }
+            .walk(.rooms)
             .navigationTitle("Комнаты")
             .navigationBarTitleDisplayMode(.large)
             .toolbar {

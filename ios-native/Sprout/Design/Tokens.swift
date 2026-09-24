@@ -111,6 +111,15 @@ enum Palette {
 
     /// Ниже двадцати. Силу тени считает сама карточка.
     static let alarm = dual(rgb(255, 59, 48), rgb(255, 92, 82))
+
+    /// Земля досуха — темнее тревоги: в статистике её надо отличить от
+    /// «в последний момент».
+    static let parched = dual(rgb(150, 32, 26), rgb(205, 72, 62))
+
+    /// Небо планетария — ночное в обеих темах: планеты видны только на
+    /// тёмном.
+    static let space = rgb(7, 11, 24)
+    static let spaceGlow = rgb(22, 40, 74)
 }
 
 /// Шрифты — стилями системы, а не пунктами: так они идут за «Размером
@@ -281,6 +290,22 @@ enum Metrics {
     static let tourBadge: CGFloat = 116
 
     static let ring: CGFloat = 30
+
+    /// Статистика: толщина кольца «сейчас», высота полоски влажности,
+    /// полосы зон и столбиков дней недели, высота графиков.
+    static let statRing: CGFloat = 14
+    static let statRingSize: CGFloat = 118
+    static let stripHeight: CGFloat = 34
+    static let zoneBar: CGFloat = 12
+    static let weekBars: CGFloat = 54
+    static let chartHeight: CGFloat = 170
+    static let hourClock: CGFloat = 150
+
+    /// Планетарий: планета, выбранная планета, солнце и превью на обзоре.
+    static let planet: CGFloat = 11
+    static let planetPicked: CGFloat = 20
+    static let sun: CGFloat = 40
+    static let teaser: CGFloat = 92
     static let ringLine: CGFloat = 2.5
 
     static let toastGap: CGFloat = 10

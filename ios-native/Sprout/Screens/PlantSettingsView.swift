@@ -29,18 +29,24 @@ struct PlantSettingsView: View {
 
     var body: some View {
         NavigationStack {
-            ScrollView {
-                VStack(alignment: .leading, spacing: Metrics.groupGap) {
-                    about
-                    habits
-                    tending
+            ScrollViewReader { reader in
+                ScrollView {
+                    VStack(alignment: .leading, spacing: Metrics.groupGap) {
+                        about
+                            .hintSpot(.tuningAbout)
+                        habits
+                            .hintSpot(.tuningHabits)
+                        tending
+                            .hintSpot(.tuningTending)
+                    }
+                    .padding(.horizontal, Metrics.contentMargin)
+                    .padding(.top, 4)
+                    .padding(.bottom, 40)
                 }
-                .padding(.horizontal, Metrics.contentMargin)
-                .padding(.top, 4)
-                .padding(.bottom, 40)
+                .scrollDismissesKeyboard(.interactively)
+                .background { SproutBackground() }
+                .walk(.tuning, scroll: reader)
             }
-            .scrollDismissesKeyboard(.interactively)
-            .background { SproutBackground() }
             .navigationTitle("Настройки растения")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

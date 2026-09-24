@@ -24,17 +24,23 @@ struct TripView: View {
 
     var body: some View {
         NavigationStack {
-            ScrollView {
-                VStack(alignment: .leading, spacing: Metrics.groupGap) {
-                    dates
-                    plan
-                    actions
+            ScrollViewReader { reader in
+                ScrollView {
+                    VStack(alignment: .leading, spacing: Metrics.groupGap) {
+                        dates
+                            .hintSpot(.tripDates)
+                        plan
+                            .hintSpot(.tripPlan)
+                        actions
+                            .hintSpot(.tripActions)
+                    }
+                    .padding(.horizontal, Metrics.contentMargin)
+                    .padding(.top, 4)
+                    .padding(.bottom, 40)
                 }
-                .padding(.horizontal, Metrics.contentMargin)
-                .padding(.top, 4)
-                .padding(.bottom, 40)
+                .background { SproutBackground() }
+                .walk(.trip, scroll: reader)
             }
-            .background { SproutBackground() }
             .navigationTitle("Уезжаю")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

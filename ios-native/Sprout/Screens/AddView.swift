@@ -55,25 +55,32 @@ struct AddView: View {
 
     var body: some View {
         NavigationStack {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 0) {
-                    SproutHead("Добавить")
-                    VStack(alignment: .leading, spacing: Metrics.groupGap) {
-                        picture
-                        about
-                        habits
-                        plantButton
+            ScrollViewReader { reader in
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 0) {
+                        SproutHead("Добавить", walk: .add)
+                        VStack(alignment: .leading, spacing: Metrics.groupGap) {
+                            picture
+                                .hintSpot(.addPicture)
+                            about
+                                .hintSpot(.addAbout)
+                            habits
+                                .hintSpot(.addHabits)
+                            plantButton
+                                .hintSpot(.addPlant)
+                        }
+                        .padding(.horizontal, Metrics.contentMargin)
+                        .padding(.top, 8)
+                        .padding(.bottom, 28)
                     }
-                    .padding(.horizontal, Metrics.contentMargin)
-                    .padding(.top, 8)
-                    .padding(.bottom, 28)
                 }
+                // Иначе до кнопки «Посадить» из последнего поля не добраться.
+                .scrollDismissesKeyboard(.interactively)
+                .background { SproutBackground() }
+                .sproutNotchCover()
+                .toolbar(.hidden, for: .navigationBar)
+                .walk(.add, scroll: reader)
             }
-            // Иначе до кнопки «Посадить» из последнего поля не добраться.
-            .scrollDismissesKeyboard(.interactively)
-            .background { SproutBackground() }
-            .sproutNotchCover()
-            .toolbar(.hidden, for: .navigationBar)
         }
         .onAppear {
             if room.isEmpty { room = rooms.first ?? Lang.text("Дом") }

@@ -246,7 +246,8 @@ print("настройки: значения по умолчанию и гран�
 let keys = ["theme", "patternKinds", "patternShapes", "reminders",
             "remindThreshold", "patternTint", "waveTint",
             "hushedHaptics", "hapticStrength", "stillPattern", "stiffShapes",
-            "plantLook", "plantOrder", "mutedSounds", "toured"]
+            "plantLook", "plantOrder", "mutedSounds", "toured",
+            "walkedScreens"]
 let store = UserDefaults.standard
 for key in keys { store.removeObject(forKey: key) }
 let fresh = Settings(store: store)
@@ -264,6 +265,7 @@ check(fresh.parallax, "узор по умолчанию едет за накло
 check(fresh.sway, "и фигурки по умолчанию расходятся")
 check(round2(fresh.threshold), "0.20", "порог по умолчанию — двадцать процентов")
 check(fresh.toured == false, "знакомство по умолчанию ещё не показано")
+check(!fresh.seen(.stats), "подсказки экранов по умолчанию не показаны")
 
 print("фигурки узора включаются по одной:")
 fresh.toggle(shape: 2)
@@ -287,6 +289,8 @@ fresh.threshold = 0.3
 fresh.patternTint = .rose
 fresh.waveTint = .amber
 fresh.toured = true
+fresh.mark(.stats)
+fresh.mark(.plant)
 let reopened = Settings(store: store)
 check("\(reopened.theme)", "dark", "тема прочиталась обратно")
 check("\(reopened.look)", "list", "и вид списком")
@@ -297,6 +301,10 @@ check(round2(reopened.threshold), "0.30", "и порог")
 check("\(reopened.patternTint)", "rose", "и цвет узора")
 check("\(reopened.waveTint)", "amber", "и цвет волны")
 check(reopened.toured, "и то, что знакомство уже было")
+check(reopened.seen(.stats) && reopened.seen(.plant) && !reopened.seen(.add),
+      "и какие подсказки уже показаны")
+reopened.rewalk()
+check(!Settings(store: store).seen(.stats), "«показать снова» забывает все")
 fresh.parallax = false
 fresh.sway = false
 fresh.sounds = false
@@ -2171,6 +2179,232 @@ do {
     check(Lang.format("Что значит «%@»", "AR"), "What “AR” means",
           "английский: подпись у «?»")
     check(Term.wave.title, "Wave", "английский: слово из словарика")
+}
+
+print("статистика за период:")
+do {
+    let stretch = Season.stretch
+    Season.stretch = 1
+    defer { Season.stretch = stretch }
+    var week = clock
+    week.firstWeekday = 2
+    func poured(_ plant: String, _ back: Int, _ hour: Int,
+                left: Double?) -> Watering {
+        Watering(plant: plant, when: day(back, hour), left: left)
+    }
+    let yard = [
+        Room(name: "Спальня", plants: [
+            plantNamed("Баксик", moisture: 0.9, dryingDays: 9),
+            plantNamed("Борис", moisture: 0.08, dryingDays: 5),
+        ]),
+        Room(name: "Кухня", plants: [
+            plantNamed("Мурзик", moisture: 0.3, dryingDays: 7),
+        ]),
+    ]
+    let log = [
+        poured("Баксик", 0, 9, left: 0.3),
+        poured("Борис", 1, 19, left: 0.05),
+        poured("Мурзик", 2, 19, left: 0),
+        poured("Баксик", 3, 8, left: 0.55),
+        poured("Борис", 6, 19, left: 0.25),
+        poured("Мурзик", 7, 19, left: 0.3),
+        poured("Баксик", 10, 10, left: nil),
+        poured("Борис", 40, 10, left: 0.35),
+        poured("Борис", 400, 10, left: 0.2),
+    ]
+    let book = Almanac.of(log, rooms: yard, period: .week, since: day(500),
+                          now: noon, calendar: week)
+    check(book.total == 5, "за неделю — семь дней с сегодняшним")
+    check(book.previous == 2 && book.change == 3,
+          "прошлая неделя — два полива, разница плюс три")
+    check(book.active == 5 && book.length == 7, "пять дней с поливом из семи")
+    check(book.bars.count == 7 && !book.byMonth, "неделя — семь столбиков")
+    check(book.bars.first!.start < book.bars.last!.start
+          && book.bars.last!.count == 1 && book.bars.first!.count == 1,
+          "от старого к новому, с сегодняшним в конце")
+    check(book.streak == 4 && book.best == 4,
+          "череда — четыре дня подряд до сегодня")
+    check(book.aim.count(.early) == 1 && book.aim.count(.onTime) == 2
+          && book.aim.count(.lastMoment) == 1 && book.aim.count(.dry) == 1,
+          "поливы по зонам тени: заранее, вовремя, в последний миг, досуха")
+    check(round2(book.aim.share(.onTime)), "0.40", "вовремя — две пятых")
+    check(round2(book.aim.typical ?? -1), "0.25",
+          "обычно поливают при четверти воды — медиана")
+    check(book.aim.usual == .onTime, "чаще всего — вовремя")
+    check(book.aim.bins == [2, 0, 1, 1, 0, 1, 0, 0, 0, 0],
+          "корзины по десять процентов")
+    check(Almanac.Aim.zone(0.4) == .early && Almanac.Aim.zone(0.2) == .onTime
+          && Almanac.Aim.zone(0.19) == .lastMoment
+          && Almanac.Aim.zone(0.005) == .dry,
+          "границы зон — как у тени карточки")
+    check(Almanac.Aim([Watering(plant: "x", when: noon)]).known == 0,
+          "записи без остатка воды в точность не идут")
+    check(book.peakHour == 19 && book.hours[19] == 3,
+          "чаще всего поливают в семь вечера")
+    check(book.weekdays.first?.number == 2,
+          "неделя с понедельника, если так в календаре")
+    check(book.weekdays.map(\.count) == [0, 1, 1, 1, 1, 1, 0],
+          "по дням недели — вторник…суббота")
+    check(book.peakDay?.number == 3, "из равных — первый по порядку недели")
+    check(book.rooms.map(\.name) == ["Спальня", "Кухня"]
+          && book.rooms[0].waterings == 4 && book.rooms[1].waterings == 1,
+          "комнаты — по нынешним жильцам")
+    check(round2(book.rooms[0].moisture ?? -1), "0.49",
+          "средняя влажность комнаты — сейчас")
+    check(book.rooms[0].onTime == 0.5 && book.rooms[1].onTime == 0,
+          "доля вовремя — по комнате")
+    let baksik = book.plants.first { $0.id == "Баксик" }!
+    check(baksik.waterings == 2 && baksik.total == 3 && baksik.due == 8
+          && baksik.last == day(0, 9),
+          "растение: за период, всего, срок и последний полив")
+    check(abs((baksik.typical ?? -1) - 0.425) < 1e-9,
+          "обычный остаток — по всем поливам с записью")
+    check(book.now.calm == 1 && book.now.warn == 1 && book.now.alarm == 1,
+          "сейчас: по одному в каждой зоне")
+    check(book.now.driest == "Борис" && book.now.levels == [0.08, 0.3, 0.9],
+          "самый сухой и полоска от сухого")
+    check(round2(book.now.content), "0.33", "довольна треть")
+    check(book.ahead.count == Almanac.horizon, "прогноз на две недели сада")
+    check(book.ahead.map(\.count)
+            == [1, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 0, 0, 0],
+          "прогноз: первый полив по карточке, дальше через срок")
+    check(book.ahead[8].names == ["Баксик"], "в прогнозе — клички")
+
+    let month = Almanac.of(log, rooms: yard, period: .month, since: day(500),
+                           now: noon, calendar: week)
+    check(month.total == 7 && month.previous == 1 && month.bars.count == 30,
+          "месяц — тридцать дней по дням")
+    let year = Almanac.of(log, rooms: yard, period: .year, since: day(500),
+                          now: noon, calendar: week)
+    check(year.byMonth && year.bars.count == 12 && year.total == 8,
+          "год — двенадцать месяцев с текущим")
+    check(year.bars.last!.count == 7 && year.bars[10].count == 1,
+          "столбик месяца — все поливы месяца")
+    let all = Almanac.of(log, rooms: yard, period: .all, since: day(500),
+                         now: noon, calendar: week)
+    check(all.byMonth && all.total == 9 && all.previous == nil,
+          "всё время — по месяцам и без сравнения")
+    let young = Almanac.of(Array(log.prefix(3)), rooms: yard, period: .all,
+                           since: day(10), now: noon, calendar: week)
+    check(!young.byMonth && young.bars.count == 11,
+          "молодой сад — по дням, с первого дня")
+    let empty = Almanac.of([], rooms: [], period: .week, since: day(3),
+                           now: noon, calendar: week)
+    check(empty.total == 0 && empty.peakHour == nil && empty.peakDay == nil
+          && empty.now.average == nil && empty.tallest == 0,
+          "пустой сад — без выдумок")
+
+    let card = PlantBook.of(yard[0].plants[0], log: log, period: .week,
+                            since: day(500), now: noon, calendar: week)
+    check(card.total == 3 && card.inPeriod == 2 && card.last == day(0, 9),
+          "растение в статистике: всего и за период")
+    check(card.dues == [8, 17, 26], "три ближайших полива в днях сада")
+    check(card.recent.map(\.when) == [day(3, 8), day(0, 9)],
+          "поливы периода — от старого к новому")
+}
+
+print("планетарий:")
+do {
+    let stretch = Season.stretch
+    Season.stretch = 1
+    defer { Season.stretch = stretch }
+    let sky = Orrery.orbits([
+        plantNamed("Кактус", moisture: 0.5, dryingDays: 57),
+        plantNamed("Борис", moisture: 0.5, dryingDays: 5),
+        plantNamed("Алоэ", moisture: 0.5, dryingDays: 5),
+        plantNamed("Баксик", moisture: 0.5, dryingDays: 9),
+    ])
+    check(sky.map(\.name) == ["Алоэ", "Борис", "Баксик", "Кактус"],
+          "орбиты от быстрых к терпеливым, равные — по кличке")
+    check(sky.first!.radius == Orrery.inner && sky.last!.radius == Orrery.outer,
+          "ближняя и дальняя — по краям")
+    check(sky.map(\.rank) == [0, 1, 2, 3], "номера по порядку")
+    check(abs(Orrery.angle(moisture: 1) - Orrery.gate) < 1e-9,
+          "политая — сразу за воротами")
+    check(abs(Orrery.angle(moisture: 0) - (2 * .pi - Orrery.gate)) < 1e-9,
+          "сухая — перед воротами")
+    check(abs(Orrery.angle(moisture: 0.5) - .pi) < 1e-9,
+          "половина воды — внизу")
+    let half = Orrery.Orbit(id: "x", name: "x", period: 10, moisture: 0.5,
+                            radius: 0.5, rank: 0)
+    check(round2(Orrery.moisture(half, after: 3)), "0.20",
+          "до сухой земли — сохнет по сроку")
+    check(round2(Orrery.moisture(half, after: 5)), "1.00",
+          "высохла — полили, снова полная")
+    check(round2(Orrery.moisture(half, after: 7)), "0.80", "и сохнет заново")
+    check(Orrery.crossings([half], within: 30).map(\.day) == [5, 15, 25],
+          "поливы — когда высохнет, потом через срок")
+    var dry = half
+    dry.moisture = 0
+    dry.period = 7
+    check(Orrery.crossings([dry], within: 30).map(\.day) == [0, 7, 14, 21, 28],
+          "сухую ждут уже сейчас")
+    let crowd = Orrery.orbits([
+        plantNamed("Раз", moisture: 0.4, dryingDays: 5),
+        plantNamed("Два", moisture: 0.2, dryingDays: 10),
+        plantNamed("Три", moisture: 0.1, dryingDays: 20),
+        plantNamed("Четыре", moisture: 0.9, dryingDays: 30),
+    ])
+    let parades = Orrery.parades(crowd, within: 30)
+    check(parades.first?.day == 2 && parades.first?.ids.count == 3,
+          "парад — трое в один день")
+    check(Set(parades.first?.names ?? []) == ["Раз", "Два", "Три"],
+          "с кличками")
+    check(Orrery.parades(crowd, within: 30, least: 5).isEmpty,
+          "пятерых в один день не бывает")
+}
+
+print("музыка сфер:")
+do {
+    let top = Spheres.pitch(rank: 0, of: 5)
+    let low = Spheres.pitch(rank: 4, of: 5)
+    check(round2(low), "220.00", "дальняя орбита — ля малой октавы")
+    check(top > 900 && top < 1_000, "ближняя — на две с лишним октавы выше")
+    check((0 ..< 5).map { Spheres.pitch(rank: $0, of: 5) }
+            == (0 ..< 5).map { Spheres.pitch(rank: $0, of: 5) }
+                .sorted(by: >),
+          "чем ближе орбита, тем выше")
+    let notes = Spheres.notes([Orrery.Crossing(id: "x", day: 15, rank: 0)],
+                              count: 1)
+    check(round2(notes.first?.at ?? -1), "10.00",
+          "середина месяца — на десятой секунде")
+    let sound = Spheres.render([Spheres.Note(at: 1, pitch: 440)])
+    let length = Int((Spheres.seconds + Spheres.tail) * Double(Spheres.rate))
+    check(sound.count == length, "длина — месяц и хвост")
+    check(sound.prefix(Spheres.rate).allSatisfy { $0 == 0 },
+          "до первой ноты тишина")
+    let ring = sound[Spheres.rate ..< Spheres.rate + 4_410]
+    check(ring.contains { abs($0) > 0.3 }, "нота звучит")
+    check(sound.allSatisfy { abs($0) <= 0.91 }, "громкость с запасом")
+    let file = Spheres.wav(sound)
+    check(file.count == 44 + 2 * sound.count, "WAV: заголовок и 16 бит")
+    check(String(decoding: file.prefix(4), as: UTF8.self) == "RIFF"
+          && String(decoding: file[8 ..< 12], as: UTF8.self) == "WAVE",
+          "WAV: метки на месте")
+}
+
+print("подсказки экранов:")
+do {
+    let all = Walk.allCases.flatMap(\.hints)
+    check(Walk.allCases.allSatisfy { !$0.hints.isEmpty },
+          "у каждого экрана есть подсказки")
+    check(all.allSatisfy { !$0.title.isEmpty && !$0.text.isEmpty },
+          "у каждой — заголовок и текст")
+    check(all.count == Hint.Target.allCases.count
+          && Set(all.map(\.target)).count == all.count,
+          "каждое место подсвечивается ровно одной подсказкой")
+    check(all.allSatisfy { $0.target.rawValue.contains(".") },
+          "имя места — «экран.место»")
+    let russian = all.map(\.text)
+    let tongues = ((catalog.strings["Словарик"]?["localizations"]
+                    as? [String: Any])?.keys).map { $0.sorted() } ?? []
+    defer { language = "ru" }
+    for tongue in tongues {
+        language = tongue
+        let local = Walk.allCases.flatMap(\.hints).map(\.text)
+        let same = zip(local, russian).filter { $0 == $1 }.map(\.0)
+        check(same.isEmpty, "\(tongue): подсказки переведены \(same)")
+    }
 }
 
 print("уезжаю:")

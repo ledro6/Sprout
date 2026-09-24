@@ -36,6 +36,7 @@ struct PlantAR: View {
             .sproutUndo()
             .safeAreaInset(edge: .bottom) { controls }
             .overlay(alignment: .top) { header }
+            .walk(.ar)
             .animation(Motion.enter, value: stage.phase)
             .animation(Motion.enter, value: stage.chosen)
             .tint(Palette.accent)
@@ -130,6 +131,7 @@ struct PlantAR: View {
             .glassEffect(.regular, in: .rect(cornerRadius: 18))
             .id(hint)
             .transition(.blurReplace)
+            .hintSpot(.arHint)
 
             Spacer(minLength: 0)
 
@@ -213,5 +215,6 @@ struct PlantAR: View {
                   || (stage.phase == .aiming && !stage.ready))
         .frame(maxWidth: .infinity)
         .padding(.bottom, 12)
+        .hintSpot(.arControls)
     }
 }

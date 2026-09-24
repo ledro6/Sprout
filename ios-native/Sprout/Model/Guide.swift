@@ -4,7 +4,8 @@ import Foundation
 /// словами. Видны по «?» рядом со словом и списком в «Словарике».
 enum Term: String, CaseIterable, Identifiable, Sendable {
     case ar, model, moisture, period, seasons, rhythm, feeding, repotting,
-         reminders, parallax, sway, wave, frolic, lock, trip
+         reminders, parallax, sway, wave, frolic, lock, trip, accuracy,
+         streak, orrery, parade
 
     var id: String { rawValue }
 
@@ -25,6 +26,10 @@ enum Term: String, CaseIterable, Identifiable, Sendable {
         case .frolic: Lang.text("Кутерьма")
         case .lock: Lang.text("Замок")
         case .trip: Lang.text("Уезжаю")
+        case .accuracy: Lang.text("Точность полива")
+        case .streak: Lang.text("Череда")
+        case .orrery: Lang.text("Планетарий")
+        case .parade: Lang.text("Парад")
         }
     }
 
@@ -108,6 +113,26 @@ enum Term: String, CaseIterable, Identifiable, Sendable {
                 План на отпуск: полить всех перед отъездом и отправить \
                 соседу памятку, кого и когда поливать.
                 """)
+        case .accuracy:
+            Lang.text("""
+                Сколько воды оставалось в земле, когда вы поливали. \
+                Вовремя — когда карточка светится оранжевым: в земле 20–40%.
+                """)
+        case .streak:
+            Lang.text("""
+                Сколько дней подряд вы поливали хоть одно растение. \
+                Пропущенный день начинает счёт заново.
+                """)
+        case .orrery:
+            Lang.text("""
+                Сад как солнечная система: растение — планета, круг — срок \
+                полива. Дошла до ворот наверху — пора поливать.
+                """)
+        case .parade:
+            Lang.text("""
+                День, когда воды попросят сразу три растения и больше, — \
+                удобно полить всех за один заход.
+                """)
         }
     }
 
@@ -126,6 +151,10 @@ enum Term: String, CaseIterable, Identifiable, Sendable {
         case .sway: "water.waves"
         case .wave: "wave.3.right"
         case .frolic: "hands.and.sparkles"
+        case .accuracy: "scope"
+        case .streak: "flame"
+        case .orrery: "circle.circle"
+        case .parade: "sparkles.rectangle.stack"
         case .lock: "lock"
         case .trip: "airplane.departure"
         }

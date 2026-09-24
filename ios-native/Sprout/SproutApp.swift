@@ -231,19 +231,23 @@ struct SearchView: View {
         NavigationStack(path: $path) {
             ScrollView {
                 VStack(alignment: .leading, spacing: 0) {
-                    SproutHead("Поиск")
-                    if asked.isEmpty {
-                        history
-                    } else if results.isEmpty {
-                        nothing
-                    } else {
-                        grid
+                    SproutHead("Поиск", walk: .search)
+                    Group {
+                        if asked.isEmpty {
+                            history
+                        } else if results.isEmpty {
+                            nothing
+                        } else {
+                            grid
+                        }
                     }
+                    .hintSpot(.searchBoard)
                 }
             }
             .background { SproutBackground() }
             // Строки комнаты здесь нет — верх держит подложка под вырезом.
             .sproutNotchCover()
+            .walk(.search)
             .navigationDestination(for: Plant.ID.self) { id in
                 PlantView(plantID: id)
                     .navigationTransition(.zoom(sourceID: id, in: cardZoom))
@@ -297,6 +301,7 @@ struct SearchView: View {
                     }
                 }
                 .sproutRide()
+                .hintSpot(.searchRecents)
 
                 Button("Очистить") {
                     withAnimation(Motion.pill) { recents.clear() }

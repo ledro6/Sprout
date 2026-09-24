@@ -30,6 +30,10 @@ final class Garden {
 
     @ObservationIgnored private var lastTick = Date()
 
+    /// Миг последнего такта часов — планетарий досчитывает от него, чтобы
+    /// планеты плыли, а не прыгали раз в секунду.
+    var ticked: Date { lastTick }
+
     /// Где файл — см. `Store`.
     @ObservationIgnored private lazy var file: URL? = Store.garden
 
