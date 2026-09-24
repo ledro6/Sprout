@@ -57,7 +57,7 @@ struct NewRoom: View {
             .disabled(blank)
 
             if !ideas.isEmpty {
-                Flow(spacing: 8) {
+                Flow {
                     ForEach(ideas, id: \.self) { idea in
                         Button(idea) { make(idea) }
                             .buttonStyle(.glass)

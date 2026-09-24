@@ -270,7 +270,8 @@ struct OrreryView: View {
             Slider(value: $ahead, in: 0 ... Orrery.reach, step: 0.25) {
                 Text("Машина времени")
             } minimumValueLabel: {
-                Image(systemName: "clock")
+                // Подписи у краёв — одного типа: значок внутри текста.
+                Text(Image(systemName: "clock"))
             } maximumValueLabel: {
                 Text(Lang.format("%lld дней", Int(Orrery.reach)))
                     .font(Typography.figureCaption)
