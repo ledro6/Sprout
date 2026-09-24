@@ -16,6 +16,12 @@
             "value": "Кого да полея в ${applicationName}"
           }
         },
+        "bn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName}-এ কাকে জল দিতে হবে"
+          }
+        },
         "ca": {
           "stringUnit": {
             "state": "translated",
@@ -70,10 +76,22 @@
             "value": "Qui arroser dans ${applicationName}"
           }
         },
+        "gu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} માં કોને પાણી આપવું"
+          }
+        },
         "he": {
           "stringUnit": {
             "state": "translated",
             "value": "את מי להשקות ב־${applicationName}"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} में किसे पानी देना है"
           }
         },
         "hr": {
@@ -124,6 +142,12 @@
             "value": "Ką laistyti programoje ${applicationName}"
           }
         },
+        "mr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} मध्ये कोणाला पाणी घालायचे"
+          }
+        },
         "ms": {
           "stringUnit": {
             "state": "translated",
@@ -140,6 +164,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "Wie water geven in ${applicationName}"
+          }
+        },
+        "or": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} ରେ କାହାକୁ ପାଣି ଦେବା"
+          }
+        },
+        "pa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} ਵਿੱਚ ਕਿਸ ਨੂੰ ਪਾਣੀ ਦੇਣਾ ਹੈ"
           }
         },
         "pl": {
@@ -237,6 +273,12 @@
             "value": "Кого да полея днес в ${applicationName}"
           }
         },
+        "bn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName}-এ আজ কাকে জল দিতে হবে"
+          }
+        },
         "ca": {
           "stringUnit": {
             "state": "translated",
@@ -291,10 +333,22 @@
             "value": "Qui arroser aujourd’hui dans ${applicationName}"
           }
         },
+        "gu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} માં આજે કોને પાણી આપવું"
+          }
+        },
         "he": {
           "stringUnit": {
             "state": "translated",
             "value": "את מי להשקות היום ב־${applicationName}"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} में आज किसे पानी देना है"
           }
         },
         "hr": {
@@ -345,6 +399,12 @@
             "value": "Ką laistyti šiandien programoje ${applicationName}"
           }
         },
+        "mr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} मध्ये आज कोणाला पाणी घालायचे"
+          }
+        },
         "ms": {
           "stringUnit": {
             "state": "translated",
@@ -361,6 +421,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "Wie vandaag water geven in ${applicationName}"
+          }
+        },
+        "or": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} ରେ ଆଜି କାହାକୁ ପାଣି ଦେବା"
+          }
+        },
+        "pa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} ਵਿੱਚ ਅੱਜ ਕਿਸ ਨੂੰ ਪਾਣੀ ਦੇਣਾ ਹੈ"
           }
         },
         "pl": {
@@ -458,6 +530,12 @@
             "value": "Кой има нужда от вода в ${applicationName}"
           }
         },
+        "bn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName}-এ কার জল দরকার"
+          }
+        },
         "ca": {
           "stringUnit": {
             "state": "translated",
@@ -512,10 +590,22 @@
             "value": "Qui a besoin d’eau dans ${applicationName}"
           }
         },
+        "gu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} માં કોને પાણી જોઈએ"
+          }
+        },
         "he": {
           "stringUnit": {
             "state": "translated",
             "value": "מי צריך מים ב־${applicationName}"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} में किसे पानी चाहिए"
           }
         },
         "hr": {
@@ -566,6 +656,12 @@
             "value": "Kam reikia vandens programoje ${applicationName}"
           }
         },
+        "mr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} मध्ये कोणाला पाणी हवे"
+          }
+        },
         "ms": {
           "stringUnit": {
             "state": "translated",
@@ -582,6 +678,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "Wie heeft water nodig in ${applicationName}"
+          }
+        },
+        "or": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} ରେ କାହାକୁ ପାଣି ଦରକାର"
+          }
+        },
+        "pa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} ਵਿੱਚ ਕਿਸ ਨੂੰ ਪਾਣੀ ਚਾਹੀਦਾ ਹੈ"
           }
         },
         "pl": {
@@ -679,6 +787,12 @@
             "value": "Кой е жаден в ${applicationName}"
           }
         },
+        "bn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName}-এ কার তেষ্টা পেয়েছে"
+          }
+        },
         "ca": {
           "stringUnit": {
             "state": "translated",
@@ -733,10 +847,22 @@
             "value": "Qui a soif dans ${applicationName}"
           }
         },
+        "gu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} માં કોને તરસ લાગી છે"
+          }
+        },
         "he": {
           "stringUnit": {
             "state": "translated",
             "value": "מי צמא ב־${applicationName}"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} में किसे प्यास लगी है"
           }
         },
         "hr": {
@@ -787,6 +913,12 @@
             "value": "Kas ištroškęs programoje ${applicationName}"
           }
         },
+        "mr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} मध्ये कोणाला तहान लागली"
+          }
+        },
         "ms": {
           "stringUnit": {
             "state": "translated",
@@ -803,6 +935,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "Wie heeft dorst in ${applicationName}"
+          }
+        },
+        "or": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} ରେ କାହାକୁ ଶୋଷ ଲାଗିଛି"
+          }
+        },
+        "pa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} ਵਿੱਚ ਕਿਸ ਨੂੰ ਪਿਆਸ ਲੱਗੀ"
           }
         },
         "pl": {
@@ -900,6 +1044,12 @@
             "value": "Отвори градината в ${applicationName}"
           }
         },
+        "bn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName}-এ আমার বাগান খোলো"
+          }
+        },
         "ca": {
           "stringUnit": {
             "state": "translated",
@@ -954,10 +1104,22 @@
             "value": "Ouvre mon jardin dans ${applicationName}"
           }
         },
+        "gu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} માં મારો બગીચો ખોલ"
+          }
+        },
         "he": {
           "stringUnit": {
             "state": "translated",
             "value": "פתח את הגינה ב־${applicationName}"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} में मेरा बगीचा खोलो"
           }
         },
         "hr": {
@@ -1008,6 +1170,12 @@
             "value": "Atidaryk sodą programoje ${applicationName}"
           }
         },
+        "mr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} मध्ये माझी बाग उघड"
+          }
+        },
         "ms": {
           "stringUnit": {
             "state": "translated",
@@ -1024,6 +1192,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "Open mijn tuin in ${applicationName}"
+          }
+        },
+        "or": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} ରେ ମୋ ବଗିଚା ଖୋଲ"
+          }
+        },
+        "pa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} ਵਿੱਚ ਮੇਰਾ ਬਗੀਚਾ ਖੋਲ੍ਹੋ"
           }
         },
         "pl": {
@@ -1121,6 +1301,12 @@
             "value": "Покажи градината в ${applicationName}"
           }
         },
+        "bn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName}-এ আমার বাগান দেখাও"
+          }
+        },
         "ca": {
           "stringUnit": {
             "state": "translated",
@@ -1175,10 +1361,22 @@
             "value": "Montre mon jardin dans ${applicationName}"
           }
         },
+        "gu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} માં મારો બગીચો બતાવ"
+          }
+        },
         "he": {
           "stringUnit": {
             "state": "translated",
             "value": "הראה את הגינה ב־${applicationName}"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} में मेरा बगीचा दिखाओ"
           }
         },
         "hr": {
@@ -1229,6 +1427,12 @@
             "value": "Parodyk sodą programoje ${applicationName}"
           }
         },
+        "mr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} मध्ये माझी बाग दाखव"
+          }
+        },
         "ms": {
           "stringUnit": {
             "state": "translated",
@@ -1245,6 +1449,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "Toon mijn tuin in ${applicationName}"
+          }
+        },
+        "or": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} ରେ ମୋ ବଗିଚା ଦେଖାଅ"
+          }
+        },
+        "pa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} ਵਿੱਚ ਮੇਰਾ ਬਗੀਚਾ ਦਿਖਾਓ"
           }
         },
         "pl": {
@@ -1342,6 +1558,12 @@
             "value": "Полей ${plant} в ${applicationName}"
           }
         },
+        "bn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName}-এ ${plant}-কে জল দাও"
+          }
+        },
         "ca": {
           "stringUnit": {
             "state": "translated",
@@ -1396,10 +1618,22 @@
             "value": "Arrose ${plant} dans ${applicationName}"
           }
         },
+        "gu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} માં ${plant} ને પાણી આપ"
+          }
+        },
         "he": {
           "stringUnit": {
             "state": "translated",
             "value": "השקה את ${plant} ב־${applicationName}"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} में ${plant} को पानी दो"
           }
         },
         "hr": {
@@ -1450,6 +1684,12 @@
             "value": "Palaistyk ${plant} programoje ${applicationName}"
           }
         },
+        "mr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} मध्ये ${plant} ला पाणी घाल"
+          }
+        },
         "ms": {
           "stringUnit": {
             "state": "translated",
@@ -1466,6 +1706,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "Geef ${plant} water in ${applicationName}"
+          }
+        },
+        "or": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} ରେ ${plant} କୁ ପାଣି ଦିଅ"
+          }
+        },
+        "pa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} ਵਿੱਚ ${plant} ਨੂੰ ਪਾਣੀ ਦਿਓ"
           }
         },
         "pl": {
@@ -1563,6 +1815,12 @@
             "value": "Полей растението ${plant} в ${applicationName}"
           }
         },
+        "bn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName}-এ ${plant} গাছে জল দাও"
+          }
+        },
         "ca": {
           "stringUnit": {
             "state": "translated",
@@ -1617,10 +1875,22 @@
             "value": "Arrose la plante ${plant} dans ${applicationName}"
           }
         },
+        "gu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} માં ${plant} છોડને પાણી આપ"
+          }
+        },
         "he": {
           "stringUnit": {
             "state": "translated",
             "value": "השקה את הצמח ${plant} ב־${applicationName}"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} में पौधे ${plant} को पानी दो"
           }
         },
         "hr": {
@@ -1671,6 +1941,12 @@
             "value": "Palaistyk augalą ${plant} programoje ${applicationName}"
           }
         },
+        "mr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} मध्ये ${plant} रोपाला पाणी घाल"
+          }
+        },
         "ms": {
           "stringUnit": {
             "state": "translated",
@@ -1687,6 +1963,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "Geef de plant ${plant} water in ${applicationName}"
+          }
+        },
+        "or": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} ରେ ${plant} ଗଛକୁ ପାଣି ଦିଅ"
+          }
+        },
+        "pa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} ਵਿੱਚ ${plant} ਪੌਦੇ ਨੂੰ ਪਾਣੀ ਦਿਓ"
           }
         },
         "pl": {
@@ -1784,6 +2072,12 @@
             "value": "Поливане на ${plant} в ${applicationName}"
           }
         },
+        "bn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} দিয়ে ${plant}-কে জল দাও"
+          }
+        },
         "ca": {
           "stringUnit": {
             "state": "translated",
@@ -1838,10 +2132,22 @@
             "value": "Arroser ${plant} avec ${applicationName}"
           }
         },
+        "gu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} થી ${plant} ને પાણી આપ"
+          }
+        },
         "he": {
           "stringUnit": {
             "state": "translated",
             "value": "להשקות את ${plant} ב־${applicationName}"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} से ${plant} को पानी दो"
           }
         },
         "hr": {
@@ -1892,6 +2198,12 @@
             "value": "Palaistyti ${plant} su ${applicationName}"
           }
         },
+        "mr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} ने ${plant} ला पाणी घाल"
+          }
+        },
         "ms": {
           "stringUnit": {
             "state": "translated",
@@ -1908,6 +2220,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "${plant} water geven met ${applicationName}"
+          }
+        },
+        "or": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} ଦ୍ୱାରା ${plant} କୁ ପାଣି ଦିଅ"
+          }
+        },
+        "pa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} ਨਾਲ ${plant} ਨੂੰ ਪਾਣੀ ਦਿਓ"
           }
         },
         "pl": {
@@ -2005,6 +2329,12 @@
             "value": "Поливане на растението ${plant} в ${applicationName}"
           }
         },
+        "bn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName}-এ ${plant} গাছে জল দেওয়া"
+          }
+        },
         "ca": {
           "stringUnit": {
             "state": "translated",
@@ -2059,10 +2389,22 @@
             "value": "Arroser la plante ${plant} dans ${applicationName}"
           }
         },
+        "gu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} માં ${plant} છોડને પાણી આપવું"
+          }
+        },
         "he": {
           "stringUnit": {
             "state": "translated",
             "value": "להשקות את הצמח ${plant} ב־${applicationName}"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} में पौधे ${plant} को पानी देना"
           }
         },
         "hr": {
@@ -2113,6 +2455,12 @@
             "value": "Palaistyti augalą ${plant} programoje ${applicationName}"
           }
         },
+        "mr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} मध्ये ${plant} रोपाला पाणी घालणे"
+          }
+        },
         "ms": {
           "stringUnit": {
             "state": "translated",
@@ -2129,6 +2477,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "Plant ${plant} water geven in ${applicationName}"
+          }
+        },
+        "or": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} ରେ ${plant} ଗଛକୁ ପାଣି ଦେବା"
+          }
+        },
+        "pa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} ਵਿੱਚ ${plant} ਪੌਦੇ ਨੂੰ ਪਾਣੀ ਦੇਣਾ"
           }
         },
         "pl": {
@@ -2226,6 +2586,12 @@
             "value": "Полей растение в ${applicationName}"
           }
         },
+        "bn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName}-এ একটি গাছে জল দাও"
+          }
+        },
         "ca": {
           "stringUnit": {
             "state": "translated",
@@ -2280,10 +2646,22 @@
             "value": "Arroser une plante dans ${applicationName}"
           }
         },
+        "gu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} માં એક છોડને પાણી આપ"
+          }
+        },
         "he": {
           "stringUnit": {
             "state": "translated",
             "value": "להשקות צמח ב־${applicationName}"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} में एक पौधे को पानी दो"
           }
         },
         "hr": {
@@ -2334,6 +2712,12 @@
             "value": "Palaistyti augalą programoje ${applicationName}"
           }
         },
+        "mr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} मध्ये एका रोपाला पाणी घाल"
+          }
+        },
         "ms": {
           "stringUnit": {
             "state": "translated",
@@ -2350,6 +2734,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "Een plant water geven in ${applicationName}"
+          }
+        },
+        "or": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} ରେ ଗୋଟିଏ ଗଛକୁ ପାଣି ଦିଅ"
+          }
+        },
+        "pa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} ਵਿੱਚ ਇੱਕ ਪੌਦੇ ਨੂੰ ਪਾਣੀ ਦਿਓ"
           }
         },
         "pl": {
@@ -2447,6 +2843,12 @@
             "value": "Градина в AR в ${applicationName}"
           }
         },
+        "bn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName}-এ AR বাগান"
+          }
+        },
         "ca": {
           "stringUnit": {
             "state": "translated",
@@ -2501,10 +2903,22 @@
             "value": "Jardin en RA dans ${applicationName}"
           }
         },
+        "gu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} માં AR બગીચો"
+          }
+        },
         "he": {
           "stringUnit": {
             "state": "translated",
             "value": "הגינה ב־AR ב־${applicationName}"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} में AR बगीचा"
           }
         },
         "hr": {
@@ -2555,6 +2969,12 @@
             "value": "Sodas AR programoje ${applicationName}"
           }
         },
+        "mr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} मध्ये AR बाग"
+          }
+        },
         "ms": {
           "stringUnit": {
             "state": "translated",
@@ -2571,6 +2991,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "Tuin in AR in ${applicationName}"
+          }
+        },
+        "or": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} ରେ AR ବଗିଚା"
+          }
+        },
+        "pa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} ਵਿੱਚ AR ਬਗੀਚਾ"
           }
         },
         "pl": {

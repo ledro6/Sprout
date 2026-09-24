@@ -16,6 +16,12 @@
             "value": "За да снимате растения за градината и да ги поставяте в стаята в добавена реалност."
           }
         },
+        "bn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "বাগানের জন্য গাছের ছবি তুলতে এবং অগমেন্টেড রিয়েলিটিতে ঘরে রাখতে।"
+          }
+        },
         "ca": {
           "stringUnit": {
             "state": "translated",
@@ -70,10 +76,22 @@
             "value": "Pour photographier des plantes pour votre jardin et les placer dans votre pièce en réalité augmentée."
           }
         },
+        "gu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "બગીચા માટે છોડના ફોટા લેવા અને તેમને ઑગમેન્ટેડ રિયાલિટીમાં રૂમમાં મૂકવા માટે."
+          }
+        },
         "he": {
           "stringUnit": {
             "state": "translated",
             "value": "כדי לצלם צמחים לגינה ולהציב אותם בחדר במציאות רבודה."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "बगीचे के पौधों की फ़ोटो लेने और उन्हें ऑगमेंटेड रियलिटी में कमरे में रखने के लिए।"
           }
         },
         "hr": {
@@ -124,6 +142,12 @@
             "value": "Kad galėtumėte fotografuoti augalus sodui ir pastatyti juos kambaryje papildytojoje realybėje."
           }
         },
+        "mr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "बागेसाठी रोपांचे फोटो काढण्यासाठी आणि त्यांना ऑगमेंटेड रिअ‍ॅलिटीमध्ये खोलीत ठेवण्यासाठी."
+          }
+        },
         "ms": {
           "stringUnit": {
             "state": "translated",
@@ -140,6 +164,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "Om planten voor je tuin te fotograferen en ze in augmented reality in je kamer te zetten."
+          }
+        },
+        "or": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ବଗିଚା ପାଇଁ ଗଛର ଫଟୋ ନେବା ଏବଂ ସେଗୁଡ଼ିକୁ ଅଗମେଣ୍ଟେଡ୍ ରିଆଲିଟିରେ ରୁମ୍‌ରେ ରଖିବା ପାଇଁ।"
+          }
+        },
+        "pa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ਬਗੀਚੇ ਲਈ ਪੌਦਿਆਂ ਦੀਆਂ ਫ਼ੋਟੋਆਂ ਲੈਣ ਅਤੇ ਉਨ੍ਹਾਂ ਨੂੰ ਔਗਮੈਂਟਡ ਰਿਐਲਿਟੀ ਵਿੱਚ ਕਮਰੇ ਵਿੱਚ ਰੱਖਣ ਲਈ।"
           }
         },
         "pl": {
@@ -243,6 +279,12 @@
             "value": "За да отключвате заключената градина с лицето си."
           }
         },
+        "bn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "লক করা বাগান মুখ দিয়ে খুলতে।"
+          }
+        },
         "ca": {
           "stringUnit": {
             "state": "translated",
@@ -297,10 +339,22 @@
             "value": "Pour ouvrir votre jardin verrouillé avec votre visage."
           }
         },
+        "gu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "લૉક કરેલો બગીચો ચહેરાથી ખોલવા માટે."
+          }
+        },
         "he": {
           "stringUnit": {
             "state": "translated",
             "value": "כדי לפתוח את הגינה הנעולה בעזרת הפנים."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "अपने लॉक बगीचे को चेहरे से खोलने के लिए।"
           }
         },
         "hr": {
@@ -351,6 +405,12 @@
             "value": "Kad galėtumėte atrakinti užrakintą sodą veidu."
           }
         },
+        "mr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "लॉक केलेली बाग चेहऱ्याने उघडण्यासाठी."
+          }
+        },
         "ms": {
           "stringUnit": {
             "state": "translated",
@@ -367,6 +427,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "Om je vergrendelde tuin met je gezicht te openen."
+          }
+        },
+        "or": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ଲକ୍ ହୋଇଥିବା ବଗିଚା ମୁହଁ ଦ୍ୱାରା ଖୋଲିବା ପାଇଁ।"
+          }
+        },
+        "pa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ਲੌਕ ਕੀਤਾ ਬਗੀਚਾ ਚਿਹਰੇ ਨਾਲ ਖੋਲ੍ਹਣ ਲਈ।"
           }
         },
         "pl": {
@@ -470,6 +542,12 @@
             "value": "Наклонът на телефона леко мести шарката на фона."
           }
         },
+        "bn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ফোন হেলালে পটভূমির নকশা একটু সরে।"
+          }
+        },
         "ca": {
           "stringUnit": {
             "state": "translated",
@@ -524,10 +602,22 @@
             "value": "Incliner le téléphone déplace légèrement le motif d’arrière-plan."
           }
         },
+        "gu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ફોન ઝુકાવતાં પૃષ્ઠભૂમિની ભાત થોડી ખસે છે."
+          }
+        },
         "he": {
           "stringUnit": {
             "state": "translated",
             "value": "הטיית הטלפון מזיזה קלות את הדוגמה ברקע."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "फ़ोन झुकाने पर पृष्ठभूमि का पैटर्न थोड़ा खिसकता है।"
           }
         },
         "hr": {
@@ -578,6 +668,12 @@
             "value": "Pakreipus telefoną, fono raštas šiek tiek pasislenka."
           }
         },
+        "mr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "फोन झुकवल्यावर पार्श्वभूमीची नक्षी थोडी हलते."
+          }
+        },
         "ms": {
           "stringUnit": {
             "state": "translated",
@@ -594,6 +690,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "Kantelen van de telefoon beweegt het achtergrondpatroon een beetje."
+          }
+        },
+        "or": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ଫୋନ୍ ଢଳାଇଲେ ପୃଷ୍ଠଭୂମିର ନକ୍ସା ଟିକେ ଘୁଞ୍ଚେ।"
+          }
+        },
+        "pa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ਫ਼ੋਨ ਝੁਕਾਉਣ 'ਤੇ ਪਿਛੋਕੜ ਦਾ ਨਮੂਨਾ ਥੋੜ੍ਹਾ ਖਿਸਕਦਾ ਹੈ।"
           }
         },
         "pl": {
