@@ -356,7 +356,6 @@
   "Комнаты": "Sobe",
   "Растения в неё можно будет посадить или перевезти.": "Vanjo boste lahko sadili ali preselili rastline.",
   "Удалить комнату «%@»?": "Izbrišem sobo »%@«?",
-  "Имя правится прямо в строке. Потяните за ручку справа, чтобы поменять порядок, — в том же порядке комнаты встанут и в меню на главной.": "Ime urejate kar v vrstici. Povlecite ročico na desni, da spremenite vrstni red — v enakem vrstnem redu bodo sobe tudi v meniju na začetnem zaslonu.",
   "Вместе с ней уйдут %lld растений. Вернуть их будет нельзя.": {
     "one": "Z njo bo izginila %lld rastlina. Tega ni mogoče razveljaviti.",
     "two": "Z njo bosta izginili %lld rastlini. Tega ni mogoče razveljaviti.",
@@ -661,5 +660,12 @@
   "Можно не спешить: земля ещё влажная, тени на карточке нет.": "Brez naglice: zemlja je še vlažna, kartica ne sveti.",
   "В самый раз: карточка как раз светится оранжевым.": "Ravno prav: kartica sveti oranžno.",
   "Поздновато: карточка уже горит красным.": "Malo pozno: kartica že sveti rdeče.",
-  "Земля успевает пересохнуть — поливайте чуть раньше.": "Zemlja se utegne izsušiti – zalivajte malo prej."
+  "Земля успевает пересохнуть — поливайте чуть раньше.": "Zemlja se utegne izsušiti – zalivajte malo prej.",
+  "Листайте комнаты": "Listajte po sobah",
+  "Проведите по экрану вбок — откроется соседняя комната, её имя выглядывает справа. За последней комнатой заводят новую.": "Podrsajte po zaslonu vstran – odpre se sosednja soba, njeno ime pokuka na desni. Za zadnjo sobo lahko ustvarite novo.",
+  "Имя правится прямо в строке. Потяните за ручку справа, чтобы поменять порядок, — в том же порядке комнаты листаются на главной.": "Ime urejate kar v vrstici. Povlecite ročico na desni, da spremenite vrstni red — v enakem vrstnem redu listate sobe na začetnem zaslonu.",
+  "Кабинет": "Delovna soba",
+  "Детская": "Otroška soba",
+  "Ванная": "Kopalnica",
+  "Прихожая": "Predsoba"
 }

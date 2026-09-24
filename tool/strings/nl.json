@@ -330,7 +330,6 @@
   "Комнаты": "Kamers",
   "Растения в неё можно будет посадить или перевезти.": "Je kunt er planten in zetten of naartoe verhuizen.",
   "Удалить комнату «%@»?": "Kamer ‘%@’ verwijderen?",
-  "Имя правится прямо в строке. Потяните за ручку справа, чтобы поменять порядок, — в том же порядке комнаты встанут и в меню на главной.": "De naam wijzig je direct in de regel. Sleep de greep rechts om de volgorde te wijzigen — in dezelfde volgorde staan de kamers in het menu op het startscherm.",
   "Вместе с ней уйдут %lld растений. Вернуть их будет нельзя.": {
     "one": "%lld plant gaat mee. Dit kan niet ongedaan worden gemaakt.",
     "other": "%lld planten gaan mee. Dit kan niet ongedaan worden gemaakt."
@@ -629,5 +628,12 @@
   "Можно не спешить: земля ещё влажная, тени на карточке нет.": "Geen haast: de aarde is nog vochtig en de kaart gloeit niet.",
   "В самый раз: карточка как раз светится оранжевым.": "Precies goed: de kaart gloeit oranje.",
   "Поздновато: карточка уже горит красным.": "Wat laat: de kaart is al rood.",
-  "Земля успевает пересохнуть — поливайте чуть раньше.": "De aarde droogt uit – geef iets eerder water."
+  "Земля успевает пересохнуть — поливайте чуть раньше.": "De aarde droogt uit – geef iets eerder water.",
+  "Листайте комнаты": "Veeg door de kamers",
+  "Проведите по экрану вбок — откроется соседняя комната, её имя выглядывает справа. За последней комнатой заводят новую.": "Veeg opzij om de volgende kamer te openen – de naam piept rechts tevoorschijn. Na de laatste kamer maak je een nieuwe aan.",
+  "Имя правится прямо в строке. Потяните за ручку справа, чтобы поменять порядок, — в том же порядке комнаты листаются на главной.": "De naam wijzig je direct in de regel. Sleep de greep rechts om de volgorde te wijzigen — in dezelfde volgorde veeg je door de kamers op het startscherm.",
+  "Кабинет": "Werkkamer",
+  "Детская": "Kinderkamer",
+  "Ванная": "Badkamer",
+  "Прихожая": "Hal"
 }

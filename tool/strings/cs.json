@@ -343,7 +343,6 @@
   "Комнаты": "Místnosti",
   "Растения в неё можно будет посадить или перевезти.": "Budete do ní moct sázet nebo stěhovat rostliny.",
   "Удалить комнату «%@»?": "Smazat místnost „%@“?",
-  "Имя правится прямо в строке. Потяните за ручку справа, чтобы поменять порядок, — в том же порядке комнаты встанут и в меню на главной.": "Název se upravuje přímo v řádku. Tažením úchytu vpravo změníte pořadí — ve stejném pořadí budou místnosti i v nabídce na domovské obrazovce.",
   "Вместе с ней уйдут %lld растений. Вернуть их будет нельзя.": {
     "one": "Spolu s ní zmizí %lld rostlina. Nepůjde to vrátit.",
     "few": "Spolu s ní zmizí %lld rostliny. Nepůjde to vrátit.",
@@ -645,5 +644,12 @@
   "Можно не спешить: земля ещё влажная, тени на карточке нет.": "Žádný spěch: hlína je ještě vlhká a karta nesvítí.",
   "В самый раз: карточка как раз светится оранжевым.": "Akorát: karta právě svítí oranžově.",
   "Поздновато: карточка уже горит красным.": "Trochu pozdě: karta už svítí červeně.",
-  "Земля успевает пересохнуть — поливайте чуть раньше.": "Hlína stihne vyschnout – zalévejte o něco dřív."
+  "Земля успевает пересохнуть — поливайте чуть раньше.": "Hlína stihne vyschnout – zalévejte o něco dřív.",
+  "Листайте комнаты": "Listujte místnostmi",
+  "Проведите по экрану вбок — откроется соседняя комната, её имя выглядывает справа. За последней комнатой заводят новую.": "Přejeďte po obrazovce do strany – otevře se vedlejší místnost, její název vykukuje vpravo. Za poslední místností můžete založit novou.",
+  "Имя правится прямо в строке. Потяните за ручку справа, чтобы поменять порядок, — в том же порядке комнаты листаются на главной.": "Název se upravuje přímo v řádku. Tažením úchytu vpravo změníte pořadí — ve stejném pořadí se místnosti listují na domovské obrazovce.",
+  "Кабинет": "Pracovna",
+  "Детская": "Dětský pokoj",
+  "Ванная": "Koupelna",
+  "Прихожая": "Předsíň"
 }

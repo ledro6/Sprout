@@ -330,7 +330,6 @@
   "Комнаты": "Cômodos",
   "Растения в неё можно будет посадить или перевезти.": "Você poderá plantar nele ou mudar plantas para lá.",
   "Удалить комнату «%@»?": "Excluir o cômodo “%@”?",
-  "Имя правится прямо в строке. Потяните за ручку справа, чтобы поменять порядок, — в том же порядке комнаты встанут и в меню на главной.": "O nome é editado na própria linha. Arraste a alça à direita para mudar a ordem — os cômodos aparecerão na mesma ordem no menu do início.",
   "Вместе с ней уйдут %lld растений. Вернуть их будет нельзя.": {
     "one": "%lld planta vai junto com ele. Não será possível desfazer.",
     "other": "%lld plantas vão junto com ele. Não será possível desfazer."
@@ -629,5 +628,12 @@
   "Можно не спешить: земля ещё влажная, тени на карточке нет.": "Sem pressa: a terra ainda está úmida, e o cartão não brilha.",
   "В самый раз: карточка как раз светится оранжевым.": "Na medida: o cartão está brilhando em laranja.",
   "Поздновато: карточка уже горит красным.": "Um pouco tarde: o cartão já está vermelho.",
-  "Земля успевает пересохнуть — поливайте чуть раньше.": "A terra chega a secar — regue um pouco antes."
+  "Земля успевает пересохнуть — поливайте чуть раньше.": "A terra chega a secar — regue um pouco antes.",
+  "Листайте комнаты": "Deslize pelos cômodos",
+  "Проведите по экрану вбок — откроется соседняя комната, её имя выглядывает справа. За последней комнатой заводят новую.": "Deslize a tela para o lado para abrir o cômodo vizinho — o nome dele aparece à direita. Depois do último cômodo, dá para criar um novo.",
+  "Имя правится прямо в строке. Потяните за ручку справа, чтобы поменять порядок, — в том же порядке комнаты листаются на главной.": "O nome é editado na própria linha. Arraste a alça à direita para mudar a ordem — é nessa ordem que os cômodos passam no Início.",
+  "Кабинет": "Escritório",
+  "Детская": "Quarto das crianças",
+  "Ванная": "Banheiro",
+  "Прихожая": "Hall de entrada"
 }

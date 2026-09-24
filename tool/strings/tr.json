@@ -330,7 +330,6 @@
   "Комнаты": "Odalar",
   "Растения в неё можно будет посадить или перевезти.": "İçine bitki dikebilir ya da oraya bitki taşıyabilirsiniz.",
   "Удалить комнату «%@»?": "“%@” odası silinsin mi?",
-  "Имя правится прямо в строке. Потяните за ручку справа, чтобы поменять порядок, — в том же порядке комнаты встанут и в меню на главной.": "Ad doğrudan satırda düzenlenir. Sırayı değiştirmek için sağdaki tutamağı sürükleyin — odalar ana sayfadaki menüde de aynı sırayla görünür.",
   "Вместе с ней уйдут %lld растений. Вернуть их будет нельзя.": {
     "one": "Onunla birlikte %lld bitki de gidecek. Bu işlem geri alınamaz.",
     "other": "Onunla birlikte %lld bitki de gidecek. Bu işlem geri alınamaz."
@@ -629,5 +628,12 @@
   "Можно не спешить: земля ещё влажная, тени на карточке нет.": "Acele yok: toprak hâlâ nemli, kart parlamıyor.",
   "В самый раз: карточка как раз светится оранжевым.": "Tam kıvamında: kart turuncu parlıyor.",
   "Поздновато: карточка уже горит красным.": "Biraz geç: kart zaten kırmızı yanıyor.",
-  "Земля успевает пересохнуть — поливайте чуть раньше.": "Toprak kurumaya fırsat buluyor — biraz daha erken sulayın."
+  "Земля успевает пересохнуть — поливайте чуть раньше.": "Toprak kurumaya fırsat buluyor — biraz daha erken sulayın.",
+  "Листайте комнаты": "Odalar arasında kaydırın",
+  "Проведите по экрану вбок — откроется соседняя комната, её имя выглядывает справа. За последней комнатой заводят новую.": "Ekranı yana kaydırın, yandaki oda açılır; adı sağda görünür. Son odanın ardından yeni bir oda oluşturabilirsiniz.",
+  "Имя правится прямо в строке. Потяните за ручку справа, чтобы поменять порядок, — в том же порядке комнаты листаются на главной.": "Ad doğrudan satırda düzenlenir. Sırayı değiştirmek için sağdaki tutamağı sürükleyin — ana sayfada odalar arasında aynı sırayla geçersiniz.",
+  "Кабинет": "Çalışma odası",
+  "Детская": "Çocuk odası",
+  "Ванная": "Banyo",
+  "Прихожая": "Antre"
 }

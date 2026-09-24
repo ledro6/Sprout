@@ -330,7 +330,6 @@
   "Комнаты": "Räume",
   "Растения в неё можно будет посадить или перевезти.": "Du kannst Pflanzen hineinsetzen oder dorthin umziehen lassen.",
   "Удалить комнату «%@»?": "Raum „%@“ löschen?",
-  "Имя правится прямо в строке. Потяните за ручку справа, чтобы поменять порядок, — в том же порядке комнаты встанут и в меню на главной.": "Der Name wird direkt in der Zeile bearbeitet. Zieh am Griff rechts, um die Reihenfolge zu ändern — in derselben Reihenfolge erscheinen die Räume auch im Menü auf der Startseite.",
   "Вместе с ней уйдут %lld растений. Вернуть их будет нельзя.": {
     "one": "Mit ihm verschwindet %lld Pflanze. Das lässt sich nicht rückgängig machen.",
     "other": "Mit ihm verschwinden %lld Pflanzen. Das lässt sich nicht rückgängig machen."
@@ -629,5 +628,12 @@
   "Можно не спешить: земля ещё влажная, тени на карточке нет.": "Keine Eile: Die Erde ist noch feucht, die Karte leuchtet nicht.",
   "В самый раз: карточка как раз светится оранжевым.": "Genau richtig: Die Karte leuchtet gerade orange.",
   "Поздновато: карточка уже горит красным.": "Etwas spät: Die Karte leuchtet schon rot.",
-  "Земля успевает пересохнуть — поливайте чуть раньше.": "Die Erde trocknet aus – gieß ein wenig früher."
+  "Земля успевает пересохнуть — поливайте чуть раньше.": "Die Erde trocknet aus – gieß ein wenig früher.",
+  "Листайте комнаты": "Durch Räume wischen",
+  "Проведите по экрану вбок — откроется соседняя комната, её имя выглядывает справа. За последней комнатой заводят новую.": "Wisch zur Seite, um den nächsten Raum zu öffnen – sein Name lugt rechts hervor. Nach dem letzten Raum legst du einen neuen an.",
+  "Имя правится прямо в строке. Потяните за ручку справа, чтобы поменять порядок, — в том же порядке комнаты листаются на главной.": "Der Name wird direkt in der Zeile bearbeitet. Zieh am Griff rechts, um die Reihenfolge zu ändern — in derselben Reihenfolge wischst du auf der Startseite durch die Räume.",
+  "Кабинет": "Arbeitszimmer",
+  "Детская": "Kinderzimmer",
+  "Ванная": "Badezimmer",
+  "Прихожая": "Flur"
 }

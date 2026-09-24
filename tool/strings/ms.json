@@ -291,7 +291,6 @@
   "Комнаты": "Bilik",
   "Растения в неё можно будет посадить или перевезти.": "Anda boleh menanam atau memindahkan tumbuhan ke sini.",
   "Удалить комнату «%@»?": "Padam bilik “%@”?",
-  "Имя правится прямо в строке. Потяните за ручку справа, чтобы поменять порядок, — в том же порядке комнаты встанут и в меню на главной.": "Nama diedit terus dalam baris. Seret pemegang di kanan untuk menukar susunan — bilik akan muncul dengan susunan yang sama dalam menu utama.",
   "Вместе с ней уйдут %lld растений. Вернуть их будет нельзя.": "%lld tumbuhan akan turut hilang. Tidak boleh dibuat asal.",
   "Уведомления выключены": "Pemberitahuan dimatikan",
   "Открыть настройки": "Buka Tetapan",
@@ -581,5 +580,12 @@
   "Можно не спешить: земля ещё влажная, тени на карточке нет.": "Tak perlu tergesa-gesa: tanah masih lembap dan kad tidak bercahaya.",
   "В самый раз: карточка как раз светится оранжевым.": "Tepat sekali: kad bercahaya jingga.",
   "Поздновато: карточка уже горит красным.": "Agak lewat: kad sudah bercahaya merah.",
-  "Земля успевает пересохнуть — поливайте чуть раньше.": "Tanah sempat kering — siram sedikit lebih awal."
+  "Земля успевает пересохнуть — поливайте чуть раньше.": "Tanah sempat kering — siram sedikit lebih awal.",
+  "Листайте комнаты": "Leret antara bilik",
+  "Проведите по экрану вбок — откроется соседняя комната, её имя выглядывает справа. За последней комнатой заводят новую.": "Leret skrin ke tepi untuk membuka bilik sebelah — namanya mengintai di kanan. Selepas bilik terakhir, anda boleh mencipta bilik baharu.",
+  "Имя правится прямо в строке. Потяните за ручку справа, чтобы поменять порядок, — в том же порядке комнаты листаются на главной.": "Nama diedit terus dalam baris. Seret pemegang di kanan untuk menukar susunan — bilik dileret dengan susunan yang sama di skrin utama.",
+  "Кабинет": "Bilik kerja",
+  "Детская": "Bilik kanak-kanak",
+  "Ванная": "Bilik mandi",
+  "Прихожая": "Ruang masuk"
 }

@@ -15846,6 +15846,293 @@
         }
       }
     },
+    "Ванная": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "الحمّام"
+          }
+        },
+        "bg": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Баня"
+          }
+        },
+        "bn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "বাথরুম"
+          }
+        },
+        "ca": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bany"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Koupelna"
+          }
+        },
+        "da": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Badeværelse"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Badezimmer"
+          }
+        },
+        "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Μπάνιο"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bathroom"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Baño"
+          }
+        },
+        "fi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kylpyhuone"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Salle de bain"
+          }
+        },
+        "gu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "બાથરૂમ"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "חדר רחצה"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "बाथरूम"
+          }
+        },
+        "hr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kupaonica"
+          }
+        },
+        "hu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fürdőszoba"
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kamar mandi"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bagno"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "浴室"
+          }
+        },
+        "kk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Жуынатын бөлме"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ಸ್ನಾನಗೃಹ"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "욕실"
+          }
+        },
+        "lt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vonios kambarys"
+          }
+        },
+        "ml": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "കുളിമുറി"
+          }
+        },
+        "mr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "न्हाणीघर"
+          }
+        },
+        "ms": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bilik mandi"
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bad"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Badkamer"
+          }
+        },
+        "or": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ଗାଧୁଆ ଘର"
+          }
+        },
+        "pa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ਗੁਸਲਖਾਨਾ"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Łazienka"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Banheiro"
+          }
+        },
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Casa de banho"
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Baie"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kúpeľňa"
+          }
+        },
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kopalnica"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Badrum"
+          }
+        },
+        "ta": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "குளியலறை"
+          }
+        },
+        "te": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "స్నానాల గది"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ห้องน้ำ"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Banyo"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ванна"
+          }
+        },
+        "ur": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "غسل خانہ"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Phòng tắm"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "浴室"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "浴室"
+          }
+        }
+      }
+    },
     "Василиса": {
       "extractionState": "manual",
       "localizations": {
@@ -29642,6 +29929,293 @@
         }
       }
     },
+    "Детская": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "غرفة الأطفال"
+          }
+        },
+        "bg": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Детска стая"
+          }
+        },
+        "bn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "বাচ্চাদের ঘর"
+          }
+        },
+        "ca": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Habitació dels nens"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dětský pokoj"
+          }
+        },
+        "da": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Børneværelse"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kinderzimmer"
+          }
+        },
+        "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Παιδικό δωμάτιο"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kids’ Room"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Habitación infantil"
+          }
+        },
+        "fi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lastenhuone"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chambre d’enfant"
+          }
+        },
+        "gu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "બાળકોનો રૂમ"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "חדר ילדים"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "बच्चों का कमरा"
+          }
+        },
+        "hr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dječja soba"
+          }
+        },
+        "hu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gyerekszoba"
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kamar anak"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cameretta"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "子ども部屋"
+          }
+        },
+        "kk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Балалар бөлмесі"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ಮಕ್ಕಳ ಕೋಣೆ"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "아이 방"
+          }
+        },
+        "lt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vaikų kambarys"
+          }
+        },
+        "ml": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "കുട്ടികളുടെ മുറി"
+          }
+        },
+        "mr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "मुलांची खोली"
+          }
+        },
+        "ms": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bilik kanak-kanak"
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Barnerom"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kinderkamer"
+          }
+        },
+        "or": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ପିଲାଙ୍କ ଘର"
+          }
+        },
+        "pa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ਬੱਚਿਆਂ ਦਾ ਕਮਰਾ"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pokój dziecięcy"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quarto das crianças"
+          }
+        },
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quarto das crianças"
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Camera copiilor"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Detská izba"
+          }
+        },
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Otroška soba"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Barnrum"
+          }
+        },
+        "ta": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "குழந்தைகள் அறை"
+          }
+        },
+        "te": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "పిల్లల గది"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ห้องเด็ก"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Çocuk odası"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Дитяча"
+          }
+        },
+        "ur": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "بچوں کا کمرہ"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Phòng trẻ em"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "儿童房"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "兒童房"
+          }
+        }
+      }
+    },
     "Диффенбахия": {
       "extractionState": "manual",
       "localizations": {
@@ -42557,289 +43131,289 @@
         }
       }
     },
-    "Имя правится прямо в строке. Потяните за ручку справа, чтобы поменять порядок, — в том же порядке комнаты встанут и в меню на главной.": {
+    "Имя правится прямо в строке. Потяните за ручку справа, чтобы поменять порядок, — в том же порядке комнаты листаются на главной.": {
       "extractionState": "manual",
       "localizations": {
         "ar": {
           "stringUnit": {
             "state": "translated",
-            "value": "يُعدَّل الاسم مباشرة في السطر. اسحب المقبض لتغيير الترتيب — ستظهر الغرف بالترتيب نفسه في قائمة الصفحة الرئيسية."
+            "value": "يُعدَّل الاسم مباشرة في السطر. اسحب المقبض لتغيير الترتيب — بالترتيب نفسه تتنقّل بين الغرف في الصفحة الرئيسية."
           }
         },
         "bg": {
           "stringUnit": {
             "state": "translated",
-            "value": "Името се редактира направо в реда. Дръпнете дръжката вдясно, за да смените реда — в същия ред стаите ще се появят и в менюто на началния екран."
+            "value": "Името се редактира направо в реда. Дръпнете дръжката вдясно, за да смените реда — в същия ред се плъзгат стаите на началния екран."
           }
         },
         "bn": {
           "stringUnit": {
             "state": "translated",
-            "value": "নাম সরাসরি সারিতেই বদলানো যায়। ক্রম বদলাতে ডানদিকের হাতল টানুন — হোমের মেনুতেও ঘরগুলো এই ক্রমে দেখা যাবে।"
+            "value": "নাম সরাসরি সারিতেই বদলানো যায়। ক্রম বদলাতে ডানদিকের হাতল টানুন — হোমে ঘরগুলো এই ক্রমেই সোয়াইপ করে দেখা যাবে।"
           }
         },
         "ca": {
           "stringUnit": {
             "state": "translated",
-            "value": "El nom s’edita a la mateixa fila. Arrossega la nansa de la dreta per canviar l’ordre: les habitacions sortiran en el mateix ordre al menú d’inici."
+            "value": "El nom s’edita a la mateixa fila. Arrossega la nansa de la dreta per canviar l’ordre: en aquest mateix ordre passen les habitacions a l’inici."
           }
         },
         "cs": {
           "stringUnit": {
             "state": "translated",
-            "value": "Název se upravuje přímo v řádku. Tažením úchytu vpravo změníte pořadí — ve stejném pořadí budou místnosti i v nabídce na domovské obrazovce."
+            "value": "Název se upravuje přímo v řádku. Tažením úchytu vpravo změníte pořadí — ve stejném pořadí se místnosti listují na domovské obrazovce."
           }
         },
         "da": {
           "stringUnit": {
             "state": "translated",
-            "value": "Navnet redigeres direkte i rækken. Træk i håndtaget til højre for at ændre rækkefølgen – rummene vises i samme rækkefølge i menuen på startskærmen."
+            "value": "Navnet redigeres direkte i rækken. Træk i håndtaget til højre for at ændre rækkefølgen – i samme rækkefølge stryger du gennem rummene på startskærmen."
           }
         },
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Der Name wird direkt in der Zeile bearbeitet. Zieh am Griff rechts, um die Reihenfolge zu ändern — in derselben Reihenfolge erscheinen die Räume auch im Menü auf der Startseite."
+            "value": "Der Name wird direkt in der Zeile bearbeitet. Zieh am Griff rechts, um die Reihenfolge zu ändern — in derselben Reihenfolge wischst du auf der Startseite durch die Räume."
           }
         },
         "el": {
           "stringUnit": {
             "state": "translated",
-            "value": "Το όνομα αλλάζει απευθείας στη γραμμή. Σύρετε τη λαβή δεξιά για να αλλάξετε τη σειρά — με την ίδια σειρά θα εμφανίζονται τα δωμάτια και στο μενού της αρχικής."
+            "value": "Το όνομα αλλάζει απευθείας στη γραμμή. Σύρετε τη λαβή δεξιά για να αλλάξετε τη σειρά — με την ίδια σειρά περνούν τα δωμάτια στην αρχική."
           }
         },
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Edit a name right in its row. Drag the handle on the right to change the order — rooms appear in the same order in the menu on Home."
+            "value": "Edit a name right in its row. Drag the handle on the right to change the order — you’ll swipe through rooms in the same order on Home."
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "El nombre se edita en la propia fila. Arrastra el asa de la derecha para cambiar el orden: las habitaciones aparecerán en el mismo orden en el menú de inicio."
+            "value": "El nombre se edita en la propia fila. Arrastra el asa de la derecha para cambiar el orden: en ese mismo orden se pasan las habitaciones en Inicio."
           }
         },
         "fi": {
           "stringUnit": {
             "state": "translated",
-            "value": "Nimeä muokataan suoraan rivillä. Muuta järjestystä vetämällä oikealla olevasta kahvasta – huoneet näkyvät samassa järjestyksessä kodin valikossa."
+            "value": "Nimeä muokataan suoraan rivillä. Muuta järjestystä vetämällä oikealla olevasta kahvasta – samassa järjestyksessä huoneita selataan Koti-välilehdellä."
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Le nom se modifie directement dans la ligne. Faites glisser la poignée à droite pour changer l’ordre — les pièces apparaîtront dans le même ordre dans le menu de l’accueil."
+            "value": "Le nom se modifie directement dans la ligne. Faites glisser la poignée à droite pour changer l’ordre — c’est dans cet ordre que les pièces défilent sur l’accueil."
           }
         },
         "gu": {
           "stringUnit": {
             "state": "translated",
-            "value": "નામ સીધું લીટીમાં જ બદલો. ક્રમ બદલવા જમણી બાજુનું હૅન્ડલ ખેંચો — હોમના મેનૂમાં પણ રૂમ આ જ ક્રમમાં દેખાશે."
+            "value": "નામ સીધું લીટીમાં જ બદલો. ક્રમ બદલવા જમણી બાજુનું હૅન્ડલ ખેંચો — હોમ પર રૂમ આ જ ક્રમમાં સ્વાઇપ થાય છે."
           }
         },
         "he": {
           "stringUnit": {
             "state": "translated",
-            "value": "השם נערך ישירות בשורה. גררו את הידית משמאל כדי לשנות את הסדר — באותו סדר החדרים יופיעו גם בתפריט במסך הראשי."
+            "value": "השם נערך ישירות בשורה. גררו את הידית משמאל כדי לשנות את הסדר — באותו סדר מדפדפים בין החדרים במסך הראשי."
           }
         },
         "hi": {
           "stringUnit": {
             "state": "translated",
-            "value": "नाम सीधे पंक्ति में बदलें। क्रम बदलने के लिए दाईं ओर का हैंडल खींचें — होम के मेनू में भी कमरे इसी क्रम में दिखेंगे।"
+            "value": "नाम सीधे पंक्ति में बदलें। क्रम बदलने के लिए दाईं ओर का हैंडल खींचें — होम पर कमरे इसी क्रम में स्वाइप होते हैं।"
           }
         },
         "hr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Naziv se uređuje izravno u retku. Povucite ručicu desno da promijenite redoslijed — istim će redom sobe biti i u izborniku na početnoj."
+            "value": "Naziv se uređuje izravno u retku. Povucite ručicu desno da promijenite redoslijed — istim redom listate sobe na početnoj."
           }
         },
         "hu": {
           "stringUnit": {
             "state": "translated",
-            "value": "A név közvetlenül a sorban szerkeszthető. A sorrend a jobb oldali fogantyú húzásával módosítható — a szobák ugyanebben a sorrendben jelennek meg a főoldal menüjében is."
+            "value": "A név közvetlenül a sorban szerkeszthető. A sorrend a jobb oldali fogantyú húzásával módosítható — a főoldalon ugyanebben a sorrendben lapozhatsz a szobák között."
           }
         },
         "id": {
           "stringUnit": {
             "state": "translated",
-            "value": "Nama diedit langsung di barisnya. Seret pegangan di kanan untuk mengubah urutan — ruangan akan muncul dengan urutan yang sama di menu beranda."
+            "value": "Nama diedit langsung di barisnya. Seret pegangan di kanan untuk mengubah urutan — dengan urutan yang sama ruangan digeser di beranda."
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Il nome si modifica direttamente nella riga. Trascina la maniglia a destra per cambiare l’ordine: le stanze appariranno nello stesso ordine nel menu della Home."
+            "value": "Il nome si modifica direttamente nella riga. Trascina la maniglia a destra per cambiare l’ordine: nello stesso ordine scorrerai le stanze nella Home."
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "名前は行のまま編集できます。右側のハンドルをドラッグすると順番を変えられます — ホームのメニューにも同じ順番で並びます。"
+            "value": "名前は行のまま編集できます。右側のハンドルをドラッグすると順番を変えられます — ホームでもこの順番で部屋をスワイプできます。"
           }
         },
         "kk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Атауы тура жолда өзгертіледі. Ретін өзгерту үшін оң жақтағы тұтқаны сүйреңіз — бөлмелер басты беттегі мәзірде де сол ретпен тұрады."
+            "value": "Атауы тура жолда өзгертіледі. Ретін өзгерту үшін оң жақтағы тұтқаны сүйреңіз — басты бетте бөлмелер дәл осы ретпен парақталады."
           }
         },
         "kn": {
           "stringUnit": {
             "state": "translated",
-            "value": "ಹೆಸರನ್ನು ನೇರವಾಗಿ ಸಾಲಿನಲ್ಲೇ ಬದಲಿಸಿ. ಕ್ರಮ ಬದಲಿಸಲು ಬಲಬದಿಯ ಹಿಡಿಕೆಯನ್ನು ಎಳೆಯಿರಿ — ಮುಖಪುಟದ ಮೆನುವಿನಲ್ಲೂ ಕೋಣೆಗಳು ಇದೇ ಕ್ರಮದಲ್ಲಿ ಕಾಣುತ್ತವೆ."
+            "value": "ಹೆಸರನ್ನು ನೇರವಾಗಿ ಸಾಲಿನಲ್ಲೇ ಬದಲಿಸಿ. ಕ್ರಮ ಬದಲಿಸಲು ಬಲಬದಿಯ ಹಿಡಿಕೆಯನ್ನು ಎಳೆಯಿರಿ — ಮುಖಪುಟದಲ್ಲಿ ಕೋಣೆಗಳು ಇದೇ ಕ್ರಮದಲ್ಲಿ ಸ್ವೈಪ್ ಆಗುತ್ತವೆ."
           }
         },
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "이름은 행에서 바로 편집해요. 오른쪽 핸들을 드래그하면 순서를 바꿀 수 있어요 — 홈 메뉴에도 같은 순서로 표시돼요."
+            "value": "이름은 행에서 바로 편집해요. 오른쪽 핸들을 드래그하면 순서를 바꿀 수 있어요 — 홈에서도 이 순서대로 방을 넘겨요."
           }
         },
         "lt": {
           "stringUnit": {
             "state": "translated",
-            "value": "Pavadinimas redaguojamas tiesiog eilutėje. Tempkite rankenėlę dešinėje, kad pakeistumėte tvarką – ta pačia tvarka kambariai bus ir pradžios meniu."
+            "value": "Pavadinimas redaguojamas tiesiog eilutėje. Tempkite rankenėlę dešinėje, kad pakeistumėte tvarką – ta pačia tvarka kambariai braukiami pradžios ekrane."
           }
         },
         "ml": {
           "stringUnit": {
             "state": "translated",
-            "value": "പേര് വരിയിൽ തന്നെ മാറ്റുക. ക്രമം മാറ്റാൻ വലതുവശത്തെ ഹാൻഡിൽ വലിക്കുക — ഹോം മെനുവിലും മുറികൾ ഇതേ ക്രമത്തിൽ കാണും."
+            "value": "പേര് വരിയിൽ തന്നെ മാറ്റുക. ക്രമം മാറ്റാൻ വലതുവശത്തെ ഹാൻഡിൽ വലിക്കുക — ഹോമിൽ മുറികൾ ഇതേ ക്രമത്തിൽ സ്വൈപ്പ് ചെയ്യാം."
           }
         },
         "mr": {
           "stringUnit": {
             "state": "translated",
-            "value": "नाव थेट ओळीतच बदला. क्रम बदलण्यासाठी उजवीकडील हँडल ओढा — मुख्य मेनूमध्येही खोल्या याच क्रमाने दिसतील."
+            "value": "नाव थेट ओळीतच बदला. क्रम बदलण्यासाठी उजवीकडील हँडल ओढा — मुख्य पानावर खोल्या याच क्रमाने स्वाइप होतात."
           }
         },
         "ms": {
           "stringUnit": {
             "state": "translated",
-            "value": "Nama diedit terus dalam baris. Seret pemegang di kanan untuk menukar susunan — bilik akan muncul dengan susunan yang sama dalam menu utama."
+            "value": "Nama diedit terus dalam baris. Seret pemegang di kanan untuk menukar susunan — bilik dileret dengan susunan yang sama di skrin utama."
           }
         },
         "nb": {
           "stringUnit": {
             "state": "translated",
-            "value": "Navnet redigeres rett i raden. Dra i håndtaket til høyre for å endre rekkefølgen – rommene vises i samme rekkefølge i menyen på startsiden."
+            "value": "Navnet redigeres rett i raden. Dra i håndtaket til høyre for å endre rekkefølgen – i samme rekkefølge sveiper du mellom rommene på startsiden."
           }
         },
         "nl": {
           "stringUnit": {
             "state": "translated",
-            "value": "De naam wijzig je direct in de regel. Sleep de greep rechts om de volgorde te wijzigen — in dezelfde volgorde staan de kamers in het menu op het startscherm."
+            "value": "De naam wijzig je direct in de regel. Sleep de greep rechts om de volgorde te wijzigen — in dezelfde volgorde veeg je door de kamers op het startscherm."
           }
         },
         "or": {
           "stringUnit": {
             "state": "translated",
-            "value": "ନାମ ସିଧାସଳଖ ଧାଡ଼ିରେ ବଦଳାନ୍ତୁ। କ୍ରମ ବଦଳାଇବାକୁ ଡାହାଣ ପଟର ହ୍ୟାଣ୍ଡେଲ୍ ଟାଣନ୍ତୁ — ହୋମ୍ ମେନୁରେ ମଧ୍ୟ ରୁମ୍ ଏହି କ୍ରମରେ ଦେଖାଯିବ।"
+            "value": "ନାମ ସିଧାସଳଖ ଧାଡ଼ିରେ ବଦଳାନ୍ତୁ। କ୍ରମ ବଦଳାଇବାକୁ ଡାହାଣ ପଟର ହ୍ୟାଣ୍ଡେଲ୍ ଟାଣନ୍ତୁ — ହୋମ୍‌ରେ ରୁମ୍ ଏହି କ୍ରମରେ ସ୍ୱାଇପ୍ ହୁଏ।"
           }
         },
         "pa": {
           "stringUnit": {
             "state": "translated",
-            "value": "ਨਾਮ ਸਿੱਧਾ ਕਤਾਰ ਵਿੱਚ ਬਦਲੋ। ਕ੍ਰਮ ਬਦਲਣ ਲਈ ਸੱਜੇ ਪਾਸੇ ਦਾ ਹੈਂਡਲ ਖਿੱਚੋ — ਹੋਮ ਦੇ ਮੀਨੂ ਵਿੱਚ ਵੀ ਕਮਰੇ ਇਸੇ ਕ੍ਰਮ ਵਿੱਚ ਦਿਖਣਗੇ।"
+            "value": "ਨਾਮ ਸਿੱਧਾ ਕਤਾਰ ਵਿੱਚ ਬਦਲੋ। ਕ੍ਰਮ ਬਦਲਣ ਲਈ ਸੱਜੇ ਪਾਸੇ ਦਾ ਹੈਂਡਲ ਖਿੱਚੋ — ਹੋਮ ਉੱਤੇ ਕਮਰੇ ਇਸੇ ਕ੍ਰਮ ਵਿੱਚ ਸਵਾਈਪ ਹੁੰਦੇ ਹਨ।"
           }
         },
         "pl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Nazwę edytuje się bezpośrednio w wierszu. Przeciągnij uchwyt po prawej, aby zmienić kolejność — w tej samej kolejności pokoje pojawią się w menu na ekranie głównym."
+            "value": "Nazwę edytuje się bezpośrednio w wierszu. Przeciągnij uchwyt po prawej, aby zmienić kolejność — w tej samej kolejności przesuwasz pokoje na ekranie głównym."
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "O nome é editado na própria linha. Arraste a alça à direita para mudar a ordem — os cômodos aparecerão na mesma ordem no menu do início."
+            "value": "O nome é editado na própria linha. Arraste a alça à direita para mudar a ordem — é nessa ordem que os cômodos passam no Início."
           }
         },
         "pt-PT": {
           "stringUnit": {
             "state": "translated",
-            "value": "O nome edita-se na própria linha. Arraste a pega à direita para mudar a ordem — as divisões aparecem pela mesma ordem no menu do início."
+            "value": "O nome edita-se na própria linha. Arraste a pega à direita para mudar a ordem — é por essa ordem que as divisões passam no Início."
           }
         },
         "ro": {
           "stringUnit": {
             "state": "translated",
-            "value": "Numele se editează direct pe rând. Trage de mânerul din dreapta ca să schimbi ordinea — camerele vor apărea în aceeași ordine și în meniul paginii principale."
+            "value": "Numele se editează direct pe rând. Trage de mânerul din dreapta ca să schimbi ordinea — în aceeași ordine glisezi prin camere pe pagina principală."
           }
         },
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Názov sa upravuje priamo v riadku. Potiahnutím úchytu vpravo zmeníte poradie — v rovnakom poradí budú miestnosti aj v ponuke na úvodnej obrazovke."
+            "value": "Názov sa upravuje priamo v riadku. Potiahnutím úchytu vpravo zmeníte poradie — v rovnakom poradí sa miestnosti listujú na úvodnej obrazovke."
           }
         },
         "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Ime urejate kar v vrstici. Povlecite ročico na desni, da spremenite vrstni red — v enakem vrstnem redu bodo sobe tudi v meniju na začetnem zaslonu."
+            "value": "Ime urejate kar v vrstici. Povlecite ročico na desni, da spremenite vrstni red — v enakem vrstnem redu listate sobe na začetnem zaslonu."
           }
         },
         "sv": {
           "stringUnit": {
             "state": "translated",
-            "value": "Namnet redigeras direkt i raden. Dra i handtaget till höger för att ändra ordningen – rummen visas i samma ordning i menyn på hemskärmen."
+            "value": "Namnet redigeras direkt i raden. Dra i handtaget till höger för att ändra ordningen – i samma ordning sveper du mellan rummen på hemskärmen."
           }
         },
         "ta": {
           "stringUnit": {
             "state": "translated",
-            "value": "பெயரை வரியிலேயே திருத்தலாம். வரிசையை மாற்ற வலப்பக்கக் கைப்பிடியை இழுக்கவும் — முகப்பு மெனுவிலும் அறைகள் இதே வரிசையில் தோன்றும்."
+            "value": "பெயரை வரியிலேயே திருத்தலாம். வரிசையை மாற்ற வலப்பக்கக் கைப்பிடியை இழுக்கவும் — முகப்பில் அறைகள் இதே வரிசையில் ஸ்வைப் ஆகும்."
           }
         },
         "te": {
           "stringUnit": {
             "state": "translated",
-            "value": "పేరును నేరుగా వరుసలోనే మార్చండి. క్రమం మార్చడానికి కుడివైపు హ్యాండిల్‌ను లాగండి — హోమ్ మెనూలో కూడా గదులు ఇదే క్రమంలో కనిపిస్తాయి."
+            "value": "పేరును నేరుగా వరుసలోనే మార్చండి. క్రమం మార్చడానికి కుడివైపు హ్యాండిల్‌ను లాగండి — హోమ్‌లో గదులు ఇదే క్రమంలో స్వైప్ అవుతాయి."
           }
         },
         "th": {
           "stringUnit": {
             "state": "translated",
-            "value": "แก้ไขชื่อได้ในแถวโดยตรง ลากที่จับด้านขวาเพื่อเปลี่ยนลำดับ — ห้องจะเรียงตามลำดับเดียวกันในเมนูหน้าหลัก"
+            "value": "แก้ไขชื่อได้ในแถวโดยตรง ลากที่จับด้านขวาเพื่อเปลี่ยนลำดับ — ในหน้าหลักจะปัดดูห้องตามลำดับเดียวกันนี้"
           }
         },
         "tr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Ad doğrudan satırda düzenlenir. Sırayı değiştirmek için sağdaki tutamağı sürükleyin — odalar ana sayfadaki menüde de aynı sırayla görünür."
+            "value": "Ad doğrudan satırda düzenlenir. Sırayı değiştirmek için sağdaki tutamağı sürükleyin — ana sayfada odalar arasında aynı sırayla geçersiniz."
           }
         },
         "uk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Назва правиться просто в рядку. Потягніть за ручку праворуч, щоб змінити порядок, — у тому самому порядку кімнати стануть і в меню на головній."
+            "value": "Назва правиться просто в рядку. Потягніть за ручку праворуч, щоб змінити порядок, — у тому самому порядку кімнати гортаються на головній."
           }
         },
         "ur": {
           "stringUnit": {
             "state": "translated",
-            "value": "نام سیدھا قطار ہی میں بدلیں۔ ترتیب بدلنے کے لیے ہینڈل کھینچیں — ہوم کے مینو میں بھی کمرے اسی ترتیب سے نظر آئیں گے۔"
+            "value": "نام سیدھا قطار ہی میں بدلیں۔ ترتیب بدلنے کے لیے ہینڈل کھینچیں — ہوم پر کمرے اسی ترتیب سے سوائپ ہوتے ہیں۔"
           }
         },
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "Sửa tên ngay trên dòng. Kéo tay nắm bên phải để đổi thứ tự — các phòng sẽ theo đúng thứ tự đó trong menu ở trang chủ."
+            "value": "Sửa tên ngay trên dòng. Kéo tay nắm bên phải để đổi thứ tự — ở trang chủ, bạn sẽ vuốt qua các phòng theo đúng thứ tự đó."
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "名称可直接在行内编辑。拖动右侧的把手可调整顺序——主页菜单中的房间也会按此顺序排列。"
+            "value": "名称可直接在行内编辑。拖动右侧的把手可调整顺序——在主页上滑动切换房间时也按此顺序。"
           }
         },
         "zh-Hant": {
           "stringUnit": {
             "state": "translated",
-            "value": "名稱可直接在該列編輯。拖移右側的控制點可調整順序——主頁選單中的房間也會依此順序排列。"
+            "value": "名稱可直接在該列編輯。拖移右側的控制點可調整順序——在主頁上滑動切換房間時也依此順序。"
           }
         }
       }
@@ -44562,6 +45136,293 @@
           "stringUnit": {
             "state": "translated",
             "value": "請在手機的設定中開啟：Sprout → 通知。"
+          }
+        }
+      }
+    },
+    "Кабинет": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "غرفة المكتب"
+          }
+        },
+        "bg": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Кабинет"
+          }
+        },
+        "bn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "পড়ার ঘর"
+          }
+        },
+        "ca": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Despatx"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pracovna"
+          }
+        },
+        "da": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kontor"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Arbeitszimmer"
+          }
+        },
+        "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Γραφείο"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Office"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Despacho"
+          }
+        },
+        "fi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Työhuone"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bureau"
+          }
+        },
+        "gu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "અભ્યાસ ખંડ"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "חדר עבודה"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "अध्ययन कक्ष"
+          }
+        },
+        "hr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Radna soba"
+          }
+        },
+        "hu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dolgozószoba"
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ruang kerja"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Studio"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "書斎"
+          }
+        },
+        "kk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Жұмыс бөлмесі"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ಅಧ್ಯಯನ ಕೋಣೆ"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "서재"
+          }
+        },
+        "lt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Darbo kambarys"
+          }
+        },
+        "ml": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "പഠനമുറി"
+          }
+        },
+        "mr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "अभ्यासिका"
+          }
+        },
+        "ms": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bilik kerja"
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kontor"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Werkkamer"
+          }
+        },
+        "or": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ପଢ଼ା ଘର"
+          }
+        },
+        "pa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ਪੜ੍ਹਾਈ ਵਾਲਾ ਕਮਰਾ"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gabinet"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Escritório"
+          }
+        },
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Escritório"
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Birou"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pracovňa"
+          }
+        },
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delovna soba"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Arbetsrum"
+          }
+        },
+        "ta": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "படிப்பறை"
+          }
+        },
+        "te": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "చదువుకునే గది"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ห้องทำงาน"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Çalışma odası"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Кабінет"
+          }
+        },
+        "ur": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "دفتر"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Phòng làm việc"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "书房"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "書房"
           }
         }
       }
@@ -58338,6 +59199,293 @@
           "stringUnit": {
             "state": "translated",
             "value": "百合"
+          }
+        }
+      }
+    },
+    "Листайте комнаты": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تنقّل بين الغرف"
+          }
+        },
+        "bg": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Плъзгайте между стаите"
+          }
+        },
+        "bn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ঘরগুলো সোয়াইপ করুন"
+          }
+        },
+        "ca": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Llisca entre habitacions"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Listujte místnostmi"
+          }
+        },
+        "da": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stryg gennem rum"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Durch Räume wischen"
+          }
+        },
+        "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Σαρώστε τα δωμάτια"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Swipe Through Rooms"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Desliza entre habitaciones"
+          }
+        },
+        "fi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pyyhkäise huoneesta toiseen"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Balayez les pièces"
+          }
+        },
+        "gu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "રૂમ વચ્ચે સ્વાઇપ કરો"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "דפדפו בין החדרים"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "कमरों में स्वाइप करें"
+          }
+        },
+        "hr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Listajte sobe"
+          }
+        },
+        "hu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lapozz a szobák között"
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Geser antarruangan"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Scorri tra le stanze"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "部屋をスワイプ"
+          }
+        },
+        "kk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Бөлмелерді парақтаңыз"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ಕೋಣೆಗಳನ್ನು ಸ್ವೈಪ್ ಮಾಡಿ"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "방을 넘겨 보세요"
+          }
+        },
+        "lt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Braukite per kambarius"
+          }
+        },
+        "ml": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "മുറികൾ സ്വൈപ്പ് ചെയ്യുക"
+          }
+        },
+        "mr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "खोल्यांमध्ये स्वाइप करा"
+          }
+        },
+        "ms": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Leret antara bilik"
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sveip mellom rom"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Veeg door de kamers"
+          }
+        },
+        "or": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ରୁମ୍ ଗୁଡ଼ିକ ସ୍ୱାଇପ୍ କରନ୍ତୁ"
+          }
+        },
+        "pa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ਕਮਰਿਆਂ ਵਿੱਚ ਸਵਾਈਪ ਕਰੋ"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Przesuwaj pokoje"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deslize pelos cômodos"
+          }
+        },
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deslize pelas divisões"
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Glisează prin camere"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Listujte miestnosťami"
+          }
+        },
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Listajte po sobah"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Svep mellan rummen"
+          }
+        },
+        "ta": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "அறைகளை ஸ்வைப் செய்யுங்கள்"
+          }
+        },
+        "te": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "గదుల మధ్య స్వైప్ చేయండి"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ปัดดูห้องต่างๆ"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Odalar arasında kaydırın"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Гортайте кімнати"
+          }
+        },
+        "ur": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "کمروں میں سوائپ کریں"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vuốt qua các phòng"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "滑动切换房间"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "滑動切換房間"
           }
         }
       }
@@ -113562,6 +114710,580 @@
           "stringUnit": {
             "state": "translated",
             "value": "App 不會連上網路。它沒有帳號、伺服器、分析，也沒有廣告。"
+          }
+        }
+      }
+    },
+    "Прихожая": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "المدخل"
+          }
+        },
+        "bg": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Антре"
+          }
+        },
+        "bn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "প্রবেশপথ"
+          }
+        },
+        "ca": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rebedor"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Předsíň"
+          }
+        },
+        "da": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Entré"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Flur"
+          }
+        },
+        "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Χολ"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hallway"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recibidor"
+          }
+        },
+        "fi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Eteinen"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Entrée"
+          }
+        },
+        "gu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "પ્રવેશખંડ"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "מבואה"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "प्रवेश कक्ष"
+          }
+        },
+        "hr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Predsoblje"
+          }
+        },
+        "hu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Előszoba"
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lorong"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ingresso"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "玄関"
+          }
+        },
+        "kk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Дәліз"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ಪ್ರವೇಶ ಕೋಣೆ"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "현관"
+          }
+        },
+        "lt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prieškambaris"
+          }
+        },
+        "ml": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "പൂമുഖം"
+          }
+        },
+        "mr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "प्रवेश कक्ष"
+          }
+        },
+        "ms": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ruang masuk"
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gang"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hal"
+          }
+        },
+        "or": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ପ୍ରବେଶ ଘର"
+          }
+        },
+        "pa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ਡਿਓਢੀ"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Przedpokój"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hall de entrada"
+          }
+        },
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hall de entrada"
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hol"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Predsieň"
+          }
+        },
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Predsoba"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hall"
+          }
+        },
+        "ta": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "நுழைவாயில்"
+          }
+        },
+        "te": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ప్రవేశ గది"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "โถงทางเข้า"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Antre"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Передпокій"
+          }
+        },
+        "ur": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ڈیوڑھی"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tiền sảnh"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "玄关"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "玄關"
+          }
+        }
+      }
+    },
+    "Проведите по экрану вбок — откроется соседняя комната, её имя выглядывает справа. За последней комнатой заводят новую.": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "اسحب الشاشة جانبًا لتفتح الغرفة المجاورة، ويطلّ اسمها من اليسار. بعد آخر غرفة يمكنك إنشاء غرفة جديدة."
+          }
+        },
+        "bg": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Плъзнете екрана встрани – ще се отвори съседната стая, името ѝ надзърта отдясно. След последната стая можете да създадете нова."
+          }
+        },
+        "bn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "স্ক্রিন পাশে সোয়াইপ করুন — পাশের ঘর খুলবে, তার নাম ডানদিক থেকে উঁকি দেয়। শেষ ঘরের পরে নতুন ঘর তৈরি করতে পারেন।"
+          }
+        },
+        "ca": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Llisca la pantalla cap al costat per obrir l’habitació del costat: el seu nom treu el cap a la dreta. Després de l’última habitació en pots crear una de nova."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Přejeďte po obrazovce do strany – otevře se vedlejší místnost, její název vykukuje vpravo. Za poslední místností můžete založit novou."
+          }
+        },
+        "da": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stryg hen over skærmen for at åbne næste rum – dets navn titter frem til højre. Efter det sidste rum kan du oprette et nyt."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wisch zur Seite, um den nächsten Raum zu öffnen – sein Name lugt rechts hervor. Nach dem letzten Raum legst du einen neuen an."
+          }
+        },
+        "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Σύρετε την οθόνη στο πλάι για να ανοίξει το διπλανό δωμάτιο — το όνομά του ξεπροβάλλει δεξιά. Μετά το τελευταίο δωμάτιο μπορείτε να φτιάξετε νέο."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Swipe sideways to open the next room — its name peeks out on the right. After the last room, you can create a new one."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Desliza la pantalla hacia un lado para abrir la habitación de al lado: su nombre asoma a la derecha. Tras la última habitación puedes crear una nueva."
+          }
+        },
+        "fi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pyyhkäise näyttöä sivulle, niin viereinen huone aukeaa – sen nimi pilkottaa oikealla. Viimeisen huoneen jälkeen voit luoda uuden."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Balayez l’écran sur le côté pour ouvrir la pièce voisine — son nom dépasse à droite. Après la dernière pièce, vous pouvez en créer une nouvelle."
+          }
+        },
+        "gu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "સ્ક્રીનને બાજુમાં સ્વાઇપ કરો — બાજુનો રૂમ ખૂલશે, તેનું નામ જમણી બાજુથી ડોકિયું કરે છે. છેલ્લા રૂમ પછી નવો રૂમ બનાવી શકો છો."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "החליקו את המסך הצידה כדי לפתוח את החדר הסמוך – שמו מציץ משמאל. אחרי החדר האחרון אפשר ליצור חדר חדש."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "स्क्रीन को बगल में स्वाइप करें — अगला कमरा खुल जाएगा, उसका नाम दाईं ओर से झाँकता है। आख़िरी कमरे के बाद नया कमरा बना सकते हैं।"
+          }
+        },
+        "hr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Povucite zaslon u stranu – otvorit će se susjedna soba, njezin naziv viri s desne strane. Iza posljednje sobe možete stvoriti novu."
+          }
+        },
+        "hu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Húzd oldalra a képernyőt, és megnyílik a szomszéd szoba – a neve jobbra kikandikál. Az utolsó szoba után újat hozhatsz létre."
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Geser layar ke samping untuk membuka ruangan berikutnya — namanya mengintip di kanan. Setelah ruangan terakhir, kamu bisa membuat yang baru."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Scorri lo schermo di lato per aprire la stanza accanto: il suo nome spunta a destra. Dopo l’ultima stanza puoi crearne una nuova."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "画面を横にスワイプすると隣の部屋が開きます。次の部屋の名前は右端からのぞいています。最後の部屋の先では新しい部屋を作れます。"
+          }
+        },
+        "kk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Экранды бүйірге сырғытыңыз — көрші бөлме ашылады, оның атауы оң жақтан сығалап тұрады. Соңғы бөлмеден кейін жаңасын құруға болады."
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ಪರದೆಯನ್ನು ಪಕ್ಕಕ್ಕೆ ಸ್ವೈಪ್ ಮಾಡಿ — ಪಕ್ಕದ ಕೋಣೆ ತೆರೆಯುತ್ತದೆ, ಅದರ ಹೆಸರು ಬಲಬದಿಯಲ್ಲಿ ಇಣುಕುತ್ತದೆ. ಕೊನೆಯ ಕೋಣೆಯ ನಂತರ ಹೊಸ ಕೋಣೆ ರಚಿಸಬಹುದು."
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "화면을 옆으로 쓸어 넘기면 옆방이 열려요. 다음 방 이름은 오른쪽 끝에 살짝 보여요. 마지막 방 다음에서는 새 방을 만들 수 있어요."
+          }
+        },
+        "lt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Perbraukite ekraną į šoną – atsidarys gretimas kambarys, jo pavadinimas kyšo dešinėje. Po paskutinio kambario galite sukurti naują."
+          }
+        },
+        "ml": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "സ്ക്രീൻ വശത്തേക്ക് സ്വൈപ്പ് ചെയ്യുക — അടുത്ത മുറി തുറക്കും, അതിന്റെ പേര് വലതുവശത്ത് എത്തിനോക്കുന്നുണ്ട്. അവസാന മുറിക്ക് ശേഷം പുതിയ മുറി ഉണ്ടാക്കാം."
+          }
+        },
+        "mr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "स्क्रीन बाजूला स्वाइप करा — शेजारची खोली उघडेल, तिचे नाव उजवीकडून डोकावते. शेवटच्या खोलीनंतर नवीन खोली तयार करता येते."
+          }
+        },
+        "ms": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Leret skrin ke tepi untuk membuka bilik sebelah — namanya mengintai di kanan. Selepas bilik terakhir, anda boleh mencipta bilik baharu."
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sveip til siden for å åpne neste rom – navnet titter fram til høyre. Etter det siste rommet kan du opprette et nytt."
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Veeg opzij om de volgende kamer te openen – de naam piept rechts tevoorschijn. Na de laatste kamer maak je een nieuwe aan."
+          }
+        },
+        "or": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ସ୍କ୍ରିନ୍‌କୁ ପାର୍ଶ୍ୱକୁ ସ୍ୱାଇପ୍ କରନ୍ତୁ — ପାଖ ରୁମ୍ ଖୋଲିବ, ତାହାର ନାମ ଡାହାଣ ପଟରୁ ଉଙ୍କି ମାରେ। ଶେଷ ରୁମ୍ ପରେ ନୂଆ ରୁମ୍ ତିଆରି କରିପାରିବେ।"
+          }
+        },
+        "pa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ਸਕ੍ਰੀਨ ਨੂੰ ਪਾਸੇ ਵੱਲ ਸਵਾਈਪ ਕਰੋ — ਨਾਲ ਵਾਲਾ ਕਮਰਾ ਖੁੱਲ੍ਹੇਗਾ, ਉਸਦਾ ਨਾਂ ਸੱਜੇ ਪਾਸਿਓਂ ਝਾਕਦਾ ਹੈ। ਆਖਰੀ ਕਮਰੇ ਤੋਂ ਬਾਅਦ ਨਵਾਂ ਕਮਰਾ ਬਣਾ ਸਕਦੇ ਹੋ।"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Przesuń ekran w bok – otworzy się sąsiedni pokój, jego nazwa wystaje z prawej. Za ostatnim pokojem możesz założyć nowy."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deslize a tela para o lado para abrir o cômodo vizinho — o nome dele aparece à direita. Depois do último cômodo, dá para criar um novo."
+          }
+        },
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deslize o ecrã para o lado para abrir a divisão vizinha — o nome dela espreita à direita. Depois da última divisão, pode criar uma nova."
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Glisează ecranul într-o parte ca să deschizi camera alăturată — numele ei se ivește în dreapta. După ultima cameră poți crea una nouă."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Potiahnite obrazovku do strany – otvorí sa susedná miestnosť, jej názov vykúka vpravo. Za poslednou miestnosťou môžete založiť novú."
+          }
+        },
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Podrsajte po zaslonu vstran – odpre se sosednja soba, njeno ime pokuka na desni. Za zadnjo sobo lahko ustvarite novo."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Svep åt sidan för att öppna nästa rum – dess namn tittar fram till höger. Efter det sista rummet kan du skapa ett nytt."
+          }
+        },
+        "ta": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "திரையைப் பக்கவாட்டில் ஸ்வைப் செய்யுங்கள் — அடுத்த அறை திறக்கும், அதன் பெயர் வலப்பக்கத்தில் எட்டிப் பார்க்கிறது. கடைசி அறைக்குப் பிறகு புதிய அறையை உருவாக்கலாம்."
+          }
+        },
+        "te": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "స్క్రీన్‌ను పక్కకు స్వైప్ చేయండి — పక్క గది తెరుచుకుంటుంది, దాని పేరు కుడివైపు నుంచి తొంగి చూస్తుంది. చివరి గది తర్వాత కొత్త గదిని సృష్టించవచ్చు."
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ปัดหน้าจอไปด้านข้างเพื่อเปิดห้องถัดไป ชื่อห้องจะโผล่อยู่ทางขวา หลังห้องสุดท้ายสร้างห้องใหม่ได้"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ekranı yana kaydırın, yandaki oda açılır; adı sağda görünür. Son odanın ardından yeni bir oda oluşturabilirsiniz."
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Проведіть по екрану вбік — відкриється сусідня кімната, її назва визирає праворуч. За останньою кімнатою можна завести нову."
+          }
+        },
+        "ur": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "اسکرین کو ایک طرف سوائپ کریں تو ساتھ والا کمرہ کھل جائے گا، اس کا نام بائیں جانب سے جھانکتا ہے۔ آخری کمرے کے بعد نیا کمرہ بنا سکتے ہیں۔"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vuốt ngang màn hình để mở phòng bên cạnh — tên phòng ló ra ở bên phải. Sau phòng cuối cùng, bạn có thể tạo phòng mới."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "在屏幕上横向滑动即可打开相邻的房间，下一个房间的名字会从右侧露出一点。最后一个房间之后可以新建房间。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "在螢幕上橫向滑動即可打開相鄰的房間，下一個房間的名稱會從右側露出一點。最後一個房間之後可以新增房間。"
           }
         }
       }

@@ -343,7 +343,6 @@
   "Комнаты": "Kambariai",
   "Растения в неё можно будет посадить или перевезти.": "Jame galėsite sodinti arba perkelti į jį augalus.",
   "Удалить комнату «%@»?": "Ištrinti kambarį „%@“?",
-  "Имя правится прямо в строке. Потяните за ручку справа, чтобы поменять порядок, — в том же порядке комнаты встанут и в меню на главной.": "Pavadinimas redaguojamas tiesiog eilutėje. Tempkite rankenėlę dešinėje, kad pakeistumėte tvarką – ta pačia tvarka kambariai bus ir pradžios meniu.",
   "Вместе с ней уйдут %lld растений. Вернуть их будет нельзя.": {
     "one": "Kartu su juo išnyks %lld augalas. Atšaukti nebus galima.",
     "few": "Kartu su juo išnyks %lld augalai. Atšaukti nebus galima.",
@@ -645,5 +644,12 @@
   "Можно не спешить: земля ещё влажная, тени на карточке нет.": "Neskubėkite: žemė dar drėgna, kortelė nešviečia.",
   "В самый раз: карточка как раз светится оранжевым.": "Pats tas: kortelė šviečia oranžine spalva.",
   "Поздновато: карточка уже горит красным.": "Kiek per vėlai: kortelė jau šviečia raudonai.",
-  "Земля успевает пересохнуть — поливайте чуть раньше.": "Žemė spėja išdžiūti – laistykite šiek tiek anksčiau."
+  "Земля успевает пересохнуть — поливайте чуть раньше.": "Žemė spėja išdžiūti – laistykite šiek tiek anksčiau.",
+  "Листайте комнаты": "Braukite per kambarius",
+  "Проведите по экрану вбок — откроется соседняя комната, её имя выглядывает справа. За последней комнатой заводят новую.": "Perbraukite ekraną į šoną – atsidarys gretimas kambarys, jo pavadinimas kyšo dešinėje. Po paskutinio kambario galite sukurti naują.",
+  "Имя правится прямо в строке. Потяните за ручку справа, чтобы поменять порядок, — в том же порядке комнаты листаются на главной.": "Pavadinimas redaguojamas tiesiog eilutėje. Tempkite rankenėlę dešinėje, kad pakeistumėte tvarką – ta pačia tvarka kambariai braukiami pradžios ekrane.",
+  "Кабинет": "Darbo kambarys",
+  "Детская": "Vaikų kambarys",
+  "Ванная": "Vonios kambarys",
+  "Прихожая": "Prieškambaris"
 }

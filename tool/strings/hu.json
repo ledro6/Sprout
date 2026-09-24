@@ -330,7 +330,6 @@
   "Комнаты": "Szobák",
   "Растения в неё можно будет посадить или перевезти.": "Ültethetsz bele, vagy növényeket költöztethetsz ide.",
   "Удалить комнату «%@»?": "Törlöd ezt a szobát: „%@”?",
-  "Имя правится прямо в строке. Потяните за ручку справа, чтобы поменять порядок, — в том же порядке комнаты встанут и в меню на главной.": "A név közvetlenül a sorban szerkeszthető. A sorrend a jobb oldali fogantyú húzásával módosítható — a szobák ugyanebben a sorrendben jelennek meg a főoldal menüjében is.",
   "Вместе с ней уйдут %lld растений. Вернуть их будет нельзя.": {
     "one": "Vele együtt eltűnik %lld növény. Ez nem vonható vissza.",
     "other": "Vele együtt eltűnik %lld növény. Ez nem vonható vissza."
@@ -629,5 +628,12 @@
   "Можно не спешить: земля ещё влажная, тени на карточке нет.": "Ráér: a föld még nedves, és a kártya nem világít.",
   "В самый раз: карточка как раз светится оранжевым.": "Épp jó: a kártya narancsszínben világít.",
   "Поздновато: карточка уже горит красным.": "Kicsit késő: a kártya már pirosan világít.",
-  "Земля успевает пересохнуть — поливайте чуть раньше.": "A föld kiszárad – öntözz egy kicsit korábban."
+  "Земля успевает пересохнуть — поливайте чуть раньше.": "A föld kiszárad – öntözz egy kicsit korábban.",
+  "Листайте комнаты": "Lapozz a szobák között",
+  "Проведите по экрану вбок — откроется соседняя комната, её имя выглядывает справа. За последней комнатой заводят новую.": "Húzd oldalra a képernyőt, és megnyílik a szomszéd szoba – a neve jobbra kikandikál. Az utolsó szoba után újat hozhatsz létre.",
+  "Имя правится прямо в строке. Потяните за ручку справа, чтобы поменять порядок, — в том же порядке комнаты листаются на главной.": "A név közvetlenül a sorban szerkeszthető. A sorrend a jobb oldali fogantyú húzásával módosítható — a főoldalon ugyanebben a sorrendben lapozhatsz a szobák között.",
+  "Кабинет": "Dolgozószoba",
+  "Детская": "Gyerekszoba",
+  "Ванная": "Fürdőszoba",
+  "Прихожая": "Előszoba"
 }

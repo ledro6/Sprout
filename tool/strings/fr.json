@@ -330,7 +330,6 @@
   "Комнаты": "Pièces",
   "Растения в неё можно будет посадить или перевезти.": "Vous pourrez y planter ou y déplacer des plantes.",
   "Удалить комнату «%@»?": "Supprimer la pièce « %@ » ?",
-  "Имя правится прямо в строке. Потяните за ручку справа, чтобы поменять порядок, — в том же порядке комнаты встанут и в меню на главной.": "Le nom se modifie directement dans la ligne. Faites glisser la poignée à droite pour changer l’ordre — les pièces apparaîtront dans le même ordre dans le menu de l’accueil.",
   "Вместе с ней уйдут %lld растений. Вернуть их будет нельзя.": {
     "one": "%lld plante partira avec elle. Impossible de revenir en arrière.",
     "other": "%lld plantes partiront avec elle. Impossible de revenir en arrière."
@@ -629,5 +628,12 @@
   "Можно не спешить: земля ещё влажная, тени на карточке нет.": "Rien ne presse : la terre est encore humide, la carte ne brille pas.",
   "В самый раз: карточка как раз светится оранжевым.": "Idéal : la carte brille justement en orange.",
   "Поздновато: карточка уже горит красным.": "Un peu tard : la carte est déjà rouge.",
-  "Земля успевает пересохнуть — поливайте чуть раньше.": "La terre a le temps de sécher — arrosez un peu plus tôt."
+  "Земля успевает пересохнуть — поливайте чуть раньше.": "La terre a le temps de sécher — arrosez un peu plus tôt.",
+  "Листайте комнаты": "Balayez les pièces",
+  "Проведите по экрану вбок — откроется соседняя комната, её имя выглядывает справа. За последней комнатой заводят новую.": "Balayez l’écran sur le côté pour ouvrir la pièce voisine — son nom dépasse à droite. Après la dernière pièce, vous pouvez en créer une nouvelle.",
+  "Имя правится прямо в строке. Потяните за ручку справа, чтобы поменять порядок, — в том же порядке комнаты листаются на главной.": "Le nom se modifie directement dans la ligne. Faites glisser la poignée à droite pour changer l’ordre — c’est dans cet ordre que les pièces défilent sur l’accueil.",
+  "Кабинет": "Bureau",
+  "Детская": "Chambre d’enfant",
+  "Ванная": "Salle de bain",
+  "Прихожая": "Entrée"
 }

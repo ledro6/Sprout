@@ -1,17 +1,29 @@
 import SwiftUI
 import UniformTypeIdentifiers
 
+/// Главная. Комнаты — страницами: листаются пальцем вбок, у каждой своя
+/// прокрутка, а за последней — «Новая комната». Шапка общая: заголовок
+/// «Главная» и лента комнат, идущая за листанием, — см. `RoomStrip`.
 struct HomeView: View {
     @Environment(Garden.self) private var garden
 
-    /// На столько растяжка под строкой комнаты уходит вверх, чтобы дотянуться
-    /// до края экрана.
-    @Environment(\.notch) private var notch
+    @Environment(\.layoutDirection) private var direction
 
-    @State private var roomIndex = 0
+    /// Какая страница на экране. Её же листает лента: привязка к прокрутке
+    /// страниц, `scrollPosition`.
+    @State private var target: HomeLeaf?
 
-    /// Карточки, которые в этой комнате уже всплыли. Журнал здесь, а не в
-    /// карточке: ленивая сетка выбрасывает карточки вместе с их памятью.
+    /// Где листание встало в последний раз — чтобы поднять клавиатуру, только
+    /// когда до «Новой комнаты» именно долистали.
+    @State private var landed: HomeLeaf?
+
+    /// Листание и прокрутка страниц — каждый кадр, поэтому в стороне: см.
+    /// `Glide`.
+    @State private var glide = Glide()
+
+    /// Карточки, которые уже всплыли. Журнал здесь, а не в карточке: ленивая
+    /// сетка выбрасывает карточки вместе с их памятью. Один на все комнаты:
+    /// комната, в которую вернулись, не всплывает заново.
     ///
     /// Именно `@State`, а не класс в стороне: класс не будил тело, флаг «уже
     /// показывали» застывал, и появление играло на каждой прокрутке.
@@ -64,30 +76,54 @@ struct HomeView: View {
     /// Кого тащат — один на всю полку.
     @State private var dragged: Plant.ID?
 
-    @State private var scrolled: CGFloat = 0
+    /// «Новая комната»: имя, поле с клавиатурой и сколько раз имя не
+    /// подошло.
+    @State private var draft = ""
+    @FocusState private var naming: Bool
+    @State private var misses = 0
 
-    /// Путь заголовка до выреза. Не числом: заголовок растёт с размером
+    /// Путь заголовка до верха. Не числом: заголовок растёт с размером
     /// текста.
     @State private var titleHeight: CGFloat = 1
+
+    /// Ширина кнопок справа: лента, поднявшись к ним, ужимается.
+    @State private var cornerWidth: CGFloat = 0
+
+    /// Сколько снизу занято панелью вкладок: страницы уходят под неё, и
+    /// последние карточки должны из-под неё выезжать. До первого замера —
+    /// на глаз, с запасом.
+    @State private var floor: CGFloat = 90
 
     @ScaledMetric(relativeTo: .headline)
     private var roomSize = Typography.roomSize
     @ScaledMetric(relativeTo: .largeTitle)
     private var roomGrown = Typography.roomGrown
 
-    /// 0 — экран в покое, 1 — заголовок ушёл, и строка комнаты встала на его
-    /// место.
-    private var grown: CGFloat {
-        min(max(scrolled / titleHeight, 0), 1)
+    /// Строка ленты в покое и доросшая до заголовка — с запасом на кегль.
+    private var row: CGFloat {
+        max(Metrics.roomRow, (roomSize * 1.3).rounded(.up))
+    }
+    private var grownRow: CGFloat {
+        max(Metrics.roomRow, (roomGrown * 1.25).rounded(.up))
     }
 
     private var look: Settings.Look { Settings.shared.look }
 
-    /// Номер придерживаем в границах. Комнат может не быть вовсе — тогда
-    /// пусто.
+    /// Комнаты и «Новая комната» за ними.
+    private var leaves: [HomeLeaf] {
+        garden.rooms.map { HomeLeaf.room($0.name) } + [HomeLeaf.fresh]
+    }
+
+    /// Комната на экране. До первого листания привязка пуста — это первая.
     private var room: Room? {
-        guard !garden.rooms.isEmpty else { return nil }
-        return garden.rooms[min(roomIndex, garden.rooms.count - 1)]
+        switch target {
+        case .room(let name)?:
+            garden.rooms.first { $0.name == name } ?? garden.rooms.first
+        case .fresh?:
+            nil
+        case nil:
+            garden.rooms.first
+        }
     }
 
     private var plants: [Plant] {
@@ -96,53 +132,39 @@ struct HomeView: View {
 
     var body: some View {
         NavigationStack(path: $path) {
-            ScrollView {
-                // Заголовок уезжает, строка комнаты прилипает к верху —
-                // закреплённая шапка секции, как в Музыке.
-                LazyVStack(alignment: .leading, spacing: 0,
-                           pinnedViews: [.sectionHeaders]) {
-                    // Ступени входа — см. `Launch`.
-                    SectionTitle("Главная")
-                        .modifier(Enter(step: 2))
-                        .onGeometryChange(for: CGFloat.self) { $0.size.height }
-                            action: { titleHeight = max($0, 1) }
-                    Section {
-                        // До своей ступени сетки нет вовсе: иначе волна
-                        // появления отыграла бы под заставкой.
-                        if Launch.shared.step >= 4 {
-                            shelf
-                        }
-                    } header: {
-                        roomBar
-                            .modifier(Enter(step: 3))
-                    }
+            pager
+                // Шапка поверх страниц и общая на все: заголовок, лента
+                // комнат. Кнопки — отдельным слоем: шапка перерисовывается
+                // каждый кадр листания, а им незачем.
+                .overlay(alignment: .top) { head }
+                .overlay(alignment: .topTrailing) { corner }
+                .onDrop(of: [.text],
+                        delegate: Rest(held: $held, fly: fly, drop: land))
+                // Нажатие мимо карточек заканчивает правку, как на «Домой».
+                // Кнопки и карточки своё нажатие забирают первыми.
+                .gesture(TapGesture().onEnded { finish() },
+                         including: editing ? .all : .subviews)
+                // Страницы уходят под панель вкладок — её высота нужна им
+                // отступом. Ноль приходит, пока поднята клавиатура: его
+                // пропускаем.
+                .onGeometryChange(for: CGFloat.self) {
+                    $0.safeAreaInsets.bottom
+                } action: { bottom in
+                    if bottom > 0 { floor = bottom }
                 }
-            }
-            // Плюс вставка сверху: под безопасной зоной смещение стартует
-            // отрицательным.
-            .onScrollGeometryChange(for: CGFloat.self) {
-                $0.contentOffset.y + $0.contentInsets.top
-            } action: { _, offset in
-                scrolled = offset
-            }
-            .onDrop(of: [.text],
-                    delegate: Rest(held: $held, fly: fly, drop: land))
-            // Нажатие мимо карточек заканчивает правку, как на «Домой».
-            // Кнопки и карточки своё нажатие забирают первыми.
-            .gesture(TapGesture().onEnded { finish() },
-                     including: editing ? .all : .subviews)
-            .background { SproutBackground() }
-            .toolbar(.hidden, for: .navigationBar)
-            // Панель вкладок — последняя ступень входа. Её видимость задаёт
-            // содержимое вкладки, а не корень.
-            .toolbar(Launch.shared.step >= Launch.last ? .visible : .hidden,
-                     for: .tabBar)
-            // По номеру, а не копией: экран растения показывает живое
-            // состояние.
-            .navigationDestination(for: Plant.ID.self) { id in
-                PlantView(plantID: id)
-                    .navigationTransition(.zoom(sourceID: id, in: cardZoom))
-            }
+                .ignoresSafeArea(.container, edges: .bottom)
+                .background { SproutBackground() }
+                .toolbar(.hidden, for: .navigationBar)
+                // Панель вкладок — последняя ступень входа. Её видимость
+                // задаёт содержимое вкладки, а не корень.
+                .toolbar(Launch.shared.step >= Launch.last ? .visible : .hidden,
+                         for: .tabBar)
+                // По номеру, а не копией: экран растения показывает живое
+                // состояние.
+                .navigationDestination(for: Plant.ID.self) { id in
+                    PlantView(plantID: id)
+                        .navigationTransition(.zoom(sourceID: id, in: cardZoom))
+                }
         }
         // Вернулись — ореолы проявляются, но не раньше, чем карточка
         // сложится.
@@ -151,15 +173,18 @@ struct HomeView: View {
                 withAnimation(Motion.halo) { opening = nil }
             }
         }
-        .onChange(of: roomIndex) { _, _ in revealed.removeAll() }
-        // Выбор держится на той же комнате, а не на том же номере.
+        // Страница держится на той же комнате, а не на том же номере.
         .onChange(of: garden.rooms.map(\.name)) { old, new in
             follow(from: old, to: new)
         }
         // Ушедшее растение уходит и из журнала показанных: вернут — всплывёт,
         // а не появится щелчком.
-        .onChange(of: room?.plants.map(\.id) ?? []) { old, new in
+        .onChange(of: garden.rooms.flatMap { $0.plants.map(\.id) }) { old, new in
             revealed.subtract(Set(old).subtracting(new))
+        }
+        // Ушли с «Новой комнаты» — клавиатура ей больше не нужна.
+        .onChange(of: target) { _, now in
+            if now != .fresh { naming = false }
         }
         .onDisappear(perform: finish)
         .sheet(isPresented: $settings) { SettingsView() }
@@ -204,23 +229,179 @@ struct HomeView: View {
         }
     }
 
+    /// Страницы комнат — системное листание (`.paging`): отскок у краёв,
+    /// бросок пальцем и доводка до страницы — как у экранов «Домой». Каждая
+    /// страница сообщает, где стоит, — отсюда лента комнат знает положение
+    /// листания и посреди жеста.
+    private var pager: some View {
+        ScrollView(.horizontal) {
+            LazyHStack(spacing: 0) {
+                ForEach(Array(leaves.enumerated()), id: \.element) { item in
+                    page(item.element, index: item.offset)
+                        .containerRelativeFrame([.horizontal, .vertical])
+                        .onGeometryChange(for: CGRect.self) {
+                            $0.frame(in: .scrollView(axis: .horizontal))
+                        } action: { frame in
+                            glide.track(page: item.offset, frame: frame,
+                                        flipped: direction == .rightToLeft)
+                        }
+                }
+            }
+            .scrollTargetLayout()
+        }
+        .scrollTargetBehavior(.paging)
+        .scrollIndicators(.hidden)
+        // По середине: страница сменяется, когда соседняя заняла больше
+        // половины экрана, а не с первым её пикселем.
+        .scrollPosition(id: $target, anchor: .center)
+        .scrollDismissesKeyboard(.immediately)
+        .onScrollPhaseChange { _, phase in
+            if phase == .idle { settle() }
+        }
+    }
+
+    /// Страница: своя прокрутка под общей шапкой. Сверху — место под
+    /// заголовок и ленту. Полоса, где лента встаёт, прокрутке объявлена
+    /// панелью (`safeAreaBar`): уезжающие под неё карточки система размывает
+    /// сама, мягким краем, как под панелями iOS.
+    private func scroller<Content: View>(
+        _ leaf: HomeLeaf, @ViewBuilder content: () -> Content
+    ) -> some View {
+        ScrollView(.vertical) {
+            content()
+        }
+        .contentMargins(.top, titleHeight + row + Metrics.shelfDrop - grownRow,
+                        for: .scrollContent)
+        .contentMargins(.bottom, floor + Metrics.shelfTail, for: .scrollContent)
+        .contentMargins(.bottom, floor, for: .scrollIndicators)
+        .safeAreaBar(edge: .top, spacing: 0) {
+            Color.clear
+                .frame(height: grownRow)
+                .allowsHitTesting(false)
+        }
+        .scrollEdgeEffectStyle(.soft, for: .top)
+        .scrollDismissesKeyboard(.interactively)
+        // Плюс вставка сверху: под шапкой смещение стартует отрицательным.
+        .onScrollGeometryChange(for: CGFloat.self) {
+            $0.contentOffset.y + $0.contentInsets.top
+        } action: { _, lift in
+            glide.track(leaf, lift: lift)
+        }
+    }
+
+    /// До своей ступени входа полки нет вовсе: иначе волна появления
+    /// отыграла бы под заставкой.
+    @ViewBuilder
+    private func page(_ leaf: HomeLeaf, index: Int) -> some View {
+        switch leaf {
+        case .room(let name):
+            scroller(leaf) {
+                if Launch.shared.step >= 4 {
+                    shelf(garden.rooms.first { $0.name == name }, index: index)
+                }
+            }
+        case .fresh:
+            scroller(leaf) {
+                if Launch.shared.step >= 4 {
+                    NewRoom(draft: $draft,
+                            focus: $naming,
+                            bare: garden.rooms.isEmpty,
+                            ideas: ideas,
+                            misses: misses,
+                            make: create,
+                            edit: { roomsOpen = true })
+                }
+            }
+        }
+    }
+
+    /// Шапка: заголовок и лента комнат — см. `HomeHead`.
+    private var head: some View {
+        HomeHead(glide: glide,
+                 leaves: leaves,
+                 names: garden.rooms.map(\.name),
+                 size: roomSize,
+                 grownSize: roomGrown,
+                 row: row,
+                 grownRow: grownRow,
+                 corner: cornerWidth,
+                 titleHeight: $titleHeight,
+                 go: go)
+    }
+
+    /// Листнуть к странице нажатием — на выглядывающую комнату или из
+    /// VoiceOver.
+    private func go(_ index: Int) {
+        guard leaves.indices.contains(index) else { return }
+        withAnimation(Motion.page) { target = leaves[index] }
+    }
+
+    /// Листание встало. Долистали до «Новой комнаты» — сразу поле с
+    /// клавиатурой: за этим и листали. Пустой сад клавиатурой не встречаем —
+    /// там эта страница единственная, до неё не листали.
+    private func settle() {
+        guard !leaves.isEmpty else { return }
+        let index = min(max(Int(glide.at.rounded()), 0), leaves.count - 1)
+        let now = leaves[index]
+        guard now != landed else { return }
+        landed = now
+        naming = now == .fresh && !garden.rooms.isEmpty
+    }
+
+    /// Готовые имена — те, которых в саду ещё нет; «кухня» и «Кухня» —
+    /// одно.
+    private var ideas: [String] {
+        let all = [Lang.text("Гостиная"), Lang.text("Спальня"),
+                   Lang.text("Кухня"), Lang.text("Балкон"),
+                   Lang.text("Кабинет"), Lang.text("Детская"),
+                   Lang.text("Ванная"), Lang.text("Прихожая")]
+        return all.filter { idea in
+            !garden.rooms.contains {
+                $0.name.compare(idea, options: .caseInsensitive) == .orderedSame
+            }
+        }
+    }
+
+    /// Завели комнату со страницы «Новая комната» — на экране остаётся она
+    /// же: страница становится новой комнатой, «Новая комната» отъезжает
+    /// правее. Пустое или занятое имя — поле вздрагивает.
+    private func create(_ name: String) {
+        let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
+        let added = withAnimation(Motion.arrange) { () -> Bool in
+            guard garden.addRoom(trimmed) else { return false }
+            target = .room(trimmed)
+            landed = .room(trimmed)
+            return true
+        }
+        guard added else {
+            misses += 1
+            Feel.wrong()
+            return
+        }
+        draft = ""
+        naming = false
+        Feel.done()
+    }
+
     private func stage() {
         staged = plants.sorted { $0.moisture < $1.moisture }.map(\.id)
         staging = true
     }
 
-    /// Нашлась по имени — её новый номер; не нашлась при том же числе комнат
-    /// — переименовали; комнат меньше — встаём на соседнюю.
+    /// Страница держится на комнате, а не на номере: переставили — едет с
+    /// ней. Не нашлась при том же числе комнат — переименовали, встаём на
+    /// новое имя; комнат меньше — на соседнюю.
     private func follow(from old: [String], to new: [String]) {
-        guard old.indices.contains(roomIndex) else {
-            roomIndex = min(roomIndex, max(new.count - 1, 0))
+        glide.keep(leaves)
+        guard case .room(let name)? = target, !new.contains(name) else {
             return
         }
-        if let index = new.firstIndex(of: old[roomIndex]) {
-            roomIndex = index
-        } else if old.count != new.count {
-            roomIndex = min(roomIndex, max(new.count - 1, 0))
+        guard let index = old.firstIndex(of: name), !new.isEmpty else {
+            target = new.first.map { HomeLeaf.room($0) } ?? HomeLeaf.fresh
+            return
         }
+        let place = old.count == new.count ? index : min(index, new.count - 1)
+        target = .room(new[place])
     }
 
     /// Гашение ореола и переход — разными проходами: в одном SwiftUI снимает
@@ -230,34 +411,11 @@ struct HomeView: View {
         Task { @MainActor in path.append(id) }
     }
 
-    /// Строка комнаты: подпись растёт навстречу уезжающему заголовку и
-    /// занимает его место.
-    private var roomBar: some View {
-        HStack(alignment: .center, spacing: 12) {
-            if garden.rooms.isEmpty {
-                // Место под строкой остаётся — на нём держатся кнопки справа.
-                Color.clear
-                    .frame(maxWidth: .infinity, minHeight: 44)
-            } else {
-                RoomPicker(rooms: garden.rooms.map(\.name),
-                           selection: $roomIndex,
-                           size: roomSize + (roomGrown - roomSize) * grown,
-                           onEdit: { roomsOpen = true })
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .sproutRide()
-            }
-            corner
-        }
-        .padding(.horizontal, Metrics.contentMargin)
-        .background(alignment: .top) { headerWash }
-    }
-
-    /// Кнопки справа сверху: вид, «Готово» в правке и настройки.
-    ///
-    /// Живут в закреплённой строке комнаты и смещаются вверх на высоту
-    /// заголовка — тем меньше, чем дальше уехал экран. В сумме они стоят на
-    /// одном месте и в покое, и на прокрутке. Стекло системное (`.glass`): с
-    /// ним приходят продавливание, отскок, блик и «Уменьшение прозрачности».
+    /// Кнопки справа сверху: вид, «Готово» в правке и настройки. Стоят на
+    /// месте и в покое, и на прокрутке: в покое — вровень с заголовком, на
+    /// прокрутке к ним поднимается лента комнат. Стекло системное (`.glass`):
+    /// с ним приходят продавливание, отскок, блик и «Уменьшение
+    /// прозрачности».
     private var corner: some View {
         HStack(spacing: Metrics.cornerGap) {
             viewMenu
@@ -265,7 +423,11 @@ struct HomeView: View {
             SproutGear { settings = true }
         }
         .sproutRide()
-        .offset(y: -titleHeight * (1 - grown))
+        .frame(height: row)
+        .padding(.trailing, Metrics.contentMargin)
+        .onGeometryChange(for: CGFloat.self) { $0.size.width }
+            action: { cornerWidth = $0 }
+        .modifier(Enter(step: 3))
     }
 
     /// Вид и порядок — одним меню, как в «Файлах»; значок — того вида, что на
@@ -304,6 +466,9 @@ struct HomeView: View {
                 }
                 Button { tripping = true } label: {
                     Label("Уезжаю…", systemImage: "airplane.departure")
+                }
+                Button { roomsOpen = true } label: {
+                    Label("Изменить комнаты…", systemImage: "pencil")
                 }
             }
         } label: {
@@ -404,32 +569,11 @@ struct HomeView: View {
         menus = true
     }
 
-    /// Растяжка под строкой комнаты гасит уезжающие под неё карточки.
-    /// Верхнего края у неё нет — он уведён за край экрана: видимый край шёл
-    /// бы поперёк экрана чертой. Поэтому подложки под вырезом на главной нет.
-    private var headerWash: some View {
-        VStack(spacing: 0) {
-            Palette.background.opacity(Metrics.headerWashOpacity)
-            LinearGradient(
-                colors: [
-                    Palette.background.opacity(Metrics.headerWashOpacity),
-                    Palette.background.opacity(0),
-                ],
-                startPoint: .top,
-                endPoint: .bottom
-            )
-            .frame(height: Metrics.headerWashFade)
-        }
-        .padding(.top, -(notch + titleHeight))
-        .padding(.bottom, -Metrics.headerWashDrop)
-        // Проступает по мере прокрутки: в покое она накрыла бы заголовок.
-        .opacity(Double(grown))
-        .allowsHitTesting(false)
-    }
-
-    /// Растения комнаты — см. `Shelf`.
+    /// Растения комнаты — см. `Shelf`. Номер страницы ведёт появление
+    /// карточек, см. `CardAppear`.
     @ViewBuilder
-    private var shelf: some View {
+    private func shelf(_ room: Room?, index: Int) -> some View {
+        let plants = Settings.shared.order.arrange(room?.plants ?? [])
         if plants.isEmpty {
             empty
         } else {
@@ -441,7 +585,7 @@ struct HomeView: View {
                               zoom: cardZoom,
                               open: show,
                               index: item.offset,
-                              room: roomIndex,
+                              room: index,
                               appears: !revealed.contains(item.element.id),
                               onShown: { revealed.insert(item.element.id) },
                               arranges: true,
@@ -459,48 +603,29 @@ struct HomeView: View {
                         .id(item.element.id)
                 }
             }
-            // Ровно на свес растяжки: в покое сход до карточек не
-            // дотягивается.
-            .padding(.top, Metrics.headerWashDrop)
             .padding(.horizontal, Metrics.contentMargin)
-            .padding(.bottom, 24)
-            // Без анимации в области видимости уходящие карточки пропадали
-            // кадром.
-            .animation(Motion.leave, value: roomIndex)
         }
     }
 
-    /// Пустая комната или пустой сад — строка о том, что делать.
+    /// Пустая комната — строка о том, что делать. Пустой сад встречает
+    /// «Новая комната».
     private var empty: some View {
-        // Строкой заранее: собранная прямо в `Text`, она заставила бы
-        // компилятор перебирать перегрузки.
-        let note: String = garden.rooms.isEmpty
-            ? Lang.text("""
-                В саду пока ничего не растёт. Посадите первое растение во \
-                вкладке «Добавить».
-                """)
-            : Lang.text("""
-                В этой комнате пока ничего не растёт. Посадите сюда растение \
-                во вкладке «Добавить» или перевезите из другой комнаты.
-                """)
-        return VStack(spacing: 14) {
+        VStack(spacing: 14) {
             Image(systemName: "leaf")
                 .font(.system(size: 30, weight: .regular))
                 .foregroundStyle(.tertiary)
-            Text(note)
+            Text(Lang.text("""
+                В этой комнате пока ничего не растёт. Посадите сюда растение \
+                во вкладке «Добавить» или перевезите из другой комнаты.
+                """))
                 .font(Typography.settingNote)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
                 .fixedSize(horizontal: false, vertical: true)
-            if garden.rooms.isEmpty {
-                Button("Завести комнату") { roomsOpen = true }
-                    .buttonStyle(.glass)
-                    .font(Typography.settingNote)
-            }
         }
         .frame(maxWidth: .infinity)
         .padding(.horizontal, 48)
-        .padding(.top, 120)
+        .padding(.top, 100)
         .transition(.blurReplace)
     }
 
@@ -541,6 +666,67 @@ private struct GardenInAR: View {
                 }
             }
             .disabled(true)
+        }
+    }
+}
+
+/// Шапка главной: заголовок «Главная» и лента комнат. Своим вью: листание и
+/// прокрутка двигают её каждый кадр, и будить ими всю главную незачем.
+///
+/// Заголовок уезжает вверх с содержимым и тает в размытие, лента поднимается
+/// на его место и растёт до его размера, прижимаясь к кнопкам справа, — как
+/// крупный заголовок iOS, только на его месте название комнаты. Прокрутка
+/// берётся у страницы на экране, посреди листания — смесью двух соседних:
+/// шапка переходит от одной к другой вместе с пальцем.
+private struct HomeHead: View {
+    let glide: Glide
+    let leaves: [HomeLeaf]
+    let names: [String]
+
+    /// Кегль подписи комнаты в покое и доросший до заголовка.
+    let size: CGFloat
+    let grownSize: CGFloat
+
+    /// Высота строки ленты в покое и доросшей.
+    let row: CGFloat
+    let grownRow: CGFloat
+
+    /// Ширина кнопок справа.
+    let corner: CGFloat
+
+    @Binding var titleHeight: CGFloat
+
+    let go: (Int) -> Void
+
+    var body: some View {
+        let lift = glide.lift(across: leaves)
+        // 0 — экран в покое, 1 — заголовок ушёл, и лента встала на его место.
+        let grown = min(max(lift / titleHeight, 0), 1)
+        let fade = min(max(lift / (titleHeight * Metrics.titleFade), 0), 1)
+        VStack(alignment: .leading, spacing: 0) {
+            // Ступени входа — см. `Launch`.
+            SectionTitle("Главная")
+                .modifier(Enter(step: 2))
+                .onGeometryChange(for: CGFloat.self) { $0.size.height }
+                    action: { titleHeight = max($0, 1) }
+                .opacity(1 - fade)
+                .blur(radius: fade * Metrics.textBlur)
+                .offset(y: -lift)
+                // Сквозь заголовок листают и прокручивают страницы.
+                .allowsHitTesting(false)
+            RoomStrip(names: names,
+                      at: glide.at,
+                      size: size + (grownSize - size) * grown,
+                      // Ужимается с опережением: поднимаясь, лента не
+                      // заезжает под кнопки.
+                      trail: (corner + Metrics.roomGap) * min(grown * 1.5, 1),
+                      peek: Metrics.roomPeek
+                          + (Metrics.roomPeekTight - Metrics.roomPeek) * grown,
+                      go: go)
+                .frame(height: row + (grownRow - row) * grown)
+                .sproutRide()
+                .modifier(Enter(step: 3))
+                .offset(y: -min(lift, titleHeight))
         }
     }
 }

@@ -97,8 +97,7 @@ struct RoomsView: View {
 
     private static let hint = Lang.text("""
         Имя правится прямо в строке. Потяните за ручку справа, чтобы \
-        поменять порядок, — в том же порядке комнаты встанут и в меню на \
-        главной.
+        поменять порядок, — в том же порядке комнаты листаются на главной.
         """)
 
     private static func warning(for room: Room) -> String {

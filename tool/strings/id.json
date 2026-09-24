@@ -291,7 +291,6 @@
   "Комнаты": "Ruangan",
   "Растения в неё можно будет посадить или перевезти.": "Kamu bisa menanam atau memindahkan tanaman ke sini.",
   "Удалить комнату «%@»?": "Hapus ruangan “%@”?",
-  "Имя правится прямо в строке. Потяните за ручку справа, чтобы поменять порядок, — в том же порядке комнаты встанут и в меню на главной.": "Nama diedit langsung di barisnya. Seret pegangan di kanan untuk mengubah urutan — ruangan akan muncul dengan urutan yang sama di menu beranda.",
   "Вместе с ней уйдут %lld растений. Вернуть их будет нельзя.": "%lld tanaman akan ikut hilang. Tidak bisa dibatalkan.",
   "Уведомления выключены": "Notifikasi nonaktif",
   "Открыть настройки": "Buka Pengaturan",
@@ -581,5 +580,12 @@
   "Можно не спешить: земля ещё влажная, тени на карточке нет.": "Tak perlu buru-buru: tanah masih lembap dan kartu tidak menyala.",
   "В самый раз: карточка как раз светится оранжевым.": "Pas sekali: kartu menyala oranye.",
   "Поздновато: карточка уже горит красным.": "Agak terlambat: kartu sudah menyala merah.",
-  "Земля успевает пересохнуть — поливайте чуть раньше.": "Tanah sempat mengering — siram sedikit lebih awal."
+  "Земля успевает пересохнуть — поливайте чуть раньше.": "Tanah sempat mengering — siram sedikit lebih awal.",
+  "Листайте комнаты": "Geser antarruangan",
+  "Проведите по экрану вбок — откроется соседняя комната, её имя выглядывает справа. За последней комнатой заводят новую.": "Geser layar ke samping untuk membuka ruangan berikutnya — namanya mengintip di kanan. Setelah ruangan terakhir, kamu bisa membuat yang baru.",
+  "Имя правится прямо в строке. Потяните за ручку справа, чтобы поменять порядок, — в том же порядке комнаты листаются на главной.": "Nama diedit langsung di barisnya. Seret pegangan di kanan untuk mengubah urutan — dengan urutan yang sama ruangan digeser di beranda.",
+  "Кабинет": "Ruang kerja",
+  "Детская": "Kamar anak",
+  "Ванная": "Kamar mandi",
+  "Прихожая": "Lorong"
 }

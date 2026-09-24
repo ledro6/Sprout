@@ -330,7 +330,6 @@
   "Комнаты": "Rum",
   "Растения в неё можно будет посадить или перевезти.": "Du kan plante i det eller flytte planter dertil.",
   "Удалить комнату «%@»?": "Slet rummet ”%@”?",
-  "Имя правится прямо в строке. Потяните за ручку справа, чтобы поменять порядок, — в том же порядке комнаты встанут и в меню на главной.": "Navnet redigeres direkte i rækken. Træk i håndtaget til højre for at ændre rækkefølgen – rummene vises i samme rækkefølge i menuen på startskærmen.",
   "Вместе с ней уйдут %lld растений. Вернуть их будет нельзя.": {
     "one": "%lld plante forsvinder med det. Det kan ikke fortrydes.",
     "other": "%lld planter forsvinder med det. Det kan ikke fortrydes."
@@ -629,5 +628,12 @@
   "Можно не спешить: земля ещё влажная, тени на карточке нет.": "Ingen hast: jorden er stadig fugtig, og kortet lyser ikke.",
   "В самый раз: карточка как раз светится оранжевым.": "Lige tilpas: kortet lyser orange.",
   "Поздновато: карточка уже горит красным.": "Lidt sent: kortet lyser allerede rødt.",
-  "Земля успевает пересохнуть — поливайте чуть раньше.": "Jorden når at tørre ud – vand lidt tidligere."
+  "Земля успевает пересохнуть — поливайте чуть раньше.": "Jorden når at tørre ud – vand lidt tidligere.",
+  "Листайте комнаты": "Stryg gennem rum",
+  "Проведите по экрану вбок — откроется соседняя комната, её имя выглядывает справа. За последней комнатой заводят новую.": "Stryg hen over skærmen for at åbne næste rum – dets navn titter frem til højre. Efter det sidste rum kan du oprette et nyt.",
+  "Имя правится прямо в строке. Потяните за ручку справа, чтобы поменять порядок, — в том же порядке комнаты листаются на главной.": "Navnet redigeres direkte i rækken. Træk i håndtaget til højre for at ændre rækkefølgen – i samme rækkefølge stryger du gennem rummene på startskærmen.",
+  "Кабинет": "Kontor",
+  "Детская": "Børneværelse",
+  "Ванная": "Badeværelse",
+  "Прихожая": "Entré"
 }

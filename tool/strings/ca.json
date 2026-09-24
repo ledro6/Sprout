@@ -330,7 +330,6 @@
   "Комнаты": "Habitacions",
   "Растения в неё можно будет посадить или перевезти.": "Hi podràs plantar o portar-hi plantes.",
   "Удалить комнату «%@»?": "Vols eliminar l’habitació «%@»?",
-  "Имя правится прямо в строке. Потяните за ручку справа, чтобы поменять порядок, — в том же порядке комнаты встанут и в меню на главной.": "El nom s’edita a la mateixa fila. Arrossega la nansa de la dreta per canviar l’ordre: les habitacions sortiran en el mateix ordre al menú d’inici.",
   "Вместе с ней уйдут %lld растений. Вернуть их будет нельзя.": {
     "one": "Amb ella se n’anirà %lld planta. No es podrà desfer.",
     "other": "Amb ella se n’aniran %lld plantes. No es podrà desfer."
@@ -629,5 +628,12 @@
   "Можно не спешить: земля ещё влажная, тени на карточке нет.": "Sense pressa: la terra encara és humida i la targeta no brilla.",
   "В самый раз: карточка как раз светится оранжевым.": "Just a temps: la targeta brilla de color taronja.",
   "Поздновато: карточка уже горит красным.": "Una mica tard: la targeta ja és vermella.",
-  "Земля успевает пересохнуть — поливайте чуть раньше.": "La terra s’arriba a assecar: rega una mica abans."
+  "Земля успевает пересохнуть — поливайте чуть раньше.": "La terra s’arriba a assecar: rega una mica abans.",
+  "Листайте комнаты": "Llisca entre habitacions",
+  "Проведите по экрану вбок — откроется соседняя комната, её имя выглядывает справа. За последней комнатой заводят новую.": "Llisca la pantalla cap al costat per obrir l’habitació del costat: el seu nom treu el cap a la dreta. Després de l’última habitació en pots crear una de nova.",
+  "Имя правится прямо в строке. Потяните за ручку справа, чтобы поменять порядок, — в том же порядке комнаты листаются на главной.": "El nom s’edita a la mateixa fila. Arrossega la nansa de la dreta per canviar l’ordre: en aquest mateix ordre passen les habitacions a l’inici.",
+  "Кабинет": "Despatx",
+  "Детская": "Habitació dels nens",
+  "Ванная": "Bany",
+  "Прихожая": "Rebedor"
 }

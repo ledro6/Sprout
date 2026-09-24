@@ -330,7 +330,6 @@
   "Комнаты": "Habitaciones",
   "Растения в неё можно будет посадить или перевезти.": "Podrás plantar en ella o traer plantas.",
   "Удалить комнату «%@»?": "¿Eliminar la habitación “%@”?",
-  "Имя правится прямо в строке. Потяните за ручку справа, чтобы поменять порядок, — в том же порядке комнаты встанут и в меню на главной.": "El nombre se edita en la propia fila. Arrastra el asa de la derecha para cambiar el orden: las habitaciones aparecerán en el mismo orden en el menú de inicio.",
   "Вместе с ней уйдут %lld растений. Вернуть их будет нельзя.": {
     "one": "Con ella se irá %lld planta. No se podrá deshacer.",
     "other": "Con ella se irán %lld plantas. No se podrá deshacer."
@@ -629,5 +628,12 @@
   "Можно не спешить: земля ещё влажная, тени на карточке нет.": "Sin prisa: la tierra aún está húmeda y la tarjeta no brilla.",
   "В самый раз: карточка как раз светится оранжевым.": "Justo a tiempo: la tarjeta brilla en naranja.",
   "Поздновато: карточка уже горит красным.": "Algo tarde: la tarjeta ya está en rojo.",
-  "Земля успевает пересохнуть — поливайте чуть раньше.": "La tierra llega a secarse: riega un poco antes."
+  "Земля успевает пересохнуть — поливайте чуть раньше.": "La tierra llega a secarse: riega un poco antes.",
+  "Листайте комнаты": "Desliza entre habitaciones",
+  "Проведите по экрану вбок — откроется соседняя комната, её имя выглядывает справа. За последней комнатой заводят новую.": "Desliza la pantalla hacia un lado para abrir la habitación de al lado: su nombre asoma a la derecha. Tras la última habitación puedes crear una nueva.",
+  "Имя правится прямо в строке. Потяните за ручку справа, чтобы поменять порядок, — в том же порядке комнаты листаются на главной.": "El nombre se edita en la propia fila. Arrastra el asa de la derecha para cambiar el orden: en ese mismo orden se pasan las habitaciones en Inicio.",
+  "Кабинет": "Despacho",
+  "Детская": "Habitación infantil",
+  "Ванная": "Baño",
+  "Прихожая": "Recibidor"
 }

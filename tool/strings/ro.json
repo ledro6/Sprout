@@ -343,7 +343,6 @@
   "Комнаты": "Camere",
   "Растения в неё можно будет посадить или перевезти.": "Vei putea planta în ea sau muta plante acolo.",
   "Удалить комнату «%@»?": "Ștergi camera „%@”?",
-  "Имя правится прямо в строке. Потяните за ручку справа, чтобы поменять порядок, — в том же порядке комнаты встанут и в меню на главной.": "Numele se editează direct pe rând. Trage de mânerul din dreapta ca să schimbi ordinea — camerele vor apărea în aceeași ordine și în meniul paginii principale.",
   "Вместе с ней уйдут %lld растений. Вернуть их будет нельзя.": {
     "one": "Împreună cu ea dispare %lld plantă. Acțiunea nu poate fi anulată.",
     "few": "Împreună cu ea dispar %lld plante. Acțiunea nu poate fi anulată.",
@@ -645,5 +644,12 @@
   "Можно не спешить: земля ещё влажная, тени на карточке нет.": "Nu te grăbi: pământul e încă umed și fișa nu strălucește.",
   "В самый раз: карточка как раз светится оранжевым.": "Exact cum trebuie: fișa strălucește portocaliu.",
   "Поздновато: карточка уже горит красным.": "Cam târziu: fișa e deja roșie.",
-  "Земля успевает пересохнуть — поливайте чуть раньше.": "Pământul apucă să se usuce – udă puțin mai devreme."
+  "Земля успевает пересохнуть — поливайте чуть раньше.": "Pământul apucă să se usuce – udă puțin mai devreme.",
+  "Листайте комнаты": "Glisează prin camere",
+  "Проведите по экрану вбок — откроется соседняя комната, её имя выглядывает справа. За последней комнатой заводят новую.": "Glisează ecranul într-o parte ca să deschizi camera alăturată — numele ei se ivește în dreapta. După ultima cameră poți crea una nouă.",
+  "Имя правится прямо в строке. Потяните за ручку справа, чтобы поменять порядок, — в том же порядке комнаты листаются на главной.": "Numele se editează direct pe rând. Trage de mânerul din dreapta ca să schimbi ordinea — în aceeași ordine glisezi prin camere pe pagina principală.",
+  "Кабинет": "Birou",
+  "Детская": "Camera copiilor",
+  "Ванная": "Baie",
+  "Прихожая": "Hol"
 }

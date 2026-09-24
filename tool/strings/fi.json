@@ -330,7 +330,6 @@
   "Комнаты": "Huoneet",
   "Растения в неё можно будет посадить или перевезти.": "Voit istuttaa siihen tai siirtää sinne kasveja.",
   "Удалить комнату «%@»?": "Poistetaanko huone ”%@”?",
-  "Имя правится прямо в строке. Потяните за ручку справа, чтобы поменять порядок, — в том же порядке комнаты встанут и в меню на главной.": "Nimeä muokataan suoraan rivillä. Muuta järjestystä vetämällä oikealla olevasta kahvasta – huoneet näkyvät samassa järjestyksessä kodin valikossa.",
   "Вместе с ней уйдут %lld растений. Вернуть их будет нельзя.": {
     "one": "Sen mukana katoaa %lld kasvi. Tätä ei voi kumota.",
     "other": "Sen mukana katoaa %lld kasvia. Tätä ei voi kumota."
@@ -629,5 +628,12 @@
   "Можно не спешить: земля ещё влажная, тени на карточке нет.": "Ei kiirettä: multa on vielä kosteaa, eikä kortti hehku.",
   "В самый раз: карточка как раз светится оранжевым.": "Juuri sopivasti: kortti hehkuu oranssina.",
   "Поздновато: карточка уже горит красным.": "Vähän myöhään: kortti hehkuu jo punaisena.",
-  "Земля успевает пересохнуть — поливайте чуть раньше.": "Multa ehtii kuivua – kastele vähän aiemmin."
+  "Земля успевает пересохнуть — поливайте чуть раньше.": "Multa ehtii kuivua – kastele vähän aiemmin.",
+  "Листайте комнаты": "Pyyhkäise huoneesta toiseen",
+  "Проведите по экрану вбок — откроется соседняя комната, её имя выглядывает справа. За последней комнатой заводят новую.": "Pyyhkäise näyttöä sivulle, niin viereinen huone aukeaa – sen nimi pilkottaa oikealla. Viimeisen huoneen jälkeen voit luoda uuden.",
+  "Имя правится прямо в строке. Потяните за ручку справа, чтобы поменять порядок, — в том же порядке комнаты листаются на главной.": "Nimeä muokataan suoraan rivillä. Muuta järjestystä vetämällä oikealla olevasta kahvasta – samassa järjestyksessä huoneita selataan Koti-välilehdellä.",
+  "Кабинет": "Työhuone",
+  "Детская": "Lastenhuone",
+  "Ванная": "Kylpyhuone",
+  "Прихожая": "Eteinen"
 }

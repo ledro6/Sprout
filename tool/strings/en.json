@@ -330,7 +330,6 @@
   "Комнаты": "Rooms",
   "Растения в неё можно будет посадить или перевезти.": "You’ll be able to plant in it or move plants there.",
   "Удалить комнату «%@»?": "Delete room “%@”?",
-  "Имя правится прямо в строке. Потяните за ручку справа, чтобы поменять порядок, — в том же порядке комнаты встанут и в меню на главной.": "Edit a name right in its row. Drag the handle on the right to change the order — rooms appear in the same order in the menu on Home.",
   "Вместе с ней уйдут %lld растений. Вернуть их будет нельзя.": {
     "one": "Its %lld plant will go with it. This can’t be undone.",
     "other": "Its %lld plants will go with it. This can’t be undone."
@@ -629,5 +628,12 @@
   "Можно не спешить: земля ещё влажная, тени на карточке нет.": "No rush: the soil is still moist, and the card isn’t glowing.",
   "В самый раз: карточка как раз светится оранжевым.": "Just right: the card is glowing orange.",
   "Поздновато: карточка уже горит красным.": "A bit late: the card is already glowing red.",
-  "Земля успевает пересохнуть — поливайте чуть раньше.": "The soil has time to dry out — try watering a bit earlier."
+  "Земля успевает пересохнуть — поливайте чуть раньше.": "The soil has time to dry out — try watering a bit earlier.",
+  "Листайте комнаты": "Swipe Through Rooms",
+  "Проведите по экрану вбок — откроется соседняя комната, её имя выглядывает справа. За последней комнатой заводят новую.": "Swipe sideways to open the next room — its name peeks out on the right. After the last room, you can create a new one.",
+  "Имя правится прямо в строке. Потяните за ручку справа, чтобы поменять порядок, — в том же порядке комнаты листаются на главной.": "Edit a name right in its row. Drag the handle on the right to change the order — you’ll swipe through rooms in the same order on Home.",
+  "Кабинет": "Office",
+  "Детская": "Kids’ Room",
+  "Ванная": "Bathroom",
+  "Прихожая": "Hallway"
 }

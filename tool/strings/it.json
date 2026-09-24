@@ -330,7 +330,6 @@
   "Комнаты": "Stanze",
   "Растения в неё можно будет посадить или перевезти.": "Potrai piantarci o spostarci piante.",
   "Удалить комнату «%@»?": "Eliminare la stanza “%@”?",
-  "Имя правится прямо в строке. Потяните за ручку справа, чтобы поменять порядок, — в том же порядке комнаты встанут и в меню на главной.": "Il nome si modifica direttamente nella riga. Trascina la maniglia a destra per cambiare l’ordine: le stanze appariranno nello stesso ordine nel menu della Home.",
   "Вместе с ней уйдут %lld растений. Вернуть их будет нельзя.": {
     "one": "Con lei se ne andrà %lld pianta. Non si potrà annullare.",
     "other": "Con lei se ne andranno %lld piante. Non si potrà annullare."
@@ -629,5 +628,12 @@
   "Можно не спешить: земля ещё влажная, тени на карточке нет.": "Nessuna fretta: la terra è ancora umida e la scheda non si illumina.",
   "В самый раз: карточка как раз светится оранжевым.": "Proprio giusto: la scheda si illumina di arancione.",
   "Поздновато: карточка уже горит красным.": "Un po’ tardi: la scheda è già rossa.",
-  "Земля успевает пересохнуть — поливайте чуть раньше.": "La terra fa in tempo a seccarsi: annaffia un po’ prima."
+  "Земля успевает пересохнуть — поливайте чуть раньше.": "La terra fa in tempo a seccarsi: annaffia un po’ prima.",
+  "Листайте комнаты": "Scorri tra le stanze",
+  "Проведите по экрану вбок — откроется соседняя комната, её имя выглядывает справа. За последней комнатой заводят новую.": "Scorri lo schermo di lato per aprire la stanza accanto: il suo nome spunta a destra. Dopo l’ultima stanza puoi crearne una nuova.",
+  "Имя правится прямо в строке. Потяните за ручку справа, чтобы поменять порядок, — в том же порядке комнаты листаются на главной.": "Il nome si modifica direttamente nella riga. Trascina la maniglia a destra per cambiare l’ordine: nello stesso ordine scorrerai le stanze nella Home.",
+  "Кабинет": "Studio",
+  "Детская": "Cameretta",
+  "Ванная": "Bagno",
+  "Прихожая": "Ingresso"
 }
