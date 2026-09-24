@@ -371,6 +371,11 @@ def check_values(lang, name, keys, values, problems, counted=()):
             if specs(text) != specs(key):
                 problems.append(f"{lang}: «{key}» [{form}] — подстановки "
                                 f"{specs(text)} вместо {specs(key)}")
+            if "%" in text and "%" not in key:
+                # Строка без подстановок не форматируется: «%%» так и
+                # останется двумя знаками.
+                problems.append(f"{lang}: «{key}» — знак % в строке без "
+                                f"подстановок")
             if lang not in CYRILLIC and CYR.search(text):
                 problems.append(f"{lang}: «{key}» — осталась кириллица")
     extra = sorted(set(values) - set(keys))

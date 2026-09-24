@@ -88,10 +88,22 @@
             "value": "Kit kell öntözni: ${applicationName}"
           }
         },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Siapa yang disiram di ${applicationName}"
+          }
+        },
         "it": {
           "stringUnit": {
             "state": "translated",
             "value": "Chi annaffiare in ${applicationName}"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName}で水やりする植物"
           }
         },
         "kk": {
@@ -100,10 +112,22 @@
             "value": "${applicationName} ішінде кімді суару керек"
           }
         },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName}에서 물 줄 식물"
+          }
+        },
         "lt": {
           "stringUnit": {
             "state": "translated",
             "value": "Ką laistyti programoje ${applicationName}"
+          }
+        },
+        "ms": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Siapa perlu disiram dalam ${applicationName}"
           }
         },
         "nb": {
@@ -160,6 +184,12 @@
             "value": "Vem ska vattnas i ${applicationName}"
           }
         },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ต้องรดน้ำต้นไหนใน ${applicationName}"
+          }
+        },
         "tr": {
           "stringUnit": {
             "state": "translated",
@@ -170,6 +200,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Кого полити в ${applicationName}"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tưới cây nào trong ${applicationName}"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "在${applicationName}中该浇谁"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "在${applicationName}中該澆誰"
           }
         }
       }
@@ -261,10 +309,22 @@
             "value": "Kit kell ma öntözni: ${applicationName}"
           }
         },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Siapa yang disiram hari ini di ${applicationName}"
+          }
+        },
         "it": {
           "stringUnit": {
             "state": "translated",
             "value": "Chi annaffiare oggi in ${applicationName}"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName}で今日水やりする植物"
           }
         },
         "kk": {
@@ -273,10 +333,22 @@
             "value": "${applicationName} ішінде бүгін кімді суару керек"
           }
         },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName}에서 오늘 물 줄 식물"
+          }
+        },
         "lt": {
           "stringUnit": {
             "state": "translated",
             "value": "Ką laistyti šiandien programoje ${applicationName}"
+          }
+        },
+        "ms": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Siapa perlu disiram hari ini dalam ${applicationName}"
           }
         },
         "nb": {
@@ -333,6 +405,12 @@
             "value": "Vem ska vattnas i dag i ${applicationName}"
           }
         },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "วันนี้ต้องรดน้ำต้นไหนใน ${applicationName}"
+          }
+        },
         "tr": {
           "stringUnit": {
             "state": "translated",
@@ -343,6 +421,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Кого полити сьогодні в ${applicationName}"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hôm nay tưới cây nào trong ${applicationName}"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "在${applicationName}中今天该浇谁"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "在${applicationName}中今天該澆誰"
           }
         }
       }
@@ -434,10 +530,22 @@
             "value": "Kinek kell víz: ${applicationName}"
           }
         },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Siapa yang butuh air di ${applicationName}"
+          }
+        },
         "it": {
           "stringUnit": {
             "state": "translated",
             "value": "Chi ha bisogno d’acqua in ${applicationName}"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName}で水が必要な植物"
           }
         },
         "kk": {
@@ -446,10 +554,22 @@
             "value": "${applicationName} ішінде кімге су керек"
           }
         },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName}에서 물이 필요한 식물"
+          }
+        },
         "lt": {
           "stringUnit": {
             "state": "translated",
             "value": "Kam reikia vandens programoje ${applicationName}"
+          }
+        },
+        "ms": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Siapa perlukan air dalam ${applicationName}"
           }
         },
         "nb": {
@@ -506,6 +626,12 @@
             "value": "Vem behöver vatten i ${applicationName}"
           }
         },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ต้นไหนต้องการน้ำใน ${applicationName}"
+          }
+        },
         "tr": {
           "stringUnit": {
             "state": "translated",
@@ -516,6 +642,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Кому потрібна вода в ${applicationName}"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cây nào cần nước trong ${applicationName}"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "在${applicationName}中谁需要水"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "在${applicationName}中誰需要水"
           }
         }
       }
@@ -607,10 +751,22 @@
             "value": "Ki szomjas: ${applicationName}"
           }
         },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Siapa yang haus di ${applicationName}"
+          }
+        },
         "it": {
           "stringUnit": {
             "state": "translated",
             "value": "Chi ha sete in ${applicationName}"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName}でのどが渇いた植物"
           }
         },
         "kk": {
@@ -619,10 +775,22 @@
             "value": "${applicationName} ішінде кім шөлдеді"
           }
         },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName}에서 목마른 식물"
+          }
+        },
         "lt": {
           "stringUnit": {
             "state": "translated",
             "value": "Kas ištroškęs programoje ${applicationName}"
+          }
+        },
+        "ms": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Siapa yang dahaga dalam ${applicationName}"
           }
         },
         "nb": {
@@ -679,6 +847,12 @@
             "value": "Vem är törstig i ${applicationName}"
           }
         },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ใครหิวน้ำใน ${applicationName}"
+          }
+        },
         "tr": {
           "stringUnit": {
             "state": "translated",
@@ -689,6 +863,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Хто хоче пити в ${applicationName}"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ai đang khát trong ${applicationName}"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "在${applicationName}中谁渴了"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "在${applicationName}中誰渴了"
           }
         }
       }
@@ -780,10 +972,22 @@
             "value": "Nyisd meg a kertet: ${applicationName}"
           }
         },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Buka kebunku di ${applicationName}"
+          }
+        },
         "it": {
           "stringUnit": {
             "state": "translated",
             "value": "Apri il mio giardino in ${applicationName}"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName}で庭を開いて"
           }
         },
         "kk": {
@@ -792,10 +996,22 @@
             "value": "${applicationName} ішінде бақты аш"
           }
         },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName}에서 정원 열어 줘"
+          }
+        },
         "lt": {
           "stringUnit": {
             "state": "translated",
             "value": "Atidaryk sodą programoje ${applicationName}"
+          }
+        },
+        "ms": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Buka taman saya dalam ${applicationName}"
           }
         },
         "nb": {
@@ -852,6 +1068,12 @@
             "value": "Öppna min trädgård i ${applicationName}"
           }
         },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "เปิดสวนของฉันใน ${applicationName}"
+          }
+        },
         "tr": {
           "stringUnit": {
             "state": "translated",
@@ -862,6 +1084,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Відкрий сад у ${applicationName}"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mở khu vườn trong ${applicationName}"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "在${applicationName}中打开我的花园"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "在${applicationName}中打開我的花園"
           }
         }
       }
@@ -953,10 +1193,22 @@
             "value": "Mutasd a kertet: ${applicationName}"
           }
         },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tunjukkan kebunku di ${applicationName}"
+          }
+        },
         "it": {
           "stringUnit": {
             "state": "translated",
             "value": "Mostra il mio giardino in ${applicationName}"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName}で庭を見せて"
           }
         },
         "kk": {
@@ -965,10 +1217,22 @@
             "value": "${applicationName} ішінде бақты көрсет"
           }
         },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName}에서 정원 보여 줘"
+          }
+        },
         "lt": {
           "stringUnit": {
             "state": "translated",
             "value": "Parodyk sodą programoje ${applicationName}"
+          }
+        },
+        "ms": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tunjukkan taman saya dalam ${applicationName}"
           }
         },
         "nb": {
@@ -1025,6 +1289,12 @@
             "value": "Visa min trädgård i ${applicationName}"
           }
         },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "แสดงสวนของฉันใน ${applicationName}"
+          }
+        },
         "tr": {
           "stringUnit": {
             "state": "translated",
@@ -1035,6 +1305,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Покажи сад у ${applicationName}"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cho xem khu vườn trong ${applicationName}"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "在${applicationName}中显示我的花园"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "在${applicationName}中顯示我的花園"
           }
         }
       }
@@ -1126,10 +1414,22 @@
             "value": "Öntözd meg: ${plant}, ${applicationName}"
           }
         },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Siram ${plant} di ${applicationName}"
+          }
+        },
         "it": {
           "stringUnit": {
             "state": "translated",
             "value": "Annaffia ${plant} in ${applicationName}"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName}で${plant}に水をあげて"
           }
         },
         "kk": {
@@ -1138,10 +1438,22 @@
             "value": "${applicationName} ішінде ${plant} суар"
           }
         },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName}에서 ${plant}에 물 줘"
+          }
+        },
         "lt": {
           "stringUnit": {
             "state": "translated",
             "value": "Palaistyk ${plant} programoje ${applicationName}"
+          }
+        },
+        "ms": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Siram ${plant} dalam ${applicationName}"
           }
         },
         "nb": {
@@ -1198,6 +1510,12 @@
             "value": "Vattna ${plant} i ${applicationName}"
           }
         },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "รดน้ำ ${plant} ใน ${applicationName}"
+          }
+        },
         "tr": {
           "stringUnit": {
             "state": "translated",
@@ -1208,6 +1526,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Полий ${plant} у ${applicationName}"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tưới ${plant} trong ${applicationName}"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "在${applicationName}中给${plant}浇水"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "在${applicationName}中幫${plant}澆水"
           }
         }
       }
@@ -1299,10 +1635,22 @@
             "value": "Öntözd meg a(z) ${plant} növényt: ${applicationName}"
           }
         },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Siram tanaman ${plant} di ${applicationName}"
+          }
+        },
         "it": {
           "stringUnit": {
             "state": "translated",
             "value": "Annaffia la pianta ${plant} in ${applicationName}"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName}で植物の${plant}に水をあげて"
           }
         },
         "kk": {
@@ -1311,10 +1659,22 @@
             "value": "${applicationName} ішінде ${plant} өсімдігін суар"
           }
         },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName}에서 식물 ${plant}에 물 줘"
+          }
+        },
         "lt": {
           "stringUnit": {
             "state": "translated",
             "value": "Palaistyk augalą ${plant} programoje ${applicationName}"
+          }
+        },
+        "ms": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Siram tumbuhan ${plant} dalam ${applicationName}"
           }
         },
         "nb": {
@@ -1371,6 +1731,12 @@
             "value": "Vattna växten ${plant} i ${applicationName}"
           }
         },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "รดน้ำต้น ${plant} ใน ${applicationName}"
+          }
+        },
         "tr": {
           "stringUnit": {
             "state": "translated",
@@ -1381,6 +1747,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Полий рослину ${plant} у ${applicationName}"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tưới cây ${plant} trong ${applicationName}"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "在${applicationName}中给植物${plant}浇水"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "在${applicationName}中幫植物${plant}澆水"
           }
         }
       }
@@ -1472,10 +1856,22 @@
             "value": "${plant} öntözése: ${applicationName}"
           }
         },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Siram ${plant} dengan ${applicationName}"
+          }
+        },
         "it": {
           "stringUnit": {
             "state": "translated",
             "value": "Annaffiare ${plant} con ${applicationName}"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName}で${plant}に水やり"
           }
         },
         "kk": {
@@ -1484,10 +1880,22 @@
             "value": "${applicationName} арқылы ${plant} суару"
           }
         },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName}에서 ${plant} 물주기"
+          }
+        },
         "lt": {
           "stringUnit": {
             "state": "translated",
             "value": "Palaistyti ${plant} su ${applicationName}"
+          }
+        },
+        "ms": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Siram ${plant} dengan ${applicationName}"
           }
         },
         "nb": {
@@ -1544,6 +1952,12 @@
             "value": "Vattna ${plant} med ${applicationName}"
           }
         },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "รดน้ำ ${plant} ด้วย ${applicationName}"
+          }
+        },
         "tr": {
           "stringUnit": {
             "state": "translated",
@@ -1554,6 +1968,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Полити ${plant} у ${applicationName}"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tưới ${plant} bằng ${applicationName}"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "用${applicationName}给${plant}浇水"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "用${applicationName}幫${plant}澆水"
           }
         }
       }
@@ -1645,10 +2077,22 @@
             "value": "${plant} növény öntözése: ${applicationName}"
           }
         },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Menyiram tanaman ${plant} di ${applicationName}"
+          }
+        },
         "it": {
           "stringUnit": {
             "state": "translated",
             "value": "Annaffiare la pianta ${plant} in ${applicationName}"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName}で植物${plant}に水やり"
           }
         },
         "kk": {
@@ -1657,10 +2101,22 @@
             "value": "${applicationName} ішінде ${plant} өсімдігін суару"
           }
         },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName}에서 식물 ${plant} 물주기"
+          }
+        },
         "lt": {
           "stringUnit": {
             "state": "translated",
             "value": "Palaistyti augalą ${plant} programoje ${applicationName}"
+          }
+        },
+        "ms": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Menyiram tumbuhan ${plant} dalam ${applicationName}"
           }
         },
         "nb": {
@@ -1717,6 +2173,12 @@
             "value": "Vattna plantan ${plant} i ${applicationName}"
           }
         },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "รดน้ำต้นไม้ ${plant} ใน ${applicationName}"
+          }
+        },
         "tr": {
           "stringUnit": {
             "state": "translated",
@@ -1727,6 +2189,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Полити рослину ${plant} у ${applicationName}"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tưới cây tên ${plant} trong ${applicationName}"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "用${applicationName}给植物${plant}浇水"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "用${applicationName}幫植物${plant}澆水"
           }
         }
       }
@@ -1818,10 +2298,22 @@
             "value": "Növény öntözése: ${applicationName}"
           }
         },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Siram satu tanaman di ${applicationName}"
+          }
+        },
         "it": {
           "stringUnit": {
             "state": "translated",
             "value": "Annaffia una pianta in ${applicationName}"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName}で植物に水やり"
           }
         },
         "kk": {
@@ -1830,10 +2322,22 @@
             "value": "${applicationName} ішінде өсімдік суару"
           }
         },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName}에서 식물에 물주기"
+          }
+        },
         "lt": {
           "stringUnit": {
             "state": "translated",
             "value": "Palaistyti augalą programoje ${applicationName}"
+          }
+        },
+        "ms": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Siram satu tumbuhan dalam ${applicationName}"
           }
         },
         "nb": {
@@ -1890,6 +2394,12 @@
             "value": "Vattna en växt i ${applicationName}"
           }
         },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "รดน้ำต้นไม้ใน ${applicationName}"
+          }
+        },
         "tr": {
           "stringUnit": {
             "state": "translated",
@@ -1900,6 +2410,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Полити рослину в ${applicationName}"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tưới một cây trong ${applicationName}"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "在${applicationName}中给植物浇水"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "在${applicationName}中幫植物澆水"
           }
         }
       }
@@ -1991,10 +2519,22 @@
             "value": "Kert AR-ben: ${applicationName}"
           }
         },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kebun dalam AR di ${applicationName}"
+          }
+        },
         "it": {
           "stringUnit": {
             "state": "translated",
             "value": "Giardino in AR in ${applicationName}"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName}で庭をARで見る"
           }
         },
         "kk": {
@@ -2003,10 +2543,22 @@
             "value": "${applicationName} ішіндегі AR бақ"
           }
         },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName}에서 AR로 정원 보기"
+          }
+        },
         "lt": {
           "stringUnit": {
             "state": "translated",
             "value": "Sodas AR programoje ${applicationName}"
+          }
+        },
+        "ms": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Taman dalam AR dalam ${applicationName}"
           }
         },
         "nb": {
@@ -2063,6 +2615,12 @@
             "value": "Trädgård i AR i ${applicationName}"
           }
         },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "สวนใน AR ใน ${applicationName}"
+          }
+        },
         "tr": {
           "stringUnit": {
             "state": "translated",
@@ -2073,6 +2631,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Сад в AR у ${applicationName}"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Khu vườn AR trong ${applicationName}"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "在${applicationName}中查看 AR 花园"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "在${applicationName}中查看 AR 花園"
           }
         }
       }

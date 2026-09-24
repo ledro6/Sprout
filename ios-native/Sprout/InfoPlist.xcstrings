@@ -88,10 +88,22 @@
             "value": "Hogy növényeket fotózhass a kertedbe, és kiterjesztett valóságban elhelyezhesd őket a szobádban."
           }
         },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Untuk memotret tanaman untuk kebunmu dan meletakkannya di ruangan dalam realitas tertambah."
+          }
+        },
         "it": {
           "stringUnit": {
             "state": "translated",
             "value": "Per fotografare le piante del tuo giardino e posizionarle nella stanza in realtà aumentata."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "庭の植物を撮影し、拡張現実で部屋に置くため。"
           }
         },
         "kk": {
@@ -100,10 +112,22 @@
             "value": "Бақ үшін өсімдіктерді суретке түсіріп, оларды толықтырылған шындықта бөлмеге орналастыру үшін."
           }
         },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "정원의 식물을 촬영하고 증강 현실로 방에 배치하기 위해."
+          }
+        },
         "lt": {
           "stringUnit": {
             "state": "translated",
             "value": "Kad galėtumėte fotografuoti augalus sodui ir pastatyti juos kambaryje papildytojoje realybėje."
+          }
+        },
+        "ms": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Untuk mengambil foto tumbuhan untuk taman anda dan meletakkannya di dalam bilik dalam realiti tambahan."
           }
         },
         "nb": {
@@ -166,6 +190,12 @@
             "value": "För att fotografera växter till din trädgård och placera dem i ditt rum i förstärkt verklighet."
           }
         },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "เพื่อถ่ายรูปต้นไม้สำหรับสวนและวางไว้ในห้องด้วยความเป็นจริงเสริม"
+          }
+        },
         "tr": {
           "stringUnit": {
             "state": "translated",
@@ -176,6 +206,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Щоб знімати рослини для саду й ставити їх у кімнату в доповненій реальності."
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Để chụp ảnh cây cho khu vườn và đặt chúng vào phòng bằng thực tế tăng cường."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "用于为花园拍摄植物，并在增强现实中将它们放入房间。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "用來為花園拍攝植物，並在擴增實境中將它們放入房間。"
           }
         }
       }
@@ -267,10 +315,22 @@
             "value": "Hogy a zárolt kertet az arcoddal nyithasd meg."
           }
         },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Untuk membuka kebunmu yang terkunci dengan wajah."
+          }
+        },
         "it": {
           "stringUnit": {
             "state": "translated",
             "value": "Per aprire il giardino bloccato con il volto."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ロックされた庭を顔で開くため。"
           }
         },
         "kk": {
@@ -279,10 +339,22 @@
             "value": "Құлыпталған бақты бетпен ашу үшін."
           }
         },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "잠긴 정원을 얼굴로 열기 위해."
+          }
+        },
         "lt": {
           "stringUnit": {
             "state": "translated",
             "value": "Kad galėtumėte atrakinti užrakintą sodą veidu."
+          }
+        },
+        "ms": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Untuk membuka taman anda yang dikunci dengan wajah."
           }
         },
         "nb": {
@@ -345,6 +417,12 @@
             "value": "För att låsa upp din låsta trädgård med ansiktet."
           }
         },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "เพื่อปลดล็อกสวนที่ล็อกไว้ด้วยใบหน้าของคุณ"
+          }
+        },
         "tr": {
           "stringUnit": {
             "state": "translated",
@@ -355,6 +433,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Щоб відкривати замкнений сад за обличчям."
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Để mở khu vườn đã khóa bằng khuôn mặt."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "用于通过面容解锁已锁定的花园。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "用來以 Face ID 解鎖已鎖定的花園。"
           }
         }
       }
@@ -446,10 +542,22 @@
             "value": "A telefon döntése kicsit elmozdítja a háttérmintát."
           }
         },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Memiringkan ponsel sedikit menggeser pola latar."
+          }
+        },
         "it": {
           "stringUnit": {
             "state": "translated",
             "value": "Inclinando il telefono il motivo dello sfondo si sposta leggermente."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iPhoneを傾けると背景の模様が少し動きます。"
           }
         },
         "kk": {
@@ -458,10 +566,22 @@
             "value": "Телефонды еңкейткенде фондағы өрнек сәл жылжиды."
           }
         },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "기기를 기울이면 배경 무늬가 살짝 움직여요."
+          }
+        },
         "lt": {
           "stringUnit": {
             "state": "translated",
             "value": "Pakreipus telefoną, fono raštas šiek tiek pasislenka."
+          }
+        },
+        "ms": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mencondongkan telefon menggerakkan sedikit corak latar."
           }
         },
         "nb": {
@@ -524,6 +644,12 @@
             "value": "När du lutar telefonen rör sig bakgrundsmönstret lite."
           }
         },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "การเอียงโทรศัพท์ทำให้ลวดลายพื้นหลังขยับเล็กน้อย"
+          }
+        },
         "tr": {
           "stringUnit": {
             "state": "translated",
@@ -534,6 +660,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Нахил телефона трохи рухає візерунок на тлі."
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nghiêng điện thoại sẽ làm hoa văn nền dịch nhẹ."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "倾斜手机会让背景图案轻轻移动。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "傾斜手機會讓背景圖案輕輕移動。"
           }
         }
       }
