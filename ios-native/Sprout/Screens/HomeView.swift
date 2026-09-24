@@ -41,6 +41,13 @@ struct HomeView: View {
     /// не всех, и пусть встанут те, кому пора.
     @State private var staged: [Plant.ID] = []
 
+    /// Сад в AR попросили извне, а модели ещё собираются: откроем, если
+    /// успеют за миг ожидания, — см. `Motion.summonGrace`.
+    @State private var summoned = false
+
+    /// Не успели — говорим об этом.
+    @State private var waiting = false
+
     /// Полка качается, как значки «Домой» в правке. Входят в неё, повёв
     /// карточку из меню, продержав палец дольше меню или пунктом
     /// «Расставить».
@@ -163,11 +170,37 @@ struct HomeView: View {
         .fullScreenCover(isPresented: $staging) {
             PlantAR(ids: staged).environment(garden)
         }
-        // Кнопка действия или Siri попросили сад в AR.
+        // Кнопка действия или Siri попросили сад в AR. Моделей нет — ждём
+        // миг: при холодном запуске готовые находятся сразу. Не нашлись —
+        // говорим, что сад пока не открыть.
         .onChange(of: Summon.shared.garden) { _, asked in
             guard asked else { return }
             Summon.shared.garden = false
-            if PlantAR.available, !plants.isEmpty { stage() }
+            guard PlantAR.available, !plants.isEmpty else { return }
+            guard !Bench.shared.ready(plants) else {
+                stage()
+                return
+            }
+            summoned = true
+            Task { @MainActor in
+                try? await Task.sleep(for: .seconds(Motion.summonGrace))
+                guard summoned else { return }
+                summoned = false
+                waiting = true
+            }
+        }
+        .onChange(of: Bench.shared.ready(plants)) { _, ready in
+            guard ready, summoned else { return }
+            summoned = false
+            stage()
+        }
+        .alert("Модели ещё готовятся", isPresented: $waiting) {
+            Button("Понятно", role: .cancel) {}
+        } message: {
+            Text("""
+                Сад в AR можно будет открыть, когда соберутся модели \
+                растений. Сколько осталось — видно на карточках.
+                """)
         }
     }
 
@@ -267,9 +300,7 @@ struct HomeView: View {
             }
             Section {
                 if PlantAR.available, !plants.isEmpty {
-                    Button { stage() } label: {
-                        Label("Сад в AR", systemImage: "arkit")
-                    }
+                    GardenInAR(plants: plants, open: stage)
                 }
                 Button { tripping = true } label: {
                     Label("Уезжаю…", systemImage: "airplane.departure")
@@ -483,5 +514,33 @@ struct HomeView: View {
         withAnimation(Motion.arrange) { dragged = nil }
         held = nil
         menus = !editing
+    }
+}
+
+/// «Сад в AR» в меню главной — когда готовы модели всех растений комнаты.
+/// Пока они собираются, пункт виден, но спит, а под ним — общие проценты.
+/// Своим вью: доли меняются на каждый процент, и перерисовываться с ними
+/// должен пункт, а не вся главная.
+private struct GardenInAR: View {
+    let plants: [Plant]
+    let open: () -> Void
+
+    var body: some View {
+        if Bench.shared.ready(plants) {
+            Button(action: open) {
+                Label("Сад в AR", systemImage: "arkit")
+            }
+        } else {
+            Button {} label: {
+                Label {
+                    Text("Сад в AR")
+                    Text(Lang.format("Модели готовятся: %@",
+                                     Bench.percent(Bench.shared.share(plants))))
+                } icon: {
+                    Image(systemName: "arkit")
+                }
+            }
+            .disabled(true)
+        }
     }
 }

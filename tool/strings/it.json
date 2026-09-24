@@ -438,5 +438,10 @@
   "Сколько растений просят воды и кто первый.": "Quante piante hanno bisogno d’acqua e chi per prima.",
   "Просят воды: %lld": "Assetate: %lld",
   "%1$@ · %2$@": "%1$@ · %2$@",
-  "и ещё %@": "e altre %@"
+  "и ещё %@": "e altre %@",
+  "Модель готовится: %@": "Preparo il modello: %@",
+  "Модель готовится": "Preparo il modello",
+  "Модели готовятся: %@": "Preparo i modelli: %@",
+  "Модели ещё готовятся": "I modelli non sono ancora pronti",
+  "Сад в AR можно будет открыть, когда соберутся модели растений. Сколько осталось — видно на карточках.": "Potrai aprire il giardino in AR quando i modelli delle piante saranno pronti. Quanto manca si vede sulle schede."
 }

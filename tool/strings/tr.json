@@ -438,5 +438,10 @@
   "Сколько растений просят воды и кто первый.": "Kaç bitkinin suya ihtiyacı var ve ilk sırada kim var.",
   "Просят воды: %lld": "Susamış: %lld",
   "%1$@ · %2$@": "%1$@ · %2$@",
-  "и ещё %@": "ve %@ daha"
+  "и ещё %@": "ve %@ daha",
+  "Модель готовится: %@": "Model hazırlanıyor: %@",
+  "Модель готовится": "Model hazırlanıyor",
+  "Модели готовятся: %@": "Modeller hazırlanıyor: %@",
+  "Модели ещё готовятся": "Modeller henüz hazır değil",
+  "Сад в AR можно будет открыть, когда соберутся модели растений. Сколько осталось — видно на карточках.": "Bitki modelleri hazır olunca bahçeyi AR’de açabilirsiniz. Ne kadar kaldığı kartlarda görünür."
 }

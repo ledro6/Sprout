@@ -438,5 +438,10 @@
   "Сколько растений просят воды и кто первый.": "Hány növénynek kell víz, és ki az első.",
   "Просят воды: %lld": "Szomjas: %lld",
   "%1$@ · %2$@": "%1$@ · %2$@",
-  "и ещё %@": "és még %@"
+  "и ещё %@": "és még %@",
+  "Модель готовится: %@": "A modell előkészítése: %@",
+  "Модель готовится": "A modell előkészítése",
+  "Модели готовятся: %@": "Modellek előkészítése: %@",
+  "Модели ещё готовятся": "A modellek még nem készek",
+  "Сад в AR можно будет открыть, когда соберутся модели растений. Сколько осталось — видно на карточках.": "A kertet akkor nyithatod meg AR-ben, ha elkészültek a növények modelljei. Hogy mennyi van hátra, a kártyákon látszik."
 }

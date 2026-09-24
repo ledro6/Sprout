@@ -390,5 +390,10 @@
   "Сколько растений просят воды и кто первый.": "Berapa tumbuhan perlukan air dan siapa yang pertama.",
   "Просят воды: %lld": "Dahaga: %lld",
   "%1$@ · %2$@": "%1$@ · %2$@",
-  "и ещё %@": "dan %@ lagi"
+  "и ещё %@": "dan %@ lagi",
+  "Модель готовится: %@": "Menyediakan model: %@",
+  "Модель готовится": "Menyediakan model",
+  "Модели готовятся: %@": "Menyediakan semua model: %@",
+  "Модели ещё готовятся": "Model belum sedia",
+  "Сад в AR можно будет открыть, когда соберутся модели растений. Сколько осталось — видно на карточках.": "Taman dalam AR boleh dibuka apabila model tumbuhan sudah sedia. Bakinya kelihatan pada kad."
 }

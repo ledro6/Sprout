@@ -2040,6 +2040,99 @@ do {
     check(Plot.layout(spreads: [], heights: []).isEmpty, "пустой сад — пусто")
 }
 
+print("модель для AR: проценты сборки:")
+do {
+    // Таблица работы сходится с настоящей сборкой: иначе проценты замирали
+    // бы или прыгали к концу. Разошлась — печатаем новую для Effort.swift.
+    func grouped(_ value: Int) -> String {
+        var digits = String(value)
+        var groups: [String] = []
+        while digits.count > 3 {
+            groups.insert(String(digits.suffix(3)), at: 0)
+            digits.removeLast(3)
+        }
+        return ([digits] + groups).joined(separator: "_")
+    }
+    var drift = false
+    var table: [String] = []
+    for preset in Preset.allCases {
+        var row: [Int] = []
+        for tier in Rig.Tier.allCases {
+            let meter = Meter(expected: 1)
+            _ = Meter.$current.withValue(meter) {
+                Botany.grow(.stock(preset), species: preset.title,
+                            detail: .of(tier))
+            }
+            row.append(meter.done)
+            let want = Effort.expected(preset, .of(tier))
+            if abs(Double(meter.done - want)) > Double(want) / 100 {
+                drift = true
+            }
+        }
+        table.append("        .\(preset.rawValue): ["
+            + row.map(grouped).joined(separator: ", ") + "],")
+    }
+    check(!drift, "таблица работы сходится со сборкой всех двадцати видов")
+    if drift { print(table.joined(separator: "\n")) }
+
+    var shares: [Double] = []
+    let meter = Meter(expected: Effort.expected(.monstera, .standard)) {
+        shares.append($0)
+    }
+    _ = Meter.$current.withValue(meter) {
+        Botany.grow(.stock(.monstera), species: "Монстера")
+    }
+    check(!shares.isEmpty
+          && zip(shares, shares.dropFirst()).allSatisfy { $0 < $1 },
+          "проценты только растут")
+    check(shares.count <= 101,
+          "и зовут экран не чаще, чем раз на процент: \(shares.count)")
+    check((shares.last ?? 0) > 0.99, "готовая модель доходит до конца")
+    check(Meter.current == nil, "вне сборки счётчика нет")
+    let heavy = Meter(expected: 1_000)
+    _ = Meter.$current.withValue(heavy) {
+        Botany.grow(.stock(.fern), species: "Папоротник")
+    }
+    check(heavy.share == 1,
+          "работы больше, чем ждали, — доля упирается в единицу")
+}
+
+print("модель для AR: готовность:")
+MainActor.assumeIsolated {
+    let bench = Bench()
+    var one = plantNamed("Раз", moisture: 0.5, dryingDays: 7)
+    let two = plantNamed("Два", moisture: 0.5, dryingDays: 7)
+    let stamp = one.blueprint.fingerprint
+    check(bench.share(one) == nil, "о ком мастерская не знает — ничего")
+    bench.note(one.id, stamp: stamp, share: 0.4)
+    bench.note(one.id, stamp: stamp, share: 0.3)
+    check(bench.share(one) == 0.4, "запоздавший отчёт долю не убавляет")
+    check(!bench.ready(one), "пока модель собирается, AR нет")
+    check(bench.finished.isEmpty,
+          "а готовые не трогаются: большие экраны не перерисовываются")
+    bench.note(one.id, stamp: stamp, share: 1)
+    check(bench.ready(one), "собралась — AR есть")
+    check(bench.finished[one.id] == stamp, "и попала в готовые")
+    bench.queue(one)
+    check(bench.ready(one), "заказ готовой модели её не сбрасывает")
+    check(!bench.ready([one, two]), "сад в AR — только когда готовы все")
+    check(round2(bench.share([one, two])), "0.50",
+          "готовность сада — средняя, неизвестные — нулём")
+    check(!bench.ready([]), "пустой сад в AR не открыть")
+    one.species = "Монстера"
+    check(bench.share(one) == nil,
+          "сменился вид — прежняя модель не в счёт")
+    check(!bench.ready(one), "и AR ждёт новую")
+    bench.queue(one)
+    check(bench.share(one) == 0, "новую заказали — с нуля")
+    check(bench.finished[one.id] == nil, "прежняя ушла из готовых")
+    check(Bench.percent(0.426), "42%", "проценты — вниз, до целого")
+    check(Bench.percent(1.3), "100%", "и не больше сотни")
+    check(Bench.preparing(nil), "Модель готовится",
+          "пока мастерская не дошла — без процентов")
+    check(Bench.preparing(0.5), "Модель готовится: 50%", "дошла — с процентами")
+}
+
 print("уезжаю:")
 do {
     let rooms = [Room(name: "Кухня", plants: [
@@ -2080,6 +2173,8 @@ do {
     check(Plant.wateringLabel(days: 2), "Next watering: in 2 days",
           "английский: срок полива")
     check(Species.periodLabel(1), "Every 1 day", "английский: барабан")
+    check(Bench.preparing(0.5), "Preparing model: 50%",
+          "английский: модель готовится")
     language = "pl"
     check(Lang.format("%lld растений", 2), "2 rośliny", "польский: few")
     check(Lang.format("%lld растений", 5), "5 roślin", "польский: many")

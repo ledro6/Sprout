@@ -10,6 +10,10 @@ struct PlantCard: View {
             PlantPhoto(plant: plant)
                 .frame(maxWidth: .infinity)
                 .aspectRatio(1, contentMode: .fit)
+                .overlay(alignment: .topTrailing) {
+                    ModelBadge(plant: plant)
+                        .padding(Metrics.modelBadgeInset)
+                }
 
             HStack {
                 Text(plant.name)
@@ -47,6 +51,61 @@ struct PlantCard: View {
 
     private var shape: RoundedRectangle {
         RoundedRectangle(cornerRadius: Metrics.cardRadius, style: .continuous)
+    }
+}
+
+/// Готовность модели для AR — значком на снимке, пока модель собирается:
+/// без неё AR не открыть. Собралась — значок ещё миг показывает сотню и
+/// уходит. О ком мастерская ещё не знает — ничего: иначе на каждом запуске
+/// карточки мигали бы нулём.
+struct ModelBadge: View {
+    let plant: Plant
+
+    /// Что на значке — отстаёт от доски на миг сотни.
+    @State private var shown: Double?
+
+    var body: some View {
+        ZStack {
+            if let shown {
+                Label {
+                    Text(Bench.percent(shown))
+                        .contentTransition(.numericText())
+                } icon: {
+                    Image(systemName: "arkit")
+                }
+                .font(Typography.modelBadge)
+                .foregroundStyle(Palette.ink)
+                .padding(.horizontal, 7)
+                .padding(.vertical, 4)
+                // Материал, а не стекло: карточка сама стеклянная.
+                .background(.regularMaterial, in: .capsule)
+                .accessibilityElement(children: .ignore)
+                .accessibilityLabel(Bench.preparing(shown))
+                .transition(.blurReplace)
+            }
+        }
+        .animation(Motion.number, value: shown)
+        .onChange(of: Bench.shared.share(plant), initial: true) { _, now in
+            settle(now)
+        }
+    }
+
+    private func settle(_ now: Double?) {
+        guard let now else {
+            shown = nil
+            return
+        }
+        guard now >= 1 else {
+            shown = now
+            return
+        }
+        // Готова: значка не было — и не надо; был — пусть покажет сотню.
+        guard shown != nil else { return }
+        shown = 1
+        Task { @MainActor in
+            try? await Task.sleep(for: .seconds(Motion.modelLinger))
+            if shown == 1 { shown = nil }
+        }
     }
 }
 
@@ -245,9 +304,7 @@ struct PlantMenu: ViewModifier {
                     Label("Настройки", systemImage: "slider.horizontal.3")
                 }
                 if PlantAR.available {
-                    Button { staging = tenant.id } label: {
-                        Label("Посмотреть в AR", systemImage: "arkit")
-                    }
+                    LookInAR(plant: plant) { staging = tenant.id }
                 }
                 // Комнаты — по номеру узла: пункты строятся при каждой сборке
                 // тела. Запечатываются только нажатия, и они идут через
@@ -319,6 +376,34 @@ struct PlantMenu: ViewModifier {
                 .onDisappear {
                     withAnimation(Motion.halo) { previewing = false }
                 }
+        }
+    }
+}
+
+/// «Посмотреть в AR» в меню карточки — только с готовой моделью. Пока она
+/// собирается, пункт виден, но спит, а под ним — проценты. Своим вью: доли
+/// меняются на каждый процент, и перерисовываться с ними должен только
+/// пункт, а не меню каждой карточки.
+private struct LookInAR: View {
+    let plant: Plant?
+    let open: () -> Void
+
+    var body: some View {
+        let share = plant.flatMap { Bench.shared.share($0) }
+        if share == 1 {
+            Button(action: open) {
+                Label("Посмотреть в AR", systemImage: "arkit")
+            }
+        } else {
+            Button {} label: {
+                Label {
+                    Text("Посмотреть в AR")
+                    Text(Bench.preparing(share))
+                } icon: {
+                    Image(systemName: "arkit")
+                }
+            }
+            .disabled(true)
         }
     }
 }

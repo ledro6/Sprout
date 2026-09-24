@@ -39,7 +39,7 @@ struct PlantView: View {
                     photo(plant)
                     VStack(spacing: Metrics.actionGap) {
                         pour
-                        tools
+                        tools(plant)
                     }
                     if let days = Rhythm.suggest(for: plant, log: garden.log) {
                         rhythm(plant, days: days)
@@ -282,21 +282,41 @@ struct PlantView: View {
     /// Остальные действия — стеклом пониже, значком над подписью, как
     /// кнопки в карточке контакта: длинная подпись в ряд бы не влезла. Без
     /// дополненной реальности настройки встают во всю ширину.
-    private var tools: some View {
+    private func tools(_ plant: Plant) -> some View {
         HStack(spacing: Metrics.actionGap) {
             if PlantAR.available {
-                tool("Посмотреть в AR", icon: "arkit") { staging = true }
+                lookInAR(plant)
             }
             tool("Настройки", icon: "slider.horizontal.3") { tuning = true }
         }
         .sproutRide()
     }
 
+    /// AR — только с готовой моделью. Пока она собирается, кнопка спит, а на
+    /// месте значка бегут проценты — см. `ModelMark`.
+    private func lookInAR(_ plant: Plant) -> some View {
+        let ready = Bench.shared.ready(plant)
+        return tool("Посмотреть в AR", action: { staging = true }) {
+            ModelMark(plant: plant)
+        }
+        .disabled(!ready)
+        .accessibilityValue(ready ? "" : Bench.preparing(nil))
+    }
+
     private func tool(_ title: LocalizedStringKey, icon: String,
                       action: @escaping () -> Void) -> some View {
+        tool(title, action: action) { Image(systemName: icon) }
+    }
+
+    /// Знак над подписью — в строку высотой с текст: значок, проценты и
+    /// крутилка сменяют друг друга, не толкая кнопку.
+    private func tool(_ title: LocalizedStringKey, action: @escaping () -> Void,
+                      @ViewBuilder mark: () -> some View) -> some View {
         Button(action: action) {
             VStack(spacing: 4) {
-                Image(systemName: icon)
+                Text(Bench.percent(1))
+                    .hidden()
+                    .overlay { mark() }
                     .font(Typography.navTitle)
                 Text(title)
                     .font(Typography.settingNote)
@@ -539,5 +559,29 @@ private struct Chrome: ViewModifier {
             .blur(radius: shown || reduceMotion ? 0 : Metrics.chromeBlur)
             .opacity(shown ? 1 : 0)
             .animation(shown ? Motion.chrome : Motion.chromeOut, value: shown)
+    }
+}
+
+/// Знак на кнопке AR: значок у готовой модели, проценты — пока она
+/// собирается, крутилка — пока мастерская до неё не дошла. Своим вью: доли
+/// меняются на каждый процент, и перерисовываться с ними должен знак, а не
+/// весь экран.
+private struct ModelMark: View {
+    let plant: Plant
+
+    var body: some View {
+        let share = Bench.shared.share(plant)
+        Group {
+            if share == 1 {
+                Image(systemName: "arkit")
+            } else if let share {
+                Text(Bench.percent(share))
+                    .monospacedDigit()
+                    .contentTransition(.numericText())
+            } else {
+                ProgressView()
+            }
+        }
+        .animation(Motion.number, value: share)
     }
 }

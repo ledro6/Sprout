@@ -61,20 +61,17 @@ struct RootView: View {
         .task { await runClock() }
         .task { await Launch.shared.run() }
         .task { Chime.warm() }
-        // Модели для сада в AR — заранее, в фоне; недостающие собираются,
-        // лишние уходят.
-        .task(priority: .background) {
-            let plants = garden.rooms.flatMap(\.plants)
-            // Модели — под силу этого телефона: на новых iPhone чётче.
-            await Workshop.shared.use(Probe.rig.detail)
-            await Workshop.shared.tend(plants)
-        }
         // Состав сада сменился — пересказываем Siri клички.
         .onChange(of: garden.roster, initial: true) { _, _ in
             SproutShortcuts.updateAppShortcutParameters()
             // Картинки для виджета — тем же поводом: состав сада сменился.
             let rooms = garden.rooms
             Task(priority: .utility) { await Thumbs.export(rooms) }
+            // И модели для AR: без них AR не открыть. Недостающие
+            // собираются, лишние уходят; так и при запуске, и после
+            // переноса сада.
+            let plants = rooms.flatMap(\.plants)
+            Task(priority: .utility) { await Workshop.shared.tend(plants) }
         }
         // Время года — при запуске, при возвращении (мог смениться месяц) и
         // когда его выключают в настройках.

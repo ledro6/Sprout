@@ -438,5 +438,10 @@
   "Сколько растений просят воды и кто первый.": "Hur många växter som behöver vatten och vem som är först.",
   "Просят воды: %lld": "Törstiga: %lld",
   "%1$@ · %2$@": "%1$@ · %2$@",
-  "и ещё %@": "och %@ till"
+  "и ещё %@": "och %@ till",
+  "Модель готовится: %@": "Förbereder modellen: %@",
+  "Модель готовится": "Förbereder modellen",
+  "Модели готовятся: %@": "Förbereder modeller: %@",
+  "Модели ещё готовятся": "Modellerna är inte klara än",
+  "Сад в AR можно будет открыть, когда соберутся модели растений. Сколько осталось — видно на карточках.": "Du kan öppna trädgården i AR när växtmodellerna är klara. Korten visar hur mycket som återstår."
 }

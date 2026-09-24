@@ -55,6 +55,8 @@ struct Kit: Equatable, Sendable {
 
     mutating func add(_ mesh: Mesh3D) -> Int {
         meshes.append(mesh)
+        // Точка сетки — вместе с тем, во что обошлось её построить.
+        Meter.tick(mesh.positions.count * 250)
         return meshes.count - 1
     }
 

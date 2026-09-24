@@ -15,7 +15,7 @@ struct Rig: Equatable, Sendable {
         var strained = false
     }
 
-    enum Tier: Int, Comparable, Sendable {
+    enum Tier: Int, Comparable, CaseIterable, Sendable {
         case lite
         case standard
         case pro
@@ -36,6 +36,14 @@ struct Rig: Equatable, Sendable {
         static let standard = Detail(texture: 1, mesh: 1)
 
         var key: String { "t\(Int(texture * 100))m\(Int(mesh * 100))" }
+
+        static func of(_ tier: Tier) -> Detail {
+            switch tier {
+            case .lite: Detail(texture: 0.5, mesh: 0.75)
+            case .standard: .standard
+            case .pro: Detail(texture: 1.5, mesh: 1.4)
+            }
+        }
     }
 
     var tier: Tier
@@ -66,11 +74,7 @@ struct Rig: Equatable, Sendable {
     /// Детализация — по телефону, без поправки на нагрев: иначе горячий
     /// телефон пересобирал бы модели.
     static func detail(of hardware: Hardware) -> Detail {
-        switch tier(of: hardware) {
-        case .lite: Detail(texture: 0.5, mesh: 0.75)
-        case .standard: .standard
-        case .pro: Detail(texture: 1.5, mesh: 1.4)
-        }
+        Detail.of(tier(of: hardware))
     }
 
     static func of(_ hardware: Hardware) -> Rig {

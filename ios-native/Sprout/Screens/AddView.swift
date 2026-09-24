@@ -402,12 +402,13 @@ struct AddView: View {
 
         let saved = shot.flatMap { Snapshot.keep($0) }
         // Чертёж объёмной модели — из снимка, если он годится; модель
-        // собирается сразу, в фоне, чтобы сад в AR открывался без ожидания.
+        // собирается сразу, в фоне: без неё AR не открыть, а проценты сборки
+        // видны на карточке.
         let seedling = Plant.new(name: nickname, species: kind,
                                  dryingDays: period, shot: saved,
                                  traits: shot == nil ? nil : reading?.traits)
         withAnimation(Motion.appear) { garden.add(seedling, to: place) }
-        Task(priority: .utility) { await Workshop.shared.prepare(seedling) }
+        Workshop.order(seedling)
         Cheer.shared.now(from: button.rect)
         Feel.planted()
         typing = false

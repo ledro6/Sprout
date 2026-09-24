@@ -438,5 +438,10 @@
   "Сколько растений просят воды и кто первый.": "Montako kasvia tarvitsee vettä ja kuka ensin.",
   "Просят воды: %lld": "Janoisia: %lld",
   "%1$@ · %2$@": "%1$@ · %2$@",
-  "и ещё %@": "ja lisäksi %@"
+  "и ещё %@": "ja lisäksi %@",
+  "Модель готовится: %@": "Valmistellaan mallia: %@",
+  "Модель готовится": "Valmistellaan mallia",
+  "Модели готовятся: %@": "Valmistellaan malleja: %@",
+  "Модели ещё готовятся": "Mallit eivät ole vielä valmiita",
+  "Сад в AR можно будет открыть, когда соберутся модели растений. Сколько осталось — видно на карточках.": "Puutarhan voi avata AR:ssä, kun kasvien mallit ovat valmiit. Korteista näkee, paljonko on jäljellä."
 }

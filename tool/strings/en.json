@@ -438,5 +438,10 @@
   "Сколько растений просят воды и кто первый.": "How many plants need water and who’s first.",
   "Просят воды: %lld": "Thirsty: %lld",
   "%1$@ · %2$@": "%1$@ · %2$@",
-  "и ещё %@": "plus %@"
+  "и ещё %@": "plus %@",
+  "Модель готовится: %@": "Preparing model: %@",
+  "Модель готовится": "Preparing model",
+  "Модели готовятся: %@": "Preparing models: %@",
+  "Модели ещё готовятся": "Models Aren’t Ready Yet",
+  "Сад в AR можно будет открыть, когда соберутся модели растений. Сколько осталось — видно на карточках.": "You can open the garden in AR once the plant models are built. The cards show how much is left."
 }

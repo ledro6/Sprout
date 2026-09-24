@@ -454,5 +454,10 @@
   "Сколько растений просят воды и кто первый.": "Koliko biljaka treba vode i koja je prva.",
   "Просят воды: %lld": "Žedne: %lld",
   "%1$@ · %2$@": "%1$@ · %2$@",
-  "и ещё %@": "i još %@"
+  "и ещё %@": "i još %@",
+  "Модель готовится: %@": "Pripremam model: %@",
+  "Модель готовится": "Pripremam model",
+  "Модели готовятся: %@": "Pripremam modele: %@",
+  "Модели ещё готовятся": "Modeli još nisu spremni",
+  "Сад в AR можно будет открыть, когда соберутся модели растений. Сколько осталось — видно на карточках.": "Vrt u AR-u moći ćete otvoriti kad modeli biljaka budu spremni. Koliko je ostalo, vidi se na karticama."
 }

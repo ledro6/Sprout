@@ -3,6 +3,47 @@ import Foundation
 /// Цвет с прозрачностью, 0…1.
 typealias Ink = SIMD4<Float>
 
+/// Сколько работы проделала сборка модели — для процентов мастерской.
+/// Растеризатор отмечается после каждой операции, сетки — когда ложатся в
+/// набор. Работа — в пикселях и точках: время ей почти пропорционально, но,
+/// в отличие от времени, она одна и та же на любом телефоне, и её можно
+/// знать заранее — см. `Effort`. Сборка идёт в одной задаче, поэтому
+/// счётчик без замка.
+final class Meter: @unchecked Sendable {
+    /// Счётчик идущей сборки — через задачу, а не параметром через двадцать
+    /// рецептов и растеризатор. Вне сборки его нет, и отметки ничего не
+    /// стоят.
+    @TaskLocal static var current: Meter?
+
+    private(set) var done = 0
+
+    private let expected: Int
+    private let report: (Double) -> Void
+    private var said = -1
+
+    /// `report` зовётся, когда доля сдвинулась на целый процент.
+    init(expected: Int, report: @escaping (Double) -> Void = { _ in }) {
+        self.expected = max(expected, 1)
+        self.report = report
+    }
+
+    /// Доля от ожидаемого, не больше единицы: оценка могла оказаться меньше
+    /// работы.
+    var share: Double { min(Double(done) / Double(expected), 1) }
+
+    static func tick(_ amount: Int) {
+        current?.add(amount)
+    }
+
+    private func add(_ amount: Int) {
+        done += amount
+        let percent = Int(share * 100)
+        guard percent != said else { return }
+        said = percent
+        report(share)
+    }
+}
+
 extension Channels {
     /// Цвет каналами — в краску: доли и непрозрачность.
     func ink(_ alpha: Float = 1) -> Ink {
@@ -32,6 +73,7 @@ struct Picture: Equatable, Sendable {
             pixels[index * 4 + 2] = bytes.2
             pixels[index * 4 + 3] = bytes.3
         }
+        Meter.tick(width * height)
     }
 
     init(width: Int, height: Int, pixels: [UInt8]) {
@@ -72,12 +114,14 @@ struct Picture: Equatable, Sendable {
     static func coverage(_ polygon: [SIMD2<Float>], width: Int,
                          height: Int) -> [Float] {
         var cover = [Float](repeating: 0, count: width * height)
+        Meter.tick(width * height * 4)
         guard polygon.count > 2 else { return cover }
         let ys = polygon.map(\.y)
         let top = max(Int(floor(ys.min()!)), 0)
         let bottom = min(Int(ceil(ys.max()!)), height - 1)
         guard top <= bottom else { return cover }
         let samples = 4
+        Meter.tick((bottom - top + 1) * samples * polygon.count * 2)
         var crossings: [Float] = []
         for row in top ... bottom {
             for sub in 0 ..< samples {
@@ -137,7 +181,10 @@ struct Picture: Equatable, Sendable {
     }
 
     mutating func apply(_ cover: [Float], _ ink: Ink, blend: Blend = .over) {
+        var covered = 0
+        defer { Meter.tick(cover.count + covered * 30) }
         for index in cover.indices where cover[index] > 0 {
+            covered += 1
             let x = index % width
             let y = index / width
             let old = self.ink(at: x, y)
@@ -210,11 +257,14 @@ struct Picture: Equatable, Sendable {
                                1 - (Float(y) + 0.5) / Float(height))
                 set(x, y, paint(uv, ink(at: x, y)))
             }
+            // По ряду: закраска большой картинки — заметная доля сборки.
+            Meter.tick(width * 60)
         }
     }
 
     /// Прозрачность — по покрытию: всё, что нарисовано за контуром, уходит.
     mutating func clip(to cover: [Float]) {
+        Meter.tick(cover.count * 2)
         for index in cover.indices {
             pixels[index * 4 + 3] = UInt8(Float(pixels[index * 4 + 3])
                 * min(max(cover[index], 0), 1) + 0.5)
@@ -274,6 +324,7 @@ struct Relief: Sendable {
         let cover = Picture.coverage(shape.map(spot), width: width,
                                      height: height)
         for index in cover.indices { values[index] += cover[index] * amount }
+        Meter.tick(cover.count * 4)
     }
 
     mutating func stroke(_ path: [SIMD2<Float>], width thickness: (Float) -> Float,
@@ -283,12 +334,14 @@ struct Relief: Sendable {
         else { return }
         let cover = Picture.coverage(band, width: width, height: height)
         for index in cover.indices { values[index] += cover[index] * amount }
+        Meter.tick(cover.count * 4)
     }
 
     /// Размыть коробкой — края жилок мягче.
     mutating func soften(_ radius: Int) {
         guard radius > 0 else { return }
         var out = values
+        let box = (2 * radius + 1) * (2 * radius + 1)
         for y in 0 ..< height {
             for x in 0 ..< width {
                 var sum: Float = 0
@@ -303,6 +356,7 @@ struct Relief: Sendable {
                 }
                 out[y * width + x] = sum / count
             }
+            Meter.tick(width * box * 2)
         }
         values = out
     }
@@ -323,6 +377,7 @@ struct Relief: Sendable {
                                       normal.y * 0.5 + 0.5,
                                       normal.z * 0.5 + 0.5, 1))
             }
+            Meter.tick(width * 28)
         }
         return picture
     }

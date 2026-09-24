@@ -152,6 +152,11 @@ enum Typography {
     static let toastNote = Font.system(.footnote)
     static let toastCount = Font.system(.caption, weight: .bold)
     static let toastAction = Font.system(.body, weight: .semibold)
+
+    /// Проценты модели на снимке: цифры одной ширины — значок не дрожит,
+    /// пока они бегут.
+    static let modelBadge = Font.system(.caption2, weight: .semibold)
+        .monospacedDigit()
 }
 
 /// Размеры и отступы макета.
@@ -260,6 +265,10 @@ enum Metrics {
     /// мимо перетаскивание система не сообщает, и пустое место так бы и
     /// осталось.
     static let ghost = 0.3
+
+    /// Значок готовности модели — в углу снимка, чуть отступив от
+    /// скругления: не липнет к краю.
+    static let modelBadgeInset: CGFloat = 7
 
     static let ring: CGFloat = 30
     static let ringLine: CGFloat = 2.5

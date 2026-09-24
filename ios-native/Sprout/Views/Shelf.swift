@@ -43,6 +43,11 @@ struct PlantRow: View {
         HStack(spacing: 12) {
             PlantPhoto(plant: plant)
                 .frame(width: Metrics.rowPhoto, height: Metrics.rowPhoto)
+                // Снизу, а не в углу: у маленькой картинки угла не хватает.
+                .overlay(alignment: .bottom) {
+                    ModelBadge(plant: plant)
+                        .padding(.bottom, 2)
+                }
 
             VStack(alignment: .leading, spacing: 4) {
                 Text(plant.name)
