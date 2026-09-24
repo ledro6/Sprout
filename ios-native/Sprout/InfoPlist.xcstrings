@@ -4,6 +4,18 @@
     "NSCameraUsageDescription": {
       "extractionState": "manual",
       "localizations": {
+        "ca": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Per fotografiar plantes per al teu jardí i col·locar-les a l’habitació en realitat augmentada."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Abyste mohli fotit rostliny do zahrady a stavět je do místnosti v rozšířené realitě."
+          }
+        },
         "da": {
           "stringUnit": {
             "state": "translated",
@@ -40,10 +52,28 @@
             "value": "Pour photographier des plantes pour votre jardin et les placer dans votre pièce en réalité augmentée."
           }
         },
+        "hr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Za fotografiranje biljaka za vrt i postavljanje u sobu u proširenoj stvarnosti."
+          }
+        },
+        "hu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hogy növényeket fotózhass a kertedbe, és kiterjesztett valóságban elhelyezhesd őket a szobádban."
+          }
+        },
         "it": {
           "stringUnit": {
             "state": "translated",
             "value": "Per fotografare le piante del tuo giardino e posizionarle nella stanza in realtà aumentata."
+          }
+        },
+        "lt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kad galėtumėte fotografuoti augalus sodui ir pastatyti juos kambaryje papildytojoje realybėje."
           }
         },
         "nb": {
@@ -58,6 +88,12 @@
             "value": "Om planten voor je tuin te fotograferen en ze in augmented reality in je kamer te zetten."
           }
         },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aby fotografować rośliny do ogrodu i stawiać je w pokoju w rzeczywistości rozszerzonej."
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -70,10 +106,28 @@
             "value": "Para fotografar plantas para o seu jardim e colocá-las na sua divisão em realidade aumentada."
           }
         },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pentru a fotografia plante pentru grădină și a le așeza în cameră în realitate augmentată."
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
             "value": "Чтобы снять растение для сада и поставить его в комнату в дополненной реальности."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aby ste mohli fotiť rastliny do záhrady a umiestňovať ich do miestnosti v rozšírenej realite."
+          }
+        },
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Da lahko fotografirate rastline za vrt in jih postavite v sobo v obogateni resničnosti."
           }
         },
         "sv": {
@@ -87,6 +141,18 @@
     "NSFaceIDUsageDescription": {
       "extractionState": "manual",
       "localizations": {
+        "ca": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Per obrir el jardí bloquejat amb la cara."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Abyste mohli odemykat zamčenou zahradu obličejem."
+          }
+        },
         "da": {
           "stringUnit": {
             "state": "translated",
@@ -123,10 +189,28 @@
             "value": "Pour ouvrir votre jardin verrouillé avec votre visage."
           }
         },
+        "hr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Za otključavanje zaključanog vrta licem."
+          }
+        },
+        "hu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hogy a zárolt kertet az arcoddal nyithasd meg."
+          }
+        },
         "it": {
           "stringUnit": {
             "state": "translated",
             "value": "Per aprire il giardino bloccato con il volto."
+          }
+        },
+        "lt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kad galėtumėte atrakinti užrakintą sodą veidu."
           }
         },
         "nb": {
@@ -141,6 +225,12 @@
             "value": "Om je vergrendelde tuin met je gezicht te openen."
           }
         },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aby otwierać zablokowany ogród twarzą."
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -153,10 +243,28 @@
             "value": "Para abrir o seu jardim bloqueado com o rosto."
           }
         },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pentru a deschide grădina blocată cu fața."
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
             "value": "Чтобы открывать запертый сад по лицу."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aby ste mohli odomykať zamknutú záhradu tvárou."
+          }
+        },
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Da lahko zaklenjeni vrt odklenete z obrazom."
           }
         },
         "sv": {
@@ -170,6 +278,18 @@
     "NSMotionUsageDescription": {
       "extractionState": "manual",
       "localizations": {
+        "ca": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "En inclinar el telèfon, el motiu del fons es mou una mica."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Náklon telefonu lehce posouvá vzor na pozadí."
+          }
+        },
         "da": {
           "stringUnit": {
             "state": "translated",
@@ -206,10 +326,28 @@
             "value": "Incliner le téléphone déplace légèrement le motif d’arrière-plan."
           }
         },
+        "hr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nagib telefona lagano pomiče uzorak u pozadini."
+          }
+        },
+        "hu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A telefon döntése kicsit elmozdítja a háttérmintát."
+          }
+        },
         "it": {
           "stringUnit": {
             "state": "translated",
             "value": "Inclinando il telefono il motivo dello sfondo si sposta leggermente."
+          }
+        },
+        "lt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pakreipus telefoną, fono raštas šiek tiek pasislenka."
           }
         },
         "nb": {
@@ -224,6 +362,12 @@
             "value": "Kantelen van de telefoon beweegt het achtergrondpatroon een beetje."
           }
         },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Przechylenie telefonu lekko porusza wzorem w tle."
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -236,10 +380,28 @@
             "value": "Inclinar o telemóvel move ligeiramente o padrão do fundo."
           }
         },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Înclinarea telefonului mișcă ușor modelul din fundal."
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
             "value": "Наклон телефона чуть двигает узор на фоне."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Náklon telefónu mierne posúva vzor na pozadí."
+          }
+        },
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nagib telefona rahlo premakne vzorec v ozadju."
           }
         },
         "sv": {

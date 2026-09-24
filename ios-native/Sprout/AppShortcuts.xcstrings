@@ -4,6 +4,18 @@
     "Кого полить в ${applicationName}": {
       "extractionState": "manual",
       "localizations": {
+        "ca": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Què cal regar a ${applicationName}"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Co zalít v ${applicationName}"
+          }
+        },
         "da": {
           "stringUnit": {
             "state": "translated",
@@ -40,10 +52,28 @@
             "value": "Qui arroser dans ${applicationName}"
           }
         },
+        "hr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Koga zaliti u ${applicationName}"
+          }
+        },
+        "hu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kit kell öntözni: ${applicationName}"
+          }
+        },
         "it": {
           "stringUnit": {
             "state": "translated",
             "value": "Chi annaffiare in ${applicationName}"
+          }
+        },
+        "lt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ką laistyti programoje ${applicationName}"
           }
         },
         "nb": {
@@ -58,6 +88,12 @@
             "value": "Wie water geven in ${applicationName}"
           }
         },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kogo podlać w ${applicationName}"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -68,6 +104,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Quem regar no ${applicationName}"
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pe cine să ud în ${applicationName}"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Čo poliať v ${applicationName}"
+          }
+        },
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Koga zaliti v ${applicationName}"
           }
         },
         "sv": {
@@ -81,6 +135,18 @@
     "Кого полить сегодня в ${applicationName}": {
       "extractionState": "manual",
       "localizations": {
+        "ca": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Què cal regar avui a ${applicationName}"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Co zalít dnes v ${applicationName}"
+          }
+        },
         "da": {
           "stringUnit": {
             "state": "translated",
@@ -117,10 +183,28 @@
             "value": "Qui arroser aujourd’hui dans ${applicationName}"
           }
         },
+        "hr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Koga zaliti danas u ${applicationName}"
+          }
+        },
+        "hu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kit kell ma öntözni: ${applicationName}"
+          }
+        },
         "it": {
           "stringUnit": {
             "state": "translated",
             "value": "Chi annaffiare oggi in ${applicationName}"
+          }
+        },
+        "lt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ką laistyti šiandien programoje ${applicationName}"
           }
         },
         "nb": {
@@ -135,6 +219,12 @@
             "value": "Wie vandaag water geven in ${applicationName}"
           }
         },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kogo podlać dziś w ${applicationName}"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -145,6 +235,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Quem regar hoje no ${applicationName}"
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pe cine să ud azi în ${applicationName}"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Čo poliať dnes v ${applicationName}"
+          }
+        },
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Koga zaliti danes v ${applicationName}"
           }
         },
         "sv": {
@@ -158,6 +266,18 @@
     "Кому нужна вода в ${applicationName}": {
       "extractionState": "manual",
       "localizations": {
+        "ca": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Qui necessita aigua a ${applicationName}"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kdo potřebuje vodu v ${applicationName}"
+          }
+        },
         "da": {
           "stringUnit": {
             "state": "translated",
@@ -194,10 +314,28 @@
             "value": "Qui a besoin d’eau dans ${applicationName}"
           }
         },
+        "hr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tko treba vode u ${applicationName}"
+          }
+        },
+        "hu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kinek kell víz: ${applicationName}"
+          }
+        },
         "it": {
           "stringUnit": {
             "state": "translated",
             "value": "Chi ha bisogno d’acqua in ${applicationName}"
+          }
+        },
+        "lt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kam reikia vandens programoje ${applicationName}"
           }
         },
         "nb": {
@@ -212,6 +350,12 @@
             "value": "Wie heeft water nodig in ${applicationName}"
           }
         },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Komu potrzeba wody w ${applicationName}"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -222,6 +366,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Quem precisa de água no ${applicationName}"
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cine are nevoie de apă în ${applicationName}"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kto potrebuje vodu v ${applicationName}"
+          }
+        },
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kdo potrebuje vodo v ${applicationName}"
           }
         },
         "sv": {
@@ -235,6 +397,18 @@
     "Кто хочет пить в ${applicationName}": {
       "extractionState": "manual",
       "localizations": {
+        "ca": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Qui té set a ${applicationName}"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kdo má žízeň v ${applicationName}"
+          }
+        },
         "da": {
           "stringUnit": {
             "state": "translated",
@@ -271,10 +445,28 @@
             "value": "Qui a soif dans ${applicationName}"
           }
         },
+        "hr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tko je žedan u ${applicationName}"
+          }
+        },
+        "hu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ki szomjas: ${applicationName}"
+          }
+        },
         "it": {
           "stringUnit": {
             "state": "translated",
             "value": "Chi ha sete in ${applicationName}"
+          }
+        },
+        "lt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kas ištroškęs programoje ${applicationName}"
           }
         },
         "nb": {
@@ -289,6 +481,12 @@
             "value": "Wie heeft dorst in ${applicationName}"
           }
         },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kto chce pić w ${applicationName}"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -299,6 +497,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Quem tem sede no ${applicationName}"
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cui îi e sete în ${applicationName}"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kto je smädný v ${applicationName}"
+          }
+        },
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kdo je žejen v ${applicationName}"
           }
         },
         "sv": {
@@ -312,6 +528,18 @@
     "Открой сад в ${applicationName}": {
       "extractionState": "manual",
       "localizations": {
+        "ca": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Obre el meu jardí a ${applicationName}"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Otevři zahradu v ${applicationName}"
+          }
+        },
         "da": {
           "stringUnit": {
             "state": "translated",
@@ -348,10 +576,28 @@
             "value": "Ouvre mon jardin dans ${applicationName}"
           }
         },
+        "hr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Otvori vrt u ${applicationName}"
+          }
+        },
+        "hu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nyisd meg a kertet: ${applicationName}"
+          }
+        },
         "it": {
           "stringUnit": {
             "state": "translated",
             "value": "Apri il mio giardino in ${applicationName}"
+          }
+        },
+        "lt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Atidaryk sodą programoje ${applicationName}"
           }
         },
         "nb": {
@@ -366,6 +612,12 @@
             "value": "Open mijn tuin in ${applicationName}"
           }
         },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Otwórz ogród w ${applicationName}"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -376,6 +628,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Abre o meu jardim no ${applicationName}"
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deschide-mi grădina în ${applicationName}"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Otvor záhradu v ${applicationName}"
+          }
+        },
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Odpri vrt v ${applicationName}"
           }
         },
         "sv": {
@@ -389,6 +659,18 @@
     "Покажи сад в ${applicationName}": {
       "extractionState": "manual",
       "localizations": {
+        "ca": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mostra el meu jardí a ${applicationName}"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ukaž zahradu v ${applicationName}"
+          }
+        },
         "da": {
           "stringUnit": {
             "state": "translated",
@@ -425,10 +707,28 @@
             "value": "Montre mon jardin dans ${applicationName}"
           }
         },
+        "hr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pokaži vrt u ${applicationName}"
+          }
+        },
+        "hu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mutasd a kertet: ${applicationName}"
+          }
+        },
         "it": {
           "stringUnit": {
             "state": "translated",
             "value": "Mostra il mio giardino in ${applicationName}"
+          }
+        },
+        "lt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Parodyk sodą programoje ${applicationName}"
           }
         },
         "nb": {
@@ -443,6 +743,12 @@
             "value": "Toon mijn tuin in ${applicationName}"
           }
         },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pokaż ogród w ${applicationName}"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -453,6 +759,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Mostra o meu jardim no ${applicationName}"
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Arată-mi grădina în ${applicationName}"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ukáž záhradu v ${applicationName}"
+          }
+        },
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pokaži vrt v ${applicationName}"
           }
         },
         "sv": {
@@ -466,6 +790,18 @@
     "Полей ${plant} в ${applicationName}": {
       "extractionState": "manual",
       "localizations": {
+        "ca": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rega ${plant} a ${applicationName}"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zalij ${plant} v ${applicationName}"
+          }
+        },
         "da": {
           "stringUnit": {
             "state": "translated",
@@ -502,10 +838,28 @@
             "value": "Arrose ${plant} dans ${applicationName}"
           }
         },
+        "hr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zalij ${plant} u ${applicationName}"
+          }
+        },
+        "hu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Öntözd meg: ${plant}, ${applicationName}"
+          }
+        },
         "it": {
           "stringUnit": {
             "state": "translated",
             "value": "Annaffia ${plant} in ${applicationName}"
+          }
+        },
+        "lt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Palaistyk ${plant} programoje ${applicationName}"
           }
         },
         "nb": {
@@ -520,6 +874,12 @@
             "value": "Geef ${plant} water in ${applicationName}"
           }
         },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Podlej ${plant} w ${applicationName}"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -530,6 +890,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Rega ${plant} no ${applicationName}"
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Udă ${plant} în ${applicationName}"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Polej ${plant} v ${applicationName}"
+          }
+        },
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zalij ${plant} v ${applicationName}"
           }
         },
         "sv": {
@@ -543,6 +921,18 @@
     "Полей растение ${plant} в ${applicationName}": {
       "extractionState": "manual",
       "localizations": {
+        "ca": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rega la planta ${plant} a ${applicationName}"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zalij rostlinu ${plant} v ${applicationName}"
+          }
+        },
         "da": {
           "stringUnit": {
             "state": "translated",
@@ -579,10 +969,28 @@
             "value": "Arrose la plante ${plant} dans ${applicationName}"
           }
         },
+        "hr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zalij biljku ${plant} u ${applicationName}"
+          }
+        },
+        "hu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Öntözd meg a(z) ${plant} növényt: ${applicationName}"
+          }
+        },
         "it": {
           "stringUnit": {
             "state": "translated",
             "value": "Annaffia la pianta ${plant} in ${applicationName}"
+          }
+        },
+        "lt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Palaistyk augalą ${plant} programoje ${applicationName}"
           }
         },
         "nb": {
@@ -597,6 +1005,12 @@
             "value": "Geef de plant ${plant} water in ${applicationName}"
           }
         },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Podlej roślinę ${plant} w ${applicationName}"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -607,6 +1021,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Rega a planta ${plant} no ${applicationName}"
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Udă planta ${plant} în ${applicationName}"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Polej rastlinu ${plant} v ${applicationName}"
+          }
+        },
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zalij rastlino ${plant} v ${applicationName}"
           }
         },
         "sv": {
@@ -620,6 +1052,18 @@
     "Полить ${plant} в ${applicationName}": {
       "extractionState": "manual",
       "localizations": {
+        "ca": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Regar ${plant} amb ${applicationName}"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zalít ${plant} v ${applicationName}"
+          }
+        },
         "da": {
           "stringUnit": {
             "state": "translated",
@@ -656,10 +1100,28 @@
             "value": "Arroser ${plant} avec ${applicationName}"
           }
         },
+        "hr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zaliti ${plant} u ${applicationName}"
+          }
+        },
+        "hu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${plant} öntözése: ${applicationName}"
+          }
+        },
         "it": {
           "stringUnit": {
             "state": "translated",
             "value": "Annaffiare ${plant} con ${applicationName}"
+          }
+        },
+        "lt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Palaistyti ${plant} su ${applicationName}"
           }
         },
         "nb": {
@@ -674,6 +1136,12 @@
             "value": "${plant} water geven met ${applicationName}"
           }
         },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Podlać ${plant} w ${applicationName}"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -684,6 +1152,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Regar ${plant} com ${applicationName}"
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Udă ${plant} cu ${applicationName}"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Poliať ${plant} v ${applicationName}"
+          }
+        },
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zaliti ${plant} v ${applicationName}"
           }
         },
         "sv": {
@@ -697,6 +1183,18 @@
     "Полить растение ${plant} в ${applicationName}": {
       "extractionState": "manual",
       "localizations": {
+        "ca": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Regar la planta ${plant} a ${applicationName}"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zalít rostlinu ${plant} v ${applicationName}"
+          }
+        },
         "da": {
           "stringUnit": {
             "state": "translated",
@@ -733,10 +1231,28 @@
             "value": "Arroser la plante ${plant} dans ${applicationName}"
           }
         },
+        "hr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zaliti biljku ${plant} u ${applicationName}"
+          }
+        },
+        "hu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${plant} növény öntözése: ${applicationName}"
+          }
+        },
         "it": {
           "stringUnit": {
             "state": "translated",
             "value": "Annaffiare la pianta ${plant} in ${applicationName}"
+          }
+        },
+        "lt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Palaistyti augalą ${plant} programoje ${applicationName}"
           }
         },
         "nb": {
@@ -751,6 +1267,12 @@
             "value": "Plant ${plant} water geven in ${applicationName}"
           }
         },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Podlać roślinę ${plant} w ${applicationName}"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -761,6 +1283,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Regar a planta ${plant} no ${applicationName}"
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A uda planta ${plant} în ${applicationName}"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Poliať rastlinu ${plant} v ${applicationName}"
+          }
+        },
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zaliti rastlino ${plant} v ${applicationName}"
           }
         },
         "sv": {
@@ -774,6 +1314,18 @@
     "Полить растение в ${applicationName}": {
       "extractionState": "manual",
       "localizations": {
+        "ca": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Regar una planta a ${applicationName}"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zalít rostlinu v ${applicationName}"
+          }
+        },
         "da": {
           "stringUnit": {
             "state": "translated",
@@ -810,10 +1362,28 @@
             "value": "Arroser une plante dans ${applicationName}"
           }
         },
+        "hr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zalij jednu biljku u ${applicationName}"
+          }
+        },
+        "hu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Növény öntözése: ${applicationName}"
+          }
+        },
         "it": {
           "stringUnit": {
             "state": "translated",
             "value": "Annaffia una pianta in ${applicationName}"
+          }
+        },
+        "lt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Palaistyti augalą programoje ${applicationName}"
           }
         },
         "nb": {
@@ -828,6 +1398,12 @@
             "value": "Een plant water geven in ${applicationName}"
           }
         },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Podlej roślinę w ${applicationName}"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -838,6 +1414,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Regar uma planta no ${applicationName}"
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Udă o plantă în ${applicationName}"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Poliať rastlinu v ${applicationName}"
+          }
+        },
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zalij eno rastlino v ${applicationName}"
           }
         },
         "sv": {
@@ -851,6 +1445,18 @@
     "Сад в AR в ${applicationName}": {
       "extractionState": "manual",
       "localizations": {
+        "ca": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jardí en RA a ${applicationName}"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zahrada v AR v ${applicationName}"
+          }
+        },
         "da": {
           "stringUnit": {
             "state": "translated",
@@ -887,10 +1493,28 @@
             "value": "Jardin en RA dans ${applicationName}"
           }
         },
+        "hr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vrt u AR-u u ${applicationName}"
+          }
+        },
+        "hu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kert AR-ben: ${applicationName}"
+          }
+        },
         "it": {
           "stringUnit": {
             "state": "translated",
             "value": "Giardino in AR in ${applicationName}"
+          }
+        },
+        "lt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sodas AR programoje ${applicationName}"
           }
         },
         "nb": {
@@ -905,6 +1529,12 @@
             "value": "Tuin in AR in ${applicationName}"
           }
         },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ogród w AR w ${applicationName}"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -915,6 +1545,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Jardim em RA no ${applicationName}"
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Grădina în RA în ${applicationName}"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Záhrada v AR v ${applicationName}"
+          }
+        },
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vrt v AR v ${applicationName}"
           }
         },
         "sv": {
