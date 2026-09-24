@@ -299,6 +299,10 @@ struct Seeded: RandomNumberGenerator {
         state = Seeded.hash(text)
     }
 
+    init(number: UInt64) {
+        state = number
+    }
+
     static func hash(_ text: String) -> UInt64 {
         var hash: UInt64 = 0xcbf2_9ce4_8422_2325
         for byte in text.utf8 {

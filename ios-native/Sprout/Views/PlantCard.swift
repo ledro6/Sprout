@@ -155,9 +155,11 @@ final class Tenant {
 struct PlantMenu: ViewModifier {
     let id: Plant.ID
 
-    /// В правке меню нет: долгое нажатие там поднимает карточку для
-    /// перетаскивания.
+    /// В правке меню нет: долгое нажатие там сразу поднимает карточку.
     var enabled = true
+
+    /// «Расставить» — как «Изменить экран „Домой“» в меню значка.
+    var arrange: (() -> Void)? = nil
 
     @Environment(Garden.self) private var garden
 
@@ -257,6 +259,11 @@ struct PlantMenu: ViewModifier {
                              roomDraft = ""
                              moving = true
                          })
+                if let arrange {
+                    Button(action: arrange) {
+                        Label("Расставить", systemImage: "apps.iphone")
+                    }
+                }
                 Button(role: .destructive) { toss() } label: {
                     Label("Удалить", systemImage: "trash")
                 }

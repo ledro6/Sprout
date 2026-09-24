@@ -14,6 +14,8 @@ struct SettingsView: View {
     /// чинится.
     @State private var denied = false
 
+    private let lock = Lock.shared
+
     @State private var tileSpots = Spots()
     @State private var patternSpots = Spots()
     @State private var waveSpots = Spots()
@@ -23,7 +25,10 @@ struct SettingsView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: Metrics.groupGap) {
                     look
+                    backdrop
+                    feel
                     watering
+                    protection
                     about
                 }
                 .padding(.horizontal, Metrics.contentMargin)
@@ -39,6 +44,8 @@ struct SettingsView: View {
                 }
             }
         }
+        // Вдруг Face ID настроили, пока приложение было открыто.
+        .onAppear { lock.refresh() }
         .alert("Уведомления выключены", isPresented: $denied) {
             Button("Открыть настройки") { openSystemSettings() }
             Button("Отмена", role: .cancel) {}
@@ -52,10 +59,7 @@ struct SettingsView: View {
 
     private var look: some View {
         SproutGroup("Оформление") {
-            SproutBlock(
-                "Тема",
-                note: "«Система» — как настроен телефон."
-            ) {
+            SproutBlock("Тема") {
                 Picker("Тема", selection: Binding(get: { settings.theme },
                                                   set: { settings.theme = $0 })) {
                     ForEach(Settings.Theme.allCases) { theme in
@@ -67,101 +71,6 @@ struct SettingsView: View {
                 // `UISegmentedControl` сам не отзывается, в отличие от
                 // переключателя и меню.
                 .onChange(of: settings.theme) { _, _ in Feel.pick() }
-            }
-
-            SproutDivider()
-
-            SproutBlock(
-                "Фигурки на фоне",
-                note: "Нажмите на фигурку, чтобы убрать её из узора или "
-                    + "вернуть. Хотя бы одна нужна."
-            ) {
-                pieces
-            }
-
-            SproutDivider()
-
-            HStack(alignment: .center, spacing: 12) {
-                VStack(alignment: .leading, spacing: 3) {
-                    Text("Отклик в руке")
-                        .font(Typography.settingRow)
-                        .foregroundStyle(Palette.ink)
-                    Text("Полив, всходы и волна отзываются вибрацией.")
-                        .font(Typography.settingNote)
-                        .foregroundStyle(.secondary)
-                }
-                Spacer(minLength: 0)
-                Toggle("Отклик в руке", isOn: Binding(
-                    get: { settings.haptics },
-                    set: { settings.haptics = $0 }))
-                    .labelsHidden()
-            }
-
-            SproutDivider()
-
-            HStack(alignment: .center, spacing: 12) {
-                VStack(alignment: .leading, spacing: 3) {
-                    Text("Звуки")
-                        .font(Typography.settingRow)
-                        .foregroundStyle(Palette.ink)
-                    Text("Полив, посадка, удаление и возврат звучат. "
-                         + "В беззвучном режиме телефона молчат.")
-                        .font(Typography.settingNote)
-                        .foregroundStyle(.secondary)
-                        .fixedSize(horizontal: false, vertical: true)
-                }
-                Spacer(minLength: 0)
-                // Включили — сразу слышно, как звучит.
-                Toggle("Звуки", isOn: Binding(
-                    get: { settings.sounds },
-                    set: {
-                        settings.sounds = $0
-                        if $0 { Chime.pour.play() }
-                    }))
-                    .labelsHidden()
-            }
-
-            SproutDivider()
-
-            HStack(alignment: .center, spacing: 12) {
-                VStack(alignment: .leading, spacing: 3) {
-                    Text("Узор за наклоном")
-                        .font(Typography.settingRow)
-                        .foregroundStyle(Palette.ink)
-                    Text("Фон едет вслед за тем, как держат телефон. "
-                         + "Выключите, если от этого рябит.")
-                        .font(Typography.settingNote)
-                        .foregroundStyle(.secondary)
-                        .fixedSize(horizontal: false, vertical: true)
-                }
-                Spacer(minLength: 0)
-                Toggle("Узор за наклоном", isOn: Binding(
-                    get: { settings.parallax },
-                    set: { settings.parallax = $0 }))
-                    .labelsHidden()
-            }
-
-            SproutDivider()
-
-            HStack(alignment: .center, spacing: 12) {
-                VStack(alignment: .leading, spacing: 3) {
-                    Text("Фигурки живут порознь")
-                        .font(Typography.settingRow)
-                        .foregroundStyle(Palette.ink)
-                    Text("Фигурки плывут в фоне порознь и доплывают, "
-                         + "когда телефон уже замер. Выключите — узор "
-                         + "поедет одним куском.")
-                        .font(Typography.settingNote)
-                        .foregroundStyle(.secondary)
-                        .fixedSize(horizontal: false, vertical: true)
-                }
-                Spacer(minLength: 0)
-                // Разъезд живёт внутри параллакса и гаснет вместе с ним.
-                Toggle("Фигурки живут порознь", isOn: Binding(
-                    get: { settings.sway },
-                    set: { settings.sway = $0 }))
-                    .labelsHidden()
-                    .disabled(!settings.parallax)
             }
 
             SproutDivider()
@@ -193,6 +102,99 @@ struct SettingsView: View {
                     Feel.pick()
                 }
             }
+        }
+    }
+
+    // MARK: - Фон
+
+    private var backdrop: some View {
+        SproutGroup("Фон") {
+            SproutBlock("Фигурки", note: "Хотя бы одна остаётся.") {
+                pieces
+            }
+
+            SproutDivider()
+
+            switchRow("Узор за наклоном", isOn: Binding(
+                get: { settings.parallax },
+                set: { settings.parallax = $0 }))
+
+            SproutDivider()
+
+            // Разъезд живёт внутри параллакса и гаснет вместе с ним.
+            switchRow("Фигурки плывут порознь", isOn: Binding(
+                get: { settings.sway },
+                set: { settings.sway = $0 }))
+                .disabled(!settings.parallax)
+        }
+    }
+
+    // MARK: - Звук и вибрация
+
+    private var feel: some View {
+        SproutGroup("Звук и вибрация") {
+            // Включили — сразу слышно, как звучит.
+            switchRow("Звуки", isOn: Binding(
+                get: { settings.sounds },
+                set: {
+                    settings.sounds = $0
+                    if $0 { Chime.pour.play() }
+                }))
+
+            SproutDivider()
+
+            SproutBlock("Сила вибрации") {
+                HStack(spacing: 12) {
+                    // Отпустили — проба в руку уже новой силы; по дороге
+                    // щелчок на каждом десятке.
+                    Slider(value: Binding(
+                        get: { settings.hapticStrength },
+                        set: { settings.hapticStrength = $0 }),
+                           in: 0 ... 1, step: 0.05,
+                           onEditingChanged: { editing in
+                        if !editing { Feel.sample() }
+                    })
+                    .accessibilityLabel("Сила вибрации")
+                    .accessibilityValue(percent)
+                    Text(percent)
+                        .font(Typography.settingRow)
+                        .monospacedDigit()
+                        .foregroundStyle(Palette.ink)
+                        .contentTransition(.numericText())
+                        .frame(width: Metrics.percentWidth, alignment: .trailing)
+                        .accessibilityHidden(true)
+                }
+                .animation(Motion.number, value: settings.hapticStrength)
+                .onChange(of: Int(settings.hapticStrength * 10)) { _, _ in
+                    Feel.pick()
+                }
+            }
+        }
+    }
+
+    private var percent: String {
+        "\(Int((settings.hapticStrength * 100).rounded()))%"
+    }
+
+    /// Строка с переключателем. Подпись спрятана у самого переключателя, но
+    /// нужна VoiceOver.
+    private func switchRow(_ title: String, note: String? = nil,
+                           isOn: Binding<Bool>) -> some View {
+        HStack(alignment: .center, spacing: 12) {
+            VStack(alignment: .leading, spacing: 3) {
+                Text(title)
+                    .font(Typography.settingRow)
+                    .foregroundStyle(Palette.ink)
+                if let note {
+                    Text(note)
+                        .font(Typography.settingNote)
+                        .foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+            }
+            Spacer(minLength: 0)
+            Toggle(title, isOn: isOn)
+                .labelsHidden()
         }
     }
 
@@ -247,29 +249,14 @@ struct SettingsView: View {
 
     private var watering: some View {
         SproutGroup("Полив") {
-            HStack(alignment: .center, spacing: 12) {
-                VStack(alignment: .leading, spacing: 3) {
-                    Text("Напоминать о поливе")
-                        .font(Typography.settingRow)
-                        .foregroundStyle(Palette.ink)
-                    Text("Телефон подскажет, когда растению станет сухо.")
-                        .font(Typography.settingNote)
-                        .foregroundStyle(.secondary)
-                }
-                Spacer(minLength: 0)
-                Toggle("Напоминать о поливе", isOn: Binding(
-                    get: { settings.reminders },
-                    set: { want(reminders: $0) }))
-                    .labelsHidden()
-            }
+            switchRow("Напоминать о поливе", isOn: Binding(
+                get: { settings.reminders },
+                set: { want(reminders: $0) }))
 
             if settings.reminders {
                 SproutDivider()
                     .transition(.opacity)
-                SproutBlock(
-                    "Когда напоминать",
-                    note: "Влажность, ниже которой растение просит воды."
-                ) {
+                SproutBlock("Когда влажность ниже") {
                     Picker("Когда напоминать",
                            selection: Binding(get: { settings.threshold },
                                               set: { settings.threshold = $0 })) {
@@ -308,6 +295,36 @@ struct SettingsView: View {
             return
         }
         UIApplication.shared.open(url)
+    }
+
+    // MARK: - Защита
+
+    /// Замок — здешние «вход» и «выход»: учётной записи у Sprout нет. Нечем
+    /// запирать — переключатель погашен, и это единственное пояснение.
+    private var protection: some View {
+        SproutGroup("Защита") {
+            switchRow("Запирать приложение",
+                      note: lock.ready ? nil
+                          : "На телефоне нет ни Face ID, ни код-пароля.",
+                      isOn: Binding(get: { lock.on }, set: { lock.on = $0 }))
+                .disabled(!lock.ready)
+
+            if lock.on {
+                SproutDivider()
+                    .transition(.opacity)
+                // Замок висит над корнем, а лист — над ним: сначала лист
+                // уходит.
+                Button {
+                    lock.close()
+                    dismiss()
+                } label: {
+                    SproutLink("Запереть сейчас", icon: "lock.fill")
+                }
+                .buttonStyle(.plain)
+                .transition(.blurReplace)
+            }
+        }
+        .animation(Motion.enter, value: lock.on)
     }
 
     // MARK: - О приложении

@@ -32,8 +32,14 @@ struct HomeView: View {
 
     @State private var roomsOpen = false
 
-    /// Правка порядка — режимом: долгое нажатие на карточку занято её меню.
+    /// Полка качается, как значки «Домой» в правке. Входят в неё, повёв
+    /// карточку из меню или пунктом «Расставить».
     @State private var editing = false
+
+    /// Меню по долгому нажатию. Снимается не сразу со входом в правку, а
+    /// когда карточку отпустили: снятое посреди перетаскивания, оно
+    /// пересобрало бы тащимую карточку.
+    @State private var menus = true
 
     /// Кого тащат — один на всю полку.
     @State private var dragged: Plant.ID?
@@ -100,6 +106,10 @@ struct HomeView: View {
                 scrolled = offset
             }
             .onDrop(of: [.text], delegate: Rest(dragged: $dragged, drop: land))
+            // Нажатие мимо карточек заканчивает правку, как на «Домой».
+            // Кнопки и карточки своё нажатие забирают первыми.
+            .gesture(TapGesture().onEnded { finish() },
+                     including: editing ? .all : .subviews)
             .background { SproutBackground() }
             .toolbar(.hidden, for: .navigationBar)
             // Панель вкладок — последняя ступень входа. Её видимость задаёт
@@ -130,6 +140,7 @@ struct HomeView: View {
         .onChange(of: room?.plants.map(\.id) ?? []) { old, new in
             revealed.subtract(Set(old).subtracting(new))
         }
+        .onDisappear(perform: finish)
         .sheet(isPresented: $settings) { SettingsView() }
         // Сад передаём явно: без него лист упал бы, а на наследование
         // окружения полагаться незачем.
@@ -179,7 +190,7 @@ struct HomeView: View {
         .background(alignment: .top) { headerWash }
     }
 
-    /// Кнопки справа сверху: вид, правка и настройки.
+    /// Кнопки справа сверху: вид, «Готово» в правке и настройки.
     ///
     /// Живут в закреплённой строке комнаты и смещаются вверх на высоту
     /// заголовка — тем меньше, чем дальше уехал экран. В сумме они стоят на
@@ -188,7 +199,7 @@ struct HomeView: View {
     private var corner: some View {
         HStack(spacing: Metrics.cornerGap) {
             viewMenu
-            editButton
+            doneButton
             SproutGear { settings = true }
         }
         .sproutRide()
@@ -243,42 +254,55 @@ struct HomeView: View {
     private func sort(_ order: Settings.Order) {
         withAnimation(Motion.arrange) {
             Settings.shared.order = order
-            if order != .manual {
-                editing = false
-                dragged = nil
+        }
+        if order != .manual { finish() }
+    }
+
+    /// «Готово» — только у качающейся полки: галочкой в синем стекле, как
+    /// подтверждение в iOS 26. Круг того же размера, что соседние кнопки, —
+    /// подписи нечего обрезать.
+    @ViewBuilder
+    private var doneButton: some View {
+        if editing {
+            Button(action: finish) {
+                Image(systemName: "checkmark")
+                    .font(.system(size: Metrics.cornerGlyph, weight: .semibold))
+                    .frame(width: Metrics.gearBox, height: Metrics.gearBox)
             }
+            .buttonStyle(.glassProminent)
+            .buttonBorderShape(.circle)
+            .accessibilityLabel("Готово")
+            .transition(.scale.combined(with: .opacity))
         }
     }
 
-    /// «Готово» — синим стеклом, как системные кнопки завершения правки.
-    /// Высота подписи — коробка значков, иначе кнопка ниже соседних.
-    @ViewBuilder
-    private var editButton: some View {
-        if editing {
-            Button {
-                withAnimation(Motion.arrange) {
-                    editing = false
-                    dragged = nil
-                }
-            } label: {
-                Text("Готово")
-                    .fontWeight(.semibold)
-                    .frame(height: Metrics.gearBox)
-            }
-            .buttonStyle(.glassProminent)
-        } else {
-            Button {
-                // Расставлять руками — значит выбрать ручной порядок.
-                withAnimation(Motion.arrange) {
-                    editing = true
-                    Settings.shared.order = .manual
-                }
-            } label: {
-                Text("Изменить")
-                    .frame(height: Metrics.gearBox)
-            }
-            .buttonStyle(.glass)
+    /// Карточку повели. Порядок — тот, что на экране: взявшись тащить в
+    /// сортировке, двигают то, что видят, и ручной порядок начинается с
+    /// него.
+    private func begin() {
+        guard !editing else { return }
+        garden.line(plants.map(\.id))
+        withAnimation(Motion.arrange) {
+            Settings.shared.order = .manual
+            editing = true
         }
+    }
+
+    /// «Расставить» из меню: меню снимаем следующим проходом, когда оно уже
+    /// закрывается.
+    private func arrange() {
+        begin()
+        Feel.pick()
+        Task { @MainActor in menus = !editing }
+    }
+
+    private func finish() {
+        guard editing || dragged != nil else { return }
+        withAnimation(Motion.arrange) {
+            editing = false
+            dragged = nil
+        }
+        menus = true
     }
 
     /// Растяжка под строкой комнаты гасит уезжающие под неё карточки.
@@ -321,10 +345,14 @@ struct HomeView: View {
                               room: roomIndex,
                               appears: !revealed.contains(item.element.id),
                               onShown: { revealed.insert(item.element.id) },
+                              arranges: true,
                               editing: editing,
+                              menus: menus,
                               dragged: $dragged,
                               move: shift,
-                              drop: land)
+                              drop: land,
+                              begin: begin,
+                              arrange: arrange)
                         // Явная личность: без неё ленивая сетка подсовывала
                         // меню чужой узел — см. `PlantTile`.
                         .id(item.element.id)
@@ -373,7 +401,10 @@ struct HomeView: View {
         withAnimation(Motion.arrange) { garden.move(who, to: spot) }
     }
 
+    /// Отпустили — полка качается дальше, но меню уже нет: следующая
+    /// карточка поднимается сразу.
     private func land() {
         withAnimation(Motion.arrange) { dragged = nil }
+        menus = !editing
     }
 }

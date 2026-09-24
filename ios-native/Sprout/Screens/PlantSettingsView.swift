@@ -109,20 +109,8 @@ struct PlantSettingsView: View {
 
             SproutDivider()
 
-            SproutBlock(
-                "Полив",
-                note: "За этот срок земля высыхает досуха. Новый срок "
-                    + "считается от последнего полива."
-            ) {
-                Picker("Полив", selection: $period) {
-                    ForEach(options, id: \.self) { days in
-                        Text(Species.periodLabel(days)).tag(days)
-                    }
-                }
-                .pickerStyle(.menu)
-                .labelsHidden()
-                .tint(Palette.accent)
-                .frame(maxWidth: .infinity, alignment: .leading)
+            SproutBlock("Полив") {
+                PeriodWheel(days: $period)
 
                 Text(forecast)
                     .font(Typography.settingNote)
@@ -164,11 +152,6 @@ struct PlantSettingsView: View {
     private var rooms: [String] {
         let names = garden.rooms.map(\.name)
         return names.contains(room) || room.isEmpty ? names : names + [room]
-    }
-
-    private var options: [Double] {
-        Species.choices(with: [plant?.dryingDays ?? 0, period,
-                               suggestion ?? 0])
     }
 
     /// Обычный срок вписанного вида, если он не тот, что выбран.

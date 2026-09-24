@@ -1,16 +1,15 @@
 import SwiftUI
 import UniformTypeIdentifiers
 
-/// Профиль: хозяин, сад, соперники и замок. Учётной записи нет, и экран её не
-/// изображает: «вход» — это замок на приложении, а соперники приходят
-/// перепиской, см. `Rival`.
+/// Профиль: хозяин, сад и соперники. Учётной записи нет, и экран её не
+/// изображает: «вход» — это замок на приложении, он в настройках, а соперники
+/// приходят перепиской, см. `Rival`.
 struct ProfileView: View {
     @Environment(Garden.self) private var garden
     @Environment(\.scenePhase) private var phase
 
     private let settings = Settings.shared
     private let friends = Friends.shared
-    private let lock = Lock.shared
 
     /// Итог по поливам — не в теле: сад сушится раз в секунду.
     @State private var score = Score()
@@ -50,7 +49,6 @@ struct ProfileView: View {
                         person
                         plot
                         rivals
-                        padlock
                         more
                     }
                     .padding(.horizontal, Metrics.contentMargin)
@@ -65,8 +63,6 @@ struct ProfileView: View {
         .onAppear {
             recount()
             makeBackup()
-            // Вдруг Face ID настроили, пока приложение было открыто.
-            lock.refresh()
         }
         .onChange(of: garden.log.count) { _, _ in
             withAnimation(Motion.number) { recount() }
@@ -204,14 +200,6 @@ struct ProfileView: View {
                     action: { paste.rect = $0 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
-
-            Paragraph("Сервера у Sprout нет, и учётной записи тоже. "
-                      + "«Позвать» готовит сообщение с вашим счётом — "
-                      + "отправьте его другу любым мессенджером. Друг "
-                      + "пришлёт своё в ответ, вы скопируете его и "
-                      + "нажмёте «Вставить»: его результат встанет в "
-                      + "таблицу. Обновится он, когда друг пришлёт код "
-                      + "снова.")
         }
         .sproutRide()
         .alert("Не вышло", isPresented: Binding(
@@ -326,56 +314,6 @@ struct ProfileView: View {
         Feel.done()
     }
 
-    // MARK: - Замок
-
-    private var padlock: some View {
-        SproutGroup("Замок") {
-            HStack(alignment: .center, spacing: 12) {
-                VStack(alignment: .leading, spacing: 3) {
-                    Text("Запирать приложение")
-                        .font(Typography.settingRow)
-                        .foregroundStyle(Palette.ink)
-                    Text(lockNote)
-                        .font(Typography.settingNote)
-                        .foregroundStyle(.secondary)
-                        .fixedSize(horizontal: false, vertical: true)
-                }
-                Spacer(minLength: 8)
-                // Подпись спрятана, но нужна VoiceOver.
-                Toggle("Запирать приложение",
-                       isOn: Binding(get: { lock.on },
-                                     set: { lock.on = $0 }))
-                    .labelsHidden()
-                    .disabled(!lock.ready)
-            }
-
-            if lock.on {
-                SproutDivider()
-
-                Button {
-                    lock.close()
-                } label: {
-                    SproutLink("Запереть сейчас", icon: "lock.fill")
-                }
-                .buttonStyle(.plain)
-            }
-
-            Paragraph("Это и есть здешние «вход» и «выход». Учётной "
-                      + "записи у Sprout нет: регистрироваться негде, "
-                      + "забыть нечего, а сад лежит только на этом "
-                      + "телефоне.")
-        }
-        .sproutRide()
-    }
-
-    private var lockNote: String {
-        guard lock.ready else {
-            return "На этом телефоне не настроен ни Face ID, ни код-пароль "
-                + "— запирать нечем."
-        }
-        return "Открывать по \(lock.means)."
-    }
-
     // MARK: - Ещё
 
     private var more: some View {
@@ -417,10 +355,6 @@ struct ProfileView: View {
                 .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
-
-            Paragraph("Файл — это весь сад целиком: растения, комнаты и "
-                      + "журнал поливов. Им сад переносят на другой "
-                      + "телефон.")
         }
         .sproutRide()
         .confirmationDialog("Стереть сад?", isPresented: $erasing,

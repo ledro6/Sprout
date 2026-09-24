@@ -32,18 +32,6 @@ enum Muse {
         return String(word)
     }
 
-    static func care(for species: String) async -> String? {
-        let answer = await say("""
-        Дай короткий совет по уходу за комнатным растением вида \
-        «\(species)»: свет, полив, чего избегать. Два-три предложения \
-        по-русски, обычным текстом, без списков, заголовков и \
-        вступлений.
-        """)
-        let text = answer?.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard let text, !text.isEmpty else { return nil }
-        return text
-    }
-
     /// Сеанс на каждый вопрос: общая память сбивала бы ответы. Без
     /// наставления модель отвечает то по-английски, то абзацами с
     /// заголовками.

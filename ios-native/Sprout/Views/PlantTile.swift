@@ -23,21 +23,35 @@ struct PlantTile: View {
     var appears = false
     var onShown: () -> Void = {}
 
-    /// Правка порядка; на поиске её нет.
+    /// Перестановка; на поиске её нет.
+    var arranges = false
+    /// Полка качается.
     var editing = false
+    var menus = true
     var dragged: Binding<Plant.ID?> = .constant(nil)
     var move: (Plant.ID, Plant.ID) -> Void = { _, _ in }
     var drop: () -> Void = {}
+    /// Карточку повели — полка начинает качаться.
+    var begin: () -> Void = {}
+    /// Пункт меню «Расставить».
+    var arrange: () -> Void = {}
 
     var body: some View {
-        // В правке нажатие — начало перетаскивания, а не переход.
+        // В правке нажатие ничего не открывает, как значок на «Домой».
         Button { if !editing { open(plant.id) } } label: {
             label
         }
         .buttonStyle(.plain)
-        .modifier(PlantMenu(id: plant.id, enabled: !editing))
-        .modifier(Arrange(id: plant.id, look: look, on: editing,
-                          dragged: dragged, move: move, drop: drop))
+        .modifier(PlantMenu(id: plant.id, enabled: menus,
+                            arrange: arranges ? arrange : nil))
+        // Снаружи меню: меню в правке снимается, и качание внутри него
+        // начиналось бы заново. Строка не качается — у неё ручка, как в
+        // списках iOS.
+        .modifier(Jiggle(on: editing && look == .grid,
+                         phase: plant.pulsePhase))
+        .modifier(Arrange(id: plant.id, look: look, on: arranges,
+                          dragged: dragged, move: move, drop: drop,
+                          begin: begin))
         .environment(\.sproutHalos, opening != plant.id)
         // Появление ведёт карточка от номера комнаты, а не от появления вью:
         // вернувшись в комнату, SwiftUI переиспользует карточку вместе с
@@ -50,16 +64,11 @@ struct PlantTile: View {
         .matchedTransitionSource(id: plant.id, in: zoom)
     }
 
-    /// Качается только карточка: у строки есть ручка, как в списках iOS.
     @ViewBuilder
     private var label: some View {
         switch look {
-        case .grid:
-            PlantCard(plant: plant)
-                .modifier(Jiggle(on: editing, index: index,
-                                 phase: plant.pulsePhase))
-        case .list:
-            PlantRow(plant: plant, editing: editing)
+        case .grid: PlantCard(plant: plant)
+        case .list: PlantRow(plant: plant, editing: editing)
         }
     }
 }

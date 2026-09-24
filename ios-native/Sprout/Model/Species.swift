@@ -80,20 +80,8 @@ enum Species {
         return nil
     }
 
-    /// Сроки на выбор, а не ползунок: важна разница между тремя и тридцатью
-    /// сутками, а не между шестью и семью.
-    static let periods: [Double] = [3, 5, 7, 10, 14, 21, 30, 60]
-
-    static func period(near days: Double) -> Double {
-        periods.min { abs($0 - days) < abs($1 - days) } ?? 7
-    }
-
-    /// Сроки на выбор в настройках растения. Нынешний срок растения и
-    /// обычный для вида встают в ряд, даже если они не из него: иначе открыть
-    /// настройки значило бы потерять свой срок.
-    static func choices(with extras: [Double]) -> [Double] {
-        Set(periods + extras.filter { $0 > 0 }).sorted()
-    }
+    /// Потолок барабана срока: дольше без воды не живёт и кактус.
+    static let longest = 60
 
     /// Дробное — одним знаком и в родительном: «6,5 дня».
     static func periodLabel(_ days: Double) -> String {

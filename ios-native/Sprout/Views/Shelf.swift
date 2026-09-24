@@ -88,13 +88,16 @@ struct PlantRow: View {
     }
 }
 
-/// Перетаскивание в правке — системное, через `onDrag`/`onDrop`: свой жест
-/// отнял бы палец у прокрутки. Соседи расступаются прямо под пальцем — сад
-/// переставляет растения на каждом заходе на чужое место.
+/// Перетаскивание — системное, через `onDrag`/`onDrop`: свой жест отнял бы
+/// палец у прокрутки. Как на экране «Домой»: карточку, поднятую меню,
+/// можно сразу повести — тогда полка начинает качаться. Соседи расступаются
+/// прямо под пальцем — сад переставляет растения на каждом заходе на чужое
+/// место.
 struct Arrange: ViewModifier {
     let id: Plant.ID
     let look: Settings.Look
 
+    /// Можно ли тащить вообще; на поиске нельзя.
     let on: Bool
 
     let dragged: Binding<Plant.ID?>
@@ -102,6 +105,9 @@ struct Arrange: ViewModifier {
     let move: (Plant.ID, Plant.ID) -> Void
 
     let drop: () -> Void
+
+    /// Карточку подняли — полка переходит в правку.
+    var begin: () -> Void = {}
 
     @Environment(Garden.self) private var garden
 
@@ -122,6 +128,7 @@ struct Arrange: ViewModifier {
                 .onDrag {
                     let who = tenant.id
                     dragged.wrappedValue = who
+                    begin()
                     return NSItemProvider(object: who as NSString)
                 } preview: {
                     lifted
@@ -202,35 +209,69 @@ struct Rest: DropDelegate {
     }
 }
 
-/// Покачивание в правке, как у значков «Домой»: соседние в разные стороны и
-/// каждая со своим периодом. При «Уменьшении движения» не качается.
+/// Покачивание полки, как у значков «Домой»: поворот и лёгкий подскок с
+/// разными тактами, у каждой карточки свой такт и своя фаза — строем они
+/// читались бы механизмом. Время — с часов экрана, а не повтором анимации:
+/// повтор начинался с нуля на каждой пересборке и дёргал карточку. Размах
+/// набирается и стихает, а не включается щелчком. При «Уменьшении движения»
+/// не качается.
 struct Jiggle: ViewModifier {
     let on: Bool
 
-    let index: Int
-
+    /// Своя у каждого растения, 0…1.
     let phase: Double
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
-    private var period: Double {
-        Motion.jigglePeriod * (1 + Motion.jiggleSpread * (phase - 0.5))
-    }
+    @State private var swing = 0.0
 
-    private var angle: Double {
-        index.isMultiple(of: 2) ? Motion.jiggleAngle : -Motion.jiggleAngle
-    }
+    private var active: Bool { on && !reduceMotion }
 
     func body(content: Content) -> some View {
-        content.keyframeAnimator(initialValue: 0.0,
-                                 repeating: on && !reduceMotion) { view, turn in
-            view.rotationEffect(.degrees(turn))
-        } keyframes: { _ in
-            KeyframeTrack {
-                CubicKeyframe(angle, duration: period / 4)
-                CubicKeyframe(-angle, duration: period / 2)
-                CubicKeyframe(0, duration: period / 4)
+        // Стихая, часы стоят: карточка плавно выпрямляется из того наклона,
+        // в котором её застали.
+        TimelineView(.animation(paused: !active)) { context in
+            content.modifier(Wobble(
+                swing: swing,
+                time: context.date.timeIntervalSinceReferenceDate,
+                phase: phase))
+        }
+        .onChange(of: active, initial: true) { _, now in
+            withAnimation(now ? Motion.jiggleIn : Motion.jiggleOut) {
+                swing = now ? 1 : 0
             }
         }
+    }
+}
+
+/// Наклон и подскок в миг `time`. Анимируется только размах: время
+/// приходит с часов.
+private struct Wobble: GeometryEffect {
+    var swing: Double
+    let time: Double
+    let phase: Double
+
+    var animatableData: Double {
+        get { swing }
+        set { swing = newValue }
+    }
+
+    func effectValue(size: CGSize) -> ProjectionTransform {
+        guard swing > 0 else { return ProjectionTransform() }
+        let pace = 1 + Motion.jiggleSpread * (phase - 0.5)
+        let rock = sin(2 * .pi * (time / (Motion.jigglePeriod * pace) + phase))
+        // Подскок со своей фазой: вместе с поворотом он даёт неровный,
+        // живой ход.
+        let hop = sin(2 * .pi * (time / (Motion.jiggleLiftPeriod * pace)
+                                 + phase * 1.7))
+        let angle = CGFloat(Motion.jiggleAngle * .pi / 180 * swing * rock)
+        let lift = Motion.jiggleLift * CGFloat(swing * hop)
+        let middle = CGAffineTransform(translationX: -size.width / 2,
+                                       y: -size.height / 2)
+        let back = CGAffineTransform(translationX: size.width / 2,
+                                     y: size.height / 2 + lift)
+        return ProjectionTransform(middle
+            .concatenating(CGAffineTransform(rotationAngle: angle))
+            .concatenating(back))
     }
 }

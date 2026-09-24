@@ -319,7 +319,8 @@ private struct SproutPattern: View {
                 for (slot, anchor) in anchors.enumerated() {
                     let middle = CGPoint(x: x + anchor, y: y + centreY)
                     let grow = pop(at: middle)
-                    var scale = grow
+                    let (burn, flare) = burned(at: middle, over: size)
+                    var scale = grow * flare
                     var here = list
                     var mesh = arrivingWeave
                     var wild: Int?
@@ -349,7 +350,7 @@ private struct SproutPattern: View {
                                                         of: here.count)]
                     let layer = (tint(of: grow) * Self.repaints
                         + (hue ?? repainted(at: middle, over: size)))
-                        * embers + burned(at: middle, over: size)
+                        * embers + burn
                     // Черёд переходов считается по месту в сетке, а не по
                     // уплывшей фигурке; разъезд достаётся только месту, куда
                     // её кладут.
@@ -434,20 +435,33 @@ private struct SproutPattern: View {
         return (CGFloat(1 - pow(1 - x, 3)), false)
     }
 
-    /// Ступень тления. Разгорается от убранной карточки наружу, волной вдвое
-    /// шире полива и на весь отсчёт; гаснет обратной волной, стекая туда,
-    /// откуда разгорелось.
-    private func burned(at middle: CGPoint, over size: CGSize) -> Int {
-        guard let ember else { return 0 }
+    /// Тление в клетке: ступень красного и всплеск. Та же волна, что у
+    /// полива, только медленная: идёт от убранной карточки весь отсчёт, и
+    /// фигурка краснеет к гребню, а после всплеска встаёт в свой размер
+    /// красной. Черёд — до дальнего угла холста, а не общей меркой: к концу
+    /// отсчёта красным залит весь экран. Гаснет быстрой волной оттуда же:
+    /// она возвращает цвет и гасит недоигравшие всплески.
+    private func burned(at middle: CGPoint,
+                        over size: CGSize) -> (burn: Int, scale: CGFloat) {
+        guard let ember else { return (0, 1) }
         let from = local(ember.origin)
+        let out = 1 - Front.collapse(from).turn(at: middle, over: size)
         let span = Metrics.emberSpan
-        let out = Front.point(from).turn(at: middle, over: size)
-        var lit = eased((ember.rise - out * (1 - span)) / span)
-        if ember.fall > 0 {
-            let back = Front.collapse(from).turn(at: middle, over: size)
-            lit *= 1 - eased((ember.fall - back * (1 - span)) / span)
-        }
-        return Int((lit * Double(Self.embers - 1)).rounded())
+        let lead = out * (1 - span)
+        let reached = (ember.reached - lead) / span
+        let lit = eased(reached * 2)
+        var flare = reached > 0 ? Self.bounce((ember.rise - lead) / span) : 1
+        guard ember.fall > 0 else { return (embered(lit), flare) }
+        let back = (ember.fall - out * (1 - Metrics.emberBackSpan))
+            / Metrics.emberBackSpan
+        let calm = 1 - eased(back * 2)
+        flare = 1 + (flare - 1) * CGFloat(calm)
+        flare *= 1 + (Self.bounce(back) - 1) * CGFloat(lit)
+        return (embered(lit * calm), flare)
+    }
+
+    private func embered(_ lit: Double) -> Int {
+        Int((lit * Double(Self.embers - 1)).rounded())
     }
 
     private func eased(_ value: Double) -> Double {
@@ -485,7 +499,12 @@ private struct SproutPattern: View {
         let far = hypot(middle.x - source.x, middle.y - source.y)
         let start = Double(min(far / Metrics.waveReach, 1))
             * (1 - Metrics.popSpan)
-        let step = (wave - start) / Metrics.popSpan
+        return Self.bounce((wave - start) / Metrics.popSpan)
+    }
+
+    /// Всплеск за своё окно 0…1; вне окна фигурка в своём размере. Общий у
+    /// полива и тления.
+    private static func bounce(_ step: Double) -> CGFloat {
         guard step > 0, step < 1 else { return 1 }
         // Полтора периода синуса, умноженные на оболочку: она прижимает концы
         // окна к нулю и по скорости — иначе фигурка трогалась рывком.
@@ -569,9 +588,9 @@ final class Cheer {
     }
 }
 
-/// Узор тлеет красным, пока удаление можно отменить: разливается весь отсчёт
-/// и к концу заливает экран, потом гаснет обратно. Один на приложение, как
-/// `Cheer`; держит начало и конец, долю спрашивает экран.
+/// Узор тлеет красным, пока удаление можно отменить: волна разливается весь
+/// отсчёт и к концу заливает экран, потом быстрая волна гасит его. Один на
+/// приложение, как `Cheer`; держит начало и конец, долю спрашивает экран.
 @Observable
 final class Ember {
     static let shared = Ember()
@@ -615,20 +634,24 @@ final class Ember {
 
     func smoulder(at moment: Date) -> Smoulder? {
         guard let start else { return nil }
+        let rise = max(moment.timeIntervalSince(start) / Motion.undoSeconds, 0)
         guard let fade else {
-            let rise = moment.timeIntervalSince(start) / Motion.undoSeconds
-            return Smoulder(origin: origin, rise: min(max(rise, 0), 1),
-                            fall: 0)
+            let now = min(rise, 1)
+            return Smoulder(origin: origin, rise: now, reached: now, fall: 0)
         }
         let fall = moment.timeIntervalSince(fade) / Motion.emberOutSeconds
         guard fall < 1 else { return nil }
-        return Smoulder(origin: origin, rise: reached, fall: max(fall, 0))
+        return Smoulder(origin: origin, rise: rise, reached: reached,
+                        fall: max(fall, 0))
     }
 }
 
+/// Доли тления. `rise` идёт и после отмены — начатые всплески доигрывают,
+/// пока их не погасит обратная волна; краснота застыла на `reached`.
 struct Smoulder {
     var origin: CGPoint
     var rise: Double
+    var reached: Double
     var fall: Double
 }
 

@@ -24,8 +24,8 @@ struct Tap: Sendable, Equatable {
 /// живёт рядом с анимацией. Числа проверяются прогоном: движок молча
 /// отвергает значения вне 0…1 и огибающую, идущую вспять.
 struct Pulse: Sendable, Equatable {
-    /// Тычков в секунду. У полива 13: волна поднимает около 13 рядов узора в
-    /// секунду. Чаще — жужжание, реже — рука отстаёт от экрана.
+    /// Тычков в секунду: 12–18 — ряды узора, чаще — жужжание, реже — рука
+    /// отстаёт от экрана.
     var rate: Double
 
     var edge: Double = 0.6
@@ -91,16 +91,20 @@ struct Pulse: Sendable, Equatable {
         return true
     }
 
-    // MARK: - Рисунки
+    /// Сила с ползунка настроек, 0…1. Слабые тычки подтягиваются сильнее
+    /// сильных: на полной силе рука слышит всю дробь, а не одни удары, и
+    /// каждый тычок не слабее, чем задуман.
+    static func scaled(_ force: Double, by strength: Double) -> Double {
+        let level = min(max(strength, 0), 1)
+        let base = min(max(force, 0), 1)
+        guard level > 0, base > 0 else { return 0 }
+        return min(pow(base, lift) * boost * level, 1)
+    }
 
-    /// Полив: удар, дробь почти в полную силу и уход до конца волны — как
-    /// кольцо, слабеющее к краю экрана.
-    static let water = Pulse(
-        rate: 13, edge: 0.4, hum: 0.25, strike: 0.9, strikeEdge: 0.65,
-        envelope: [
-            Moment(0, 0.55), Moment(0.09, 0.9), Moment(0.3, 0.5),
-            Moment(0.55, 0.26), Moment(0.8, 0.1), Moment(1, 0),
-        ])
+    static let lift = 0.65
+    static let boost = 1.25
+
+    // MARK: - Рисунки
 
     /// Всходы: редкие слабые тычки набирают частоту и садятся хлопком, когда
     /// встала последняя фигурка. Без удара — всходы ничем не вызваны.
@@ -138,7 +142,78 @@ struct Pulse: Sendable, Equatable {
     }
 
     static var all: [(name: String, pulse: Pulse)] {
-        [("полив", water), ("всходы", sprout), ("посадка", bloom),
-         ("кутерьма", frenzy)]
+        [("всходы", sprout), ("посадка", bloom), ("кутерьма", frenzy)]
+    }
+}
+
+/// Полив в руке — капли, как всходы при запуске, только живее: удар и россыпь
+/// тычков, каждый раз новая. Промежутки, сила и резкость у каждой капли свои,
+/// изредка капля двоится или пропадает; общая сила угасает вместе с волной.
+/// Одинаковый рисунок на каждый полив рука выучила бы на третий раз. Без
+/// гула: он размазывал капли в жужжание.
+enum Rain {
+    /// Ближе тычки сливаются в один.
+    static let closest = 0.028
+
+    static func drops(over seconds: Double, seed: UInt64) -> [Tap] {
+        guard seconds > 0 else { return [] }
+        var dice = Seeded(number: seed)
+        func roll(_ range: ClosedRange<Double>) -> Double {
+            Double.random(in: range, using: &dice)
+        }
+        var out = [Tap(at: 0, strength: roll(0.85 ... 1),
+                       edge: roll(0.55 ... 0.8))]
+        var time = roll(0.05 ... 0.09)
+        while time <= seconds {
+            let part = time / seconds
+            // Вначале почти в полную силу, к концу волны — шёпот.
+            let fade = pow(1 - part, 1.3)
+            let force = fade * roll(0.55 ... 1.15)
+            if force >= Pulse.faintest, roll(0 ... 1) > 0.08 {
+                out.append(Tap(at: time, strength: min(force, 1),
+                               edge: roll(0.2 ... 0.95)))
+                // Изредка «кап-кап»: вторая капля следом, слабее.
+                let echo = force * roll(0.45 ... 0.75)
+                let later = time + roll(0.03 ... 0.045)
+                if roll(0 ... 1) < 0.18, echo >= Pulse.faintest,
+                   later <= seconds {
+                    out.append(Tap(at: later, strength: min(echo, 1),
+                                   edge: roll(0.3 ... 0.9)))
+                }
+            }
+            // Капли редеют: волна расходится, рядов в секунду всё меньше.
+            let gap = (0.055 + 0.13 * part) * roll(0.6 ... 1.5)
+            time = max(time + gap, (out.last?.at ?? time) + closest)
+        }
+        return out
+    }
+}
+
+/// Короткие отклики — несколько тычков, как системные «успех» и «ошибка», но
+/// послушные ползунку силы: системные его не слушают.
+enum Knock {
+    /// Выбор из нескольких — щелчок барабана.
+    static let pick = [Tap(at: 0, strength: 0.55, edge: 0.8)]
+
+    /// Сохранено: слабый и сильный.
+    static let done = [Tap(at: 0, strength: 0.6, edge: 0.45),
+                       Tap(at: 0.1, strength: 1, edge: 0.7)]
+
+    /// Удалено: сильный и тающий следом.
+    static let toss = [Tap(at: 0, strength: 1, edge: 0.6),
+                       Tap(at: 0.12, strength: 0.5, edge: 0.3)]
+
+    /// Отменено: мягкое «тук-тук» назад.
+    static let back = [Tap(at: 0, strength: 0.75, edge: 0.35),
+                       Tap(at: 0.09, strength: 0.5, edge: 0.55)]
+
+    /// Не вышло: три резких, последний сильнее.
+    static let wrong = [Tap(at: 0, strength: 0.8, edge: 0.85),
+                        Tap(at: 0.08, strength: 0.75, edge: 0.85),
+                        Tap(at: 0.17, strength: 1, edge: 0.95)]
+
+    static var all: [(name: String, taps: [Tap])] {
+        [("выбор", pick), ("готово", done), ("удаление", toss),
+         ("отмена", back), ("ошибка", wrong)]
     }
 }

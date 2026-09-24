@@ -215,6 +215,28 @@ final class Garden {
         }
     }
 
+    /// Комната встаёт в порядке с экрана: взявшись тащить в сортировке,
+    /// двигают то, что видят. Кого нет в списке — остаются в хвосте, как
+    /// стояли.
+    func line(_ ids: [Plant.ID]) {
+        guard let first = ids.first, let room = rooms.firstIndex(where: {
+            $0.plants.contains { $0.id == first }
+        }) else { return }
+        let plants = rooms[room].plants
+        var rank: [Plant.ID: Int] = [:]
+        for (place, id) in ids.enumerated() where rank[id] == nil {
+            rank[id] = place
+        }
+        let lined = plants.enumerated().sorted { a, b in
+            let x = rank[a.element.id] ?? ids.count + a.offset
+            let y = rank[b.element.id] ?? ids.count + b.offset
+            return x < y
+        }.map(\.element)
+        guard lined.map(\.id) != plants.map(\.id) else { return }
+        rooms[room].plants = lined
+        save()
+    }
+
     /// Убрать, запомнив откуда. Снимок остаётся на диске — его выбрасывает
     /// тот, кто решит, что возврата не будет. Журнал не трогаем: поливы были,
     /// а вернётся растение — они снова его.

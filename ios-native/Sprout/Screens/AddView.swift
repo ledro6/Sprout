@@ -3,8 +3,8 @@ import SwiftUI
 import UIKit
 
 /// Добавить растение. Вид и срок полива подсказывает классификатор Vision,
-/// кличку и совет — языковая модель, если есть Apple Intelligence; всё прямо
-/// на телефоне, и оба поля правятся руками.
+/// кличку — языковая модель, если есть Apple Intelligence; всё прямо на
+/// телефоне, и оба поля правятся руками.
 struct AddView: View {
     @Environment(Garden.self) private var garden
 
@@ -36,7 +36,6 @@ struct AddView: View {
     @State private var naming = false
     @State private var newRoom = ""
 
-    @State private var care: String?
     @State private var thinking = false
 
     /// Строка готова заранее: к моменту показа поля уже очищены под следующее
@@ -63,7 +62,6 @@ struct AddView: View {
                         picture
                         about
                         habits
-                        advice
                         plantButton
                     }
                     .padding(.horizontal, Metrics.contentMargin)
@@ -279,20 +277,8 @@ struct AddView: View {
 
             SproutDivider()
 
-            SproutBlock(
-                "Полив",
-                note: "За этот срок земля высыхает досуха. Проценты на "
-                    + "карточке убывают ровно с такой скоростью."
-            ) {
-                Picker("Полив", selection: $period) {
-                    ForEach(Species.periods, id: \.self) { days in
-                        Text(Species.periodLabel(days)).tag(days)
-                    }
-                }
-                .pickerStyle(.menu)
-                .labelsHidden()
-                .tint(Palette.accent)
-                .frame(maxWidth: .infinity, alignment: .leading)
+            SproutBlock("Полив") {
+                PeriodWheel(days: $period)
             }
         }
         .sproutRide()
@@ -307,49 +293,6 @@ struct AddView: View {
         }
         .foregroundStyle(Palette.accent)
         .frame(maxWidth: .infinity, alignment: .leading)
-    }
-
-    // MARK: - Совет
-
-    /// Без модели на телефоне — объяснение, а не неработающая кнопка.
-    @ViewBuilder
-    private var advice: some View {
-        if Muse.ready {
-            SproutGroup("Совет") {
-                Button { Task { await counsel() } } label: {
-                    Label(care == nil ? "Как за ним ухаживать"
-                          : "Спросить ещё раз",
-                          systemImage: "sparkles")
-                }
-                .buttonStyle(.glass)
-                .disabled(thinking || wanted.isEmpty)
-
-                if thinking {
-                    ProgressView()
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                }
-
-                if let care {
-                    Paragraph(care)
-                        .id(care)
-                        .transition(.blurReplace)
-                }
-
-                Paragraph("Пишет языковая модель Apple прямо на телефоне, "
-                          + "без сети. Она может ошибаться — сверяйтесь.")
-            }
-            .sproutRide()
-        } else {
-            SproutGroup("Совет") {
-                Paragraph("Совет по уходу пишет языковая модель Apple "
-                          + "Intelligence прямо на телефоне. На этом "
-                          + "телефоне её нет: нужен iPhone 15 Pro или "
-                          + "новее и включённый Apple Intelligence. Вид "
-                          + "растения при этом узнаётся и здесь — это "
-                          + "делает Vision, и ему хватает любого телефона.")
-            }
-            .sproutRide()
-        }
     }
 
     // MARK: - Посадить
@@ -404,10 +347,7 @@ struct AddView: View {
     /// вместе с видом.
     @MainActor
     private func take(_ image: UIImage) async {
-        withAnimation(Motion.appear) {
-            shot = image
-            care = nil
-        }
+        withAnimation(Motion.appear) { shot = image }
         looking = true
         async let sighted = Eye.guess(image)
         async let studied = Eye.study(image)
@@ -419,7 +359,7 @@ struct AddView: View {
             looking = false
             if let seen, species.trimmingCharacters(in: .whitespaces).isEmpty {
                 species = seen.species
-                period = Species.period(near: seen.dryingDays)
+                period = max(seen.dryingDays.rounded(), 1)
             }
         }
     }
@@ -443,15 +383,6 @@ struct AddView: View {
         thinking = false
         guard let word else { return }
         withAnimation(Motion.pill) { name = word }
-    }
-
-    @MainActor
-    private func counsel() async {
-        thinking = true
-        let text = await Muse.care(for: wanted)
-        thinking = false
-        guard let text else { return }
-        withAnimation(Motion.appear) { care = text }
     }
 
     /// Снимок кладётся на диск только здесь: передуманные снимки копились бы
@@ -494,7 +425,6 @@ struct AddView: View {
             item = nil
             guess = nil
             reading = nil
-            care = nil
             period = 7
         }
     }

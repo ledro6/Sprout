@@ -1,8 +1,8 @@
 import SwiftUI
 
-/// Экран растения: фото, сведения, заметки и история поливов. Растение
-/// берётся из сада по номеру, а не копией: его поливают и правят прямо здесь,
-/// а почва подсыхает сама.
+/// Экран растения сверху вниз: фото, «Полить сейчас», действия, сведения,
+/// заметки и история поливов. Растение берётся из сада по номеру, а не
+/// копией: его поливают и правят прямо здесь, а почва подсыхает сама.
 struct PlantView: View {
     let plantID: Plant.ID
 
@@ -35,8 +35,12 @@ struct PlantView: View {
             if let plant {
                 // Без стеклянного контейнера: он склеил бы экран в один слой
                 // и сломал разворачивание карточки.
-                VStack(spacing: 44) {
+                VStack(spacing: Metrics.plantGap) {
                     photo(plant)
+                    VStack(spacing: Metrics.actionGap) {
+                        pour
+                        tools
+                    }
                     facts(plant)
                     notes
                     diary(plant)
@@ -112,10 +116,13 @@ struct PlantView: View {
         .onDisappear { keepNote() }
     }
 
+    /// Круг — размера системной кнопки «назад», знак прежний. Коробка та же,
+    /// что у кнопок в углу главной.
     private var back: some View {
         Button { close() } label: {
             Image(systemName: "chevron.backward")
                 .font(Typography.navTitle)
+                .frame(width: Metrics.gearBox, height: Metrics.gearBox)
         }
         .buttonStyle(.glass)
         .buttonBorderShape(.circle)
@@ -135,12 +142,10 @@ struct PlantView: View {
             .sproutRide()
     }
 
-    /// `.button` заставляет меню принять стиль кнопки.
+    /// `.button` заставляет меню принять стиль кнопки. Полива здесь нет — он
+    /// большой кнопкой под фото.
     private var actions: some View {
         Menu {
-            Button { water() } label: {
-                Label("Полить сейчас", systemImage: "drop.fill")
-            }
             Button {
                 draft = plant?.name ?? ""
                 renaming = true
@@ -163,6 +168,7 @@ struct PlantView: View {
         } label: {
             Image(systemName: "ellipsis")
                 .font(Typography.navTitle)
+                .frame(width: Metrics.gearBox, height: Metrics.gearBox)
         }
         .menuStyle(.button)
         .buttonStyle(.glass)
@@ -247,20 +253,55 @@ struct PlantView: View {
             .aspectRatio(336.0 / 347.0, contentMode: .fit)
             .sproutPlate(in: plate)
             .modifier(PlantGlow(plant: plant, shape: plate))
-            .overlay(alignment: .bottomTrailing) {
-                if PlantAR.available {
-                    Button { staging = true } label: {
-                        Label("Посмотреть в AR", systemImage: "arkit")
-                            .font(Typography.settingNote)
-                    }
-                    .buttonStyle(.glass)
-                    .padding(16)
-                }
-            }
             .onGeometryChange(for: CGRect.self) { $0.frame(in: .global) }
                 action: { spot.rect = $0 }
             // Отсюда волна трогается — эта плашка подпрыгивает первой.
             .sproutRide()
+    }
+
+    /// Главное действие экрана — широкой синей кнопкой, как в системных
+    /// приложениях iOS 26.
+    private var pour: some View {
+        Button(action: water) {
+            Label("Полить сейчас", systemImage: "drop.fill")
+                .font(Typography.detail)
+                .frame(maxWidth: .infinity)
+        }
+        .buttonStyle(.glassProminent)
+        .controlSize(.extraLarge)
+        .sproutRide()
+    }
+
+    /// Остальные действия — стеклом пониже, значком над подписью, как
+    /// кнопки в карточке контакта: длинная подпись в ряд бы не влезла. Без
+    /// дополненной реальности настройки встают во всю ширину.
+    private var tools: some View {
+        HStack(spacing: Metrics.actionGap) {
+            if PlantAR.available {
+                tool("Посмотреть в AR", icon: "arkit") { staging = true }
+            }
+            tool("Настройки", icon: "slider.horizontal.3") { tuning = true }
+        }
+        .sproutRide()
+    }
+
+    private func tool(_ title: String, icon: String,
+                      action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            VStack(spacing: 4) {
+                Image(systemName: icon)
+                    .font(Typography.navTitle)
+                Text(title)
+                    .font(Typography.settingNote)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 4)
+        }
+        .buttonStyle(.glass)
+        .buttonBorderShape(.roundedRectangle(radius: Metrics.toolRadius))
+        .controlSize(.large)
     }
 
     private func facts(_ plant: Plant) -> some View {
@@ -293,7 +334,7 @@ struct PlantView: View {
                 .font(Typography.groupTitle)
                 .foregroundStyle(.secondary)
             if diary.entries.isEmpty {
-                Text("Поливов ещё не было. Полить можно из меню сверху.")
+                Text("Поливов ещё не было.")
                     .font(Typography.settingNote)
                     .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)

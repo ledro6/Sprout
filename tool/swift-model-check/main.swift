@@ -143,6 +143,17 @@ check(lineup(0)[0 ..< 4] == [p4, p1, p2, p3][...],
 garden.move("никого-нет", to: p1)
 check(lineup(0)[0 ..< 4] == [p4, p1, p2, p3][...],
       "чужой номер ничего не трогает")
+let seen = Array(lineup(0).reversed())
+garden.line(seen)
+check(lineup(0) == seen, "порядок с экрана становится ручным")
+garden.line([seen[2], seen[0]])
+check(lineup(0) == [seen[2], seen[0], seen[1]] + seen[3...],
+      "неназванные встают в хвост, как стояли")
+garden.line(["никого-нет"])
+check(lineup(0) == [seen[2], seen[0], seen[1]] + seen[3...],
+      "чужой номер порядок не трогает")
+garden.line(Array(lineup(0).reversed()))
+garden.line(seen)
 let shuffled = lineup(0)
 // Через слепок: на Linux папка документов не идёт за подменённым HOME.
 let lineupFile = try! JSONEncoder().encode(garden.state)
@@ -159,7 +170,7 @@ check("\(Seed.search("   ", in: Seed.rooms).count)", "0", "пустой запр
 print("настройки: значения по умолчанию и границы:")
 let keys = ["theme", "patternKinds", "patternShapes", "reminders",
             "remindThreshold", "patternTint", "waveTint",
-            "hushedHaptics", "stillPattern", "stiffShapes",
+            "hushedHaptics", "hapticStrength", "stillPattern", "stiffShapes",
             "plantLook", "plantOrder", "mutedSounds"]
 let store = UserDefaults.standard
 for key in keys { store.removeObject(forKey: key) }
@@ -172,6 +183,7 @@ check("\(fresh.patternTint)", "green", "узор по умолчанию зел�
 check("\(fresh.waveTint)", "blue", "волна по умолчанию синяя")
 check(fresh.reminders == false, "напоминания по умолчанию выключены")
 check(fresh.haptics, "отклик в руке по умолчанию включён")
+check(round2(fresh.hapticStrength), "1.00", "и на полную силу")
 check(fresh.sounds, "звуки по умолчанию включены")
 check(fresh.parallax, "узор по умолчанию едет за наклоном")
 check(fresh.sway, "и фигурки по умолчанию расходятся")
@@ -218,6 +230,22 @@ fresh.parallax = true
 fresh.sway = true
 fresh.sounds = true
 check(Settings(store: store).parallax, "и включённый обратно тоже")
+fresh.hapticStrength = 0.35
+check(round2(Settings(store: store).hapticStrength), "0.35",
+      "сила отклика прочиталась обратно")
+fresh.hapticStrength = 0
+check(Settings(store: store).haptics == false, "ноль — отклика нет")
+store.removeObject(forKey: "hapticStrength")
+store.set(true, forKey: "hushedHaptics")
+check(round2(Settings(store: store).hapticStrength), "0.00",
+      "выключенный прежним переключателем отклик не включается сам")
+store.removeObject(forKey: "hushedHaptics")
+check(round2(Settings(store: store).hapticStrength), "1.00",
+      "без обеих настроек — полная сила")
+store.set(3.5, forKey: "hapticStrength")
+check(round2(Settings(store: store).hapticStrength), "1.00",
+      "сила из файла не выходит за единицу")
+store.removeObject(forKey: "hapticStrength")
 
 print("оттенки:")
 check("\(Tint.allCases.count)", "5", "пять оттенков на выбор")
@@ -570,35 +598,66 @@ for (name, pulse) in Pulse.all {
     check(pulse.valid, "рисунок «\(name)» движок примет")
 }
 
-// Ряд тычков, а не ровный гул: рука должна слышать ряды фигурок.
-let splash = Pulse.water
-let drops = splash.taps(over: 2.4)
-check(drops.count > 20, "за волну в руку уходит не один тычок, а десятки")
-check(drops.allSatisfy { $0.strength >= Pulse.faintest && $0.strength <= 1 },
-      "и все они в силах, которые движок покажет")
-check(zip(drops, drops.dropFirst()).allSatisfy { $0.at < $1.at },
-      "и идут по времени вперёд")
-check(round2(drops[1].at - drops[0].at), round2(1 / splash.rate),
-      "промежуток между тычками — обратная частота")
+// Полив — капли: удар и россыпь тычков, каждый раз новая.
+let drops = Rain.drops(over: 2.4, seed: 7)
+check(drops.count > 15 && drops.count < 60,
+      "за волну в руку уходит не один тычок, а десятки (\(drops.count))")
+check(drops.first?.at == 0 && (drops.first?.strength ?? 0) >= 0.85,
+      "начинается сильным ударом")
+check(drops.allSatisfy { $0.strength >= Pulse.faintest && $0.strength <= 1
+    && $0.edge >= 0 && $0.edge <= 1 },
+      "все капли в силах и резкости, которые движок покажет")
+check(zip(drops, drops.dropFirst()).allSatisfy {
+    $1.at - $0.at >= Rain.closest - 1e-9 },
+      "идут по времени вперёд и не сливаются")
 check(drops.allSatisfy { $0.at <= 2.4 + 1e-9 },
-      "и ни один не выпадает за отведённое время")
-check(round2(splash.rate), "13.00",
-      "частота полива — сколько рядов узора волна поднимает за секунду")
-
-// После горба сила только убывает.
-var rising = 0
-var peak = 0.0
-for step in stride(from: 0.0, through: 1.0, by: 0.01) {
-    let now = splash.strength(at: step)
-    if step > 0.15, now > peak + 1e-9 { rising += 1 }
-    peak = max(peak, now)
+      "и ни одна не выпадает за отведённое время")
+check(Rain.drops(over: 2.4, seed: 7) == drops,
+      "то же зерно — тот же рисунок: его можно проверить")
+var alike = 0
+for seed in 1 ... 20 as ClosedRange<UInt64> {
+    let other = Rain.drops(over: 2.4, seed: seed &* 7919)
+    if other.map(\.at) == drops.map(\.at) { alike += 1 }
 }
-check("\(rising)", "0", "полив после горба только слабеет")
-check(splash.strike > 0.8, "и начинается резким ударом")
-check(splash.hum > 0 && splash.hum < 0.5,
-      "под дробью тихая подложка, чтобы между тычками рука не пустовала")
-check(round2(splash.strength(at: 0.195)), "0.70",
-      "между точками огибающая идёт по прямой")
+check("\(alike)", "0", "а другое зерно — другие капли: полив всегда разный")
+let gaps = zip(drops, drops.dropFirst()).map { $1.at - $0.at }
+let meanGap = gaps.reduce(0, +) / Double(gaps.count)
+let spreadGap = sqrt(gaps.map { ($0 - meanGap) * ($0 - meanGap) }
+    .reduce(0, +) / Double(gaps.count))
+check(spreadGap / meanGap > 0.25, "промежутки неровные — это капли, а не дробь")
+check(Set(drops.map { Int($0.edge * 10) }).count >= 5,
+      "и резкость у капель разная")
+func meanForce(_ taps: [Tap]) -> Double {
+    taps.map(\.strength).reduce(0, +) / Double(max(taps.count, 1))
+}
+let earlyDrops = drops.filter { $0.at > 0 && $0.at < 0.8 }
+let lateDrops = drops.filter { $0.at > 1.6 }
+check(meanForce(earlyDrops) > meanForce(lateDrops) * 1.5,
+      "к концу волны капли слабеют")
+check(Rain.drops(over: 0, seed: 1).isEmpty, "на нулевом времени капель нет")
+
+for (name, taps) in Knock.all {
+    check(!taps.isEmpty && taps.first?.at == 0
+          && zip(taps, taps.dropFirst()).allSatisfy { $0.at < $1.at }
+          && taps.allSatisfy { $0.strength > 0 && $0.strength <= 1
+              && $0.edge >= 0 && $0.edge <= 1 },
+          "короткий отклик «\(name)» движок примет")
+}
+check(Knock.done.last!.strength > Knock.done.first!.strength,
+      "«готово» — слабый и сильный, как системный успех")
+
+print("сила отклика:")
+check(round2(Pulse.scaled(0.8, by: 0)), "0.00", "на нуле отклика нет")
+check(stride(from: 0.05, through: 1, by: 0.05).allSatisfy {
+    Pulse.scaled($0, by: 1) >= $0 },
+      "на полной силе каждый тычок не слабее задуманного")
+check(Pulse.scaled(0.3, by: 1) - 0.3 > Pulse.scaled(0.9, by: 1) - 0.9,
+      "слабые подтягиваются сильнее сильных")
+check(Pulse.scaled(0.5, by: 0.4) < Pulse.scaled(0.5, by: 0.8),
+      "ползунок больше — отклик сильнее")
+check(Pulse.scaled(1, by: 1) <= 1 && Pulse.scaled(3, by: 7) <= 1
+      && Pulse.scaled(-1, by: 1) == 0,
+      "и никогда не выходит за 0…1")
 
 let rise = Pulse.sprout
 let seeds = rise.taps(over: 1.1)
@@ -646,7 +705,7 @@ for (_, pulse) in Pulse.all {
     }
 }
 check("\(outOfRange)", "0", "сила и время тычков нигде не выходят за края")
-check(Pulse.water.taps(over: 0).isEmpty, "на нулевом времени тычков нет")
+check(Pulse.sprout.taps(over: 0).isEmpty, "на нулевом времени тычков нет")
 
 // Негодный рисунок проверка обязана отвергнуть.
 func bad(_ pulse: Pulse) -> Bool { !pulse.valid }
@@ -887,10 +946,8 @@ check("\(prickly?.dryingDays ?? 0)", "30.0",
       "кактусу подставляется месяц, а не неделя")
 
 print("сроки полива:")
-check("\(Species.period(near: 30))", "30.0", "точное совпадение")
-check("\(Species.period(near: 8))", "7.0", "восемь суток округляются к семи")
-check("\(Species.period(near: 9))", "10.0", "девять — к десяти")
-check("\(Species.period(near: 200))", "60.0", "запредельное упирается в потолок")
+check(Species.table.allSatisfy { $0.days <= Double(Species.longest) },
+      "срок любого вида помещается на барабан")
 check(Species.periodLabel(1), "Раз в 1 день", "1 день")
 check(Species.periodLabel(3), "Раз в 3 дня", "3 дня")
 check(Species.periodLabel(7), "Раз в 7 дней", "7 дней")
@@ -1192,12 +1249,6 @@ do {
     check(Species.periodLabel(3), "Раз в 3 дня", "целое, «дня»")
     check(Species.periodLabel(6.5), "Раз в 6,5 дня", "дробное")
     check(Species.periodLabel(10.4), "Раз в 10,4 дня", "дробное больше десяти")
-    check(Species.choices(with: [7, 0]) == Species.periods,
-          "свой срок уже в ряду, нулевой не в счёт")
-    let odd = Species.choices(with: [6.5, 4.5, 6.5])
-    check(odd.contains(6.5) && odd.contains(4.5) && odd == odd.sorted()
-          && odd.count == Species.periods.count + 2,
-          "чужие сроки встают в ряд по порядку и без повторов")
     check(Species.usual(for: " кактус ") == 30, "обычный срок вида")
     check(Species.usual(for: "Баобаб") == nil, "незнакомый вид — без срока")
 }

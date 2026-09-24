@@ -102,17 +102,24 @@ enum Motion {
     /// Перестановка карточек, правка и смена вида.
     static let arrange = Animation.spring(duration: 0.32, bounce: 0.16)
 
-    /// Покачивание в правке. Угол мал: карточка втрое крупнее значка, и тот
-    /// же угол читался бы тряской.
-    static let jiggleAngle = 1.1
-    static let jigglePeriod = 0.28
-    static let jiggleSpread = 0.3
+    /// Покачивание полки, как у значков «Домой»: поворот и подскок с разными
+    /// тактами, у каждой карточки свой. Угол меньше, чем у значка: карточка
+    /// втрое крупнее, и тот же угол читался бы тряской.
+    static let jiggleAngle = 0.9
+    static let jigglePeriod = 0.24
+    static let jiggleLift: CGFloat = 0.8
+    static let jiggleLiftPeriod = 0.3
+    static let jiggleSpread = 0.16
+
+    /// Качание набирает размах и стихает, а не включается щелчком.
+    static let jiggleIn = Animation.easeOut(duration: 0.25)
+    static let jiggleOut = Animation.easeOut(duration: 0.2)
 
     /// Сколько секунд удалённое можно вернуть.
     static let undoSeconds = 5.0
 
     /// Погасание быстрее разгорания: разгорание — отсчёт, погасание — ответ.
-    static let emberOutSeconds = 1.2
+    static let emberOutSeconds = 0.6
 
     static let toast = Animation.spring(duration: 0.4, bounce: 0.18)
 }

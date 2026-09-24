@@ -266,14 +266,31 @@ enum Metrics {
 
     static let toastGap: CGFloat = 10
 
-    /// Вдвое больше всплеска — волна вдвое шире: соседние фигурки разгораются
-    /// внахлёст, и красное разливается, а не бежит кольцом.
-    static let emberSpan = popSpan * 2
+    /// Всплеск тления длится столько же, сколько у полива: волна та же, только
+    /// идёт весь отсчёт.
+    static let emberSpan = popSpan * Motion.cheerSeconds / Motion.undoSeconds
+
+    /// Обратная волна: всплески короткие, фронт проходит экран за треть
+    /// секунды.
+    static let emberBackSpan = 0.5
 
     /// Мельче размытия панели: строки при той же силе проступали бы из пятна.
     static let textBlur: CGFloat = 8
 
     static let diaryGap: CGFloat = 10
+
+    /// Экран растения: плашки идут плотно, кнопки под фото — ещё плотнее,
+    /// одной связкой.
+    static let plantGap: CGFloat = 16
+    static let actionGap: CGFloat = 10
+    static let toolRadius: CGFloat = 20
+
+    /// Барабан срока полива: три строки видно, как у «Таймера».
+    static let wheelWidth: CGFloat = 76
+    static let wheelHeight: CGFloat = 118
+
+    /// «100%» помещается, и число не толкает ползунок.
+    static let percentWidth: CGFloat = 52
 
     /// Предпросмотру меню размера не предлагают, и карточка без числа
     /// свернулась бы. Чуть крупнее, чем в сетке.

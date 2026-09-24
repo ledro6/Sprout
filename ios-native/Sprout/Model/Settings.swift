@@ -177,11 +177,14 @@ final class Settings {
     /// По порядку — чтобы при одном выборе узор всегда был одним и тем же.
     var chosen: [Int] { shapes.sorted() }
 
-    /// Своя настройка: «Системная вибрация» не гасит рисунки `CoreHaptics`, а
-    /// полив и всходы — как раз они.
-    var haptics: Bool {
-        didSet { store.set(!haptics, forKey: Key.hushed) }
+    /// Сила отклика в руке, 0…1; ноль — отклика нет. Своя настройка:
+    /// «Системная вибрация» не гасит рисунки `CoreHaptics`, а весь отклик
+    /// приложения — они.
+    var hapticStrength: Double {
+        didSet { store.set(hapticStrength, forKey: Key.strength) }
     }
+
+    var haptics: Bool { hapticStrength > 0 }
 
     /// Беззвучный режим телефона звуки глушит и так; это — чтобы молчали и
     /// со включённым звонком.
@@ -247,9 +250,11 @@ final class Settings {
         static let patternTint = "patternTint"
         static let waveTint = "waveTint"
         static let avatarTint = "avatarTint"
-        /// Наоборот, «без отклика»: на отсутствие ключа `UserDefaults`
-        /// отвечает `false`, а отклик по умолчанию включён.
+        /// Прежний переключатель, наоборот — «без отклика». Читается, пока
+        /// силы не задали: выключивший отклик не должен почувствовать его
+        /// снова.
         static let hushed = "hushedHaptics"
+        static let strength = "hapticStrength"
         /// Тоже наоборот.
         static let muted = "mutedSounds"
         /// Тоже наоборот.
@@ -286,7 +291,11 @@ final class Settings {
         patternTint = Self.tint(store, Key.patternTint) ?? Tint.defaultPattern
         waveTint = Self.tint(store, Key.waveTint) ?? Tint.defaultWave
         avatarTint = Self.tint(store, Key.avatarTint) ?? Tint.defaultAvatar
-        haptics = !store.bool(forKey: Key.hushed)
+        if store.object(forKey: Key.strength) != nil {
+            hapticStrength = min(max(store.double(forKey: Key.strength), 0), 1)
+        } else {
+            hapticStrength = store.bool(forKey: Key.hushed) ? 0 : 1
+        }
         sounds = !store.bool(forKey: Key.muted)
         parallax = !store.bool(forKey: Key.stillPattern)
         sway = !store.bool(forKey: Key.stiffShapes)

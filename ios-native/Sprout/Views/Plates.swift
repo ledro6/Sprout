@@ -10,6 +10,41 @@ final class Spots {
     func rect(_ key: Int) -> CGRect { rects[key] ?? .zero }
 }
 
+/// Срок полива барабаном, как в «Таймере»: «Раз в [N] дней». Дробный срок —
+/// 4,5 дня из таблицы видов — барабан показывает ближайшим целым и не
+/// трогает, пока его не крутили.
+struct PeriodWheel: View {
+    @Binding var days: Double
+
+    private var whole: Int {
+        min(max(Int(days.rounded()), 1), Species.longest)
+    }
+
+    var body: some View {
+        HStack(spacing: 6) {
+            Text("Раз в")
+            Picker("Полив", selection: Binding(
+                get: { whole },
+                set: { days = Double($0) })) {
+                ForEach(1 ... Species.longest, id: \.self) { count in
+                    Text("\(count)").tag(count)
+                }
+            }
+            .pickerStyle(.wheel)
+            .labelsHidden()
+            .frame(width: Metrics.wheelWidth, height: Metrics.wheelHeight)
+            .clipped()
+            Text(Plant.plural(whole, "день", "дня", "дней"))
+                .contentTransition(.interpolate)
+                .animation(Motion.number, value: whole)
+            Spacer(minLength: 0)
+        }
+        .font(Typography.settingRow)
+        .foregroundStyle(Palette.ink)
+        .accessibilityElement(children: .contain)
+    }
+}
+
 /// Группа настроек: подпись снаружи плашки, как у системных списков.
 struct SproutGroup<Content: View>: View {
     let title: String
