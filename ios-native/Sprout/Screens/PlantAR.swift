@@ -1,77 +1,99 @@
 import ARKit
 import SwiftUI
 
-/// Растение в комнате. Камера находит пол или стол, растение встаёт туда в
-/// натуральную величину: двумя пальцами его поворачивают, щипком растягивают,
-/// пальцем двигают. Над ним — табличка с процентами. «Полить» зовёт лейку, и
-/// полив засчитывается, когда вода коснулась земли.
+/// Растение или весь сад комнаты — в комнате. Камера находит пол или стол,
+/// растения встают туда в натуральную величину: двумя пальцами их
+/// поворачивают, щипком растягивают, пальцем двигают. Над каждым —
+/// табличка с процентами. «Полить» зовёт лейку, и полив засчитывается,
+/// когда вода коснулась земли; в саду сперва выбирают, кого поливать, или
+/// поливают всех сухих по очереди.
 struct PlantAR: View {
-    let plantID: Plant.ID
+    let ids: [Plant.ID]
 
     @Environment(Garden.self) private var garden
     @Environment(\.dismiss) private var dismiss
 
     @State private var stage = Stage()
 
+    init(plantID: Plant.ID) {
+        ids = [plantID]
+    }
+
+    init(ids: [Plant.ID]) {
+        self.ids = ids
+    }
+
     /// Без отслеживания мира экрана нет — в симуляторе кнопка не появляется.
     static var available: Bool { ARWorldTrackingConfiguration.isSupported }
 
-    private var plant: Plant? { garden.plant(id: plantID) }
+    private var plants: [Plant] { ids.compactMap { garden.plant(id: $0) } }
 
     var body: some View {
-        // Табличка — в одних координатах с камерой: обе во весь экран.
+        // Таблички — в одних координатах с камерой: обе во весь экран.
         StageView(stage: stage)
-            .overlay(alignment: .topLeading) { label }
+            .overlay(alignment: .topLeading) { labels }
             .ignoresSafeArea()
             .sproutUndo()
             .safeAreaInset(edge: .bottom) { controls }
             .overlay(alignment: .top) { header }
             .animation(Motion.enter, value: stage.phase)
+            .animation(Motion.enter, value: stage.chosen)
             .tint(Palette.accent)
             .onAppear(perform: start)
             .onDisappear { stage.stop() }
-            .onChange(of: plant == nil) { _, gone in
+            .onChange(of: plants.isEmpty) { _, gone in
                 if gone { dismiss() }
             }
     }
 
     private func start() {
-        guard let plant else { return }
-        stage.cast(plant, in: garden)
-        stage.onWatered = { [garden, plantID] in
-            guard Bin.shared.water(plantID, in: garden) else { return }
+        stage.cast(plants, in: garden)
+        stage.onWatered = { [garden] id in
+            guard Bin.shared.water(id, in: garden) else { return }
             Feel.water()
         }
     }
 
-    // MARK: - Табличка
+    // MARK: - Таблички
 
-    @ViewBuilder
-    private var label: some View {
-        if let spot = stage.tag, let plant {
-            VStack(spacing: 2) {
-                Text(plant.name)
-                    .font(Typography.toastTitle)
-                    .foregroundStyle(Palette.ink)
-                Text("Влажность \(plant.moistureLabel)")
-                    .font(Typography.toastNote)
-                    .foregroundStyle(Palette.ink)
-                    .contentTransition(.numericText())
+    private var labels: some View {
+        ForEach(plants) { plant in
+            if let spot = stage.tags[plant.id] {
+                label(plant, big: !stage.many || stage.chosen == plant.id)
+                    .position(x: spot.x, y: spot.y - 36)
+                    .transition(.blurReplace)
+            }
+        }
+    }
+
+    /// Выбранное — полной табличкой, остальные — кличкой и процентами: иначе
+    /// сад тонул бы в табличках.
+    private func label(_ plant: Plant, big: Bool) -> some View {
+        VStack(spacing: 2) {
+            Text(plant.name)
+                .font(Typography.toastTitle)
+                .foregroundStyle(Palette.ink)
+            Text(Lang.format("Влажность %@", plant.moistureLabel))
+                .font(Typography.toastNote)
+                .foregroundStyle(Palette.ink)
+                .contentTransition(.numericText())
+            if big {
                 Text(plant.wateringLabel)
                     .font(Typography.toastNote)
                     .foregroundStyle(.secondary)
                     .contentTransition(.numericText())
             }
-            .multilineTextAlignment(.center)
-            .padding(.horizontal, 14)
-            .padding(.vertical, 10)
-            .glassEffect(.regular, in: .rect(cornerRadius: 18))
-            .animation(Motion.number, value: plant.moisture)
-            .fixedSize()
-            .position(x: spot.x, y: spot.y - 36)
-            .allowsHitTesting(false)
-            .transition(.blurReplace)
         }
+        .multilineTextAlignment(.center)
+        .padding(.horizontal, big ? 14 : 10)
+        .padding(.vertical, big ? 10 : 6)
+        .glassEffect(big && stage.many
+                         ? Glass.regular.tint(Palette.accent.opacity(0.25))
+                         : Glass.regular,
+                     in: .rect(cornerRadius: 18))
+        .animation(Motion.number, value: plant.moisture)
+        .fixedSize()
+        .allowsHitTesting(false)
     }
 
     // MARK: - Верх и низ
@@ -81,6 +103,7 @@ struct PlantAR: View {
             Button { dismiss() } label: {
                 Image(systemName: "xmark")
                     .font(Typography.navTitle)
+                    .frame(width: Metrics.gearBox, height: Metrics.gearBox)
             }
             .buttonStyle(.glass)
             .buttonBorderShape(.circle)
@@ -88,15 +111,25 @@ struct PlantAR: View {
 
             Spacer(minLength: 0)
 
-            Text(hint)
-                .font(Typography.toastNote)
-                .foregroundStyle(Palette.ink)
-                .multilineTextAlignment(.center)
-                .padding(.horizontal, 14)
-                .padding(.vertical, 9)
-                .glassEffect(.regular, in: .capsule)
-                .id(hint)
-                .transition(.blurReplace)
+            VStack(spacing: 4) {
+                Text(hint)
+                    .font(Typography.toastNote)
+                    .foregroundStyle(Palette.ink)
+                    .multilineTextAlignment(.center)
+                    .contentTransition(.numericText())
+                if stage.left > 0 {
+                    Text(Lang.format("Показаны %1$lld из %2$lld: больше телефону тяжело",
+                                     stage.total, stage.total + stage.left))
+                        .font(Typography.toastNote)
+                        .foregroundStyle(.secondary)
+                        .multilineTextAlignment(.center)
+                }
+            }
+            .padding(.horizontal, 14)
+            .padding(.vertical, 9)
+            .glassEffect(.regular, in: .rect(cornerRadius: 18))
+            .id(hint)
+            .transition(.blurReplace)
 
             Spacer(minLength: 0)
 
@@ -110,11 +143,23 @@ struct PlantAR: View {
 
     private var hint: String {
         switch stage.phase {
-        case .searching: "Медленно ведите телефоном над полом или столом"
-        case .aiming where !stage.ready: "Готовлю модель растения…"
-        case .aiming: "Нажмите — и растение встанет сюда"
-        case .placed: "Двумя пальцами — повернуть, щипком — размер"
-        case .watering: "Поливаем…"
+        case .searching:
+            Lang.text("Медленно ведите телефоном над полом или столом")
+        case .aiming where !stage.ready:
+            stage.many
+                ? Lang.format("Готовлю модели растений: %1$lld из %2$lld",
+                              stage.loaded, stage.total)
+                : Lang.text("Готовлю модель растения…")
+        case .aiming:
+            stage.many ? Lang.text("Нажмите — и сад встанет вокруг прицела")
+                : Lang.text("Нажмите — и растение встанет сюда")
+        case .placed where stage.many && stage.chosen == nil:
+            Lang.text("Нажмите на растение, чтобы выбрать его")
+        case .placed:
+            Lang.text("Двумя пальцами — повернуть, щипком — размер")
+        case .watering:
+            stage.queue.isEmpty ? Lang.text("Поливаем…")
+                : Lang.text("Поливаем по очереди…")
         }
     }
 
@@ -126,10 +171,16 @@ struct PlantAR: View {
                 EmptyView()
             case .aiming:
                 Button { stage.place() } label: {
-                    Label("Поставить", systemImage: "arkit")
-                        .font(Typography.detail)
-                        .padding(.horizontal, 10)
-                        .padding(.vertical, 6)
+                    Group {
+                        if stage.many {
+                            Label("Поставить сад", systemImage: "arkit")
+                        } else {
+                            Label("Поставить", systemImage: "arkit")
+                        }
+                    }
+                    .font(Typography.detail)
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 6)
                 }
                 .buttonStyle(.glassProminent)
             case .placed, .watering:
@@ -139,6 +190,15 @@ struct PlantAR: View {
                         .padding(.vertical, 6)
                 }
                 .buttonStyle(.glass)
+                if stage.many && stage.thirsty > 0 {
+                    Button { stage.waterThirsty() } label: {
+                        Label("Полить сухих", systemImage: "drop.triangle")
+                            .font(Typography.detail)
+                            .padding(.vertical, 6)
+                    }
+                    .buttonStyle(.glass)
+                    .transition(.blurReplace)
+                }
                 Button { stage.water() } label: {
                     Label("Полить", systemImage: "drop.fill")
                         .font(Typography.detail)
@@ -146,6 +206,7 @@ struct PlantAR: View {
                         .padding(.vertical, 6)
                 }
                 .buttonStyle(.glassProminent)
+                .disabled(stage.many && stage.chosen == nil)
             }
         }
         .disabled(stage.phase == .watering

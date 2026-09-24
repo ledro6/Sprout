@@ -84,8 +84,11 @@ extension Plant {
 /// горшок, земля, стебли, листья-карточки с рисунком, мясистые листья,
 /// цветы. Всё детерминировано: один чертёж — одна и та же модель.
 enum Botany {
-    static func grow(_ blueprint: Blueprint, species: String) -> Kit {
-        var grower = Grower(blueprint, species: species)
+    /// `detail` — чёткость рисунков и густота сеток по силе телефона, см.
+    /// `Rig`.
+    static func grow(_ blueprint: Blueprint, species: String,
+                     detail: Rig.Detail = .standard) -> Kit {
+        var grower = Grower(blueprint, species: species, detail: detail)
         switch blueprint.preset {
         case .monstera: grower.monstera()
         case .ficus: grower.ficus()
@@ -120,14 +123,29 @@ struct Grower {
     let traits: Traits?
     let seed: UInt32
     let species: String
+    let detail: Rig.Detail
 
     static let soil = Greenhouse.soil
 
-    init(_ blueprint: Blueprint, species: String) {
+    init(_ blueprint: Blueprint, species: String,
+         detail: Rig.Detail = .standard) {
         rng = Seeded(blueprint.seed + blueprint.preset.rawValue)
         traits = blueprint.traits
         seed = UInt32(truncatingIfNeeded: Seeded.hash(blueprint.seed))
         self.species = species.lowercased()
+        self.detail = detail
+    }
+
+    /// Высота рисунка с поправкой на силу телефона — кратно восьми, как
+    /// любит видеопамять.
+    func sharp(_ height: Int) -> Int {
+        let scaled = Int((Float(height) * detail.texture / 8).rounded()) * 8
+        return min(max(scaled, 64), 2048)
+    }
+
+    /// Число рядов сетки с поправкой на силу телефона.
+    func dense(_ count: Int) -> Int {
+        max(3, Int((Float(count) * detail.mesh).rounded()))
     }
 
     // MARK: - Случай и черты
@@ -173,7 +191,7 @@ struct Grower {
     mutating func leafLook(_ design: LeafLook, rough: Float, gloss: Float = 0,
                            height: Int = 512, wilts: Bool = true) -> Int {
         let art = Leafart.leaf(design, seed: seed &+ UInt32(kit.pictures.count),
-                               height: height)
+                               height: sharp(height))
         let color = kit.add(art.color)
         let normal = kit.add(art.normal)
         return kit.add(Look(color: color, normal: normal, rough: rough,
@@ -201,7 +219,8 @@ struct Grower {
                            bend: Sculpt.Bend, rows: Int = 24,
                            columns: Int = 11) -> Int {
         var mesh = Sculpt.card(length: length, width: length * design.aspect,
-                               bend: bend, rows: rows, columns: columns,
+                               bend: bend, rows: dense(rows),
+                               columns: dense(columns),
                                hug: { Leafart.half(design.outline, $0) })
         if Leafart.lobed(design.outline) {
             mesh = mesh.moved(by: Vec3(-Leafart.notch * length, 0, 0))
@@ -214,7 +233,7 @@ struct Grower {
                         radius: @escaping (Float) -> Float) {
         var mesh = Mesh3D()
         for path in paths {
-            mesh.merge(Sculpt.tube(path, sides: sides, radius: radius))
+            mesh.merge(Sculpt.tube(path, sides: dense(sides), radius: radius))
         }
         guard !mesh.isEmpty else { return }
         kit.put(mesh, look)
@@ -252,11 +271,13 @@ struct Grower {
     /// он длиннее. Сдвиг вдоль оси разводит круги: иначе они мерцали бы
     /// друг в друге. `root` — на каком расстоянии от оси лепесток растёт:
     /// у розы лепестки сидят по краю донца, а не в одной точке.
-    static func whorl(_ design: LeafLook, length: Float, open: Float,
-                      bend: Sculpt.Bend, turns: [Float],
-                      sizes: [Float]? = nil, shift: Float = 0,
-                      root: Float = 0, rows: Int = 12,
-                      columns: Int = 9) -> Mesh3D {
+    func whorl(_ design: LeafLook, length: Float, open: Float,
+               bend: Sculpt.Bend, turns: [Float],
+               sizes: [Float]? = nil, shift: Float = 0,
+               root: Float = 0, rows: Int = 12,
+               columns: Int = 9) -> Mesh3D {
+        let rows = dense(rows)
+        let columns = dense(columns)
         var ring = Mesh3D()
         for (index, turn) in turns.enumerated() {
             let size = sizes?[index % max(sizes?.count ?? 1, 1)] ?? 1
@@ -310,7 +331,7 @@ struct Grower {
                               veins: .none, base: color,
                               tip: lighter(color, 0.15), mottle: 0.1)
         let look = leafLook(design, rough: 0.6, height: 128, wilts: false)
-        let mesh = Grower.whorl(design, length: length, open: open,
+        let mesh = whorl(design, length: length, open: open,
                                 bend: Sculpt.Bend(arch: 0.2, fold: 0.1),
                                 turns: Grower.evenly(count, offset: 0.5),
                                 shift: -0.001, rows: 6, columns: 5)
@@ -332,7 +353,7 @@ struct Grower {
                          heart: Channels?, stamens count: Int = 0,
                          pollen: Channels = Channels(250, 214, 60)) -> Head {
         let look = petalLook(petal)
-        var head = [Part(mesh: kit.add(Grower.whorl(
+        var head = [Part(mesh: kit.add(whorl(
             petal, length: size, open: open, bend: bend,
             turns: Grower.evenly(petals))), look: look)]
         if count > 0 {
@@ -840,16 +861,16 @@ struct Grower {
                            throat: Channels(250, 206, 70), throatReach: 0.4,
                            mottle: 0.1)
         let flat = Float.pi / 2 - 0.1
-        let sepals = Grower.whorl(sepal, length: length, open: flat,
+        let sepals = whorl(sepal, length: length, open: flat,
                                   bend: Sculpt.Bend(arch: 0.08, fold: 0.05,
                                                     cup: -0.15),
                                   turns: [0, 2.45, -2.45], shift: -0.0015)
-        let petals = Grower.whorl(petal, length: length * 0.92, open: flat,
+        let petals = whorl(petal, length: length * 0.92, open: flat,
                                   bend: Sculpt.Bend(arch: 0.05, fold: 0,
                                                     cup: -0.12, wave: 0.02,
                                                     waves: 2),
                                   turns: [1.3, -1.3])
-        let labellum = Grower.whorl(lip, length: length * 0.55,
+        let labellum = whorl(lip, length: length * 0.55,
                                     open: Float.pi / 2 - 0.45,
                                     bend: Sculpt.Bend(arch: 0.35, fold: 0,
                                                       cup: -0.7),
@@ -1540,7 +1561,7 @@ struct Grower {
                              throat: darker(colour, 0.35), throatReach: 0.3,
                              glow: 0.15, mottle: 0.08)
         let length: Float = 0.014
-        let ring = Grower.whorl(petal, length: length,
+        let ring = whorl(petal, length: length,
                                 open: Float.pi / 2 - 0.08,
                                 bend: Sculpt.Bend(arch: -0.06, fold: 0,
                                                   cup: -0.2, wave: 0.03,
@@ -1572,7 +1593,7 @@ struct Grower {
                              vein: darker(colour, 0.12),
                              throat: lighter(colour, 0.35), throatReach: 0.35,
                              glow: 0.3, mottle: 0.06)
-        let ring = Grower.whorl(petal, length: 0.017,
+        let ring = whorl(petal, length: 0.017,
                                 open: Float.pi / 2 - 0.08,
                                 bend: Sculpt.Bend(arch: -0.04, fold: 0,
                                                   cup: -0.15),
@@ -1609,9 +1630,9 @@ struct Grower {
         let open = Float.pi / 2 - 0.12
         let bend = Sculpt.Bend(arch: -0.05, fold: 0, cup: -0.15, wave: 0.02,
                                waves: 2)
-        let top = Grower.whorl(upper, length: 0.012, open: open, bend: bend,
+        let top = whorl(upper, length: 0.012, open: open, bend: bend,
                                turns: [0.5, -0.5], shift: 0.0004)
-        let bottom = Grower.whorl(lower, length: 0.013, open: open, bend: bend,
+        let bottom = whorl(lower, length: 0.013, open: open, bend: bend,
                                   turns: [Float.pi, Float.pi - 1.2,
                                           Float.pi + 1.2])
         var head = [Part(mesh: kit.add(top), look: petalLook(upper)),
@@ -1634,12 +1655,12 @@ struct Grower {
         inner.throat = Channels(60, 40, 40)
         inner.throatReach = 0.22
         let length: Float = 0.052
-        let shell = Grower.whorl(outer, length: length, open: 0.62,
+        let shell = whorl(outer, length: length, open: 0.62,
                                  bend: Sculpt.Bend(arch: 0.42, fold: 0,
                                                    cup: -0.75),
                                  turns: Grower.evenly(3), rows: 16,
                                  columns: 11)
-        let core = Grower.whorl(inner, length: length * 0.96, open: 0.52,
+        let core = whorl(inner, length: length * 0.96, open: 0.52,
                                 bend: Sculpt.Bend(arch: 0.42, fold: 0,
                                                   cup: -0.8),
                                 turns: Grower.evenly(3, offset: 0.5),
@@ -1665,12 +1686,12 @@ struct Grower {
                              throatReach: 0.4, glow: 0.2, mottle: 0.06)
         let look = petalLook(petal, rough: 0.4, gloss: 0.15)
         let bend = Sculpt.Bend(arch: -0.18, fold: 0.1, cup: -0.2)
-        var funnel = Grower.whorl(petal, length: 0.024, open: 1.2, bend: bend,
+        var funnel = whorl(petal, length: 0.024, open: 1.2, bend: bend,
                                   turns: Grower.evenly(14))
-        funnel.merge(Grower.whorl(petal, length: 0.022, open: 0.9, bend: bend,
+        funnel.merge(whorl(petal, length: 0.022, open: 0.9, bend: bend,
                                   turns: Grower.evenly(14, offset: 0.5),
                                   shift: 0.001))
-        funnel.merge(Grower.whorl(petal, length: 0.018, open: 0.6, bend: bend,
+        funnel.merge(whorl(petal, length: 0.018, open: 0.6, bend: bend,
                                   turns: Grower.evenly(10, offset: 0.25),
                                   shift: 0.002))
         var head = [Part(mesh: kit.add(funnel), look: look)]
@@ -1793,7 +1814,7 @@ struct Grower {
             let k = Float(index) / Float(petals - 1)
             let bend = Sculpt.Bend(arch: 0.32 - 0.62 * k, fold: 0,
                                    cup: -1.0 + 0.6 * k)
-            mesh.merge(Grower.whorl(petal, length: 0.017 + 0.017 * pow(k, 0.7),
+            mesh.merge(whorl(petal, length: 0.017 + 0.017 * pow(k, 0.7),
                                     open: 0.18 + 1.12 * pow(k, 1.3),
                                     bend: bend,
                                     turns: [Float(index) * 2.399_963],
@@ -1811,7 +1832,7 @@ struct Grower {
         let petal = LeafLook(outline: .broad, aspect: 1.1, veins: .fan(7),
                              base: colour, tip: darker(colour, 0.1),
                              vein: darker(colour, 0.2), mottle: 0.08)
-        let mesh = Grower.whorl(petal, length: 0.017, open: 0.22,
+        let mesh = whorl(petal, length: 0.017, open: 0.22,
                                 bend: Sculpt.Bend(arch: 0.2, fold: 0, cup: -1.1),
                                 turns: Grower.evenly(5), root: 0.002,
                                 rows: 10, columns: 9)

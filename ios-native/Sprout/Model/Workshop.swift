@@ -8,12 +8,20 @@ actor Workshop {
     static let shared = Workshop()
 
     /// Последние открытые — в памяти: второй раз сад открывается мгновенно.
+    /// Сад в AR ставит до дюжины растений разом — столько и держим.
     private var recent: [String: Kit] = [:]
     private var order: [String] = []
+    private static let kept = 12
+
+    /// Детализация по силе телефона, см. `Rig`. Ставит приложение при
+    /// запуске, до первой сборки.
+    private(set) var detail = Rig.Detail.standard
+
+    func use(_ detail: Rig.Detail) { self.detail = detail }
 
     /// Готовая модель: из памяти, с диска или собранная сейчас.
     func kit(for plant: Plant) -> Kit {
-        let key = Workshop.key(plant)
+        let key = key(plant)
         if let kit = recent[key] { return kit }
         let kit = read(key) ?? build(plant, key: key)
         remember(kit, key)
@@ -22,7 +30,7 @@ actor Workshop {
 
     /// Собрать заранее, если модели ещё нет.
     func prepare(_ plant: Plant) {
-        let key = Workshop.key(plant)
+        let key = key(plant)
         guard recent[key] == nil, !exists(key) else { return }
         _ = build(plant, key: key)
     }
@@ -35,7 +43,7 @@ actor Workshop {
               let files = try? FileManager.default.contentsOfDirectory(
                   atPath: folder.path)
         else { return }
-        let alive = Set(plants.map { Workshop.key($0) + ".kit" })
+        let alive = Set(plants.map { key($0) + ".kit" })
         for file in files where !alive.contains(file) {
             try? FileManager.default.removeItem(
                 at: folder.appendingPathComponent(file))
@@ -43,7 +51,8 @@ actor Workshop {
     }
 
     private func build(_ plant: Plant, key: String) -> Kit {
-        let kit = Botany.grow(plant.blueprint, species: plant.species)
+        let kit = Botany.grow(plant.blueprint, species: plant.species,
+                              detail: detail)
         write(kit, key)
         return kit
     }
@@ -52,15 +61,17 @@ actor Workshop {
         recent[key] = kit
         order.removeAll { $0 == key }
         order.append(key)
-        while order.count > 3 {
+        while order.count > Self.kept {
             recent[order.removeFirst()] = nil
         }
     }
 
     // MARK: - Диск
 
-    static func key(_ plant: Plant) -> String {
-        "\(plant.id)-\(plant.blueprint.fingerprint)"
+    /// Детализация — в ключе: пересел на другой телефон из резервной копии
+    /// — модели соберутся под него.
+    private func key(_ plant: Plant) -> String {
+        "\(plant.id)-\(plant.blueprint.fingerprint)-\(detail.key)"
     }
 
     private static let folder: URL? = {

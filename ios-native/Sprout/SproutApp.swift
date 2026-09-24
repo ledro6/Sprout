@@ -65,6 +65,8 @@ struct RootView: View {
         // лишние уходят.
         .task(priority: .background) {
             let plants = garden.rooms.flatMap(\.plants)
+            // Модели — под силу этого телефона: на новых iPhone чётче.
+            await Workshop.shared.use(Probe.rig.detail)
             await Workshop.shared.tend(plants)
         }
         // Состав сада сменился — пересказываем Siri клички.

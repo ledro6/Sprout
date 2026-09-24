@@ -105,6 +105,31 @@ struct WhoNeedsWater: AppIntent {
     }
 }
 
+/// Сад в AR одним нажатием — для кнопки действия на корпусе iPhone 15 Pro и
+/// новее, «Пункта управления» и Siri. Приложение открывается, главная
+/// разворачивает сад текущей комнаты.
+struct OpenGardenAR: AppIntent {
+    static let title: LocalizedStringResource = "Сад в AR"
+    static let description: IntentDescription? = IntentDescription(
+        "Открывает растения комнаты в дополненной реальности.")
+    static let openAppWhenRun = true
+
+    @MainActor
+    func perform() async throws -> some IntentResult {
+        Summon.shared.garden = true
+        return .result()
+    }
+}
+
+/// Просьбы извне, которые исполняет экран: команда не держит окон.
+@MainActor
+@Observable
+final class Summon {
+    static let shared = Summon()
+
+    var garden = false
+}
+
 /// После слова «растение» кличка остаётся в именительном — «Полей растение
 /// Баксик». Без него она в винительном, и её ищет `PlantQuery`. Без клички
 /// Siri переспросит.
@@ -131,5 +156,14 @@ struct SproutShortcuts: AppShortcutsProvider {
             ],
             shortTitle: "Кого полить",
             systemImageName: "leaf")
+        AppShortcut(
+            intent: OpenGardenAR(),
+            phrases: [
+                "Сад в AR в \(.applicationName)",
+                "Покажи сад в \(.applicationName)",
+                "Открой сад в \(.applicationName)",
+            ],
+            shortTitle: "Сад в AR",
+            systemImageName: "arkit")
     }
 }

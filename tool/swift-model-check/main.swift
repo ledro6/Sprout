@@ -1937,6 +1937,82 @@ do {
     check(home.roster == roster, "файл не менялся — перечитывать нечего")
 }
 
+print("сила телефона:")
+do {
+    let a14 = Rig.Hardware(gpu: 7, memory: 4, lidar: false)
+    let a15 = Rig.Hardware(gpu: 8, memory: 6, lidar: false)
+    let a16pro = Rig.Hardware(gpu: 8, memory: 6, lidar: true)
+    let a17pro = Rig.Hardware(gpu: 9, memory: 8, lidar: true)
+    let a19 = Rig.Hardware(gpu: 9, memory: 8, lidar: false)
+    let a19pro = Rig.Hardware(gpu: 9, memory: 12, lidar: true)
+    check(Rig.tier(of: a14) == .lite, "A14 — бережно")
+    check(Rig.tier(of: a15) == .standard && Rig.tier(of: a16pro) == .standard,
+          "A15 и A16 — обычная сила")
+    check(Rig.tier(of: a17pro) == .pro && Rig.tier(of: a19) == .pro
+          && Rig.tier(of: a19pro) == .pro,
+          "A17 Pro и новее — полная сила: iPhone 15 Pro, 16, 17 и Air")
+    let full = Rig.of(a19pro)
+    let lite = Rig.of(a14)
+    check(full.plants > Rig.of(a15).plants && Rig.of(a15).plants > lite.plants,
+          "чем сильнее телефон, тем больше растений в саду разом")
+    check(full.drops > lite.drops && full.effects && !lite.effects && full.hdr,
+          "и больше капель, и дорогие эффекты только на сильных")
+    check(Rig.of(a17pro).room && !Rig.of(a19).room,
+          "сетка комнаты — только с LiDAR")
+    var hot = a19pro
+    hot.strained = true
+    let cooled = Rig.of(hot)
+    check(cooled.tier == .standard && cooled.plants < full.plants,
+          "перегрелся — нагрузка ниже")
+    check(cooled.detail == full.detail,
+          "а детализация моделей та же: иначе горячий телефон пересобирал бы их")
+
+    let stock = Blueprint.stock(.monstera)
+    let normal = Botany.grow(stock, species: "Монстера")
+    let sharp = Botany.grow(stock, species: "Монстера",
+                            detail: Rig.detail(of: a19pro))
+    let soft = Botany.grow(stock, species: "Монстера",
+                           detail: Rig.detail(of: a14))
+    func pixels(_ kit: Kit) -> Int {
+        kit.pictures.reduce(0) { $0 + $1.width * $1.height }
+    }
+    check(sharp.triangles > normal.triangles && normal.triangles > soft.triangles,
+          "сетки гуще на сильном телефоне: \(soft.triangles) → "
+              + "\(normal.triangles) → \(sharp.triangles)")
+    check(pixels(sharp) > pixels(normal) && pixels(normal) > pixels(soft),
+          "и рисунки чётче")
+    check(sharp.pieces.count == normal.pieces.count
+          && abs(sharp.height - normal.height) < 0.001,
+          "а само растение то же: те же листья на тех же местах")
+    check(Rig.Detail.standard.key != Rig.detail(of: a19pro).key,
+          "детализация — часть ключа кэша моделей")
+}
+
+print("сад в AR:")
+do {
+    let spreads: [Float] = [0.2, 0.1, 0.15, 0.3, 0.12, 0.25]
+    let heights: [Float] = [0.5, 0.2, 0.3, 0.7, 0.15, 0.4]
+    let spots = Plot.layout(spreads: spreads, heights: heights)
+    check(spots.count == 6, "у каждого растения своё место")
+    var apart = true
+    for i in spots.indices {
+        for j in spots.indices where j > i {
+            let d = spots[i] - spots[j]
+            if (d.x * d.x + d.y * d.y).squareRoot() < spreads[i] + spreads[j] {
+                apart = false
+            }
+        }
+    }
+    check(apart, "листья соседей не залезают друг в друга")
+    check(spots[3].y > spots[4].y && spots[0].y > spots[1].y,
+          "высокие — дальше низких, не заслоняют")
+    let front = spots.indices.filter { spots[$0].y == spots[4].y }
+    check(front.count == 4, "в ряду по четыре")
+    let middle = front.map { spots[$0].x }.reduce(0, +) / Float(front.count)
+    check(abs(middle) < 0.2, "ряд стоит посередине взгляда")
+    check(Plot.layout(spreads: [], heights: []).isEmpty, "пустой сад — пусто")
+}
+
 print("уезжаю:")
 do {
     let rooms = [Room(name: "Кухня", plants: [
