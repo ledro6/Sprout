@@ -50,8 +50,7 @@ struct SettingsView: View {
             Button("Открыть настройки") { openSystemSettings() }
             Button("Отмена", role: .cancel) {}
         } message: {
-            Text("Разрешить их можно в настройках телефона: "
-                 + "Sprout → Уведомления.")
+            Text("Их включают в настройках телефона: Sprout → Уведомления.")
         }
     }
 
@@ -173,12 +172,13 @@ struct SettingsView: View {
     }
 
     private var percent: String {
-        "\(Int((settings.hapticStrength * 100).rounded()))%"
+        Lang.format("%lld%%", Int((settings.hapticStrength * 100).rounded()))
     }
 
     /// Строка с переключателем. Подпись спрятана у самого переключателя, но
     /// нужна VoiceOver.
-    private func switchRow(_ title: String, note: String? = nil,
+    private func switchRow(_ title: LocalizedStringKey,
+                           note: LocalizedStringKey? = nil,
                            isOn: Binding<Bool>) -> some View {
         HStack(alignment: .center, spacing: 12) {
             VStack(alignment: .leading, spacing: 3) {
@@ -198,7 +198,8 @@ struct SettingsView: View {
         }
     }
 
-    private static let shapeNames = ["Росток", "Капля", "Цветок", "Горшок"]
+    private static let shapeNames = [Lang.text("Росток"), Lang.text("Капля"),
+                                     Lang.text("Цветок"), Lang.text("Горшок")]
 
     /// Выключенная фигурка остаётся на месте приглушённой: иначе кнопки
     /// перескакивали бы под пальцем.
@@ -267,7 +268,8 @@ struct SettingsView: View {
                            selection: Binding(get: { settings.threshold },
                                               set: { settings.threshold = $0 })) {
                         ForEach(Settings.thresholds, id: \.self) { level in
-                            Text("\(Int((level * 100).rounded()))%").tag(level)
+                            Text(Lang.format("%lld%%", Int((level * 100).rounded())))
+                                .tag(level)
                         }
                     }
                     .pickerStyle(.segmented)
@@ -360,29 +362,38 @@ struct SettingsView: View {
 private struct PrivacyView: View {
     var body: some View {
         SproutPage(title: "Политика конфиденциальности") {
-            Paragraph("Sprout не собирает о вас никаких сведений и никуда "
-                      + "их не передаёт.")
-            Paragraph("Что хранится", body:
-                "Клички растений, виды, влажность, даты — всё, что вы "
-                + "вводите, — лежит в файле внутри приложения, на самом "
-                + "телефоне. Там же настройки. Ничего из этого не покидает "
-                + "устройство.")
-            Paragraph("Сеть", body:
-                "Приложение не выходит в интернет. У него нет ни учётной "
-                + "записи, ни сервера, ни аналитики, ни рекламы.")
-            Paragraph("Датчик движения", body:
-                "Наклон телефона чуть двигает узор на фоне. Показания "
-                + "используются только для этого, не сохраняются и никуда "
-                + "не уходят.")
-            Paragraph("Уведомления", body:
-                "Напоминания о поливе создаёт сам телефон по срокам, "
-                + "посчитанным на нём же. Пуш-сервер в этом не участвует.")
-            Paragraph("Резервная копия", body:
-                "Файл сада попадает в резервную копию iPhone — туда же, "
-                + "куда и остальные ваши данные, по правилам Apple.")
-            Paragraph("Удаление", body:
-                "Удалите приложение — вместе с ним исчезнет и всё, что оно "
-                + "помнило.")
+            // Абзац — одна строка каталога: `\` в конце строки литерала
+            // склеивает её со следующей без переноса.
+            Paragraph("""
+                Sprout не собирает о вас никаких сведений и никуда их не \
+                передаёт.
+                """)
+            Paragraph("Что хранится", body: """
+                Клички растений, виды, влажность, даты — всё, что вы вводите, \
+                — лежит в файле внутри приложения, на самом телефоне. Там же \
+                настройки. Ничего из этого не покидает устройство.
+                """)
+            Paragraph("Сеть", body: """
+                Приложение не выходит в интернет. У него нет ни учётной \
+                записи, ни сервера, ни аналитики, ни рекламы.
+                """)
+            Paragraph("Датчик движения", body: """
+                Наклон телефона чуть двигает узор на фоне. Показания \
+                используются только для этого, не сохраняются и никуда не \
+                уходят.
+                """)
+            Paragraph("Уведомления", body: """
+                Напоминания о поливе создаёт сам телефон по срокам, \
+                посчитанным на нём же. Пуш-сервер в этом не участвует.
+                """)
+            Paragraph("Резервная копия", body: """
+                Файл сада попадает в резервную копию iPhone — туда же, куда \
+                и остальные ваши данные, по правилам Apple.
+                """)
+            Paragraph("Удаление", body: """
+                Удалите приложение — вместе с ним исчезнет и всё, что оно \
+                помнило.
+                """)
         }
     }
 }
@@ -414,15 +425,16 @@ private struct AboutView: View {
 
             SproutDivider()
 
-            fact("Версия", version)
-            fact("Система", "iOS 26 и новее")
+            pair("Версия", version)
+            pair("Система", Lang.text("iOS 26 и новее"))
 
             SproutDivider()
 
-            Paragraph("Время идёт быстрее", body:
-                "Час сада проходит здесь за секунду настоящего времени: "
-                + "иначе за один сеанс проценты влажности не сдвинулись бы "
-                + "ни на один. По этим же часам считаются и напоминания.")
+            Paragraph("Время идёт быстрее", body: """
+                Час сада проходит здесь за секунду настоящего времени: иначе \
+                за один сеанс проценты влажности не сдвинулись бы ни на один. \
+                По этим же часам считаются и напоминания.
+                """)
 
             Link(destination: URL(string: "https://github.com/ledro6/Sprout")!) {
                 HStack(spacing: 8) {
@@ -436,7 +448,7 @@ private struct AboutView: View {
         }
     }
 
-    private func fact(_ name: String, _ value: String) -> some View {
+    private func pair(_ name: LocalizedStringKey, _ value: String) -> some View {
         HStack(spacing: 12) {
             Text(name)
                 .font(Typography.settingRow)

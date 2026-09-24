@@ -17,18 +17,18 @@ final class Settings {
 
         var title: String {
             switch self {
-            case .system: "Как в системе"
-            case .light: "Светлая"
-            case .dark: "Тёмная"
+            case .system: Lang.text("Как в системе")
+            case .light: Lang.text("Светлая")
+            case .dark: Lang.text("Тёмная")
             }
         }
 
         /// Для ряда из трёх кнопок, где «Как в системе» не помещается.
         var short: String {
             switch self {
-            case .system: "Система"
-            case .light: "Светлая"
-            case .dark: "Тёмная"
+            case .system: Lang.text("Система")
+            case .light: Lang.text("Светлая")
+            case .dark: Lang.text("Тёмная")
             }
         }
 
@@ -57,8 +57,8 @@ final class Settings {
 
         var title: String {
             switch self {
-            case .grid: "Плиткой"
-            case .list: "Списком"
+            case .grid: Lang.text("Плиткой")
+            case .list: Lang.text("Списком")
             }
         }
     }
@@ -72,10 +72,10 @@ final class Settings {
 
         var title: String {
             switch self {
-            case .manual: "Вручную"
-            case .thirsty: "Сначала сухие"
-            case .name: "По имени"
-            case .newest: "Сначала новые"
+            case .manual: Lang.text("Вручную")
+            case .thirsty: Lang.text("Сначала сухие")
+            case .name: Lang.text("По имени")
+            case .newest: Lang.text("Сначала новые")
             }
         }
 

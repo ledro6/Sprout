@@ -253,7 +253,7 @@ struct SearchView: View {
     @ViewBuilder
     private var history: some View {
         if recents.queries.isEmpty {
-            hint("Найдётся по кличке или по виду — «Баксик», «Монстера».",
+            hint(Lang.text("Найдётся по кличке или по виду — «Баксик», «Монстера»."),
                  icon: "magnifyingglass")
         } else {
             VStack(alignment: .leading, spacing: 14) {
@@ -293,7 +293,7 @@ struct SearchView: View {
     }
 
     private var nothing: some View {
-        hint("По запросу «\(asked)» в квартире ничего не растёт.",
+        hint(Lang.format("По запросу «%@» в квартире ничего не растёт.", asked),
              icon: "leaf")
     }
 

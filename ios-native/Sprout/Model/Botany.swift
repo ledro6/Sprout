@@ -10,35 +10,54 @@ enum Preset: String, Codable, CaseIterable, Sendable {
 
     var title: String {
         switch self {
-        case .monstera: "Монстера"
-        case .ficus: "Фикус"
-        case .sansevieria: "Сансевиерия"
-        case .zamioculcas: "Замиокулькас"
-        case .spathiphyllum: "Спатифиллум"
-        case .orchid: "Орхидея"
-        case .aloe: "Алоэ"
-        case .cactus: "Кактус"
-        case .echeveria: "Эхеверия"
-        case .jade: "Толстянка"
-        case .dracaena: "Драцена"
-        case .palm: "Пальма"
-        case .fern: "Папоротник"
-        case .ivy: "Плющ"
-        case .chlorophytum: "Хлорофитум"
-        case .violet: "Фиалка"
-        case .begonia: "Бегония"
-        case .pelargonium: "Пеларгония"
-        case .herbs: "Пряные травы"
-        case .tulip: "Тюльпан"
+        case .monstera: Lang.text("Монстера")
+        case .ficus: Lang.text("Фикус")
+        case .sansevieria: Lang.text("Сансевиерия")
+        case .zamioculcas: Lang.text("Замиокулькас")
+        case .spathiphyllum: Lang.text("Спатифиллум")
+        case .orchid: Lang.text("Орхидея")
+        case .aloe: Lang.text("Алоэ")
+        case .cactus: Lang.text("Кактус")
+        case .echeveria: Lang.text("Эхеверия")
+        case .jade: Lang.text("Толстянка")
+        case .dracaena: Lang.text("Драцена")
+        case .palm: Lang.text("Пальма")
+        case .fern: Lang.text("Папоротник")
+        case .ivy: Lang.text("Плющ")
+        case .chlorophytum: Lang.text("Хлорофитум")
+        case .violet: Lang.text("Фиалка")
+        case .begonia: Lang.text("Бегония")
+        case .pelargonium: Lang.text("Пеларгония")
+        case .herbs: Lang.text("Пряные травы")
+        case .tulip: Lang.text("Тюльпан")
         }
     }
 
     /// По вписанному виду. Частное — раньше общего: «каменная роза» —
-    /// суккулент, а не роза.
+    /// суккулент, а не роза. Сперва основы из таблицы, потом названия на
+    /// языке телефона: «サボテン» — тоже кактус.
     static func of(_ species: String) -> Preset {
         let name = species.lowercased()
-        return table.first { name.contains($0.stem) }?.preset ?? .spathiphyllum
+        return stem(name) ?? named.first { name.contains($0.stem) }?.preset
+            ?? .spathiphyllum
     }
+
+    private static func stem(_ name: String) -> Preset? {
+        table.first { name.contains($0.stem) }?.preset
+    }
+
+    /// Названия самих моделей и видов из `Species` — в переводе. Длинные
+    /// раньше коротких: «Rosemary» — травы, хоть в нём и есть «Rose».
+    /// Однобуквенные не берём: иероглиф нашёлся бы в любом слове.
+    private static let named: [(stem: String, preset: Preset)] =
+        (allCases.map { ($0.title.lowercased(), $0) }
+         + Species.table.compactMap { row in
+             stem(row.species.lowercased()).map {
+                 (Lang.text(row.species).lowercased(), $0)
+             }
+         })
+        .filter { $0.stem.count > 1 }
+        .sorted { $0.stem.count > $1.stem.count }
 
     private static let table: [(stem: String, preset: Preset)] = [
         ("монстер", .monstera), ("филодендрон", .monstera),
@@ -72,6 +91,42 @@ enum Preset: String, Codable, CaseIterable, Sendable {
         ("кустик", .herbs), ("росток", .herbs),
         ("тюльпан", .tulip), ("лили", .tulip), ("нарцисс", .tulip),
         ("гиацинт", .tulip), ("крокус", .tulip), ("подсолнух", .tulip),
+        // Латинские родовые имена — их пишут почти на любом языке — и
+        // английские названия.
+        ("monst", .monstera), ("philodendron", .monstera),
+        ("ficus", .ficus), ("rubber", .ficus),
+        ("sansevier", .sansevieria), ("trifasciata", .sansevieria),
+        ("snake plant", .sansevieria),
+        ("zamioculcas", .zamioculcas), ("zz plant", .zamioculcas),
+        ("spathiphyll", .spathiphyllum), ("peace lily", .spathiphyllum),
+        ("dieffenbach", .spathiphyllum), ("anthurium", .spathiphyllum),
+        ("aglaonema", .spathiphyllum),
+        ("orchid", .orchid), ("phalaenopsis", .orchid),
+        ("aloe", .aloe), ("haworth", .aloe), ("agave", .aloe),
+        ("cact", .cactus), ("kakt", .cactus), ("opuntia", .cactus),
+        ("mammillaria", .cactus),
+        ("echeveria", .echeveria), ("sempervivum", .echeveria),
+        ("succulent", .echeveria),
+        ("crassula", .jade), ("jade", .jade), ("kalancho", .jade),
+        ("dracaena", .dracaena), ("yucca", .dracaena),
+        ("cordyline", .dracaena),
+        ("chamaedorea", .palm), ("palm", .palm), ("bamboo", .palm),
+        ("nephrolepis", .fern), ("fern", .fern), ("moss", .fern),
+        ("hedera", .ivy), ("ivy", .ivy), ("scindapsus", .ivy),
+        ("epipremnum", .ivy), ("pothos", .ivy), ("hoya", .ivy),
+        ("tradescantia", .ivy),
+        ("chlorophytum", .chlorophytum), ("spider plant", .chlorophytum),
+        ("saintpaulia", .violet), ("violet", .violet),
+        ("begonia", .begonia),
+        ("pelargonium", .pelargonium), ("geranium", .pelargonium),
+        ("rosmarinus", .herbs), ("rosemary", .herbs),
+        ("sunflower", .tulip),
+        ("rose", .pelargonium), ("daisy", .pelargonium),
+        ("flower", .pelargonium),
+        ("basil", .herbs), ("mint", .herbs), ("parsley", .herbs),
+        ("dill", .herbs), ("herb", .herbs),
+        ("tulip", .tulip), ("lily", .tulip), ("narcissus", .tulip),
+        ("daffodil", .tulip), ("hyacinth", .tulip), ("crocus", .tulip),
     ]
 }
 

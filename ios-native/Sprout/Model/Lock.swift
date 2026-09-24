@@ -56,7 +56,7 @@ final class Lock {
         switch context.biometryType {
         case .faceID: return (ready, "Face ID")
         case .touchID: return (ready, "Touch ID")
-        default: return (ready, "код-паролю")
+        default: return (ready, Lang.text("код-паролю"))
         }
     }
 
@@ -73,10 +73,10 @@ final class Lock {
         asking = true
         defer { asking = false }
         let context = LAContext()
-        context.localizedCancelTitle = "Отмена"
+        context.localizedCancelTitle = Lang.text("Отмена")
         let granted = try? await context.evaluatePolicy(
             .deviceOwnerAuthentication,
-            localizedReason: "Чтобы открыть сад")
+            localizedReason: Lang.text("Чтобы открыть сад"))
         if granted == true { open = true }
     }
 }

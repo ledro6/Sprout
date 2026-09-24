@@ -15,11 +15,11 @@ enum Tint: Int, CaseIterable, Identifiable, Sendable {
 
     var title: String {
         switch self {
-        case .green: "Зелёный"
-        case .blue: "Синий"
-        case .violet: "Сиреневый"
-        case .amber: "Медовый"
-        case .rose: "Розовый"
+        case .green: Lang.text("Зелёный")
+        case .blue: Lang.text("Синий")
+        case .violet: Lang.text("Сиреневый")
+        case .amber: Lang.text("Медовый")
+        case .rose: Lang.text("Розовый")
         }
     }
 

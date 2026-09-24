@@ -351,8 +351,9 @@ struct Blueprint: Codable, Hashable, Sendable {
 
     /// Подпись для экрана: откуда модель.
     var source: String {
-        traits == nil ? "Готовая модель: \(preset.title.lowercased())"
-            : "Модель по снимку: \(preset.title.lowercased())"
+        traits == nil
+            ? Lang.format("Готовая модель: %@", preset.title.lowercased())
+            : Lang.format("Модель по снимку: %@", preset.title.lowercased())
     }
 
     /// Имя файла модели: меняется с чертежом и с версией сборки.

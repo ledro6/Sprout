@@ -18,8 +18,8 @@ enum Slip: Equatable {
 
     var title: String {
         switch self {
-        case .removal: "Растение удалено"
-        case .pour: "Полито"
+        case .removal: Lang.text("Растение удалено")
+        case .pour: Lang.text("Полито")
         }
     }
 
@@ -63,7 +63,8 @@ final class Bin {
         else { return }
         self.garden = garden
         Ember.shared.light(from: plate == .zero ? Screen.middle : plate)
-        let line = "Растение «\(gone.plant.name)» удалено. Его можно вернуть."
+        let line = Lang.format("Растение «%@» удалено. Его можно вернуть.",
+                               gone.plant.name)
         UIAccessibility.post(notification: .announcement, argument: line)
         Feel.toss()
         count(.removal(gone))
@@ -238,7 +239,7 @@ private struct Countdown: View {
                                                lineCap: .round))
                     .rotationEffect(.degrees(-90))
             }
-            Text("\(left)")
+            Text(left.formatted())
                 .font(Typography.toastCount)
                 .monospacedDigit()
                 .foregroundStyle(tint)
@@ -249,7 +250,7 @@ private struct Countdown: View {
     }
 
     private var spoken: String {
-        "Осталось \(left) " + Plant.plural(left, "секунда", "секунды", "секунд")
+        Lang.format("Осталось %lld секунд", left)
     }
 
     private func remaining(at moment: Date) -> CGFloat {

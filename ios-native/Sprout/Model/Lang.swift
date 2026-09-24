@@ -22,6 +22,10 @@ enum Lang {
 
     static func text(_ key: String) -> String { format(key) }
 
+    /// Ключ, который переводится позже, там, где его показывают: таблица
+    /// видов хранит русские ключи, а сборщик каталога видит их здесь.
+    static func key(_ key: String) -> String { key }
+
     static func format(_ key: String, _ values: any Spoken...) -> String {
         say(key, values.map(\.said))
     }

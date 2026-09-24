@@ -109,14 +109,14 @@ struct ProfileView: View {
                     }
                     .accessibilityHidden(true)
                 VStack(alignment: .leading, spacing: 3) {
-                    Text(named ? garden.owner : "Имя не задано")
+                    Text(named ? garden.owner : Lang.text("Имя не задано"))
                         .font(Typography.navTitle)
                         .foregroundStyle(named ? Palette.ink : .secondary)
                         .lineLimit(1)
                     Text(named
-                         ? "Сад с " + garden.since.formatted(
-                             .dateTime.day().month(.wide).year())
-                         : "Назовитесь — имя встретит вас при запуске")
+                         ? Lang.format("Сад с %@", garden.since.formatted(
+                             .dateTime.day().month(.wide).year()))
+                         : Lang.text("Назовитесь — имя встретит вас при запуске"))
                         .font(Typography.settingNote)
                         .foregroundStyle(.secondary)
                 }
@@ -157,9 +157,9 @@ struct ProfileView: View {
         SproutGroup("Сад") {
             Grid(alignment: .leading, horizontalSpacing: 12) {
                 GridRow {
-                    SproutFigure(garden.plantCount, "Растений")
-                    SproutFigure(garden.rooms.count, "Комнат")
-                    SproutFigure(age, "Дней")
+                    SproutFigure("Растений", garden.plantCount)
+                    SproutFigure("Комнат", garden.rooms.count)
+                    SproutFigure("Дней", age)
                 }
             }
         }
@@ -216,8 +216,8 @@ struct ProfileView: View {
         )) {
             Button("Хорошо", role: .cancel) {}
         } message: {
-            Text("Счёт от " + stamp(welcomed)
-                 + ". Обновится, когда друг пришлёт код снова.")
+            Text(Lang.format("Счёт от %@. Обновится, когда друг пришлёт код снова.",
+                             stamp(welcomed)))
         }
     }
 
@@ -262,7 +262,7 @@ struct ProfileView: View {
 
     private func row(_ place: Int, _ rival: Rival) -> some View {
         HStack(spacing: 10) {
-            Text("\(place)")
+            Text(place.formatted())
                 .font(Typography.figureCaption)
                 .foregroundStyle(.tertiary)
                 .contentTransition(.numericText())
@@ -278,11 +278,11 @@ struct ProfileView: View {
             }
             Spacer(minLength: 8)
             VStack(alignment: .trailing, spacing: 1) {
-                Text("\(rival.total)")
+                Text(rival.total.formatted())
                     .font(Typography.settingRow)
                     .foregroundStyle(Palette.ink)
                     .contentTransition(.numericText())
-                Text("череда \(rival.streak)")
+                Text(Lang.format("череда %lld", rival.streak))
                     .font(Typography.figureCaption)
                     .foregroundStyle(.secondary)
             }
@@ -294,18 +294,20 @@ struct ProfileView: View {
     /// Чужая строка свежа настолько, насколько свеж код, — об этом говорит
     /// дата под кличкой.
     private func note(for rival: Rival) -> String {
-        guard rival.id != me.id else { return "вы" }
-        return "счёт от "
-            + rival.stamp.formatted(.dateTime.day().month(.abbreviated))
+        guard rival.id != me.id else { return Lang.text("вы") }
+        return Lang.format("счёт от %@", rival.stamp.formatted(
+            .dateTime.day().month(.abbreviated)))
     }
 
     /// Удалось — от кнопки вставки идёт волна.
     private func invite(_ text: String) {
         guard let rival = friends.take(text, mine: garden.owner) else {
             trouble = Rival.read(text) == nil
-                ? "В скопированном нет кода Sprout. Скопируйте сообщение "
-                    + "друга целиком — код лежит в нём последней строкой."
-                : "Это ваш собственный код: в таблице вы и так есть."
+                ? Lang.text("""
+                    В скопированном нет кода Sprout. Скопируйте сообщение \
+                    друга целиком — код лежит в нём последней строкой.
+                    """)
+                : Lang.text("Это ваш собственный код: в таблице вы и так есть.")
             Feel.wrong()
             return
         }
@@ -362,8 +364,7 @@ struct ProfileView: View {
             Button("Стереть", role: .destructive) { garden.erase() }
             Button("Отмена", role: .cancel) {}
         } message: {
-            Text("Исчезнут все растения и весь журнал поливов. "
-                 + "Вернуть их будет нельзя.")
+            Text("Исчезнут все растения и весь журнал поливов. Вернуть их будет нельзя.")
         }
         .fileImporter(isPresented: $importing,
                       allowedContentTypes: [.json]) { result in
@@ -377,7 +378,7 @@ struct ProfileView: View {
         encoder.outputFormatting = [.prettyPrinted, .withoutEscapingSlashes]
         guard let data = try? encoder.encode(garden.state) else { return }
         let file = FileManager.default.temporaryDirectory
-            .appendingPathComponent("Сад — \(garden.owner).json")
+            .appendingPathComponent(Lang.format("Сад — %@", garden.owner) + ".json")
         guard (try? data.write(to: file, options: .atomic)) != nil else {
             return
         }
@@ -394,7 +395,7 @@ struct ProfileView: View {
               let state = try? JSONDecoder().decode(GardenState.self,
                                                     from: data)
         else {
-            trouble = "Это не файл сада Sprout."
+            trouble = Lang.text("Это не файл сада Sprout.")
             Feel.wrong()
             return
         }

@@ -62,11 +62,12 @@ struct PeriodWheel: View {
 }
 
 /// Группа настроек: подпись снаружи плашки, как у системных списков.
+/// Подписи плашек — ключи каталога строк, как у `Text("…")`.
 struct SproutGroup<Content: View>: View {
-    let title: String
+    let title: LocalizedStringKey
     let content: Content
 
-    init(_ title: String, @ViewBuilder content: () -> Content) {
+    init(_ title: LocalizedStringKey, @ViewBuilder content: () -> Content) {
         self.title = title
         self.content = content()
     }
@@ -90,11 +91,11 @@ struct SproutGroup<Content: View>: View {
 
 /// Название настройки, выбор и необязательное пояснение.
 struct SproutBlock<Control: View>: View {
-    let title: String
-    let note: String?
+    let title: LocalizedStringKey
+    let note: LocalizedStringKey?
     let control: Control
 
-    init(_ title: String, note: String? = nil,
+    init(_ title: LocalizedStringKey, note: LocalizedStringKey? = nil,
          @ViewBuilder control: () -> Control) {
         self.title = title
         self.note = note
@@ -140,11 +141,11 @@ struct SproutGear: View {
 /// Заголовок раздела и кнопка настроек — на каждом экране, кроме главной: там
 /// кнопка живёт в закреплённой строке комнаты.
 struct SproutHead: View {
-    let title: String
+    let title: LocalizedStringKey
 
     @State private var open = false
 
-    init(_ title: String) {
+    init(_ title: LocalizedStringKey) {
         self.title = title
     }
 
@@ -216,20 +217,20 @@ struct SproutTints: View {
 /// Число с ярлыком под ним: «17 / Всего». Ярлык, а не фраза, — его не надо
 /// склонять по числу.
 struct SproutFigure: View {
+    let caption: LocalizedStringKey
     let value: Int
-    let caption: String
 
     var note: String?
 
-    init(_ value: Int, _ caption: String, note: String? = nil) {
-        self.value = value
+    init(_ caption: LocalizedStringKey, _ value: Int, note: String? = nil) {
         self.caption = caption
+        self.value = value
         self.note = note
     }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 1) {
-            Text("\(value)")
+            Text(value.formatted())
                 .font(Typography.figure)
                 .foregroundStyle(Palette.ink)
                 .contentTransition(.numericText())
@@ -256,12 +257,20 @@ struct SproutDivider: View {
     var body: some View { Divider() }
 }
 
+/// Подпись — ключ каталога; строка из данных (прежний запрос поиска) идёт
+/// как есть.
 struct SproutLink: View {
-    let title: String
+    let title: Text
     let icon: String
 
-    init(_ title: String, icon: String) {
-        self.title = title
+    init(_ title: LocalizedStringKey, icon: String) {
+        self.title = Text(title)
+        self.icon = icon
+    }
+
+    @_disfavoredOverload
+    init(_ title: some StringProtocol, icon: String) {
+        self.title = Text(title)
         self.icon = icon
     }
 
@@ -271,7 +280,7 @@ struct SproutLink: View {
                 .font(Typography.settingRow)
                 .foregroundStyle(Palette.accent)
                 .frame(width: 24)
-            Text(title)
+            title
                 .font(Typography.settingRow)
                 .foregroundStyle(Palette.ink)
             Spacer(minLength: 8)
@@ -284,10 +293,10 @@ struct SproutLink: View {
 }
 
 struct SproutPage<Content: View>: View {
-    let title: String
+    let title: LocalizedStringKey
     let content: Content
 
-    init(title: String, @ViewBuilder content: () -> Content) {
+    init(title: LocalizedStringKey, @ViewBuilder content: () -> Content) {
         self.title = title
         self.content = content()
     }
@@ -312,15 +321,15 @@ struct SproutPage<Content: View>: View {
 }
 
 struct Paragraph: View {
-    let heading: String?
-    let text: String
+    let heading: LocalizedStringKey?
+    let text: LocalizedStringKey
 
-    init(_ text: String) {
+    init(_ text: LocalizedStringKey) {
         heading = nil
         self.text = text
     }
 
-    init(_ heading: String, body text: String) {
+    init(_ heading: LocalizedStringKey, body text: LocalizedStringKey) {
         self.heading = heading
         self.text = text
     }

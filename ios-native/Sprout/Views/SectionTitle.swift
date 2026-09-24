@@ -3,9 +3,9 @@ import SwiftUI
 /// Заголовок раздела. Не системный: системный при прокрутке переезжает в
 /// панель сверху, а этот уезжает с содержимым, как в Музыке.
 struct SectionTitle: View {
-    let text: String
+    let text: LocalizedStringKey
 
-    init(_ text: String) {
+    init(_ text: LocalizedStringKey) {
         self.text = text
     }
 

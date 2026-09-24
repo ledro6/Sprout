@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Каталог строк приложения: собирает и проверяет переводы.
+Каталоги строк приложения: собирает и проверяет переводы.
 
     python3 tool/make_strings.py build    # собрать *.xcstrings из таблиц
     python3 tool/make_strings.py check    # проверить, ничего не пишет
@@ -9,20 +9,29 @@
 коде. Переводы лежат таблицами по языкам в tool/strings/<язык>.json: ключ →
 перевод, а у строк, где форма зависит от числа, — ключ → {"one": …,
 "few": …, "other": …}. Русская таблица держит только такие строки: у
-остальных русский текст — сам ключ.
+остальных русский текст — сам ключ. Два раздела таблицы — отдельные
+каталоги, тоже по русскому тексту: "_shortcuts" — фразы Siri
+(AppShortcuts.xcstrings), "_infoplist" — пояснения к разрешениям
+(InfoPlist.xcstrings).
 
 Ключи берутся из кода, а не выписываются руками:
 
-- `Lang.text("…")` и `Lang.format("…", …)` — строки модели и экранов;
-- строки-литералы в местах, где SwiftUI сам ищет перевод: `Text("…")`,
-  `Button("…")`, `Label("…", …)`, `.navigationTitle("…")` и свои плашки
-  приложения, которые принимают `LocalizedStringKey`;
-- строки App Intents: названия команд, описания, диалоги.
+- `Lang.text("…")`, `Lang.format("…", …)` и `Lang.key("…")`;
+- литералы там, где SwiftUI сам ищет перевод: `Text("…")`, `Button("…")`,
+  `.navigationTitle("…")`, плашки приложения с `LocalizedStringKey` — и оба
+  плеча `условие ? "…" : "…"` (или `nil`) в тех же местах;
+- строки App Intents: названия команд, описания, диалоги;
+- фразы Siri из `phrases: [...]`;
+- пояснения к разрешениям — INFOPLIST_KEY_NS…UsageDescription проекта.
+
+Многострочный литерал `\"\"\"` читается так же, как его прочтёт Swift: `\\` в
+конце строки склеивает её со следующей.
 
 Проверка ловит то, что иначе нашлось бы только на телефоне с другим
 языком: ключ без перевода, перевод с другими подстановками (%@, %lld),
-неполный набор форм числа для языка и русскую строку, которая идёт на экран
-мимо каталога.
+неполный набор форм числа, фразу Siri без имени приложения, язык,
+оставленный по-английски, и русскую строку, которая идёт на экран мимо
+каталога.
 """
 import json
 import re
@@ -30,9 +39,14 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-APP = ROOT / "ios-native" / "Sprout"
+NATIVE = ROOT / "ios-native"
+APP = NATIVE / "Sprout"
+WIDGET = NATIVE / "SproutWidget"
+PROJECT = NATIVE / "Sprout.xcodeproj" / "project.pbxproj"
 TABLES = ROOT / "tool" / "strings"
 CATALOG = APP / "Localizable.xcstrings"
+SHORTCUTS = APP / "AppShortcuts.xcstrings"
+INFOPLIST = APP / "InfoPlist.xcstrings"
 SOURCE = "ru"
 
 # Языки интерфейса iPhone. Региональные варианты английского, испанского,
@@ -68,24 +82,35 @@ DEFAULT_PLURALS = ["one", "other"]
 CYRILLIC = {"ru", "uk", "bg", "kk"}
 
 LITERAL = r'"((?:[^"\\\n]|\\.)*)"'
-LANG_CALL = re.compile(r'\bLang\.(?:text|format)\(\s*' + LITERAL)
-# Первые аргументы, которые SwiftUI и плашки приложения переводят сами.
+LITERAL_AT = re.compile(LITERAL)
+# Места, где аргумент — ключ каталога. Сам аргумент разбирает `argument`.
+LANG_CALL = re.compile(r'\bLang\.(?:text|format|key)\(\s*')
 SWIFTUI_FIRST = re.compile(
     r'(?<![\w.])(?:Text|Button|Label|Toggle|Picker|TextField|SecureField|'
-    r'Section|Menu|Tab|ProgressView|DatePicker|Stepper|Link|'
-    r'SproutGroup|SproutBlock|SproutHead|SproutLink|Paragraph|SproutPage|'
-    r'switchRow|tool|hint|chore)\(\s*' + LITERAL)
+    r'Section|Menu|Tab|ProgressView|DatePicker|Stepper|Link|ShareLink|'
+    r'ContentUnavailableView|SproutGroup|SproutBlock|SproutHead|SproutLink|'
+    r'SproutFigure|SproutPage|Paragraph|SectionTitle|switchRow|tool|pair)'
+    r'\(\s*')
 SWIFTUI_MOD = re.compile(
     r'\.(?:navigationTitle|alert|confirmationDialog|accessibilityLabel|'
-    r'accessibilityHint|accessibilityValue|help|badge)\(\s*' + LITERAL)
+    r'accessibilityHint|accessibilityValue|help|badge|'
+    r'configurationDisplayName|description)\(\s*')
 NAMED = re.compile(
     r'\b(?:note|body|title|prompt|done|message|requestValueDialog|'
-    r'shortTitle|dialog)\s*:\s*' + LITERAL)
+    r'shortTitle|dialog|caption|line)\s*:\s*')
 INTENT = re.compile(
     r'(?:LocalizedStringResource\s*=|TypeDisplayRepresentation\s*=|'
-    r'IntentDescription\(|IntentDialog\()\s*' + LITERAL)
+    r'IntentDescription\(|IntentDialog\()\s*')
+# Оба плеча условия — литералы или nil: `cond ? nil : "…"`.
+BRANCH = r'(?:' + LITERAL + r'|nil)'
+TERNARY_AT = re.compile(r'[^"\n?;{}]*?\?\s*' + BRANCH + r'\s*:\s*' + BRANCH)
+PHRASES = re.compile(r'\bphrases:\s*\[(.*?)\]', re.S)
+MULTI = re.compile(r'"""[ \t]*\n(.*?)\n([ \t]*)"""', re.S)
+USAGE = re.compile(r'INFOPLIST_KEY_(NS\w+UsageDescription)\s*=\s*' + LITERAL
+                   + r';')
 CYR = re.compile(r'[А-Яа-яЁё]')
 SPEC = re.compile(r'%(?:\d+\$)?(?:\.\d+)?(?:ll|l|h|q)?[@dDiuUxXoOfeEgGcCsSaA]')
+PARAM = re.compile(r'\$\{(\w+)\}')
 
 
 def unescape(text):
@@ -93,13 +118,23 @@ def unescape(text):
             .replace("\\\\", "\\"))
 
 
-WIDGET = ROOT / "ios-native" / "SproutWidget"
-
-
-def sources():
-    for folder in (APP, WIDGET):
-        for path in sorted(folder.rglob("*.swift")):
-            yield path, path.read_text(encoding="utf-8")
+def flatten(text):
+    """Многострочные литералы — однострочными на месте открывающих кавычек.
+    Переводы строк после них сохраняют номера строк файла."""
+    def one(match):
+        body, indent = match.group(1), match.group(2)
+        lines = body.split("\n")
+        value = ""
+        for index, line in enumerate(lines):
+            line = line[len(indent):] if line.startswith(indent) \
+                else line.strip()
+            if line.endswith("\\") and not line.endswith("\\\\"):
+                value += line[:-1]
+            else:
+                value += line + ("\\n" if index < len(lines) - 1 else "")
+        value = re.sub(r'(?<!\\)"', r'\\"', value)
+        return '"' + value + '"' + "\n" * (len(lines) + 1)
+    return MULTI.sub(one, text)
 
 
 def code_only(line):
@@ -119,71 +154,130 @@ def code_only(line):
     return line
 
 
+def sources():
+    for folder in (APP, WIDGET):
+        for path in sorted(folder.rglob("*.swift")):
+            yield path, path.read_text(encoding="utf-8")
+
+
+def argument(code, at, ternary):
+    """Литералы-ключи, с которых начинается аргумент: сам литерал или оба
+    плеча условия. Каждый — (начало, текст)."""
+    match = LITERAL_AT.match(code, at)
+    if match:
+        return [(match.start(1), match.group(1))]
+    if not ternary:
+        return []
+    match = TERNARY_AT.match(code, at)
+    if not match:
+        return []
+    return [(match.start(group), match.group(group)) for group in (1, 2)
+            if match.group(group) is not None]
+
+
+def phrase(literal):
+    """Фраза Siri так, как её ищет система: параметры — ${…}."""
+    key = re.sub(r'\\\(\s*\\\.\$(\w+)\s*\)', r'${\1}', literal)
+    key = re.sub(r'\\\(\s*\.applicationName\s*\)', '${applicationName}', key)
+    return unescape(key)
+
+
 def extract():
-    """Ключи из кода: откуда и каким путём каждый."""
-    keys = {}
-    stray = []
+    """Ключи из кода: откуда каждый, фразы Siri и строки мимо каталога."""
+    keys, phrases, stray = {}, {}, []
     for path, text in sources():
-        rel = path.relative_to(APP.parent)
-        for number, raw in enumerate(text.splitlines(), 1):
-            line = code_only(raw)
-            if not line.strip():
-                continue
-            found = set()
-            for pattern in (LANG_CALL, SWIFTUI_FIRST, SWIFTUI_MOD, NAMED,
-                            INTENT):
-                for match in pattern.finditer(line):
-                    literal = match.group(1)
+        rel = path.relative_to(NATIVE)
+        code = "\n".join(code_only(line)
+                         for line in flatten(text).split("\n"))
+        starts = [0]
+        for line in code.split("\n"):
+            starts.append(starts[-1] + len(line) + 1)
+
+        def number(offset):
+            low, high = 0, len(starts) - 1
+            while low < high:
+                middle = (low + high + 1) // 2
+                if starts[middle] <= offset:
+                    low = middle
+                else:
+                    high = middle - 1
+            return low + 1
+
+        found = set()
+        for pattern in (LANG_CALL, SWIFTUI_FIRST, SWIFTUI_MOD, NAMED,
+                        INTENT):
+            for match in pattern.finditer(code):
+                for start, literal in argument(code, match.end(),
+                                               pattern is not LANG_CALL):
+                    found.add(start)
                     if "\\(" in literal:
                         # Подстановка в литерале SwiftUI дала бы ключ с %@,
                         # который легко не угадать, — такие идут через Lang.
-                        if pattern is not LANG_CALL:
-                            stray.append((rel, number, literal,
-                                          "подстановка в литерале SwiftUI"))
+                        # Одна подстановка без слов — не текст, а число.
+                        if CYR.search(literal):
+                            stray.append((rel, number(start), literal,
+                                          "подстановка в литерале"))
                         continue
                     key = unescape(literal)
-                    if not key.strip() or not CYR.search(key):
-                        continue
-                    keys.setdefault(key, f"{rel}:{number}")
-                    found.add(match.start(1))
-            for match in re.finditer(LITERAL, line):
-                if match.start(1) in found or not CYR.search(match.group(1)):
-                    continue
-                stray.append((rel, number, match.group(1), "мимо каталога"))
-    return keys, stray
+                    # Вызов Lang — ключ всегда, даже без слов: «%lld%%»
+                    # по-турецки пишется «%%%lld».
+                    if key.strip() and (pattern is LANG_CALL
+                                        or CYR.search(key)):
+                        keys.setdefault(key, f"{rel}:{number(start)}")
+        for block in PHRASES.finditer(code):
+            for match in LITERAL_AT.finditer(code, block.start(1),
+                                             block.end(1)):
+                found.add(match.start(1))
+                phrases.setdefault(phrase(match.group(1)),
+                                   f"{rel}:{number(match.start(1))}")
+        for match in LITERAL_AT.finditer(code):
+            if match.start(1) in found or not CYR.search(match.group(1)):
+                continue
+            stray.append((rel, number(match.start(1)), match.group(1),
+                          "мимо каталога"))
+    return keys, phrases, stray
+
+
+def usages():
+    """Пояснения к разрешениям из настроек проекта: ключ Info.plist → текст."""
+    found = {}
+    for key, value in USAGE.findall(PROJECT.read_text(encoding="utf-8")):
+        found.setdefault(key, set()).add(unescape(value))
+    return found
+
+
+# Файл → литералы, которые остаются русскими нарочно: основы для узнавания
+# видов и падежей, имена откликов для проверки.
+ALLOW = {
+    "Sprout/Model/Botany.swift": [r"."],
+    "Sprout/Model/Plants.swift": [r"^[а-яё]+$", r"аяоеиыуюйь"],
+    "Sprout/Model/Pulse.swift": [r"^[а-яё]+$"],
+}
 
 
 def allowed(entry):
-    """Русские строки, которым на экран не нужно: основы для узнавания
-    видов, подсказки языковой модели, данные для Siri."""
     rel, _, literal, _ = entry
     rules = ALLOW.get(str(rel), [])
     return any(re.search(rule, literal) for rule in rules)
 
 
-# Файл → литералы, которые остаются русскими нарочно.
-ALLOW = {
-    "Sprout/Model/Botany.swift": [r"."],
-    "Sprout/Model/Species.swift": [r"."],
-    "Sprout/Model/Plants.swift": [r"^[а-яё]+$", r"аяоеиыуюйь"],
-    "Sprout/Model/Muse.swift": [r"."],
-}
-
-
-def load(lang):
+def table(lang):
     path = TABLES / f"{lang}.json"
     if not path.exists():
         return {}
-    data = json.loads(path.read_text(encoding="utf-8"))
-    return {k: v for k, v in data.items() if not k.startswith("_")}
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def load(lang):
+    return {k: v for k, v in table(lang).items() if not k.startswith("_")}
+
+
+def section(lang, name):
+    return table(lang).get(name, {})
 
 
 def neutral():
-    path = TABLES / f"{SOURCE}.json"
-    if not path.exists():
-        return set()
-    return set(json.loads(path.read_text(encoding="utf-8"))
-               .get("_neutral", []))
+    return set(table(SOURCE).get("_neutral", []))
 
 
 def specs(text):
@@ -194,41 +288,142 @@ def unit(value):
     return {"stringUnit": {"state": "translated", "value": value}}
 
 
-def entry(key, lang, value):
+def entry(value):
     if isinstance(value, dict):
         return {"variations": {"plural": {
             form: unit(text) for form, text in value.items()}}}
     return unit(value)
 
 
-def build():
-    keys, _ = extract()
+def catalog(strings):
+    return json.dumps({"sourceLanguage": SOURCE, "strings": strings,
+                       "version": "1.0"},
+                      ensure_ascii=False, indent=2, sort_keys=True) + "\n"
+
+
+def assemble():
+    """Все три каталога — текстом, как их запишет `build`."""
+    keys, phrases, _ = extract()
     tables = {lang: load(lang) for lang in LANGS}
     strings = {}
     for key in sorted(keys):
-        localizations = {}
-        for lang in LANGS:
-            value = tables[lang].get(key)
-            if value is None:
-                continue
-            localizations[lang] = entry(key, lang, value)
+        local = {lang: entry(tables[lang][key]) for lang in LANGS
+                 if key in tables[lang]}
         item = {"extractionState": "manual"}
-        if localizations:
-            item["localizations"] = localizations
+        if local:
+            item["localizations"] = local
         strings[key] = item
-    catalog = {"sourceLanguage": SOURCE, "strings": strings, "version": "1.0"}
-    CATALOG.write_text(json.dumps(catalog, ensure_ascii=False, indent=2,
-                                  sort_keys=True) + "\n", encoding="utf-8")
-    print(f"{CATALOG.relative_to(ROOT)}: строк {len(strings)}, "
-          f"языков {len(LANGS)}")
+
+    spoken = {lang: section(lang, "_shortcuts") for lang in LANGS}
+    said = {}
+    for key in sorted(phrases):
+        local = {lang: unit(spoken[lang][key]) for lang in LANGS
+                 if lang != SOURCE and key in spoken[lang]}
+        item = {"extractionState": "manual"}
+        if local:
+            item["localizations"] = local
+        said[key] = item
+
+    asked = {lang: section(lang, "_infoplist") for lang in LANGS}
+    plist = {}
+    for key, texts in sorted(usages().items()):
+        text = sorted(texts)[0]
+        local = {lang: unit(asked[lang][text]) for lang in LANGS
+                 if lang != SOURCE and text in asked[lang]}
+        local[SOURCE] = unit(text)
+        plist[key] = {"extractionState": "manual", "localizations": local}
+    return {CATALOG: catalog(strings), SHORTCUTS: catalog(said),
+            INFOPLIST: catalog(plist)}
+
+
+def build():
+    for path, text in assemble().items():
+        path.write_text(text, encoding="utf-8")
+        count = len(json.loads(text)["strings"])
+        print(f"{path.relative_to(ROOT)}: строк {count}, языков {len(LANGS)}")
     return 0
 
 
-def check(strict=True):
-    keys, stray = extract()
+def check_values(lang, name, keys, values, problems):
+    """Один раздел таблицы языка против ключей из кода."""
+    for key in keys:
+        value = values.get(key)
+        if value is None:
+            continue
+        forms = value if isinstance(value, dict) else {"": value}
+        if isinstance(value, dict):
+            need = PLURALS.get(lang, DEFAULT_PLURALS)
+            lacking = [f for f in need if f not in value]
+            if lacking:
+                problems.append(f"{lang}: «{key}» — нет форм {lacking}")
+            if len(specs(key)) != 1:
+                problems.append(f"{lang}: «{key}» — формы числа только у "
+                                f"строк с одной подстановкой")
+        for form, text in forms.items():
+            if not isinstance(text, str) or not text.strip():
+                problems.append(f"{lang}: «{key}» [{form}] — пустой перевод")
+                continue
+            if specs(text) != specs(key):
+                problems.append(f"{lang}: «{key}» [{form}] — подстановки "
+                                f"{specs(text)} вместо {specs(key)}")
+            if lang not in CYRILLIC and CYR.search(text):
+                problems.append(f"{lang}: «{key}» — осталась кириллица")
+    extra = sorted(set(values) - set(keys))
+    if extra:
+        problems.append(f"{lang}{name}: лишние ключи, которых нет в коде: "
+                        f"{extra[:5]}{'…' if len(extra) > 5 else ''}")
+    lost = [key for key in keys if key not in values]
+    if lost and lang != SOURCE:
+        problems.append(f"{lang}{name}: без перевода {len(lost)} из "
+                        f"{len(keys)}, например «{lost[0]}»")
+
+
+def check_phrases(lang, phrases, spoken, problems):
+    """Фраза Siri: имя приложения ровно раз, те же параметры, без повторов."""
+    seen = {}
+    for key in phrases:
+        text = spoken.get(key)
+        if text is None:
+            continue
+        if text.count("${applicationName}") != 1:
+            problems.append(f"{lang}: фраза «{key}» — имя приложения "
+                            f"должно встречаться ровно раз")
+        if sorted(PARAM.findall(text)) != sorted(PARAM.findall(key)):
+            problems.append(f"{lang}: фраза «{key}» — параметры "
+                            f"{PARAM.findall(text)} вместо "
+                            f"{PARAM.findall(key)}")
+        folded = text.casefold()
+        if folded in seen:
+            problems.append(f"{lang}: фразы «{seen[folded]}» и «{key}» "
+                            f"переведены одинаково")
+        seen[folded] = key
+
+
+WORD = re.compile(r"[^\W\d_]{4,}")
+
+
+def check_english(tables, keys, problems):
+    """Язык, в котором слишком много строк совпало с английскими, — скорее
+    всего, не переведён, а скопирован."""
+    english = tables["en"]
+    for lang in LANGS:
+        if lang in ("en", SOURCE):
+            continue
+        same = [key for key in keys
+                if key in tables[lang] and key in english
+                and tables[lang][key] == english[key]
+                and WORD.search(json.dumps(english[key], ensure_ascii=False))]
+        if len(same) > len(keys) // 10:
+            problems.append(f"{lang}: {len(same)} строк совпадают с "
+                            f"английскими, например «{same[0]}»")
+
+
+def check():
+    keys, phrases, stray = extract()
     problems = []
-    for rel, number, literal, why in stray:
-        if not allowed((rel, number, literal, why)):
+    for item in stray:
+        if not allowed(item):
+            rel, number, literal, why = item
             problems.append(f"{rel}:{number}: «{literal}» — {why}")
     counted = neutral()
     source = load(SOURCE)
@@ -237,43 +432,36 @@ def check(strict=True):
         if numbers and key not in source and key not in counted:
             problems.append(f"«{key}»: нет русских форм числа "
                             f"(или добавь в _neutral)")
-    missing = {}
+    stale = sorted(counted - set(keys))
+    if stale:
+        problems.append(f"_neutral: ключей нет в коде: {stale}")
+    for key in phrases:
+        if key.count("${applicationName}") != 1:
+            problems.append(f"фраза «{key}» — нет имени приложения")
+
+    plist = usages()
+    texts = set()
+    for key, values in plist.items():
+        if len(values) != 1:
+            problems.append(f"{key}: в Debug и Release разный текст")
+        texts |= values
+
+    tables = {lang: load(lang) for lang in LANGS}
     for lang in LANGS:
-        table = load(lang)
-        for key in keys:
-            value = table.get(key)
-            if value is None:
-                if lang != SOURCE:
-                    missing.setdefault(lang, []).append(key)
-                continue
-            forms = value if isinstance(value, dict) else {"": value}
-            if isinstance(value, dict):
-                need = PLURALS.get(lang, DEFAULT_PLURALS)
-                lacking = [f for f in need if f not in value]
-                if lacking:
-                    problems.append(f"{lang}: «{key}» — нет форм {lacking}")
-                if len(specs(key)) != 1:
-                    problems.append(f"{lang}: «{key}» — формы числа только у "
-                                    f"строк с одной подстановкой")
-            for form, text in forms.items():
-                if specs(text) != specs(key):
-                    problems.append(f"{lang}: «{key}» [{form}] — подстановки "
-                                    f"{specs(text)} вместо {specs(key)}")
-                if lang not in CYRILLIC and CYR.search(text):
-                    problems.append(f"{lang}: «{key}» — осталась кириллица")
-        extra = set(table) - set(keys)
-        if extra and strict:
-            problems.append(f"{lang}: лишние ключи, которых нет в коде: "
-                            f"{sorted(extra)[:5]}…" if len(extra) > 5 else
-                            f"{lang}: лишние ключи, которых нет в коде: "
-                            f"{sorted(extra)}")
-    for lang, lost in sorted(missing.items()):
-        problems.append(f"{lang}: без перевода {len(lost)} из {len(keys)}, "
-                        f"например «{lost[0]}»")
-    built = json.loads(CATALOG.read_text(encoding="utf-8")) \
-        if CATALOG.exists() else {"strings": {}}
-    if set(built["strings"]) != set(keys):
-        problems.append("каталог устарел: python3 tool/make_strings.py build")
+        check_values(lang, "", keys, tables[lang], problems)
+        if lang == SOURCE:
+            continue
+        spoken = section(lang, "_shortcuts")
+        check_values(lang, " (фразы Siri)", phrases, spoken, problems)
+        check_phrases(lang, phrases, spoken, problems)
+        check_values(lang, " (разрешения)", texts, section(lang, "_infoplist"),
+                     problems)
+    check_english(tables, keys, problems)
+
+    for path, text in assemble().items():
+        if not path.exists() or path.read_text(encoding="utf-8") != text:
+            problems.append(f"{path.name} устарел: "
+                            f"python3 tool/make_strings.py build")
     if problems:
         print(f"строки: найдено проблем — {len(problems)}")
         for problem in problems[:60]:
@@ -281,7 +469,8 @@ def check(strict=True):
         if len(problems) > 60:
             print(f"  … и ещё {len(problems) - 60}")
         return 1
-    print(f"строки сходятся: {len(keys)} ключей, {len(LANGS)} языков")
+    print(f"строки сходятся: {len(keys)} ключей, фраз Siri {len(phrases)}, "
+          f"разрешений {len(texts)}, языков {len(LANGS)}")
     return 0
 
 

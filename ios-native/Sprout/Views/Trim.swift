@@ -25,8 +25,7 @@ struct Trim: View {
             VStack(spacing: 18) {
                 Spacer(minLength: 0)
                 window
-                Text("Потяните снимок или разведите пальцы. "
-                     + "Двойное нажатие вернёт как было.")
+                Text("Потяните снимок или разведите пальцы. Двойное нажатие вернёт как было.")
                     .font(Typography.settingNote)
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)

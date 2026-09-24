@@ -24,53 +24,47 @@ struct Diary: Equatable {
     }
 
     /// «Сегодня, 14:05», «Вчера, 9:12», «20 сентября, 18:40», прошлогоднее —
-    /// с годом. Месяцы своим списком, а не форматтером: строка не зависит от
-    /// языка телефона и одинакова в проверке модели.
+    /// с годом. Числа и месяцы — по-местному: у кого «9:12», у кого
+    /// «9:12 AM».
     static func label(_ moment: Date, now: Date = Date(),
                       calendar: Calendar = .current) -> String {
-        let time = clock(moment, calendar: calendar)
+        let time = moment.formatted(Date.FormatStyle(calendar: calendar,
+                                                     timeZone: calendar.timeZone)
+            .hour(.defaultDigits(amPM: .abbreviated)).minute(.twoDigits)
+            .locale(Lang.locale))
         if calendar.isDate(moment, inSameDayAs: now) {
-            return "Сегодня, \(time)"
+            return Lang.format("Сегодня, %@", time)
         }
         if let yesterday = calendar.date(byAdding: .day, value: -1, to: now),
            calendar.isDate(moment, inSameDayAs: yesterday) {
-            return "Вчера, \(time)"
+            return Lang.format("Вчера, %@", time)
         }
-        let parts = calendar.dateComponents([.year, .month, .day], from: moment)
-        let day = parts.day ?? 1
-        let month = months[min(max((parts.month ?? 1) - 1, 0), 11)]
-        let year = parts.year ?? 0
-        guard year == calendar.component(.year, from: now) else {
-            return "\(day) \(month) \(year), \(time)"
+        var style = Date.FormatStyle(calendar: calendar,
+                                     timeZone: calendar.timeZone)
+            .day().month(.wide).locale(Lang.locale)
+        if calendar.component(.year, from: moment)
+            != calendar.component(.year, from: now) {
+            style = style.year()
         }
-        return "\(day) \(month), \(time)"
+        return Lang.format("%1$@, %2$@", moment.formatted(style), time)
     }
 
     /// «раз в 3 дня», «раз в 5 ч» — крупнейшей единицей, в которой выходит
     /// хотя бы одна.
     static func rhythm(_ seconds: TimeInterval) -> String {
-        guard seconds >= 60 else { return "чаще раза в минуту" }
+        guard seconds >= 60 else { return Lang.text("чаще раза в минуту") }
         if seconds < 3_600 {
             let minutes = Int((seconds / 60).rounded())
-            return minutes <= 1 ? "раз в минуту" : "раз в \(minutes) мин"
+            return minutes <= 1 ? Lang.text("раз в минуту")
+                : Lang.format("раз в %lld минут", minutes)
         }
         if seconds < 86_400 {
             let hours = Int((seconds / 3_600).rounded())
-            return hours <= 1 ? "раз в час" : "раз в \(hours) ч"
+            return hours <= 1 ? Lang.text("раз в час")
+                : Lang.format("раз в %lld часов", hours)
         }
         let days = Int((seconds / 86_400).rounded())
-        return days <= 1 ? "раз в день"
-            : "раз в \(days) " + Plant.plural(days, "день", "дня", "дней")
+        return days <= 1 ? Lang.text("раз в день")
+            : Lang.format("раз в %lld дней", days)
     }
-
-    private static func clock(_ moment: Date, calendar: Calendar) -> String {
-        let parts = calendar.dateComponents([.hour, .minute], from: moment)
-        let minute = parts.minute ?? 0
-        return "\(parts.hour ?? 0):" + (minute < 10 ? "0\(minute)" : "\(minute)")
-    }
-
-    private static let months = [
-        "января", "февраля", "марта", "апреля", "мая", "июня", "июля",
-        "августа", "сентября", "октября", "ноября", "декабря",
-    ]
 }

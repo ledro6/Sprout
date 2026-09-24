@@ -75,7 +75,9 @@ struct AddView: View {
             .sproutNotchCover()
             .toolbar(.hidden, for: .navigationBar)
         }
-        .onAppear { if room.isEmpty { room = rooms.first ?? "Дом" } }
+        .onAppear {
+            if room.isEmpty { room = rooms.first ?? Lang.text("Дом") }
+        }
         // `onDismiss` объявлен до содержимого — вторым замыканием его не
         // переставить.
         .fullScreenCover(isPresented: $shooting, onDismiss: { snapped() }) {
@@ -211,11 +213,14 @@ struct AddView: View {
     private var sighting: String? {
         guard shot != nil, !looking else { return nil }
         guard let guess else {
-            return "Растения на снимке телефон не узнал — впишите вид сами."
+            return Lang.text("""
+                Растения на снимке телефон не узнал — впишите вид сами.
+                """)
         }
         let sure = Int((guess.confidence * 100).rounded())
-        return "Телефон думает, что это \(guess.species.lowercased())"
-            + " — уверен на \(sure)%. Поправьте, если не он."
+        return Lang.format("""
+            Телефон узнал: %1$@ — уверен на %2$lld%%. Поправьте, если не так.
+            """, guess.species, sure)
     }
 
     /// Что будет с объёмной моделью: по снимку или готовая.
@@ -271,7 +276,7 @@ struct AddView: View {
                     Divider()
                     Button("Новая комната…") { naming = true }
                 } label: {
-                    field(room.isEmpty ? "Выбрать" : room)
+                    field(room.isEmpty ? Lang.text("Выбрать") : room)
                 }
             }
 
@@ -379,7 +384,7 @@ struct AddView: View {
     private func invent() async {
         thinking = true
         let word = await Muse.nickname(for: wanted.isEmpty
-                                       ? "комнатное растение" : wanted)
+                                       ? Lang.text("Комнатное растение") : wanted)
         thinking = false
         guard let word else { return }
         withAnimation(Motion.pill) { name = word }
@@ -390,9 +395,9 @@ struct AddView: View {
     private func plant() {
         let nickname = name.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !nickname.isEmpty else { return }
-        let kind = wanted.isEmpty ? "Комнатное растение" : wanted
+        let kind = wanted.isEmpty ? Lang.text("Комнатное растение") : wanted
         let chosen = room.trimmingCharacters(in: .whitespacesAndNewlines)
-        let place = chosen.isEmpty ? "Дом" : chosen
+        let place = chosen.isEmpty ? Lang.text("Дом") : chosen
         let days = Int(period.rounded())
 
         let saved = shot.flatMap { Snapshot.keep($0) }
@@ -406,11 +411,11 @@ struct AddView: View {
         Cheer.shared.now(from: button.rect)
         Feel.planted()
         typing = false
+        // Две строки каталога: у второй форма числа своя.
         planted = Planted(
             name: nickname,
-            note: "Растёт в комнате «\(place)». Полито, следующий полив "
-                + "через \(days) "
-                + Plant.plural(days, "день", "дня", "дней") + ".")
+            note: Lang.format("Растёт в комнате «%@».", place) + "\n"
+                + Lang.format("Полито, следующий полив через %lld дней.", days))
         reset()
     }
 

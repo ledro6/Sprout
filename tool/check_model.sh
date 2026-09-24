@@ -17,6 +17,22 @@ fi
 
 OUT=$(mktemp -d)
 trap 'rm -rf "$OUT"' EXIT
+
+# Виджет собирает только часть модели — файлы из списка в проекте. Тип из
+# файла не из списка Xcode не простит, а здесь это видно и без Mac.
+WIDGET_MODEL=$(python3 - <<'PY'
+import re
+src = open("ios-native/Sprout.xcodeproj/project.pbxproj", encoding="utf-8").read()
+block = re.search(r'"Sprout" folder in "SproutWidgetExtension" target \*/ '
+                  r'= \{.*?membershipExceptions = \((.*?)\);', src, re.S)
+names = [line.strip().rstrip(",") for line in block.group(1).splitlines()]
+print(" ".join("ios-native/Sprout/" + name for name in names
+               if name.startswith("Model/")))
+PY
+)
+# shellcheck disable=SC2086
+"$SWIFTC" -typecheck $WIDGET_MODEL
+echo "модель виджета собирается: $(echo "$WIDGET_MODEL" | wc -w) файлов"
 "$SWIFTC" -O \
   ios-native/Sprout/Model/Lang.swift \
   ios-native/Sprout/Model/Season.swift \

@@ -97,7 +97,7 @@ let bedroom = Seed.rooms[0]
 check(bedroom.name, "Спальня", "первая комната")
 check("\(bedroom.plants.count)", "8", "растений в спальне")
 check(bedroom.plants[0].moistureLabel, "89%", "влажность Баксика")
-check(bedroom.plants[0].addedLabel, "Добавлен 2.11.2024", "дата добавления")
+check(bedroom.plants[0].addedLabel, "Добавлен 02.11.2024", "дата добавления")
 check(bedroom.plants[0].wateringLabel, "Следующий полив: 8 дней",
       "у Баксика 89% при сушке за 9 суток дают 8 дней")
 check("\(Seed.rooms[1].plants.count)", "7", "растений в гостиной")
@@ -1244,7 +1244,7 @@ do {
           "20 сентября, 18:40", "в этом году — без года")
     check(Diary.label(at(2, 7, 0, month: 11, year: 2025), now: now,
                       calendar: moscow),
-          "2 ноября 2025, 7:00", "в прошлом году — с годом")
+          "2 ноября 2025\u{202F}г., 7:00", "в прошлом году — с годом")
     let log = [
         Watering(plant: "x", when: at(20, 12, 0)),
         Watering(plant: "y", when: at(21, 12, 0)),
@@ -1260,9 +1260,11 @@ do {
           "из одного полива среднего не посчитать")
     check(Diary.rhythm(30), "чаще раза в минуту", "совсем часто")
     check(Diary.rhythm(60), "раз в минуту", "минута")
-    check(Diary.rhythm(20 * 60), "раз в 20 мин", "минуты")
+    check(Diary.rhythm(20 * 60), "раз в 20 минут", "минуты")
+    check(Diary.rhythm(3 * 60), "раз в 3 минуты", "три минуты")
     check(Diary.rhythm(3_600), "раз в час", "час")
-    check(Diary.rhythm(5 * 3_600), "раз в 5 ч", "часы")
+    check(Diary.rhythm(5 * 3_600), "раз в 5 часов", "часы")
+    check(Diary.rhythm(2 * 3_600), "раз в 2 часа", "два часа")
     check(Diary.rhythm(1.2 * 86_400), "раз в день", "день")
     check(Diary.rhythm(1.5 * 86_400), "раз в 2 дня", "полтора дня — уже два")
     check(Diary.rhythm(5 * 86_400), "раз в 5 дней", "дни")
@@ -1520,6 +1522,13 @@ do {
     check(Preset.of("Розы чайные") == .pelargonium, "и во множественном числе")
     check(Preset.of("Тюльпан") == .tulip, "тюльпан")
     check(Preset.of("Баобаб") == .spathiphyllum, "незнакомый — спатифиллум")
+    check(Preset.of("Monstera deliciosa") == .monstera, "латинское имя")
+    check(Preset.of("Snake plant") == .sansevieria, "английское название")
+    check(Preset.of("Peace lily") == .spathiphyllum,
+          "«peace lily» — спатифиллум, а не лилия")
+    check(Preset.of("Rosemary") == .herbs, "rosemary — травы, хоть и с rose")
+    check(Preset.of("Sunflower") == .tulip, "sunflower — не просто flower")
+    check(Preset.of("Kaktus") == .cactus, "кактус по-немецки и по-польски")
     check(Preset.allCases.allSatisfy { Preset.of($0.title) == $0 },
           "своё же название каждый вид узнаёт")
     check(Preset.allCases.count == 20, "видов ровно двадцать")

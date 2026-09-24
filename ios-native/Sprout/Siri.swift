@@ -79,14 +79,14 @@ struct WaterPlant: AppIntent {
         garden.reload()
         garden.advance()
         guard garden.plant(id: plant.id) != nil else {
-            return .result(dialog: "Растения «\(plant.name)» в саду больше нет.")
+            return .result(dialog: "\(Lang.format("Растения «%@» в саду больше нет.", plant.name))")
         }
         withAnimation(Motion.appear) { _ = garden.water(plant.id) }
         if UIApplication.shared.applicationState == .active {
             let spot = Cards.shared.rect(plant.id)
             Cheer.shared.now(from: spot == .zero ? Screen.middle : spot)
         }
-        return .result(dialog: "Полито: \(plant.name). Влажность — сто процентов.")
+        return .result(dialog: "\(Lang.format("Полито: %@. Влажность — сто процентов.", plant.name))")
     }
 }
 

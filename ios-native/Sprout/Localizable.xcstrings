@@ -1,8 +1,93 @@
 {
   "sourceLanguage": "ru",
   "strings": {
+    "%1$@ · %2$@": {
+      "extractionState": "manual"
+    },
     "%1$@ · полить: %2$@": {
       "extractionState": "manual"
+    },
+    "%1$@ в Sprout: %2$@, череда %3$@, лучшая %4$lld.": {
+      "extractionState": "manual"
+    },
+    "%1$@ и %2$@": {
+      "extractionState": "manual"
+    },
+    "%1$@ и ещё %2$@": {
+      "extractionState": "manual"
+    },
+    "%1$@, %2$@": {
+      "extractionState": "manual"
+    },
+    "%lld дней": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "variations": {
+            "plural": {
+              "few": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld дня"
+                }
+              },
+              "many": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld дней"
+                }
+              },
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld день"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld дня"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "%lld поливов": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "variations": {
+            "plural": {
+              "few": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld полива"
+                }
+              },
+              "many": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld поливов"
+                }
+              },
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld полив"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld полива"
+                }
+              }
+            }
+          }
+        }
+      }
     },
     "%lld растений": {
       "extractionState": "manual",
@@ -39,7 +124,13 @@
         }
       }
     },
-    "Sprout не собирает о вас никаких сведений и никуда ": {
+    "%lld%%": {
+      "extractionState": "manual"
+    },
+    "Sprout не собирает о вас никаких сведений и никуда их не передаёт.": {
+      "extractionState": "manual"
+    },
+    "iOS 26 и новее": {
       "extractionState": "manual"
     },
     "«%1$@» и ещё %2$@ просят воды": {
@@ -54,10 +145,52 @@
     "«%@» просится в горшок побольше": {
       "extractionState": "manual"
     },
+    "Алоэ": {
+      "extractionState": "manual"
+    },
+    "Базилик": {
+      "extractionState": "manual"
+    },
     "Баксик": {
       "extractionState": "manual"
     },
     "Балкон": {
+      "extractionState": "manual"
+    },
+    "Бамбук": {
+      "extractionState": "manual"
+    },
+    "Банка": {
+      "extractionState": "manual"
+    },
+    "Батон": {
+      "extractionState": "manual"
+    },
+    "Бегония": {
+      "extractionState": "manual"
+    },
+    "Бонсай": {
+      "extractionState": "manual"
+    },
+    "Борис": {
+      "extractionState": "manual"
+    },
+    "В саду пока ничего не растёт. Посадите первое растение во вкладке «Добавить».": {
+      "extractionState": "manual"
+    },
+    "В саду пока пусто.": {
+      "extractionState": "manual"
+    },
+    "В скопированном нет кода Sprout. Скопируйте сообщение друга целиком — код лежит в нём последней строкой.": {
+      "extractionState": "manual"
+    },
+    "В среднем": {
+      "extractionState": "manual"
+    },
+    "В этой комнате пока ничего не растёт. Посадите сюда растение во вкладке «Добавить» или перевезите из другой комнаты.": {
+      "extractionState": "manual"
+    },
+    "Василиса": {
       "extractionState": "manual"
     },
     "Вернусь": {
@@ -66,13 +199,60 @@
     "Вернуть": {
       "extractionState": "manual"
     },
+    "Версия": {
+      "extractionState": "manual"
+    },
+    "Ветер": {
+      "extractionState": "manual"
+    },
     "Вид": {
       "extractionState": "manual"
     },
     "Вид и порядок": {
       "extractionState": "manual"
     },
+    "Влажность %@": {
+      "extractionState": "manual"
+    },
+    "Вместе с ней уйдут %lld растений. Вернуть их будет нельзя.": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "variations": {
+            "plural": {
+              "few": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Вместе с ней уйдут %lld растения. Вернуть их будет нельзя."
+                }
+              },
+              "many": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Вместе с ней уйдут %lld растений. Вернуть их будет нельзя."
+                }
+              },
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Вместе с ней уйдёт %lld растение. Вернуть его будет нельзя."
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Вместе с ней уйдут %lld растения. Вернуть их будет нельзя."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "Время идёт быстрее": {
+      "extractionState": "manual"
+    },
+    "Вручную": {
       "extractionState": "manual"
     },
     "Все дождутся вас: перед отъездом полейте — и можно ехать.": {
@@ -81,19 +261,73 @@
     "Все политы": {
       "extractionState": "manual"
     },
+    "Всего": {
+      "extractionState": "manual"
+    },
+    "Вчера, %@": {
+      "extractionState": "manual"
+    },
     "Выбрать": {
       "extractionState": "manual"
     },
     "Главная": {
       "extractionState": "manual"
     },
+    "Горшок": {
+      "extractionState": "manual"
+    },
+    "Гостиная": {
+      "extractionState": "manual"
+    },
+    "Готовая модель: %@": {
+      "extractionState": "manual"
+    },
+    "Готовлю модели растений: %1$lld из %2$lld": {
+      "extractionState": "manual"
+    },
+    "Готовлю модель растения…": {
+      "extractionState": "manual"
+    },
     "Готово": {
+      "extractionState": "manual"
+    },
+    "Гоша": {
+      "extractionState": "manual"
+    },
+    "Груша": {
       "extractionState": "manual"
     },
     "Датчик движения": {
       "extractionState": "manual"
     },
+    "Двумя пальцами — повернуть, щипком — размер": {
+      "extractionState": "manual"
+    },
+    "Деревце": {
+      "extractionState": "manual"
+    },
+    "Диффенбахия": {
+      "extractionState": "manual"
+    },
+    "Дней": {
+      "extractionState": "manual"
+    },
     "Добавить": {
+      "extractionState": "manual"
+    },
+    "Добавлен %@": {
+      "extractionState": "manual"
+    },
+    "Добро пожаловать!": {
+      "extractionState": "manual"
+    },
+    "Добро пожаловать, %@!": {
+      "extractionState": "manual"
+    },
+    "Дом": {
+      "extractionState": "manual"
+    },
+    "Драцена": {
       "extractionState": "manual"
     },
     "Друзья": {
@@ -117,6 +351,9 @@
     "Заметки": {
       "extractionState": "manual"
     },
+    "Замиокулькас": {
+      "extractionState": "manual"
+    },
     "Запереть сейчас": {
       "extractionState": "manual"
     },
@@ -132,7 +369,19 @@
     "Звуки": {
       "extractionState": "manual"
     },
+    "Зеленик": {
+      "extractionState": "manual"
+    },
+    "Зелень": {
+      "extractionState": "manual"
+    },
+    "Зелёный": {
+      "extractionState": "manual"
+    },
     "Зима: земля сохнет медленнее, поливать реже": {
+      "extractionState": "manual"
+    },
+    "Изменить": {
       "extractionState": "manual"
     },
     "Изменить комнаты…": {
@@ -141,19 +390,31 @@
     "Имя": {
       "extractionState": "manual"
     },
+    "Имя не задано": {
+      "extractionState": "manual"
+    },
+    "Имя правится прямо в строке. Потяните за ручку справа, чтобы поменять порядок, — в том же порядке комнаты встанут и в меню на главной.": {
+      "extractionState": "manual"
+    },
     "Имя стоит в профиле и уходит вместе со счётом друзьям.": {
       "extractionState": "manual"
     },
     "Исходный код на GitHub": {
       "extractionState": "manual"
     },
-    "Исчезнут все растения и весь журнал поливов. ": {
+    "Исчезнут все растения и весь журнал поливов. Вернуть их будет нельзя.": {
+      "extractionState": "manual"
+    },
+    "Их включают в настройках телефона: Sprout → Уведомления.": {
       "extractionState": "manual"
     },
     "Кадр": {
       "extractionState": "manual"
     },
     "Кадр снимка": {
+      "extractionState": "manual"
+    },
+    "Как в системе": {
       "extractionState": "manual"
     },
     "Как вас зовут?": {
@@ -165,7 +426,22 @@
     "Какое растение полить?": {
       "extractionState": "manual"
     },
+    "Кактус": {
+      "extractionState": "manual"
+    },
+    "Каланхоэ": {
+      "extractionState": "manual"
+    },
+    "Капля": {
+      "extractionState": "manual"
+    },
+    "Кефир": {
+      "extractionState": "manual"
+    },
     "Кличка": {
+      "extractionState": "manual"
+    },
+    "Клички растений, виды, влажность, даты — всё, что вы вводите, — лежит в файле внутри приложения, на самом телефоне. Там же настройки. Ничего из этого не покидает устройство.": {
       "extractionState": "manual"
     },
     "Когда": {
@@ -186,6 +462,12 @@
     "Кого полить соседу": {
       "extractionState": "manual"
     },
+    "Комнат": {
+      "extractionState": "manual"
+    },
+    "Комнат нет": {
+      "extractionState": "manual"
+    },
     "Комната": {
       "extractionState": "manual"
     },
@@ -195,16 +477,76 @@
     "Комната появится, когда вы нажмёте «Готово».": {
       "extractionState": "manual"
     },
+    "Комнатное растение": {
+      "extractionState": "manual"
+    },
     "Комнаты": {
+      "extractionState": "manual"
+    },
+    "Компот": {
+      "extractionState": "manual"
+    },
+    "Кто хочет пить": {
+      "extractionState": "manual"
+    },
+    "Кустик": {
+      "extractionState": "manual"
+    },
+    "Кухня": {
+      "extractionState": "manual"
+    },
+    "Лера": {
       "extractionState": "manual"
     },
     "Лето: земля сохнет быстрее, поливать чаще": {
       "extractionState": "manual"
     },
+    "Лилия": {
+      "extractionState": "manual"
+    },
+    "Малыш": {
+      "extractionState": "manual"
+    },
+    "Медленно ведите телефоном над полом или столом": {
+      "extractionState": "manual"
+    },
+    "Медовый": {
+      "extractionState": "manual"
+    },
+    "Модель по снимку: %@": {
+      "extractionState": "manual"
+    },
+    "Модель построю по снимку.": {
+      "extractionState": "manual"
+    },
     "Монстера": {
       "extractionState": "manual"
     },
+    "Мох": {
+      "extractionState": "manual"
+    },
+    "Мурзик": {
+      "extractionState": "manual"
+    },
+    "Мята": {
+      "extractionState": "manual"
+    },
+    "На телефоне нет ни Face ID, ни код-пароля.": {
+      "extractionState": "manual"
+    },
     "Нажмите «+», чтобы завести первую.": {
+      "extractionState": "manual"
+    },
+    "Нажмите на растение, чтобы выбрать его": {
+      "extractionState": "manual"
+    },
+    "Нажмите — и растение встанет сюда": {
+      "extractionState": "manual"
+    },
+    "Нажмите — и сад встанет вокруг прицела": {
+      "extractionState": "manual"
+    },
+    "Нажмите, чтобы выбрать кадр": {
       "extractionState": "manual"
     },
     "Назад": {
@@ -213,13 +555,28 @@
     "Название": {
       "extractionState": "manual"
     },
+    "Назвать": {
+      "extractionState": "manual"
+    },
+    "Назовитесь — имя встретит вас при запуске": {
+      "extractionState": "manual"
+    },
+    "Называет растения, у которых срок полива — сегодня, от самого сухого.": {
+      "extractionState": "manual"
+    },
     "Найдётся по кличке или по виду — «Баксик», «Монстера».": {
       "extractionState": "manual"
     },
     "Найти растение": {
       "extractionState": "manual"
     },
+    "Наклон телефона чуть двигает узор на фоне. Показания используются только для этого, не сохраняются и никуда не уходят.": {
+      "extractionState": "manual"
+    },
     "Напоминалка о поливе комнатных растений": {
+      "extractionState": "manual"
+    },
+    "Напоминания о поливе создаёт сам телефон по срокам, посчитанным на нём же. Пуш-сервер в этом не участвует.": {
       "extractionState": "manual"
     },
     "Напоминать о подкормке": {
@@ -252,10 +609,57 @@
     "О приложении": {
       "extractionState": "manual"
     },
+    "Обычно для вида: %@": {
+      "extractionState": "manual"
+    },
+    "Орхидея": {
+      "extractionState": "manual"
+    },
     "Оставить": {
       "extractionState": "manual"
     },
+    "Осталось %lld секунд": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "variations": {
+            "plural": {
+              "few": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Осталось %lld секунды"
+                }
+              },
+              "many": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Осталось %lld секунд"
+                }
+              },
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Осталась %lld секунда"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Осталось %lld секунды"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "Остальные дождутся сами: %@.": {
+      "extractionState": "manual"
+    },
+    "Откройте Sprout — и сад появится здесь.": {
+      "extractionState": "manual"
+    },
+    "Открывает растения комнаты в дополненной реальности.": {
       "extractionState": "manual"
     },
     "Открыть": {
@@ -265,6 +669,9 @@
       "extractionState": "manual"
     },
     "Отмена": {
+      "extractionState": "manual"
+    },
+    "Отмечает полив: влажность встаёт на сто процентов, а полив попадает в журнал.": {
       "extractionState": "manual"
     },
     "Отправить памятку соседу": {
@@ -277,6 +684,15 @@
       "extractionState": "manual"
     },
     "Ошибочную запись удалит долгое нажатие.": {
+      "extractionState": "manual"
+    },
+    "Пальма": {
+      "extractionState": "manual"
+    },
+    "Папоротник": {
+      "extractionState": "manual"
+    },
+    "Пеларгония": {
       "extractionState": "manual"
     },
     "Переехать": {
@@ -370,6 +786,21 @@
     "Переставить": {
       "extractionState": "manual"
     },
+    "Петрович": {
+      "extractionState": "manual"
+    },
+    "Плиткой": {
+      "extractionState": "manual"
+    },
+    "Плющ": {
+      "extractionState": "manual"
+    },
+    "По запросу «%@» в квартире ничего не растёт.": {
+      "extractionState": "manual"
+    },
+    "По имени": {
+      "extractionState": "manual"
+    },
     "Подкормил": {
       "extractionState": "manual"
     },
@@ -410,6 +841,9 @@
           }
         }
       }
+    },
+    "Подсолнух": {
+      "extractionState": "manual"
     },
     "Поездка — %lld дней": {
       "extractionState": "manual",
@@ -452,10 +886,22 @@
     "Позвать": {
       "extractionState": "manual"
     },
+    "Позвать меня в соперники: скопируйте это сообщение целиком и нажмите «Вставить» в Sprout → Профиль → Друзья.": {
+      "extractionState": "manual"
+    },
     "Поиск": {
       "extractionState": "manual"
     },
+    "Показаны %1$lld из %2$lld: больше телефону тяжело": {
+      "extractionState": "manual"
+    },
     "Полив": {
+      "extractionState": "manual"
+    },
+    "Поливаем по очереди…": {
+      "extractionState": "manual"
+    },
+    "Поливаем…": {
       "extractionState": "manual"
     },
     "Поливаете раньше срока": {
@@ -473,6 +919,47 @@
     "Политика конфиденциальности": {
       "extractionState": "manual"
     },
+    "Полито": {
+      "extractionState": "manual"
+    },
+    "Полито, следующий полив через %lld дней.": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "variations": {
+            "plural": {
+              "few": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Полито, следующий полив через %lld дня."
+                }
+              },
+              "many": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Полито, следующий полив через %lld дней."
+                }
+              },
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Полито, следующий полив через %lld день."
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Полито, следующий полив через %lld дня."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "Полито: %@. Влажность — сто процентов.": {
+      "extractionState": "manual"
+    },
     "Полить": {
       "extractionState": "manual"
     },
@@ -486,6 +973,9 @@
       "extractionState": "manual"
     },
     "Полить сейчас": {
+      "extractionState": "manual"
+    },
+    "Полить сухих": {
       "extractionState": "manual"
     },
     "Полить — до мокрой земли, но чтобы вода не стояла в поддоне. Остальные растения дождутся меня сами. Спасибо!": {
@@ -521,16 +1011,28 @@
     "Поставить": {
       "extractionState": "manual"
     },
-    "Потяните снимок или разведите пальцы. ": {
+    "Поставить сад": {
+      "extractionState": "manual"
+    },
+    "Потяните снимок или разведите пальцы. Двойное нажатие вернёт как было.": {
       "extractionState": "manual"
     },
     "Похоже, земля сохнет быстрее: %1$@ вместо %2$@.": {
+      "extractionState": "manual"
+    },
+    "Пр": {
+      "extractionState": "manual"
+    },
+    "Привет": {
       "extractionState": "manual"
     },
     "Привет! Меня не будет с %1$@ по %2$@.": {
       "extractionState": "manual"
     },
     "Придумать": {
+      "extractionState": "manual"
+    },
+    "Приложение не выходит в интернет. У него нет ни учётной записи, ни сервера, ни аналитики, ни рекламы.": {
       "extractionState": "manual"
     },
     "Просят воды: %lld": {
@@ -540,6 +1042,9 @@
       "extractionState": "manual"
     },
     "Прохладно: земля сохнет чуть медленнее": {
+      "extractionState": "manual"
+    },
+    "Пряные травы": {
       "extractionState": "manual"
     },
     "Раз в %@ дня": {
@@ -615,16 +1120,28 @@
         }
       }
     },
-    "Разрешить их можно в настройках телефона: ": {
-      "extractionState": "manual"
-    },
     "Расставить": {
       "extractionState": "manual"
     },
     "Растение": {
       "extractionState": "manual"
     },
+    "Растение «%@» удалено. Его можно вернуть.": {
+      "extractionState": "manual"
+    },
     "Растение переедет туда, и комната появится в списке.": {
+      "extractionState": "manual"
+    },
+    "Растение стоит. Его можно полить.": {
+      "extractionState": "manual"
+    },
+    "Растение удалено": {
+      "extractionState": "manual"
+    },
+    "Растений": {
+      "extractionState": "manual"
+    },
+    "Растения «%@» в саду больше нет.": {
       "extractionState": "manual"
     },
     "Растения в неё можно будет посадить или перевезти.": {
@@ -633,16 +1150,76 @@
     "Растения дождутся меня сами — поливать никого не нужно. Спасибо!": {
       "extractionState": "manual"
     },
+    "Растения на снимке не видно — возьму готовую модель вида.": {
+      "extractionState": "manual"
+    },
+    "Растения на снимке телефон не узнал — впишите вид сами.": {
+      "extractionState": "manual"
+    },
+    "Растёт в комнате «%@».": {
+      "extractionState": "manual"
+    },
     "Резервная копия": {
+      "extractionState": "manual"
+    },
+    "Роза": {
+      "extractionState": "manual"
+    },
+    "Розмарин": {
+      "extractionState": "manual"
+    },
+    "Розовый": {
+      "extractionState": "manual"
+    },
+    "Ромашка": {
+      "extractionState": "manual"
+    },
+    "Росток": {
       "extractionState": "manual"
     },
     "Сад": {
       "extractionState": "manual"
     },
+    "Сад в AR": {
+      "extractionState": "manual"
+    },
     "Сад заперт": {
       "extractionState": "manual"
     },
+    "Сад с %@": {
+      "extractionState": "manual"
+    },
+    "Сад стоит. Нажмите на растение, чтобы полить его.": {
+      "extractionState": "manual"
+    },
+    "Сад — %@": {
+      "extractionState": "manual"
+    },
+    "Садовод": {
+      "extractionState": "manual"
+    },
+    "Самые сухие растения и кнопка «Полить».": {
+      "extractionState": "manual"
+    },
+    "Сансевиерия": {
+      "extractionState": "manual"
+    },
     "Сведения о приложении": {
+      "extractionState": "manual"
+    },
+    "Светлая": {
+      "extractionState": "manual"
+    },
+    "Сегодня ждут воды %@.": {
+      "extractionState": "manual"
+    },
+    "Сегодня ждёт воды %@.": {
+      "extractionState": "manual"
+    },
+    "Сегодня поливать никого не нужно.": {
+      "extractionState": "manual"
+    },
+    "Сегодня, %@": {
       "extractionState": "manual"
     },
     "Сеть": {
@@ -651,10 +1228,90 @@
     "Сила вибрации": {
       "extractionState": "manual"
     },
+    "Синий": {
+      "extractionState": "manual"
+    },
+    "Сиреневый": {
+      "extractionState": "manual"
+    },
+    "Система": {
+      "extractionState": "manual"
+    },
+    "Сколько растений просят воды и кто первый.": {
+      "extractionState": "manual"
+    },
+    "Следующий полив: %lld дней": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "variations": {
+            "plural": {
+              "few": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Следующий полив: %lld дня"
+                }
+              },
+              "many": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Следующий полив: %lld дней"
+                }
+              },
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Следующий полив: %lld день"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Следующий полив: %lld дня"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "Следующий полив: завтра": {
+      "extractionState": "manual"
+    },
+    "Следующий полив: сегодня": {
+      "extractionState": "manual"
+    },
+    "Сначала новые": {
+      "extractionState": "manual"
+    },
+    "Сначала сухие": {
+      "extractionState": "manual"
+    },
+    "Снег": {
+      "extractionState": "manual"
+    },
+    "Снимка нет": {
+      "extractionState": "manual"
+    },
     "Снимок": {
       "extractionState": "manual"
     },
+    "Снимок мыльный — возьму готовую модель вида.": {
+      "extractionState": "manual"
+    },
+    "Снимок пересвечен — возьму готовую модель вида.": {
+      "extractionState": "manual"
+    },
+    "Снимок растения": {
+      "extractionState": "manual"
+    },
+    "Снимок тёмный — возьму готовую модель вида.": {
+      "extractionState": "manual"
+    },
     "Снять": {
+      "extractionState": "manual"
+    },
+    "Соня": {
       "extractionState": "manual"
     },
     "Сохранить": {
@@ -663,7 +1320,13 @@
     "Сохранить сад в файл": {
       "extractionState": "manual"
     },
+    "Спальня": {
+      "extractionState": "manual"
+    },
     "Спатифиллум": {
+      "extractionState": "manual"
+    },
+    "Списком": {
       "extractionState": "manual"
     },
     "Статистика": {
@@ -681,10 +1344,34 @@
     "Стереть сад?": {
       "extractionState": "manual"
     },
-    "Счёт от ": {
+    "Суккулент": {
+      "extractionState": "manual"
+    },
+    "Сумка": {
+      "extractionState": "manual"
+    },
+    "Счёт от %@. Обновится, когда друг пришлёт код снова.": {
+      "extractionState": "manual"
+    },
+    "Тапок": {
+      "extractionState": "manual"
+    },
+    "Телефон узнал: %1$@ — уверен на %2$lld%%. Поправьте, если не так.": {
       "extractionState": "manual"
     },
     "Тема": {
+      "extractionState": "manual"
+    },
+    "Толстянка": {
+      "extractionState": "manual"
+    },
+    "Трава": {
+      "extractionState": "manual"
+    },
+    "Тюльпан": {
+      "extractionState": "manual"
+    },
+    "Тёмная": {
       "extractionState": "manual"
     },
     "Убрать из таблицы": {
@@ -702,10 +1389,16 @@
     "Удаление": {
       "extractionState": "manual"
     },
+    "Удалите приложение — вместе с ним исчезнет и всё, что оно помнило.": {
+      "extractionState": "manual"
+    },
     "Удалить": {
       "extractionState": "manual"
     },
     "Удалить запись": {
+      "extractionState": "manual"
+    },
+    "Удалить комнату «%@»?": {
       "extractionState": "manual"
     },
     "Уезжаю": {
@@ -717,10 +1410,16 @@
     "Узор за наклоном": {
       "extractionState": "manual"
     },
+    "Укроп": {
+      "extractionState": "manual"
+    },
     "Уход": {
       "extractionState": "manual"
     },
     "Учитывать время года": {
+      "extractionState": "manual"
+    },
+    "Файл сада попадает в резервную копию iPhone — туда же, куда и остальные ваши данные, по правилам Apple.": {
       "extractionState": "manual"
     },
     "Фиалка": {
@@ -732,13 +1431,25 @@
     "Фигурки плывут порознь": {
       "extractionState": "manual"
     },
+    "Фикус": {
+      "extractionState": "manual"
+    },
+    "Филодендрон": {
+      "extractionState": "manual"
+    },
     "Фон": {
       "extractionState": "manual"
     },
     "Фото": {
       "extractionState": "manual"
     },
+    "Хлорофитум": {
+      "extractionState": "manual"
+    },
     "Хозяин": {
+      "extractionState": "manual"
+    },
+    "Хойя": {
       "extractionState": "manual"
     },
     "Хорошо": {
@@ -756,10 +1467,43 @@
     "Цвет узора": {
       "extractionState": "manual"
     },
+    "Цветок": {
+      "extractionState": "manual"
+    },
+    "Час сада проходит здесь за секунду настоящего времени: иначе за один сеанс проценты влажности не сдвинулись бы ни на один. По этим же часам считаются и напоминания.": {
+      "extractionState": "manual"
+    },
+    "Чеснок": {
+      "extractionState": "manual"
+    },
     "Что хранится": {
       "extractionState": "manual"
     },
+    "Чтобы открыть сад": {
+      "extractionState": "manual"
+    },
+    "Шнурок": {
+      "extractionState": "manual"
+    },
+    "Шуба": {
+      "extractionState": "manual"
+    },
+    "Это ваш собственный код: в таблице вы и так есть.": {
+      "extractionState": "manual"
+    },
+    "Это не файл сада Sprout.": {
+      "extractionState": "manual"
+    },
+    "Эхеверия": {
+      "extractionState": "manual"
+    },
+    "вы": {
+      "extractionState": "manual"
+    },
     "и ещё %@": {
+      "extractionState": "manual"
+    },
+    "код-паролю": {
       "extractionState": "manual"
     },
     "раз в %@ дня": {
@@ -799,6 +1543,97 @@
           }
         }
       }
+    },
+    "раз в %lld минут": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "variations": {
+            "plural": {
+              "few": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "раз в %lld минуты"
+                }
+              },
+              "many": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "раз в %lld минут"
+                }
+              },
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "раз в %lld минуту"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "раз в %lld минуты"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "раз в %lld часов": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "variations": {
+            "plural": {
+              "few": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "раз в %lld часа"
+                }
+              },
+              "many": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "раз в %lld часов"
+                }
+              },
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "раз в %lld час"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "раз в %lld часа"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "раз в день": {
+      "extractionState": "manual"
+    },
+    "раз в минуту": {
+      "extractionState": "manual"
+    },
+    "раз в час": {
+      "extractionState": "manual"
+    },
+    "счёт от %@": {
+      "extractionState": "manual"
+    },
+    "чаще раза в минуту": {
+      "extractionState": "manual"
+    },
+    "череда %lld": {
+      "extractionState": "manual"
+    },
+    "• %1$@ (%2$@, «%3$@») — %4$@": {
+      "extractionState": "manual"
     }
   },
   "version": "1.0"

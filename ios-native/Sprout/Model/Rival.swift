@@ -43,15 +43,11 @@ struct Rival: Codable, Identifiable, Hashable, Sendable {
 
     /// Сперва человеческая часть, потом код: сообщение читает человек.
     var card: String {
-        let waterings = Plant.plural(total, "полив", "полива", "поливов")
-        let days = Plant.plural(streak, "день", "дня", "дней")
-        return """
-        \(name) в Sprout: \(total) \(waterings), череда \(streak) \(days), \
-        лучшая \(best).
-        Позвать меня в соперники: скопируйте это сообщение целиком и \
-        нажмите «Вставить» в Sprout → Профиль → Друзья.
-        \(code)
-        """
+        let score = Lang.format("%1$@ в Sprout: %2$@, череда %3$@, лучшая %4$lld.",
+                                name, Lang.format("%lld поливов", total),
+                                Lang.format("%lld дней", streak), best)
+        let invite = Lang.text("Позвать меня в соперники: скопируйте это сообщение целиком и нажмите «Вставить» в Sprout → Профиль → Друзья.")
+        return score + "\n" + invite + "\n" + code
     }
 
     /// base64url, а не base64: «+» и «/» переписка и браузеры портят.

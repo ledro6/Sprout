@@ -67,12 +67,18 @@ struct Plant: Identifiable, Hashable, Codable {
         return min(1, (Thirst.warnBelow - moisture) / Thirst.warnBelow)
     }
 
-    var moistureLabel: String { "\(Int((moisture * 100).rounded()))%" }
+    var moistureLabel: String {
+        Lang.format("%lld%%", Int((moisture * 100).rounded()))
+    }
 
     var wateringLabel: String { Self.wateringLabel(days: daysUntilWatering) }
 
+    /// Дата — по-местному: у кого «2.11.2024», у кого «11/2/2024».
     var addedLabel: String {
-        "Добавлен \(addedOn.day ?? 1).\(addedOn.month ?? 1).\(addedOn.year ?? 2024)"
+        let day = Calendar(identifier: .gregorian).date(from: addedOn) ?? Date()
+        return Lang.format("Добавлен %@", day.formatted(
+            Date.FormatStyle(date: .numeric, time: .omitted)
+                .locale(Lang.locale)))
     }
 
     mutating func dry(days: Double) {
@@ -102,9 +108,9 @@ struct Plant: Identifiable, Hashable, Codable {
 
     /// С двоеточием вместо «через»: строка короче и читается сроком.
     static func wateringLabel(days: Int) -> String {
-        if days <= 0 { return "Следующий полив: сегодня" }
-        if days == 1 { return "Следующий полив: завтра" }
-        return "Следующий полив: \(days) " + plural(days, "день", "дня", "дней")
+        if days <= 0 { return Lang.text("Следующий полив: сегодня") }
+        if days == 1 { return Lang.text("Следующий полив: завтра") }
+        return Lang.format("Следующий полив: %lld дней", days)
     }
 
     /// Номер случайный: кличек бывает две одинаковых.
@@ -123,17 +129,6 @@ struct Plant: Identifiable, Hashable, Codable {
               plan: traits.map {
                   Blueprint(preset: .of(species), traits: $0, seed: id)
               })
-    }
-
-    static func plural(_ n: Int, _ one: String, _ few: String,
-                       _ many: String) -> String {
-        let mod100 = n % 100
-        if (11...14).contains(mod100) { return many }
-        switch n % 10 {
-        case 1: return one
-        case 2, 3, 4: return few
-        default: return many
-        }
     }
 }
 
@@ -213,12 +208,12 @@ enum Seed {
     static let owner = ""
 
     /// Для кода и таблицы, где без имени нельзя.
-    static let stranger = "Садовод"
+    static var stranger: String { Lang.text("Садовод") }
 
     static func greeting(for owner: String) -> String {
         let name = owner.trimmingCharacters(in: .whitespacesAndNewlines)
-        return name.isEmpty ? "Добро пожаловать!"
-            : "Добро пожаловать, \(name)!"
+        return name.isEmpty ? Lang.text("Добро пожаловать!")
+            : Lang.format("Добро пожаловать, %@!", name)
     }
 
     static var state: GardenState {
@@ -226,88 +221,90 @@ enum Seed {
                     log: [], since: Date())
     }
 
+    /// На языке телефона: клички, комнаты и виды макета — тоже слова
+    /// каталога. Раз записанный, сад дальше живёт своими словами.
     static let rooms: [Room] = [
-        Room(name: "Спальня", plants: [
-            Plant(id: "baksik", name: "Баксик", species: "Тюльпан",
+        Room(name: Lang.text("Спальня"), plants: [
+            Plant(id: "baksik", name: Lang.text("Баксик"), species: Lang.text("Тюльпан"),
                   moisture: 0.89, dryingDays: 9,
                   addedOn: DateComponents(year: 2024, month: 11, day: 2)),
-            Plant(id: "pr", name: "Пр", species: "Монстера",
+            Plant(id: "pr", name: Lang.text("Пр"), species: Lang.text("Монстера"),
                   moisture: 0.14, dryingDays: 7,
                   addedOn: DateComponents(year: 2025, month: 3, day: 17)),
-            Plant(id: "tapok", name: "Тапок", species: "Хлорофитум",
+            Plant(id: "tapok", name: Lang.text("Тапок"), species: Lang.text("Хлорофитум"),
                   moisture: 0.62, dryingDays: 6.5,
                   addedOn: DateComponents(year: 2025, month: 5, day: 12)),
-            Plant(id: "boris", name: "Борис", species: "Алоэ",
+            Plant(id: "boris", name: Lang.text("Борис"), species: Lang.text("Алоэ"),
                   moisture: 0.08, dryingDays: 5,
                   addedOn: DateComponents(year: 2024, month: 9, day: 30)),
-            Plant(id: "shuba", name: "Шуба", species: "Папоротник",
+            Plant(id: "shuba", name: Lang.text("Шуба"), species: Lang.text("Папоротник"),
                   moisture: 0.45, dryingDays: 6.7,
                   addedOn: DateComponents(year: 2025, month: 7, day: 21)),
-            Plant(id: "vasilisa", name: "Василиса", species: "Фиалка",
+            Plant(id: "vasilisa", name: Lang.text("Василиса"), species: Lang.text("Фиалка"),
                   moisture: 0.52, dryingDays: 4.5,
                   addedOn: DateComponents(year: 2025, month: 4, day: 3)),
-            Plant(id: "kompot", name: "Компот", species: "Бегония",
+            Plant(id: "kompot", name: Lang.text("Компот"), species: Lang.text("Бегония"),
                   moisture: 0.27, dryingDays: 6.2,
                   addedOn: DateComponents(year: 2025, month: 5, day: 30)),
-            Plant(id: "shnurok", name: "Шнурок", species: "Плющ",
+            Plant(id: "shnurok", name: Lang.text("Шнурок"), species: Lang.text("Плющ"),
                   moisture: 0.71, dryingDays: 8,
                   addedOn: DateComponents(year: 2024, month: 12, day: 14)),
         ]),
-        Room(name: "Гостиная", plants: [
-            Plant(id: "zelenik", name: "Зеленик", species: "Фикус",
+        Room(name: Lang.text("Гостиная"), plants: [
+            Plant(id: "zelenik", name: Lang.text("Зеленик"), species: Lang.text("Фикус"),
                   moisture: 0.30, dryingDays: 7,
                   addedOn: DateComponents(year: 2025, month: 1, day: 9)),
-            Plant(id: "gosha", name: "Гоша", species: "Драцена",
+            Plant(id: "gosha", name: Lang.text("Гоша"), species: Lang.text("Драцена"),
                   moisture: 0.73, dryingDays: 8.2,
                   addedOn: DateComponents(year: 2025, month: 2, day: 14)),
-            Plant(id: "petrovich", name: "Петрович", species: "Кактус",
+            Plant(id: "petrovich", name: Lang.text("Петрович"), species: Lang.text("Кактус"),
                   moisture: 0.21, dryingDays: 57,
                   addedOn: DateComponents(year: 2023, month: 8, day: 5)),
-            Plant(id: "sonya", name: "Соня", species: "Орхидея",
+            Plant(id: "sonya", name: Lang.text("Соня"), species: Lang.text("Орхидея"),
                   moisture: 0.11, dryingDays: 9,
                   addedOn: DateComponents(year: 2025, month: 8, day: 19)),
-            Plant(id: "malysh", name: "Малыш", species: "Пальма",
+            Plant(id: "malysh", name: Lang.text("Малыш"), species: Lang.text("Пальма"),
                   moisture: 0.64, dryingDays: 11,
                   addedOn: DateComponents(year: 2024, month: 7, day: 22)),
-            Plant(id: "grusha", name: "Груша", species: "Пеларгония",
+            Plant(id: "grusha", name: Lang.text("Груша"), species: Lang.text("Пеларгония"),
                   moisture: 0.18, dryingDays: 5.4,
                   addedOn: DateComponents(year: 2025, month: 5, day: 8)),
-            Plant(id: "veter", name: "Ветер", species: "Диффенбахия",
+            Plant(id: "veter", name: Lang.text("Ветер"), species: Lang.text("Диффенбахия"),
                   moisture: 0.41, dryingDays: 7.6,
                   addedOn: DateComponents(year: 2025, month: 1, day: 26)),
         ]),
-        Room(name: "Кухня", plants: [
-            Plant(id: "murzik", name: "Мурзик", species: "Монстера",
+        Room(name: Lang.text("Кухня"), plants: [
+            Plant(id: "murzik", name: Lang.text("Мурзик"), species: Lang.text("Монстера"),
                   moisture: 0.89, dryingDays: 9,
                   addedOn: DateComponents(year: 2024, month: 12, day: 20)),
-            Plant(id: "privet", name: "Привет", species: "Замиокулькас",
+            Plant(id: "privet", name: Lang.text("Привет"), species: Lang.text("Замиокулькас"),
                   moisture: 0.14, dryingDays: 7,
                   addedOn: DateComponents(year: 2025, month: 2, day: 4)),
-            Plant(id: "lera", name: "Лера", species: "Сансевиерия",
+            Plant(id: "lera", name: Lang.text("Лера"), species: Lang.text("Сансевиерия"),
                   moisture: 0.56, dryingDays: 9,
                   addedOn: DateComponents(year: 2025, month: 4, day: 28)),
-            Plant(id: "sumka", name: "Сумка", species: "Спатифиллум",
+            Plant(id: "sumka", name: Lang.text("Сумка"), species: Lang.text("Спатифиллум"),
                   moisture: 0.01, dryingDays: 6,
                   addedOn: DateComponents(year: 2025, month: 6, day: 1)),
-            Plant(id: "baksik-2", name: "Баксик", species: "Тюльпан",
+            Plant(id: "baksik-2", name: Lang.text("Баксик"), species: Lang.text("Тюльпан"),
                   moisture: 0.89, dryingDays: 9,
                   addedOn: DateComponents(year: 2024, month: 11, day: 2)),
-            Plant(id: "ukrop", name: "Укроп", species: "Розмарин",
+            Plant(id: "ukrop", name: Lang.text("Укроп"), species: Lang.text("Розмарин"),
                   moisture: 0.34, dryingDays: 5.9,
                   addedOn: DateComponents(year: 2025, month: 6, day: 7)),
-            Plant(id: "baton", name: "Батон", species: "Хойя",
+            Plant(id: "baton", name: Lang.text("Батон"), species: Lang.text("Хойя"),
                   moisture: 0.67, dryingDays: 10.4,
                   addedOn: DateComponents(year: 2024, month: 10, day: 11)),
-            Plant(id: "kefir", name: "Кефир", species: "Толстянка",
+            Plant(id: "kefir", name: Lang.text("Кефир"), species: Lang.text("Толстянка"),
                   moisture: 0.05, dryingDays: 6,
                   addedOn: DateComponents(year: 2025, month: 3, day: 3)),
-            Plant(id: "chesnok", name: "Чеснок", species: "Базилик",
+            Plant(id: "chesnok", name: Lang.text("Чеснок"), species: Lang.text("Базилик"),
                   moisture: 0.38, dryingDays: 3.8,
                   addedOn: DateComponents(year: 2025, month: 8, day: 2)),
-            Plant(id: "banka", name: "Банка", species: "Мята",
+            Plant(id: "banka", name: Lang.text("Банка"), species: Lang.text("Мята"),
                   moisture: 0.75, dryingDays: 4.2,
                   addedOn: DateComponents(year: 2025, month: 7, day: 14)),
-            Plant(id: "sneg", name: "Снег", species: "Каланхоэ",
+            Plant(id: "sneg", name: Lang.text("Снег"), species: Lang.text("Каланхоэ"),
                   moisture: 0.09, dryingDays: 8.8,
                   addedOn: DateComponents(year: 2024, month: 10, day: 5)),
         ]),
@@ -325,19 +322,17 @@ enum Seed {
         let names = plants.map(\.name)
         switch names.count {
         case 0:
-            return "Сегодня поливать никого не нужно."
+            return Lang.text("Сегодня поливать никого не нужно.")
         case 1:
-            return "Сегодня ждёт воды \(names[0])."
+            return Lang.format("Сегодня ждёт воды %@.", names[0])
         case 2 ... 5:
-            return "Сегодня ждут воды "
-                + names.dropLast().joined(separator: ", ")
-                + " и \(names[names.count - 1])."
+            return Lang.format("Сегодня ждут воды %@.", Lang.format(
+                "%1$@ и %2$@", names.dropLast().joined(separator: ", "),
+                names[names.count - 1]))
         default:
-            let rest = names.count - 4
-            return "Сегодня ждут воды "
-                + names.prefix(4).joined(separator: ", ")
-                + " и ещё \(rest) "
-                + Plant.plural(rest, "растение", "растения", "растений") + "."
+            return Lang.format("Сегодня ждут воды %@.", Lang.format(
+                "%1$@ и ещё %2$@", names.prefix(4).joined(separator: ", "),
+                Lang.format("%lld растений", names.count - 4)))
         }
     }
 

@@ -205,7 +205,7 @@ struct PlantSettingsView: View {
     }
 
     private func usualLine(_ days: Double) -> String {
-        "Обычно для вида: " + Species.periodLabel(days).lowercased()
+        Lang.format("Обычно для вида: %@", Species.periodPhrase(days))
     }
 
     /// Как новый срок ляжет на карточку — тем же счётом, что `tune`.

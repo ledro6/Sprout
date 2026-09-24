@@ -1,0 +1,42 @@
+{
+  "sourceLanguage": "ru",
+  "strings": {
+    "Кого полить в ${applicationName}": {
+      "extractionState": "manual"
+    },
+    "Кого полить сегодня в ${applicationName}": {
+      "extractionState": "manual"
+    },
+    "Кому нужна вода в ${applicationName}": {
+      "extractionState": "manual"
+    },
+    "Кто хочет пить в ${applicationName}": {
+      "extractionState": "manual"
+    },
+    "Открой сад в ${applicationName}": {
+      "extractionState": "manual"
+    },
+    "Покажи сад в ${applicationName}": {
+      "extractionState": "manual"
+    },
+    "Полей ${plant} в ${applicationName}": {
+      "extractionState": "manual"
+    },
+    "Полей растение ${plant} в ${applicationName}": {
+      "extractionState": "manual"
+    },
+    "Полить ${plant} в ${applicationName}": {
+      "extractionState": "manual"
+    },
+    "Полить растение ${plant} в ${applicationName}": {
+      "extractionState": "manual"
+    },
+    "Полить растение в ${applicationName}": {
+      "extractionState": "manual"
+    },
+    "Сад в AR в ${applicationName}": {
+      "extractionState": "manual"
+    }
+  },
+  "version": "1.0"
+}

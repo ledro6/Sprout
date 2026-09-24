@@ -78,7 +78,7 @@ struct RoomsView: View {
             Text("Растения в неё можно будет посадить или перевезти.")
         }
         .confirmationDialog(
-            "Удалить комнату «\(doomed?.name ?? "")»?",
+            Lang.format("Удалить комнату «%@»?", doomed?.name ?? ""),
             isPresented: Binding(get: { doomed != nil },
                                  set: { if !$0 { doomed = nil } }),
             titleVisibility: .visible,
@@ -93,15 +93,15 @@ struct RoomsView: View {
         }
     }
 
-    private static let hint = "Имя правится прямо в строке. Потяните за "
-        + "ручку справа, чтобы поменять порядок, — в том же порядке "
-        + "комнаты встанут и в меню на главной."
+    private static let hint = Lang.text("""
+        Имя правится прямо в строке. Потяните за ручку справа, чтобы \
+        поменять порядок, — в том же порядке комнаты встанут и в меню на \
+        главной.
+        """)
 
     private static func warning(for room: Room) -> String {
-        let n = room.plants.count
-        return "Вместе с ней уйдут \(n) "
-            + Plant.plural(n, "растение", "растения", "растений")
-            + ". Вернуть их будет нельзя."
+        Lang.format("Вместе с ней уйдут %lld растений. Вернуть их будет нельзя.",
+                    room.plants.count)
     }
 
     /// Пустую комнату удаляем сразу. С растениями — переспрашиваем и без
@@ -161,8 +161,7 @@ private struct RoomRow: View {
     }
 
     private var count: String {
-        let n = room.plants.count
-        return "\(n) " + Plant.plural(n, "растение", "растения", "растений")
+        Lang.format("%lld растений", room.plants.count)
     }
 
     private func commit() {

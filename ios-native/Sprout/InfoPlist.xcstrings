@@ -1,0 +1,39 @@
+{
+  "sourceLanguage": "ru",
+  "strings": {
+    "NSCameraUsageDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Чтобы снять растение для сада и поставить его в комнату в дополненной реальности."
+          }
+        }
+      }
+    },
+    "NSFaceIDUsageDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Чтобы открывать запертый сад по лицу."
+          }
+        }
+      }
+    },
+    "NSMotionUsageDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Наклон телефона чуть двигает узор на фоне."
+          }
+        }
+      }
+    }
+  },
+  "version": "1.0"
+}

@@ -292,7 +292,7 @@ struct PlantView: View {
         .sproutRide()
     }
 
-    private func tool(_ title: String, icon: String,
+    private func tool(_ title: LocalizedStringKey, icon: String,
                       action: @escaping () -> Void) -> some View {
         Button(action: action) {
             VStack(spacing: 4) {
@@ -409,7 +409,7 @@ struct PlantView: View {
 
     private func facts(_ plant: Plant) -> some View {
         VStack(alignment: .leading, spacing: 14) {
-            fact("Влажность \(plant.moistureLabel)")
+            fact(Lang.format("Влажность %@", plant.moistureLabel))
                 .contentTransition(.numericText())
             fact(plant.species)
             fact(plant.wateringLabel)
@@ -469,7 +469,7 @@ struct PlantView: View {
 
     private func tally(_ diary: Diary) -> some View {
         HStack(alignment: .firstTextBaseline, spacing: 28) {
-            figure("\(diary.total)", caption: "Всего")
+            figure(diary.total.formatted(), caption: "Всего")
             if let average = diary.average {
                 figure(Diary.rhythm(average), caption: "В среднем")
                     .transition(.blurReplace)
@@ -478,7 +478,8 @@ struct PlantView: View {
         .padding(.bottom, 4)
     }
 
-    private func figure(_ value: String, caption: String) -> some View {
+    private func figure(_ value: String,
+                        caption: LocalizedStringKey) -> some View {
         VStack(alignment: .leading, spacing: 2) {
             Text(value)
                 .font(Typography.detail)
