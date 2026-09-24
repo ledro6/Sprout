@@ -91,11 +91,16 @@ struct RootView: View {
         // Замок поверх всего: запертый сад не должен мелькнуть даже под
         // заставкой.
         .overlay { padlock }
-        .onAppear { notch = Self.topInset() }
+        // Наблюдатель касаний — тоже на окно, см. `Finger`.
+        .onAppear {
+            notch = Self.topInset()
+            Finger.shared.watch()
+        }
         // При первом появлении окна могло ещё не быть.
         .onChange(of: phase) { _, now in
             if now == .active {
                 notch = Self.topInset()
+                Finger.shared.watch()
                 // Пока спали, сад мог полить виджет или кнопка в
                 // уведомлении.
                 garden.reload()

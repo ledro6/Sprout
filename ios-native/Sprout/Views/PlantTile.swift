@@ -28,11 +28,14 @@ struct PlantTile: View {
     /// Полка качается.
     var editing = false
     var menus = true
-    var dragged: Binding<Plant.ID?> = .constant(nil)
+    var held: Binding<Plant.ID?> = .constant(nil)
+    var dragged: Plant.ID?
     var move: (Plant.ID, Plant.ID) -> Void = { _, _ in }
     var drop: () -> Void = {}
+    /// Карточку подняли — открылось меню, см. `Arrange`.
+    var lift: (Plant.ID) -> Void = { _ in }
     /// Карточку повели — полка начинает качаться.
-    var begin: () -> Void = {}
+    var fly: () -> Void = {}
     /// Пункт меню «Расставить».
     var arrange: () -> Void = {}
 
@@ -50,8 +53,8 @@ struct PlantTile: View {
         .modifier(Jiggle(on: editing && look == .grid,
                          phase: plant.pulsePhase))
         .modifier(Arrange(id: plant.id, look: look, on: arranges,
-                          dragged: dragged, move: move, drop: drop,
-                          begin: begin))
+                          held: held, dragged: dragged, move: move,
+                          drop: drop, lift: lift, fly: fly))
         .environment(\.sproutHalos, opening != plant.id)
         // Появление ведёт карточка от номера комнаты, а не от появления вью:
         // вернувшись в комнату, SwiftUI переиспользует карточку вместе с

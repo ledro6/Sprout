@@ -42,13 +42,17 @@ struct HomeView: View {
     @State private var staged: [Plant.ID] = []
 
     /// Полка качается, как значки «Домой» в правке. Входят в неё, повёв
-    /// карточку из меню или пунктом «Расставить».
+    /// карточку из меню, продержав палец дольше меню или пунктом
+    /// «Расставить».
     @State private var editing = false
 
     /// Меню по долгому нажатию. Снимается не сразу со входом в правку, а
     /// когда карточку отпустили: снятое посреди перетаскивания, оно
     /// пересобрало бы тащимую карточку.
     @State private var menus = true
+
+    /// Кого подняли долгим нажатием: меню открыто или карточку уже ведут.
+    @State private var held: Plant.ID?
 
     /// Кого тащат — один на всю полку.
     @State private var dragged: Plant.ID?
@@ -114,7 +118,8 @@ struct HomeView: View {
             } action: { _, offset in
                 scrolled = offset
             }
-            .onDrop(of: [.text], delegate: Rest(dragged: $dragged, drop: land))
+            .onDrop(of: [.text],
+                    delegate: Rest(held: $held, fly: fly, drop: land))
             // Нажатие мимо карточек заканчивает правку, как на «Домой».
             // Кнопки и карточки своё нажатие забирают первыми.
             .gesture(TapGesture().onEnded { finish() },
@@ -310,7 +315,35 @@ struct HomeView: View {
         }
     }
 
-    /// Карточку повели. Порядок — тот, что на экране: взявшись тащить в
+    /// Карточку подняли долгим нажатием — открылось меню, полка стоит.
+    /// Держат дальше — меню уходит, и полка качается, как значки «Домой».
+    /// Повели — см. `fly`.
+    private func lift(_ who: Plant.ID) {
+        held = who
+        // Наблюдатель не встал при запуске — встанет сейчас: это нажатие
+        // он уже не увидит, следующее — да.
+        Finger.shared.watch()
+        // В правке меню нет — поднятую карточку сразу ведут.
+        guard !editing else { return }
+        let press = Finger.shared.press
+        Task { @MainActor in
+            try? await Task.sleep(for: .seconds(Motion.holdToArrange))
+            guard held == who, dragged == nil, !editing,
+                  Finger.shared.holds(press) else { return }
+            Finger.shared.closeMenu()
+            arrange()
+        }
+    }
+
+    /// Поднятую карточку повели: меню ушло, карточка бледнеет на своём
+    /// месте, полка качается.
+    private func fly() {
+        guard dragged == nil, let held else { return }
+        withAnimation(Motion.arrange) { dragged = held }
+        begin()
+    }
+
+    /// Вход в правку. Порядок — тот, что на экране: взявшись тащить в
     /// сортировке, двигают то, что видят, и ручной порядок начинается с
     /// него.
     private func begin() {
@@ -322,8 +355,8 @@ struct HomeView: View {
         }
     }
 
-    /// «Расставить» из меню: меню снимаем следующим проходом, когда оно уже
-    /// закрывается.
+    /// «Расставить» из меню или палец продержали дольше меню: меню снимаем
+    /// следующим проходом, когда оно уже закрывается.
     private func arrange() {
         begin()
         Feel.pick()
@@ -336,6 +369,7 @@ struct HomeView: View {
             editing = false
             dragged = nil
         }
+        held = nil
         menus = true
     }
 
@@ -382,10 +416,12 @@ struct HomeView: View {
                               arranges: true,
                               editing: editing,
                               menus: menus,
-                              dragged: $dragged,
+                              held: $held,
+                              dragged: dragged,
                               move: shift,
                               drop: land,
-                              begin: begin,
+                              lift: lift,
+                              fly: fly,
                               arrange: arrange)
                         // Явная личность: без неё ленивая сетка подсовывала
                         // меню чужой узел — см. `PlantTile`.
@@ -445,6 +481,7 @@ struct HomeView: View {
     /// карточка поднимается сразу.
     private func land() {
         withAnimation(Motion.arrange) { dragged = nil }
+        held = nil
         menus = !editing
     }
 }

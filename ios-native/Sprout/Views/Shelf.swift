@@ -89,10 +89,10 @@ struct PlantRow: View {
 }
 
 /// Перетаскивание — системное, через `onDrag`/`onDrop`: свой жест отнял бы
-/// палец у прокрутки. Как на экране «Домой»: карточку, поднятую меню,
-/// можно сразу повести — тогда полка начинает качаться. Соседи расступаются
-/// прямо под пальцем — сад переставляет растения на каждом заходе на чужое
-/// место.
+/// палец у прокрутки. Как на экране «Домой»: долгое нажатие поднимает меню,
+/// а полка начинает качаться, только когда карточку повели или продержали
+/// дольше меню. Соседи расступаются прямо под пальцем — сад переставляет
+/// растения на каждом заходе на чужое место.
 struct Arrange: ViewModifier {
     let id: Plant.ID
     let look: Settings.Look
@@ -100,14 +100,21 @@ struct Arrange: ViewModifier {
     /// Можно ли тащить вообще; на поиске нельзя.
     let on: Bool
 
-    let dragged: Binding<Plant.ID?>
+    /// Кого подняли. Места на полке читают его в миг вызова.
+    let held: Binding<Plant.ID?>
+
+    /// Кого ведут — он бледнеет на своём месте.
+    let dragged: Plant.ID?
 
     let move: (Plant.ID, Plant.ID) -> Void
 
     let drop: () -> Void
 
-    /// Карточку подняли — полка переходит в правку.
-    var begin: () -> Void = {}
+    /// Карточку подняли долгим нажатием — открылось меню. Полка ещё стоит.
+    var lift: (Plant.ID) -> Void = { _ in }
+
+    /// Карточку повели — полка начинает качаться.
+    var fly: () -> Void = {}
 
     @Environment(Garden.self) private var garden
 
@@ -118,23 +125,25 @@ struct Arrange: ViewModifier {
     func body(content: Content) -> some View {
         drag(content
             .onChange(of: id, initial: true) { _, now in tenant.id = now })
-            .opacity(on && dragged.wrappedValue == id ? Metrics.ghost : 1)
+            .opacity(on && dragged == id ? Metrics.ghost : 1)
     }
 
     @ViewBuilder
     private func drag(_ base: some View) -> some View {
         if on {
             base
+                // Зовётся, когда карточку поднимают, — вместе с меню, а не
+                // когда её повели. Что повели, скажут места на полке.
                 .onDrag {
                     let who = tenant.id
-                    dragged.wrappedValue = who
-                    begin()
+                    lift(who)
                     return NSItemProvider(object: who as NSString)
                 } preview: {
                     lifted
                 }
                 .onDrop(of: [.text], delegate: Slot(
-                    tenant: tenant, dragged: dragged, move: move, drop: drop))
+                    tenant: tenant, held: held, fly: fly, move: move,
+                    drop: drop))
         } else {
             base
         }
@@ -158,21 +167,23 @@ struct Arrange: ViewModifier {
     }
 }
 
-/// Чужое место на полке. Всё живое читает в момент вызова, а не при
-/// постройке.
+/// Место на полке. Всё живое читает в момент вызова, а не при постройке.
 private struct Slot: DropDelegate {
     let tenant: Tenant
-    let dragged: Binding<Plant.ID?>
+    let held: Binding<Plant.ID?>
+    let fly: () -> Void
     let move: (Plant.ID, Plant.ID) -> Void
     let drop: () -> Void
 
     /// Принимаем только своё: текст из другого приложения — мимо.
     func validateDrop(info: DropInfo) -> Bool {
-        dragged.wrappedValue != nil
+        held.wrappedValue != nil
     }
 
+    /// Первым о заходе узнаёт своё же место — карточку только что повели.
     func dropEntered(info: DropInfo) {
-        guard let who = dragged.wrappedValue, who != tenant.id else { return }
+        fly()
+        guard let who = held.wrappedValue, who != tenant.id else { return }
         move(who, tenant.id)
     }
 
@@ -182,7 +193,7 @@ private struct Slot: DropDelegate {
     }
 
     func performDrop(info: DropInfo) -> Bool {
-        guard dragged.wrappedValue != nil else { return false }
+        guard held.wrappedValue != nil else { return false }
         drop()
         return true
     }
@@ -191,11 +202,16 @@ private struct Slot: DropDelegate {
 /// Весь экран — место для броска: иначе отпущенная мимо карточки так и
 /// осталась бы бледной. Над карточками отвечают они сами.
 struct Rest: DropDelegate {
-    let dragged: Binding<Plant.ID?>
+    let held: Binding<Plant.ID?>
+    let fly: () -> Void
     let drop: () -> Void
 
     func validateDrop(info: DropInfo) -> Bool {
-        dragged.wrappedValue != nil
+        held.wrappedValue != nil
+    }
+
+    func dropEntered(info: DropInfo) {
+        fly()
     }
 
     func dropUpdated(info: DropInfo) -> DropProposal? {
@@ -203,18 +219,19 @@ struct Rest: DropDelegate {
     }
 
     func performDrop(info: DropInfo) -> Bool {
-        guard dragged.wrappedValue != nil else { return false }
+        guard held.wrappedValue != nil else { return false }
         drop()
         return true
     }
 }
 
-/// Покачивание полки, как у значков «Домой»: поворот и лёгкий подскок с
-/// разными тактами, у каждой карточки свой такт и своя фаза — строем они
-/// читались бы механизмом. Время — с часов экрана, а не повтором анимации:
-/// повтор начинался с нуля на каждой пересборке и дёргал карточку. Размах
-/// набирается и стихает, а не включается щелчком. При «Уменьшении движения»
-/// не качается.
+/// Покачивание полки — как значки «Домой» в правке: поворот вокруг середины
+/// туда и обратно и мелкая дрожь по восьмёрке. Такт у всех один, фаза своя:
+/// вразнобой, но в общем ритме. С разными тактами карточки то сходились бы,
+/// то расходились, и полка дёргалась бы. Время — с часов экрана, а не
+/// повтором анимации: повтор начинался с нуля на каждой пересборке и дёргал
+/// карточку. Размах набирается и стихает, а не включается щелчком. При
+/// «Уменьшении движения» не качается.
 struct Jiggle: ViewModifier {
     let on: Bool
 
@@ -244,8 +261,8 @@ struct Jiggle: ViewModifier {
     }
 }
 
-/// Наклон и подскок в миг `time`. Анимируется только размах: время
-/// приходит с часов.
+/// Наклон и сдвиг в миг `time`. Анимируется только размах: время приходит
+/// с часов.
 private struct Wobble: GeometryEffect {
     var swing: Double
     let time: Double
@@ -258,18 +275,21 @@ private struct Wobble: GeometryEffect {
 
     func effectValue(size: CGSize) -> ProjectionTransform {
         guard swing > 0 else { return ProjectionTransform() }
-        let pace = 1 + Motion.jiggleSpread * (phase - 0.5)
-        let rock = sin(2 * .pi * (time / (Motion.jigglePeriod * pace) + phase))
-        // Подскок со своей фазой: вместе с поворотом он даёт неровный,
-        // живой ход.
-        let hop = sin(2 * .pi * (time / (Motion.jiggleLiftPeriod * pace)
-                                 + phase * 1.7))
-        let angle = CGFloat(Motion.jiggleAngle * .pi / 180 * swing * rock)
-        let lift = Motion.jiggleLift * CGFloat(swing * hop)
+        // Такты от начала отсчёта, со своей фазой. Синус — тот же ход, что
+        // у значка: разгон с края и торможение к другому краю.
+        let beat = time / Motion.jigglePeriod + phase
+        let angle = CGFloat(Motion.jiggleAngle * .pi / 180 * swing
+                            * sin(2 * .pi * beat))
+        // Восьмёрка: вбок — в такт наклону, на четверть такта позже;
+        // вверх-вниз — вдвое реже. Одним поворотом карточка ходила бы
+        // маятником.
+        let shake = Motion.jiggleShake * CGFloat(swing)
+        let dx = shake * CGFloat(sin(2 * .pi * (beat - 0.25)))
+        let dy = shake * CGFloat(sin(.pi * beat))
         let middle = CGAffineTransform(translationX: -size.width / 2,
                                        y: -size.height / 2)
-        let back = CGAffineTransform(translationX: size.width / 2,
-                                     y: size.height / 2 + lift)
+        let back = CGAffineTransform(translationX: size.width / 2 + dx,
+                                     y: size.height / 2 + dy)
         return ProjectionTransform(middle
             .concatenating(CGAffineTransform(rotationAngle: angle))
             .concatenating(back))
