@@ -36,6 +36,9 @@ struct RootView: View {
     @Environment(\.scenePhase) private var phase
 
     var body: some View {
+        // Условия знакомства читаются в самом теле: изнутри привязки
+        // SwiftUI мог бы не заметить, что вход доиграл.
+        let _ = touring
         TabView {
             Tab("Главная", systemImage: "house.fill") {
                 HomeView().sproutUndo()
@@ -88,10 +91,11 @@ struct RootView: View {
         // Замок поверх всего: запертый сад не должен мелькнуть даже под
         // заставкой.
         .overlay { padlock }
-        // Знакомство — один раз, когда вход доиграл и сад не заперт.
+        // Знакомство — один раз, когда вход доиграл и сад не заперт. Ушло
+        // под замок — не пройдено: откроют сад, и оно начнётся снова.
         .fullScreenCover(isPresented: Binding(
             get: { touring },
-            set: { if !$0 { settings.toured = true } })) {
+            set: { if !$0, !locked { settings.toured = true } })) {
             TourView()
         }
         // Наблюдатель касаний — тоже на окно, см. `Finger`.
@@ -125,9 +129,10 @@ struct RootView: View {
     }
 
     private var touring: Bool {
-        !settings.toured && Launch.shared.step >= Launch.last
-            && !(lock.on && !lock.open)
+        !settings.toured && Launch.shared.step >= Launch.last && !locked
     }
+
+    private var locked: Bool { lock.on && !lock.open }
 
     private var scheme: ColorScheme? {
         switch settings.theme {
