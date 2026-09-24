@@ -4,6 +4,18 @@
     "Кого полить в ${applicationName}": {
       "extractionState": "manual",
       "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "من يحتاج السقي في ${applicationName}"
+          }
+        },
+        "bg": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Кого да полея в ${applicationName}"
+          }
+        },
         "ca": {
           "stringUnit": {
             "state": "translated",
@@ -26,6 +38,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Wen gießen in ${applicationName}"
+          }
+        },
+        "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ποια να ποτίσω στο ${applicationName}"
           }
         },
         "en": {
@@ -52,6 +70,12 @@
             "value": "Qui arroser dans ${applicationName}"
           }
         },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "את מי להשקות ב־${applicationName}"
+          }
+        },
         "hr": {
           "stringUnit": {
             "state": "translated",
@@ -68,6 +92,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Chi annaffiare in ${applicationName}"
+          }
+        },
+        "kk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} ішінде кімді суару керек"
           }
         },
         "lt": {
@@ -129,12 +159,36 @@
             "state": "translated",
             "value": "Vem ska vattnas i ${applicationName}"
           }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} ile kimi sulamalı"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Кого полити в ${applicationName}"
+          }
         }
       }
     },
     "Кого полить сегодня в ${applicationName}": {
       "extractionState": "manual",
       "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "من يحتاج السقي اليوم في ${applicationName}"
+          }
+        },
+        "bg": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Кого да полея днес в ${applicationName}"
+          }
+        },
         "ca": {
           "stringUnit": {
             "state": "translated",
@@ -157,6 +211,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Wen heute gießen in ${applicationName}"
+          }
+        },
+        "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ποια να ποτίσω σήμερα στο ${applicationName}"
           }
         },
         "en": {
@@ -183,6 +243,12 @@
             "value": "Qui arroser aujourd’hui dans ${applicationName}"
           }
         },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "את מי להשקות היום ב־${applicationName}"
+          }
+        },
         "hr": {
           "stringUnit": {
             "state": "translated",
@@ -199,6 +265,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Chi annaffiare oggi in ${applicationName}"
+          }
+        },
+        "kk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} ішінде бүгін кімді суару керек"
           }
         },
         "lt": {
@@ -260,12 +332,36 @@
             "state": "translated",
             "value": "Vem ska vattnas i dag i ${applicationName}"
           }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} ile bugün kimi sulamalı"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Кого полити сьогодні в ${applicationName}"
+          }
         }
       }
     },
     "Кому нужна вода в ${applicationName}": {
       "extractionState": "manual",
       "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "من يحتاج إلى الماء في ${applicationName}"
+          }
+        },
+        "bg": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Кой има нужда от вода в ${applicationName}"
+          }
+        },
         "ca": {
           "stringUnit": {
             "state": "translated",
@@ -288,6 +384,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Wer braucht Wasser in ${applicationName}"
+          }
+        },
+        "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ποιο θέλει νερό στο ${applicationName}"
           }
         },
         "en": {
@@ -314,6 +416,12 @@
             "value": "Qui a besoin d’eau dans ${applicationName}"
           }
         },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "מי צריך מים ב־${applicationName}"
+          }
+        },
         "hr": {
           "stringUnit": {
             "state": "translated",
@@ -330,6 +438,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Chi ha bisogno d’acqua in ${applicationName}"
+          }
+        },
+        "kk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} ішінде кімге су керек"
           }
         },
         "lt": {
@@ -391,12 +505,36 @@
             "state": "translated",
             "value": "Vem behöver vatten i ${applicationName}"
           }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} ile kimin suya ihtiyacı var"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Кому потрібна вода в ${applicationName}"
+          }
         }
       }
     },
     "Кто хочет пить в ${applicationName}": {
       "extractionState": "manual",
       "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "من العطشان في ${applicationName}"
+          }
+        },
+        "bg": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Кой е жаден в ${applicationName}"
+          }
+        },
         "ca": {
           "stringUnit": {
             "state": "translated",
@@ -419,6 +557,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Wer hat Durst in ${applicationName}"
+          }
+        },
+        "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ποιος διψάει στο ${applicationName}"
           }
         },
         "en": {
@@ -445,6 +589,12 @@
             "value": "Qui a soif dans ${applicationName}"
           }
         },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "מי צמא ב־${applicationName}"
+          }
+        },
         "hr": {
           "stringUnit": {
             "state": "translated",
@@ -461,6 +611,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Chi ha sete in ${applicationName}"
+          }
+        },
+        "kk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} ішінде кім шөлдеді"
           }
         },
         "lt": {
@@ -522,12 +678,36 @@
             "state": "translated",
             "value": "Vem är törstig i ${applicationName}"
           }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} ile kim susadı"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Хто хоче пити в ${applicationName}"
+          }
         }
       }
     },
     "Открой сад в ${applicationName}": {
       "extractionState": "manual",
       "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "افتح حديقتي في ${applicationName}"
+          }
+        },
+        "bg": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Отвори градината в ${applicationName}"
+          }
+        },
         "ca": {
           "stringUnit": {
             "state": "translated",
@@ -550,6 +730,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Öffne meinen Garten in ${applicationName}"
+          }
+        },
+        "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Άνοιξε τον κήπο μου στο ${applicationName}"
           }
         },
         "en": {
@@ -576,6 +762,12 @@
             "value": "Ouvre mon jardin dans ${applicationName}"
           }
         },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "פתח את הגינה ב־${applicationName}"
+          }
+        },
         "hr": {
           "stringUnit": {
             "state": "translated",
@@ -592,6 +784,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Apri il mio giardino in ${applicationName}"
+          }
+        },
+        "kk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} ішінде бақты аш"
           }
         },
         "lt": {
@@ -653,12 +851,36 @@
             "state": "translated",
             "value": "Öppna min trädgård i ${applicationName}"
           }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} ile bahçemi aç"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Відкрий сад у ${applicationName}"
+          }
         }
       }
     },
     "Покажи сад в ${applicationName}": {
       "extractionState": "manual",
       "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "اعرض حديقتي في ${applicationName}"
+          }
+        },
+        "bg": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Покажи градината в ${applicationName}"
+          }
+        },
         "ca": {
           "stringUnit": {
             "state": "translated",
@@ -681,6 +903,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Zeig meinen Garten in ${applicationName}"
+          }
+        },
+        "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Δείξε τον κήπο μου στο ${applicationName}"
           }
         },
         "en": {
@@ -707,6 +935,12 @@
             "value": "Montre mon jardin dans ${applicationName}"
           }
         },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "הראה את הגינה ב־${applicationName}"
+          }
+        },
         "hr": {
           "stringUnit": {
             "state": "translated",
@@ -723,6 +957,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Mostra il mio giardino in ${applicationName}"
+          }
+        },
+        "kk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} ішінде бақты көрсет"
           }
         },
         "lt": {
@@ -784,12 +1024,36 @@
             "state": "translated",
             "value": "Visa min trädgård i ${applicationName}"
           }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} ile bahçemi göster"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Покажи сад у ${applicationName}"
+          }
         }
       }
     },
     "Полей ${plant} в ${applicationName}": {
       "extractionState": "manual",
       "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "اسقِ ${plant} في ${applicationName}"
+          }
+        },
+        "bg": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Полей ${plant} в ${applicationName}"
+          }
+        },
         "ca": {
           "stringUnit": {
             "state": "translated",
@@ -812,6 +1076,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Gieß ${plant} in ${applicationName}"
+          }
+        },
+        "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Πότισε το ${plant} στο ${applicationName}"
           }
         },
         "en": {
@@ -838,6 +1108,12 @@
             "value": "Arrose ${plant} dans ${applicationName}"
           }
         },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "השקה את ${plant} ב־${applicationName}"
+          }
+        },
         "hr": {
           "stringUnit": {
             "state": "translated",
@@ -854,6 +1130,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Annaffia ${plant} in ${applicationName}"
+          }
+        },
+        "kk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} ішінде ${plant} суар"
           }
         },
         "lt": {
@@ -915,12 +1197,36 @@
             "state": "translated",
             "value": "Vattna ${plant} i ${applicationName}"
           }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} ile ${plant} sula"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Полий ${plant} у ${applicationName}"
+          }
         }
       }
     },
     "Полей растение ${plant} в ${applicationName}": {
       "extractionState": "manual",
       "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "اسقِ النبتة ${plant} في ${applicationName}"
+          }
+        },
+        "bg": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Полей растението ${plant} в ${applicationName}"
+          }
+        },
         "ca": {
           "stringUnit": {
             "state": "translated",
@@ -943,6 +1249,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Gieß die Pflanze ${plant} in ${applicationName}"
+          }
+        },
+        "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Πότισε το φυτό ${plant} στο ${applicationName}"
           }
         },
         "en": {
@@ -969,6 +1281,12 @@
             "value": "Arrose la plante ${plant} dans ${applicationName}"
           }
         },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "השקה את הצמח ${plant} ב־${applicationName}"
+          }
+        },
         "hr": {
           "stringUnit": {
             "state": "translated",
@@ -985,6 +1303,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Annaffia la pianta ${plant} in ${applicationName}"
+          }
+        },
+        "kk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} ішінде ${plant} өсімдігін суар"
           }
         },
         "lt": {
@@ -1046,12 +1370,36 @@
             "state": "translated",
             "value": "Vattna växten ${plant} i ${applicationName}"
           }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} ile ${plant} bitkisini sula"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Полий рослину ${plant} у ${applicationName}"
+          }
         }
       }
     },
     "Полить ${plant} в ${applicationName}": {
       "extractionState": "manual",
       "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "سقي ${plant} بواسطة ${applicationName}"
+          }
+        },
+        "bg": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Поливане на ${plant} в ${applicationName}"
+          }
+        },
         "ca": {
           "stringUnit": {
             "state": "translated",
@@ -1074,6 +1422,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "${plant} gießen mit ${applicationName}"
+          }
+        },
+        "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Πότισμα ${plant} με το ${applicationName}"
           }
         },
         "en": {
@@ -1100,6 +1454,12 @@
             "value": "Arroser ${plant} avec ${applicationName}"
           }
         },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "להשקות את ${plant} ב־${applicationName}"
+          }
+        },
         "hr": {
           "stringUnit": {
             "state": "translated",
@@ -1116,6 +1476,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Annaffiare ${plant} con ${applicationName}"
+          }
+        },
+        "kk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} арқылы ${plant} суару"
           }
         },
         "lt": {
@@ -1177,12 +1543,36 @@
             "state": "translated",
             "value": "Vattna ${plant} med ${applicationName}"
           }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} uygulamasında ${plant} sula"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Полити ${plant} у ${applicationName}"
+          }
         }
       }
     },
     "Полить растение ${plant} в ${applicationName}": {
       "extractionState": "manual",
       "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "سقي النبتة ${plant} في ${applicationName}"
+          }
+        },
+        "bg": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Поливане на растението ${plant} в ${applicationName}"
+          }
+        },
         "ca": {
           "stringUnit": {
             "state": "translated",
@@ -1205,6 +1595,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Pflanze ${plant} gießen in ${applicationName}"
+          }
+        },
+        "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Πότισμα φυτού ${plant} στο ${applicationName}"
           }
         },
         "en": {
@@ -1231,6 +1627,12 @@
             "value": "Arroser la plante ${plant} dans ${applicationName}"
           }
         },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "להשקות את הצמח ${plant} ב־${applicationName}"
+          }
+        },
         "hr": {
           "stringUnit": {
             "state": "translated",
@@ -1247,6 +1649,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Annaffiare la pianta ${plant} in ${applicationName}"
+          }
+        },
+        "kk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} ішінде ${plant} өсімдігін суару"
           }
         },
         "lt": {
@@ -1308,12 +1716,36 @@
             "state": "translated",
             "value": "Vattna plantan ${plant} i ${applicationName}"
           }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} uygulamasında ${plant} bitkisini sula"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Полити рослину ${plant} у ${applicationName}"
+          }
         }
       }
     },
     "Полить растение в ${applicationName}": {
       "extractionState": "manual",
       "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "سقي نبتة في ${applicationName}"
+          }
+        },
+        "bg": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Полей растение в ${applicationName}"
+          }
+        },
         "ca": {
           "stringUnit": {
             "state": "translated",
@@ -1336,6 +1768,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Eine Pflanze gießen in ${applicationName}"
+          }
+        },
+        "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Πότισμα ενός φυτού στο ${applicationName}"
           }
         },
         "en": {
@@ -1362,6 +1800,12 @@
             "value": "Arroser une plante dans ${applicationName}"
           }
         },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "להשקות צמח ב־${applicationName}"
+          }
+        },
         "hr": {
           "stringUnit": {
             "state": "translated",
@@ -1378,6 +1822,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Annaffia una pianta in ${applicationName}"
+          }
+        },
+        "kk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} ішінде өсімдік суару"
           }
         },
         "lt": {
@@ -1439,12 +1889,36 @@
             "state": "translated",
             "value": "Vattna en växt i ${applicationName}"
           }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} ile bir bitki sula"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Полити рослину в ${applicationName}"
+          }
         }
       }
     },
     "Сад в AR в ${applicationName}": {
       "extractionState": "manual",
       "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "الحديقة بالواقع المعزز في ${applicationName}"
+          }
+        },
+        "bg": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Градина в AR в ${applicationName}"
+          }
+        },
         "ca": {
           "stringUnit": {
             "state": "translated",
@@ -1467,6 +1941,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Garten in AR in ${applicationName}"
+          }
+        },
+        "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Κήπος σε AR στο ${applicationName}"
           }
         },
         "en": {
@@ -1493,6 +1973,12 @@
             "value": "Jardin en RA dans ${applicationName}"
           }
         },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "הגינה ב־AR ב־${applicationName}"
+          }
+        },
         "hr": {
           "stringUnit": {
             "state": "translated",
@@ -1509,6 +1995,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Giardino in AR in ${applicationName}"
+          }
+        },
+        "kk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} ішіндегі AR бақ"
           }
         },
         "lt": {
@@ -1569,6 +2061,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "Trädgård i AR i ${applicationName}"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} ile AR’de bahçe"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Сад в AR у ${applicationName}"
           }
         }
       }

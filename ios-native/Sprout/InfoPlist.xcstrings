@@ -4,6 +4,18 @@
     "NSCameraUsageDescription": {
       "extractionState": "manual",
       "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "لتصوير النباتات لحديقتك ووضعها في غرفتك بالواقع المعزز."
+          }
+        },
+        "bg": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "За да снимате растения за градината и да ги поставяте в стаята в добавена реалност."
+          }
+        },
         "ca": {
           "stringUnit": {
             "state": "translated",
@@ -26,6 +38,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Um Pflanzen für deinen Garten zu fotografieren und sie in Augmented Reality in deinen Raum zu stellen."
+          }
+        },
+        "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Για να φωτογραφίζετε φυτά για τον κήπο σας και να τα τοποθετείτε στο δωμάτιο σε επαυξημένη πραγματικότητα."
           }
         },
         "en": {
@@ -52,6 +70,12 @@
             "value": "Pour photographier des plantes pour votre jardin et les placer dans votre pièce en réalité augmentée."
           }
         },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "כדי לצלם צמחים לגינה ולהציב אותם בחדר במציאות רבודה."
+          }
+        },
         "hr": {
           "stringUnit": {
             "state": "translated",
@@ -68,6 +92,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Per fotografare le piante del tuo giardino e posizionarle nella stanza in realtà aumentata."
+          }
+        },
+        "kk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Бақ үшін өсімдіктерді суретке түсіріп, оларды толықтырылған шындықта бөлмеге орналастыру үшін."
           }
         },
         "lt": {
@@ -135,12 +165,36 @@
             "state": "translated",
             "value": "För att fotografera växter till din trädgård och placera dem i ditt rum i förstärkt verklighet."
           }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bahçeniz için bitkilerin fotoğrafını çekmek ve onları artırılmış gerçeklikte odanıza yerleştirmek için."
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Щоб знімати рослини для саду й ставити їх у кімнату в доповненій реальності."
+          }
         }
       }
     },
     "NSFaceIDUsageDescription": {
       "extractionState": "manual",
       "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "لفتح حديقتك المقفلة بوجهك."
+          }
+        },
+        "bg": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "За да отключвате заключената градина с лицето си."
+          }
+        },
         "ca": {
           "stringUnit": {
             "state": "translated",
@@ -163,6 +217,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Um deinen gesperrten Garten per Gesichtserkennung zu öffnen."
+          }
+        },
+        "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Για να ξεκλειδώνετε τον κλειδωμένο κήπο με το πρόσωπό σας."
           }
         },
         "en": {
@@ -189,6 +249,12 @@
             "value": "Pour ouvrir votre jardin verrouillé avec votre visage."
           }
         },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "כדי לפתוח את הגינה הנעולה בעזרת הפנים."
+          }
+        },
         "hr": {
           "stringUnit": {
             "state": "translated",
@@ -205,6 +271,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Per aprire il giardino bloccato con il volto."
+          }
+        },
+        "kk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Құлыпталған бақты бетпен ашу үшін."
           }
         },
         "lt": {
@@ -272,12 +344,36 @@
             "state": "translated",
             "value": "För att låsa upp din låsta trädgård med ansiktet."
           }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kilitli bahçenizi yüzünüzle açmak için."
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Щоб відкривати замкнений сад за обличчям."
+          }
         }
       }
     },
     "NSMotionUsageDescription": {
       "extractionState": "manual",
       "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "إمالة الهاتف تحرّك نقش الخلفية قليلًا."
+          }
+        },
+        "bg": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Наклонът на телефона леко мести шарката на фона."
+          }
+        },
         "ca": {
           "stringUnit": {
             "state": "translated",
@@ -300,6 +396,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Wenn du das Telefon neigst, bewegt sich das Hintergrundmuster leicht."
+          }
+        },
+        "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Η κλίση του τηλεφώνου μετακινεί ελαφρά το μοτίβο του φόντου."
           }
         },
         "en": {
@@ -326,6 +428,12 @@
             "value": "Incliner le téléphone déplace légèrement le motif d’arrière-plan."
           }
         },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "הטיית הטלפון מזיזה קלות את הדוגמה ברקע."
+          }
+        },
         "hr": {
           "stringUnit": {
             "state": "translated",
@@ -342,6 +450,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Inclinando il telefono il motivo dello sfondo si sposta leggermente."
+          }
+        },
+        "kk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Телефонды еңкейткенде фондағы өрнек сәл жылжиды."
           }
         },
         "lt": {
@@ -408,6 +522,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "När du lutar telefonen rör sig bakgrundsmönstret lite."
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Telefonu eğmek arka plandaki deseni hafifçe kaydırır."
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Нахил телефона трохи рухає візерунок на тлі."
           }
         }
       }
