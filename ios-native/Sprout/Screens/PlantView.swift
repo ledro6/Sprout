@@ -335,9 +335,13 @@ struct PlantView: View {
     /// то же предложение больше не всплывёт.
     private func rhythm(_ plant: Plant, days: Double) -> some View {
         VStack(alignment: .leading, spacing: 12) {
-            Label("Поливаете раньше срока", systemImage: "calendar.badge.clock")
-                .font(Typography.detail)
-                .foregroundStyle(Palette.ink)
+            HStack(spacing: 6) {
+                Label("Поливаете раньше срока",
+                      systemImage: "calendar.badge.clock")
+                    .font(Typography.detail)
+                    .foregroundStyle(Palette.ink)
+                TermHint(.rhythm)
+            }
             Text(Lang.format("Похоже, земля сохнет быстрее: %1$@ вместо %2$@.",
                              Species.periodPhrase(days),
                              Species.periodPhrase(plant.dryingDays)))
@@ -386,13 +390,13 @@ struct PlantView: View {
                     .foregroundStyle(.secondary)
                 if let line = tending.feedLabel {
                     chore(line, due: tending.feedDue, done: "Подкормил",
-                          icon: "sparkles") {
+                          icon: "sparkles", term: .feeding) {
                         garden.feed(plantID)
                     }
                 }
                 if let line = tending.repotLabel {
                     chore(line, due: tending.repotDue, done: "Пересадил",
-                          icon: "arrow.up.bin") {
+                          icon: "arrow.up.bin", term: .repotting) {
                         garden.repot(plantID)
                     }
                 }
@@ -407,14 +411,17 @@ struct PlantView: View {
 
     /// Срок — переходом цифр; пора — синим, как всё, что ждёт действия.
     private func chore(_ line: String, due: Bool, done: LocalizedStringKey,
-                       icon: String,
+                       icon: String, term: Term,
                        action: @escaping () -> Void) -> some View {
         HStack(spacing: 12) {
-            Text(line)
-                .font(Typography.detail)
-                .foregroundStyle(due ? Palette.accent : Palette.ink)
-                .contentTransition(.numericText())
-                .frame(maxWidth: .infinity, alignment: .leading)
+            HStack(spacing: 6) {
+                Text(line)
+                    .font(Typography.detail)
+                    .foregroundStyle(due ? Palette.accent : Palette.ink)
+                    .contentTransition(.numericText())
+                TermHint(term)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
             Button {
                 withAnimation(Motion.number) { action() }
                 Feel.done()
@@ -429,10 +436,11 @@ struct PlantView: View {
 
     private func facts(_ plant: Plant) -> some View {
         VStack(alignment: .leading, spacing: 14) {
-            fact(Lang.format("Влажность %@", plant.moistureLabel))
+            fact(Lang.format("Влажность %@", plant.moistureLabel),
+                 term: .moisture)
                 .contentTransition(.numericText())
             fact(plant.species)
-            fact(plant.wateringLabel)
+            fact(plant.wateringLabel, term: .period)
                 .contentTransition(.numericText())
             if let room = garden.roomName(of: plant.id) {
                 fact(Lang.format("Комната «%@»", room))
@@ -536,10 +544,11 @@ struct PlantView: View {
         RoundedRectangle(cornerRadius: Metrics.cardRadius, style: .continuous)
     }
 
-    private func fact(_ text: String) -> some View {
-        HStack(alignment: .top, spacing: 12) {
+    private func fact(_ text: String, term: Term? = nil) -> some View {
+        HStack(alignment: .firstTextBaseline, spacing: 12) {
             Text("•")
             Text(text)
+            if let term { TermHint(term) }
         }
         .font(Typography.detail)
         .foregroundStyle(Palette.ink)

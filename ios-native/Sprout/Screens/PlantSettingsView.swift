@@ -116,7 +116,7 @@ struct PlantSettingsView: View {
 
             SproutDivider()
 
-            SproutBlock("Полив") {
+            SproutBlock("Полив", term: .period) {
                 PeriodWheel(days: $period)
 
                 Text(forecast)
@@ -149,6 +149,7 @@ struct PlantSettingsView: View {
                 Text("Напоминать о подкормке")
                     .font(Typography.settingRow)
                     .foregroundStyle(Palette.ink)
+                TermHint(.feeding)
                 Spacer(minLength: 0)
                 Toggle("Напоминать о подкормке", isOn: $feeds.animation(Motion.enter))
                     .labelsHidden()
@@ -160,7 +161,7 @@ struct PlantSettingsView: View {
 
             SproutDivider()
 
-            SproutBlock("Пересадка") {
+            SproutBlock("Пересадка", term: .repotting) {
                 Menu {
                     Picker("Пересадка", selection: $repotMonths) {
                         Text("Не напоминать").tag(Int?.none)

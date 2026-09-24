@@ -88,6 +88,12 @@ struct RootView: View {
         // Замок поверх всего: запертый сад не должен мелькнуть даже под
         // заставкой.
         .overlay { padlock }
+        // Знакомство — один раз, когда вход доиграл и сад не заперт.
+        .fullScreenCover(isPresented: Binding(
+            get: { touring },
+            set: { if !$0 { settings.toured = true } })) {
+            TourView()
+        }
         // Наблюдатель касаний — тоже на окно, см. `Finger`.
         .onAppear {
             notch = Self.topInset()
@@ -116,6 +122,11 @@ struct RootView: View {
             if now == .background { Bin.shared.commit() }
             remind(active: now == .active)
         }
+    }
+
+    private var touring: Bool {
+        !settings.toured && Launch.shared.step >= Launch.last
+            && !(lock.on && !lock.open)
     }
 
     private var scheme: ColorScheme? {

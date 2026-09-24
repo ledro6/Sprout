@@ -16,6 +16,9 @@ struct SettingsView: View {
 
     private let lock = Lock.shared
 
+    /// Знакомство ещё раз — то же, что при первом запуске.
+    @State private var touring = false
+
     @State private var tileSpots = Spots()
     @State private var patternSpots = Spots()
     @State private var waveSpots = Spots()
@@ -52,6 +55,7 @@ struct SettingsView: View {
         } message: {
             Text("Их включают в настройках телефона: Sprout → Уведомления.")
         }
+        .fullScreenCover(isPresented: $touring) { TourView() }
     }
 
     // MARK: - Оформление
@@ -91,7 +95,7 @@ struct SettingsView: View {
 
             SproutDivider()
 
-            SproutBlock("Цвет волны") {
+            SproutBlock("Цвет волны", term: .wave) {
                 SproutTints(current: settings.waveTint,
                             spots: waveSpots) { tint, spot in
                     // Цвет волны виден только волной — пускаем её из кружка.
@@ -114,14 +118,14 @@ struct SettingsView: View {
 
             SproutDivider()
 
-            switchRow("Узор за наклоном", isOn: Binding(
+            switchRow("Узор за наклоном", term: .parallax, isOn: Binding(
                 get: { settings.parallax },
                 set: { settings.parallax = $0 }))
 
             SproutDivider()
 
             // Разъезд живёт внутри параллакса и гаснет вместе с ним.
-            switchRow("Фигурки плывут порознь", isOn: Binding(
+            switchRow("Фигурки плывут порознь", term: .sway, isOn: Binding(
                 get: { settings.sway },
                 set: { settings.sway = $0 }))
                 .disabled(!settings.parallax)
@@ -176,15 +180,19 @@ struct SettingsView: View {
     }
 
     /// Строка с переключателем. Подпись спрятана у самого переключателя, но
-    /// нужна VoiceOver.
+    /// нужна VoiceOver. Непонятное слово — со своим «?».
     private func switchRow(_ title: LocalizedStringKey,
+                           term: Term? = nil,
                            note: LocalizedStringKey? = nil,
                            isOn: Binding<Bool>) -> some View {
         HStack(alignment: .center, spacing: 12) {
             VStack(alignment: .leading, spacing: 3) {
-                Text(title)
-                    .font(Typography.settingRow)
-                    .foregroundStyle(Palette.ink)
+                HStack(spacing: 6) {
+                    Text(title)
+                        .font(Typography.settingRow)
+                        .foregroundStyle(Palette.ink)
+                    if let term { TermHint(term) }
+                }
                 if let note {
                     Text(note)
                         .font(Typography.settingNote)
@@ -250,13 +258,13 @@ struct SettingsView: View {
 
     private var watering: some View {
         SproutGroup("Полив") {
-            switchRow("Учитывать время года", isOn: Binding(
+            switchRow("Учитывать время года", term: .seasons, isOn: Binding(
                 get: { settings.seasons },
                 set: { settings.seasons = $0 }))
 
             SproutDivider()
 
-            switchRow("Напоминать о поливе", isOn: Binding(
+            switchRow("Напоминать о поливе", term: .reminders, isOn: Binding(
                 get: { settings.reminders },
                 set: { want(reminders: $0) }))
 
@@ -311,7 +319,7 @@ struct SettingsView: View {
     /// запирать — переключатель погашен, и это единственное пояснение.
     private var protection: some View {
         SproutGroup("Защита") {
-            switchRow("Запирать приложение",
+            switchRow("Запирать приложение", term: .lock,
                       note: lock.ready ? nil
                           : "На телефоне нет ни Face ID, ни код-пароля.",
                       isOn: Binding(get: { lock.on }, set: { lock.on = $0 }))
@@ -339,6 +347,20 @@ struct SettingsView: View {
 
     private var about: some View {
         SproutGroup("О приложении") {
+            Button { touring = true } label: {
+                SproutLink("Как пользоваться", icon: "hand.tap")
+            }
+            .buttonStyle(.plain)
+
+            SproutDivider()
+
+            NavigationLink { GlossaryView() } label: {
+                SproutLink("Словарик", icon: "character.book.closed")
+            }
+            .buttonStyle(.plain)
+
+            SproutDivider()
+
             NavigationLink { PrivacyView() } label: {
                 SproutLink("Политика конфиденциальности",
                              icon: "checkmark.shield")

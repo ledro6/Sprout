@@ -270,6 +270,16 @@ enum Metrics {
     /// скругления: не липнет к краю.
     static let modelBadgeInset: CGFloat = 7
 
+    /// Пузырь пояснения: строк в пять, как сноска, а не лист.
+    static let hintWidth: CGFloat = 280
+
+    /// Поле вокруг «?», которое ловит палец: сам значок мельче пальца.
+    static let hintReach: CGFloat = 8
+
+    /// Знак страницы знакомства и стеклянный круг под ним.
+    static let tourGlyph: CGFloat = 52
+    static let tourBadge: CGFloat = 116
+
     static let ring: CGFloat = 30
     static let ringLine: CGFloat = 2.5
 

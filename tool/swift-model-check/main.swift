@@ -246,7 +246,7 @@ print("настройки: значения по умолчанию и гран�
 let keys = ["theme", "patternKinds", "patternShapes", "reminders",
             "remindThreshold", "patternTint", "waveTint",
             "hushedHaptics", "hapticStrength", "stillPattern", "stiffShapes",
-            "plantLook", "plantOrder", "mutedSounds"]
+            "plantLook", "plantOrder", "mutedSounds", "toured"]
 let store = UserDefaults.standard
 for key in keys { store.removeObject(forKey: key) }
 let fresh = Settings(store: store)
@@ -263,6 +263,7 @@ check(fresh.sounds, "звуки по умолчанию включены")
 check(fresh.parallax, "узор по умолчанию едет за наклоном")
 check(fresh.sway, "и фигурки по умолчанию расходятся")
 check(round2(fresh.threshold), "0.20", "порог по умолчанию — двадцать процентов")
+check(fresh.toured == false, "знакомство по умолчанию ещё не показано")
 
 print("фигурки узора включаются по одной:")
 fresh.toggle(shape: 2)
@@ -285,6 +286,7 @@ fresh.reminders = true
 fresh.threshold = 0.3
 fresh.patternTint = .rose
 fresh.waveTint = .amber
+fresh.toured = true
 let reopened = Settings(store: store)
 check("\(reopened.theme)", "dark", "тема прочиталась обратно")
 check("\(reopened.look)", "list", "и вид списком")
@@ -294,6 +296,7 @@ check(reopened.reminders, "и переключатель напоминаний"
 check(round2(reopened.threshold), "0.30", "и порог")
 check("\(reopened.patternTint)", "rose", "и цвет узора")
 check("\(reopened.waveTint)", "amber", "и цвет волны")
+check(reopened.toured, "и то, что знакомство уже было")
 fresh.parallax = false
 fresh.sway = false
 fresh.sounds = false
@@ -2131,6 +2134,43 @@ MainActor.assumeIsolated {
     check(Bench.preparing(nil), "Модель готовится",
           "пока мастерская не дошла — без процентов")
     check(Bench.preparing(0.5), "Модель готовится: 50%", "дошла — с процентами")
+}
+
+print("знакомство и словарик:")
+do {
+    let terms = Term.allCases
+    check(terms.allSatisfy { !$0.title.isEmpty && !$0.meaning.isEmpty
+                             && !$0.icon.isEmpty },
+          "у каждого слова есть название, пояснение и знак")
+    check(Set(terms.map(\.title)).count == terms.count,
+          "названия слов не повторяются")
+    check(Set(terms.map(\.meaning)).count == terms.count,
+          "и пояснения тоже")
+    let pages = Tour.pages
+    check(pages.count == 6, "в знакомстве шесть страниц")
+    check(pages.map(\.id) == Array(0 ..< pages.count),
+          "страницы идут по порядку с нуля — по ним листает TabView")
+    check(pages.allSatisfy { !$0.icon.isEmpty && !$0.title.isEmpty
+                             && !$0.text.isEmpty },
+          "у каждой страницы есть знак, заголовок и текст")
+    // Названия не сверяются: «Замок» и «Пересадка» по-украински те же.
+    let russian = terms.map(\.meaning) + pages.flatMap { [$0.title, $0.text] }
+    let tongues = ((catalog.strings["Словарик"]?["localizations"]
+                    as? [String: Any])?.keys).map { $0.sorted() } ?? []
+    check(tongues.count == 47, "словарик переведён на все языки")
+    defer { language = "ru" }
+    for tongue in tongues {
+        language = tongue
+        let local = Term.allCases.map(\.meaning)
+            + Tour.pages.flatMap { [$0.title, $0.text] }
+        let same = zip(local, russian).filter { $0 == $1 }.map(\.0)
+        check(same.isEmpty,
+              "\(tongue): знакомство и словарик переведены \(same)")
+    }
+    language = "en"
+    check(Lang.format("Что значит «%@»", "AR"), "What “AR” means",
+          "английский: подпись у «?»")
+    check(Term.wave.title, "Wave", "английский: слово из словарика")
 }
 
 print("уезжаю:")

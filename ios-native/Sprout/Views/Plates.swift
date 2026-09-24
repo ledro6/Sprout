@@ -89,24 +89,30 @@ struct SproutGroup<Content: View>: View {
     }
 }
 
-/// Название настройки, выбор и необязательное пояснение.
+/// Название настройки, выбор и необязательное пояснение. Непонятное слово
+/// в названии — со своим «?», см. `TermHint`.
 struct SproutBlock<Control: View>: View {
     let title: LocalizedStringKey
     let note: LocalizedStringKey?
+    let term: Term?
     let control: Control
 
     init(_ title: LocalizedStringKey, note: LocalizedStringKey? = nil,
-         @ViewBuilder control: () -> Control) {
+         term: Term? = nil, @ViewBuilder control: () -> Control) {
         self.title = title
         self.note = note
+        self.term = term
         self.control = control()
     }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 9) {
-            Text(title)
-                .font(Typography.settingRow)
-                .foregroundStyle(Palette.ink)
+            HStack(spacing: 6) {
+                Text(title)
+                    .font(Typography.settingRow)
+                    .foregroundStyle(Palette.ink)
+                if let term { TermHint(term) }
+            }
             control
             if let note {
                 Text(note)

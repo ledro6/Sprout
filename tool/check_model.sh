@@ -63,6 +63,7 @@ echo "модель виджета собирается: $(echo "$WIDGET_MODEL" |
   ios-native/Sprout/Model/Kit.swift \
   ios-native/Sprout/Model/Effort.swift \
   ios-native/Sprout/Model/Bench.swift \
+  ios-native/Sprout/Model/Guide.swift \
   ios-native/Sprout/Model/Botany.swift \
   ios-native/Sprout/Model/Sample.swift \
   ios-native/Sprout/Model/Greenhouse.swift \

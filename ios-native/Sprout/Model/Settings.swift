@@ -217,6 +217,12 @@ final class Settings {
         didSet { store.set(threshold, forKey: Key.threshold) }
     }
 
+    /// Знакомство при первом запуске уже показано — см. `Tour`. Повторить
+    /// его можно из настроек.
+    var toured: Bool {
+        didSet { store.set(toured, forKey: Key.toured) }
+    }
+
     /// Последнюю не выключить: пустой набор — голый фон. Отвечает, изменилось
     /// ли что-нибудь, — по нему экран решает, пускать ли всходы.
     @discardableResult
@@ -267,6 +273,7 @@ final class Settings {
         static let stiffShapes = "stiffShapes"
         /// Тоже наоборот: время года учитывается по умолчанию.
         static let flatYear = "ignoreSeasons"
+        static let toured = "toured"
     }
 
     /// Отсутствие ключа ловим отдельно: `UserDefaults` отвечает нулём, а ноль
@@ -311,5 +318,6 @@ final class Settings {
         let level = store.double(forKey: Key.threshold)
         threshold = Self.thresholds.contains(level) ? level
             : Self.defaultThreshold
+        toured = store.bool(forKey: Key.toured)
     }
 }
