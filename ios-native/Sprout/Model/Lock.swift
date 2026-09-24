@@ -41,23 +41,12 @@ final class Lock {
     /// запирать — замок не предлагаем, иначе он запер бы сад навсегда.
     @ObservationIgnored private lazy var probe = Self.sense()
 
-    var ready: Bool { probe.ready }
-
-    /// В дательном падеже — для «Открывать по …».
-    var means: String { probe.name }
+    var ready: Bool { probe }
 
     func refresh() { probe = Self.sense() }
 
-    private static func sense() -> (ready: Bool, name: String) {
-        let context = LAContext()
-        // Опрос обязателен: до него `biometryType` всегда `none`.
-        let ready = context.canEvaluatePolicy(.deviceOwnerAuthentication,
-                                              error: nil)
-        switch context.biometryType {
-        case .faceID: return (ready, "Face ID")
-        case .touchID: return (ready, "Touch ID")
-        default: return (ready, Lang.text("код-паролю"))
-        }
+    private static func sense() -> Bool {
+        LAContext().canEvaluatePolicy(.deviceOwnerAuthentication, error: nil)
     }
 
     func close() {

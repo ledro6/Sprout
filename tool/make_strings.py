@@ -344,12 +344,17 @@ def build():
     return 0
 
 
-def check_values(lang, name, keys, values, problems):
-    """Один раздел таблицы языка против ключей из кода."""
+def check_values(lang, name, keys, values, problems, counted=()):
+    """Один раздел таблицы языка против ключей из кода. `counted` — ключи
+    с формами числа по-русски: там, где у языка форм больше одной, они
+    нужны и в переводе."""
     for key in keys:
         value = values.get(key)
         if value is None:
             continue
+        if (key in counted and not isinstance(value, dict)
+                and len(PLURALS.get(lang, DEFAULT_PLURALS)) > 1):
+            problems.append(f"{lang}: «{key}» — нужны формы числа")
         forms = value if isinstance(value, dict) else {"": value}
         if isinstance(value, dict):
             need = PLURALS.get(lang, DEFAULT_PLURALS)
@@ -447,8 +452,9 @@ def check():
         texts |= values
 
     tables = {lang: load(lang) for lang in LANGS}
+    plural = {key for key, value in source.items() if isinstance(value, dict)}
     for lang in LANGS:
-        check_values(lang, "", keys, tables[lang], problems)
+        check_values(lang, "", keys, tables[lang], problems, plural)
         if lang == SOURCE:
             continue
         spoken = section(lang, "_shortcuts")

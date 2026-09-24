@@ -4,10 +4,82 @@
     "NSCameraUsageDescription": {
       "extractionState": "manual",
       "localizations": {
+        "da": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "For at fotografere planter til din have og placere dem i dit rum i augmented reality."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Um Pflanzen für deinen Garten zu fotografieren und sie in Augmented Reality in deinen Raum zu stellen."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "To photograph plants for your garden and place them in your room in augmented reality."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Para fotografiar plantas para tu jardín y colocarlas en tu habitación en realidad aumentada."
+          }
+        },
+        "fi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kasvien kuvaamiseksi puutarhaasi ja niiden sijoittamiseksi huoneeseen lisätyssä todellisuudessa."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pour photographier des plantes pour votre jardin et les placer dans votre pièce en réalité augmentée."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Per fotografare le piante del tuo giardino e posizionarle nella stanza in realtà aumentata."
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "For å fotografere planter til hagen din og plassere dem i rommet ditt i utvidet virkelighet."
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Om planten voor je tuin te fotograferen en ze in augmented reality in je kamer te zetten."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Para fotografar plantas para o seu jardim e colocá-las no seu cômodo em realidade aumentada."
+          }
+        },
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Para fotografar plantas para o seu jardim e colocá-las na sua divisão em realidade aumentada."
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
             "value": "Чтобы снять растение для сада и поставить его в комнату в дополненной реальности."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "För att fotografera växter till din trädgård och placera dem i ditt rum i förstärkt verklighet."
           }
         }
       }
@@ -15,10 +87,82 @@
     "NSFaceIDUsageDescription": {
       "extractionState": "manual",
       "localizations": {
+        "da": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "For at låse din låste have op med dit ansigt."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Um deinen gesperrten Garten per Gesichtserkennung zu öffnen."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "To unlock your locked garden with your face."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Para abrir tu jardín bloqueado con la cara."
+          }
+        },
+        "fi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lukitun puutarhan avaamiseksi kasvoilla."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pour ouvrir votre jardin verrouillé avec votre visage."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Per aprire il giardino bloccato con il volto."
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "For å låse opp den låste hagen din med ansiktet."
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Om je vergrendelde tuin met je gezicht te openen."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Para abrir seu jardim bloqueado com o rosto."
+          }
+        },
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Para abrir o seu jardim bloqueado com o rosto."
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
             "value": "Чтобы открывать запертый сад по лицу."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "För att låsa upp din låsta trädgård med ansiktet."
           }
         }
       }
@@ -26,10 +170,82 @@
     "NSMotionUsageDescription": {
       "extractionState": "manual",
       "localizations": {
+        "da": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Når du vipper telefonen, flytter baggrundsmønsteret sig en smule."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wenn du das Telefon neigst, bewegt sich das Hintergrundmuster leicht."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tilting the phone gently moves the background pattern."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Al inclinar el teléfono, el patrón del fondo se mueve un poco."
+          }
+        },
+        "fi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Puhelimen kallistaminen liikuttaa taustakuviota hieman."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Incliner le téléphone déplace légèrement le motif d’arrière-plan."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Inclinando il telefono il motivo dello sfondo si sposta leggermente."
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Når du vipper telefonen, flytter bakgrunnsmønsteret seg litt."
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kantelen van de telefoon beweegt het achtergrondpatroon een beetje."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Inclinar o celular move levemente o padrão do fundo."
+          }
+        },
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Inclinar o telemóvel move ligeiramente o padrão do fundo."
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
             "value": "Наклон телефона чуть двигает узор на фоне."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "När du lutar telefonen rör sig bakgrundsmönstret lite."
           }
         }
       }
