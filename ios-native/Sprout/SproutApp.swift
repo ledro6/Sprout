@@ -8,6 +8,8 @@ struct SproutApp: App {
     /// как придёт первое.
     init() {
         Notifier.register()
+        // Записали сад — виджету пора перерисоваться.
+        Garden.saved = { Task { @MainActor in Widgets.nudge() } }
     }
 
     var body: some Scene {
@@ -68,6 +70,9 @@ struct RootView: View {
         // Состав сада сменился — пересказываем Siri клички.
         .onChange(of: garden.roster, initial: true) { _, _ in
             SproutShortcuts.updateAppShortcutParameters()
+            // Картинки для виджета — тем же поводом: состав сада сменился.
+            let rooms = garden.rooms
+            Task(priority: .utility) { await Thumbs.export(rooms) }
         }
         // Время года — при запуске, при возвращении (мог смениться месяц) и
         // когда его выключают в настройках.
@@ -89,6 +94,9 @@ struct RootView: View {
         .onChange(of: phase) { _, now in
             if now == .active {
                 notch = Self.topInset()
+                // Пока спали, сад мог полить виджет или кнопка в
+                // уведомлении.
+                garden.reload()
                 Season.settle(on: settings.seasons)
                 Task { await lock.unlock() }
             } else {

@@ -1909,6 +1909,34 @@ do {
           "уход ложится в файл сада")
 }
 
+print("сад в общей папке:")
+do {
+    let folder = FileManager.default.temporaryDirectory
+        .appendingPathComponent("sprout-store-\(UUID().uuidString)")
+    try! FileManager.default.createDirectory(at: folder,
+                                             withIntermediateDirectories: true)
+    Store.testing = folder
+    defer {
+        Store.testing = nil
+        try? FileManager.default.removeItem(at: folder)
+    }
+    let home = Garden()
+    home.save()
+    let other = Garden()
+    check(other.plantCount == home.plantCount, "второй сад читает тот же файл")
+    let id = other.rooms[0].plants[0].id
+    other.advance(to: Date().addingTimeInterval(3 * 86_400 / Garden.speed))
+    _ = other.water(id)
+    check(home.log.count != other.log.count, "пока не перечитал — не знает")
+    home.reload()
+    check(home.log.count == other.log.count
+          && round2(home.plant(id: id)!.moisture) == "1.00",
+          "перечитал — видит полив, сделанный мимо него (виджетом)")
+    let roster = home.roster
+    home.reload()
+    check(home.roster == roster, "файл не менялся — перечитывать нечего")
+}
+
 print("уезжаю:")
 do {
     let rooms = [Room(name: "Кухня", plants: [

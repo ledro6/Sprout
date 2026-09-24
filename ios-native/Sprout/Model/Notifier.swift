@@ -107,7 +107,9 @@ private final class Postman: NSObject, UNUserNotificationCenterDelegate {
         else { return }
         await MainActor.run {
             let garden = Garden.shared
-            // Приложение могло стоять в фоне — сперва отдаём саду время.
+            // Приложение могло стоять в фоне — сперва чужие правки (виджет),
+            // потом прошедшее время.
+            garden.reload()
             garden.advance()
             for id in ids { _ = garden.water(id) }
         }

@@ -479,6 +479,9 @@
     "Полить всех перед отъездом": {
       "extractionState": "manual"
     },
+    "Полить из виджета": {
+      "extractionState": "manual"
+    },
     "Полить растение": {
       "extractionState": "manual"
     },
@@ -486,6 +489,9 @@
       "extractionState": "manual"
     },
     "Полить — до мокрой земли, но чтобы вода не стояла в поддоне. Остальные растения дождутся меня сами. Спасибо!": {
+      "extractionState": "manual"
+    },
+    "Полить: %@": {
       "extractionState": "manual"
     },
     "Поменять срок": {
@@ -525,6 +531,9 @@
       "extractionState": "manual"
     },
     "Придумать": {
+      "extractionState": "manual"
+    },
+    "Просят воды: %lld": {
       "extractionState": "manual"
     },
     "Профиль": {
@@ -654,6 +663,9 @@
     "Сохранить сад в файл": {
       "extractionState": "manual"
     },
+    "Спатифиллум": {
+      "extractionState": "manual"
+    },
     "Статистика": {
       "extractionState": "manual"
     },
@@ -711,6 +723,9 @@
     "Учитывать время года": {
       "extractionState": "manual"
     },
+    "Фиалка": {
+      "extractionState": "manual"
+    },
     "Фигурки": {
       "extractionState": "manual"
     },
@@ -742,6 +757,9 @@
       "extractionState": "manual"
     },
     "Что хранится": {
+      "extractionState": "manual"
+    },
+    "и ещё %@": {
       "extractionState": "manual"
     },
     "раз в %@ дня": {

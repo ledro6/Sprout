@@ -30,18 +30,39 @@ final class Garden {
 
     @ObservationIgnored private var lastTick = Date()
 
-    /// Documents, а не Caches: данные хозяина нельзя вычищать ради места, и
-    /// так файл попадает в резервную копию.
-    @ObservationIgnored private lazy var file: URL? = Self.fileURL()
+    /// Где файл — см. `Store`.
+    @ObservationIgnored private lazy var file: URL? = Store.garden
+
+    /// Метка слепка, что сейчас в памяти: другая в файле — его записал
+    /// виджет или кнопка в уведомлении, пока приложение спало.
+    @ObservationIgnored private var written: String?
+
+    /// После записи — виджету пора перерисоваться. Ставит приложение: модель
+    /// о WidgetKit не знает.
+    nonisolated(unsafe) static var saved: (() -> Void)?
 
     init() {
-        let state = Self.load() ?? Seed.state
+        let state = Store.read() ?? Seed.state
         owner = state.owner
         rooms = state.rooms
         log = state.log
         since = state.since
+        written = state.stamp
         // Отсчёт — с запуска: что было до него, саду знать неоткуда.
         lastTick = Date()
+    }
+
+    /// Файл поменяли без нас — берём его. Зовётся при возвращении на экран и
+    /// перед командами, которые могут прийти, пока приложение спит.
+    func reload() {
+        guard let state = Store.read(), state.stamp != written else { return }
+        owner = state.owner
+        rooms = state.rooms
+        log = state.log
+        since = state.since
+        written = state.stamp
+        lastTick = Date()
+        roster += 1
     }
 
     // MARK: - Время
@@ -395,7 +416,8 @@ final class Garden {
 
     var state: GardenState {
         GardenState(owner: owner, rooms: rooms, savedAt: Date(),
-                    log: log, since: since)
+                    log: log, since: since, stamp: written,
+                    season: Season.stretch)
     }
 
     /// На действиях хозяина и при уходе в фон, но не на каждом такте часов.
@@ -404,25 +426,13 @@ final class Garden {
         do {
             let encoder = JSONEncoder()
             encoder.outputFormatting = .prettyPrinted
-            try encoder.encode(state).write(to: file, options: .atomic)
+            var snapshot = state
+            snapshot.stamp = UUID().uuidString
+            try encoder.encode(snapshot).write(to: file, options: .atomic)
+            written = snapshot.stamp
+            Self.saved?()
         } catch {
             // Не сохранились — не повод падать: сад в памяти цел.
         }
-    }
-
-    private static func fileURL() -> URL? {
-        FileManager.default
-            .urls(for: .documentDirectory, in: .userDomainMask)
-            .first?
-            .appendingPathComponent("garden.json")
-    }
-
-    private static func load() -> GardenState? {
-        guard let file = fileURL(),
-              let data = try? Data(contentsOf: file)
-        else { return nil }
-        // Битый файл — тоже «нет файла»: лучше макетный сад, чем не
-        // запуститься.
-        return try? JSONDecoder().decode(GardenState.self, from: data)
     }
 }

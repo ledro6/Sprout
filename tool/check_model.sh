@@ -22,6 +22,7 @@ trap 'rm -rf "$OUT"' EXIT
   ios-native/Sprout/Model/Season.swift \
   ios-native/Sprout/Model/Care.swift \
   ios-native/Sprout/Model/Trip.swift \
+  ios-native/Sprout/Model/Store.swift \
   ios-native/Sprout/Model/Plants.swift \
   ios-native/Sprout/Model/Garden.swift \
   ios-native/Sprout/Model/Settings.swift \

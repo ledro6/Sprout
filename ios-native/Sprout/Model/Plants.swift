@@ -170,13 +170,24 @@ struct GardenState: Codable {
 
     var since: Date
 
+    /// Метка записи — своя у каждого сохранения: по ней сад узнаёт, что файл
+    /// переписал кто-то другой (виджет, кнопка в уведомлении).
+    var stamp: String?
+
+    /// Поправка на время года в миг записи — виджету: настроек приложения
+    /// он не видит, а сроки должен считать так же.
+    var season: Double?
+
     init(owner: String, rooms: [Room], savedAt: Date,
-         log: [Watering] = [], since: Date = Date()) {
+         log: [Watering] = [], since: Date = Date(), stamp: String? = nil,
+         season: Double? = nil) {
         self.owner = owner
         self.rooms = rooms
         self.savedAt = savedAt
         self.log = log
         self.since = since
+        self.stamp = stamp
+        self.season = season
     }
 
     /// Журнала и даты в файлах прежних сборок нет, а синтезированный разбор
@@ -188,6 +199,8 @@ struct GardenState: Codable {
         savedAt = try box.decode(Date.self, forKey: .savedAt)
         log = try box.decodeIfPresent([Watering].self, forKey: .log) ?? []
         since = try box.decodeIfPresent(Date.self, forKey: .since) ?? savedAt
+        stamp = try box.decodeIfPresent(String.self, forKey: .stamp)
+        season = try box.decodeIfPresent(Double.self, forKey: .season)
     }
 }
 

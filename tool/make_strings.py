@@ -93,9 +93,13 @@ def unescape(text):
             .replace("\\\\", "\\"))
 
 
+WIDGET = ROOT / "ios-native" / "SproutWidget"
+
+
 def sources():
-    for path in sorted(APP.rglob("*.swift")):
-        yield path, path.read_text(encoding="utf-8")
+    for folder in (APP, WIDGET):
+        for path in sorted(folder.rglob("*.swift")):
+            yield path, path.read_text(encoding="utf-8")
 
 
 def code_only(line):
@@ -120,7 +124,7 @@ def extract():
     keys = {}
     stray = []
     for path, text in sources():
-        rel = path.relative_to(APP)
+        rel = path.relative_to(APP.parent)
         for number, raw in enumerate(text.splitlines(), 1):
             line = code_only(raw)
             if not line.strip():
@@ -159,10 +163,10 @@ def allowed(entry):
 
 # Файл → литералы, которые остаются русскими нарочно.
 ALLOW = {
-    "Model/Botany.swift": [r"."],
-    "Model/Species.swift": [r"."],
-    "Model/Plants.swift": [r"^[а-яё]+$", r"аяоеиыуюйь"],
-    "Model/Muse.swift": [r"."],
+    "Sprout/Model/Botany.swift": [r"."],
+    "Sprout/Model/Species.swift": [r"."],
+    "Sprout/Model/Plants.swift": [r"^[а-яё]+$", r"аяоеиыуюйь"],
+    "Sprout/Model/Muse.swift": [r"."],
 }
 
 

@@ -74,8 +74,9 @@ struct WaterPlant: AppIntent {
     @MainActor
     func perform() async throws -> some IntentResult & ProvidesDialog {
         let garden = Garden.shared
-        // Приложение могло стоять в фоне — сперва отдаём саду прошедшее
-        // время.
+        // Приложение могло стоять в фоне — сперва чужие правки (виджет),
+        // потом прошедшее время.
+        garden.reload()
         garden.advance()
         guard garden.plant(id: plant.id) != nil else {
             return .result(dialog: "Растения «\(plant.name)» в саду больше нет.")
@@ -97,6 +98,7 @@ struct WhoNeedsWater: AppIntent {
     @MainActor
     func perform() async throws -> some IntentResult & ProvidesDialog {
         let garden = Garden.shared
+        garden.reload()
         garden.advance()
         let line = Seed.dueLine(Seed.due(in: garden.rooms))
         return .result(dialog: "\(line)")
