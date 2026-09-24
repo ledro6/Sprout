@@ -5,6 +5,14 @@ import Foundation
 struct Watering: Codable, Hashable, Sendable {
     var plant: Plant.ID
     var when: Date
+    /// Сколько воды оставалось в земле в миг полива — по этому видно, что
+    /// поливают раньше срока, см. `Rhythm`. В журналах прежних сборок пусто.
+    var left: Double? = nil
+
+    /// Та же запись — по растению и мигу: доля воды в сравнении не участвует.
+    func same(_ other: Watering) -> Bool {
+        plant == other.plant && when == other.when
+    }
 }
 
 struct Tally: Identifiable, Hashable, Sendable {

@@ -18,6 +18,10 @@ fi
 OUT=$(mktemp -d)
 trap 'rm -rf "$OUT"' EXIT
 "$SWIFTC" -O \
+  ios-native/Sprout/Model/Lang.swift \
+  ios-native/Sprout/Model/Season.swift \
+  ios-native/Sprout/Model/Care.swift \
+  ios-native/Sprout/Model/Trip.swift \
   ios-native/Sprout/Model/Plants.swift \
   ios-native/Sprout/Model/Garden.swift \
   ios-native/Sprout/Model/Settings.swift \

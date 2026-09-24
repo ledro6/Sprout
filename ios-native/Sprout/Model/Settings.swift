@@ -203,6 +203,11 @@ final class Settings {
         didSet { store.set(!sway, forKey: Key.stiffShapes) }
     }
 
+    /// Срок полива длиннее зимой и короче летом, см. `Season`.
+    var seasons: Bool {
+        didSet { store.set(!seasons, forKey: Key.flatYear) }
+    }
+
     /// Разрешение спрашивает экран настроек, когда включают переключатель.
     var reminders: Bool {
         didSet { store.set(reminders, forKey: Key.reminders) }
@@ -260,6 +265,8 @@ final class Settings {
         /// Тоже наоборот.
         static let stillPattern = "stillPattern"
         static let stiffShapes = "stiffShapes"
+        /// Тоже наоборот: время года учитывается по умолчанию.
+        static let flatYear = "ignoreSeasons"
     }
 
     /// Отсутствие ключа ловим отдельно: `UserDefaults` отвечает нулём, а ноль
@@ -299,6 +306,7 @@ final class Settings {
         sounds = !store.bool(forKey: Key.muted)
         parallax = !store.bool(forKey: Key.stillPattern)
         sway = !store.bool(forKey: Key.stiffShapes)
+        seasons = !store.bool(forKey: Key.flatYear)
         reminders = store.bool(forKey: Key.reminders)
         let level = store.double(forKey: Key.threshold)
         threshold = Self.thresholds.contains(level) ? level

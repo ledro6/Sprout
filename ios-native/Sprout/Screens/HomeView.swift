@@ -32,6 +32,8 @@ struct HomeView: View {
 
     @State private var roomsOpen = false
 
+    @State private var tripping = false
+
     /// Полка качается, как значки «Домой» в правке. Входят в неё, повёв
     /// карточку из меню или пунктом «Расставить».
     @State private var editing = false
@@ -145,6 +147,7 @@ struct HomeView: View {
         // Сад передаём явно: без него лист упал бы, а на наследование
         // окружения полагаться незачем.
         .sheet(isPresented: $roomsOpen) { RoomsView().environment(garden) }
+        .sheet(isPresented: $tripping) { TripView().environment(garden) }
     }
 
     /// Нашлась по имени — её новый номер; не нашлась при том же числе комнат
@@ -234,6 +237,11 @@ struct HomeView: View {
                     ForEach(Settings.Order.allCases) { item in
                         Label(item.title, systemImage: item.icon).tag(item)
                     }
+                }
+            }
+            Section {
+                Button { tripping = true } label: {
+                    Label("Уезжаю…", systemImage: "airplane.departure")
                 }
             }
         } label: {

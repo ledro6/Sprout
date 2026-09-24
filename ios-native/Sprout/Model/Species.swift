@@ -87,12 +87,18 @@ enum Species {
     static func periodLabel(_ days: Double) -> String {
         let whole = days.rounded()
         guard abs(days - whole) < 0.05 else {
-            let tenths = Int((days * 10).rounded())
-            return "Раз в \(tenths / 10),\(tenths % 10) дня"
+            return Lang.format("Раз в %@ дня", Lang.decimal(days))
         }
-        let count = Int(whole)
-        return "Раз в \(count) "
-            + Plant.plural(count, "день", "дня", "дней")
+        return Lang.format("Раз в %lld дней", Int(whole))
+    }
+
+    /// Срок в середине фразы: «раз в 6 дней».
+    static func periodPhrase(_ days: Double) -> String {
+        let whole = days.rounded()
+        guard abs(days - whole) < 0.05 else {
+            return Lang.format("раз в %@ дня", Lang.decimal(days))
+        }
+        return Lang.format("раз в %lld дней", Int(whole))
     }
 
     /// Обычный срок для вида, вписанного по-русски, — из той же таблицы.

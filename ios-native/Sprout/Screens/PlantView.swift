@@ -41,10 +41,17 @@ struct PlantView: View {
                         pour
                         tools
                     }
+                    if let days = Rhythm.suggest(for: plant, log: garden.log) {
+                        rhythm(plant, days: days)
+                            .transition(.blurReplace)
+                    }
+                    care(plant)
                     facts(plant)
                     notes
                     diary(plant)
                 }
+                .animation(Motion.enter,
+                           value: Rhythm.suggest(for: plant, log: garden.log))
                 .padding(.horizontal, Metrics.margin)
                 .padding(.top, 14)
                 .padding(.bottom, 40)
@@ -304,6 +311,102 @@ struct PlantView: View {
         .controlSize(.large)
     }
 
+    /// Поливают раньше срока — предложение сократить его. Отказ запоминается:
+    /// то же предложение больше не всплывёт.
+    private func rhythm(_ plant: Plant, days: Double) -> some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Label("Поливаете раньше срока", systemImage: "calendar.badge.clock")
+                .font(Typography.detail)
+                .foregroundStyle(Palette.ink)
+            Text(Lang.format("Похоже, земля сохнет быстрее: %1$@ вместо %2$@.",
+                             Species.periodPhrase(days),
+                             Species.periodPhrase(plant.dryingDays)))
+                .font(Typography.settingNote)
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+            HStack(spacing: Metrics.actionGap) {
+                Button { adopt(days) } label: {
+                    Text("Поменять срок").frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.glassProminent)
+                Button {
+                    withAnimation(Motion.enter) { garden.quiet(plantID, days) }
+                } label: {
+                    Text("Оставить").frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.glass)
+            }
+            .font(Typography.settingRow)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.horizontal, 25)
+        .padding(.vertical, 22)
+        .sproutPlate(in: plate)
+        .sproutRide()
+    }
+
+    private func adopt(_ days: Double) {
+        guard let plant else { return }
+        withAnimation(Motion.number) {
+            garden.tune(plantID, name: plant.name, species: plant.species,
+                        dryingDays: days)
+        }
+        Feel.done()
+    }
+
+    /// Подкормка и пересадка: сколько осталось и кнопка «сделал». Обе
+    /// выключены в настройках растения — плашки нет.
+    @ViewBuilder
+    private func care(_ plant: Plant) -> some View {
+        let tending = plant.tending
+        if tending.feedEvery != nil || tending.repotEvery != nil {
+            VStack(alignment: .leading, spacing: 14) {
+                Text("Уход")
+                    .font(Typography.groupTitle)
+                    .foregroundStyle(.secondary)
+                if let line = tending.feedLabel {
+                    chore(line, due: tending.feedDue, done: "Подкормил",
+                          icon: "sparkles") {
+                        garden.feed(plantID)
+                    }
+                }
+                if let line = tending.repotLabel {
+                    chore(line, due: tending.repotDue, done: "Пересадил",
+                          icon: "arrow.up.bin") {
+                        garden.repot(plantID)
+                    }
+                }
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.horizontal, 25)
+            .padding(.vertical, 22)
+            .sproutPlate(in: plate)
+            .sproutRide()
+        }
+    }
+
+    /// Срок — переходом цифр; пора — синим, как всё, что ждёт действия.
+    private func chore(_ line: String, due: Bool, done: LocalizedStringKey,
+                       icon: String,
+                       action: @escaping () -> Void) -> some View {
+        HStack(spacing: 12) {
+            Text(line)
+                .font(Typography.detail)
+                .foregroundStyle(due ? Palette.accent : Palette.ink)
+                .contentTransition(.numericText())
+                .frame(maxWidth: .infinity, alignment: .leading)
+            Button {
+                withAnimation(Motion.number) { action() }
+                Feel.done()
+            } label: {
+                Label(done, systemImage: icon)
+                    .font(Typography.settingNote)
+                    .lineLimit(1)
+            }
+            .buttonStyle(.glass)
+        }
+    }
+
     private func facts(_ plant: Plant) -> some View {
         VStack(alignment: .leading, spacing: 14) {
             fact("Влажность \(plant.moistureLabel)")
@@ -312,8 +415,11 @@ struct PlantView: View {
             fact(plant.wateringLabel)
                 .contentTransition(.numericText())
             if let room = garden.roomName(of: plant.id) {
-                fact("Комната «\(room)»")
+                fact(Lang.format("Комната «%@»", room))
                     .contentTransition(.numericText())
+            }
+            if let season = Season.line(stretch: Season.stretch) {
+                fact(season)
             }
             fact(plant.addedLabel)
         }

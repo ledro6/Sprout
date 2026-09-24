@@ -40,10 +40,14 @@ GIVEN = {"allCases", "self", "init", "rawValue", "ID", "id", "Type",
 
 DECL = re.compile(
     r"^\s*(?:public\s+|private\s+|fileprivate\s+|internal\s+)?"
+    r"(?:nonisolated(?:\(unsafe\))?\s+)?"
     r"(?:static\s+(?:let|var|func)|case|enum|struct|typealias)\s+"
     r"([A-Za-z_][A-Za-z0-9_]*)")
+# Расширение с соответствием протоколу (`extension Int: Spoken`) типа
+# приложения не делает: статические члены у `Int` свои, системные.
 TYPE = re.compile(r"^(?:public\s+|private\s+|final\s+)*"
-                  r"(?:enum|struct|class|extension)\s+([A-Z][A-Za-z0-9_]*)")
+                  r"(?:(?:enum|struct|class)\s+([A-Z][A-Za-z0-9_]*)"
+                  r"|extension\s+([A-Z][A-Za-z0-9_]*)\s*\{)")
 # То же, но только объявления — без `extension`, которых у одного типа
 # бывает сколько угодно.
 BORN = re.compile(r"^(?:public\s+|private\s+|fileprivate\s+|internal\s+"
@@ -70,7 +74,7 @@ def main(root: str) -> int:
                                       .splitlines(), 1):
             found = TYPE.match(line)
             if found:
-                types.add(found.group(1))
+                types.add(found.group(1) or found.group(2))
             # Объявления верхнего уровня: вложенные в тип имена живут в
             # своей области и столкнуться не могут, поэтому отступ важен.
             found = BORN.match(line)

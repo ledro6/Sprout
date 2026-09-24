@@ -25,6 +25,63 @@ func plantNamed(_ name: String, moisture: Double,
           addedOn: DateComponents(year: 2024, month: 1, day: 1))
 }
 
+/// Каталог строк — так, как его прочитал бы телефон: без него русские
+/// формы числа («1 день», «2 дня») не проверить. Формы выбираются по CLDR —
+/// здесь только для языков, которые проверяются.
+struct Catalog {
+    let strings: [String: [String: Any]]
+
+    init(_ path: String) {
+        let data = (try? Data(contentsOf: URL(fileURLWithPath: path))) ?? Data()
+        let json = (try? JSONSerialization.jsonObject(with: data))
+            as? [String: Any]
+        strings = json?["strings"] as? [String: [String: Any]] ?? [:]
+    }
+
+    static func form(_ lang: String, _ n: Int) -> String {
+        switch lang {
+        case "ru", "uk":
+            if n % 10 == 1 && n % 100 != 11 { return "one" }
+            if (2 ... 4).contains(n % 10) && !(12 ... 14).contains(n % 100) {
+                return "few"
+            }
+            return "many"
+        case "ja", "zh-Hans", "zh-Hant", "ko", "th", "vi", "id", "ms":
+            return "other"
+        default:
+            return n == 1 ? "one" : "other"
+        }
+    }
+
+    func resolve(_ key: String, _ values: [Lang.Value], lang: String) -> String {
+        let local = (strings[key]?["localizations"] as? [String: Any])?[lang]
+            as? [String: Any]
+        var pattern = key
+        if let unit = local?["stringUnit"] as? [String: Any],
+           let value = unit["value"] as? String {
+            pattern = value
+        } else if let plural = (local?["variations"] as? [String: Any])?["plural"]
+                    as? [String: Any] {
+            let number = values.lazy.compactMap { value -> Int? in
+                if case .whole(let n) = value { return n }
+                return nil
+            }.first ?? 0
+            let pick = plural[Catalog.form(lang, number)] ?? plural["other"]
+            if let unit = (pick as? [String: Any])?["stringUnit"] as? [String: Any],
+               let value = unit["value"] as? String {
+                pattern = value
+            }
+        }
+        return Lang.fill(pattern, values)
+    }
+}
+
+let catalog = Catalog("ios-native/Sprout/Localizable.xcstrings")
+check(!catalog.strings.isEmpty, "каталог строк прочитан")
+var language = "ru"
+Lang.locale = Locale(identifier: "ru")
+Lang.resolve = { catalog.resolve($0, $1, lang: language) }
+
 print("склонение дней:")
 func label(_ d: Int) -> String { Plant.wateringLabel(days: d) }
 check(label(0),  "Следующий полив: сегодня", "0 → сегодня")
@@ -859,6 +916,27 @@ check(Reminder.text(for: single), "«Борис» просит воды", "ст�
 
 check(Reminder.next(in: [], threshold: 0.2) == nil,
       "в пустой квартире будить некого")
+check(due.ids.count == 2 && due.ids.contains("Сумка") && due.ids.contains("Кефир"),
+      "кнопка «Полил» польёт всех, кому к этому мигу сухо")
+
+var fed = plantNamed("Фиалка", moisture: 1, dryingDays: 5)
+fed.care = Care(feedEvery: 14, sinceFed: 10, repotEvery: 365, sinceRepot: 300)
+var potted = plantNamed("Кактус", moisture: 1, dryingDays: 30)
+potted.care = Care(feedEvery: 30, sinceFed: 0, repotEvery: 730, sinceRepot: 728)
+let chores = [Room(name: "Кухня", plants: [fed, potted])]
+Season.growing = true
+let chore = Reminder.chore(in: chores)!
+check(chore.plant.name == "Кактус" && chore.repot,
+      "ближайший уход — пересадка кактуса через два дня")
+check(Reminder.text(for: chore), "«Кактус» просится в горшок побольше",
+      "строка уведомления о пересадке")
+Season.growing = false
+potted.care?.repotEvery = nil
+check(Reminder.chore(in: [Room(name: "Кухня", plants: [fed, potted])])
+      .map { $0.plant.name } == "Фиалка"
+      && Reminder.chore(in: [Room(name: "Кухня", plants: [fed, potted])])!.repot,
+      "зимой о подкормке не напоминают — только о пересадке")
+Season.growing = true
 
 print("склонение растений в уведомлении:")
 func many(_ n: Int) -> String {
@@ -1713,6 +1791,153 @@ do {
     let origin = Pouring.origin(scale: 1, clearance: Pouring.clearance(over: 0.4))
     check(origin.y - 0.06 > 0.4 - Greenhouse.soil,
           "над высоким растением лейка висит выше листвы")
+}
+
+print("время года:")
+do {
+    check(Season.side(region: "RU") == .north, "Россия — север")
+    check(Season.side(region: "au") == .south, "Австралия — юг")
+    check(Season.side(region: "SG") == .tropics, "Сингапур — у экватора")
+    check(Season.side(region: nil) == .north, "страна неизвестна — север")
+    check(Season.stretch(month: 1, side: .north) > 1.3,
+          "январь на севере: срок на треть длиннее")
+    check(Season.stretch(month: 7, side: .north) < 0.9,
+          "июль на севере: короче")
+    check(Season.stretch(month: 7, side: .south)
+          == Season.stretch(month: 1, side: .north),
+          "южный июль — северный январь")
+    check((1 ... 12).allSatisfy { Season.stretch(month: $0, side: .tropics) == 1 },
+          "у экватора срок круглый год тот же")
+    check(Season.growing(month: 5, side: .north)
+          && !Season.growing(month: 12, side: .north)
+          && Season.growing(month: 12, side: .south),
+          "пора роста: весна и лето своего полушария")
+    let steps = (1 ... 12).map { Season.stretch(month: $0, side: .north) }
+    check(zip(steps, steps.dropFirst() + [steps[0]]).allSatisfy {
+        abs($0 - $1) < 0.25 }, "от месяца к месяцу срок не прыгает")
+
+    var wintry = plant(moisture: 1, dryingDays: 10)
+    Season.stretch = 1.35
+    check(round2(wintry.period), "13.50", "зимой срок длиннее записанного")
+    wintry.dry(days: 13.5)
+    check(round2(wintry.moisture), "0.00", "и земля сохнет за зимний срок")
+    check(wintry.dryingDays == 10, "записанный срок при этом не меняется")
+    Season.stretch = 1
+}
+
+print("срок по привычке:")
+do {
+    var often = plant(moisture: 0.5, dryingDays: 9)
+    func entries(_ left: [Double]) -> [Watering] {
+        left.enumerated().map {
+            Watering(plant: "x", when: Date(timeIntervalSince1970: Double($0.offset)),
+                     left: $0.element)
+        }
+    }
+    check(Rhythm.suggest(for: often, log: entries([0.4, 0.3, 0.35])) == 6,
+          "поливают при трети воды — срок 9 дней стоит сократить до 6")
+    check(Rhythm.suggest(for: often, log: entries([0.4, 0.3])) == nil,
+          "двух поливов мало — это ещё не привычка")
+    check(Rhythm.suggest(for: often, log: entries([0.05, 0.1, 0.0, 0.15])) == nil,
+          "поливают у сухой земли — срок верный")
+    check(Rhythm.suggest(for: often,
+                         log: entries([0.4, 0.3, 0.35]) + [Watering(
+                             plant: "y", when: Date(), left: 0.9)]) == 6,
+          "чужие поливы в счёт не идут")
+    check(Rhythm.suggest(for: often, log: [
+        Watering(plant: "x", when: Date()), Watering(plant: "x", when: Date()),
+        Watering(plant: "x", when: Date())]) == nil,
+          "журнал прежних сборок без доли воды ничего не предлагает")
+    often.quiet = 6
+    check(Rhythm.suggest(for: often, log: entries([0.4, 0.3, 0.35])) == nil,
+          "отклонённое предложение не повторяется")
+    check(Rhythm.suggest(for: often, log: entries([0.6, 0.55, 0.62])) == 4,
+          "а новое — предлагается")
+
+    let yard = Garden()
+    let id = yard.rooms[0].plants[0].id
+    let before = yard.plant(id: id)!.moisture
+    let pour = yard.water(id)!
+    check(round2(yard.log.last?.left ?? -1) == round2(before),
+          "полив пишет в журнал, сколько воды оставалось")
+    yard.unwater(pour)
+    check(!yard.log.contains { $0.plant == id && $0.when == pour.when },
+          "отмена находит запись и с долей воды")
+    let old = try! JSONDecoder().decode(
+        Watering.self, from: Data(#"{"plant":"a","when":0}"#.utf8))
+    check(old.left == nil, "запись прежней сборки читается без доли воды")
+}
+
+print("подкормка и пересадка:")
+do {
+    check(Care.usual(for: .cactus).feedEvery == 30
+          && Care.usual(for: .violet).feedEvery == 14
+          && Care.usual(for: .monstera).repotEvery == 365,
+          "сроки ухода — по виду")
+    var care = Care(feedEvery: 14, repotEvery: 365)
+    care.pass(days: 10, growing: false)
+    check(care.sinceFed == 0 && care.sinceRepot == 10,
+          "зимой подкормка не считается, а пересадка — да")
+    care.pass(days: 14, growing: true)
+    check(care.feedDue && !care.repotDue, "за две недели роста — пора подкормить")
+    check(Care(feedEvery: nil).feedIn == nil && !Care(feedEvery: nil).feedDue,
+          "выключенная подкормка не напоминает")
+
+    let yard = Garden()
+    let id = yard.rooms[0].plants[0].id
+    Season.growing = true
+    yard.advance(to: Date().addingTimeInterval(20 * 86_400 / Garden.speed))
+    let grown = yard.plant(id: id)!.tending
+    check(round2(grown.sinceFed) == "20.00" && round2(grown.sinceRepot) == "20.00",
+          "дни ухода идут вместе с влажностью")
+    yard.feed(id)
+    check(yard.plant(id: id)!.tending.sinceFed == 0
+          && yard.plant(id: id)!.tending.sinceRepot > 0,
+          "подкормили — счёт подкормки заново")
+    yard.advance(to: Date().addingTimeInterval(40 * 86_400 / Garden.speed))
+    yard.repot(id)
+    check(yard.plant(id: id)!.tending.sinceFed == 0
+          && yard.plant(id: id)!.tending.sinceRepot == 0,
+          "пересадили — заново оба счёта")
+    yard.tend(id, feedEvery: nil, repotEvery: Care.days(months: 18))
+    check(yard.plant(id: id)!.tending.feedEvery == nil
+          && Care.months(days: yard.plant(id: id)!.tending.repotEvery!) == 18,
+          "сроки ухода правятся из настроек")
+    let file = try! JSONEncoder().encode(yard.state)
+    let back = try! JSONDecoder().decode(GardenState.self, from: file)
+    check(back.rooms[0].plants[0].care == yard.plant(id: id)!.care,
+          "уход ложится в файл сада")
+}
+
+print("уезжаю:")
+do {
+    let rooms = [Room(name: "Кухня", plants: [
+        plantNamed("папоротник", moisture: 0.2, dryingDays: 5),
+        plantNamed("кактус", moisture: 0.9, dryingDays: 30),
+        plantNamed("фикус", moisture: 0.5, dryingDays: 8),
+    ])]
+    let needs = Trip.needs(in: rooms, days: 12)
+    check(needs.map(\.plant.id) == ["папоротник", "фикус"],
+          "соседу — те, кто не дождётся, от самого быстрого")
+    check(needs[0].visits == [4, 8], "папоротник: полить на 4-й и 8-й день")
+    check(needs[1].visits == [7], "фикус: на 7-й")
+    check(needs.allSatisfy { need in
+        let stops = [0] + need.visits + [12]
+        return zip(stops, stops.dropFirst()).allSatisfy {
+            Double($1 - $0) <= need.dries }
+    }, "ни одно растение не остаётся без воды дольше своего срока")
+    check(Trip.fine(in: rooms, days: 12).map(\.id) == ["кактус"],
+          "кактус дождётся сам")
+    check(Trip.needs(in: rooms, days: 3).isEmpty, "на три дня — никого")
+    let leave = Date(timeIntervalSince1970: 1_750_000_000)
+    let back = Calendar.current.date(byAdding: .day, value: 12, to: leave)!
+    check(Trip.days(from: leave, to: back) == 12, "дни поездки — по календарю")
+    let memo = Trip.memo(needs, leave: leave, back: back)
+    check(memo.contains("папоротник") && memo.contains("фикус")
+          && !memo.contains("кактус"),
+          "в памятке — только те, кого надо полить")
+    check(Trip.memo([], leave: leave, back: back).contains("поливать никого"),
+          "никого — так и написано")
 }
 
 if failed > 0 {

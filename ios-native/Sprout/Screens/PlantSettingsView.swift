@@ -14,6 +14,12 @@ struct PlantSettingsView: View {
     @State private var room = ""
     @State private var period: Double = 7
 
+    /// Подкормка: напоминать ли и раз в сколько дней; пересадка — в месяцах,
+    /// пусто — не напоминать.
+    @State private var feeds = true
+    @State private var feedEvery: Double = 21
+    @State private var repotMonths: Int?
+
     @State private var naming = false
     @State private var newRoom = ""
 
@@ -27,6 +33,7 @@ struct PlantSettingsView: View {
                 VStack(alignment: .leading, spacing: Metrics.groupGap) {
                     about
                     habits
+                    tending
                 }
                 .padding(.horizontal, Metrics.contentMargin)
                 .padding(.top, 4)
@@ -134,6 +141,42 @@ struct PlantSettingsView: View {
         }
     }
 
+    // MARK: - Подкормка и пересадка
+
+    private var tending: some View {
+        SproutGroup("Подкормка и пересадка") {
+            HStack(spacing: 12) {
+                Text("Напоминать о подкормке")
+                    .font(Typography.settingRow)
+                    .foregroundStyle(Palette.ink)
+                Spacer(minLength: 0)
+                Toggle("Напоминать о подкормке", isOn: $feeds.animation(Motion.enter))
+                    .labelsHidden()
+            }
+            if feeds {
+                PeriodWheel(days: $feedEvery)
+                    .transition(.blurReplace)
+            }
+
+            SproutDivider()
+
+            SproutBlock("Пересадка") {
+                Menu {
+                    Picker("Пересадка", selection: $repotMonths) {
+                        Text("Не напоминать").tag(Int?.none)
+                        ForEach(Care.repotMonths, id: \.self) { months in
+                            Text(Lang.format("Раз в %lld месяцев", months))
+                                .tag(Int?.some(months))
+                        }
+                    }
+                } label: {
+                    field(repotMonths.map { Lang.format("Раз в %lld месяцев", $0) }
+                          ?? Lang.text("Не напоминать"))
+                }
+            }
+        }
+    }
+
     private func field(_ text: String) -> some View {
         HStack(spacing: 6) {
             Text(text)
@@ -185,6 +228,20 @@ struct PlantSettingsView: View {
                 != plant.species
             || period != plant.dryingDays
             || room != (garden.roomName(of: plantID) ?? "")
+            || feedDraft != plant.tending.feedEvery
+            || repotDraft != plant.tending.repotEvery
+    }
+
+    private var feedDraft: Double? { feeds ? feedEvery : nil }
+
+    /// Прежний срок в днях остаётся как был, если месяцы не трогали: иначе
+    /// округление до месяцев считалось бы правкой.
+    private var repotDraft: Double? {
+        guard let months = repotMonths else { return nil }
+        if let old = plant?.tending.repotEvery, Care.months(days: old) == months {
+            return old
+        }
+        return Care.days(months: months)
     }
 
     private func load() {
@@ -193,6 +250,10 @@ struct PlantSettingsView: View {
         species = plant.species
         room = garden.roomName(of: plantID) ?? ""
         period = plant.dryingDays
+        let tending = plant.tending
+        feeds = tending.feedEvery != nil
+        feedEvery = tending.feedEvery ?? 21
+        repotMonths = tending.repotEvery.map { Care.months(days: $0) }
     }
 
     private func save() {
@@ -202,6 +263,7 @@ struct PlantSettingsView: View {
         withAnimation(Motion.number) {
             garden.tune(plantID, name: name, species: species,
                         dryingDays: period)
+            garden.tend(plantID, feedEvery: feedDraft, repotEvery: repotDraft)
             garden.relocate(plantID, to: room)
         }
         // Сменился вид — сменилась и модель: собираем её заранее.

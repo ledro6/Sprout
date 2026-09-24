@@ -249,6 +249,12 @@ struct SettingsView: View {
 
     private var watering: some View {
         SproutGroup("Полив") {
+            switchRow("Учитывать время года", isOn: Binding(
+                get: { settings.seasons },
+                set: { settings.seasons = $0 }))
+
+            SproutDivider()
+
             switchRow("Напоминать о поливе", isOn: Binding(
                 get: { settings.reminders },
                 set: { want(reminders: $0) }))

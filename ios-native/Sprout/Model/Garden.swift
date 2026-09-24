@@ -89,7 +89,7 @@ final class Garden {
         guard let before = plant(id: id) else { return nil }
         // Запись в журнал — до полива: `change` пишет файл, и запись должна в
         // него попасть.
-        log.append(Watering(plant: id, when: moment))
+        log.append(Watering(plant: id, when: moment, left: before.moisture))
         change(id) { $0.moisture = 1 }
         return Pour(plant: id, name: before.name, moisture: before.moisture,
                     when: moment)
@@ -98,8 +98,8 @@ final class Garden {
     /// Запись уходит из журнала, влажность — на прежнюю, за вычетом того, что
     /// земля успела высохнуть за отсчёт.
     func unwater(_ pour: Pour) {
-        if let index = log.lastIndex(of: Watering(plant: pour.plant,
-                                                   when: pour.when)) {
+        let entry = Watering(plant: pour.plant, when: pour.when)
+        if let index = log.lastIndex(where: { $0.same(entry) }) {
             log.remove(at: index)
         }
         guard plant(id: pour.plant) != nil else {
@@ -114,7 +114,8 @@ final class Garden {
     /// Ошибочная запись из истории. Влажность не трогаем: для свежей ошибки
     /// есть отмена, а старая давно высохла.
     func forget(_ entry: Watering) {
-        guard let index = log.lastIndex(of: entry) else { return }
+        guard let index = log.lastIndex(where: { $0.same(entry) })
+        else { return }
         log.remove(at: index)
         save()
     }
@@ -188,6 +189,43 @@ final class Garden {
             plant.retime(dryingDays)
         }
         if !nickname.isEmpty, nickname != old.name { roster += 1 }
+    }
+
+    /// Подкормили: счёт до следующей — заново.
+    func feed(_ id: Plant.ID) {
+        guard plant(id: id) != nil else { return }
+        change(id) {
+            var tended = $0.tending
+            tended.sinceFed = 0
+            $0.care = tended
+        }
+    }
+
+    /// Пересадили: свежая земля кормит сама — счёт подкормки тоже заново.
+    func repot(_ id: Plant.ID) {
+        guard plant(id: id) != nil else { return }
+        change(id) {
+            var tended = $0.tending
+            tended.sinceRepot = 0
+            tended.sinceFed = 0
+            $0.care = tended
+        }
+    }
+
+    /// Сроки ухода из настроек растения; прошедшие дни сохраняются.
+    func tend(_ id: Plant.ID, feedEvery: Double?, repotEvery: Double?) {
+        guard let old = plant(id: id) else { return }
+        var tended = old.tending
+        tended.feedEvery = feedEvery
+        tended.repotEvery = repotEvery
+        guard tended != old.care else { return }
+        change(id) { $0.care = tended }
+    }
+
+    /// Предложение срока отклонили — это же больше не предлагать.
+    func quiet(_ id: Plant.ID, _ days: Double) {
+        guard plant(id: id) != nil else { return }
+        change(id) { $0.quiet = days }
     }
 
     /// Пустая заметка — её нет.

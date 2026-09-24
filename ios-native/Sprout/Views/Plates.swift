@@ -21,27 +21,43 @@ struct PeriodWheel: View {
     }
 
     var body: some View {
+        let (before, after) = Self.around(whole)
         HStack(spacing: 6) {
-            Text("Раз в")
-            Picker("Полив", selection: Binding(
+            if !before.isEmpty { Text(before) }
+            Picker(Species.periodLabel(Double(whole)), selection: Binding(
                 get: { whole },
                 set: { days = Double($0) })) {
                 ForEach(1 ... Species.longest, id: \.self) { count in
-                    Text("\(count)").tag(count)
+                    Text(count.formatted()).tag(count)
                 }
             }
             .pickerStyle(.wheel)
             .labelsHidden()
             .frame(width: Metrics.wheelWidth, height: Metrics.wheelHeight)
             .clipped()
-            Text(Plant.plural(whole, "день", "дня", "дней"))
-                .contentTransition(.interpolate)
-                .animation(Motion.number, value: whole)
+            if !after.isEmpty {
+                Text(after)
+                    .contentTransition(.interpolate)
+                    .animation(Motion.number, value: whole)
+            }
             Spacer(minLength: 0)
         }
         .font(Typography.settingRow)
         .foregroundStyle(Palette.ink)
         .accessibilityElement(children: .contain)
+    }
+
+    /// Слова по обе стороны барабана — из той же строки каталога, что «Раз в
+    /// 7 дней»: порядок слов и форма числа у каждого языка свои, и склеивать
+    /// их здесь значило бы переводить заново.
+    static func around(_ count: Int) -> (String, String) {
+        let line = Species.periodLabel(Double(count))
+        let marks = [count.formatted(.number.locale(Lang.locale)), "\(count)"]
+        guard let range = marks.lazy.compactMap({ line.range(of: $0) }).first
+        else { return (line, "") }
+        let trim = CharacterSet.whitespaces
+        return (String(line[..<range.lowerBound]).trimmingCharacters(in: trim),
+                String(line[range.upperBound...]).trimmingCharacters(in: trim))
     }
 }
 

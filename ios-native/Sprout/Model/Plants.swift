@@ -42,9 +42,21 @@ struct Plant: Identifiable, Hashable, Codable {
     /// вида, см. `blueprint`.
     var plan: Blueprint?
 
+    /// Подкормка и пересадка. Пусто в садах прежних сборок — тогда сроки
+    /// вида, см. `tending`.
+    var care: Care?
+
+    /// Отклонённое предложение срока — чтобы не повторять его, см. `Rhythm`.
+    var quiet: Double?
+
+    var tending: Care { care ?? .usual(for: blueprint.preset) }
+
+    /// Срок с поправкой на время года — им сохнет земля и считаются подписи.
+    var period: Double { dryingDays * Season.stretch }
+
     /// Из влажности, а не хранится: два числа рано или поздно разошлись бы.
     var daysUntilWatering: Int {
-        max(0, Int((moisture * dryingDays).rounded()))
+        max(0, Int((moisture * period).rounded()))
     }
 
     var thirst: Thirst { Thirst(moisture: moisture) }
@@ -65,7 +77,10 @@ struct Plant: Identifiable, Hashable, Codable {
 
     mutating func dry(days: Double) {
         guard dryingDays > 0, days > 0 else { return }
-        moisture = max(0, moisture - days / dryingDays)
+        moisture = max(0, moisture - days / period)
+        var tended = tending
+        tended.pass(days: days, growing: Season.growing)
+        care = tended
     }
 
     /// Новый срок считается от того же полива: сколько дней земля уже сохла,

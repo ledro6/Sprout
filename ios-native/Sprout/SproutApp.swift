@@ -4,6 +4,12 @@ import UIKit
 
 @main
 struct SproutApp: App {
+    /// Кнопка «Полил» в уведомлении должна быть известна системе до того,
+    /// как придёт первое.
+    init() {
+        Notifier.register()
+    }
+
     var body: some Scene {
         WindowGroup {
             RootView()
@@ -63,6 +69,11 @@ struct RootView: View {
         .onChange(of: garden.roster, initial: true) { _, _ in
             SproutShortcuts.updateAppShortcutParameters()
         }
+        // Время года — при запуске, при возвращении (мог смениться месяц) и
+        // когда его выключают в настройках.
+        .onChange(of: settings.seasons, initial: true) { _, on in
+            Season.settle(on: on)
+        }
         // Тема — в корне: она должна достать и до листа настроек, и до
         // заставки. Пусто — за системой.
         .preferredColorScheme(scheme)
@@ -78,6 +89,7 @@ struct RootView: View {
         .onChange(of: phase) { _, now in
             if now == .active {
                 notch = Self.topInset()
+                Season.settle(on: settings.seasons)
                 Task { await lock.unlock() }
             } else {
                 // Запираем на «неактивно», а не на «в фоне»: снимок для
