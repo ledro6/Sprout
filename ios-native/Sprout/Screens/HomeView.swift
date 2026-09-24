@@ -37,6 +37,9 @@ struct HomeView: View {
     /// Сад комнаты в дополненной реальности — из меню или кнопкой действия
     /// на корпусе, см. `OpenGardenAR`.
     @State private var staging = false
+    /// Сад в AR — список на миг открытия, от самого сухого: телефон тянет
+    /// не всех, и пусть встанут те, кому пора.
+    @State private var staged: [Plant.ID] = []
 
     /// Полка качается, как значки «Домой» в правке. Входят в неё, повёв
     /// карточку из меню или пунктом «Расставить».
@@ -153,14 +156,19 @@ struct HomeView: View {
         .sheet(isPresented: $roomsOpen) { RoomsView().environment(garden) }
         .sheet(isPresented: $tripping) { TripView().environment(garden) }
         .fullScreenCover(isPresented: $staging) {
-            PlantAR(ids: plants.map(\.id)).environment(garden)
+            PlantAR(ids: staged).environment(garden)
         }
         // Кнопка действия или Siri попросили сад в AR.
         .onChange(of: Summon.shared.garden) { _, asked in
             guard asked else { return }
             Summon.shared.garden = false
-            if PlantAR.available, !plants.isEmpty { staging = true }
+            if PlantAR.available, !plants.isEmpty { stage() }
         }
+    }
+
+    private func stage() {
+        staged = plants.sorted { $0.moisture < $1.moisture }.map(\.id)
+        staging = true
     }
 
     /// Нашлась по имени — её новый номер; не нашлась при том же числе комнат
@@ -254,7 +262,7 @@ struct HomeView: View {
             }
             Section {
                 if PlantAR.available, !plants.isEmpty {
-                    Button { staging = true } label: {
+                    Button { stage() } label: {
                         Label("Сад в AR", systemImage: "arkit")
                     }
                 }

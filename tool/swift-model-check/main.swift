@@ -46,6 +46,24 @@ struct Catalog {
                 return "few"
             }
             return "many"
+        case "pl":
+            if n == 1 { return "one" }
+            if (2 ... 4).contains(n % 10) && !(12 ... 14).contains(n % 100) {
+                return "few"
+            }
+            return "many"
+        case "cs", "sk":
+            if n == 1 { return "one" }
+            return (2 ... 4).contains(n) ? "few" : "other"
+        case "ar":
+            switch n % 100 {
+            case _ where n == 0: return "zero"
+            case _ where n == 1: return "one"
+            case _ where n == 2: return "two"
+            case 3 ... 10: return "few"
+            case 11 ... 99: return "many"
+            default: return "other"
+            }
         case "ja", "zh-Hans", "zh-Hant", "ko", "th", "vi", "id", "ms":
             return "other"
         default:
@@ -2051,6 +2069,37 @@ do {
           "в памятке — только те, кого надо полить")
     check(Trip.memo([], leave: leave, back: back).contains("поливать никого"),
           "никого — так и написано")
+}
+
+print("другие языки:")
+do {
+    defer { language = "ru" }
+    language = "en"
+    check(Lang.format("%lld растений", 1), "1 plant", "английский: одно")
+    check(Lang.format("%lld растений", 5), "5 plants", "английский: много")
+    check(Plant.wateringLabel(days: 2), "Next watering: in 2 days",
+          "английский: срок полива")
+    check(Species.periodLabel(1), "Every 1 day", "английский: барабан")
+    language = "pl"
+    check(Lang.format("%lld растений", 2), "2 rośliny", "польский: few")
+    check(Lang.format("%lld растений", 5), "5 roślin", "польский: many")
+    check(Lang.format("%lld растений", 22), "22 rośliny", "польский: 22")
+    language = "cs"
+    check(Lang.format("%lld растений", 3), "3 rostliny", "чешский: few")
+    check(Lang.format("%lld растений", 7), "7 rostlin", "чешский: other")
+    language = "ar"
+    check(Lang.format("%lld растений", 2), "2 نبتتان", "арабский: два")
+    check(Lang.format("%lld растений", 7), "7 نبتات", "арабский: few")
+    check(Lang.format("%lld растений", 11), "11 نبتة", "арабский: many")
+    language = "ja"
+    check(Lang.format("%lld растений", 3), "3株", "японский: одна форма")
+    language = "tr"
+    check(Lang.format("%lld%%", 50), "%50", "турецкий: знак процента впереди")
+    language = "de"
+    check(Lang.format("%lld%%", 50), "50\u{00A0}%", "немецкий: неразрывный пробел")
+    language = "fr"
+    check(Seed.dueLine([]), "Aucune plante à arroser aujourd’hui.",
+          "французский: Siri")
 }
 
 if failed > 0 {

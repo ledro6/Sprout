@@ -130,6 +130,12 @@
             "value": "${applicationName} ішінде кімді суару керек"
           }
         },
+        "kn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} ನಲ್ಲಿ ಯಾರಿಗೆ ನೀರು"
+          }
+        },
         "ko": {
           "stringUnit": {
             "state": "translated",
@@ -140,6 +146,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ką laistyti programoje ${applicationName}"
+          }
+        },
+        "ml": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName}-ൽ ആരെ നനയ്ക്കണം"
           }
         },
         "mr": {
@@ -220,6 +232,18 @@
             "value": "Vem ska vattnas i ${applicationName}"
           }
         },
+        "ta": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} இல் யாருக்கு ஊற்றுவது"
+          }
+        },
+        "te": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} లో ఎవరికి నీళ్లు"
+          }
+        },
         "th": {
           "stringUnit": {
             "state": "translated",
@@ -236,6 +260,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Кого полити в ${applicationName}"
+          }
+        },
+        "ur": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} میں کسے پانی دینا ہے"
           }
         },
         "vi": {
@@ -387,6 +417,12 @@
             "value": "${applicationName} ішінде бүгін кімді суару керек"
           }
         },
+        "kn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} ನಲ್ಲಿ ಇಂದು ಯಾರಿಗೆ ನೀರು"
+          }
+        },
         "ko": {
           "stringUnit": {
             "state": "translated",
@@ -397,6 +433,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ką laistyti šiandien programoje ${applicationName}"
+          }
+        },
+        "ml": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName}-ൽ ഇന്ന് ആരെ നനയ്ക്കണം"
           }
         },
         "mr": {
@@ -477,6 +519,18 @@
             "value": "Vem ska vattnas i dag i ${applicationName}"
           }
         },
+        "ta": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} இல் இன்று யாருக்கு ஊற்றுவது"
+          }
+        },
+        "te": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} లో ఈరోజు ఎవరికి నీళ్లు"
+          }
+        },
         "th": {
           "stringUnit": {
             "state": "translated",
@@ -493,6 +547,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Кого полити сьогодні в ${applicationName}"
+          }
+        },
+        "ur": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} میں آج کسے پانی دینا ہے"
           }
         },
         "vi": {
@@ -644,6 +704,12 @@
             "value": "${applicationName} ішінде кімге су керек"
           }
         },
+        "kn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} ನಲ್ಲಿ ಯಾರಿಗೆ ನೀರು ಬೇಕು"
+          }
+        },
         "ko": {
           "stringUnit": {
             "state": "translated",
@@ -654,6 +720,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Kam reikia vandens programoje ${applicationName}"
+          }
+        },
+        "ml": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName}-ൽ ആർക്ക് വെള്ളം വേണം"
           }
         },
         "mr": {
@@ -734,6 +806,18 @@
             "value": "Vem behöver vatten i ${applicationName}"
           }
         },
+        "ta": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} இல் யாருக்குத் தண்ணீர் தேவை"
+          }
+        },
+        "te": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} లో ఎవరికి నీళ్లు కావాలి"
+          }
+        },
         "th": {
           "stringUnit": {
             "state": "translated",
@@ -750,6 +834,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Кому потрібна вода в ${applicationName}"
+          }
+        },
+        "ur": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} میں کسے پانی چاہیے"
           }
         },
         "vi": {
@@ -901,6 +991,12 @@
             "value": "${applicationName} ішінде кім шөлдеді"
           }
         },
+        "kn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} ನಲ್ಲಿ ಯಾರಿಗೆ ಬಾಯಾರಿಕೆ"
+          }
+        },
         "ko": {
           "stringUnit": {
             "state": "translated",
@@ -911,6 +1007,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Kas ištroškęs programoje ${applicationName}"
+          }
+        },
+        "ml": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName}-ൽ ആർക്കാണ് ദാഹം"
           }
         },
         "mr": {
@@ -991,6 +1093,18 @@
             "value": "Vem är törstig i ${applicationName}"
           }
         },
+        "ta": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} இல் யாருக்குத் தாகம்"
+          }
+        },
+        "te": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} లో ఎవరికి దాహం"
+          }
+        },
         "th": {
           "stringUnit": {
             "state": "translated",
@@ -1007,6 +1121,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Хто хоче пити в ${applicationName}"
+          }
+        },
+        "ur": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} میں کسے پیاس لگی ہے"
           }
         },
         "vi": {
@@ -1158,6 +1278,12 @@
             "value": "${applicationName} ішінде бақты аш"
           }
         },
+        "kn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} ನಲ್ಲಿ ನನ್ನ ತೋಟ ತೆರೆ"
+          }
+        },
         "ko": {
           "stringUnit": {
             "state": "translated",
@@ -1168,6 +1294,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Atidaryk sodą programoje ${applicationName}"
+          }
+        },
+        "ml": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName}-ൽ എന്റെ തോട്ടം തുറക്കൂ"
           }
         },
         "mr": {
@@ -1248,6 +1380,18 @@
             "value": "Öppna min trädgård i ${applicationName}"
           }
         },
+        "ta": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} இல் என் தோட்டத்தைத் திற"
+          }
+        },
+        "te": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} లో నా తోట తెరువు"
+          }
+        },
         "th": {
           "stringUnit": {
             "state": "translated",
@@ -1264,6 +1408,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Відкрий сад у ${applicationName}"
+          }
+        },
+        "ur": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} میں میرا باغ کھولو"
           }
         },
         "vi": {
@@ -1415,6 +1565,12 @@
             "value": "${applicationName} ішінде бақты көрсет"
           }
         },
+        "kn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} ನಲ್ಲಿ ನನ್ನ ತೋಟ ತೋರಿಸು"
+          }
+        },
         "ko": {
           "stringUnit": {
             "state": "translated",
@@ -1425,6 +1581,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Parodyk sodą programoje ${applicationName}"
+          }
+        },
+        "ml": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName}-ൽ എന്റെ തോട്ടം കാണിക്കൂ"
           }
         },
         "mr": {
@@ -1505,6 +1667,18 @@
             "value": "Visa min trädgård i ${applicationName}"
           }
         },
+        "ta": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} இல் என் தோட்டத்தைக் காட்டு"
+          }
+        },
+        "te": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} లో నా తోట చూపించు"
+          }
+        },
         "th": {
           "stringUnit": {
             "state": "translated",
@@ -1521,6 +1695,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Покажи сад у ${applicationName}"
+          }
+        },
+        "ur": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} میں میرا باغ دکھاؤ"
           }
         },
         "vi": {
@@ -1672,6 +1852,12 @@
             "value": "${applicationName} ішінде ${plant} суар"
           }
         },
+        "kn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} ನಲ್ಲಿ ${plant} ಗೆ ನೀರು ಹಾಕು"
+          }
+        },
         "ko": {
           "stringUnit": {
             "state": "translated",
@@ -1682,6 +1868,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Palaistyk ${plant} programoje ${applicationName}"
+          }
+        },
+        "ml": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName}-ൽ ${plant} നനയ്ക്കൂ"
           }
         },
         "mr": {
@@ -1762,6 +1954,18 @@
             "value": "Vattna ${plant} i ${applicationName}"
           }
         },
+        "ta": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} இல் ${plant} க்குத் தண்ணீர் ஊற்று"
+          }
+        },
+        "te": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} లో ${plant}కి నీళ్లు పొయ్యి"
+          }
+        },
         "th": {
           "stringUnit": {
             "state": "translated",
@@ -1778,6 +1982,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Полий ${plant} у ${applicationName}"
+          }
+        },
+        "ur": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} میں ${plant} کو پانی دو"
           }
         },
         "vi": {
@@ -1929,6 +2139,12 @@
             "value": "${applicationName} ішінде ${plant} өсімдігін суар"
           }
         },
+        "kn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} ನಲ್ಲಿ ${plant} ಗಿಡಕ್ಕೆ ನೀರು ಹಾಕು"
+          }
+        },
         "ko": {
           "stringUnit": {
             "state": "translated",
@@ -1939,6 +2155,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Palaistyk augalą ${plant} programoje ${applicationName}"
+          }
+        },
+        "ml": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName}-ൽ ${plant} ചെടി നനയ്ക്കൂ"
           }
         },
         "mr": {
@@ -2019,6 +2241,18 @@
             "value": "Vattna växten ${plant} i ${applicationName}"
           }
         },
+        "ta": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} இல் ${plant} செடிக்குத் தண்ணீர் ஊற்று"
+          }
+        },
+        "te": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} లో ${plant} మొక్కకు నీళ్లు పొయ్యి"
+          }
+        },
         "th": {
           "stringUnit": {
             "state": "translated",
@@ -2035,6 +2269,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Полий рослину ${plant} у ${applicationName}"
+          }
+        },
+        "ur": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} میں ${plant} پودے کو پانی دو"
           }
         },
         "vi": {
@@ -2186,6 +2426,12 @@
             "value": "${applicationName} арқылы ${plant} суару"
           }
         },
+        "kn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} ಮೂಲಕ ${plant} ಗೆ ನೀರು ಹಾಕು"
+          }
+        },
         "ko": {
           "stringUnit": {
             "state": "translated",
@@ -2196,6 +2442,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Palaistyti ${plant} su ${applicationName}"
+          }
+        },
+        "ml": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} ഉപയോഗിച്ച് ${plant} നനയ്ക്കൂ"
           }
         },
         "mr": {
@@ -2276,6 +2528,18 @@
             "value": "Vattna ${plant} med ${applicationName}"
           }
         },
+        "ta": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} மூலம் ${plant} க்குத் தண்ணீர் ஊற்று"
+          }
+        },
+        "te": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} తో ${plant}కి నీళ్లు పొయ్యి"
+          }
+        },
         "th": {
           "stringUnit": {
             "state": "translated",
@@ -2292,6 +2556,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Полити ${plant} у ${applicationName}"
+          }
+        },
+        "ur": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} سے ${plant} کو پانی دو"
           }
         },
         "vi": {
@@ -2443,6 +2713,12 @@
             "value": "${applicationName} ішінде ${plant} өсімдігін суару"
           }
         },
+        "kn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} ನಲ್ಲಿ ${plant} ಗಿಡಕ್ಕೆ ನೀರು ಹಾಕುವುದು"
+          }
+        },
         "ko": {
           "stringUnit": {
             "state": "translated",
@@ -2453,6 +2729,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Palaistyti augalą ${plant} programoje ${applicationName}"
+          }
+        },
+        "ml": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName}-ൽ ${plant} ചെടി നനയ്ക്കുക"
           }
         },
         "mr": {
@@ -2533,6 +2815,18 @@
             "value": "Vattna plantan ${plant} i ${applicationName}"
           }
         },
+        "ta": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} இல் ${plant} செடிக்கு நீர் பாய்ச்சு"
+          }
+        },
+        "te": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} లో ${plant} మొక్కకు నీళ్లు పోయడం"
+          }
+        },
         "th": {
           "stringUnit": {
             "state": "translated",
@@ -2549,6 +2843,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Полити рослину ${plant} у ${applicationName}"
+          }
+        },
+        "ur": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} میں ${plant} پودے کو پانی دینا"
           }
         },
         "vi": {
@@ -2700,6 +3000,12 @@
             "value": "${applicationName} ішінде өсімдік суару"
           }
         },
+        "kn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} ನಲ್ಲಿ ಒಂದು ಗಿಡಕ್ಕೆ ನೀರು ಹಾಕು"
+          }
+        },
         "ko": {
           "stringUnit": {
             "state": "translated",
@@ -2710,6 +3016,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Palaistyti augalą programoje ${applicationName}"
+          }
+        },
+        "ml": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName}-ൽ ഒരു ചെടി നനയ്ക്കൂ"
           }
         },
         "mr": {
@@ -2790,6 +3102,18 @@
             "value": "Vattna en växt i ${applicationName}"
           }
         },
+        "ta": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} இல் ஒரு செடிக்குத் தண்ணீர் ஊற்று"
+          }
+        },
+        "te": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} లో ఒక మొక్కకు నీళ్లు పొయ్యి"
+          }
+        },
         "th": {
           "stringUnit": {
             "state": "translated",
@@ -2806,6 +3130,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Полити рослину в ${applicationName}"
+          }
+        },
+        "ur": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} میں ایک پودے کو پانی دو"
           }
         },
         "vi": {
@@ -2957,6 +3287,12 @@
             "value": "${applicationName} ішіндегі AR бақ"
           }
         },
+        "kn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} ನಲ್ಲಿ AR ತೋಟ"
+          }
+        },
         "ko": {
           "stringUnit": {
             "state": "translated",
@@ -2967,6 +3303,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Sodas AR programoje ${applicationName}"
+          }
+        },
+        "ml": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName}-ൽ AR തോട്ടം"
           }
         },
         "mr": {
@@ -3047,6 +3389,18 @@
             "value": "Trädgård i AR i ${applicationName}"
           }
         },
+        "ta": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} இல் AR தோட்டம்"
+          }
+        },
+        "te": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} లో AR తోట"
+          }
+        },
         "th": {
           "stringUnit": {
             "state": "translated",
@@ -3063,6 +3417,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Сад в AR у ${applicationName}"
+          }
+        },
+        "ur": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} میں AR باغ"
           }
         },
         "vi": {

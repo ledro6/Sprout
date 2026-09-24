@@ -130,6 +130,12 @@
             "value": "Бақ үшін өсімдіктерді суретке түсіріп, оларды толықтырылған шындықта бөлмеге орналастыру үшін."
           }
         },
+        "kn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ತೋಟಕ್ಕಾಗಿ ಗಿಡಗಳ ಫೋಟೋ ತೆಗೆದು ಅವುಗಳನ್ನು ಆಗ್ಮೆಂಟೆಡ್ ರಿಯಾಲಿಟಿಯಲ್ಲಿ ಕೋಣೆಯಲ್ಲಿ ಇರಿಸಲು."
+          }
+        },
         "ko": {
           "stringUnit": {
             "state": "translated",
@@ -140,6 +146,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Kad galėtumėte fotografuoti augalus sodui ir pastatyti juos kambaryje papildytojoje realybėje."
+          }
+        },
+        "ml": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "തോട്ടത്തിനായി ചെടികളുടെ ഫോട്ടോ എടുക്കാനും അവയെ ഓഗ്മെന്റഡ് റിയാലിറ്റിയിൽ മുറിയിൽ വയ്ക്കാനും."
           }
         },
         "mr": {
@@ -226,6 +238,18 @@
             "value": "För att fotografera växter till din trädgård och placera dem i ditt rum i förstärkt verklighet."
           }
         },
+        "ta": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "தோட்டத்திற்காகச் செடிகளைப் புகைப்படம் எடுத்து, ஆக்மென்டட் ரியாலிட்டியில் அறையில் வைக்க."
+          }
+        },
+        "te": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "తోట కోసం మొక్కల ఫోటోలు తీసి, వాటిని ఆగ్మెంటెడ్ రియాలిటీలో గదిలో ఉంచడానికి."
+          }
+        },
         "th": {
           "stringUnit": {
             "state": "translated",
@@ -242,6 +266,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Щоб знімати рослини для саду й ставити їх у кімнату в доповненій реальності."
+          }
+        },
+        "ur": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "باغ کے لیے پودوں کی تصویریں لینے اور انہیں اضافہ شدہ حقیقت میں کمرے میں رکھنے کے لیے۔"
           }
         },
         "vi": {
@@ -393,6 +423,12 @@
             "value": "Құлыпталған бақты бетпен ашу үшін."
           }
         },
+        "kn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ಲಾಕ್ ಮಾಡಿದ ತೋಟವನ್ನು ಮುಖದಿಂದ ತೆರೆಯಲು."
+          }
+        },
         "ko": {
           "stringUnit": {
             "state": "translated",
@@ -403,6 +439,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Kad galėtumėte atrakinti užrakintą sodą veidu."
+          }
+        },
+        "ml": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ലോക്ക് ചെയ്ത തോട്ടം മുഖം ഉപയോഗിച്ച് തുറക്കാൻ."
           }
         },
         "mr": {
@@ -489,6 +531,18 @@
             "value": "För att låsa upp din låsta trädgård med ansiktet."
           }
         },
+        "ta": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "பூட்டிய தோட்டத்தை முகத்தால் திறக்க."
+          }
+        },
+        "te": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "లాక్ చేసిన తోటను ముఖంతో తెరవడానికి."
+          }
+        },
         "th": {
           "stringUnit": {
             "state": "translated",
@@ -505,6 +559,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Щоб відкривати замкнений сад за обличчям."
+          }
+        },
+        "ur": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "مقفل باغ کو چہرے سے کھولنے کے لیے۔"
           }
         },
         "vi": {
@@ -656,6 +716,12 @@
             "value": "Телефонды еңкейткенде фондағы өрнек сәл жылжиды."
           }
         },
+        "kn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ಫೋನ್ ವಾಲಿಸಿದರೆ ಹಿನ್ನೆಲೆ ವಿನ್ಯಾಸ ಸ್ವಲ್ಪ ಸರಿಯುತ್ತದೆ."
+          }
+        },
         "ko": {
           "stringUnit": {
             "state": "translated",
@@ -666,6 +732,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Pakreipus telefoną, fono raštas šiek tiek pasislenka."
+          }
+        },
+        "ml": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ഫോൺ ചരിച്ചാൽ പശ്ചാത്തല ഡിസൈൻ അല്പം നീങ്ങും."
           }
         },
         "mr": {
@@ -752,6 +824,18 @@
             "value": "När du lutar telefonen rör sig bakgrundsmönstret lite."
           }
         },
+        "ta": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ஃபோனைச் சாய்த்தால் பின்னணி வடிவமைப்பு சற்று நகரும்."
+          }
+        },
+        "te": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ఫోన్‌ను వంచితే నేపథ్య డిజైన్ కొంచెం కదులుతుంది."
+          }
+        },
         "th": {
           "stringUnit": {
             "state": "translated",
@@ -768,6 +852,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Нахил телефона трохи рухає візерунок на тлі."
+          }
+        },
+        "ur": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "فون جھکانے پر پس منظر کا نقش تھوڑا سرکتا ہے۔"
           }
         },
         "vi": {
