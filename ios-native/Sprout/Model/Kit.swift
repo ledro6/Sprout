@@ -44,7 +44,7 @@ struct Piece: Equatable, Sendable {
 struct Kit: Equatable, Sendable {
     /// Меняется вместе с тем, как растут модели: старые файлы тогда
     /// собираются заново.
-    static let version: UInt32 = 1
+    static let version: UInt32 = 2
 
     var meshes: [Mesh3D] = []
     var pictures: [Picture] = []

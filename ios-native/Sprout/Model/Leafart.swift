@@ -26,12 +26,21 @@ struct LeafLook: Equatable, Sendable {
         case petal
         /// Покрывало спатифиллума: острое.
         case spathe
+        /// Широкий лепесток с узким ноготком и круглым верхом — роза,
+        /// фиалка, орхидея.
+        case broad
+        /// Лепесток тюльпана: шире всего за серединой, кончик круглый.
+        case tepal
+        /// Губа орхидеи: две боковые лопасти и средняя.
+        case lip
     }
 
     enum Veins: Equatable, Sendable {
         case pinnate(Int)
         case palmate(Int)
         case parallel(Int)
+        /// Веером от ноготка — жилки лепестка, тонкие и тающие к краю.
+        case fan(Int)
         case none
     }
 
@@ -74,6 +83,14 @@ struct LeafLook: Equatable, Sendable {
     var holes = 0
     /// Одна половина шире другой — бегония.
     var asymmetry: Float = 0
+    /// Зев: свой цвет у основания, тающий к середине, — глазок фиалки,
+    /// тёмное донце тюльпана, жёлтое горло розы.
+    var throat: Channels? = nil
+    var throatReach: Float = 0.35
+    /// Светлая кромка — лепесток на просвет.
+    var glow: Float = 0
+    /// Пятнистость: у листа живая, у лепестка — шёлк.
+    var mottle: Float = 0.2
 }
 
 /// Рисует листья, лепестки, кору, горшки и землю. Всё своими руками, по
@@ -108,6 +125,16 @@ enum Leafart {
         case .wing: return pow(sin(Float.pi * (0.1 + 0.9 * pow(t, 0.75))), 0.8)
         case .petal: return pow(sin(Float.pi * pow(t, 0.55)), 0.55)
         case .spathe: return pow(sin(Float.pi * pow(t, 0.7)), 0.9)
+        case .broad:
+            // Верх — полукруг, низ сужается в ноготок.
+            let round = max(0, t * (1 - t)).squareRoot() * 2
+            return round * pow(min(t / 0.4, 1), 0.9)
+        case .tepal: return pow(sin(Float.pi * pow(t, 1.36)), 0.5)
+        case .lip:
+            let sides = 0.95 * exp(-pow((t - 0.3) / 0.16, 2))
+            let middle = 0.62 * exp(-pow((t - 0.8) / 0.14, 2))
+            let neck = 0.3 * pow(sin(Float.pi * pow(t, 0.5)), 0.6)
+            return min(1, t * 8) * max(sides, middle, neck)
         }
     }
 
@@ -181,14 +208,32 @@ enum Leafart {
             let near = SIMD3(old.x, old.y, old.z) * (1 - blend)
             var color = near + far * blend
             let mottle = Noise.fractal(uv.x, uv.y * 2, cells: 6, seed: seed)
-            color *= 0.9 + 0.2 * mottle
+            color *= 1 - look.mottle / 2 + look.mottle * mottle
             // У жилки чуть светлее, к краю темнее — объём без света.
             color *= 1.04 - 0.12 * abs(uv.x - 0.5) * 2
             return Ink(color.x, color.y, color.z, 1)
         }
+        if let throat = look.throat {
+            let reach = look.throatReach
+            picture.shade { uv, old in
+                let d = ((uv.x - 0.5) * (uv.x - 0.5) * 1.4 + uv.y * uv.y)
+                    .squareRoot()
+                let k = pow(max(0, 1 - d / reach), 1.3)
+                return Leafart.blend(old, throat, k)
+            }
+        }
         paint(look.pattern, on: &picture, look: look, seed: seed)
         var relief = Relief(width: max(16, width / 2), height: height / 2)
         veins(look, picture: &picture, relief: &relief)
+        if look.glow > 0 {
+            picture.shade { uv, old in
+                let reach = max(half(look.outline, uv.y) * 0.48, 1e-3)
+                let away = abs(uv.x - 0.5) / reach
+                let rim = max(away, uv.y > 0.8 ? (uv.y - 0.8) / 0.2 : 0)
+                let k = pow(min(max((rim - 0.7) / 0.3, 0), 1), 2) * look.glow
+                return Leafart.blend(old, Channels(255, 252, 246), k)
+            }
+        }
         if let margin = look.margin {
             let line = outline(look)
             picture.stroke(line + [line[0]], width: { _ in look.marginWidth },
@@ -313,6 +358,21 @@ enum Leafart {
                 }
                 picture.stroke(path, width: { 0.02 * (1 - $0 * 0.8) }, color)
                 relief.stroke(path, width: { 0.035 * (1 - $0 * 0.7) }, by: -0.4)
+            }
+        case .fan(let count):
+            let root = SIMD2<Float>(0.5, from)
+            for index in 0 ..< count {
+                let share = (Float(index) + 0.5) / Float(count) * 2 - 1
+                let path = (0 ... 16).map { step -> SIMD2<Float> in
+                    let t = from + (0.93 - from) * Float(step) / 16
+                    let reach = half(look.outline, t) * 0.44 * share
+                    // Жилка идёт от ноготка и расходится с лепестком.
+                    let ease = pow(Float(step) / 16, 0.7)
+                    return SIMD2(root.x + reach * ease, t)
+                }
+                picture.stroke(path, width: { 0.009 * (1 - $0 * 0.75) },
+                               look.vein.ink(0.45 * (1 - abs(share) * 0.4)))
+                relief.stroke(path, width: { _ in 0.02 }, by: -0.2)
             }
         case .parallel(let count):
             for index in 0 ... count {
@@ -522,6 +582,24 @@ enum Leafart {
     }
 
     /// Кожица кактуса и суккулентов: тон с мелкими точками.
+    /// Початок спатифиллума: сотни бугорков-цветочков рядами со сдвигом.
+    static func spadix(_ color: Channels) -> Picture {
+        var picture = Picture(width: 64, height: 128, fill: color.ink())
+        picture.shade { uv, _ in
+            let row = (uv.y * 40).rounded(.down)
+            let shift: Float = row.truncatingRemainder(dividingBy: 2) == 0
+                ? 0 : 0.5
+            let du = (uv.x * 10 + shift).truncatingRemainder(dividingBy: 1)
+                - 0.5
+            let dv = (uv.y * 40).truncatingRemainder(dividingBy: 1) - 0.5
+            let bump = max(0, 1 - (du * du + dv * dv).squareRoot() * 2.2)
+            let k = 0.82 + 0.3 * bump
+            let base = color.ink()
+            return Ink(base.x * k, base.y * k, base.z * (k - 0.04), 1)
+        }
+        return picture
+    }
+
     static func skin(_ color: Channels, seed: UInt32) -> Picture {
         var picture = Picture(width: 128, height: 256, fill: color.ink())
         picture.shade { uv, _ in

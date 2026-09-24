@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Рисует двадцать готовых моделей без телефона: лист политых и лист сухих.
+# Рисует двадцать готовых моделей без телефона: лист политых, лист сухих
+# и цветы крупным планом.
 #
 #     tool/preview_plants.sh [папка]
 #
@@ -28,9 +29,18 @@ DRY="monstera spathiphyllum ficus fern ivy"
 "$BUILD/preview" "$OUT/wet" 1 $ALL
 # shellcheck disable=SC2086
 "$BUILD/preview" "$OUT/dry" 0.05 $DRY
+# Цветы крупно: у них детали мельче, чем видно на общем плане.
+BLOOMS="spathiphyllum orchid cactus jade:Каланхоэ violet begonia pelargonium
+pelargonium:Роза tulip"
+mkdir -p "$OUT/bloom"
+# shellcheck disable=SC2086
+"$BUILD/preview" "$OUT/bloom" 1 --close $BLOOMS
 # shellcheck disable=SC2086
 python3 tool/plant-preview/render.py "$OUT/wet" $ALL
 # shellcheck disable=SC2086
 python3 tool/plant-preview/render.py "$OUT/dry" $DRY
+# shellcheck disable=SC2086
+python3 tool/plant-preview/render.py "$OUT/bloom" $BLOOMS
 echo "$OUT/wet/sheet.png"
 echo "$OUT/dry/sheet.png"
+echo "$OUT/bloom/sheet.png"

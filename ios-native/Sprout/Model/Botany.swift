@@ -64,9 +64,10 @@ enum Preset: String, Codable, CaseIterable, Sendable {
         ("фиалк", .violet), ("сенполи", .violet),
         ("бегони", .begonia),
         ("пеларгони", .pelargonium), ("герань", .pelargonium),
-        ("роза", .pelargonium), ("ромашк", .pelargonium),
+        ("розмарин", .herbs),
+        ("роз", .pelargonium), ("ромашк", .pelargonium),
         ("цвет", .pelargonium),
-        ("базилик", .herbs), ("мят", .herbs), ("розмарин", .herbs),
+        ("базилик", .herbs), ("мят", .herbs),
         ("зелень", .herbs), ("петрушк", .herbs), ("укроп", .herbs),
         ("кустик", .herbs), ("росток", .herbs),
         ("тюльпан", .tulip), ("лили", .tulip), ("нарцисс", .tulip),
@@ -227,48 +228,129 @@ struct Grower {
         return out
     }
 
-    /// Цветок из лепестков по кругу и серединки. Сетка смотрит вдоль +X.
-    mutating func flower(_ petal: LeafLook, petals: Int, size: Float,
-                         cup: Float, heart: Channels?, heartSize: Float,
-                         layers: Int = 1) -> (petals: Int, look: Int,
-                                              heart: Int?, heartLook: Int?) {
-        let look = leafLook(petal, rough: 0.5, height: 256, wilts: false)
-        var ring = Mesh3D()
-        for layer in 0 ..< layers {
-            let inner = Float(layer) / Float(max(layers, 1))
-            let open = Float.pi / 2 - cup - inner * 0.35
-            for index in 0 ..< petals {
-                let turn = 2 * Float.pi * (Float(index) + inner * 0.5)
-                    / Float(petals)
-                let card = Sculpt.card(length: size * (1 - inner * 0.25),
-                                       width: size * petal.aspect,
-                                       bend: Sculpt.Bend(arch: -0.12,
-                                                         fold: 0.12, cup: 0.25),
-                                       rows: 10, columns: 7,
-                                       hug: { Leafart.half(petal.outline, $0) })
-                    .turned(around: Pose.z, by: open)
-                    .turned(around: Pose.x, by: turn)
-                ring.merge(card)
-            }
-        }
-        let petalsMesh = kit.add(ring)
-        guard let heart else { return (petalsMesh, look, nil, nil) }
-        let dome = Sculpt.ball(radius: heartSize, segments: 10, rings: 6)
-            .stretched(Vec3(0.7, 1, 1))
-        let heartLook = plainLook(heart, rough: 0.7)
-        return (petalsMesh, look, kit.add(dome), heartLook)
+    // MARK: - Цветы
+
+    /// Деталь цветка: сетка и её материал. Цветок — несколько деталей в
+    /// одной позе.
+    struct Part {
+        var mesh: Int
+        var look: Int
     }
 
-    /// Поставить цветок: лепестки и серединка — одной позой.
-    mutating func place(flower: (petals: Int, look: Int, heart: Int?,
-                                 heartLook: Int?), _ pose: Pose,
-                        sag: Float, delay: Float) {
+    typealias Head = [Part]
+
+    /// Лепесток не вянет: у цветка своя жизнь, и жухлый лепесток на свежем
+    /// растении читался бы поломкой.
+    mutating func petalLook(_ design: LeafLook, rough: Float = 0.5,
+                            gloss: Float = 0) -> Int {
+        leafLook(design, rough: rough, gloss: gloss, height: 256, wilts: false)
+    }
+
+    /// Круг лепестков. Цветок смотрит вдоль +X; `open` — угол лепестка от
+    /// оси: ноль — сомкнут вперёд, π/2 — раскрыт плашмя. `turns` — где по
+    /// кругу стоит каждый лепесток (ноль — вверх), `sizes` — во сколько раз
+    /// он длиннее. Сдвиг вдоль оси разводит круги: иначе они мерцали бы
+    /// друг в друге. `root` — на каком расстоянии от оси лепесток растёт:
+    /// у розы лепестки сидят по краю донца, а не в одной точке.
+    static func whorl(_ design: LeafLook, length: Float, open: Float,
+                      bend: Sculpt.Bend, turns: [Float],
+                      sizes: [Float]? = nil, shift: Float = 0,
+                      root: Float = 0, rows: Int = 12,
+                      columns: Int = 9) -> Mesh3D {
+        var ring = Mesh3D()
+        for (index, turn) in turns.enumerated() {
+            let size = sizes?[index % max(sizes?.count ?? 1, 1)] ?? 1
+            let card = Sculpt.card(length: length * size,
+                                   width: length * size * design.aspect,
+                                   bend: bend, rows: rows, columns: columns,
+                                   hug: { Leafart.half(design.outline, $0) })
+                .turned(around: Pose.z, by: open)
+                .moved(by: Vec3(0, root, 0))
+                .turned(around: Pose.x, by: turn)
+                .moved(by: Vec3(shift, 0, 0))
+            ring.merge(card)
+        }
+        return ring
+    }
+
+    /// Ровно по кругу, со сдвигом на долю шага.
+    static func evenly(_ count: Int, offset: Float = 0) -> [Float] {
+        (0 ..< count).map { 2 * Float.pi * (Float($0) + offset) / Float(count) }
+    }
+
+    /// Тычинки: нити из середины вперёд и в стороны, на концах — пыльники.
+    mutating func stamens(_ count: Int, length: Float, spread: Float,
+                          anther: Float, thread: Channels,
+                          pollen: Channels) -> Head {
+        var threads = Mesh3D()
+        var heads = Mesh3D()
+        for index in 0 ..< count {
+            let turn = 2 * Float.pi * Float(index) / Float(count)
+                + random(-0.2 ... 0.2)
+            let reach = length * random(0.8 ... 1.1)
+            let out = spread * random(0.7 ... 1.1)
+            let tip = Vec3(reach, out * cos(turn), out * sin(turn))
+            let path = Sculpt.curve(Vec3(0, 0, 0),
+                                    Vec3(reach * 0.6, tip.y * 0.3, tip.z * 0.3),
+                                    tip, steps: 5)
+            threads.merge(Sculpt.tube(path, sides: 4) { _ in anther * 0.28 })
+            heads.merge(Sculpt.ball(radius: anther, segments: 6, rings: 4)
+                .stretched(Vec3(0.8, 1, 1.25)).moved(by: tip))
+        }
+        let threadLook = plainLook(thread, rough: 0.6)
+        let pollenLook = plainLook(pollen, rough: 0.85)
+        return [Part(mesh: kit.add(Grower.opaque(threads)), look: threadLook),
+                Part(mesh: kit.add(heads), look: pollenLook)]
+    }
+
+    /// Чашелистики — зелёная звёздочка под венчиком, отогнутая назад.
+    mutating func sepals(_ count: Int, length: Float, color: Channels,
+                         open: Float = 1.9) -> Part {
+        let design = LeafLook(outline: .lanceolate, aspect: 0.4,
+                              veins: .none, base: color,
+                              tip: lighter(color, 0.15), mottle: 0.1)
+        let look = leafLook(design, rough: 0.6, height: 128, wilts: false)
+        let mesh = Grower.whorl(design, length: length, open: open,
+                                bend: Sculpt.Bend(arch: 0.2, fold: 0.1),
+                                turns: Grower.evenly(count, offset: 0.5),
+                                shift: -0.001, rows: 6, columns: 5)
+        return Part(mesh: kit.add(mesh), look: look)
+    }
+
+    /// Серединка: бугорок своего цвета.
+    mutating func dome(_ radius: Float, color: Channels,
+                       squash: Float = 0.6) -> Part {
+        let mesh = Sculpt.ball(radius: radius, segments: 10, rings: 6)
+            .stretched(Vec3(squash, 1, 1))
+        return Part(mesh: kit.add(mesh), look: plainLook(color, rough: 0.8))
+    }
+
+    /// Простой цветок: круг лепестков, тычинки и серединка. Для мелких
+    /// соцветий, где рисунок лепестка важнее устройства цветка.
+    mutating func flower(_ petal: LeafLook, petals: Int, size: Float,
+                         open: Float, bend: Sculpt.Bend,
+                         heart: Channels?, stamens count: Int = 0,
+                         pollen: Channels = Channels(250, 214, 60)) -> Head {
+        let look = petalLook(petal)
+        var head = [Part(mesh: kit.add(Grower.whorl(
+            petal, length: size, open: open, bend: bend,
+            turns: Grower.evenly(petals))), look: look)]
+        if count > 0 {
+            head += stamens(count, length: size * 0.35, spread: size * 0.18,
+                            anther: size * 0.06, thread: lighter(pollen, 0.5),
+                            pollen: pollen)
+        }
+        if let heart { head.append(dome(size * 0.12, color: heart)) }
+        return head
+    }
+
+    /// Поставить цветок: все детали — одной позой и одним покачиванием.
+    mutating func place(flower head: Head, _ pose: Pose, sag: Float,
+                        delay: Float) {
         let phase = random(0 ... 1)
-        kit.place(flower.petals, flower.look, pose, sag: sag, sway: 0.03,
-                  delay: delay, phase: phase)
-        if let heart = flower.heart, let look = flower.heartLook {
-            kit.place(heart, look, pose, sag: sag, sway: 0.03, delay: delay,
-                      phase: phase)
+        for part in head {
+            kit.place(part.mesh, part.look, pose, sag: sag, sway: 0.03,
+                      delay: delay, phase: phase)
         }
     }
 
@@ -639,20 +721,26 @@ struct Grower {
         }
         stems(paths, look: stalk, sides: 6) { 0.004 - 0.0015 * $0 }
         let spathe = LeafLook(outline: .spathe, aspect: 0.5,
-                              veins: .parallel(6),
-                              base: bloom(Channels(246, 246, 238)),
-                              tip: Channels(214, 228, 200),
-                              vein: Channels(205, 220, 195))
+                              veins: .fan(9),
+                              base: bloom(Channels(248, 248, 240)),
+                              tip: Channels(206, 226, 190),
+                              vein: Channels(200, 218, 188),
+                              throat: Channels(214, 232, 196),
+                              throatReach: 0.25, glow: 0.25, mottle: 0.05)
         let white = leafLook(spathe, rough: 0.5, height: 256, wilts: false)
         let hood = leafMesh(spathe, length: 0.075,
                             bend: Sculpt.Bend(arch: -0.05, fold: 0.1, cup: 0.45),
                             rows: 14, columns: 9)
-        let spadix = Sculpt.tube((0 ... 8).map {
-            Vec3(0.008 + 0.028 * Float($0) / 8, 0.006, 0)
-        }, sides: 8) { 0.0038 * (1 - $0 * 0.3) }
+        // Початок толще к середине и чуть изогнут, в бугорках-цветочках.
+        let spadix = Sculpt.tube((0 ... 10).map {
+            let t = Float($0) / 10
+            return Vec3(0.008 + 0.03 * t, 0.006 + 0.003 * t * t, 0)
+        }, sides: 10, repeat: 0.04) { t in
+            0.0042 * pow(sin(Float.pi * (0.15 + 0.85 * t)), 0.5) + 0.0008
+        }
         let cream = kit.add(spadix)
-        let creamLook = pictureLook(Leafart.skin(Channels(236, 226, 172),
-                                                 seed: seed), rough: 0.8)
+        let creamLook = pictureLook(Leafart.spadix(Channels(238, 228, 176)),
+                                    rough: 0.8)
         var stalks: [[Vec3]] = []
         for index in 0 ..< self.count(2 ... 4) {
             let yaw = Float(index) * 2.1 + random(0 ... 0.6)
@@ -694,15 +782,12 @@ struct Grower {
                       sag: 0.35, sway: 0.01, delay: Float(index) / Float(count),
                       phase: random(0 ... 1))
         }
-        let petal = LeafLook(outline: .petal, aspect: 0.95, veins: .parallel(6),
-                             base: bloom(Channels(246, 232, 244)),
-                             tip: lighter(bloom(Channels(246, 232, 244)), 0.3),
-                             vein: bloom(Channels(222, 170, 214)))
-        let head = flower(petal, petals: 5, size: 0.042, cup: 0.15,
-                          heart: Channels(196, 44, 132), heartSize: 0.01)
+        let head = orchidFlower(bloom(Channels(246, 232, 244)))
         let bud = kit.add(Sculpt.ball(radius: 0.007, segments: 10, rings: 6)
-            .stretched(Vec3(1.3, 1, 1)))
-        let budLook = plainLook(Channels(170, 190, 140), rough: 0.5)
+            .stretched(Vec3(1.5, 1, 1)))
+        let budLook = plainLook(.mix(Channels(170, 196, 140),
+                                     bloom(Channels(246, 232, 244)), 0.35),
+                                rough: 0.5)
         let spikeLook = plainLook(Channels(74, 86, 52), rough: 0.6)
         var spikes: [[Vec3]] = []
         for index in 0 ..< Int.random(in: 1 ... 2, using: &rng) {
@@ -718,9 +803,11 @@ struct Grower {
             for flowerIndex in 0 ..< blooms {
                 let at = path[min(8 + flowerIndex * 10 / blooms, 18)]
                 place(flower: head,
-                      Pose(base: at + Vec3(0, -0.012, 0),
-                           yaw: yaw + (flowerIndex.isMultiple(of: 2) ? 0.5 : -0.5),
-                           rise: random(-0.1 ... 0.2)),
+                      Pose(base: at + Vec3(0, -0.014, 0),
+                           yaw: yaw + (flowerIndex.isMultiple(of: 2) ? 0.9 : -0.9)
+                               + random(-0.2 ... 0.2),
+                           rise: random(-0.15 ... 0.15),
+                           roll: random(-0.25 ... 0.25)),
                       sag: 0.3, delay: 0.7 + 0.03 * Float(flowerIndex))
             }
             kit.place(bud, budLook, Pose(base: path[20], yaw: yaw),
@@ -729,6 +816,56 @@ struct Grower {
                       sag: 0.3, sway: 0.03, delay: 0.9, phase: random(0 ... 1))
         }
         stems(spikes, look: spikeLook, sides: 6) { _ in 0.0024 }
+    }
+
+    /// Фаленопсис анфас: три чашелистика — верхний и два нижних, два
+    /// широких лепестка по бокам, губа с жёлтым горлом и крапом внизу и
+    /// колонка в середине. Всё плоско, чуть вперёд, как у живого цветка.
+    mutating func orchidFlower(_ colour: Channels) -> Head {
+        let length: Float = 0.036
+        let blush = Channels.mix(colour, Channels(214, 60, 150), 0.35)
+        let sepal = LeafLook(outline: .oval, aspect: 0.5, veins: .fan(7),
+                             base: colour, tip: lighter(colour, 0.2),
+                             vein: blush, throat: blush, throatReach: 0.3,
+                             glow: 0.35, mottle: 0.06)
+        let petal = LeafLook(outline: .broad, aspect: 1.02, veins: .fan(11),
+                             base: colour, tip: lighter(colour, 0.25),
+                             vein: blush, throat: blush, throatReach: 0.35,
+                             glow: 0.4, mottle: 0.06)
+        let lipColour = Channels.mix(colour, Channels(196, 34, 120), 0.75)
+        let lip = LeafLook(outline: .lip, aspect: 0.9, veins: .fan(5),
+                           base: lipColour, tip: darker(lipColour, 0.1),
+                           vein: darker(lipColour, 0.3),
+                           pattern: .spots(Channels(150, 20, 80), 26),
+                           throat: Channels(250, 206, 70), throatReach: 0.4,
+                           mottle: 0.1)
+        let flat = Float.pi / 2 - 0.1
+        let sepals = Grower.whorl(sepal, length: length, open: flat,
+                                  bend: Sculpt.Bend(arch: 0.08, fold: 0.05,
+                                                    cup: -0.15),
+                                  turns: [0, 2.45, -2.45], shift: -0.0015)
+        let petals = Grower.whorl(petal, length: length * 0.92, open: flat,
+                                  bend: Sculpt.Bend(arch: 0.05, fold: 0,
+                                                    cup: -0.12, wave: 0.02,
+                                                    waves: 2),
+                                  turns: [1.3, -1.3])
+        let labellum = Grower.whorl(lip, length: length * 0.55,
+                                    open: Float.pi / 2 - 0.45,
+                                    bend: Sculpt.Bend(arch: 0.35, fold: 0,
+                                                      cup: -0.7),
+                                    turns: [Float.pi], shift: 0.002)
+        let column = Sculpt.tube(Sculpt.curve(Vec3(0, 0, 0),
+                                              Vec3(0.004, 0.001, 0),
+                                              Vec3(0.008, 0.001, 0), steps: 4),
+                                 sides: 8) { 0.0026 - 0.0008 * $0 }
+        return [
+            Part(mesh: kit.add(sepals), look: petalLook(sepal, rough: 0.45)),
+            Part(mesh: kit.add(petals), look: petalLook(petal, rough: 0.45)),
+            Part(mesh: kit.add(labellum), look: petalLook(lip, rough: 0.4,
+                                                          gloss: 0.2)),
+            Part(mesh: kit.add(Grower.opaque(column)),
+                 look: plainLook(Channels(250, 246, 236), rough: 0.5)),
+        ]
     }
 
     mutating func aloe() {
@@ -863,14 +1000,7 @@ struct Grower {
         kit.put(areoles, areoleLook)
         kit.put(spines, spineLook)
         if traits?.flower != nil || chance(0.3) {
-            let petal = LeafLook(outline: .petal, aspect: 0.55,
-                                 veins: .parallel(4),
-                                 base: bloom(Channels(236, 96, 150)),
-                                 tip: lighter(bloom(Channels(236, 96, 150)), 0.2),
-                                 vein: lighter(bloom(Channels(236, 96, 150)), 0.3))
-            let head = flower(petal, petals: 12, size: 0.02, cup: 0.5,
-                              heart: Channels(250, 220, 120), heartSize: 0.004,
-                              layers: 2)
+            let head = cactusFlower(bloom(Channels(236, 96, 150)))
             place(flower: head,
                   Pose(base: Vec3(0, soil + tall + 0.008, 0), rise: .pi / 2),
                   sag: 0, delay: 0.9)
@@ -972,11 +1102,18 @@ struct Grower {
             }
         }
         if species.contains("каланхоэ") || traits?.flower != nil {
-            let petal = LeafLook(outline: .petal, aspect: 0.8, veins: .none,
-                                 base: bloom(Channels(250, 120, 44)),
-                                 tip: lighter(bloom(Channels(250, 120, 44)), 0.15))
-            let head = flower(petal, petals: 4, size: 0.01, cup: 0.3,
-                              heart: Channels(250, 210, 90), heartSize: 0.002)
+            let colour = bloom(Channels(250, 120, 44))
+            let petal = LeafLook(outline: .petal, aspect: 0.8, veins: .fan(5),
+                                 base: colour, tip: lighter(colour, 0.15),
+                                 vein: darker(colour, 0.15),
+                                 throat: Channels(252, 214, 90),
+                                 throatReach: 0.3, glow: 0.2, mottle: 0.08)
+            let head = flower(petal, petals: 4, size: 0.01,
+                              open: Float.pi / 2 - 0.3,
+                              bend: Sculpt.Bend(arch: -0.1, fold: 0.05,
+                                                cup: -0.1),
+                              heart: nil, stamens: 4,
+                              pollen: Channels(250, 210, 90))
             for (point, yaw) in tips.prefix(5) {
                 for index in 0 ..< 5 {
                     place(flower: head,
@@ -1270,12 +1407,7 @@ struct Grower {
                       sag: 0.35, sway: 0.01, delay: inner, phase: random(0 ... 1))
         }
         stems(paths, look: stalk, sides: 5) { _ in 0.0025 }
-        let colour = bloom(Channels(112, 52, 172))
-        let petal = LeafLook(outline: .petal, aspect: 0.85, veins: .parallel(4),
-                             base: colour, tip: lighter(colour, 0.15),
-                             vein: darker(colour, 0.2))
-        let head = flower(petal, petals: 5, size: 0.015, cup: 0.1,
-                          heart: Channels(250, 214, 60), heartSize: 0.0035)
+        let head = violetFlower(bloom(Channels(112, 52, 172)))
         var pedicels: [[Vec3]] = []
         for index in 0 ..< self.count(6 ... 12) {
             let yaw = Float(index) * 2.1 + random(0 ... 0.5)
@@ -1286,7 +1418,8 @@ struct Grower {
                              (end + Vec3(0, Grower.soil + 0.01, 0)) / 2
                                  + Vec3(0, 0.01, 0), end])
             place(flower: head, Pose(base: end, yaw: yaw,
-                                     rise: random(0.9 ... 1.4)),
+                                     rise: random(0.9 ... 1.4),
+                                     roll: random(-0.6 ... 0.6)),
                   sag: 0.4, delay: 0.7 + Float(index) * 0.02)
         }
         stems(pedicels, look: stalk, sides: 4) { _ in 0.0014 }
@@ -1324,11 +1457,7 @@ struct Grower {
                       phase: random(0 ... 1))
         }
         stems(paths, look: stalk, sides: 6) { 0.0045 - 0.0015 * $0 }
-        let colour = bloom(Channels(240, 96, 112))
-        let petal = LeafLook(outline: .petal, aspect: 0.9, veins: .none,
-                             base: colour, tip: lighter(colour, 0.2))
-        let head = flower(petal, petals: 4, size: 0.016, cup: 0.35,
-                          heart: Channels(250, 220, 80), heartSize: 0.003)
+        let head = begoniaFlower(bloom(Channels(240, 96, 112)))
         for cluster in 0 ..< Int.random(in: 2 ... 3, using: &rng) {
             let yaw = Float(cluster) * 2.2 + random(0 ... 0.6)
             let center = Grower.around(Vec3(0.05, Grower.soil + 0.17 * stretch, 0),
@@ -1336,14 +1465,15 @@ struct Grower {
             for index in 0 ..< 5 {
                 let turn = Float(index) * 1.25
                 place(flower: head,
-                      Pose(base: center + Grower.around(Vec3(0.012, 0, 0), turn),
-                           yaw: turn, rise: 0.6),
+                      Pose(base: center + Grower.around(Vec3(0.013, 0, 0), turn),
+                           yaw: turn, rise: 0.6, roll: random(-0.4 ... 0.4)),
                       sag: 0.45, delay: 0.8)
             }
         }
     }
 
     mutating func pelargonium() {
+        if species.contains("роз") { return rose() }
         pot(.classic)
         let base = green(Channels(82, 140, 70))
         let design = LeafLook(outline: .round, aspect: 0.96,
@@ -1375,12 +1505,7 @@ struct Grower {
                       sag: 0.5, sway: 0.02, delay: Float(index) / Float(count),
                       phase: random(0 ... 1))
         }
-        let colour = bloom(Channels(226, 40, 56))
-        let petal = LeafLook(outline: .petal, aspect: 0.95, veins: .parallel(3),
-                             base: colour, tip: lighter(colour, 0.1),
-                             vein: darker(colour, 0.2))
-        let head = flower(petal, petals: 5, size: 0.013, cup: 0.2,
-                          heart: Channels(250, 236, 200), heartSize: 0.002)
+        let head = geraniumFlower(bloom(Channels(226, 40, 56)))
         for umbel in 0 ..< self.count(2 ... 4) {
             let yaw = Float(umbel) * 2.0 + random(0 ... 0.6)
             let center = Grower.around(Vec3(random(0.01 ... 0.05),
@@ -1403,6 +1528,296 @@ struct Grower {
             }
         }
         stems(paths, look: stalk, sides: 5) { 0.003 - 0.001 * $0 }
+    }
+
+    /// Фиалка: два лепестка сверху меньше, три снизу больше, край
+    /// волнистый, серединка темнее; пара пухлых жёлтых пыльников.
+    mutating func violetFlower(_ colour: Channels) -> Head {
+        let petal = LeafLook(outline: .broad, aspect: 1.0, veins: .fan(9),
+                             base: colour, tip: lighter(colour, 0.12),
+                             vein: darker(colour, 0.25), teeth: 7,
+                             toothDepth: 0.03, scallops: true,
+                             throat: darker(colour, 0.35), throatReach: 0.3,
+                             glow: 0.15, mottle: 0.08)
+        let length: Float = 0.014
+        let ring = Grower.whorl(petal, length: length,
+                                open: Float.pi / 2 - 0.08,
+                                bend: Sculpt.Bend(arch: -0.06, fold: 0,
+                                                  cup: -0.2, wave: 0.03,
+                                                  waves: 2),
+                                turns: [0.62, -0.62, Float.pi, Float.pi - 1.25,
+                                        Float.pi + 1.25],
+                                sizes: [0.82, 0.82, 1.05, 1, 1])
+        var head = [Part(mesh: kit.add(ring), look: petalLook(petal))]
+        var anthers = Mesh3D()
+        for side: Float in [1, -1] {
+            anthers.merge(Sculpt.ball(radius: 0.0022, segments: 8, rings: 5)
+                .stretched(Vec3(1, 1.3, 0.9))
+                .moved(by: Vec3(0.0022, 0, side * 0.0018)))
+        }
+        head.append(Part(mesh: kit.add(anthers),
+                         look: plainLook(Channels(252, 214, 40), rough: 0.7)))
+        let pistil = Sculpt.tube([Vec3(0, 0, 0), Vec3(0.005, 0.0015, 0)],
+                                 sides: 4) { _ in 0.0005 }
+        head.append(Part(mesh: kit.add(Grower.opaque(pistil)),
+                         look: plainLook(Channels(120, 150, 90), rough: 0.6)))
+        return head
+    }
+
+    /// Мужской цветок бегонии: два широких лепестка сверху и снизу, два
+    /// узких по бокам, в середине — жёлтый пучок тычинок.
+    mutating func begoniaFlower(_ colour: Channels) -> Head {
+        let petal = LeafLook(outline: .broad, aspect: 1.05, veins: .fan(7),
+                             base: colour, tip: lighter(colour, 0.2),
+                             vein: darker(colour, 0.12),
+                             throat: lighter(colour, 0.35), throatReach: 0.35,
+                             glow: 0.3, mottle: 0.06)
+        let ring = Grower.whorl(petal, length: 0.017,
+                                open: Float.pi / 2 - 0.08,
+                                bend: Sculpt.Bend(arch: -0.04, fold: 0,
+                                                  cup: -0.15),
+                                turns: [0, Float.pi, Float.pi / 2,
+                                        -Float.pi / 2],
+                                sizes: [1, 1, 0.62, 0.62])
+        var head = [Part(mesh: kit.add(ring), look: petalLook(petal))]
+        var cluster = Mesh3D()
+        for index in 0 ..< 14 {
+            let turn = Float(index) * 2.399_963
+            let out = 0.0022 * (Float(index) / 14).squareRoot()
+            cluster.merge(Sculpt.ball(radius: 0.0011, segments: 6, rings: 4)
+                .moved(by: Vec3(0.0022 - out * 0.4, out * cos(turn),
+                                out * sin(turn))))
+        }
+        head.append(Part(mesh: kit.add(cluster),
+                         look: plainLook(Channels(250, 212, 50), rough: 0.8)))
+        return head
+    }
+
+    /// Цветок пеларгонии в зонтике: два верхних лепестка уже и с тёмными
+    /// жилками-дорожками, три нижних шире; короткие тычинки.
+    mutating func geraniumFlower(_ colour: Channels) -> Head {
+        let upper = LeafLook(outline: .broad, aspect: 0.78, veins: .fan(7),
+                             base: colour, tip: colour,
+                             vein: darker(colour, 0.45),
+                             throat: lighter(colour, 0.45), throatReach: 0.28,
+                             glow: 0.12, mottle: 0.08)
+        let lower = LeafLook(outline: .broad, aspect: 0.95, veins: .fan(7),
+                             base: colour, tip: lighter(colour, 0.08),
+                             vein: darker(colour, 0.12),
+                             throat: lighter(colour, 0.45), throatReach: 0.25,
+                             glow: 0.12, mottle: 0.08)
+        let open = Float.pi / 2 - 0.12
+        let bend = Sculpt.Bend(arch: -0.05, fold: 0, cup: -0.15, wave: 0.02,
+                               waves: 2)
+        let top = Grower.whorl(upper, length: 0.012, open: open, bend: bend,
+                               turns: [0.5, -0.5], shift: 0.0004)
+        let bottom = Grower.whorl(lower, length: 0.013, open: open, bend: bend,
+                                  turns: [Float.pi, Float.pi - 1.2,
+                                          Float.pi + 1.2])
+        var head = [Part(mesh: kit.add(top), look: petalLook(upper)),
+                    Part(mesh: kit.add(bottom), look: petalLook(lower))]
+        head += stamens(6, length: 0.0035, spread: 0.0012, anther: 0.0005,
+                        thread: lighter(colour, 0.5),
+                        pollen: Channels(214, 110, 50))
+        return head
+    }
+
+    /// Тюльпан — бокал: три наружных и три внутренних лепестка сходятся
+    /// кверху, на донце тёмное пятно, внутри — тёмные тычинки.
+    mutating func tulipFlower(_ colour: Channels) -> Head {
+        let outer = LeafLook(outline: .tepal, aspect: 0.66, veins: .fan(9),
+                             base: colour, tip: lighter(colour, 0.06),
+                             vein: darker(colour, 0.12),
+                             throat: .mix(colour, Channels(250, 210, 70), 0.6),
+                             throatReach: 0.32, glow: 0.12, mottle: 0.06)
+        var inner = outer
+        inner.throat = Channels(60, 40, 40)
+        inner.throatReach = 0.22
+        let length: Float = 0.052
+        let shell = Grower.whorl(outer, length: length, open: 0.62,
+                                 bend: Sculpt.Bend(arch: 0.42, fold: 0,
+                                                   cup: -0.75),
+                                 turns: Grower.evenly(3), rows: 16,
+                                 columns: 11)
+        let core = Grower.whorl(inner, length: length * 0.96, open: 0.52,
+                                bend: Sculpt.Bend(arch: 0.42, fold: 0,
+                                                  cup: -0.8),
+                                turns: Grower.evenly(3, offset: 0.5),
+                                shift: -0.001, rows: 16, columns: 11)
+        var head = [Part(mesh: kit.add(shell),
+                         look: petalLook(outer, rough: 0.35, gloss: 0.3)),
+                    Part(mesh: kit.add(core),
+                         look: petalLook(inner, rough: 0.35, gloss: 0.3))]
+        head += stamens(6, length: 0.02, spread: 0.006, anther: 0.0018,
+                        thread: Channels(70, 60, 50),
+                        pollen: Channels(46, 36, 40))
+        head.append(dome(0.0035, color: Channels(150, 170, 90), squash: 1.6))
+        return head
+    }
+
+    /// Цветок кактуса — воронка из трёх кругов узких лепестков, к краю
+    /// ярче, к горлу светлее; пучок сливочных тычинок и звёздочка рыльца.
+    mutating func cactusFlower(_ colour: Channels) -> Head {
+        let petal = LeafLook(outline: .petal, aspect: 0.32, veins: .fan(3),
+                             base: lighter(colour, 0.35), tip: colour,
+                             vein: darker(colour, 0.1),
+                             throat: Channels(250, 236, 220),
+                             throatReach: 0.4, glow: 0.2, mottle: 0.06)
+        let look = petalLook(petal, rough: 0.4, gloss: 0.15)
+        let bend = Sculpt.Bend(arch: -0.18, fold: 0.1, cup: -0.2)
+        var funnel = Grower.whorl(petal, length: 0.024, open: 1.2, bend: bend,
+                                  turns: Grower.evenly(14))
+        funnel.merge(Grower.whorl(petal, length: 0.022, open: 0.9, bend: bend,
+                                  turns: Grower.evenly(14, offset: 0.5),
+                                  shift: 0.001))
+        funnel.merge(Grower.whorl(petal, length: 0.018, open: 0.6, bend: bend,
+                                  turns: Grower.evenly(10, offset: 0.25),
+                                  shift: 0.002))
+        var head = [Part(mesh: kit.add(funnel), look: look)]
+        head += stamens(26, length: 0.008, spread: 0.0035, anther: 0.0006,
+                        thread: Channels(250, 244, 220),
+                        pollen: Channels(250, 222, 120))
+        var stigma = Mesh3D()
+        for index in 0 ..< 6 {
+            let turn = Float(index) * Float.pi / 3
+            stigma.merge(Sculpt.ball(radius: 0.0008, segments: 6, rings: 4)
+                .stretched(Vec3(0.6, 1.6, 1))
+                .moved(by: Vec3(0.0105, 0.0011 * cos(turn),
+                                0.0011 * sin(turn))))
+        }
+        head.append(Part(mesh: kit.add(stigma),
+                         look: plainLook(Channels(200, 220, 120), rough: 0.7)))
+        return head
+    }
+
+    /// Роза: прямые стебли с шипами, перистые листья из пяти зубчатых
+    /// листочков, на макушках — цветы, на боковых веточках — бутоны.
+    mutating func rose() {
+        pot(.classic)
+        let base = green(Channels(40, 86, 46))
+        let design = LeafLook(outline: .ovate, aspect: 0.6, veins: .pinnate(6),
+                              base: base, tip: lighter(base, 0.06),
+                              vein: lighter(base, 0.25), teeth: 14,
+                              toothDepth: 0.07)
+        let look = leafLook(design, rough: 0.3, gloss: 0.45, height: 256)
+        let leaflet = leafMesh(design, length: 0.028,
+                               bend: Sculpt.Bend(arch: 0.1, fold: 0.22),
+                               rows: 12, columns: 9)
+        let stalk = plainLook(Channels(66, 104, 56), rough: 0.6)
+        let thorn = plainLook(Channels(150, 84, 64), rough: 0.5)
+        let colour = bloom(Channels(196, 22, 48))
+        let head = roseFlower(colour)
+        let bud = roseBud(colour)
+        var paths: [[Vec3]] = []
+        var thorns = Mesh3D()
+        let count = count(3 ... 5)
+        for index in 0 ..< count {
+            let yaw = Float(index) * 2.399_963 + random(0 ... 0.4)
+            let height = random(0.2 ... 0.3) * stretch
+            let lean = random(0.025 ... 0.07)
+            let path = Sculpt.curve(
+                Grower.around(Vec3(0.006, Grower.soil - 0.004, 0), yaw),
+                Grower.around(Vec3(lean * 0.3, Grower.soil + height * 0.55, 0),
+                              yaw),
+                Grower.around(Vec3(lean, Grower.soil + height, 0), yaw),
+                steps: 14)
+            paths.append(path)
+            place(flower: head,
+                  Pose(base: path[14], yaw: yaw,
+                       rise: .pi / 2 - random(0.05 ... 0.4)),
+                  sag: 0.35, delay: 0.8 + 0.03 * Float(index))
+            for node in [4, 7, 10] {
+                let turn = yaw + Float(node) * 2.2
+                leaf(at: path[node], turn: turn, leaflet: leaflet, look: look,
+                     stalk: &paths, delay: Float(node) / 14)
+            }
+            // Шип от оси стебля наружу и чуть вниз: основание прячется в
+            // стебле, торчит только кончик.
+            for step in stride(from: 2, to: 13, by: 2) {
+                thorns.merge(Sculpt.spike(radius: 0.0013, height: 0.0058,
+                                          sides: 4)
+                    .posed(Pose(base: path[step], yaw: Float(step) * 1.9 + yaw,
+                                rise: -0.35 - .pi / 2)))
+            }
+            if index < 2 {
+                let fork = path[9]
+                let side = yaw + (index == 0 ? 1.1 : -1.1)
+                let tip = fork + Grower.around(Vec3(0.035, 0.045, 0), side)
+                paths.append(Sculpt.curve(fork, fork + Grower.around(
+                    Vec3(0.012, 0.02, 0), side), tip, steps: 5))
+                place(flower: bud, Pose(base: tip, yaw: side, rise: 1.25),
+                      sag: 0.3, delay: 0.9)
+            }
+        }
+        kit.put(thorns, thorn)
+        stems(paths, look: stalk, sides: 7) { 0.0034 - 0.0014 * $0 }
+    }
+
+    /// Перистый лист розы: черешок и пять листочков — две пары и верхний.
+    private mutating func leaf(at node: Vec3, turn: Float, leaflet: Int,
+                               look: Int, stalk: inout [[Vec3]],
+                               delay: Float) {
+        let reach: Float = 0.05
+        let end = node + Grower.around(Vec3(reach, reach * 0.35, 0), turn)
+        let rachis = Sculpt.curve(node, node + Grower.around(
+            Vec3(reach * 0.5, reach * 0.3, 0), turn), end, steps: 6)
+        stalk.append(rachis)
+        let phase = random(0 ... 1)
+        for (step, size) in [(2, Float(0.8)), (4, Float(0.95))] {
+            for side: Float in [1, -1] {
+                kit.place(leaflet, look,
+                          Pose(base: rachis[step], yaw: turn + side * 1.2,
+                               rise: random(-0.1 ... 0.2),
+                               roll: side * 0.25, size: size),
+                          sag: 0.5, sway: 0.02, delay: delay, phase: phase)
+            }
+        }
+        kit.place(leaflet, look,
+                  Pose(base: end, yaw: turn, rise: random(0 ... 0.25),
+                       size: 1.05),
+                  sag: 0.5, sway: 0.02, delay: delay, phase: phase)
+    }
+
+    /// Цветок розы: спираль лепестков золотым углом. Внутренние сомкнуты и
+    /// завёрнуты к середине, наружные раскрыты и отогнуты кончиками; снизу
+    /// — чашелистики.
+    mutating func roseFlower(_ colour: Channels) -> Head {
+        let petal = LeafLook(outline: .broad, aspect: 1.12, veins: .fan(11),
+                             base: colour, tip: lighter(colour, 0.05),
+                             vein: darker(colour, 0.18),
+                             throat: .mix(colour, Channels(250, 214, 120), 0.45),
+                             throatReach: 0.32, glow: 0.06, mottle: 0.08)
+        var mesh = Mesh3D()
+        let petals = 19
+        for index in 0 ..< petals {
+            let k = Float(index) / Float(petals - 1)
+            let bend = Sculpt.Bend(arch: 0.32 - 0.62 * k, fold: 0,
+                                   cup: -1.0 + 0.6 * k)
+            mesh.merge(Grower.whorl(petal, length: 0.017 + 0.017 * pow(k, 0.7),
+                                    open: 0.18 + 1.12 * pow(k, 1.3),
+                                    bend: bend,
+                                    turns: [Float(index) * 2.399_963],
+                                    shift: 0.004 * (1 - k),
+                                    root: 0.0015 + 0.004 * k,
+                                    rows: 12, columns: 11))
+        }
+        return [Part(mesh: kit.add(mesh),
+                     look: petalLook(petal, rough: 0.45, gloss: 0.1)),
+                sepals(5, length: 0.02, color: Channels(58, 104, 58))]
+    }
+
+    /// Бутон: пять сомкнутых лепестков, чашелистики обнимают их снизу.
+    mutating func roseBud(_ colour: Channels) -> Head {
+        let petal = LeafLook(outline: .broad, aspect: 1.1, veins: .fan(7),
+                             base: colour, tip: darker(colour, 0.1),
+                             vein: darker(colour, 0.2), mottle: 0.08)
+        let mesh = Grower.whorl(petal, length: 0.017, open: 0.22,
+                                bend: Sculpt.Bend(arch: 0.2, fold: 0, cup: -1.1),
+                                turns: Grower.evenly(5), root: 0.002,
+                                rows: 10, columns: 9)
+        return [Part(mesh: kit.add(mesh), look: petalLook(petal, rough: 0.45)),
+                sepals(5, length: 0.016, color: Channels(58, 104, 58),
+                       open: 0.5)]
     }
 
     mutating func herbs() {
@@ -1467,12 +1882,7 @@ struct Grower {
         let leaf = leafMesh(design, length: 0.16,
                             bend: Sculpt.Bend(arch: 0.35, fold: 0.35,
                                               wave: 0.015, waves: 3))
-        let colour = bloom(Channels(226, 38, 52))
-        let petal = LeafLook(outline: .petal, aspect: 0.62, veins: .parallel(5),
-                             base: .mix(colour, Channels(250, 214, 80), 0.4),
-                             tip: colour, vein: darker(colour, 0.15))
-        let head = flower(petal, petals: 3, size: 0.05, cup: 1.12,
-                          heart: nil, heartSize: 0, layers: 2)
+        let head = tulipFlower(bloom(Channels(226, 38, 52)))
         let stalk = plainLook(base, rough: 0.5)
         var stems: [[Vec3]] = []
         for index in 0 ..< count(3 ... 5) {
@@ -1484,7 +1894,8 @@ struct Grower {
                 Grower.around(Vec3(0.008, Grower.soil - 0.004, 0), yaw),
                 Grower.around(Vec3(0.012, Grower.soil + height * 0.5, 0), yaw),
                 end))
-            place(flower: head, Pose(base: end, yaw: yaw, rise: .pi / 2 - 0.1),
+            place(flower: head, Pose(base: end, yaw: yaw,
+                                     rise: .pi / 2 - random(0.02 ... 0.15)),
                   sag: 0.5, delay: 0.7)
             for leafIndex in 0 ..< 2 {
                 let turn = yaw + Float(leafIndex) * Float.pi + random(-0.3 ... 0.3)

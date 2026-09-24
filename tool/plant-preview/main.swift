@@ -8,6 +8,9 @@ import Foundation
 // Кладёт в папку по картинке PPM на вид; лист собирает render.py.
 
 struct Camera {
+    /// Свет по-мировому; у портрета — от камеры, иначе цветок, смотрящий
+    /// от солнца, выходил бы серым.
+    var light = Vec3(-0.5, 1.2, 0.8)
     var yaw: Float = 0.55
     var pitch: Float = 0.5
     var distance: Float = 0.95
@@ -30,7 +33,7 @@ func render(_ kit: Kit, moisture: Double, camera: Camera) -> Picture {
                         fill: Ink(0.94, 0.95, 0.96, 1))
     var depth = [Float](repeating: .infinity,
                         count: camera.width * camera.height)
-    let light = camera.view(Vec3(-0.5, 1.2, 0.8) + camera.target)
+    let light = camera.view(camera.light + camera.target)
         - camera.view(camera.target)
     let sun = light.unit
     let focal = Float(camera.height) * 1.5
@@ -131,16 +134,69 @@ func ppm(_ picture: Picture, to path: String) {
     try! data.write(to: URL(fileURLWithPath: path))
 }
 
+/// Портрет цветка: самая высокая головка отдельно от растения — детали,
+/// стоящие в той же позе, что её лепестки. Камера — анфас, по направлению,
+/// куда цветок смотрит; ракурс подбирается перебором, чтобы не зависеть от
+/// знаков поворотов.
+func portrait(_ kit: Kit, camera base: Camera) -> (Kit, Camera)? {
+    let petals = kit.pieces.filter {
+        let look = kit.looks[$0.look]
+        return look.cutout && !look.wilts
+    }
+    guard let top = petals.max(by: { $0.pose.base.y < $1.pose.base.y })
+    else { return nil }
+    var head = kit
+    head.pieces = kit.pieces.filter {
+        ($0.pose.base - top.pose.base).size < 1e-6
+            && $0.pose.yaw == top.pose.yaw && $0.pose.rise == top.pose.rise
+    }
+    let forward = top.pose.turn(Vec3(1, 0, 0), lean: 0).unit
+    var camera = base
+    var best = -Float.infinity
+    for yawStep in 0 ..< 72 {
+        for pitchStep in -17 ... 17 {
+            let yaw = Float(yawStep) * Float.pi / 36
+            let pitch = Float(pitchStep) * Float.pi / 36
+            let toward = Vec3(0, 0, 1).turned(around: Pose.x, by: -pitch)
+                .turned(around: Pose.y, by: yaw)
+            // Чуть сверху-сбоку, а не в упор: так видно и объём.
+            let aim = (forward + Vec3(0, 0.35, 0)).unit
+            let score = toward.dotted(aim)
+            if score > best {
+                best = score
+                camera.yaw = yaw
+                camera.pitch = pitch
+                camera.light = toward + Vec3(0, 0.6, 0)
+            }
+        }
+    }
+    camera.target = top.pose.place(Vec3(0.006, 0, 0), lean: 0)
+    camera.distance = 0.11
+    return (head, camera)
+}
+
 let arguments = CommandLine.arguments
 let folder = arguments[1]
 let moisture = Double(arguments[2]) ?? 1
-let wanted = arguments.count > 3 ? Array(arguments[3...]) : Preset.allCases.map(\.rawValue)
+var rest = Array(arguments.dropFirst(3))
+let close = rest.first == "--close"
+if close { rest.removeFirst() }
+let wanted = rest.isEmpty ? Preset.allCases.map(\.rawValue) : rest
+// Вид можно уточнить названием: «pelargonium:Роза» — роза из того же
+// готового набора.
 for name in wanted {
-    guard let preset = Preset(rawValue: name) else { continue }
-    let kit = Botany.grow(.stock(preset), species: preset.title)
+    let parts = name.split(separator: ":", maxSplits: 1).map(String.init)
+    guard let preset = Preset(rawValue: parts[0]) else { continue }
+    let species = parts.count > 1 ? parts[1] : preset.title
+    let kit = Botany.grow(.stock(preset), species: species)
     var camera = Camera()
     camera.target = Vec3(0, min(kit.height, 0.6) * 0.5, 0)
     camera.distance = max(0.75, kit.height * 1.7, kit.spread * 2.6)
-    ppm(render(kit, moisture: moisture, camera: camera),
+    var shown = kit
+    if close, let (head, near) = portrait(kit, camera: camera) {
+        shown = head
+        camera = near
+    }
+    ppm(render(shown, moisture: moisture, camera: camera),
         to: "\(folder)/\(name).ppm")
 }

@@ -1439,6 +1439,7 @@ do {
     check(Preset.of("Каменная роза") == .echeveria, "каменная роза — суккулент")
     check(Preset.of("Розмарин") == .herbs, "розмарин — пряные травы")
     check(Preset.of("Роза") == .pelargonium, "роза — цветущий куст")
+    check(Preset.of("Розы чайные") == .pelargonium, "и во множественном числе")
     check(Preset.of("Тюльпан") == .tulip, "тюльпан")
     check(Preset.of("Баобаб") == .spathiphyllum, "незнакомый — спатифиллум")
     check(Preset.allCases.allSatisfy { Preset.of($0.title) == $0 },
@@ -1480,6 +1481,30 @@ do {
     check(odd.isEmpty, "каждый вид вырастает целым и в разумных размерах: \(odd)")
     check(slow.isEmpty, "и быстро: \(slow)")
     check(total > 20 * 15_000, "и детально: в среднем \(total / 20) треугольников")
+
+    // Роза — свой рецепт внутри цветущего куста: спираль лепестков.
+    let rose = Botany.grow(.stock("Роза"), species: "Роза")
+    let geranium = Botany.grow(.stock(.pelargonium), species: "Пеларгония")
+    check(rose != geranium, "роза вырастает розой, а не пеларгонией")
+    check(rose.meshes.map(sound).allSatisfy { $0.intact && $0.agree >= 0.9 }
+          && rose.triangles >= 8_000 && rose.triangles <= 400_000
+          && rose.height >= 0.14 && rose.height <= 0.75 && rose.spread <= 0.45,
+          "и целой: \(rose.triangles) треугольников, высота "
+              + "\(round2(Double(rose.height)))")
+    // Цветок — не один круг лепестков: у каждого цветущего вида есть
+    // тычинки или пыльники — детали цветка, которые не вянут и не вырезаны.
+    for preset in [Preset.orchid, .violet, .begonia, .pelargonium, .tulip] {
+        let kit = Botany.grow(.stock(preset), species: preset.title)
+        let petals = Set(kit.pieces.filter {
+            kit.looks[$0.look].cutout && !kit.looks[$0.look].wilts
+        }.map(\.mesh))
+        let solid = kit.pieces.filter {
+            !kit.looks[$0.look].cutout && !kit.looks[$0.look].wilts
+                && kit.looks[$0.look].color == nil
+        }
+        check(petals.count >= 1 && solid.count > petals.count,
+              "у цветов «\(preset.title)» есть серединка и тычинки")
+    }
 
     let one = Botany.grow(.stock("Монстера"), species: "Монстера")
     let again = Botany.grow(.stock("Монстера"), species: "Монстера")
