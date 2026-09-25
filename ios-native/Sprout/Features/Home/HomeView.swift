@@ -442,6 +442,7 @@ struct HomeView: View {
                         Label("Сад в AR", systemImage: "arkit")
                     }
                 }
+                round
                 Button { tripping = true } label: {
                     Label("Уезжаю…", systemImage: "airplane.departure")
                 }
@@ -460,6 +461,32 @@ struct HomeView: View {
         .buttonStyle(.glass)
         .buttonBorderShape(.circle)
         .accessibilityLabel("Вид и порядок")
+    }
+
+    /// «Обход сада» — живое действие на экране блокировки: кто просит воды,
+    /// по одному, с кнопкой «Полил». Идёт — его можно закончить; просить
+    /// воды некому — и начинать нечего.
+    @ViewBuilder
+    private var round: some View {
+        let live = Live.shared
+        if live.enabled {
+            if live.rounding {
+                Button {
+                    Task { await live.endRound() }
+                } label: {
+                    Label("Закончить обход", systemImage: "stop.circle")
+                }
+            } else if garden.rooms.contains(where: {
+                $0.plants.contains { $0.thirst != .calm }
+            }) {
+                Button {
+                    Task { await live.startRound() }
+                    Feel.done()
+                } label: {
+                    Label("Обход сада", systemImage: "figure.walk")
+                }
+            }
+        }
     }
 
     /// Не ручной порядок заканчивает правку: пересортированная сетка не дала

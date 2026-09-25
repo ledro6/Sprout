@@ -2663,6 +2663,116 @@ do {
           "в памятке — только те, кого надо полить")
     check(Trip.memo([], leave: leave, back: back).contains("поливать никого"),
           "никого — так и написано")
+
+    var utc = Calendar(identifier: .gregorian)
+    utc.timeZone = TimeZone(identifier: "UTC")!
+    func at(_ day: Int, _ hour: Int, _ minute: Int = 0) -> Date {
+        utc.date(from: DateComponents(year: 2026, month: 9, day: day,
+                                      hour: hour, minute: minute))!
+    }
+    check(Trip.departure(after: at(25, 14, 37), calendar: utc) == at(26, 15),
+          "уезжают по умолчанию завтра, в начале следующего часа")
+    check(Trip.countdownStart(to: at(25, 21), now: at(25, 14)) == at(25, 14),
+          "за семь часов до отъезда отсчёт начинается сразу")
+    check(Trip.countdownStart(to: at(26, 9), now: at(25, 14)) == at(26, 1),
+          "за девятнадцать — за восемь часов до отъезда: раньше погас бы")
+    check(Trip.countdownStart(to: at(25, 13), now: at(25, 14)) == nil,
+          "уехавшему отсчитывать нечего")
+    let now = at(25, 20)
+    let fresh = rooms.flatMap(\.plants).map {
+        Watering(plant: $0.id, when: at(25, 9))
+    }
+    check(Trip.watered(rooms, log: fresh, now: now),
+          "все политы утром — к вечернему отъезду готовы")
+    check(!Trip.watered(rooms, log: Array(fresh.dropLast()), now: now),
+          "одного не полили — не готовы")
+    check(!Trip.watered(rooms, log: fresh, now: at(26, 10)),
+          "полив суточной давности — уже не перед отъездом")
+    check(Trip.firstVisit(needs, leave: at(25, 20), calendar: utc) == at(29, 0),
+          "сосед придёт впервые на четвёртый день, в полночь дня")
+    check(Trip.firstVisit([], leave: at(25, 20), calendar: utc) == nil,
+          "соседу никого — и приходить незачем")
+}
+
+print("обход сада:")
+do {
+    let rooms = [
+        Room(name: "Кухня", plants: [
+            plantNamed("папоротник", moisture: 0.15, dryingDays: 5),
+            plantNamed("кактус", moisture: 0.9, dryingDays: 30),
+        ]),
+        Room(name: "Спальня", plants: [
+            plantNamed("фикус", moisture: 0.35, dryingDays: 8),
+            plantNamed("фиалка", moisture: 0.05, dryingDays: 4),
+        ]),
+    ]
+    let stops = Round.stops(in: rooms) { "\($0.id).jpg" }
+    check(stops.map(\.id) == ["фиалка", "папоротник", "фикус"],
+          "в обходе — кто просит воды, от самого сухого")
+    check(stops.map(\.room) == ["Спальня", "Кухня", "Спальня"],
+          "у каждого — своя комната")
+    check(stops[0].percent == 5 && stops[0].thumb == "фиалка.jpg",
+          "проценты и картинка — с начала обхода")
+    let many = [Room(name: "Зал", plants: (0 ..< 20).map {
+        plantNamed("растение \($0)", moisture: 0.01 * Double($0),
+                   dryingDays: 5)
+    })]
+    check(Round.stops(in: many).count == Round.limit,
+          "больше дюжины в обход не берём")
+    let long = String(repeating: "о", count: 50)
+    check(Round.clip(long).count == Round.nameLimit
+          && Round.clip(long).hasSuffix("…"),
+          "длинное имя режется многоточием")
+    check(Round.clip("Баксик") == "Баксик", "короткое — как есть")
+
+    let start = Date(timeIntervalSince1970: 1_790_000_000)
+    let alive = Set(rooms.flatMap(\.plants).map(\.id))
+    var log = [Watering(plant: "фиалка", when: start.addingTimeInterval(-60))]
+    var marked = Round.mark(stops, log: log, since: start, alive: alive)
+    check(Round.passed(marked) == 0,
+          "полив до начала обхода — не полив обхода")
+    log.append(Watering(plant: "фиалка", when: start.addingTimeInterval(60)))
+    marked = Round.mark(marked, log: log, since: start, alive: alive)
+    check(marked[0].mark == .watered && Round.next(marked)?.id == "папоротник",
+          "полили первого — следующий на очереди")
+    marked = Round.skip("папоротник", in: marked)
+    check(marked[1].mark == .skipped && Round.next(marked)?.id == "фикус",
+          "пропустили — дальше, не поливая")
+    check(Round.passed(marked) == 2 && Round.watered(marked) == 1,
+          "пройдено двое, полит один")
+    log.append(Watering(plant: "папоротник", when: start.addingTimeInterval(90)))
+    marked = Round.mark(marked, log: log, since: start, alive: alive)
+    check(marked[1].mark == .watered,
+          "пропущенного полили с экрана растения — полит")
+    marked = Round.mark(marked, log: Array(log.dropLast()), since: start,
+                        alive: alive)
+    check(marked[1].mark == .waiting, "полив отменили — снова ждёт")
+    marked = Round.mark(marked, log: log, since: start,
+                        alive: alive.subtracting(["фикус"]))
+    check(marked[2].mark == .skipped && Round.next(marked) == nil,
+          "растение убрали из сада — пропущено, обход пройден")
+
+    func crowd(_ letter: String) -> [Round.Stop] {
+        Round.stops(in: [Room(
+            name: String(repeating: letter, count: 40),
+            plants: (0 ..< 12).map { _ in
+                Plant(id: UUID().uuidString,
+                      name: String(repeating: letter, count: 40),
+                      species: "x", moisture: 0.1, dryingDays: 5,
+                      addedOn: DateComponents(year: 2024, month: 1, day: 1))
+            })]) { _ in String(repeating: "f", count: 16) + ".jpg" }
+    }
+    let plain = crowd("я")
+    check(plain.count == Round.limit && Round.weight(plain) <= Round.budget,
+          "дюжина длинных русских имён влезает: \(Round.weight(plain)) байт")
+    let heavy = crowd("🌵")
+    check(!heavy.isEmpty && heavy.count < Round.limit
+          && Round.weight(heavy) <= Round.budget,
+          "имена из эмодзи тяжелее — остановок меньше, но в пределах: "
+          + "\(heavy.count), \(Round.weight(heavy)) байт")
+    let back = try? JSONDecoder().decode([Round.Stop].self,
+                                         from: JSONEncoder().encode(marked))
+    check(back == marked, "остановки обхода переживают упаковку")
 }
 
 print("кошкам и собакам:")

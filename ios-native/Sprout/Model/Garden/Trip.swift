@@ -38,6 +38,48 @@ enum Trip {
         return rooms.flatMap(\.plants).filter { !needy.contains($0.id) }
     }
 
+    /// Уезжают обычно не сию минуту: по умолчанию — завтра, в начале
+    /// следующего часа.
+    static func departure(after now: Date = Date(),
+                          calendar: Calendar = .current) -> Date {
+        let tomorrow = calendar.date(byAdding: .day, value: 1, to: now) ?? now
+        return calendar.dateInterval(of: .hour, for: tomorrow)?.end ?? tomorrow
+    }
+
+    /// Живое действие живёт восемь часов — отсчёт до отъезда начинается не
+    /// раньше, иначе погаснет до него.
+    static let countdownSpan: TimeInterval = 8 * 3600
+
+    /// Когда начать отсчёт: сразу, если до отъезда меньше восьми часов, —
+    /// иначе за восемь часов до него. Уехавшему отсчитывать нечего.
+    static func countdownStart(to leave: Date, now: Date = Date()) -> Date? {
+        guard leave > now else { return nil }
+        return max(now, leave.addingTimeInterval(-countdownSpan))
+    }
+
+    /// Полит перед отъездом — если не раньше, чем за полсуток до него.
+    static let fresh: TimeInterval = 12 * 3600
+
+    static func watered(_ rooms: [Room], log: [Watering],
+                        now: Date = Date()) -> Bool {
+        let recent = Set(log.lazy.filter {
+            now.timeIntervalSince($0.when) < fresh
+        }.map(\.plant))
+        return rooms.allSatisfy { room in
+            room.plants.allSatisfy { recent.contains($0.id) }
+        }
+    }
+
+    /// Когда сосед придёт в первый раз.
+    static func firstVisit(_ needs: [Need], leave: Date,
+                           calendar: Calendar = .current) -> Date? {
+        guard let first = needs.compactMap(\.visits.first).min() else {
+            return nil
+        }
+        return calendar.date(byAdding: .day, value: first,
+                             to: calendar.startOfDay(for: leave))
+    }
+
     /// Целых дней между датами — по календарю, а не делением секунд: сутки
     /// бывают в 23 и 25 часов.
     static func days(from leave: Date, to back: Date,

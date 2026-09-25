@@ -101,8 +101,9 @@ struct RootView: View {
                 notch = Self.topInset()
                 Finger.shared.watch()
                 // Пока спали, сад мог полить виджет или кнопка в
-                // уведомлении.
+                // уведомлении — а живые действия могли смахнуть.
                 garden.reload()
+                Task { await Live.shared.sync() }
                 Season.settle(on: settings.seasons)
                 redress()
                 Task { await lock.unlock() }

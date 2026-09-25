@@ -6,13 +6,15 @@ import WidgetKit
 // Виджеты Sprout: «Кого полить» на экран «Домой» — с кнопкой «Полить» у
 // каждого растения — и сводка на экран блокировки. Сад читается из общей
 // папки (`Store`), полив идёт через `WaterFromWidget` — ту же команду знает
-// и приложение.
+// и приложение. Живые действия — в `LiveViews.swift`.
 
 @main
 struct SproutWidgets: WidgetBundle {
     var body: some Widget {
         ThirstWidget()
         ThirstGlance()
+        RoundLive()
+        TripLive()
     }
 }
 
@@ -277,7 +279,7 @@ private struct Leafy: View {
     }
 }
 
-private enum Tone {
+enum Tone {
     static let water = Color(red: 0, green: 0.53, blue: 1)
     static let leaf = Color(red: 0.2, green: 0.62, blue: 0.3)
 

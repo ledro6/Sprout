@@ -8,13 +8,14 @@ struct TripView: View {
     @Environment(Garden.self) private var garden
     @Environment(\.dismiss) private var dismiss
 
-    @State private var leave = Calendar.current.date(
-        byAdding: .day, value: 1, to: Date()) ?? Date()
+    @State private var leave = Trip.departure()
     @State private var back = Calendar.current.date(
         byAdding: .day, value: 8, to: Date()) ?? Date()
 
     /// Полили перед отъездом — кнопка гаснет, чтобы не лить второй раз.
     @State private var watered = false
+
+    @State private var replanning: Task<Void, Never>?
 
     @State private var button = Spot()
 
@@ -50,16 +51,26 @@ struct TripView: View {
             }
         }
         .animation(Motion.enter, value: needs.map(\.plant.id))
+        // Идёт отсчёт — «Уезжаю» открывается на его поездке.
+        .onAppear {
+            if let plan = Live.shared.plan {
+                leave = plan.leave
+                back = plan.back
+            }
+        }
         .onChange(of: leave) { _, now in
             // Вернуться раньше, чем уехал, нельзя — возвращение едет следом.
             if back < now { back = now }
+            replan()
         }
+        .onChange(of: back) { _, _ in replan() }
     }
 
     private var dates: some View {
         SproutGroup("Когда") {
+            // Со временем: до него идёт отсчёт на экране блокировки.
             DatePicker("Уезжаю", selection: $leave, in: Date()...,
-                       displayedComponents: .date)
+                       displayedComponents: [.date, .hourAndMinute])
                 .font(Typography.settingRow)
             SproutDivider()
             DatePicker("Вернусь", selection: $back, in: leave...,
@@ -155,8 +166,64 @@ struct TripView: View {
                 .buttonStyle(.glass)
                 .controlSize(.large)
             }
+
+            countdown
         }
         .sproutRide()
+    }
+
+    /// Отсчёт до отъезда — живое действие на экране блокировки и в Dynamic
+    /// Island, с кнопкой «Полить всех». Живёт оно восемь часов, поэтому до
+    /// дальнего отъезда появляется само, за восемь часов до него.
+    @ViewBuilder
+    private var countdown: some View {
+        let live = Live.shared
+        if live.enabled {
+            VStack(alignment: .leading, spacing: 8) {
+                Button {
+                    if live.counting {
+                        Task { await live.endTrip() }
+                    } else {
+                        Task { await live.startTrip(leave: leave, back: back) }
+                        Feel.done()
+                    }
+                } label: {
+                    Group {
+                        if live.counting {
+                            Label("Убрать отсчёт", systemImage: "timer")
+                        } else {
+                            Label("Отсчёт на экране блокировки",
+                                  systemImage: "timer")
+                        }
+                    }
+                    .font(Typography.detail)
+                    .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.glass)
+                .controlSize(.large)
+                if leave.timeIntervalSinceNow > Trip.countdownSpan {
+                    Text("Отсчёт появится на экране блокировки за 8 часов до отъезда.")
+                        .font(Typography.settingNote)
+                        .foregroundStyle(.secondary)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+            }
+        }
+    }
+
+    /// Даты поменяли, пока идёт отсчёт, — он переходит на новые. Не на каждый
+    /// оборот барабана: секунда тишины — и только тогда.
+    private func replan() {
+        guard Live.shared.counting else { return }
+        replanning?.cancel()
+        let leave = leave
+        let back = back
+        replanning = Task {
+            try? await Task.sleep(for: .seconds(1))
+            guard !Task.isCancelled else { return }
+            await Live.shared.startTrip(leave: leave, back: back)
+        }
     }
 
     /// Всех разом, без плашки «Вернуть»: отменять полив перед отъездом
