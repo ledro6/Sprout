@@ -96,8 +96,8 @@ struct PlantRow: View {
 /// Перетаскивание — системное, через `onDrag`/`onDrop`: свой жест отнял бы
 /// палец у прокрутки. Как на экране «Домой»: долгое нажатие поднимает меню,
 /// а полка начинает качаться, только когда карточку повели или продержали
-/// дольше меню. Соседи расступаются прямо под пальцем — сад переставляет
-/// растения на каждом заходе на чужое место.
+/// дольше меню. Соседи расступаются прямо под пальцем, когда карточку
+/// задержали над чужим местом, — см. `Hover`.
 struct Arrange: ViewModifier {
     let id: Plant.ID
     let look: Settings.Look
@@ -173,6 +173,8 @@ struct Arrange: ViewModifier {
 }
 
 /// Место на полке. Всё живое читает в момент вызова, а не при постройке.
+/// Соседи расступаются не при заходе, а когда карточку над местом
+/// задержали, см. `Hover`.
 private struct Slot: DropDelegate {
     let tenant: Tenant
     let held: Binding<Plant.ID?>
@@ -188,8 +190,16 @@ private struct Slot: DropDelegate {
     /// Первым о заходе узнаёт своё же место — карточку только что повели.
     func dropEntered(info: DropInfo) {
         fly()
-        guard let who = held.wrappedValue, who != tenant.id else { return }
-        move(who, tenant.id)
+        let spot = tenant.id
+        Hover.shared.aim(at: spot) {
+            guard let who = held.wrappedValue, who != spot else { return }
+            move(who, spot)
+        }
+    }
+
+    /// Ушли с места раньше срока — соседи стоят.
+    func dropExited(info: DropInfo) {
+        Hover.shared.leave(tenant.id)
     }
 
     /// Перенос, а не копия: иначе система рисует зелёный плюс.
@@ -197,10 +207,48 @@ private struct Slot: DropDelegate {
         DropProposal(operation: .move)
     }
 
+    /// Отпустили, не дождавшись, — карточка всё равно ложится сюда.
     func performDrop(info: DropInfo) -> Bool {
-        guard held.wrappedValue != nil else { return false }
+        guard let who = held.wrappedValue else { return false }
+        Hover.shared.reset()
+        if who != tenant.id { move(who, tenant.id) }
         drop()
         return true
+    }
+}
+
+/// Над каким местом держат тащимую карточку — одно на всю полку. Место
+/// переставляется, только если карточку над ним задержали
+/// (`Motion.arrangeDwell`): так расступаются значки «Домой». С перестановкой
+/// на первом же заходе полка тасовалась под пальцем на каждом пролёте.
+final class Hover {
+    static let shared = Hover()
+
+    private var spot: Plant.ID?
+    private var wait: Task<Void, Never>?
+
+    private init() {}
+
+    /// Навели на место — переставим, если задержат.
+    func aim(at spot: Plant.ID, then act: @escaping () -> Void) {
+        wait?.cancel()
+        self.spot = spot
+        wait = Task { @MainActor [weak self] in
+            try? await Task.sleep(for: Motion.arrangeDwell)
+            guard !Task.isCancelled, self?.spot == spot else { return }
+            act()
+        }
+    }
+
+    func leave(_ spot: Plant.ID) {
+        guard self.spot == spot else { return }
+        reset()
+    }
+
+    func reset() {
+        wait?.cancel()
+        wait = nil
+        spot = nil
     }
 }
 
@@ -225,6 +273,7 @@ struct Rest: DropDelegate {
 
     func performDrop(info: DropInfo) -> Bool {
         guard held.wrappedValue != nil else { return false }
+        Hover.shared.reset()
         drop()
         return true
     }

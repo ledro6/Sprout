@@ -608,7 +608,7 @@ struct HomeView: View {
     }
 
     private func shift(_ who: Plant.ID, _ spot: Plant.ID) {
-        withAnimation(Motion.arrange) { garden.move(who, to: spot) }
+        withAnimation(Motion.reflow) { garden.move(who, to: spot) }
     }
 
     /// Отпустили — полка качается дальше, но меню уже нет: следующая

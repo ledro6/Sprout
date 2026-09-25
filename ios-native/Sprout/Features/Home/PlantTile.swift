@@ -49,8 +49,9 @@ struct PlantTile: View {
                             arrange: arranges ? arrange : nil))
         // Снаружи меню: меню в правке снимается, и качание внутри него
         // начиналось бы заново. Строка не качается — у неё ручка, как в
-        // списках iOS.
-        .modifier(Jiggle(on: editing && look == .grid,
+        // списках iOS. Место тащимой карточки стоит: это метка, куда она
+        // ляжет, а качаясь под пальцем, она двоилась с поднятой.
+        .modifier(Jiggle(on: editing && look == .grid && dragged != plant.id,
                          phase: plant.pulsePhase))
         .modifier(Arrange(id: plant.id, look: look, on: arranges,
                           held: held, dragged: dragged, move: move,
