@@ -170,5 +170,6 @@ struct TripView: View {
         }
         Cheer.shared.now(from: button.rect)
         Feel.water()
+        Cabinet.shared.deed(.traveler)
     }
 }

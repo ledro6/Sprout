@@ -2817,6 +2817,150 @@ do {
     Season.growing = growing
 }
 
+print("награды:")
+do {
+    var utc = Calendar(identifier: .gregorian)
+    utc.timeZone = TimeZone(identifier: "UTC")!
+    func at(_ day: Int, _ hour: Int, month: Int = 3) -> Date {
+        utc.date(from: DateComponents(year: 2026, month: month, day: day,
+                                      hour: hour))!
+    }
+    let stretch = Season.stretch
+    Season.stretch = 1
+    let since = at(1, 0)
+    // Неделя подряд, каждый день в полдень, вовремя — 30% воды.
+    var log = (1 ... 7).map { Watering(plant: "a", when: at($0, 12), left: 0.3) }
+    var trophies = Trophies.of(log, rooms: [], since: since, now: at(8, 12),
+                               calendar: utc)
+    check(trophies.reached[.firstDrop] == at(1, 12), "первая капля — с первым поливом")
+    check(trophies.reached[.week] == at(7, 12), "неделя подряд — на седьмой день")
+    check(trophies.reached[.tenDrops] == nil, "до десяти поливов далеко")
+    check("\(trophies.count(.tenDrops))", "7", "набрано семь из десяти")
+    check("\(trophies.count(.bullseye))", "7", "семь поливов вовремя подряд")
+    check(trophies.reached[.earlyBird] == nil, "в полдень — не жаворонок")
+    // Пропуск дня рвёт череду, поздний полив — серию вовремя.
+    log.append(Watering(plant: "a", when: at(9, 12), left: 0.1))
+    log += (10 ... 19).map { Watering(plant: "a", when: at($0, 12), left: 0.25) }
+    trophies = Trophies.of(log, rooms: [], since: since, now: at(20, 12),
+                           calendar: utc)
+    check(trophies.reached[.tenDrops] == at(11, 12), "десятый полив — одиннадцатого")
+    check(trophies.reached[.bullseye] == at(19, 12),
+          "десять вовремя подряд — считая после позднего полива")
+    check("\(trophies.count(.week))", "7", "череда длиннее цели — полная полоска")
+    check(trophies.reached[.month] == nil, "месяца подряд ещё нет")
+    // Особые дни.
+    let dawn = [Watering(plant: "a", when: at(3, 5), left: 0.5)]
+    check(Trophies.of(dawn, rooms: [], since: since, now: at(4, 12),
+                      calendar: utc).reached[.earlyBird] == at(3, 5),
+          "полив в пять утра — жаворонок")
+    let night = [Watering(plant: "a", when: at(3, 2), left: 0.5)]
+    check(Trophies.of(night, rooms: [], since: since, now: at(4, 12),
+                      calendar: utc).reached[.nightOwl] == at(3, 2),
+          "полив в два ночи — сова")
+    let eve = [Watering(plant: "a", when: at(31, 23, month: 12), left: 0.5)]
+    check(Trophies.of(eve, rooms: [], since: since,
+                      now: at(31, 23, month: 12),
+                      calendar: utc).reached[.newYear] != nil,
+          "полив 31 декабря — с Новым годом")
+    // Месяц без засухи: полив досуха 10 марта — отсчёт заново.
+    let dry = [Watering(plant: "a", when: at(10, 12), left: 0)]
+    let april = at(15, 12, month: 4)
+    let clean = Trophies.of(dry, rooms: [], since: since, now: april,
+                            calendar: utc)
+    check(clean.reached[.noDrought] == at(9, 12, month: 4),
+          "тридцать дней после засухи — девятого апреля")
+    check("\(clean.count(.noDrought))", "30", "полоска полная")
+    // Растение сухое сейчас: высохло через срок после последнего полива.
+    var parched = Plant.new(name: "Сухарик", species: "Фикус", dryingDays: 3,
+                            id: "d", on: since, calendar: utc)
+    parched.moisture = 0
+    let water = dry + [Watering(plant: "d", when: at(1, 12, month: 4), left: 0.3)]
+    let thirsty = Trophies.of(water, rooms: [Room(name: "Кухня", plants: [parched])],
+                              since: since, now: april, calendar: utc)
+    check(thirsty.reached[.noDrought] == nil,
+          "сухое растение сбивает отсчёт — месяца нет")
+    check("\(thirsty.count(.noDrought))", "13",
+          "высохло второго апреля: тринадцать дней без засухи")
+    // Сад: десять растений и пять видов.
+    let kinds = ["Монстера", "Кактус", "Фикус", "Орхидея", "Алоэ"]
+    let plants = (0 ..< 10).map { index in
+        Plant.new(name: "Р\(index)", species: kinds[index % 5],
+                  dryingDays: 7, id: "p\(index)", on: since, calendar: utc)
+    }
+    let garden = Trophies.of([], rooms: [Room(name: "Зал", plants: plants)],
+                             since: since, now: april, calendar: utc)
+    check(garden.reached[.jungle] == april, "десять растений — джунгли")
+    check(garden.reached[.botanist] == april, "пять видов — ботаник")
+    let small = Trophies.of([], rooms: [Room(name: "Зал",
+                                             plants: Array(plants.prefix(4)))],
+                            since: since, now: april, calendar: utc)
+    check(small.reached[.botanist] == nil && small.count(.botanist) == 4,
+          "четыре вида — ещё не ботаник")
+    Season.stretch = stretch
+
+    // Полка: первая сверка молча, дальше — праздник.
+    let shelf = UserDefaults(suiteName: "sprout-awards-check")!
+    shelf.removePersistentDomain(forName: "sprout-awards-check")
+    let cabinet = Cabinet(store: shelf)
+    cabinet.review(Trophies.of(Array(log.prefix(3)), rooms: [], since: since,
+                               now: at(4, 12), calendar: utc))
+    check(cabinet.has(.firstDrop), "первая капля на полке")
+    check(cabinet.fresh.isEmpty, "первая сверка — без праздника")
+    cabinet.review(trophies)
+    check(cabinet.fresh.contains(.tenDrops) && cabinet.fresh.contains(.week),
+          "новые награды ждут праздника")
+    check(!cabinet.fresh.contains(.firstDrop), "старая второй раз не празднуется")
+    cabinet.deed(.feeder)
+    cabinet.deed(.feeder)
+    check(cabinet.fresh.filter { $0 == .feeder }.count == 1,
+          "подкормка — одна награда, сколько ни подкармливай")
+    cabinet.shown(.tenDrops)
+    check(!cabinet.fresh.contains(.tenDrops), "показанная уходит из очереди")
+    let reopened = Cabinet(store: shelf)
+    check(reopened.has(.tenDrops) && reopened.has(.feeder),
+          "полка переживает перезапуск")
+    check(reopened.earned[.tenDrops] == at(11, 12),
+          "дата — когда условие выполнилось, а не когда заметили")
+    cabinet.review(Trophies.of([], rooms: [], since: since, now: april,
+                               calendar: utc))
+    check(cabinet.has(.week), "награды не отбираются")
+    shelf.removePersistentDomain(forName: "sprout-awards-check")
+
+    // Медаль: барельеф вида, прозрачные углы, металл ярче стали.
+    let size = 64
+    let kit = Botany.grow(.stock(.cactus), species: "Кактус")
+    let relief = Emboss.relief(kit, size: size)
+    let covered = relief.filter { $0 > 0 }
+    check(!covered.isEmpty, "барельеф есть")
+    check(covered.allSatisfy { $0 >= 0.35 && $0 <= 1 },
+          "высоты барельефа — от 0.35 до 1")
+    let share = Double(covered.count) / Double(size * size)
+    check(share > 0.05 && share < 0.4, "растение занимает поле, а не всю медаль")
+    var columns: [Int] = []
+    for (index, value) in relief.enumerated() where value > 0 {
+        columns.append(index % size)
+    }
+    let middle = Double(columns.min()! + columns.max()!) / 2
+    check(abs(middle - Double(size) / 2) < 3, "растение по середине медали")
+    let medal = Emboss.medal(relief, size: size, alloy: .gold)
+    check(medal.ink(at: 0, 0).w == 0, "угол картинки прозрачный")
+    check(medal.ink(at: size / 2, size / 2).w == 1, "середина медали непрозрачная")
+    let steel = Emboss.medal(relief, size: size, alloy: .gold, earned: false)
+    func warmth(_ picture: Picture) -> Float {
+        let ink = picture.ink(at: size / 2, size * 3 / 4)
+        return ink.x - ink.z
+    }
+    check(warmth(medal) > warmth(steel) + 0.1, "золото теплее стали")
+    check(Emboss.flipped(Emboss.flipped(relief, size: size), size: size) == relief,
+          "переворот дважды — как было")
+    let normals = Emboss.normals(relief, size: size)
+    let flat = normals.ink(at: 1, 1)
+    check(abs(flat.x - 0.5) < 0.01 && abs(flat.y - 0.5) < 0.01 && flat.z > 0.99,
+          "поле без барельефа — ровная нормаль")
+    check(Award.Group.allCases.flatMap(\.awards).count == Award.allCases.count,
+          "каждая награда — в своей группе")
+}
+
 print("другие языки:")
 do {
     defer { language = "ru" }

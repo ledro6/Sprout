@@ -59,6 +59,10 @@ struct RootView: View {
             let plants = rooms.flatMap(\.plants)
             Task(priority: .utility) { await Workshop.shared.tend(plants) }
         }
+        // Награды — после каждого полива и смены состава сада. Поливы из
+        // виджета и уведомления приходят с журналом при возвращении.
+        .onChange(of: garden.log.count, initial: true) { _, _ in review() }
+        .onChange(of: garden.roster) { _, _ in review() }
         // Время года — при запуске, при возвращении (мог смениться месяц) и
         // когда его выключают в настройках.
         .onChange(of: settings.seasons, initial: true) { _, on in
@@ -74,6 +78,8 @@ struct RootView: View {
         // приветственном экране.
         .overlay { welcome }
         .overlay(alignment: .top) { badge }
+        // Новая награда — поверх экранов, но под замком.
+        .overlay { celebration }
         // Замок поверх всего: запертый сад не должен мелькнуть даже под
         // заставкой.
         .overlay { padlock }
@@ -116,6 +122,25 @@ struct RootView: View {
                 if settings.calendar { CalendarSync.shared.sync(garden.rooms) }
             }
             remind(active: now == .active)
+        }
+    }
+
+    private func review() {
+        Cabinet.shared.review(Trophies.of(garden.log, rooms: garden.rooms,
+                                          since: garden.since))
+    }
+
+    /// По одной: следующая — после «Отлично». Не под заставкой и не поверх
+    /// знакомства.
+    @ViewBuilder
+    private var celebration: some View {
+        if let award = Cabinet.shared.fresh.first,
+           Launch.shared.step >= Launch.last, settings.toured {
+            Celebration(award: award) {
+                withAnimation(Motion.leave) { Cabinet.shared.shown(award) }
+            }
+            .id(award)
+            .transition(.opacity)
         }
     }
 

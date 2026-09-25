@@ -50,6 +50,7 @@ struct ProfileView: View {
                                 .hintSpot(.profilePerson)
                             plot
                                 .hintSpot(.profilePlot)
+                            awards
                             rivals
                                 .hintSpot(.profileRivals)
                             more
@@ -251,6 +252,49 @@ struct ProfileView: View {
         let from = calendar.startOfDay(for: garden.since)
         let to = calendar.startOfDay(for: Date())
         return max(0, calendar.dateComponents([.day], from: from, to: to).day ?? 0)
+    }
+
+    // MARK: - Награды
+
+    /// Последние медали рядком и ссылка на полку — как сводка в «Фитнесе».
+    private var awards: some View {
+        SproutGroup("Награды") {
+            NavigationLink { AwardsView() } label: {
+                HStack(spacing: 10) {
+                    if latest.isEmpty {
+                        MedalBadge(award: .firstDrop, earned: false)
+                            .frame(width: 44, height: 44)
+                        Text("Первая — за первый полив")
+                            .font(Typography.settingNote)
+                            .foregroundStyle(.secondary)
+                    } else {
+                        ForEach(latest) { award in
+                            MedalBadge(award: award, earned: true)
+                                .frame(width: 44, height: 44)
+                        }
+                    }
+                    Spacer(minLength: 8)
+                    Text(Lang.format("%1$lld из %2$lld",
+                                     Cabinet.shared.earned.count,
+                                     Award.allCases.count))
+                        .font(Typography.settingNote)
+                        .foregroundStyle(.secondary)
+                        .monospacedDigit()
+                    Image(systemName: "chevron.right")
+                        .font(Typography.settingNote)
+                        .foregroundStyle(.tertiary)
+                }
+                .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+        }
+        .sproutRide()
+    }
+
+    /// Четыре последние — больше в строку не встанет.
+    private var latest: [Award] {
+        Cabinet.shared.earned.sorted { $0.value > $1.value }
+            .prefix(4).map(\.key)
     }
 
     // MARK: - Друзья

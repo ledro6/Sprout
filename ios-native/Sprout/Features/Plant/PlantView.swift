@@ -400,6 +400,7 @@ struct PlantView: View {
                     chore(line, due: tending.feedDue, done: "Подкормил",
                           icon: "sparkles", term: .feeding) {
                         garden.feed(plantID)
+                        Cabinet.shared.deed(.feeder)
                     }
                 }
                 if let line = tending.repotLabel {
