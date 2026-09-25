@@ -2961,6 +2961,79 @@ do {
           "каждая награда — в своей группе")
 }
 
+print("итоги года:")
+do {
+    var utc = Calendar(identifier: .gregorian)
+    utc.timeZone = TimeZone(identifier: "UTC")!
+    func at(_ month: Int, _ day: Int, _ hour: Int, year: Int = 2026) -> Date {
+        utc.date(from: DateComponents(year: year, month: month, day: day,
+                                      hour: hour))!
+    }
+    let baksik = Plant.new(name: "Баксик", species: "Монстера", dryingDays: 7,
+                           id: "a", on: at(1, 5, 12), calendar: utc)
+    let lera = Plant.new(name: "Лера", species: "Фикус", dryingDays: 7,
+                         id: "b", on: at(2, 1, 12), calendar: utc)
+    let kesha = Plant.new(name: "Кеша", species: "Кактус", dryingDays: 20,
+                          id: "c", on: at(3, 1, 12), calendar: utc)
+    let old = Plant.new(name: "Дед", species: "Фикус", dryingDays: 9,
+                        id: "d", on: at(6, 1, 12, year: 2025), calendar: utc)
+    let rooms = [Room(name: "Зал", plants: [baksik, lera, kesha, old])]
+    var log = [Watering(plant: "a", when: at(12, 31, 8, year: 2025), left: 0.3)]
+    log += (10 ... 14).map { Watering(plant: "a", when: at(1, $0, 8), left: 0.3) }
+    log += [
+        Watering(plant: "b", when: at(3, 3, 8), left: 0.5),
+        Watering(plant: "b", when: at(3, 4, 8), left: 0.5),
+        Watering(plant: "c", when: at(3, 5, 21), left: 0.1),
+        Watering(plant: "a", when: at(3, 6, 8), left: 0.3),
+        Watering(plant: "x", when: at(3, 7, 13)),
+    ]
+    let recap = Recap.of(log, rooms: rooms,
+                         awards: [.firstDrop: at(1, 10, 8),
+                                  .week: at(12, 31, 8, year: 2025)],
+                         year: 2026, now: at(9, 25, 12), calendar: utc)
+    check("\(recap.waterings)", "10", "поливы года — без прошлогоднего")
+    check("\(recap.days)", "10", "десять дней с поливом")
+    check("\(recap.streak)", "5", "самая длинная череда за год — пять дней")
+    check(recap.favorite?.name ?? "—", "Баксик", "любимчик — кого поливали чаще")
+    check("\(recap.favorite?.count ?? 0)", "6", "шесть поливов любимчика")
+    check(recap.podium.map(\.name) == ["Баксик", "Лера", "Кеша"],
+          "пьедестал — по числу поливов; ушедшего растения нет")
+    check("\(recap.peakHour ?? -1)", "8", "чаще всего — в восемь утра")
+    check(recap.persona == .lark, "восемь утра — жаворонок")
+    check(round2(recap.onTime ?? 0), "0.67",
+          "вовремя — шесть из девяти, где известен остаток")
+    check("\(recap.bestMonth ?? -1)", "0", "поровну — первый из лучших месяцев")
+    check("\(recap.added)", "3", "добавлены в этом году — трое")
+    check("\(recap.plants)", "4", "в саду — четверо")
+    check(recap.awards == [.firstDrop], "награды года — без прошлогодних")
+    check(recap.lit.contains(9) && !recap.lit.contains(8),
+          "десятое января — десятый день года")
+    check("\(recap.length)", "365", "2026 — не високосный")
+    check(recap.deck == [.intro, .waterings, .favorite, .podium, .streak,
+                         .rhythm, .aim, .months, .garden, .awards, .outro],
+          "все слайды, когда есть о чём рассказать")
+    let blank = Recap.of([], rooms: rooms, awards: [:], year: 2026,
+                         now: at(9, 25, 12), calendar: utc)
+    check(blank.deck == [.intro, .garden, .outro],
+          "пустой год — вступление, сад и прощание")
+    check(Recap.Persona(hour: 23) == .owl && Recap.Persona(hour: 2) == .owl,
+          "ночью — сова")
+    check(Recap.Persona(hour: 13) == .day && Recap.Persona(hour: 19) == .evening,
+          "днём — дневной, вечером — вечерний")
+    let notes = recap.melody()
+    check("\(notes.count)", "26", "такт на месяц: два полных и десять по ноте")
+    check(notes.allSatisfy { $0.at >= 0 && $0.at < Recap.length() },
+          "все ноты — внутри мелодии")
+    check(notes.allSatisfy { $0.pitch >= 220 && $0.pitch < 1_800 },
+          "ноты — в мягком регистре шкатулки")
+    let sound = Spheres.render(notes, seconds: Recap.length())
+    let loud = sound.map { abs($0) }.max() ?? 0
+    check(loud > 0.05 && loud <= 1, "мелодия звучит и не хрипит")
+    check("\(sound.count)",
+          "\(Int((Recap.length() + Spheres.tail) * Double(Spheres.rate)) * 2)",
+          "длина — такты и хвост зала, стерео")
+}
+
 print("другие языки:")
 do {
     defer { language = "ru" }

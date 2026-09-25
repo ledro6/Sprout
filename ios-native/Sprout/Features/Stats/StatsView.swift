@@ -33,6 +33,9 @@ struct StatsView: View {
 
     @State private var board: Board = .most
 
+    /// «Итоги года» открыты — во весь экран, поверх вкладок.
+    @State private var recapping = false
+
     /// Список растений: кого поливают чаще, кого реже, кто суше всех.
     enum Board: String, CaseIterable, Identifiable {
         case most, least, driest
@@ -56,6 +59,9 @@ struct StatsView: View {
 
     private let calendar = Calendar.current
 
+    /// Итоги — за нынешний год: до декабря — с января по сегодня.
+    private var year: Int { calendar.component(.year, from: Date()) }
+
     var body: some View {
         NavigationStack(path: $path) {
             ScrollViewReader { reader in
@@ -69,6 +75,11 @@ struct StatsView: View {
                             } else {
                                 picker.hintSpot(.statsPeriod)
                                 now.hintSpot(.statsNow)
+                                Button { recapping = true } label: {
+                                    RecapTeaser(year: year)
+                                }
+                                .buttonStyle(.plain)
+                                .sproutRide()
                                 NavigationLink(value: StatsRoute.orrery) {
                                     OrreryTeaser()
                                 }
@@ -108,6 +119,11 @@ struct StatsView: View {
             }
         }
         .onAppear { recount() }
+        .fullScreenCover(isPresented: $recapping) {
+            RecapView(recap: Recap.of(garden.log, rooms: garden.rooms,
+                                      awards: Cabinet.shared.earned,
+                                      year: year))
+        }
         .onChange(of: garden.log.count) {
             withAnimation(Motion.number) { recount() }
         }

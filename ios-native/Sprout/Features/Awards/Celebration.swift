@@ -99,12 +99,14 @@ private struct Glitter: View {
         let t = time - delay
         guard t > 0 else { return }
         let fall = 180 + unit(2) * 220
-        let x = unit(3) * size.width + sin(t * (1.5 + unit(4) * 2)) * 18
-        let y = -20 + t * fall + 60 * t * t
-        guard y < size.height + 20 else { return }
+        let wobble = sin(t * (1.5 + unit(4) * 2)) * 18
+        let x = CGFloat(unit(3) * Double(size.width) + wobble)
+        let drop = -20 + t * fall + 60 * t * t
+        guard drop < Double(size.height) + 20 else { return }
+        let y = CGFloat(drop)
         let fade = max(0, 1 - t / (Self.seconds - delay))
         let spin = t * (3 + unit(5) * 5) + unit(6) * .pi
-        let side = 5 + unit(7) * 6
+        let side = CGFloat(5 + unit(7) * 6)
         let sparkle = index % 4 == 0
         let tone = Channels.mix(alloy.dark, alloy.light, 0.4 + unit(8) * 0.6)
         let colour = sparkle ? Color.white
@@ -115,7 +117,7 @@ private struct Glitter: View {
         piece.translateBy(x: x, y: y)
         piece.rotate(by: .radians(spin))
         // Плоский квадратик, повёрнутый ребром, — сжат по одной оси.
-        piece.scaleBy(x: 1, y: abs(cos(spin * 0.7)) * 0.8 + 0.2)
+        piece.scaleBy(x: 1, y: CGFloat(abs(cos(spin * 0.7)) * 0.8 + 0.2))
         let rect = CGRect(x: -side / 2, y: -side / 2, width: side,
                           height: sparkle ? side / 2 : side)
         piece.fill(Path(roundedRect: rect, cornerRadius: 1.2),
