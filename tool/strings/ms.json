@@ -635,5 +635,11 @@
   "Посмотрите на растение у себя в комнате, сделайте ему свою модель — по фото или сканом — или поменяйте кличку, вид и срок полива.": "Lihat tumbuhan di bilik anda, buatkan model sendiri — daripada foto atau imbasan — atau tukar nama, spesies dan selang siraman.",
   "Назовитесь — приложение будет здороваться по имени. Нажмите на кружок, чтобы поставить фото.": "Beritahu nama anda — aplikasi akan menyapa anda dengannya. Ketik bulatan untuk meletakkan foto.",
   "Телефон узнает растение на снимке и придумает его модель: возьмёт цвета листьев, цветов и горшка, густоту и рост. Всё считается на телефоне, без сети, — за пару секунд.": "Telefon akan mengecam tumbuhan dalam foto dan membayangkan modelnya: warna daun, bunga dan pasu, kepadatan dan ketinggian. Semuanya dikira dalam telefon, tanpa internet, dalam beberapa saat.",
-  "Обойдите растение с телефоном по кругу — получится его точная объёмная копия. Съёмка займёт пару минут, сборка модели — ещё несколько; всё на телефоне.": "Kelilingi tumbuhan dengan telefon — anda akan mendapat salinan 3D yang tepat. Rakaman mengambil beberapa minit, pembinaan model beberapa minit lagi; semuanya dalam telefon."
+  "Обойдите растение с телефоном по кругу — получится его точная объёмная копия. Съёмка займёт пару минут, сборка модели — ещё несколько; всё на телефоне.": "Kelilingi tumbuhan dengan telefon — anda akan mendapat salinan 3D yang tepat. Rakaman mengambil beberapa minit, pembinaan model beberapa minit lagi; semuanya dalam telefon.",
+  "Безопасно для кошек и собак": "Selamat untuk kucing dan anjing",
+  "Ядовито для кошек и собак": "Beracun kepada kucing dan anjing",
+  "Смертельно опасно для кошек": "Maut bagi kucing",
+  "Смертельно опасно для кошек и собак": "Maut bagi kucing dan anjing",
+  "Кошкам и собакам": "Kucing dan anjing",
+  "Можно ли ставить растение туда, где до него доберётся питомец. По базе ASPCA, которой пользуются ветеринары. Съел лист ядовитого — сразу к ветеринару.": "Sama ada tumbuhan boleh diletakkan di tempat yang dapat dicapai haiwan peliharaan. Berdasarkan pangkalan data ASPCA yang digunakan oleh doktor haiwan. Jika termakan daun tumbuhan beracun — segera ke doktor haiwan."
 }

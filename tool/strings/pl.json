@@ -715,5 +715,11 @@
   "Посмотрите на растение у себя в комнате, сделайте ему свою модель — по фото или сканом — или поменяйте кличку, вид и срок полива.": "Zobacz roślinę u siebie w pokoju, zrób jej własny model – ze zdjęcia lub skanu – albo zmień imię, gatunek i odstęp podlewania.",
   "Назовитесь — приложение будет здороваться по имени. Нажмите на кружок, чтобы поставить фото.": "Przedstaw się – aplikacja będzie witać cię po imieniu. Stuknij kółko, by dodać zdjęcie.",
   "Телефон узнает растение на снимке и придумает его модель: возьмёт цвета листьев, цветов и горшка, густоту и рост. Всё считается на телефоне, без сети, — за пару секунд.": "Telefon rozpozna roślinę na zdjęciu i wymyśli jej model: kolory liści, kwiatów i doniczki, gęstość i wysokość. Wszystko liczy się w telefonie, bez sieci, w kilka sekund.",
-  "Обойдите растение с телефоном по кругу — получится его точная объёмная копия. Съёмка займёт пару минут, сборка модели — ещё несколько; всё на телефоне.": "Obejdź roślinę z telefonem – powstanie jej dokładna kopia 3D. Zdjęcia zajmą parę minut, składanie modelu jeszcze kilka; wszystko w telefonie."
+  "Обойдите растение с телефоном по кругу — получится его точная объёмная копия. Съёмка займёт пару минут, сборка модели — ещё несколько; всё на телефоне.": "Obejdź roślinę z telefonem – powstanie jej dokładna kopia 3D. Zdjęcia zajmą parę minut, składanie modelu jeszcze kilka; wszystko w telefonie.",
+  "Безопасно для кошек и собак": "Bezpieczna dla kotów i psów",
+  "Ядовито для кошек и собак": "Trująca dla kotów i psów",
+  "Смертельно опасно для кошек": "Śmiertelnie groźna dla kotów",
+  "Смертельно опасно для кошек и собак": "Śmiertelnie groźna dla kotów i psów",
+  "Кошкам и собакам": "Koty i psy",
+  "Можно ли ставить растение туда, где до него доберётся питомец. По базе ASPCA, которой пользуются ветеринары. Съел лист ядовитого — сразу к ветеринару.": "Czy roślinę można postawić tam, gdzie dosięgnie jej zwierzak. Według bazy ASPCA, z której korzystają weterynarze. Zjadł liść trującej rośliny — od razu do weterynarza."
 }

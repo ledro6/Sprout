@@ -635,5 +635,11 @@
   "Посмотрите на растение у себя в комнате, сделайте ему свою модель — по фото или сканом — или поменяйте кличку, вид и срок полива.": "Lihat tanaman di ruangan Anda, buatkan model sendiri — dari foto atau pindaian — atau ubah nama, jenis, dan jarak penyiraman.",
   "Назовитесь — приложение будет здороваться по имени. Нажмите на кружок, чтобы поставить фото.": "Sebutkan nama Anda — aplikasi akan menyapa Anda dengannya. Ketuk lingkaran untuk memasang foto.",
   "Телефон узнает растение на снимке и придумает его модель: возьмёт цвета листьев, цветов и горшка, густоту и рост. Всё считается на телефоне, без сети, — за пару секунд.": "Ponsel akan mengenali tanaman di foto dan membayangkan modelnya: warna daun, bunga, dan pot, kerapatan dan tinggi. Semua dihitung di ponsel, tanpa internet, dalam beberapa detik.",
-  "Обойдите растение с телефоном по кругу — получится его точная объёмная копия. Съёмка займёт пару минут, сборка модели — ещё несколько; всё на телефоне.": "Kelilingi tanaman dengan ponsel — Anda akan mendapat salinan 3D-nya yang persis. Pengambilan gambar butuh beberapa menit, penyusunan model beberapa menit lagi; semua di ponsel."
+  "Обойдите растение с телефоном по кругу — получится его точная объёмная копия. Съёмка займёт пару минут, сборка модели — ещё несколько; всё на телефоне.": "Kelilingi tanaman dengan ponsel — Anda akan mendapat salinan 3D-nya yang persis. Pengambilan gambar butuh beberapa menit, penyusunan model beberapa menit lagi; semua di ponsel.",
+  "Безопасно для кошек и собак": "Aman untuk kucing dan anjing",
+  "Ядовито для кошек и собак": "Beracun bagi kucing dan anjing",
+  "Смертельно опасно для кошек": "Mematikan bagi kucing",
+  "Смертельно опасно для кошек и собак": "Mematikan bagi kucing dan anjing",
+  "Кошкам и собакам": "Kucing dan anjing",
+  "Можно ли ставить растение туда, где до него доберётся питомец. По базе ASPCA, которой пользуются ветеринары. Съел лист ядовитого — сразу к ветеринару.": "Apakah tanaman boleh diletakkan di tempat yang bisa dijangkau hewan peliharaan. Berdasarkan basis data ASPCA yang dipakai dokter hewan. Kalau hewan memakan daun tanaman beracun, segera ke dokter hewan."
 }

@@ -699,5 +699,11 @@
   "Посмотрите на растение у себя в комнате, сделайте ему свою модель — по фото или сканом — или поменяйте кличку, вид и срок полива.": "Pozrite si rastlinu u seba v izbe, urobte jej vlastný model – z fotky alebo skenom – alebo zmeňte meno, druh a interval polievania.",
   "Назовитесь — приложение будет здороваться по имени. Нажмите на кружок, чтобы поставить фото.": "Predstavte sa – aplikácia vás bude zdraviť menom. Klepnutím na krúžok nastavíte fotku.",
   "Телефон узнает растение на снимке и придумает его модель: возьмёт цвета листьев, цветов и горшка, густоту и рост. Всё считается на телефоне, без сети, — за пару секунд.": "Telefón rozpozná rastlinu na fotke a vymyslí jej model: farby listov, kvetov a kvetináča, hustotu a výšku. Všetko sa počíta v telefóne, bez siete, za pár sekúnd.",
-  "Обойдите растение с телефоном по кругу — получится его точная объёмная копия. Съёмка займёт пару минут, сборка модели — ещё несколько; всё на телефоне.": "Obíďte rastlinu s telefónom dookola – vznikne jej presná 3D kópia. Snímanie potrvá pár minút, zostavenie modelu ďalších pár; všetko v telefóne."
+  "Обойдите растение с телефоном по кругу — получится его точная объёмная копия. Съёмка займёт пару минут, сборка модели — ещё несколько; всё на телефоне.": "Obíďte rastlinu s telefónom dookola – vznikne jej presná 3D kópia. Snímanie potrvá pár minút, zostavenie modelu ďalších pár; všetko v telefóne.",
+  "Безопасно для кошек и собак": "Bezpečné pre mačky a psy",
+  "Ядовито для кошек и собак": "Jedovaté pre mačky a psy",
+  "Смертельно опасно для кошек": "Smrteľne nebezpečné pre mačky",
+  "Смертельно опасно для кошек и собак": "Smrteľne nebezpečné pre mačky a psy",
+  "Кошкам и собакам": "Mačky a psy",
+  "Можно ли ставить растение туда, где до него доберётся питомец. По базе ASPCA, которой пользуются ветеринары. Съел лист ядовитого — сразу к ветеринару.": "Či môže rastlina stáť tam, kam dosiahne domáce zviera. Podľa databázy ASPCA, ktorú používajú veterinári. Zjedlo list jedovatej rastliny? Hneď k veterinárovi."
 }

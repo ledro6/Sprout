@@ -715,5 +715,11 @@
   "Посмотрите на растение у себя в комнате, сделайте ему свою модель — по фото или сканом — или поменяйте кличку, вид и срок полива.": "Oglejte si rastlino v svoji sobi, naredite ji svoj model – po fotografiji ali s skeniranjem – ali spremenite ime, vrsto in razmik zalivanja.",
   "Назовитесь — приложение будет здороваться по имени. Нажмите на кружок, чтобы поставить фото.": "Predstavite se – aplikacija vas bo pozdravljala z imenom. Tapnite krog, da nastavite fotografijo.",
   "Телефон узнает растение на снимке и придумает его модель: возьмёт цвета листьев, цветов и горшка, густоту и рост. Всё считается на телефоне, без сети, — за пару секунд.": "Telefon bo prepoznal rastlino na fotografiji in si zamislil njen model: barve listov, cvetov in lonca, gostoto in višino. Vse se izračuna na telefonu, brez omrežja, v nekaj sekundah.",
-  "Обойдите растение с телефоном по кругу — получится его точная объёмная копия. Съёмка займёт пару минут, сборка модели — ещё несколько; всё на телефоне.": "Obhodite rastlino s telefonom – nastala bo njena natančna 3D-kopija. Snemanje traja nekaj minut, sestavljanje modela še nekaj; vse na telefonu."
+  "Обойдите растение с телефоном по кругу — получится его точная объёмная копия. Съёмка займёт пару минут, сборка модели — ещё несколько; всё на телефоне.": "Obhodite rastlino s telefonom – nastala bo njena natančna 3D-kopija. Snemanje traja nekaj minut, sestavljanje modela še nekaj; vse na telefonu.",
+  "Безопасно для кошек и собак": "Varno za mačke in pse",
+  "Ядовито для кошек и собак": "Strupeno za mačke in pse",
+  "Смертельно опасно для кошек": "Smrtno nevarno za mačke",
+  "Смертельно опасно для кошек и собак": "Smrtno nevarno za mačke in pse",
+  "Кошкам и собакам": "Mačke in psi",
+  "Можно ли ставить растение туда, где до него доберётся питомец. По базе ASPCA, которой пользуются ветеринары. Съел лист ядовитого — сразу к ветеринару.": "Ali lahko rastlina stoji tam, kamor seže hišni ljubljenček. Po podatkovni zbirki ASPCA, ki jo uporabljajo veterinarji. Če je pojedel list strupene rastline — takoj k veterinarju."
 }

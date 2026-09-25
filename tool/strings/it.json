@@ -683,5 +683,11 @@
   "Посмотрите на растение у себя в комнате, сделайте ему свою модель — по фото или сканом — или поменяйте кличку, вид и срок полива.": "Guarda la pianta nella tua stanza, dalle un modello tutto suo, da foto o da scansione, oppure cambia nome, specie e intervallo di annaffiatura.",
   "Назовитесь — приложение будет здороваться по имени. Нажмите на кружок, чтобы поставить фото.": "Presentati: l’app ti saluterà per nome. Tocca il cerchio per mettere una foto.",
   "Телефон узнает растение на снимке и придумает его модель: возьмёт цвета листьев, цветов и горшка, густоту и рост. Всё считается на телефоне, без сети, — за пару секунд.": "Il telefono riconoscerà la pianta nella foto e ne immaginerà il modello: colori di foglie, fiori e vaso, densità e altezza. Tutto sul telefono, offline, in un paio di secondi.",
-  "Обойдите растение с телефоном по кругу — получится его точная объёмная копия. Съёмка займёт пару минут, сборка модели — ещё несколько; всё на телефоне.": "Gira intorno alla pianta con il telefono e otterrai la sua copia 3D esatta. La ripresa richiede un paio di minuti, la costruzione del modello qualcuno in più; tutto sul telefono."
+  "Обойдите растение с телефоном по кругу — получится его точная объёмная копия. Съёмка займёт пару минут, сборка модели — ещё несколько; всё на телефоне.": "Gira intorno alla pianta con il telefono e otterrai la sua copia 3D esatta. La ripresa richiede un paio di minuti, la costruzione del modello qualcuno in più; tutto sul telefono.",
+  "Безопасно для кошек и собак": "Innocua per gatti e cani",
+  "Ядовито для кошек и собак": "Tossica per gatti e cani",
+  "Смертельно опасно для кошек": "Letale per i gatti",
+  "Смертельно опасно для кошек и собак": "Letale per gatti e cani",
+  "Кошкам и собакам": "Gatti e cani",
+  "Можно ли ставить растение туда, где до него доберётся питомец. По базе ASPCA, которой пользуются ветеринары. Съел лист ядовитого — сразу к ветеринару.": "Se la pianta può stare dove arriva un animale domestico. Secondo la banca dati dell’ASPCA, quella usata dai veterinari. Se ha mangiato una foglia di una pianta tossica, subito dal veterinario."
 }

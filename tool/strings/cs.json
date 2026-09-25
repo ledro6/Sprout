@@ -699,5 +699,11 @@
   "Посмотрите на растение у себя в комнате, сделайте ему свою модель — по фото или сканом — или поменяйте кличку, вид и срок полива.": "Prohlédněte si rostlinu u sebe v pokoji, udělejte jí vlastní model – z fotky nebo skenem – nebo změňte jméno, druh a interval zálivky.",
   "Назовитесь — приложение будет здороваться по имени. Нажмите на кружок, чтобы поставить фото.": "Představte se – aplikace vás bude zdravit jménem. Klepnutím na kroužek nastavíte fotku.",
   "Телефон узнает растение на снимке и придумает его модель: возьмёт цвета листьев, цветов и горшка, густоту и рост. Всё считается на телефоне, без сети, — за пару секунд.": "Telefon pozná rostlinu na fotce a vymyslí její model: barvy listů, květů a květináče, hustotu a výšku. Vše se počítá v telefonu, bez sítě, za pár sekund.",
-  "Обойдите растение с телефоном по кругу — получится его точная объёмная копия. Съёмка займёт пару минут, сборка модели — ещё несколько; всё на телефоне.": "Obejděte rostlinu s telefonem dokola – vznikne její přesná 3D kopie. Snímání zabere pár minut, sestavení modelu dalších pár; vše v telefonu."
+  "Обойдите растение с телефоном по кругу — получится его точная объёмная копия. Съёмка займёт пару минут, сборка модели — ещё несколько; всё на телефоне.": "Obejděte rostlinu s telefonem dokola – vznikne její přesná 3D kopie. Snímání zabere pár minut, sestavení modelu dalších pár; vše v telefonu.",
+  "Безопасно для кошек и собак": "Bezpečné pro kočky a psy",
+  "Ядовито для кошек и собак": "Jedovaté pro kočky a psy",
+  "Смертельно опасно для кошек": "Smrtelně nebezpečné pro kočky",
+  "Смертельно опасно для кошек и собак": "Smrtelně nebezpečné pro kočky a psy",
+  "Кошкам и собакам": "Kočky a psi",
+  "Можно ли ставить растение туда, где до него доберётся питомец. По базе ASPCA, которой пользуются ветеринары. Съел лист ядовитого — сразу к ветеринару.": "Zda může rostlina stát tam, kam dosáhne domácí mazlíček. Podle databáze ASPCA, kterou používají veterináři. Snědl list jedovaté rostliny? Hned k veterináři."
 }

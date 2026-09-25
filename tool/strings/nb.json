@@ -683,5 +683,11 @@
   "Посмотрите на растение у себя в комнате, сделайте ему свою модель — по фото или сканом — или поменяйте кличку, вид и срок полива.": "Se planten i rommet ditt, gi den sin egen modell – fra bilde eller skanning – eller endre navn, art og vanningsintervall.",
   "Назовитесь — приложение будет здороваться по имени. Нажмите на кружок, чтобы поставить фото.": "Si hva du heter – appen hilser på deg med navn. Trykk på sirkelen for å sette et bilde.",
   "Телефон узнает растение на снимке и придумает его модель: возьмёт цвета листьев, цветов и горшка, густоту и рост. Всё считается на телефоне, без сети, — за пару секунд.": "Telefonen kjenner igjen planten på bildet og forestiller seg modellen: farger på blader, blomster og potte, tetthet og høyde. Alt regnes på telefonen, uten nett, på et par sekunder.",
-  "Обойдите растение с телефоном по кругу — получится его точная объёмная копия. Съёмка займёт пару минут, сборка модели — ещё несколько; всё на телефоне.": "Gå rundt planten med telefonen – så får du en nøyaktig 3D-kopi. Opptaket tar et par minutter og byggingen av modellen noen til; alt på telefonen."
+  "Обойдите растение с телефоном по кругу — получится его точная объёмная копия. Съёмка займёт пару минут, сборка модели — ещё несколько; всё на телефоне.": "Gå rundt planten med telefonen – så får du en nøyaktig 3D-kopi. Opptaket tar et par minutter og byggingen av modellen noen til; alt på telefonen.",
+  "Безопасно для кошек и собак": "Trygg for katter og hunder",
+  "Ядовито для кошек и собак": "Giftig for katter og hunder",
+  "Смертельно опасно для кошек": "Livsfarlig for katter",
+  "Смертельно опасно для кошек и собак": "Livsfarlig for katter og hunder",
+  "Кошкам и собакам": "Katter og hunder",
+  "Можно ли ставить растение туда, где до него доберётся питомец. По базе ASPCA, которой пользуются ветеринары. Съел лист ядовитого — сразу к ветеринару.": "Om planten kan stå der et kjæledyr når den. Etter databasen til ASPCA, som veterinærer bruker. Har dyret spist et blad av en giftig plante, rett til veterinæren."
 }

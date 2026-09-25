@@ -12689,6 +12689,293 @@
         }
       }
     },
+    "Безопасно для кошек и собак": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "آمن للقطط والكلاب"
+          }
+        },
+        "bg": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Безопасно за котки и кучета"
+          }
+        },
+        "bn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "বিড়াল ও কুকুরের জন্য নিরাপদ"
+          }
+        },
+        "ca": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Segura per a gats i gossos"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bezpečné pro kočky a psy"
+          }
+        },
+        "da": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sikker for katte og hunde"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unbedenklich für Katzen und Hunde"
+          }
+        },
+        "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ασφαλές για γάτες και σκύλους"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Safe for cats and dogs"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Segura para gatos y perros"
+          }
+        },
+        "fi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Turvallinen kissoille ja koirille"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sans danger pour les chats et les chiens"
+          }
+        },
+        "gu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "બિલાડી અને કૂતરા માટે સુરક્ષિત"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "בטוח לחתולים ולכלבים"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "बिल्लियों और कुत्तों के लिए सुरक्षित"
+          }
+        },
+        "hr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sigurno za mačke i pse"
+          }
+        },
+        "hu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Biztonságos macskáknak és kutyáknak"
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aman untuk kucing dan anjing"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Innocua per gatti e cani"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "猫と犬に安全"
+          }
+        },
+        "kk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Мысықтар мен иттерге қауіпсіз"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ಬೆಕ್ಕು ಮತ್ತು ನಾಯಿಗಳಿಗೆ ಸುರಕ್ಷಿತ"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "고양이와 개에게 안전"
+          }
+        },
+        "lt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saugu katėms ir šunims"
+          }
+        },
+        "ml": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "പൂച്ചകൾക്കും നായകൾക്കും സുരക്ഷിതം"
+          }
+        },
+        "mr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "मांजरी आणि कुत्र्यांसाठी सुरक्षित"
+          }
+        },
+        "ms": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Selamat untuk kucing dan anjing"
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Trygg for katter og hunder"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Veilig voor katten en honden"
+          }
+        },
+        "or": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ବିରାଡ଼ି ଓ କୁକୁରଙ୍କ ପାଇଁ ସୁରକ୍ଷିତ"
+          }
+        },
+        "pa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ਬਿੱਲੀਆਂ ਅਤੇ ਕੁੱਤਿਆਂ ਲਈ ਸੁਰੱਖਿਅਤ"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bezpieczna dla kotów i psów"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Segura para gatos e cachorros"
+          }
+        },
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Segura para gatos e cães"
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sigură pentru pisici și câini"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bezpečné pre mačky a psy"
+          }
+        },
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Varno za mačke in pse"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ofarlig för katter och hundar"
+          }
+        },
+        "ta": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "பூனைகளுக்கும் நாய்களுக்கும் பாதுகாப்பானது"
+          }
+        },
+        "te": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "పిల్లులు, కుక్కలకు సురక్షితం"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ปลอดภัยสำหรับแมวและสุนัข"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kediler ve köpekler için güvenli"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Безпечно для котів і собак"
+          }
+        },
+        "ur": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "بلیوں اور کتوں کے لیے محفوظ"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "An toàn cho mèo và chó"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "对猫狗安全"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "對貓狗安全"
+          }
+        }
+      }
+    },
     "Бирюзовый": {
       "extractionState": "manual",
       "localizations": {
@@ -61499,6 +61786,293 @@
         }
       }
     },
+    "Кошкам и собакам": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "القطط والكلاب"
+          }
+        },
+        "bg": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Котки и кучета"
+          }
+        },
+        "bn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "বিড়াল ও কুকুর"
+          }
+        },
+        "ca": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gats i gossos"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kočky a psi"
+          }
+        },
+        "da": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Katte og hunde"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Katzen und Hunde"
+          }
+        },
+        "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Γάτες και σκύλοι"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cats and dogs"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gatos y perros"
+          }
+        },
+        "fi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kissat ja koirat"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chats et chiens"
+          }
+        },
+        "gu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "બિલાડી અને કૂતરા"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "חתולים וכלבים"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "बिल्लियाँ और कुत्ते"
+          }
+        },
+        "hr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mačke i psi"
+          }
+        },
+        "hu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Macskák és kutyák"
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kucing dan anjing"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gatti e cani"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "猫と犬"
+          }
+        },
+        "kk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Мысықтар мен иттер"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ಬೆಕ್ಕು ಮತ್ತು ನಾಯಿಗಳು"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "고양이와 개"
+          }
+        },
+        "lt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Katės ir šunys"
+          }
+        },
+        "ml": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "പൂച്ചകളും നായകളും"
+          }
+        },
+        "mr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "मांजरी आणि कुत्रे"
+          }
+        },
+        "ms": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kucing dan anjing"
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Katter og hunder"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Katten en honden"
+          }
+        },
+        "or": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ବିରାଡ଼ି ଓ କୁକୁର"
+          }
+        },
+        "pa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ਬਿੱਲੀਆਂ ਅਤੇ ਕੁੱਤੇ"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Koty i psy"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gatos e cachorros"
+          }
+        },
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gatos e cães"
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pisici și câini"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mačky a psy"
+          }
+        },
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mačke in psi"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Katter och hundar"
+          }
+        },
+        "ta": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "பூனைகளும் நாய்களும்"
+          }
+        },
+        "te": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "పిల్లులు, కుక్కలు"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "แมวและสุนัข"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kediler ve köpekler"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Котам і собакам"
+          }
+        },
+        "ur": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "بلیاں اور کتے"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mèo và chó"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "猫和狗"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "貓和狗"
+          }
+        }
+      }
+    },
     "Круг пройден. Можно ещё один — пониже или повыше": {
       "extractionState": "manual",
       "localizations": {
@@ -70392,6 +70966,293 @@
           "stringUnit": {
             "state": "translated",
             "value": "植物模型"
+          }
+        }
+      }
+    },
+    "Можно ли ставить растение туда, где до него доберётся питомец. По базе ASPCA, которой пользуются ветеринары. Съел лист ядовитого — сразу к ветеринару.": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "هل يمكن وضع النبتة حيث يصل إليها حيوانك الأليف. وفق قاعدة بيانات ASPCA التي يعتمد عليها الأطباء البيطريون. إذا أكل ورقة من نبتة سامة — فإلى الطبيب البيطري فورًا."
+          }
+        },
+        "bg": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Може ли растението да стои там, където домашният любимец ще го стигне. По базата на ASPCA, която ползват ветеринарите. Изял е лист от отровно растение — веднага при ветеринар."
+          }
+        },
+        "bn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "গাছটি এমন জায়গায় রাখা যায় কি না, যেখানে পোষা প্রাণী পৌঁছাতে পারে। পশুচিকিৎসকেরা যে ASPCA ডেটাবেস ব্যবহার করেন, তার ভিত্তিতে। বিষাক্ত গাছের পাতা খেয়ে ফেললে — সঙ্গে সঙ্গে পশুচিকিৎসকের কাছে যান।"
+          }
+        },
+        "ca": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Si la planta pot estar on hi arribi una mascota. Segons la base de dades de l’ASPCA, la que fan servir els veterinaris. Si se n’ha menjat una fulla d’una planta tòxica, de seguida al veterinari."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zda může rostlina stát tam, kam dosáhne domácí mazlíček. Podle databáze ASPCA, kterou používají veterináři. Snědl list jedovaté rostliny? Hned k veterináři."
+          }
+        },
+        "da": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Om planten kan stå, hvor et kæledyr kan nå den. Ifølge ASPCA’s database, som dyrlæger bruger. Har dyret spist et blad af en giftig plante, så straks til dyrlægen."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ob die Pflanze dort stehen darf, wo ein Haustier sie erreicht. Nach der Datenbank der ASPCA, mit der Tierärzte arbeiten. Hat es ein Blatt einer giftigen Pflanze gefressen – sofort zum Tierarzt."
+          }
+        },
+        "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Αν το φυτό μπορεί να μπει εκεί όπου φτάνει ένα κατοικίδιο. Σύμφωνα με τη βάση δεδομένων της ASPCA, που χρησιμοποιούν οι κτηνίατροι. Αν έφαγε φύλλο τοξικού φυτού — αμέσως στον κτηνίατρο."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Whether the plant can stand where a pet can reach it. Based on the ASPCA database that vets rely on. If a pet ate a leaf of a toxic plant, go to the vet right away."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Si la planta puede estar donde llegue una mascota. Según la base de datos de la ASPCA, la que usan los veterinarios. Si se comió una hoja de una planta tóxica, al veterinario enseguida."
+          }
+        },
+        "fi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Voiko kasvin sijoittaa paikkaan, johon lemmikki ylettyy. ASPCA:n tietokannan mukaan, jota eläinlääkärit käyttävät. Jos lemmikki söi myrkyllisen kasvin lehden, heti eläinlääkäriin."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Peut-on placer la plante là où un animal peut l’atteindre. D’après la base de données de l’ASPCA, celle qu’utilisent les vétérinaires. S’il a mangé une feuille d’une plante toxique, direction le vétérinaire sans attendre."
+          }
+        },
+        "gu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "છોડને એવી જગ્યાએ રાખી શકાય કે નહીં, જ્યાં પાળતુ પ્રાણી પહોંચી શકે. પશુચિકિત્સકો જે ASPCA ડેટાબેઝનો ઉપયોગ કરે છે તેના આધારે. ઝેરી છોડનું પાન ખાઈ ગયું હોય — તો તરત પશુચિકિત્સક પાસે જાઓ."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "האם אפשר להעמיד את הצמח במקום שחיית המחמד מגיעה אליו. לפי מאגר ה-ASPCA שבו משתמשים וטרינרים. אכל עלה של צמח רעיל — מיד לווטרינר."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "क्या पौधे को ऐसी जगह रखा जा सकता है जहाँ पालतू जानवर पहुँच सके। पशु-चिकित्सक जिस ASPCA डेटाबेस का इस्तेमाल करते हैं, उसके अनुसार। ज़हरीले पौधे का पत्ता खा लिया हो — तो तुरंत पशु-चिकित्सक के पास जाएँ।"
+          }
+        },
+        "hr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Smije li biljka stajati ondje gdje do nje može doći ljubimac. Prema bazi podataka ASPCA koju koriste veterinari. Pojede li list otrovne biljke — odmah veterinaru."
+          }
+        },
+        "hu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tehető-e a növény oda, ahol a háziállat eléri. Az ASPCA adatbázisa alapján, amelyet az állatorvosok használnak. Ha mérgező növény levelét ette meg, azonnal állatorvoshoz."
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apakah tanaman boleh diletakkan di tempat yang bisa dijangkau hewan peliharaan. Berdasarkan basis data ASPCA yang dipakai dokter hewan. Kalau hewan memakan daun tanaman beracun, segera ke dokter hewan."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Se la pianta può stare dove arriva un animale domestico. Secondo la banca dati dell’ASPCA, quella usata dai veterinari. Se ha mangiato una foglia di una pianta tossica, subito dal veterinario."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ペットの手が届く場所に置いてもよいか。獣医師が使う ASPCA のデータベースに基づきます。有毒な植物の葉を食べたら、すぐに動物病院へ。"
+          }
+        },
+        "kk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Өсімдікті үй жануары жететін жерге қоюға бола ма. Ветеринарлар қолданатын ASPCA дерекқоры бойынша. Улы өсімдіктің жапырағын жеп қойса — бірден ветеринарға."
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ಸಾಕುಪ್ರಾಣಿ ತಲುಪುವ ಜಾಗದಲ್ಲಿ ಗಿಡವನ್ನು ಇಡಬಹುದೇ ಎಂಬುದು. ಪಶುವೈದ್ಯರು ಬಳಸುವ ASPCA ದತ್ತಾಂಶದ ಆಧಾರದ ಮೇಲೆ. ವಿಷಕಾರಿ ಗಿಡದ ಎಲೆ ತಿಂದರೆ — ತಕ್ಷಣ ಪಶುವೈದ್ಯರ ಬಳಿ ಹೋಗಿ."
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "반려동물이 닿는 곳에 식물을 두어도 되는지 알려 줍니다. 수의사들이 쓰는 ASPCA 데이터베이스를 따릅니다. 독성 식물의 잎을 먹었다면 바로 동물병원으로 가세요."
+          }
+        },
+        "lt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ar augalą galima statyti ten, kur pasieks augintinis. Pagal ASPCA duomenų bazę, kuria naudojasi veterinarai. Suėdė nuodingo augalo lapą — iškart pas veterinarą."
+          }
+        },
+        "ml": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "വളർത്തുമൃഗം എത്തുന്നിടത്ത് ചെടി വയ്ക്കാമോ എന്ന്. മൃഗഡോക്ടർമാർ ഉപയോഗിക്കുന്ന ASPCA ഡാറ്റാബേസ് പ്രകാരം. വിഷമുള്ള ചെടിയുടെ ഇല തിന്നാൽ — ഉടൻ മൃഗഡോക്ടറുടെ അടുത്തേക്ക്."
+          }
+        },
+        "mr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "पाळीव प्राणी पोहोचू शकेल अशा ठिकाणी रोप ठेवता येईल का. पशुवैद्य वापरतात त्या ASPCA डेटाबेसनुसार. विषारी रोपाचे पान खाल्ले असेल — तर लगेच पशुवैद्याकडे जा."
+          }
+        },
+        "ms": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sama ada tumbuhan boleh diletakkan di tempat yang dapat dicapai haiwan peliharaan. Berdasarkan pangkalan data ASPCA yang digunakan oleh doktor haiwan. Jika termakan daun tumbuhan beracun — segera ke doktor haiwan."
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Om planten kan stå der et kjæledyr når den. Etter databasen til ASPCA, som veterinærer bruker. Har dyret spist et blad av en giftig plante, rett til veterinæren."
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Of de plant mag staan waar een huisdier erbij kan. Volgens de database van de ASPCA, die dierenartsen gebruiken. Heeft het een blad van een giftige plant gegeten, dan meteen naar de dierenarts."
+          }
+        },
+        "or": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ପୋଷା ପ୍ରାଣୀ ପହଞ୍ଚିପାରୁଥିବା ଜାଗାରେ ଗଛଟି ରଖାଯାଇପାରିବ କି ନାହିଁ। ପଶୁ ଡାକ୍ତରମାନେ ବ୍ୟବହାର କରୁଥିବା ASPCA ଡାଟାବେସ୍ ଅନୁସାରେ। ବିଷାକ୍ତ ଗଛର ପତ୍ର ଖାଇଦେଲେ — ତୁରନ୍ତ ପଶୁ ଡାକ୍ତରଙ୍କ ପାଖକୁ ଯାଆନ୍ତୁ।"
+          }
+        },
+        "pa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ਕੀ ਪੌਦੇ ਨੂੰ ਉੱਥੇ ਰੱਖਿਆ ਜਾ ਸਕਦਾ ਹੈ ਜਿੱਥੇ ਪਾਲਤੂ ਜਾਨਵਰ ਪਹੁੰਚ ਸਕੇ। ਪਸ਼ੂਆਂ ਦੇ ਡਾਕਟਰ ਜਿਸ ASPCA ਡਾਟਾਬੇਸ ਨੂੰ ਵਰਤਦੇ ਹਨ, ਉਸ ਅਨੁਸਾਰ। ਜ਼ਹਿਰੀਲੇ ਪੌਦੇ ਦਾ ਪੱਤਾ ਖਾ ਲਿਆ ਹੋਵੇ — ਤਾਂ ਤੁਰੰਤ ਪਸ਼ੂਆਂ ਦੇ ਡਾਕਟਰ ਕੋਲ ਜਾਓ।"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Czy roślinę można postawić tam, gdzie dosięgnie jej zwierzak. Według bazy ASPCA, z której korzystają weterynarze. Zjadł liść trującej rośliny — od razu do weterynarza."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Se a planta pode ficar onde um pet alcança. Segundo a base de dados da ASPCA, usada por veterinários. Se ele comeu uma folha de planta tóxica, leve ao veterinário na hora."
+          }
+        },
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Se a planta pode ficar onde um animal de estimação lhe chegue. Segundo a base de dados da ASPCA, usada pelos veterinários. Se comeu uma folha de uma planta tóxica, vá logo ao veterinário."
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dacă planta poate sta acolo unde ajunge un animal de companie. După baza de date ASPCA, folosită de veterinari. Dacă a mâncat o frunză de plantă toxică — imediat la veterinar."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Či môže rastlina stáť tam, kam dosiahne domáce zviera. Podľa databázy ASPCA, ktorú používajú veterinári. Zjedlo list jedovatej rastliny? Hneď k veterinárovi."
+          }
+        },
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ali lahko rastlina stoji tam, kamor seže hišni ljubljenček. Po podatkovni zbirki ASPCA, ki jo uporabljajo veterinarji. Če je pojedel list strupene rastline — takoj k veterinarju."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Om växten kan stå där ett husdjur kommer åt den. Enligt ASPCA:s databas, som veterinärer använder. Har djuret ätit ett blad av en giftig växt – genast till veterinären."
+          }
+        },
+        "ta": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "செல்லப்பிராணி எட்டும் இடத்தில் செடியை வைக்கலாமா என்பது. கால்நடை மருத்துவர்கள் பயன்படுத்தும் ASPCA தரவுத்தளத்தின்படி. நச்சுச் செடியின் இலையைத் தின்றுவிட்டால் — உடனே கால்நடை மருத்துவரிடம் செல்லுங்கள்."
+          }
+        },
+        "te": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "పెంపుడు జంతువు అందుకునే చోట మొక్కను ఉంచవచ్చా అనేది. పశువైద్యులు వాడే ASPCA డేటాబేస్ ఆధారంగా. విషపూరిత మొక్క ఆకు తింటే — వెంటనే పశువైద్యుడి దగ్గరకు వెళ్లండి."
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "วางต้นไม้ไว้ในที่ที่สัตว์เลี้ยงเอื้อมถึงได้หรือไม่ อ้างอิงจากฐานข้อมูลของ ASPCA ที่สัตวแพทย์ใช้ ถ้ากินใบของต้นไม้มีพิษเข้าไป ให้รีบพาไปหาสัตวแพทย์ทันที"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bitkinin, evcil hayvanın ulaşabileceği bir yere konup konamayacağı. Veterinerlerin kullandığı ASPCA veri tabanına göre. Zehirli bir bitkinin yaprağını yediyse hemen veterinere."
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Чи можна ставити рослину туди, де до неї дістанеться улюбленець. За базою ASPCA, якою користуються ветеринари. З’їв листок отруйної — одразу до ветеринара."
+          }
+        },
+        "ur": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "کیا پودا ایسی جگہ رکھا جا سکتا ہے جہاں پالتو جانور پہنچ سکے۔ جانوروں کے ڈاکٹر جس ASPCA ڈیٹا بیس سے کام لیتے ہیں، اس کے مطابق۔ زہریلے پودے کا پتا کھا لیا ہو — تو فوراً جانوروں کے ڈاکٹر کے پاس جائیں۔"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Có thể đặt cây ở nơi thú cưng với tới được hay không. Theo cơ sở dữ liệu của ASPCA mà bác sĩ thú y sử dụng. Nếu thú cưng ăn phải lá cây độc — hãy đưa ngay đến bác sĩ thú y."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "植物能否放在宠物够得着的地方。依据兽医使用的 ASPCA 数据库。如果吃了有毒植物的叶子，请立即去看兽医。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "植物能否放在寵物碰得到的地方。依據獸醫使用的 ASPCA 資料庫。如果吃了有毒植物的葉子，請立刻帶去看獸醫。"
           }
         }
       }
@@ -150649,6 +151510,580 @@
         }
       }
     },
+    "Смертельно опасно для кошек": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "قاتل للقطط"
+          }
+        },
+        "bg": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Смъртоносно за котки"
+          }
+        },
+        "bn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "বিড়ালের জন্য প্রাণঘাতী"
+          }
+        },
+        "ca": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mortal per als gats"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Smrtelně nebezpečné pro kočky"
+          }
+        },
+        "da": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Livsfarlig for katte"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lebensgefährlich für Katzen"
+          }
+        },
+        "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Θανατηφόρο για γάτες"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deadly to cats"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mortal para gatos"
+          }
+        },
+        "fi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hengenvaarallinen kissoille"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mortelle pour les chats"
+          }
+        },
+        "gu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "બિલાડી માટે જીવલેણ"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "קטלני לחתולים"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "बिल्लियों के लिए जानलेवा"
+          }
+        },
+        "hr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Smrtonosno za mačke"
+          }
+        },
+        "hu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Halálos macskáknak"
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mematikan bagi kucing"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Letale per i gatti"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "猫には命に関わる"
+          }
+        },
+        "kk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Мысықтар үшін өлімге әкеледі"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ಬೆಕ್ಕುಗಳಿಗೆ ಮಾರಕ"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "고양이에게 치명적"
+          }
+        },
+        "lt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mirtinai pavojinga katėms"
+          }
+        },
+        "ml": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "പൂച്ചകൾക്ക് മാരകം"
+          }
+        },
+        "mr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "मांजरींसाठी जीवघेणे"
+          }
+        },
+        "ms": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Maut bagi kucing"
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Livsfarlig for katter"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dodelijk voor katten"
+          }
+        },
+        "or": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ବିରାଡ଼ିଙ୍କ ପାଇଁ ପ୍ରାଣଘାତୀ"
+          }
+        },
+        "pa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ਬਿੱਲੀਆਂ ਲਈ ਜਾਨਲੇਵਾ"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Śmiertelnie groźna dla kotów"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mortal para gatos"
+          }
+        },
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mortal para gatos"
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mortală pentru pisici"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Smrteľne nebezpečné pre mačky"
+          }
+        },
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Smrtno nevarno za mačke"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Livsfarlig för katter"
+          }
+        },
+        "ta": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "பூனைகளுக்கு உயிருக்கு ஆபத்து"
+          }
+        },
+        "te": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "పిల్లులకు ప్రాణాంతకం"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "อันตรายถึงชีวิตสำหรับแมว"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kediler için ölümcül"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Смертельно небезпечно для котів"
+          }
+        },
+        "ur": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "بلیوں کے لیے جان لیوا"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gây tử vong cho mèo"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "对猫致命"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "對貓致命"
+          }
+        }
+      }
+    },
+    "Смертельно опасно для кошек и собак": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "قاتل للقطط والكلاب"
+          }
+        },
+        "bg": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Смъртоносно за котки и кучета"
+          }
+        },
+        "bn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "বিড়াল ও কুকুরের জন্য প্রাণঘাতী"
+          }
+        },
+        "ca": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mortal per a gats i gossos"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Smrtelně nebezpečné pro kočky a psy"
+          }
+        },
+        "da": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Livsfarlig for katte og hunde"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lebensgefährlich für Katzen und Hunde"
+          }
+        },
+        "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Θανατηφόρο για γάτες και σκύλους"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deadly to cats and dogs"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mortal para gatos y perros"
+          }
+        },
+        "fi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hengenvaarallinen kissoille ja koirille"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mortelle pour les chats et les chiens"
+          }
+        },
+        "gu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "બિલાડી અને કૂતરા માટે જીવલેણ"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "קטלני לחתולים ולכלבים"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "बिल्लियों और कुत्तों के लिए जानलेवा"
+          }
+        },
+        "hr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Smrtonosno za mačke i pse"
+          }
+        },
+        "hu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Halálos macskáknak és kutyáknak"
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mematikan bagi kucing dan anjing"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Letale per gatti e cani"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "猫と犬の命に関わる"
+          }
+        },
+        "kk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Мысықтар мен иттер үшін өлімге әкеледі"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ಬೆಕ್ಕು ಮತ್ತು ನಾಯಿಗಳಿಗೆ ಮಾರಕ"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "고양이와 개에게 치명적"
+          }
+        },
+        "lt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mirtinai pavojinga katėms ir šunims"
+          }
+        },
+        "ml": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "പൂച്ചകൾക്കും നായകൾക്കും മാരകം"
+          }
+        },
+        "mr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "मांजरी आणि कुत्र्यांसाठी जीवघेणे"
+          }
+        },
+        "ms": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Maut bagi kucing dan anjing"
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Livsfarlig for katter og hunder"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dodelijk voor katten en honden"
+          }
+        },
+        "or": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ବିରାଡ଼ି ଓ କୁକୁରଙ୍କ ପାଇଁ ପ୍ରାଣଘାତୀ"
+          }
+        },
+        "pa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ਬਿੱਲੀਆਂ ਅਤੇ ਕੁੱਤਿਆਂ ਲਈ ਜਾਨਲੇਵਾ"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Śmiertelnie groźna dla kotów i psów"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mortal para gatos e cachorros"
+          }
+        },
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mortal para gatos e cães"
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mortală pentru pisici și câini"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Smrteľne nebezpečné pre mačky a psy"
+          }
+        },
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Smrtno nevarno za mačke in pse"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Livsfarlig för katter och hundar"
+          }
+        },
+        "ta": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "பூனைகளுக்கும் நாய்களுக்கும் உயிருக்கு ஆபத்து"
+          }
+        },
+        "te": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "పిల్లులు, కుక్కలకు ప్రాణాంతకం"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "อันตรายถึงชีวิตสำหรับแมวและสุนัข"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kediler ve köpekler için ölümcül"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Смертельно небезпечно для котів і собак"
+          }
+        },
+        "ur": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "بلیوں اور کتوں کے لیے جان لیوا"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gây tử vong cho mèo và chó"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "对猫狗致命"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "對貓狗致命"
+          }
+        }
+      }
+    },
     "Смотрю на снимок…": {
       "extractionState": "manual",
       "localizations": {
@@ -179632,6 +181067,293 @@
           "stringUnit": {
             "state": "translated",
             "value": "絲蘭"
+          }
+        }
+      }
+    },
+    "Ядовито для кошек и собак": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "سام للقطط والكلاب"
+          }
+        },
+        "bg": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Отровно за котки и кучета"
+          }
+        },
+        "bn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "বিড়াল ও কুকুরের জন্য বিষাক্ত"
+          }
+        },
+        "ca": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tòxica per a gats i gossos"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jedovaté pro kočky a psy"
+          }
+        },
+        "da": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Giftig for katte og hunde"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Giftig für Katzen und Hunde"
+          }
+        },
+        "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Τοξικό για γάτες και σκύλους"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Toxic to cats and dogs"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tóxica para gatos y perros"
+          }
+        },
+        "fi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Myrkyllinen kissoille ja koirille"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Toxique pour les chats et les chiens"
+          }
+        },
+        "gu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "બિલાડી અને કૂતરા માટે ઝેરી"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "רעיל לחתולים ולכלבים"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "बिल्लियों और कुत्तों के लिए ज़हरीला"
+          }
+        },
+        "hr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Otrovno za mačke i pse"
+          }
+        },
+        "hu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mérgező macskáknak és kutyáknak"
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Beracun bagi kucing dan anjing"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tossica per gatti e cani"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "猫と犬に有毒"
+          }
+        },
+        "kk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Мысықтар мен иттерге улы"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ಬೆಕ್ಕು ಮತ್ತು ನಾಯಿಗಳಿಗೆ ವಿಷಕಾರಿ"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "고양이와 개에게 유독"
+          }
+        },
+        "lt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nuodinga katėms ir šunims"
+          }
+        },
+        "ml": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "പൂച്ചകൾക്കും നായകൾക്കും വിഷമുള്ളത്"
+          }
+        },
+        "mr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "मांजरी आणि कुत्र्यांसाठी विषारी"
+          }
+        },
+        "ms": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Beracun kepada kucing dan anjing"
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Giftig for katter og hunder"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Giftig voor katten en honden"
+          }
+        },
+        "or": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ବିରାଡ଼ି ଓ କୁକୁରଙ୍କ ପାଇଁ ବିଷାକ୍ତ"
+          }
+        },
+        "pa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ਬਿੱਲੀਆਂ ਅਤੇ ਕੁੱਤਿਆਂ ਲਈ ਜ਼ਹਿਰੀਲਾ"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Trująca dla kotów i psów"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tóxica para gatos e cachorros"
+          }
+        },
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tóxica para gatos e cães"
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Toxică pentru pisici și câini"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jedovaté pre mačky a psy"
+          }
+        },
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Strupeno za mačke in pse"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Giftig för katter och hundar"
+          }
+        },
+        "ta": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "பூனைகளுக்கும் நாய்களுக்கும் நச்சு"
+          }
+        },
+        "te": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "పిల్లులు, కుక్కలకు విషపూరితం"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "เป็นพิษต่อแมวและสุนัข"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kediler ve köpekler için zehirli"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Отруйно для котів і собак"
+          }
+        },
+        "ur": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "بلیوں اور کتوں کے لیے زہریلا"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Độc với mèo và chó"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "对猫狗有毒"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "對貓狗有毒"
           }
         }
       }

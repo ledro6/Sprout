@@ -699,5 +699,11 @@
   "Посмотрите на растение у себя в комнате, сделайте ему свою модель — по фото или сканом — или поменяйте кличку, вид и срок полива.": "Vezi planta în camera ta, fă-i un model propriu – după fotografie sau prin scanare – ori schimbă-i numele, specia și intervalul de udare.",
   "Назовитесь — приложение будет здороваться по имени. Нажмите на кружок, чтобы поставить фото.": "Spune-ți numele – aplicația te va saluta cu el. Atinge cercul ca să pui o fotografie.",
   "Телефон узнает растение на снимке и придумает его модель: возьмёт цвета листьев, цветов и горшка, густоту и рост. Всё считается на телефоне, без сети, — за пару секунд.": "Telefonul va recunoaște planta din fotografie și îi va imagina modelul: culorile frunzelor, florilor și ghiveciului, densitatea și înălțimea. Totul se calculează pe telefon, fără rețea, în câteva secunde.",
-  "Обойдите растение с телефоном по кругу — получится его точная объёмная копия. Съёмка займёт пару минут, сборка модели — ещё несколько; всё на телефоне.": "Înconjoară planta cu telefonul și vei obține o copie 3D exactă a ei. Captura durează câteva minute, construirea modelului încă vreo câteva; totul pe telefon."
+  "Обойдите растение с телефоном по кругу — получится его точная объёмная копия. Съёмка займёт пару минут, сборка модели — ещё несколько; всё на телефоне.": "Înconjoară planta cu telefonul și vei obține o copie 3D exactă a ei. Captura durează câteva minute, construirea modelului încă vreo câteva; totul pe telefon.",
+  "Безопасно для кошек и собак": "Sigură pentru pisici și câini",
+  "Ядовито для кошек и собак": "Toxică pentru pisici și câini",
+  "Смертельно опасно для кошек": "Mortală pentru pisici",
+  "Смертельно опасно для кошек и собак": "Mortală pentru pisici și câini",
+  "Кошкам и собакам": "Pisici și câini",
+  "Можно ли ставить растение туда, где до него доберётся питомец. По базе ASPCA, которой пользуются ветеринары. Съел лист ядовитого — сразу к ветеринару.": "Dacă planta poate sta acolo unde ajunge un animal de companie. După baza de date ASPCA, folosită de veterinari. Dacă a mâncat o frunză de plantă toxică — imediat la veterinar."
 }

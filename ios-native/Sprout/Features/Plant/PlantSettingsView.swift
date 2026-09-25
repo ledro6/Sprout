@@ -97,6 +97,7 @@ struct PlantSettingsView: View {
                     .font(Typography.settingRow)
                     .focused($typing)
                     .submitLabel(.done)
+                PetNote(species: species)
             }
         }
     }

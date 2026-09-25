@@ -34,6 +34,7 @@ ios-native/Sprout/Model/Garden/Almanac.swift
 ios-native/Sprout/Model/Orrery/Orrery.swift
 ios-native/Sprout/Model/Help/Walk.swift
 ios-native/Sprout/Model/Botany/Preset.swift
+ios-native/Sprout/Model/Botany/Toxicity.swift
 ios-native/Sprout/Model/Botany/Botany.swift
 ios-native/Sprout/Model/Botany/Grower.swift
 ios-native/Sprout/Model/Botany/Grower+Foliage.swift

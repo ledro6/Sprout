@@ -683,5 +683,11 @@
   "Посмотрите на растение у себя в комнате, сделайте ему свою модель — по фото или сканом — или поменяйте кличку, вид и срок полива.": "Bitkiyi odanızda görün, ona kendi modelini yapın — fotoğraftan ya da taramayla — veya adını, türünü ve sulama aralığını değiştirin.",
   "Назовитесь — приложение будет здороваться по имени. Нажмите на кружок, чтобы поставить фото.": "Adınızı söyleyin — uygulama sizi adınızla selamlasın. Fotoğraf koymak için daireye dokunun.",
   "Телефон узнает растение на снимке и придумает его модель: возьмёт цвета листьев, цветов и горшка, густоту и рост. Всё считается на телефоне, без сети, — за пару секунд.": "Telefon fotoğraftaki bitkiyi tanıyıp modelini tasarlar: yaprak, çiçek ve saksı renklerini, sıklığı ve boyu alır. Hepsi telefonda, internetsiz, birkaç saniyede hesaplanır.",
-  "Обойдите растение с телефоном по кругу — получится его точная объёмная копия. Съёмка займёт пару минут, сборка модели — ещё несколько; всё на телефоне.": "Telefonla bitkinin etrafında dolaşın — onun birebir 3B kopyası çıkar. Çekim birkaç dakika, modelin oluşturulması birkaç dakika daha sürer; hepsi telefonda."
+  "Обойдите растение с телефоном по кругу — получится его точная объёмная копия. Съёмка займёт пару минут, сборка модели — ещё несколько; всё на телефоне.": "Telefonla bitkinin etrafında dolaşın — onun birebir 3B kopyası çıkar. Çekim birkaç dakika, modelin oluşturulması birkaç dakika daha sürer; hepsi telefonda.",
+  "Безопасно для кошек и собак": "Kediler ve köpekler için güvenli",
+  "Ядовито для кошек и собак": "Kediler ve köpekler için zehirli",
+  "Смертельно опасно для кошек": "Kediler için ölümcül",
+  "Смертельно опасно для кошек и собак": "Kediler ve köpekler için ölümcül",
+  "Кошкам и собакам": "Kediler ve köpekler",
+  "Можно ли ставить растение туда, где до него доберётся питомец. По базе ASPCA, которой пользуются ветеринары. Съел лист ядовитого — сразу к ветеринару.": "Bitkinin, evcil hayvanın ulaşabileceği bir yere konup konamayacağı. Veterinerlerin kullandığı ASPCA veri tabanına göre. Zehirli bir bitkinin yaprağını yediyse hemen veterinere."
 }

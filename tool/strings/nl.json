@@ -683,5 +683,11 @@
   "Посмотрите на растение у себя в комнате, сделайте ему свою модель — по фото или сканом — или поменяйте кличку, вид и срок полива.": "Bekijk de plant in je kamer, geef hem een eigen model – van een foto of een scan – of wijzig naam, soort en gietinterval.",
   "Назовитесь — приложение будет здороваться по имени. Нажмите на кружок, чтобы поставить фото.": "Vertel je naam – de app begroet je er dan mee. Tik op de cirkel om een foto te zetten.",
   "Телефон узнает растение на снимке и придумает его модель: возьмёт цвета листьев, цветов и горшка, густоту и рост. Всё считается на телефоне, без сети, — за пару секунд.": "De telefoon herkent de plant op de foto en bedenkt zijn model: kleuren van bladeren, bloemen en pot, dichtheid en hoogte. Alles draait op de telefoon, offline, in een paar seconden.",
-  "Обойдите растение с телефоном по кругу — получится его точная объёмная копия. Съёмка займёт пару минут, сборка модели — ещё несколько; всё на телефоне.": "Loop met je telefoon om de plant heen – zo krijg je een exacte 3D-kopie. De opname duurt een paar minuten, het model bouwen nog een paar; alles op de telefoon."
+  "Обойдите растение с телефоном по кругу — получится его точная объёмная копия. Съёмка займёт пару минут, сборка модели — ещё несколько; всё на телефоне.": "Loop met je telefoon om de plant heen – zo krijg je een exacte 3D-kopie. De opname duurt een paar minuten, het model bouwen nog een paar; alles op de telefoon.",
+  "Безопасно для кошек и собак": "Veilig voor katten en honden",
+  "Ядовито для кошек и собак": "Giftig voor katten en honden",
+  "Смертельно опасно для кошек": "Dodelijk voor katten",
+  "Смертельно опасно для кошек и собак": "Dodelijk voor katten en honden",
+  "Кошкам и собакам": "Katten en honden",
+  "Можно ли ставить растение туда, где до него доберётся питомец. По базе ASPCA, которой пользуются ветеринары. Съел лист ядовитого — сразу к ветеринару.": "Of de plant mag staan waar een huisdier erbij kan. Volgens de database van de ASPCA, die dierenartsen gebruiken. Heeft het een blad van een giftige plant gegeten, dan meteen naar de dierenarts."
 }

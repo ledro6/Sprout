@@ -683,5 +683,11 @@
   "Посмотрите на растение у себя в комнате, сделайте ему свою модель — по фото или сканом — или поменяйте кличку, вид и срок полива.": "Katso kasvia huoneessasi, anna sille oma malli – kuvasta tai skannaamalla – tai vaihda nimi, laji ja kasteluväli.",
   "Назовитесь — приложение будет здороваться по имени. Нажмите на кружок, чтобы поставить фото.": "Kerro nimesi – sovellus tervehtii sinua sillä. Napauta ympyrää lisätäksesi kuvan.",
   "Телефон узнает растение на снимке и придумает его модель: возьмёт цвета листьев, цветов и горшка, густоту и рост. Всё считается на телефоне, без сети, — за пару секунд.": "Puhelin tunnistaa kasvin kuvasta ja kuvittelee sen mallin: lehtien, kukkien ja ruukun värit, tuuheuden ja korkeuden. Kaikki lasketaan puhelimessa, ilman verkkoa, parissa sekunnissa.",
-  "Обойдите растение с телефоном по кругу — получится его точная объёмная копия. Съёмка займёт пару минут, сборка модели — ещё несколько; всё на телефоне.": "Kierrä kasvi puhelimen kanssa – saat siitä tarkan 3D-kopion. Kuvaus kestää pari minuuttia ja mallin kokoaminen muutaman lisää; kaikki puhelimessa."
+  "Обойдите растение с телефоном по кругу — получится его точная объёмная копия. Съёмка займёт пару минут, сборка модели — ещё несколько; всё на телефоне.": "Kierrä kasvi puhelimen kanssa – saat siitä tarkan 3D-kopion. Kuvaus kestää pari minuuttia ja mallin kokoaminen muutaman lisää; kaikki puhelimessa.",
+  "Безопасно для кошек и собак": "Turvallinen kissoille ja koirille",
+  "Ядовито для кошек и собак": "Myrkyllinen kissoille ja koirille",
+  "Смертельно опасно для кошек": "Hengenvaarallinen kissoille",
+  "Смертельно опасно для кошек и собак": "Hengenvaarallinen kissoille ja koirille",
+  "Кошкам и собакам": "Kissat ja koirat",
+  "Можно ли ставить растение туда, где до него доберётся питомец. По базе ASPCA, которой пользуются ветеринары. Съел лист ядовитого — сразу к ветеринару.": "Voiko kasvin sijoittaa paikkaan, johon lemmikki ylettyy. ASPCA:n tietokannan mukaan, jota eläinlääkärit käyttävät. Jos lemmikki söi myrkyllisen kasvin lehden, heti eläinlääkäriin."
 }

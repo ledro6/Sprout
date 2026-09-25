@@ -683,5 +683,11 @@
   "Посмотрите на растение у себя в комнате, сделайте ему свою модель — по фото или сканом — или поменяйте кличку, вид и срок полива.": "Se växten i ditt rum, ge den en egen modell – från foto eller skanning – eller ändra namn, art och vattningsintervall.",
   "Назовитесь — приложение будет здороваться по имени. Нажмите на кружок, чтобы поставить фото.": "Berätta vad du heter – appen hälsar på dig med namn. Tryck på cirkeln för att sätta ett foto.",
   "Телефон узнает растение на снимке и придумает его модель: возьмёт цвета листьев, цветов и горшка, густоту и рост. Всё считается на телефоне, без сети, — за пару секунд.": "Telefonen känner igen växten på fotot och föreställer sig dess modell: färger på blad, blommor och kruka, täthet och höjd. Allt räknas på telefonen, offline, på ett par sekunder.",
-  "Обойдите растение с телефоном по кругу — получится его точная объёмная копия. Съёмка займёт пару минут, сборка модели — ещё несколько; всё на телефоне.": "Gå runt växten med telefonen – så får du en exakt 3D-kopia. Fotograferingen tar ett par minuter och modellbygget några till; allt på telefonen."
+  "Обойдите растение с телефоном по кругу — получится его точная объёмная копия. Съёмка займёт пару минут, сборка модели — ещё несколько; всё на телефоне.": "Gå runt växten med telefonen – så får du en exakt 3D-kopia. Fotograferingen tar ett par minuter och modellbygget några till; allt på telefonen.",
+  "Безопасно для кошек и собак": "Ofarlig för katter och hundar",
+  "Ядовито для кошек и собак": "Giftig för katter och hundar",
+  "Смертельно опасно для кошек": "Livsfarlig för katter",
+  "Смертельно опасно для кошек и собак": "Livsfarlig för katter och hundar",
+  "Кошкам и собакам": "Katter och hundar",
+  "Можно ли ставить растение туда, где до него доберётся питомец. По базе ASPCA, которой пользуются ветеринары. Съел лист ядовитого — сразу к ветеринару.": "Om växten kan stå där ett husdjur kommer åt den. Enligt ASPCA:s databas, som veterinärer använder. Har djuret ätit ett blad av en giftig växt – genast till veterinären."
 }

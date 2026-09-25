@@ -683,5 +683,11 @@
   "Посмотрите на растение у себя в комнате, сделайте ему свою модель — по фото или сканом — или поменяйте кличку, вид и срок полива.": "Nézd meg a növényt a szobádban, adj neki saját modellt – fotóból vagy szkennelve –, vagy módosítsd a nevét, faját és öntözési idejét.",
   "Назовитесь — приложение будет здороваться по имени. Нажмите на кружок, чтобы поставить фото.": "Mutatkozz be – az app a neveden fog köszönteni. Koppints a körre, hogy fotót állíts be.",
   "Телефон узнает растение на снимке и придумает его модель: возьмёт цвета листьев, цветов и горшка, густоту и рост. Всё считается на телефоне, без сети, — за пару секунд.": "A telefon felismeri a növényt a fotón, és kitalálja a modelljét: a levelek, virágok és a cserép színét, a sűrűséget és a magasságot. Minden a telefonon fut, net nélkül, pár másodperc alatt.",
-  "Обойдите растение с телефоном по кругу — получится его точная объёмная копия. Съёмка займёт пару минут, сборка модели — ещё несколько; всё на телефоне.": "Járd körbe a növényt a telefonnal – így elkészül a pontos 3D-másolata. A felvétel pár perc, a modell összerakása még néhány; minden a telefonon."
+  "Обойдите растение с телефоном по кругу — получится его точная объёмная копия. Съёмка займёт пару минут, сборка модели — ещё несколько; всё на телефоне.": "Járd körbe a növényt a telefonnal – így elkészül a pontos 3D-másolata. A felvétel pár perc, a modell összerakása még néhány; minden a telefonon.",
+  "Безопасно для кошек и собак": "Biztonságos macskáknak és kutyáknak",
+  "Ядовито для кошек и собак": "Mérgező macskáknak és kutyáknak",
+  "Смертельно опасно для кошек": "Halálos macskáknak",
+  "Смертельно опасно для кошек и собак": "Halálos macskáknak és kutyáknak",
+  "Кошкам и собакам": "Macskák és kutyák",
+  "Можно ли ставить растение туда, где до него доберётся питомец. По базе ASPCA, которой пользуются ветеринары. Съел лист ядовитого — сразу к ветеринару.": "Tehető-e a növény oda, ahol a háziállat eléri. Az ASPCA adatbázisa alapján, amelyet az állatorvosok használnak. Ha mérgező növény levelét ette meg, azonnal állatorvoshoz."
 }

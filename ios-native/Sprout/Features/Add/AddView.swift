@@ -249,6 +249,7 @@ struct AddView: View {
                     .font(Typography.settingRow)
                     .focused($typing)
                     .submitLabel(.done)
+                PetNote(species: wanted)
             }
         }
         .sproutRide()

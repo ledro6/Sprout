@@ -683,5 +683,11 @@
   "Посмотрите на растение у себя в комнате, сделайте ему свою модель — по фото или сканом — или поменяйте кличку, вид и срок полива.": "Se planten i dit rum, giv den sin egen model – fra foto eller scanning – eller skift navn, art og vandingsinterval.",
   "Назовитесь — приложение будет здороваться по имени. Нажмите на кружок, чтобы поставить фото.": "Sig dit navn – appen hilser på dig med det. Tryk på cirklen for at sætte et foto.",
   "Телефон узнает растение на снимке и придумает его модель: возьмёт цвета листьев, цветов и горшка, густоту и рост. Всё считается на телефоне, без сети, — за пару секунд.": "Telefonen genkender planten på fotoet og forestiller sig dens model: farver på blade, blomster og potte, tæthed og højde. Det hele kører på telefonen, offline, på et par sekunder.",
-  "Обойдите растение с телефоном по кругу — получится его точная объёмная копия. Съёмка займёт пару минут, сборка модели — ещё несколько; всё на телефоне.": "Gå rundt om planten med telefonen – så får du en præcis 3D-kopi. Optagelsen tager et par minutter og modelbygningen et par mere; alt på telefonen."
+  "Обойдите растение с телефоном по кругу — получится его точная объёмная копия. Съёмка займёт пару минут, сборка модели — ещё несколько; всё на телефоне.": "Gå rundt om planten med telefonen – så får du en præcis 3D-kopi. Optagelsen tager et par minutter og modelbygningen et par mere; alt på telefonen.",
+  "Безопасно для кошек и собак": "Sikker for katte og hunde",
+  "Ядовито для кошек и собак": "Giftig for katte og hunde",
+  "Смертельно опасно для кошек": "Livsfarlig for katte",
+  "Смертельно опасно для кошек и собак": "Livsfarlig for katte og hunde",
+  "Кошкам и собакам": "Katte og hunde",
+  "Можно ли ставить растение туда, где до него доберётся питомец. По базе ASPCA, которой пользуются ветеринары. Съел лист ядовитого — сразу к ветеринару.": "Om planten kan stå, hvor et kæledyr kan nå den. Ifølge ASPCA’s database, som dyrlæger bruger. Har dyret spist et blad af en giftig plante, så straks til dyrlægen."
 }

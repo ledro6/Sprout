@@ -683,5 +683,11 @@
   "Посмотрите на растение у себя в комнате, сделайте ему свою модель — по фото или сканом — или поменяйте кличку, вид и срок полива.": "Sieh dir die Pflanze in deinem Zimmer an, gib ihr ein eigenes Modell – aus Foto oder Scan – oder ändere Name, Art und Gießintervall.",
   "Назовитесь — приложение будет здороваться по имени. Нажмите на кружок, чтобы поставить фото.": "Sag deinen Namen – die App begrüßt dich dann damit. Tippe auf den Kreis, um ein Foto zu setzen.",
   "Телефон узнает растение на снимке и придумает его модель: возьмёт цвета листьев, цветов и горшка, густоту и рост. Всё считается на телефоне, без сети, — за пару секунд.": "Das Telefon erkennt die Pflanze auf dem Foto und erdenkt ihr Modell: Farben von Blättern, Blüten und Topf, Dichte und Höhe. Alles läuft auf dem Telefon, offline, in ein paar Sekunden.",
-  "Обойдите растение с телефоном по кругу — получится его точная объёмная копия. Съёмка займёт пару минут, сборка модели — ещё несколько; всё на телефоне.": "Geh mit dem Telefon um die Pflanze herum – so entsteht eine genaue 3D-Kopie. Die Aufnahme dauert ein paar Minuten, der Modellbau noch ein paar; alles auf dem Telefon."
+  "Обойдите растение с телефоном по кругу — получится его точная объёмная копия. Съёмка займёт пару минут, сборка модели — ещё несколько; всё на телефоне.": "Geh mit dem Telefon um die Pflanze herum – so entsteht eine genaue 3D-Kopie. Die Aufnahme dauert ein paar Minuten, der Modellbau noch ein paar; alles auf dem Telefon.",
+  "Безопасно для кошек и собак": "Unbedenklich für Katzen und Hunde",
+  "Ядовито для кошек и собак": "Giftig für Katzen und Hunde",
+  "Смертельно опасно для кошек": "Lebensgefährlich für Katzen",
+  "Смертельно опасно для кошек и собак": "Lebensgefährlich für Katzen und Hunde",
+  "Кошкам и собакам": "Katzen und Hunde",
+  "Можно ли ставить растение туда, где до него доберётся питомец. По базе ASPCA, которой пользуются ветеринары. Съел лист ядовитого — сразу к ветеринару.": "Ob die Pflanze dort stehen darf, wo ein Haustier sie erreicht. Nach der Datenbank der ASPCA, mit der Tierärzte arbeiten. Hat es ein Blatt einer giftigen Pflanze gefressen – sofort zum Tierarzt."
 }

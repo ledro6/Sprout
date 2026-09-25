@@ -699,5 +699,11 @@
   "Посмотрите на растение у себя в комнате, сделайте ему свою модель — по фото или сканом — или поменяйте кличку, вид и срок полива.": "Pogledajte biljku u svojoj sobi, napravite joj vlastiti model – po fotografiji ili skenom – ili promijenite ime, vrstu i razmak zalijevanja.",
   "Назовитесь — приложение будет здороваться по имени. Нажмите на кружок, чтобы поставить фото.": "Predstavite se – aplikacija će vas pozdravljati imenom. Dodirnite krug da postavite fotografiju.",
   "Телефон узнает растение на снимке и придумает его модель: возьмёт цвета листьев, цветов и горшка, густоту и рост. Всё считается на телефоне, без сети, — за пару секунд.": "Telefon će prepoznati biljku na fotografiji i osmisliti njezin model: boje listova, cvjetova i posude, gustoću i visinu. Sve se računa na telefonu, bez mreže, za par sekundi.",
-  "Обойдите растение с телефоном по кругу — получится его точная объёмная копия. Съёмка займёт пару минут, сборка модели — ещё несколько; всё на телефоне.": "Obiđite biljku s telefonom – dobit ćete njezinu točnu 3D kopiju. Snimanje traje par minuta, slaganje modela još nekoliko; sve na telefonu."
+  "Обойдите растение с телефоном по кругу — получится его точная объёмная копия. Съёмка займёт пару минут, сборка модели — ещё несколько; всё на телефоне.": "Obiđite biljku s telefonom – dobit ćete njezinu točnu 3D kopiju. Snimanje traje par minuta, slaganje modela još nekoliko; sve na telefonu.",
+  "Безопасно для кошек и собак": "Sigurno za mačke i pse",
+  "Ядовито для кошек и собак": "Otrovno za mačke i pse",
+  "Смертельно опасно для кошек": "Smrtonosno za mačke",
+  "Смертельно опасно для кошек и собак": "Smrtonosno za mačke i pse",
+  "Кошкам и собакам": "Mačke i psi",
+  "Можно ли ставить растение туда, где до него доберётся питомец. По базе ASPCA, которой пользуются ветеринары. Съел лист ядовитого — сразу к ветеринару.": "Smije li biljka stajati ondje gdje do nje može doći ljubimac. Prema bazi podataka ASPCA koju koriste veterinari. Pojede li list otrovne biljke — odmah veterinaru."
 }

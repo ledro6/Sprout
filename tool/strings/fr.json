@@ -683,5 +683,11 @@
   "Посмотрите на растение у себя в комнате, сделайте ему свою модель — по фото или сканом — или поменяйте кличку, вид и срок полива.": "Voyez la plante chez vous, donnez-lui son propre modèle — par photo ou par scan — ou changez son nom, son espèce et son rythme d’arrosage.",
   "Назовитесь — приложение будет здороваться по имени. Нажмите на кружок, чтобы поставить фото.": "Présentez-vous — l’app vous saluera par votre nom. Touchez le cercle pour mettre une photo.",
   "Телефон узнает растение на снимке и придумает его модель: возьмёт цвета листьев, цветов и горшка, густоту и рост. Всё считается на телефоне, без сети, — за пару секунд.": "Le téléphone reconnaîtra la plante sur la photo et imaginera son modèle : couleurs des feuilles, des fleurs et du pot, densité et taille. Tout se calcule sur le téléphone, hors ligne, en quelques secondes.",
-  "Обойдите растение с телефоном по кругу — получится его точная объёмная копия. Съёмка займёт пару минут, сборка модели — ещё несколько; всё на телефоне.": "Faites le tour de la plante avec votre téléphone — vous obtiendrez sa copie 3D exacte. La prise de vue dure quelques minutes, la construction du modèle quelques-unes de plus ; tout sur le téléphone."
+  "Обойдите растение с телефоном по кругу — получится его точная объёмная копия. Съёмка займёт пару минут, сборка модели — ещё несколько; всё на телефоне.": "Faites le tour de la plante avec votre téléphone — vous obtiendrez sa copie 3D exacte. La prise de vue dure quelques minutes, la construction du modèle quelques-unes de plus ; tout sur le téléphone.",
+  "Безопасно для кошек и собак": "Sans danger pour les chats et les chiens",
+  "Ядовито для кошек и собак": "Toxique pour les chats et les chiens",
+  "Смертельно опасно для кошек": "Mortelle pour les chats",
+  "Смертельно опасно для кошек и собак": "Mortelle pour les chats et les chiens",
+  "Кошкам и собакам": "Chats et chiens",
+  "Можно ли ставить растение туда, где до него доберётся питомец. По базе ASPCA, которой пользуются ветеринары. Съел лист ядовитого — сразу к ветеринару.": "Peut-on placer la plante là où un animal peut l’atteindre. D’après la base de données de l’ASPCA, celle qu’utilisent les vétérinaires. S’il a mangé une feuille d’une plante toxique, direction le vétérinaire sans attendre."
 }

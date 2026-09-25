@@ -683,5 +683,11 @@
   "Посмотрите на растение у себя в комнате, сделайте ему свою модель — по фото или сканом — или поменяйте кличку, вид и срок полива.": "See the plant in your room, give it its own model — from a photo or a scan — or change its name, species and watering interval.",
   "Назовитесь — приложение будет здороваться по имени. Нажмите на кружок, чтобы поставить фото.": "Tell us your name — the app will greet you by it. Tap the circle to add a photo.",
   "Телефон узнает растение на снимке и придумает его модель: возьмёт цвета листьев, цветов и горшка, густоту и рост. Всё считается на телефоне, без сети, — за пару секунд.": "The phone will recognize the plant in the photo and imagine its model: leaf, flower and pot colors, density and height. It all runs on the phone, offline, in a couple of seconds.",
-  "Обойдите растение с телефоном по кругу — получится его точная объёмная копия. Съёмка займёт пару минут, сборка модели — ещё несколько; всё на телефоне.": "Walk around the plant with your phone — you’ll get an exact 3D copy of it. Capturing takes a couple of minutes and building the model a few more, all on the phone."
+  "Обойдите растение с телефоном по кругу — получится его точная объёмная копия. Съёмка займёт пару минут, сборка модели — ещё несколько; всё на телефоне.": "Walk around the plant with your phone — you’ll get an exact 3D copy of it. Capturing takes a couple of minutes and building the model a few more, all on the phone.",
+  "Безопасно для кошек и собак": "Safe for cats and dogs",
+  "Ядовито для кошек и собак": "Toxic to cats and dogs",
+  "Смертельно опасно для кошек": "Deadly to cats",
+  "Смертельно опасно для кошек и собак": "Deadly to cats and dogs",
+  "Кошкам и собакам": "Cats and dogs",
+  "Можно ли ставить растение туда, где до него доберётся питомец. По базе ASPCA, которой пользуются ветеринары. Съел лист ядовитого — сразу к ветеринару.": "Whether the plant can stand where a pet can reach it. Based on the ASPCA database that vets rely on. If a pet ate a leaf of a toxic plant, go to the vet right away."
 }

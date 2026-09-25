@@ -683,5 +683,11 @@
   "Посмотрите на растение у себя в комнате, сделайте ему свою модель — по фото или сканом — или поменяйте кличку, вид и срок полива.": "Mira la planta en tu habitación, dale su propio modelo —con una foto o un escaneo— o cambia su nombre, especie y frecuencia de riego.",
   "Назовитесь — приложение будет здороваться по имени. Нажмите на кружок, чтобы поставить фото.": "Dinos tu nombre: la app te saludará con él. Toca el círculo para poner una foto.",
   "Телефон узнает растение на снимке и придумает его модель: возьмёт цвета листьев, цветов и горшка, густоту и рост. Всё считается на телефоне, без сети, — за пару секунд.": "El teléfono reconocerá la planta en la foto e imaginará su modelo: colores de hojas, flores y maceta, densidad y altura. Todo se calcula en el teléfono, sin conexión, en un par de segundos.",
-  "Обойдите растение с телефоном по кругу — получится его точная объёмная копия. Съёмка займёт пару минут, сборка модели — ещё несколько; всё на телефоне.": "Rodea la planta con el teléfono y obtendrás su copia 3D exacta. La captura lleva un par de minutos y montar el modelo, unos pocos más; todo en el teléfono."
+  "Обойдите растение с телефоном по кругу — получится его точная объёмная копия. Съёмка займёт пару минут, сборка модели — ещё несколько; всё на телефоне.": "Rodea la planta con el teléfono y obtendrás su copia 3D exacta. La captura lleva un par de minutos y montar el modelo, unos pocos más; todo en el teléfono.",
+  "Безопасно для кошек и собак": "Segura para gatos y perros",
+  "Ядовито для кошек и собак": "Tóxica para gatos y perros",
+  "Смертельно опасно для кошек": "Mortal para gatos",
+  "Смертельно опасно для кошек и собак": "Mortal para gatos y perros",
+  "Кошкам и собакам": "Gatos y perros",
+  "Можно ли ставить растение туда, где до него доберётся питомец. По базе ASPCA, которой пользуются ветеринары. Съел лист ядовитого — сразу к ветеринару.": "Si la planta puede estar donde llegue una mascota. Según la base de datos de la ASPCA, la que usan los veterinarios. Si se comió una hoja de una planta tóxica, al veterinario enseguida."
 }

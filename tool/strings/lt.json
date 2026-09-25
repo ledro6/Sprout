@@ -699,5 +699,11 @@
   "Посмотрите на растение у себя в комнате, сделайте ему свою модель — по фото или сканом — или поменяйте кличку, вид и срок полива.": "Pažiūrėkite į augalą savo kambaryje, sukurkite jam savo modelį – pagal nuotrauką ar skenavimu – arba pakeiskite vardą, rūšį ir laistymo intervalą.",
   "Назовитесь — приложение будет здороваться по имени. Нажмите на кружок, чтобы поставить фото.": "Prisistatykite – programa sveikins jus vardu. Bakstelėkite apskritimą, kad įdėtumėte nuotrauką.",
   "Телефон узнает растение на снимке и придумает его модель: возьмёт цвета листьев, цветов и горшка, густоту и рост. Всё считается на телефоне, без сети, — за пару секунд.": "Telefonas atpažins augalą nuotraukoje ir sugalvos jo modelį: lapų, žiedų ir vazono spalvas, tankumą ir aukštį. Viskas skaičiuojama telefone, be interneto, per porą sekundžių.",
-  "Обойдите растение с телефоном по кругу — получится его точная объёмная копия. Съёмка займёт пару минут, сборка модели — ещё несколько; всё на телефоне.": "Apeikite augalą su telefonu – gausite tikslią jo 3D kopiją. Fotografavimas užtruks porą minučių, modelio kūrimas – dar kelias; viskas telefone."
+  "Обойдите растение с телефоном по кругу — получится его точная объёмная копия. Съёмка займёт пару минут, сборка модели — ещё несколько; всё на телефоне.": "Apeikite augalą su telefonu – gausite tikslią jo 3D kopiją. Fotografavimas užtruks porą minučių, modelio kūrimas – dar kelias; viskas telefone.",
+  "Безопасно для кошек и собак": "Saugu katėms ir šunims",
+  "Ядовито для кошек и собак": "Nuodinga katėms ir šunims",
+  "Смертельно опасно для кошек": "Mirtinai pavojinga katėms",
+  "Смертельно опасно для кошек и собак": "Mirtinai pavojinga katėms ir šunims",
+  "Кошкам и собакам": "Katės ir šunys",
+  "Можно ли ставить растение туда, где до него доберётся питомец. По базе ASPCA, которой пользуются ветеринары. Съел лист ядовитого — сразу к ветеринару.": "Ar augalą galima statyti ten, kur pasieks augintinis. Pagal ASPCA duomenų bazę, kuria naudojasi veterinarai. Suėdė nuodingo augalo lapą — iškart pas veterinarą."
 }

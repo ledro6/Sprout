@@ -683,5 +683,11 @@
   "Посмотрите на растение у себя в комнате, сделайте ему свою модель — по фото или сканом — или поменяйте кличку, вид и срок полива.": "Veja a planta na sua divisão, dê-lhe um modelo próprio — por fotografia ou por digitalização — ou mude o nome, a espécie e o intervalo de rega.",
   "Назовитесь — приложение будет здороваться по имени. Нажмите на кружок, чтобы поставить фото.": "Diga o seu nome — a app vai cumprimentá-lo por ele. Toque no círculo para pôr uma fotografia.",
   "Телефон узнает растение на снимке и придумает его модель: возьмёт цвета листьев, цветов и горшка, густоту и рост. Всё считается на телефоне, без сети, — за пару секунд.": "O telefone vai reconhecer a planta na fotografia e imaginar o seu modelo: cores das folhas, das flores e do vaso, densidade e altura. Tudo é calculado no telefone, sem rede, em poucos segundos.",
-  "Обойдите растение с телефоном по кругу — получится его точная объёмная копия. Съёмка займёт пару минут, сборка модели — ещё несколько; всё на телефоне.": "Dê a volta à planta com o telefone e obterá uma cópia 3D exata dela. A captura demora uns minutos e a montagem do modelo mais alguns; tudo no telefone."
+  "Обойдите растение с телефоном по кругу — получится его точная объёмная копия. Съёмка займёт пару минут, сборка модели — ещё несколько; всё на телефоне.": "Dê a volta à planta com o telefone e obterá uma cópia 3D exata dela. A captura demora uns minutos e a montagem do modelo mais alguns; tudo no telefone.",
+  "Безопасно для кошек и собак": "Segura para gatos e cães",
+  "Ядовито для кошек и собак": "Tóxica para gatos e cães",
+  "Смертельно опасно для кошек": "Mortal para gatos",
+  "Смертельно опасно для кошек и собак": "Mortal para gatos e cães",
+  "Кошкам и собакам": "Gatos e cães",
+  "Можно ли ставить растение туда, где до него доберётся питомец. По базе ASPCA, которой пользуются ветеринары. Съел лист ядовитого — сразу к ветеринару.": "Se a planta pode ficar onde um animal de estimação lhe chegue. Segundo a base de dados da ASPCA, usada pelos veterinários. Se comeu uma folha de uma planta tóxica, vá logo ao veterinário."
 }

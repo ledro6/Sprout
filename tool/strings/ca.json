@@ -683,5 +683,11 @@
   "Посмотрите на растение у себя в комнате, сделайте ему свою модель — по фото или сканом — или поменяйте кличку, вид и срок полива.": "Mira la planta a la teva habitació, dona-li un model propi —per foto o per escaneig— o canvia’n el nom, l’espècie i la freqüència de reg.",
   "Назовитесь — приложение будет здороваться по имени. Нажмите на кружок, чтобы поставить фото.": "Digues el teu nom: l’app et saludarà amb ell. Toca el cercle per posar-hi una foto.",
   "Телефон узнает растение на снимке и придумает его модель: возьмёт цвета листьев, цветов и горшка, густоту и рост. Всё считается на телефоне, без сети, — за пару секунд.": "El telèfon reconeixerà la planta a la foto i n’imaginarà el model: colors de fulles, flors i test, densitat i alçada. Tot es calcula al telèfon, sense connexió, en un parell de segons.",
-  "Обойдите растение с телефоном по кругу — получится его точная объёмная копия. Съёмка займёт пару минут, сборка модели — ещё несколько; всё на телефоне.": "Fes la volta a la planta amb el telèfon i tindràs la seva còpia 3D exacta. La captura dura un parell de minuts i muntar el model, uns quants més; tot al telèfon."
+  "Обойдите растение с телефоном по кругу — получится его точная объёмная копия. Съёмка займёт пару минут, сборка модели — ещё несколько; всё на телефоне.": "Fes la volta a la planta amb el telèfon i tindràs la seva còpia 3D exacta. La captura dura un parell de minuts i muntar el model, uns quants més; tot al telèfon.",
+  "Безопасно для кошек и собак": "Segura per a gats i gossos",
+  "Ядовито для кошек и собак": "Tòxica per a gats i gossos",
+  "Смертельно опасно для кошек": "Mortal per als gats",
+  "Смертельно опасно для кошек и собак": "Mortal per a gats i gossos",
+  "Кошкам и собакам": "Gats i gossos",
+  "Можно ли ставить растение туда, где до него доберётся питомец. По базе ASPCA, которой пользуются ветеринары. Съел лист ядовитого — сразу к ветеринару.": "Si la planta pot estar on hi arribi una mascota. Segons la base de dades de l’ASPCA, la que fan servir els veterinaris. Si se n’ha menjat una fulla d’una planta tòxica, de seguida al veterinari."
 }

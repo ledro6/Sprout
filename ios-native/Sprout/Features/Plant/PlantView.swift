@@ -448,6 +448,10 @@ struct PlantView: View {
                  term: .moisture)
                 .contentTransition(.numericText())
             fact(plant.species)
+            // Сразу под видом: питомца касается вид, а не кличка.
+            if let danger = Toxicity.of(plant.species) {
+                fact(danger.line, term: .pets, tone: tone(of: danger))
+            }
             fact(plant.wateringLabel, term: .period)
                 .contentTransition(.numericText())
             if let room = garden.roomName(of: plant.id) {
@@ -552,14 +556,25 @@ struct PlantView: View {
         RoundedRectangle(cornerRadius: Metrics.cardRadius, style: .continuous)
     }
 
-    private func fact(_ text: String, term: Term? = nil) -> some View {
+    private func fact(_ text: String, term: Term? = nil,
+                      tone: Color = Palette.ink) -> some View {
         HStack(alignment: .firstTextBaseline, spacing: 12) {
             Text("•")
             Text(text)
             if let term { TermHint(term) }
         }
         .font(Typography.detail)
-        .foregroundStyle(Palette.ink)
+        .foregroundStyle(tone)
+    }
+
+    /// Смертельное — красным, ядовитое — оранжевым, как тень тревоги;
+    /// безопасное — обычным цветом: хорошая новость не кричит.
+    private func tone(of danger: Toxicity) -> Color {
+        switch danger {
+        case .safe: Palette.ink
+        case .toxic: Palette.warn
+        case .lily, .deadly: Palette.alarm
+        }
     }
 }
 
