@@ -58,10 +58,10 @@ struct SearchView: View {
             }
             .onSubmit(of: .search) { recents.remember(asked) }
         }
-        .onChange(of: path) { _, now in
-            if now.isEmpty {
-                withAnimation(Motion.halo) { opening = nil }
-            }
+        // Ореол вернувшейся карточки — с выдержкой, как на главной.
+        .task(id: path.isEmpty) {
+            guard path.isEmpty, opening != nil else { return }
+            await Motion.haloBack { opening = nil }
         }
     }
 

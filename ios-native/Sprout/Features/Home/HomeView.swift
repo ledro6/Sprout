@@ -156,11 +156,10 @@ struct HomeView: View {
                 }
         }
         // Вернулись — ореолы проявляются, но не раньше, чем карточка
-        // сложится.
-        .onChange(of: path) { _, now in
-            if now.isEmpty {
-                withAnimation(Motion.halo) { opening = nil }
-            }
+        // сложится. Открыли снова до срока — ожидание отменяется само.
+        .task(id: path.isEmpty) {
+            guard path.isEmpty, opening != nil else { return }
+            await Motion.haloBack { opening = nil }
         }
         // Страница держится на той же комнате, а не на том же номере.
         .onChange(of: garden.rooms.map(\.name)) { old, new in

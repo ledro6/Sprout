@@ -11,9 +11,24 @@ enum Motion {
 
     static let leave = Animation.easeOut(duration: 0.24)
 
-    /// Секунду ореола нет вовсе — карточка складывается и встаёт на место.
-    /// При открытии он гаснет сразу, без анимации.
-    static let halo = Animation.easeOut(duration: 0.5).delay(1)
+    /// Секунду ореола нет вовсе — карточка складывается и встаёт на место,
+    /// потом он проявляется за полсекунды. При открытии гаснет сразу, без
+    /// анимации.
+    static let haloWait: Duration = .seconds(1)
+    static let halo = Animation.easeOut(duration: 0.5)
+
+    /// Вернуть ореол после выдержки. Выдержка — таймером, а не `.delay` у
+    /// анимации: в конце складывания SwiftUI заново ставит карточку на полку,
+    /// отложенная анимация при этом терялась, и ореол вспыхивал сразу, под
+    /// ещё не вставшей карточкой. Здесь же до конца выдержки он погашен в
+    /// самом состоянии. Отменили раньше — открыли карточку снова, ушли с
+    /// экрана — ореол не трогаем.
+    @MainActor
+    static func haloBack(_ reveal: () -> Void) async {
+        try? await Task.sleep(for: haloWait)
+        guard !Task.isCancelled else { return }
+        withAnimation(halo) { reveal() }
+    }
 
     static let number = Animation.easeInOut(duration: 0.3)
 

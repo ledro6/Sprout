@@ -59,6 +59,10 @@ struct PlantMenu: ViewModifier {
     /// меню нет.
     @State private var previewing = false
 
+    /// Ореол погашен: с меню — сразу, после меню — ещё на выдержку, пока
+    /// предпросмотр возвращается на место.
+    @State private var dimmed = false
+
     @State private var tenant = Tenant()
 
     private var plant: Plant? { garden.plant(id: tenant.id) }
@@ -69,7 +73,7 @@ struct PlantMenu: ViewModifier {
             .onChange(of: id, initial: true) { _, now in tenant.id = now }
             .onGeometryChange(for: CGRect.self) { $0.frame(in: .global) }
                 action: { keep($0) }
-            .environment(\.sproutHalos, halos && !previewing))
+            .environment(\.sproutHalos, halos && !dimmed))
             .alert("Переименовать", isPresented: $renaming) {
                 TextField("Кличка", text: $draft)
                 Button("Отмена", role: .cancel) {}
@@ -100,6 +104,12 @@ struct PlantMenu: ViewModifier {
                 if let staging {
                     PlantAR(plantID: staging).environment(garden)
                 }
+            }
+            // Меню закрылось — ореол возвращается с выдержкой, см.
+            // `Motion.haloBack`. Открыли снова до срока — ожидание отменяется.
+            .task(id: previewing) {
+                guard !previewing, dimmed else { return }
+                await Motion.haloBack { dimmed = false }
             }
     }
 
@@ -190,10 +200,11 @@ struct PlantMenu: ViewModifier {
                 // карточка свернулась бы.
                 .frame(width: Metrics.previewCard)
                 .environment(\.sproutHalos, false)
-                .onAppear { previewing = true }
-                .onDisappear {
-                    withAnimation(Motion.halo) { previewing = false }
+                .onAppear {
+                    previewing = true
+                    dimmed = true
                 }
+                .onDisappear { previewing = false }
         }
     }
 }
