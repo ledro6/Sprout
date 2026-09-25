@@ -127,8 +127,8 @@ enum MedalCraft {
                                 metal: earned ? 0.85 : 0.5)
         let normals = await Medals.shared.normals(award)
         if let image = Craft.image(normals),
-           let relief = try? TextureResource.generate(
-               from: image, options: .init(semantic: .normal)) {
+           let relief = try? await TextureResource(
+               image: image, options: .init(semantic: .normal)) {
             satin.normal = .init(texture: .init(relief))
         }
         if let field = Craft.model(face, satin) { coin.addChild(field) }
