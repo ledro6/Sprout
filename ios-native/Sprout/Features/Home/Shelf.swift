@@ -279,8 +279,8 @@ struct Rest: DropDelegate {
     }
 }
 
-/// Покачивание полки — как значки «Домой» в правке: поворот вокруг середины
-/// туда и обратно и мелкая дрожь по восьмёрке. Такт у всех один, фаза своя:
+/// Покачивание полки — как виджеты «Домой» в правке: поворот вокруг середины
+/// туда и обратно, и только он. Такт у всех один, фаза своя:
 /// вразнобой, но в общем ритме. С разными тактами карточки то сходились бы,
 /// то расходились, и полка дёргалась бы. Время — с часов экрана, а не
 /// повтором анимации: повтор начинался с нуля на каждой пересборке и дёргал
@@ -315,8 +315,7 @@ struct Jiggle: ViewModifier {
     }
 }
 
-/// Наклон и сдвиг в миг `time`. Анимируется только размах: время приходит
-/// с часов.
+/// Наклон в миг `time`. Анимируется только размах: время приходит с часов.
 private struct Wobble: GeometryEffect {
     var swing: Double
     let time: Double
@@ -329,21 +328,18 @@ private struct Wobble: GeometryEffect {
 
     func effectValue(size: CGSize) -> ProjectionTransform {
         guard swing > 0 else { return ProjectionTransform() }
+        // Угол — чтобы угол карточки ходил на `jiggleTravel`, как у значка,
+        // но не круче двух градусов: мелкое вью крутилось бы волчком.
+        let reach = max(hypot(size.width, size.height) / 2, 1)
+        let tilt = min(Motion.jiggleTravel / reach, .pi / 90)
         // Такты от начала отсчёта, со своей фазой. Синус — тот же ход, что
         // у значка: разгон с края и торможение к другому краю.
         let beat = time / Motion.jigglePeriod + phase
-        let angle = CGFloat(Motion.jiggleAngle * .pi / 180 * swing
-                            * sin(2 * .pi * beat))
-        // Восьмёрка: вбок — в такт наклону, на четверть такта позже;
-        // вверх-вниз — вдвое реже. Одним поворотом карточка ходила бы
-        // маятником.
-        let shake = Motion.jiggleShake * CGFloat(swing)
-        let dx = shake * CGFloat(sin(2 * .pi * (beat - 0.25)))
-        let dy = shake * CGFloat(sin(.pi * beat))
+        let angle = tilt * CGFloat(swing * sin(2 * .pi * beat))
         let middle = CGAffineTransform(translationX: -size.width / 2,
                                        y: -size.height / 2)
-        let back = CGAffineTransform(translationX: size.width / 2 + dx,
-                                     y: size.height / 2 + dy)
+        let back = CGAffineTransform(translationX: size.width / 2,
+                                     y: size.height / 2)
         return ProjectionTransform(middle
             .concatenating(CGAffineTransform(rotationAngle: angle))
             .concatenating(back))
