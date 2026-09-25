@@ -33,9 +33,13 @@
     <string name="t_197eb092cd">%d%%</string>
     <string name="t_45b8ac5695" formatted="false">20–40% wody</string>
     <string name="t_3d6c2541b9" formatted="false">40% wody i więcej</string>
+    <string name="t_5f5e0de553">AR się nie uruchomiło</string>
+    <string name="t_957c85ce41">AR rysuje roślinę na tym, co widzi aparat. Obraz nigdzie nie trafia.</string>
     <string name="t_14c72c397f">AR – rzeczywistość rozszerzona</string>
     <string name="t_484d12fea8">AR to rozszerzona rzeczywistość: aparat pokazuje twój pokój, a w nim roślinę 3D. Modele gatunków są już w aplikacji, a własny możesz wymyślić ze zdjęcia albo zeskanować.</string>
+    <string name="t_5c4b538eba">AR to rozszerzona rzeczywistość: aparat pokazuje twój pokój, a w nim trójwymiarową roślinę. Modele gatunków są już w aplikacji, a własny możesz wymyślić na podstawie zdjęcia.</string>
     <string name="t_809c431aa4">AR, model i ustawienia</string>
+    <string name="t_acec2ec7d0">Android %s lub nowszy</string>
     <string name="t_302a05a1ac">Sprout nie zbiera o tobie żadnych informacji i nigdzie ich nie wysyła.</string>
     <string name="t_9585992548">iOS 26 lub nowszy</string>
     <string name="t_c65910cd34">„%1$s” i jeszcze %2$s potrzebują wody</string>
@@ -74,6 +78,7 @@
     <string name="t_a8bcae2d9a">Wasylisa</string>
     <string name="t_f79b25b05d">Twój ogród jak Układ Słoneczny: rośliny krążą po orbitach podlewania. Zajrzyj – można tam nawet posłuchać miesiąca.</string>
     <string name="t_19ff316e6f">Przesuń suwak – ogród przeniesie się o dni do przodu, jakbyś podlewał w porę.</string>
+    <string name="t_ddf5bf682d">Przesuwaj telefon wolniej</string>
     <string name="t_3f52bd53a9">Powrót</string>
     <string name="t_c7aaa96778">Cofnij</string>
     <string name="t_f10d238768">Wróć do gotowego modelu</string>
@@ -102,6 +107,7 @@
     <string name="t_2b5f40f213">Wszystkie podlania tej rośliny. Błędny wpis usuniesz długim naciśnięciem.</string>
     <string name="t_2f07cfc9c2">Wszystkie podlane</string>
     <string name="t_3b5143902e">Razem</string>
+    <string name="t_eeb8caeb95">Wklej</string>
     <string name="t_c12ee51dd9">Cały czas</string>
     <string name="t_1059a1d77d">Wczoraj, %s</string>
     <string name="t_fe4b0c80f0">Wybierz</string>
@@ -121,6 +127,7 @@
     <string name="t_68ae695380">Czujnik ruchu</string>
     <string name="t_827d544645">Daty</string>
     <string name="t_0bcd158c3d">Dwa palce — obrót, szczypnięcie — rozmiar</string>
+    <string name="t_9978ac34b2">Działania</string>
     <string name="t_b6ef08401f">Dzień</string>
     <string name="t_abbebfc85b">Dzień, w którym trzy rośliny lub więcej zechcą wody naraz – wygodnie podlać wszystkie za jednym razem.</string>
     <string name="t_e0c0ceee56">Drzewko</string>
@@ -141,6 +148,7 @@
     <string name="t_fdf0f98738">Jeśli podlewasz przed czasem, aplikacja to zauważy i zaproponuje krótszy odstęp.</string>
     <string name="t_19f25d5784">Więcej</string>
     <string name="t_7db203bdda">Jeszcze jedno okrążenie</string>
+    <string name="t_bbe42739db">Spróbuj ponownie</string>
     <string name="t_0fb6d09e78">Czekają na wodę</string>
     <string name="t_ef28cc1496">W okresie</string>
     <string name="t_70efc9651a">W tym okresie nie było podlewania.</string>
@@ -181,6 +189,7 @@
     <string name="t_b335f763ea">Znikną wszystkie rośliny i cały dziennik podlewania. Nie da się tego cofnąć.</string>
     <string name="t_53d55db39f">Podsumowanie</string>
     <string name="t_779e8b3e28">Włącz je w Ustawieniach telefonu: Sprout → Powiadomienia.</string>
+    <string name="t_9c47ca16c4">Instaluje się je z Google Play, bezpłatnie. Potem AR otworzy się od razu.</string>
     <string name="t_46c7be08dd">Gabinet</string>
     <string name="t_0112d57d0b">Przytnij</string>
     <string name="t_01b9b803e7">Kadr zdjęcia</string>
@@ -189,6 +198,7 @@
     <string name="t_223428bd3c">Każda kropka to podlanie. Im wyżej kropka, tym więcej wody było jeszcze w ziemi.</string>
     <string name="t_e1439f1755">Każde podlanie to nuta: bliskie planety śpiewają wyżej.</string>
     <string name="t_f0a22d9d1a">Jak w systemie</string>
+    <string name="t_087f6705ed">Jak w telefonie</string>
     <string name="t_696586f496">Jak masz na imię?</string>
     <string name="t_7013b69dab">Jak korzystać</string>
     <string name="t_d4066ba693">Jak teraz nazywa się roślina?</string>
@@ -197,6 +207,9 @@
     <string name="t_7b105a68e6">Kalanchoe</string>
     <string name="t_60f6304f34">Kalatea</string>
     <string name="t_fe0790d4e2">Kalendarz podlewań</string>
+    <string name="t_f2d0f5cc41">Aparat jest zajęty przez inną aplikację</string>
+    <string name="t_37620de860">Aparat jest zablokowany w ustawieniach telefonu. Zezwól na niego tam i wróć.</string>
+    <string name="t_601947a61c">Aparat i zdjęcia</string>
     <string name="t_d8e43f5730">Aparat pokazuje twój pokój, a aplikacja stawia w nim trójwymiarową roślinę. Możesz ją obrócić, powiększyć i podlać konewką.</string>
     <string name="t_8671ea9e33">Kropla</string>
     <string name="t_85618413ed">Każdy kwadrat to dzień z ostatnich czterech miesięcy: im mocniejszy kolor, tym więcej podlewań. Stuknij kwadrat, by zobaczyć datę.</string>
@@ -207,6 +220,7 @@
     <string name="t_eb1aa42a32">Przezwiska roślin, gatunki, wilgotność, daty — wszystko, co wpisujesz, leży w pliku wewnątrz aplikacji, w samym telefonie. Tam też są ustawienia. Nic z tego nie opuszcza urządzenia.</string>
     <string name="t_1c8e21179b">Przyciski</string>
     <string name="t_49cdfd9292">Przyciski dookoła</string>
+    <string name="t_2ecb4451da">Przyciski i karty w kolorach tapety telefonu.</string>
     <string name="t_725347e425">Kiedy</string>
     <string name="t_512bafe5b5">Gdy wilgotność spadnie poniżej</string>
     <string name="t_72e18d38d9">Kiedy podlewasz</string>
@@ -264,7 +278,9 @@
     <string name="t_18f71e9762">Muzyka sfer</string>
     <string name="t_0b854eb300">Mruczek</string>
     <string name="t_7a7164238c">Mięta</string>
+    <string name="t_06ec0f34bf">Na tym telefonie nie ustawiono blokady ekranu.</string>
     <string name="t_272e98dde1">Ten telefon nie ma ani Face ID, ani kodu.</string>
+    <string name="t_339d955a3c">Skieruj aparat na podłogę ze wzorem albo na meble</string>
     <string name="t_4dd78d95e6">Namierz</string>
     <string name="t_c96769af49">Stuknij „+”, aby utworzyć pierwszy.</string>
     <string name="t_730cde94e5">Stuknij „?” obok niego – wyjaśnimy po ludzku. Wszystkie słowa są w słowniczku w ustawieniach.</string>
@@ -310,9 +326,14 @@
     <string name="t_da731c70ca">Nowy pokój</string>
     <string name="t_87b55f8287">Nowy pokój…</string>
     <string name="t_4a30361774">Potrzebny iPhone z czujnikiem LiDAR – modele Pro od iPhone’a 12 Pro.</string>
+    <string name="t_7283f54f30">Potrzebny aparat</string>
+    <string name="t_ba43c393fc">Potrzebne Usługi Google Play dla AR</string>
     <string name="t_b9c9ff652d">O aplikacji</string>
+    <string name="t_7bee71b043">Zaktualizuj Usługi Google Play dla AR</string>
+    <string name="t_c2f668e54f">Zaktualizuj</string>
     <string name="t_3a3478672d">Obejdź roślinę z telefonem – powstanie jej dokładna kopia 3D. Zdjęcia zajmą parę minut, składanie modelu jeszcze kilka; wszystko w telefonie.</string>
     <string name="t_bc8d2377f1">Kopia 3D rośliny do AR. Modele gatunków są już w aplikacji, a własny możesz wymyślić ze zdjęcia albo zeskanować – przycisk „Model” na ekranie rośliny.</string>
+    <string name="t_7eb02aa630">Trójwymiarowa kopia rośliny do AR. Modele gatunków są już w aplikacji, a własny można wymyślić na podstawie zdjęcia — przycisk „Model” na ekranie rośliny.</string>
     <string name="t_4b919d0c3d">Zwykle dla gatunku: %s</string>
     <string name="t_00495efa90">Zwykle przy %s wody w ziemi</string>
     <string name="t_9bc6b67c85">Jedno okrążenie to jeden odstęp podlewania. Bliskie orbity mają te, co szybko schną, dalekie – cierpliwe.</string>
@@ -407,6 +428,7 @@
     <string name="t_0455b2eeff">Pokazano %1$d z %2$d: więcej byłoby za ciężkie dla telefonu</string>
     <string name="t_387af5ff90">Pokaż podpowiedzi ponownie</string>
     <string name="t_ca645a26b9">Pokręć bębnem – poniżej widać, jak nowy odstęp wyląduje na karcie.</string>
+    <string name="t_51b8f05bf7">Pole wyszukiwania jest na górze. Szuka po przezwiskach, gatunkach i notatkach.</string>
     <string name="t_17c7b943fc">Pole wyszukiwania jest na dole, przy pasku kart. Szuka po przezwisku, gatunku i notatkach.</string>
     <string name="t_cd1de7bdc3">Podlej wszystkie naraz i wyślij sąsiadowi notatkę.</string>
     <string name="t_c767922d35">Podlej roślinę – a zobaczysz tu, ile wody było w ziemi w tej chwili.</string>
@@ -446,6 +468,7 @@
     <string name="t_3ca46e3e76">Po podlaniu przez wzór przebiega kolorowa fala – tak widać, że podlanie zostało zaliczone.</string>
     <string name="t_e101868e98">Ostatnie podlanie</string>
     <string name="t_d72166f389">Zobacz w AR</string>
+    <string name="t_22f978c185">Zobacz roślinę u siebie w pokoju, zrób jej własny model ze zdjęcia albo zmień przezwisko, gatunek i odstęp podlewania.</string>
     <string name="t_f945f5f017">Zobacz roślinę u siebie w pokoju, zrób jej własny model – ze zdjęcia lub skanu – albo zmień imię, gatunek i odstęp podlewania.</string>
     <string name="t_8845f9ee9d">Ustaw</string>
     <string name="t_39a52fa645">Ustaw ogród</string>
@@ -489,6 +512,7 @@
         <item quantity="other">Co %d miesiąca</item>
     </plurals>
     <string name="t_9caa86d668">Co ile dni podlewa się roślinę – mniej więcej tyle schnie ziemia. Zmienisz to w ustawieniach rośliny.</string>
+    <string name="t_7882f56b39">Zezwól na aparat</string>
     <string name="t_cc687c1fa5">Ramka obejmuje roślinę z doniczką? To zaczynaj</string>
     <string name="t_0717b1b655">Ustaw</string>
     <string name="t_7ebd3688e2">Roślina</string>
@@ -520,6 +544,7 @@
     <string name="t_cd59e4204b">Ogród zablokowany</string>
     <string name="t_e3b46fe6dd">Twój ogród jak Układ Słoneczny: każda roślina to planeta, jedno okrążenie to jeden odstęp podlewania. Gdy dotrze do bramy na górze, pora podlać.</string>
     <string name="t_5a05a6d3f9">Ogród otwiera się tylko przez Face ID albo kod telefonu – nikt obcy nie zajrzy.</string>
+    <string name="t_8401f09a45">Ogród otwiera się tylko odciskiem palca, twarzą albo blokadą ekranu telefonu — obcy nie zajrzą.</string>
     <string name="t_2306927b56">Ogród od %s</string>
     <string name="t_928ada7e39">Ogród stoi. Stuknij roślinę, aby ją podlać.</string>
     <string name="t_e4d56c1f85">Ogrodnik</string>
@@ -538,6 +563,7 @@
     <string name="t_013255575f">Dziś niczego nie trzeba podlewać.</string>
     <string name="t_618a6abf44">Dziś, %s</string>
     <string name="t_88be20fd06">Teraz</string>
+    <string name="t_ad8df7482b">Usługi Google Play dla AR na nim nie działają. Wszystko inne w Sprout działa jak zwykle.</string>
     <string name="t_b3c4b1be56">Sieć</string>
     <string name="t_a872210c83">Siła wibracji</string>
     <string name="t_04954ca725">Niebieski</string>
@@ -563,12 +589,14 @@
     </plurals>
     <string name="t_4a40d86849">Następne podlewanie: jutro</string>
     <string name="t_b0f07c6bde">Następne podlewanie: dziś</string>
+    <string name="t_cef8f4a582">Za ciemno — zapal światło</string>
     <string name="t_6f8ca5c940">Słowniczek</string>
     <string name="t_214438003b">Oglądam zdjęcie…</string>
     <string name="t_6fb5cb3976">Najpierw nowe</string>
     <string name="t_3189602bf1">Najpierw suche</string>
     <string name="t_4ff6829db6">Śnieżek</string>
     <string name="t_1b494791c5">Brak zdjęcia</string>
+    <string name="t_2cb357366d">Zdjęcia roślin są rozpoznawane na samym telefonie — nigdzie nie są wysyłane.</string>
     <string name="t_9e2d4d618a">Zdjęcie</string>
     <string name="t_d303471890">Zdjęcie jest nieostre – zrób ostrzejsze.</string>
     <string name="t_bee88a5c8c">Zdjęcie jest prześwietlone – zrób je bez ostrego słońca.</string>
@@ -593,6 +621,7 @@
     <string name="t_8335506cd9">Najsuchsza: %s.</string>
     <string name="t_31386bfdb5">Zrób zdjęcie rośliny – telefon spróbuje rozpoznać jej gatunek.</string>
     <string name="t_2da75ff638">Wynik z %s. Zaktualizuje się, gdy znajomy znów przyśle kod.</string>
+    <string name="t_d9467398b8">Tak bywa, gdy aparatu używa inna aplikacja. Spróbuj ponownie.</string>
     <string name="t_109ff6015e">Kapeć</string>
     <string name="t_ba89e87d7f">Telefon rozpozna roślinę na zdjęciu i wymyśli jej model: kolory liści, kwiatów i doniczki, gęstość i wysokość. Wszystko liczy się w telefonie, bez sieci, w kilka sekund.</string>
     <string name="t_c9b9affc8d">Rozpoznano: %1$s — pewność %2$d%%. Popraw, jeśli to nie to.</string>
@@ -622,8 +651,10 @@
     <string name="t_8b19591d8a">Wzór podąża za przechyleniem</string>
     <string name="t_1cc281e997">Wzór w tle lekko się przesuwa, gdy przechylasz telefon – jakby leżał głębiej niż ekran.</string>
     <string name="t_c8f3f390c2">Koperek</string>
+    <string name="t_ce88d35b18">Zainstaluj</string>
     <string name="t_5373dc43a3">Pielęgnacja</string>
     <string name="t_ddc1a36266">Uwzględniaj porę roku</string>
+    <string name="t_8a4653acae">Plik ogrodu trafia do kopii zapasowej Androida — razem z danymi innych aplikacji, na zasadach Google.</string>
     <string name="t_8041745a9b">Plik ogrodu trafia do kopii zapasowej iPhone’a — tam, gdzie reszta twoich danych, zgodnie z zasadami Apple.</string>
     <string name="t_92c396e199">Fiołek afrykański</string>
     <string name="t_99c7c8c714">Figurki</string>
@@ -644,6 +675,7 @@
     <string name="t_84b22ed2aa">Kolor</string>
     <string name="t_7ceb6b0f96">Kolor fali</string>
     <string name="t_4d7209b9c1">Kolor wzoru</string>
+    <string name="t_8c038b5d5a">Kolory tapety</string>
     <string name="t_2a6d22be37">Kolory, gęstość i wysokość – ze zdjęcia.</string>
     <string name="t_ac08f8dec7">Kwiat</string>
     <string name="t_4924d77144">Liczby</string>
@@ -660,11 +692,14 @@
     <string name="t_febbc7512c">Aby otworzyć ogród</string>
     <string name="t_e250a6df76">Sznurówka</string>
     <string name="t_723a09005e">Futerko</string>
+    <string name="t_68656a952e">Ta wersja jest za stara dla Sprout.</string>
     <string name="t_b3bf1682b8">To twój ogród</string>
     <string name="t_d342de941a">To twój własny kod: już jesteś w tabeli.</string>
     <string name="t_3a925bfac5">Ten iPhone nie umie skanować: potrzebny jest LiDAR.</string>
+    <string name="t_8536fc8767">Ten telefon nie obsługuje AR</string>
     <string name="t_c7e64e73eb">Eszeweria</string>
     <string name="t_77789a486b">Juka</string>
+    <string name="t_ed3f0e507a">Język</string>
     <string name="t_3f264c02f1">w porę %s</string>
     <string name="t_cc86ef708c">ty</string>
     <string name="t_2e06422eda">ziemia sucha</string>
@@ -699,4 +734,11 @@
     <string name="t_d8e6f5387c">częściej niż raz na minutę</string>
     <string name="t_d959d34275">seria %d</string>
     <string name="t_34eb9e66db">• %1$s (%2$s, „%3$s”) — %4$s</string>
+    <string name="shortcut_add">Dodaj</string>
+    <string name="shortcut_search">Szukaj</string>
+    <string name="shortcut_stats">Statystyki</string>
+    <string name="shortcut_thirst">Kogo podlać</string>
+    <string name="tile_label">Kogo podlać</string>
+    <string name="widget_description">Najbardziej suche rośliny i przycisk „Podlej”.</string>
+    <string name="widget_name">Kogo podlać</string>
 </resources>

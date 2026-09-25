@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="sprout_accent">#0088FF</color>
+    <!-- Заставка — цвет приветствия, как на iPhone. -->
+    <color name="sprout_welcome">#CFF8C9</color>
+    <color name="sprout_icon_background">#CFF8C9</color>
+    <color name="sprout_window">#FFFFFF</color>
+</resources>

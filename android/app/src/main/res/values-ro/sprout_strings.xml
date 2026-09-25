@@ -30,9 +30,13 @@
     <string name="t_197eb092cd">%d %%</string>
     <string name="t_45b8ac5695" formatted="false">20–40 % apă</string>
     <string name="t_3d6c2541b9" formatted="false">40 % apă sau mai mult</string>
+    <string name="t_5f5e0de553">RA nu a pornit</string>
+    <string name="t_957c85ce41">RA desenează planta peste ce vede camera. Cadrele nu pleacă nicăieri.</string>
     <string name="t_14c72c397f">RA — realitate augmentată</string>
     <string name="t_484d12fea8">RA înseamnă realitate augmentată: camera îți arată camera cu o plantă 3D în ea. Modelele speciilor sunt deja în aplicație, iar pe al tău îl poți imagina după o fotografie sau îl poți scana.</string>
+    <string name="t_5c4b538eba">RA înseamnă realitate augmentată: camera îți arată camera cu o plantă 3D în ea. Modelele speciilor sunt deja în aplicație, iar pe al tău îl poți imagina după o fotografie.</string>
     <string name="t_809c431aa4">RA, model și configurări</string>
+    <string name="t_acec2ec7d0">Android %s sau mai nou</string>
     <string name="t_302a05a1ac">Sprout nu colectează nicio informație despre tine și nu trimite nimic nicăieri.</string>
     <string name="t_9585992548">iOS 26 sau ulterior</string>
     <string name="t_c65910cd34">„%1$s” și încă %2$s au nevoie de apă</string>
@@ -71,6 +75,7 @@
     <string name="t_a8bcae2d9a">Vasilisa</string>
     <string name="t_f79b25b05d">Grădina ta ca un sistem solar: plantele se rotesc pe orbitele de udare. Aruncă o privire – poți chiar asculta o lună.</string>
     <string name="t_19ff316e6f">Trage glisorul – grădina sare zile înainte, ca și cum ai uda la timp.</string>
+    <string name="t_ddf5bf682d">Mișcă telefonul mai încet</string>
     <string name="t_3f52bd53a9">Revin</string>
     <string name="t_c7aaa96778">Anulează</string>
     <string name="t_f10d238768">Înapoi la modelul gata</string>
@@ -98,6 +103,7 @@
     <string name="t_2b5f40f213">Toate udările acestei plante. O înregistrare greșită o ștergi cu o apăsare lungă.</string>
     <string name="t_2f07cfc9c2">Toate udate</string>
     <string name="t_3b5143902e">Total</string>
+    <string name="t_eeb8caeb95">Lipește</string>
     <string name="t_c12ee51dd9">Tot timpul</string>
     <string name="t_1059a1d77d">Ieri, %s</string>
     <string name="t_fe4b0c80f0">Alege</string>
@@ -117,6 +123,7 @@
     <string name="t_68ae695380">Senzor de mișcare</string>
     <string name="t_827d544645">Date</string>
     <string name="t_0bcd158c3d">Două degete pentru rotire, ciupire pentru mărime</string>
+    <string name="t_9978ac34b2">Acțiuni</string>
     <string name="t_b6ef08401f">Zi</string>
     <string name="t_abbebfc85b">O zi în care trei sau mai multe plante vor apă deodată – comod să le uzi pe toate dintr-odată.</string>
     <string name="t_e0c0ceee56">Copăcel</string>
@@ -137,6 +144,7 @@
     <string name="t_fdf0f98738">Dacă uzi mai devreme, aplicația observă și îți propune un interval mai scurt.</string>
     <string name="t_19f25d5784">Mai mult</string>
     <string name="t_7db203bdda">Încă o tură</string>
+    <string name="t_bbe42739db">Încearcă din nou</string>
     <string name="t_0fb6d09e78">Cer apă</string>
     <string name="t_ef28cc1496">În perioadă</string>
     <string name="t_70efc9651a">Nicio udare în această perioadă.</string>
@@ -177,6 +185,7 @@
     <string name="t_b335f763ea">Vor dispărea toate plantele și tot jurnalul de udări. Acțiunea nu poate fi anulată.</string>
     <string name="t_53d55db39f">Rezumat</string>
     <string name="t_779e8b3e28">Activează-le în Configurările telefonului: Sprout → Notificări.</string>
+    <string name="t_9c47ca16c4">Se instalează din Google Play, gratuit. Apoi RA se deschide imediat.</string>
     <string name="t_46c7be08dd">Birou</string>
     <string name="t_0112d57d0b">Decupează</string>
     <string name="t_01b9b803e7">Decuparea fotografiei</string>
@@ -185,6 +194,7 @@
     <string name="t_223428bd3c">Fiecare punct e o udare. Cu cât punctul e mai sus, cu atât mai multă apă era încă în pământ.</string>
     <string name="t_e1439f1755">Fiecare udare e o notă: planetele apropiate cântă mai sus.</string>
     <string name="t_f0a22d9d1a">Ca sistemul</string>
+    <string name="t_087f6705ed">Ca pe telefon</string>
     <string name="t_696586f496">Cum te numești?</string>
     <string name="t_7013b69dab">Cum se folosește</string>
     <string name="t_d4066ba693">Cum se numește acum planta?</string>
@@ -193,6 +203,9 @@
     <string name="t_7b105a68e6">Kalanchoe</string>
     <string name="t_60f6304f34">Calatea</string>
     <string name="t_fe0790d4e2">Calendarul udărilor</string>
+    <string name="t_f2d0f5cc41">Camera e folosită de altă aplicație</string>
+    <string name="t_37620de860">Camera e blocată în setările telefonului. Permite-o acolo și revino.</string>
+    <string name="t_601947a61c">Cameră și fotografii</string>
     <string name="t_d8e43f5730">Camera foto îți arată încăperea, iar aplicația așază în ea o plantă 3D. O poți roti, mări și uda cu o stropitoare.</string>
     <string name="t_8671ea9e33">Picătură</string>
     <string name="t_85618413ed">Fiecare pătrat e o zi din ultimele patru luni: cu cât culoarea e mai intensă, cu atât mai multe udări. Atinge un pătrat ca să vezi data.</string>
@@ -203,6 +216,7 @@
     <string name="t_eb1aa42a32">Poreclele plantelor, speciile, umiditatea, datele — tot ce introduci stă într-un fișier în aplicație, pe telefon. La fel și setările. Nimic nu părăsește dispozitivul.</string>
     <string name="t_1c8e21179b">Butoane</string>
     <string name="t_49cdfd9292">Butoanele din jur</string>
+    <string name="t_2ecb4451da">Butoane și carduri în culorile imaginii de fundal.</string>
     <string name="t_725347e425">Când</string>
     <string name="t_512bafe5b5">Când umiditatea scade sub</string>
     <string name="t_72e18d38d9">Când uzi</string>
@@ -260,7 +274,9 @@
     <string name="t_18f71e9762">Muzica sferelor</string>
     <string name="t_0b854eb300">Pisicuț</string>
     <string name="t_7a7164238c">Mentă</string>
+    <string name="t_06ec0f34bf">Pe telefon nu e configurată blocarea ecranului.</string>
     <string name="t_272e98dde1">Telefonul nu are nici Face ID, nici cod de acces.</string>
+    <string name="t_339d955a3c">Îndreaptă camera spre o podea cu model sau spre o mobilă</string>
     <string name="t_4dd78d95e6">Țintește</string>
     <string name="t_c96769af49">Atinge „+” ca să creezi prima.</string>
     <string name="t_730cde94e5">Atinge „?” de lângă el și ți-l explicăm pe înțeles. Toate cuvintele sunt în glosarul din setări.</string>
@@ -306,9 +322,14 @@
     <string name="t_da731c70ca">Cameră nouă</string>
     <string name="t_87b55f8287">Cameră nouă…</string>
     <string name="t_4a30361774">E nevoie de un iPhone cu senzor LiDAR – modele Pro de la iPhone 12 Pro.</string>
+    <string name="t_7283f54f30">E nevoie de cameră</string>
+    <string name="t_ba43c393fc">E nevoie de Serviciile Google Play pentru RA</string>
     <string name="t_b9c9ff652d">Despre</string>
+    <string name="t_7bee71b043">Actualizează Serviciile Google Play pentru RA</string>
+    <string name="t_c2f668e54f">Actualizează</string>
     <string name="t_3a3478672d">Înconjoară planta cu telefonul și vei obține o copie 3D exactă a ei. Captura durează câteva minute, construirea modelului încă vreo câteva; totul pe telefon.</string>
     <string name="t_bc8d2377f1">O copie 3D a plantei pentru RA. Modelele speciilor sunt deja în aplicație, iar pe al tău îl poți imagina după o fotografie sau îl poți scana – butonul „Model” de pe ecranul plantei.</string>
+    <string name="t_7eb02aa630">O copie 3D a plantei pentru RA. Modelele speciilor sunt deja în aplicație, iar pe al tău îl poți imagina după o fotografie — butonul „Model” de pe ecranul plantei.</string>
     <string name="t_4b919d0c3d">Obișnuit pentru specie: %s</string>
     <string name="t_00495efa90">De obicei la %s apă în pământ</string>
     <string name="t_9bc6b67c85">O orbită e un interval de udare. Orbitele apropiate sunt ale celor care se usucă repede, cele îndepărtate – ale celor răbdătoare.</string>
@@ -398,6 +419,7 @@
     <string name="t_0455b2eeff">Se afișează %1$d din %2$d: mai multe ar fi prea greu pentru telefon</string>
     <string name="t_387af5ff90">Afișează din nou sfaturile</string>
     <string name="t_ca645a26b9">Rotește roata – dedesubt vezi cum se așază noul interval pe fișă.</string>
+    <string name="t_51b8f05bf7">Câmpul de căutare e sus. Caută după porecle, specii și notițe.</string>
     <string name="t_17c7b943fc">Câmpul de căutare e jos, lângă bara de file. Caută după poreclă, specie și note.</string>
     <string name="t_cd1de7bdc3">Udă-le pe toate deodată și trimite-i vecinului un bilet.</string>
     <string name="t_c767922d35">Udă o plantă și aici vei vedea câtă apă era în pământ în acel moment.</string>
@@ -436,6 +458,7 @@
     <string name="t_3ca46e3e76">După udare, un val colorat trece peste model — așa știi că udarea a fost numărată.</string>
     <string name="t_e101868e98">Ultima udare</string>
     <string name="t_d72166f389">Vezi în RA</string>
+    <string name="t_22f978c185">Vezi planta la tine în cameră, fă-i un model propriu după o fotografie sau schimbă-i porecla, specia și intervalul de udare.</string>
     <string name="t_f945f5f017">Vezi planta în camera ta, fă-i un model propriu – după fotografie sau prin scanare – ori schimbă-i numele, specia și intervalul de udare.</string>
     <string name="t_8845f9ee9d">Așază</string>
     <string name="t_39a52fa645">Așază grădina</string>
@@ -477,6 +500,7 @@
         <item quantity="other">La fiecare %d de luni</item>
     </plurals>
     <string name="t_9caa86d668">La câte zile se udă planta — cam cât îi trebuie pământului să se usuce. Se schimbă în setările plantei.</string>
+    <string name="t_7882f56b39">Permite camera</string>
     <string name="t_cc687c1fa5">Rama cuprinde planta cu ghiveci cu tot? Atunci începe</string>
     <string name="t_0717b1b655">Aranjează</string>
     <string name="t_7ebd3688e2">Plantă</string>
@@ -508,6 +532,7 @@
     <string name="t_cd59e4204b">Grădina e blocată</string>
     <string name="t_e3b46fe6dd">Grădina ta ca un sistem solar: fiecare plantă e o planetă, o orbită e un interval de udare. Când ajunge la poarta de sus, e timpul să uzi.</string>
     <string name="t_5a05a6d3f9">Grădina se deschide doar cu Face ID sau cu codul telefonului — nimeni altcineva nu poate trage cu ochiul.</string>
+    <string name="t_8401f09a45">Grădina se deschide doar cu amprenta, fața sau blocarea ecranului telefonului — străinii nu pot trage cu ochiul.</string>
     <string name="t_2306927b56">Grădină din %s</string>
     <string name="t_928ada7e39">Grădina e așezată. Atinge o plantă ca s-o uzi.</string>
     <string name="t_e4d56c1f85">Grădinar</string>
@@ -526,6 +551,7 @@
     <string name="t_013255575f">Azi nu trebuie udată nicio plantă.</string>
     <string name="t_618a6abf44">Azi, %s</string>
     <string name="t_88be20fd06">Acum</string>
+    <string name="t_ad8df7482b">Serviciile Google Play pentru RA nu funcționează pe el. Tot restul din Sprout funcționează ca de obicei.</string>
     <string name="t_b3c4b1be56">Rețea</string>
     <string name="t_a872210c83">Intensitatea vibrațiilor</string>
     <string name="t_04954ca725">Albastru</string>
@@ -550,12 +576,14 @@
     </plurals>
     <string name="t_4a40d86849">Următoarea udare: mâine</string>
     <string name="t_b0f07c6bde">Următoarea udare: azi</string>
+    <string name="t_cef8f4a582">Prea întuneric — aprinde lumina</string>
     <string name="t_6f8ca5c940">Glosar</string>
     <string name="t_214438003b">Mă uit la fotografie…</string>
     <string name="t_6fb5cb3976">Cele mai noi întâi</string>
     <string name="t_3189602bf1">Cele mai uscate întâi</string>
     <string name="t_4ff6829db6">Zăpadă</string>
     <string name="t_1b494791c5">Fără fotografie</string>
+    <string name="t_2cb357366d">Fotografiile plantelor sunt recunoscute chiar pe telefon — nu sunt trimise nicăieri.</string>
     <string name="t_9e2d4d618a">Fotografie</string>
     <string name="t_d303471890">Fotografia e neclară – fă una mai clară.</string>
     <string name="t_bee88a5c8c">Fotografia e supraexpusă – fă-o fără soare direct.</string>
@@ -580,6 +608,7 @@
     <string name="t_8335506cd9">Cea mai uscată: %s.</string>
     <string name="t_31386bfdb5">Fotografiază planta – telefonul va încerca să-i recunoască specia.</string>
     <string name="t_2da75ff638">Scor din %s. Se actualizează când prietenul trimite din nou codul.</string>
+    <string name="t_d9467398b8">Se întâmplă când altă aplicație folosește camera. Încearcă din nou.</string>
     <string name="t_109ff6015e">Papuc</string>
     <string name="t_ba89e87d7f">Telefonul va recunoaște planta din fotografie și îi va imagina modelul: culorile frunzelor, florilor și ghiveciului, densitatea și înălțimea. Totul se calculează pe telefon, fără rețea, în câteva secunde.</string>
     <string name="t_c9b9affc8d">Recunoscută: %1$s — sigur în proporție de %2$d %%. Corectează dacă nu e așa.</string>
@@ -609,8 +638,10 @@
     <string name="t_8b19591d8a">Modelul urmează înclinarea</string>
     <string name="t_1cc281e997">Modelul din fundal se mișcă puțin când înclini telefonul — de parcă ar fi mai adânc decât ecranul.</string>
     <string name="t_c8f3f390c2">Mărar</string>
+    <string name="t_ce88d35b18">Instalează</string>
     <string name="t_5373dc43a3">Îngrijire</string>
     <string name="t_ddc1a36266">Ține cont de anotimp</string>
+    <string name="t_8a4653acae">Fișierul grădinii intră în backupul Android — împreună cu datele celorlalte aplicații, după regulile Google.</string>
     <string name="t_8041745a9b">Fișierul grădinii intră în copia de rezervă a iPhone-ului — împreună cu restul datelor tale, după regulile Apple.</string>
     <string name="t_92c396e199">Violetă africană</string>
     <string name="t_99c7c8c714">Figuri</string>
@@ -631,6 +662,7 @@
     <string name="t_84b22ed2aa">Culoare</string>
     <string name="t_7ceb6b0f96">Culoarea valului</string>
     <string name="t_4d7209b9c1">Culoarea modelului</string>
+    <string name="t_8c038b5d5a">Culorile imaginii de fundal</string>
     <string name="t_2a6d22be37">Culori, densitate și înălțime – din fotografie.</string>
     <string name="t_ac08f8dec7">Floare</string>
     <string name="t_4924d77144">Cifre</string>
@@ -647,11 +679,14 @@
     <string name="t_febbc7512c">Pentru a deschide grădina</string>
     <string name="t_e250a6df76">Șiret</string>
     <string name="t_723a09005e">Blăniță</string>
+    <string name="t_68656a952e">Această versiune e prea veche pentru Sprout.</string>
     <string name="t_b3bf1682b8">Aceasta e grădina ta</string>
     <string name="t_d342de941a">E propriul tău cod: ești deja în tabel.</string>
     <string name="t_3a925bfac5">Acest iPhone nu poate scana: are nevoie de LiDAR.</string>
+    <string name="t_8536fc8767">Acest telefon nu suportă RA</string>
     <string name="t_c7e64e73eb">Echeveria</string>
     <string name="t_77789a486b">Yucca</string>
+    <string name="t_ed3f0e507a">Limbă</string>
     <string name="t_3f264c02f1">la timp %s</string>
     <string name="t_cc86ef708c">tu</string>
     <string name="t_2e06422eda">pământul e uscat</string>
@@ -683,4 +718,11 @@
     <string name="t_d8e6f5387c">mai des de o dată pe minut</string>
     <string name="t_d959d34275">serie %d</string>
     <string name="t_34eb9e66db">• %1$s (%2$s, „%3$s”) — %4$s</string>
+    <string name="shortcut_add">Adaugă</string>
+    <string name="shortcut_search">Caută</string>
+    <string name="shortcut_stats">Statistici</string>
+    <string name="shortcut_thirst">Pe cine să ud</string>
+    <string name="tile_label">Pe cine să ud</string>
+    <string name="widget_description">Cele mai uscate plante și un buton „Udă”.</string>
+    <string name="widget_name">Pe cine să ud</string>
 </resources>

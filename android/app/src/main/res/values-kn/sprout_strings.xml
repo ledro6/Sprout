@@ -27,9 +27,13 @@
     <string name="t_197eb092cd">%d%%</string>
     <string name="t_45b8ac5695" formatted="false">20–40% ನೀರು</string>
     <string name="t_3d6c2541b9" formatted="false">40% ಅಥವಾ ಹೆಚ್ಚು ನೀರು</string>
+    <string name="t_5f5e0de553">AR ಪ್ರಾರಂಭವಾಗಲಿಲ್ಲ</string>
+    <string name="t_957c85ce41">ಕ್ಯಾಮರಾ ನೋಡುವುದರ ಮೇಲೆ AR ಗಿಡವನ್ನು ಬಿಡಿಸುತ್ತದೆ. ಚೌಕಟ್ಟುಗಳು ಎಲ್ಲಿಗೂ ಹೋಗುವುದಿಲ್ಲ.</string>
     <string name="t_14c72c397f">AR — ವರ್ಧಿತ ವಾಸ್ತವ</string>
     <string name="t_484d12fea8">AR ಅಂದರೆ ವರ್ಧಿತ ವಾಸ್ತವ: ಕ್ಯಾಮೆರಾ ನಿಮ್ಮ ಕೋಣೆಯನ್ನೂ ಅದರಲ್ಲಿ 3D ಗಿಡವನ್ನೂ ತೋರಿಸುತ್ತದೆ. ಜಾತಿಗಳ ಮಾದರಿಗಳು ಆ್ಯಪ್‌ನಲ್ಲೇ ಇವೆ; ನಿಮ್ಮದನ್ನು ಫೋಟೋದಿಂದ ಕಲ್ಪಿಸಬಹುದು ಅಥವಾ ಸ್ಕ್ಯಾನ್ ಮಾಡಬಹುದು.</string>
+    <string name="t_5c4b538eba">AR ಎಂದರೆ ವರ್ಧಿತ ವಾಸ್ತವ: ಕ್ಯಾಮರಾ ನಿಮ್ಮ ಕೋಣೆಯನ್ನು ತೋರಿಸುತ್ತದೆ, ಅದರಲ್ಲಿ ಒಂದು ಮೂರು ಆಯಾಮದ ಗಿಡ. ಜಾತಿಗಳ ಮಾದರಿಗಳು ಆ್ಯಪ್‌ನಲ್ಲೇ ಇವೆ, ನಿಮ್ಮದೇ ಮಾದರಿಯನ್ನು ಫೋಟೋದಿಂದ ರೂಪಿಸಬಹುದು.</string>
     <string name="t_809c431aa4">AR, ಮಾದರಿ ಮತ್ತು ಸೆಟ್ಟಿಂಗ್‌ಗಳು</string>
+    <string name="t_acec2ec7d0">Android %s ಅಥವಾ ನಂತರದ್ದು</string>
     <string name="t_302a05a1ac">Sprout ನಿಮ್ಮ ಬಗ್ಗೆ ಯಾವುದೇ ಮಾಹಿತಿ ಸಂಗ್ರಹಿಸುವುದಿಲ್ಲ, ಎಲ್ಲಿಗೂ ಕಳುಹಿಸುವುದಿಲ್ಲ.</string>
     <string name="t_9585992548">iOS 26 ಅಥವಾ ನಂತರದ್ದು</string>
     <string name="t_c65910cd34">“%1$s” ಮತ್ತು ಇನ್ನೂ %2$sಗೆ ನೀರು ಬೇಕು</string>
@@ -68,6 +72,7 @@
     <string name="t_a8bcae2d9a">ಮಟಿಲ್ಡಾ</string>
     <string name="t_f79b25b05d">ನಿಮ್ಮ ತೋಟ ಸೌರವ್ಯೂಹದಂತೆ: ಗಿಡಗಳು ನೀರಿನ ಕಕ್ಷೆಗಳಲ್ಲಿ ಸುತ್ತುತ್ತವೆ. ಒಮ್ಮೆ ನೋಡಿ — ಒಂದು ತಿಂಗಳನ್ನು ಕೇಳಲೂ ಬಹುದು.</string>
     <string name="t_19ff316e6f">ಸ್ಲೈಡರ್ ಎಳೆಯಿರಿ — ತೋಟ ಕೆಲವು ದಿನ ಮುಂದೆ ಹೋಗುತ್ತದೆ, ನೀವು ಸಮಯಕ್ಕೆ ಸರಿಯಾಗಿ ನೀರು ಹಾಕಿದಂತೆ.</string>
+    <string name="t_ddf5bf682d">ಫೋನನ್ನು ಇನ್ನಷ್ಟು ನಿಧಾನವಾಗಿ ಸರಿಸಿ</string>
     <string name="t_3f52bd53a9">ಹಿಂತಿರುಗುವುದು</string>
     <string name="t_c7aaa96778">ರದ್ದುಗೊಳಿಸಿ</string>
     <string name="t_f10d238768">ಸಿದ್ಧ ಮಾದರಿಗೆ ಹಿಂತಿರುಗಿ</string>
@@ -94,6 +99,7 @@
     <string name="t_2b5f40f213">ಈ ಗಿಡಕ್ಕೆ ಹಾಕಿದ ಎಲ್ಲಾ ನೀರು. ತಪ್ಪು ನಮೂದನ್ನು ದೀರ್ಘವಾಗಿ ಒತ್ತಿ ಅಳಿಸಿ.</string>
     <string name="t_2f07cfc9c2">ಎಲ್ಲಕ್ಕೂ ನೀರು ಹಾಕಲಾಗಿದೆ</string>
     <string name="t_3b5143902e">ಒಟ್ಟು</string>
+    <string name="t_eeb8caeb95">ಅಂಟಿಸಿ</string>
     <string name="t_c12ee51dd9">ಇಡೀ ಅವಧಿ</string>
     <string name="t_1059a1d77d">ನಿನ್ನೆ, %s</string>
     <string name="t_fe4b0c80f0">ಆಯ್ಕೆಮಾಡಿ</string>
@@ -113,6 +119,7 @@
     <string name="t_68ae695380">ಚಲನ ಸಂವೇದಕ</string>
     <string name="t_827d544645">ದಿನಾಂಕಗಳು</string>
     <string name="t_0bcd158c3d">ಎರಡು ಬೆರಳುಗಳಿಂದ ತಿರುಗಿಸಿ, ಪಿಂಚ್‌ನಿಂದ ಗಾತ್ರ ಬದಲಿಸಿ</string>
+    <string name="t_9978ac34b2">ಕ್ರಿಯೆಗಳು</string>
     <string name="t_b6ef08401f">ದಿನ</string>
     <string name="t_abbebfc85b">ಮೂರು ಅಥವಾ ಹೆಚ್ಚು ಗಿಡಗಳು ಒಟ್ಟಿಗೆ ನೀರು ಕೇಳುವ ದಿನ — ಎಲ್ಲಕ್ಕೂ ಒಮ್ಮೆಗೇ ನೀರು ಹಾಕುವುದು ಸುಲಭ.</string>
     <string name="t_e0c0ceee56">ಸಣ್ಣ ಮರ</string>
@@ -133,6 +140,7 @@
     <string name="t_fdf0f98738">ನೀವು ಸಮಯಕ್ಕೆ ಮುಂಚೆ ನೀರು ಹಾಕಿದರೆ, ಆ್ಯಪ್ ಗಮನಿಸಿ ಅಂತರವನ್ನು ಕಡಿಮೆ ಮಾಡಲು ಸೂಚಿಸುತ್ತದೆ.</string>
     <string name="t_19f25d5784">ಇನ್ನಷ್ಟು</string>
     <string name="t_7db203bdda">ಇನ್ನೊಂದು ಸುತ್ತು</string>
+    <string name="t_bbe42739db">ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ</string>
     <string name="t_0fb6d09e78">ನೀರು ಬೇಕು</string>
     <string name="t_ef28cc1496">ಅವಧಿಯಲ್ಲಿ</string>
     <string name="t_70efc9651a">ಈ ಅವಧಿಯಲ್ಲಿ ನೀರು ಹಾಕಿಲ್ಲ.</string>
@@ -173,6 +181,7 @@
     <string name="t_b335f763ea">ಎಲ್ಲಾ ಗಿಡಗಳು ಮತ್ತು ಸಂಪೂರ್ಣ ನೀರಿನ ದಾಖಲೆ ಹೋಗುತ್ತದೆ. ಇದನ್ನು ಹಿಂಪಡೆಯಲಾಗದು.</string>
     <string name="t_53d55db39f">ಸಾರಾಂಶ</string>
     <string name="t_779e8b3e28">ಫೋನ್ ಸೆಟ್ಟಿಂಗ್‌ಗಳಲ್ಲಿ ಆನ್ ಮಾಡಿ: Sprout → ಅಧಿಸೂಚನೆಗಳು.</string>
+    <string name="t_9c47ca16c4">ಇವುಗಳನ್ನು Google Play ನಿಂದ ಉಚಿತವಾಗಿ ಸ್ಥಾಪಿಸಲಾಗುತ್ತದೆ. ಆಮೇಲೆ AR ತಕ್ಷಣ ತೆರೆಯುತ್ತದೆ.</string>
     <string name="t_46c7be08dd">ಅಧ್ಯಯನ ಕೋಣೆ</string>
     <string name="t_0112d57d0b">ಕ್ರಾಪ್</string>
     <string name="t_01b9b803e7">ಫೋಟೋ ಕ್ರಾಪ್</string>
@@ -181,6 +190,7 @@
     <string name="t_223428bd3c">ಪ್ರತಿ ಬಿಂದು ಒಂದು ಬಾರಿ ನೀರು ಹಾಕಿದ್ದು. ಬಿಂದು ಎಷ್ಟು ಎತ್ತರವೋ, ಮಣ್ಣಿನಲ್ಲಿ ಅಷ್ಟು ಹೆಚ್ಚು ನೀರಿತ್ತು.</string>
     <string name="t_e1439f1755">ಪ್ರತಿ ಬಾರಿ ನೀರು ಹಾಕುವುದು ಒಂದು ಸ್ವರ: ಹತ್ತಿರದ ಗ್ರಹಗಳು ಎತ್ತರದ ಸ್ವರದಲ್ಲಿ ಹಾಡುತ್ತವೆ.</string>
     <string name="t_f0a22d9d1a">ಸಿಸ್ಟಮ್‌ನಂತೆ</string>
+    <string name="t_087f6705ed">ಫೋನ್‌ನಂತೆಯೇ</string>
     <string name="t_696586f496">ನಿಮ್ಮ ಹೆಸರೇನು?</string>
     <string name="t_7013b69dab">ಬಳಸುವುದು ಹೇಗೆ</string>
     <string name="t_d4066ba693">ಈಗ ಗಿಡದ ಹೆಸರೇನು?</string>
@@ -189,6 +199,9 @@
     <string name="t_7b105a68e6">ಕಲಾಂಚೋ</string>
     <string name="t_60f6304f34">ಕಲಾಥಿಯಾ</string>
     <string name="t_fe0790d4e2">ನೀರು ಹಾಕುವ ಕ್ಯಾಲೆಂಡರ್</string>
+    <string name="t_f2d0f5cc41">ಕ್ಯಾಮರಾವನ್ನು ಬೇರೊಂದು ಆ್ಯಪ್ ಬಳಸುತ್ತಿದೆ</string>
+    <string name="t_37620de860">ಫೋನ್ ಸೆಟ್ಟಿಂಗ್‌ಗಳಲ್ಲಿ ಕ್ಯಾಮರಾವನ್ನು ನಿರ್ಬಂಧಿಸಲಾಗಿದೆ. ಅಲ್ಲಿ ಅನುಮತಿಸಿ ಮತ್ತು ಹಿಂತಿರುಗಿ.</string>
+    <string name="t_601947a61c">ಕ್ಯಾಮರಾ ಮತ್ತು ಫೋಟೋಗಳು</string>
     <string name="t_d8e43f5730">ಕ್ಯಾಮೆರಾ ನಿಮ್ಮ ಕೋಣೆಯನ್ನು ತೋರಿಸುತ್ತದೆ, ಆ್ಯಪ್ ಅದರಲ್ಲಿ ಮೂರು ಆಯಾಮದ ಗಿಡವನ್ನು ಇಡುತ್ತದೆ. ಅದನ್ನು ತಿರುಗಿಸಬಹುದು, ದೊಡ್ಡದು ಮಾಡಬಹುದು ಮತ್ತು ನೀರಿನ ಕ್ಯಾನ್‌ನಿಂದ ನೀರು ಹಾಕಬಹುದು.</string>
     <string name="t_8671ea9e33">ಹನಿ</string>
     <string name="t_85618413ed">ಪ್ರತಿ ಚೌಕ ಕಳೆದ ನಾಲ್ಕು ತಿಂಗಳಲ್ಲಿನ ಒಂದು ದಿನ: ಬಣ್ಣ ಗಾಢವಾದಷ್ಟೂ ನೀರು ಹೆಚ್ಚು. ದಿನಾಂಕ ನೋಡಲು ಚೌಕವನ್ನು ಟ್ಯಾಪ್ ಮಾಡಿ.</string>
@@ -199,6 +212,7 @@
     <string name="t_eb1aa42a32">ಗಿಡಗಳ ಅಡ್ಡಹೆಸರುಗಳು, ಜಾತಿಗಳು, ತೇವಾಂಶ, ದಿನಾಂಕಗಳು — ನೀವು ನಮೂದಿಸುವುದೆಲ್ಲವೂ ಆ್ಯಪ್ ಒಳಗಿನ ಫೈಲ್‌ನಲ್ಲಿ, ಫೋನ್‌ನಲ್ಲೇ ಇರುತ್ತದೆ. ಸೆಟ್ಟಿಂಗ್‌ಗಳೂ ಅಲ್ಲೇ. ಇವುಗಳಲ್ಲಿ ಯಾವುದೂ ಸಾಧನವನ್ನು ಬಿಟ್ಟು ಹೋಗುವುದಿಲ್ಲ.</string>
     <string name="t_1c8e21179b">ಬಟನ್‌ಗಳು</string>
     <string name="t_49cdfd9292">ಸುತ್ತಲಿನ ಬಟನ್‌ಗಳು</string>
+    <string name="t_2ecb4451da">ಬಟನ್‌ಗಳು ಮತ್ತು ಕಾರ್ಡ್‌ಗಳು ಫೋನ್‌ನ ವಾಲ್‌ಪೇಪರ್ ಬಣ್ಣಗಳಲ್ಲಿ.</string>
     <string name="t_725347e425">ಯಾವಾಗ</string>
     <string name="t_512bafe5b5">ತೇವಾಂಶ ಇದಕ್ಕಿಂತ ಕಡಿಮೆಯಾದಾಗ</string>
     <string name="t_72e18d38d9">ನೀವು ಯಾವಾಗ ನೀರು ಹಾಕುತ್ತೀರಿ</string>
@@ -256,7 +270,9 @@
     <string name="t_18f71e9762">ಗೋಳಗಳ ಸಂಗೀತ</string>
     <string name="t_0b854eb300">ಮಿನಿ</string>
     <string name="t_7a7164238c">ಪುದೀನ</string>
+    <string name="t_06ec0f34bf">ಈ ಫೋನ್‌ನಲ್ಲಿ ಸ್ಕ್ರೀನ್ ಲಾಕ್ ಹೊಂದಿಸಿಲ್ಲ.</string>
     <string name="t_272e98dde1">ಈ ಫೋನ್‌ನಲ್ಲಿ Face ID ಆಗಲಿ ಪಾಸ್‌ಕೋಡ್ ಆಗಲಿ ಇಲ್ಲ.</string>
+    <string name="t_339d955a3c">ಕ್ಯಾಮರಾವನ್ನು ವಿನ್ಯಾಸವಿರುವ ನೆಲ ಅಥವಾ ಪೀಠೋಪಕರಣದತ್ತ ತಿರುಗಿಸಿ</string>
     <string name="t_4dd78d95e6">ಗುರಿ ಇಡಿ</string>
     <string name="t_c96769af49">ಮೊದಲನೆಯದನ್ನು ರಚಿಸಲು “+” ಟ್ಯಾಪ್ ಮಾಡಿ.</string>
     <string name="t_730cde94e5">ಪಕ್ಕದ “?” ಮೇಲೆ ಟ್ಯಾಪ್ ಮಾಡಿ — ಸರಳ ಮಾತುಗಳಲ್ಲಿ ವಿವರಿಸುತ್ತೇವೆ. ಎಲ್ಲಾ ಪದಗಳು ಸೆಟ್ಟಿಂಗ್‌ಗಳ ಪದಕೋಶದಲ್ಲಿವೆ.</string>
@@ -302,9 +318,14 @@
     <string name="t_da731c70ca">ಹೊಸ ಕೋಣೆ</string>
     <string name="t_87b55f8287">ಹೊಸ ಕೋಣೆ…</string>
     <string name="t_4a30361774">LiDAR ಸೆನ್ಸರ್ ಇರುವ iPhone ಬೇಕು — iPhone 12 Pro ನಿಂದ Pro ಮಾದರಿಗಳು.</string>
+    <string name="t_7283f54f30">ಕ್ಯಾಮರಾ ಬೇಕು</string>
+    <string name="t_ba43c393fc">AR ಗಾಗಿ Google Play ಸೇವೆಗಳು ಬೇಕು</string>
     <string name="t_b9c9ff652d">ಕುರಿತು</string>
+    <string name="t_7bee71b043">AR ಗಾಗಿ Google Play ಸೇವೆಗಳನ್ನು ಅಪ್‌ಡೇಟ್ ಮಾಡಿ</string>
+    <string name="t_c2f668e54f">ಅಪ್‌ಡೇಟ್ ಮಾಡಿ</string>
     <string name="t_3a3478672d">ಫೋನ್ ಹಿಡಿದು ಗಿಡದ ಸುತ್ತ ನಡೆಯಿರಿ — ಅದರ ನಿಖರ 3D ಪ್ರತಿ ಸಿಗುತ್ತದೆ. ಚಿತ್ರೀಕರಣಕ್ಕೆ ಕೆಲವು ನಿಮಿಷ, ಮಾದರಿ ನಿರ್ಮಾಣಕ್ಕೆ ಇನ್ನೂ ಕೆಲವು; ಎಲ್ಲವೂ ಫೋನ್‌ನಲ್ಲೇ.</string>
     <string name="t_bc8d2377f1">AR ಗಾಗಿ ಗಿಡದ 3D ಪ್ರತಿ. ಜಾತಿಗಳ ಮಾದರಿಗಳು ಆ್ಯಪ್‌ನಲ್ಲೇ ಇವೆ; ನಿಮ್ಮದನ್ನು ಫೋಟೋದಿಂದ ಕಲ್ಪಿಸಬಹುದು ಅಥವಾ ಸ್ಕ್ಯಾನ್ ಮಾಡಬಹುದು — ಗಿಡದ ಪರದೆಯಲ್ಲಿ “ಮಾದರಿ” ಬಟನ್.</string>
+    <string name="t_7eb02aa630">AR ಗಾಗಿ ಗಿಡದ ಮೂರು ಆಯಾಮದ ಪ್ರತಿ. ಜಾತಿಗಳ ಮಾದರಿಗಳು ಆ್ಯಪ್‌ನಲ್ಲೇ ಇವೆ, ನಿಮ್ಮದೇ ಮಾದರಿಯನ್ನು ಫೋಟೋದಿಂದ ರೂಪಿಸಬಹುದು — ಗಿಡದ ಪರದೆಯಲ್ಲಿರುವ “ಮಾದರಿ” ಬಟನ್.</string>
     <string name="t_4b919d0c3d">ಈ ಜಾತಿಗೆ ಸಾಮಾನ್ಯವಾಗಿ: %s</string>
     <string name="t_00495efa90">ಸಾಮಾನ್ಯವಾಗಿ ಮಣ್ಣಿನಲ್ಲಿ %s ನೀರು ಇದ್ದಾಗ</string>
     <string name="t_9bc6b67c85">ಒಂದು ಸುತ್ತು ಒಂದು ನೀರು ಹಾಕುವ ಅಂತರ. ಹತ್ತಿರದ ಕಕ್ಷೆಗಳು ಬೇಗ ಒಣಗುವವರದ್ದು, ದೂರದವು ತಾಳ್ಮೆಯವರದ್ದು.</string>
@@ -389,6 +410,7 @@
     <string name="t_0455b2eeff">%2$d ರಲ್ಲಿ %1$d ತೋರಿಸಲಾಗಿದೆ: ಹೆಚ್ಚಾದರೆ ಫೋನ್‌ಗೆ ಭಾರ</string>
     <string name="t_387af5ff90">ಸುಳಿವುಗಳನ್ನು ಮತ್ತೆ ತೋರಿಸಿ</string>
     <string name="t_ca645a26b9">ಚಕ್ರ ತಿರುಗಿಸಿ — ಹೊಸ ಅಂತರ ಕಾರ್ಡ್‌ನಲ್ಲಿ ಹೇಗೆ ಕಾಣುತ್ತದೆ ಎಂದು ಕೆಳಗೆ ಕಾಣುತ್ತದೆ.</string>
+    <string name="t_51b8f05bf7">ಹುಡುಕಾಟ ಕ್ಷೇತ್ರ ಮೇಲ್ಭಾಗದಲ್ಲಿದೆ. ಇದು ಅಡ್ಡಹೆಸರು, ಜಾತಿ ಮತ್ತು ಟಿಪ್ಪಣಿಗಳಲ್ಲಿ ಹುಡುಕುತ್ತದೆ.</string>
     <string name="t_17c7b943fc">ಹುಡುಕಾಟ ಕ್ಷೇತ್ರ ಕೆಳಗೆ, ಟ್ಯಾಬ್ ಬಾರ್ ಬಳಿ ಇದೆ. ಅಡ್ಡಹೆಸರು, ಜಾತಿ ಮತ್ತು ಟಿಪ್ಪಣಿಗಳಲ್ಲಿ ಹುಡುಕುತ್ತದೆ.</string>
     <string name="t_cd1de7bdc3">ಎಲ್ಲರಿಗೂ ಒಮ್ಮೆಗೇ ನೀರು ಹಾಕಿ ಮತ್ತು ನೆರೆಯವರಿಗೆ ಚೀಟಿ ಕಳುಹಿಸಿ.</string>
     <string name="t_c767922d35">ಗಿಡಕ್ಕೆ ನೀರು ಹಾಕಿ — ಆ ಕ್ಷಣದಲ್ಲಿ ಮಣ್ಣಿನಲ್ಲಿ ಎಷ್ಟು ನೀರಿತ್ತು ಎಂದು ಇಲ್ಲಿ ಕಾಣುತ್ತದೆ.</string>
@@ -426,6 +448,7 @@
     <string name="t_3ca46e3e76">ನೀರು ಹಾಕಿದ ನಂತರ ವಿನ್ಯಾಸದ ಮೇಲೆ ಬಣ್ಣದ ಅಲೆ ಓಡುತ್ತದೆ — ನೀರು ಹಾಕಿದ್ದು ಲೆಕ್ಕಕ್ಕೆ ಬಂತು ಎಂದು ಹೀಗೆ ತಿಳಿಯುತ್ತದೆ.</string>
     <string name="t_e101868e98">ಕೊನೆಯ ನೀರು</string>
     <string name="t_d72166f389">AR ನಲ್ಲಿ ನೋಡಿ</string>
+    <string name="t_22f978c185">ನಿಮ್ಮ ಕೋಣೆಯಲ್ಲೇ ಗಿಡವನ್ನು ನೋಡಿ, ಫೋಟೋದಿಂದ ಅದಕ್ಕೆ ಸ್ವಂತ ಮಾದರಿ ಮಾಡಿ, ಅಥವಾ ಅಡ್ಡಹೆಸರು, ಜಾತಿ ಮತ್ತು ನೀರುಣಿಸುವ ಅಂತರವನ್ನು ಬದಲಿಸಿ.</string>
     <string name="t_f945f5f017">ಗಿಡವನ್ನು ನಿಮ್ಮ ಕೋಣೆಯಲ್ಲಿ ನೋಡಿ, ಅದಕ್ಕೆ ಸ್ವಂತ ಮಾದರಿ ಮಾಡಿ — ಫೋಟೋ ಅಥವಾ ಸ್ಕ್ಯಾನ್ ಮೂಲಕ — ಇಲ್ಲವೇ ಹೆಸರು, ಜಾತಿ, ನೀರಿನ ಅಂತರ ಬದಲಿಸಿ.</string>
     <string name="t_8845f9ee9d">ಇರಿಸಿ</string>
     <string name="t_39a52fa645">ತೋಟ ಇರಿಸಿ</string>
@@ -465,6 +488,7 @@
         <item quantity="other">ಪ್ರತಿ %d ತಿಂಗಳುಗಳಿಗೆ</item>
     </plurals>
     <string name="t_9caa86d668">ಗಿಡಕ್ಕೆ ಎಷ್ಟು ದಿನಕ್ಕೊಮ್ಮೆ ನೀರು ಹಾಕಲಾಗುತ್ತದೆ — ಸುಮಾರು ಅಷ್ಟರಲ್ಲಿ ಮಣ್ಣು ಒಣಗುತ್ತದೆ. ಗಿಡದ ಸೆಟ್ಟಿಂಗ್‌ಗಳಲ್ಲಿ ಬದಲಿಸಬಹುದು.</string>
+    <string name="t_7882f56b39">ಕ್ಯಾಮರಾಗೆ ಅನುಮತಿಸಿ</string>
     <string name="t_cc687c1fa5">ಚೌಕಟ್ಟು ಗಿಡ ಮತ್ತು ಕುಂಡವನ್ನು ಸುತ್ತುವರಿದಿದೆಯೇ? ಹಾಗಾದರೆ ಆರಂಭಿಸಿ</string>
     <string name="t_0717b1b655">ಜೋಡಿಸಿ</string>
     <string name="t_7ebd3688e2">ಗಿಡ</string>
@@ -496,6 +520,7 @@
     <string name="t_cd59e4204b">ತೋಟ ಲಾಕ್ ಆಗಿದೆ</string>
     <string name="t_e3b46fe6dd">ನಿಮ್ಮ ತೋಟ ಸೌರವ್ಯೂಹದಂತೆ: ಪ್ರತಿ ಗಿಡ ಒಂದು ಗ್ರಹ, ಒಂದು ಸುತ್ತು ಒಂದು ನೀರು ಹಾಕುವ ಅಂತರ. ಮೇಲಿನ ದ್ವಾರ ತಲುಪಿದಾಗ ನೀರು ಹಾಕುವ ಸಮಯ.</string>
     <string name="t_5a05a6d3f9">ತೋಟ Face ID ಅಥವಾ ಫೋನ್‌ನ ಪಾಸ್‌ಕೋಡ್‌ನಿಂದ ಮಾತ್ರ ತೆರೆಯುತ್ತದೆ — ಬೇರೆ ಯಾರೂ ಇಣುಕಲಾರರು.</string>
+    <string name="t_8401f09a45">ತೋಟ ನಿಮ್ಮ ಬೆರಳಚ್ಚು, ಮುಖ ಅಥವಾ ಫೋನ್‌ನ ಸ್ಕ್ರೀನ್ ಲಾಕ್‌ನಿಂದ ಮಾತ್ರ ತೆರೆಯುತ್ತದೆ — ಬೇರೆಯವರು ಇಣುಕಲಾರರು.</string>
     <string name="t_2306927b56">%s ರಿಂದ ತೋಟ</string>
     <string name="t_928ada7e39">ತೋಟ ಇರಿಸಲಾಗಿದೆ. ನೀರು ಹಾಕಲು ಗಿಡವನ್ನು ಟ್ಯಾಪ್ ಮಾಡಿ.</string>
     <string name="t_e4d56c1f85">ತೋಟಗಾರ</string>
@@ -514,6 +539,7 @@
     <string name="t_013255575f">ಇಂದು ಯಾವ ಗಿಡಕ್ಕೂ ನೀರು ಬೇಕಿಲ್ಲ.</string>
     <string name="t_618a6abf44">ಇಂದು, %s</string>
     <string name="t_88be20fd06">ಈಗ</string>
+    <string name="t_ad8df7482b">ಇದರಲ್ಲಿ AR ಗಾಗಿ Google Play ಸೇವೆಗಳು ನಡೆಯುವುದಿಲ್ಲ. Sprout ನ ಉಳಿದೆಲ್ಲವೂ ಎಂದಿನಂತೆ ಕೆಲಸ ಮಾಡುತ್ತದೆ.</string>
     <string name="t_b3c4b1be56">ನೆಟ್‌ವರ್ಕ್</string>
     <string name="t_a872210c83">ಕಂಪನದ ಶಕ್ತಿ</string>
     <string name="t_04954ca725">ನೀಲಿ</string>
@@ -537,12 +563,14 @@
     </plurals>
     <string name="t_4a40d86849">ಮುಂದಿನ ನೀರು: ನಾಳೆ</string>
     <string name="t_b0f07c6bde">ಮುಂದಿನ ನೀರು: ಇಂದು</string>
+    <string name="t_cef8f4a582">ತುಂಬಾ ಕತ್ತಲು — ದೀಪ ಹಾಕಿ</string>
     <string name="t_6f8ca5c940">ಪದಕೋಶ</string>
     <string name="t_214438003b">ಫೋಟೋ ನೋಡುತ್ತಿದ್ದೇನೆ…</string>
     <string name="t_6fb5cb3976">ಹೊಸವು ಮೊದಲು</string>
     <string name="t_3189602bf1">ಹೆಚ್ಚು ಒಣಗಿದವು ಮೊದಲು</string>
     <string name="t_4ff6829db6">ಹಿಮ</string>
     <string name="t_1b494791c5">ಫೋಟೋ ಇಲ್ಲ</string>
+    <string name="t_2cb357366d">ಗಿಡಗಳ ಫೋಟೋಗಳನ್ನು ಫೋನ್‌ನಲ್ಲೇ ಗುರುತಿಸಲಾಗುತ್ತದೆ — ಚಿತ್ರಗಳನ್ನು ಎಲ್ಲಿಗೂ ಕಳುಹಿಸುವುದಿಲ್ಲ.</string>
     <string name="t_9e2d4d618a">ಫೋಟೋ</string>
     <string name="t_d303471890">ಫೋಟೋ ಮಸುಕಾಗಿದೆ — ಇನ್ನಷ್ಟು ಸ್ಪಷ್ಟವಾಗಿ ತೆಗೆಯಿರಿ.</string>
     <string name="t_bee88a5c8c">ಫೋಟೋದಲ್ಲಿ ಬೆಳಕು ಹೆಚ್ಚು — ನೇರ ಬಿಸಿಲು ಇಲ್ಲದೆ ತೆಗೆಯಿರಿ.</string>
@@ -567,6 +595,7 @@
     <string name="t_8335506cd9">ಅತಿ ಒಣ: %s.</string>
     <string name="t_31386bfdb5">ಗಿಡದ ಫೋಟೋ ತೆಗೆಯಿರಿ — ಫೋನ್ ಅದರ ಜಾತಿ ಗುರುತಿಸಲು ಪ್ರಯತ್ನಿಸುತ್ತದೆ.</string>
     <string name="t_2da75ff638">%s ವರೆಗಿನ ಅಂಕ. ಸ್ನೇಹಿತರು ಮತ್ತೆ ಕೋಡ್ ಕಳುಹಿಸಿದಾಗ ನವೀಕರಿಸಲಾಗುತ್ತದೆ.</string>
+    <string name="t_d9467398b8">ಬೇರೊಂದು ಆ್ಯಪ್ ಕ್ಯಾಮರಾ ಬಳಸುತ್ತಿರುವಾಗ ಹೀಗಾಗುತ್ತದೆ. ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.</string>
     <string name="t_109ff6015e">ಚಪ್ಪಲಿ</string>
     <string name="t_ba89e87d7f">ಫೋನ್ ಫೋಟೋದಲ್ಲಿನ ಗಿಡವನ್ನು ಗುರುತಿಸಿ ಅದರ ಮಾದರಿಯನ್ನು ಕಲ್ಪಿಸುತ್ತದೆ: ಎಲೆ, ಹೂವು, ಕುಂಡದ ಬಣ್ಣಗಳು, ದಟ್ಟತೆ, ಎತ್ತರ. ಎಲ್ಲವೂ ಫೋನ್‌ನಲ್ಲೇ, ಇಂಟರ್ನೆಟ್ ಇಲ್ಲದೆ, ಕೆಲವೇ ಸೆಕೆಂಡುಗಳಲ್ಲಿ.</string>
     <string name="t_c9b9affc8d">ಗುರುತಿಸಲಾಗಿದೆ: %1$s — %2$d%% ಖಚಿತ. ತಪ್ಪಾಗಿದ್ದರೆ ಸರಿಪಡಿಸಿ.</string>
@@ -596,8 +625,10 @@
     <string name="t_8b19591d8a">ವಾಲುವಿಕೆಯನ್ನು ಅನುಸರಿಸುವ ವಿನ್ಯಾಸ</string>
     <string name="t_1cc281e997">ಫೋನ್ ಓರೆ ಮಾಡಿದಾಗ ಹಿನ್ನೆಲೆಯ ವಿನ್ಯಾಸ ಸ್ವಲ್ಪ ಸರಿಯುತ್ತದೆ — ಪರದೆಗಿಂತ ಆಳದಲ್ಲಿ ಇದ್ದಂತೆ.</string>
     <string name="t_c8f3f390c2">ಸಬ್ಬಸಿಗೆ</string>
+    <string name="t_ce88d35b18">ಸ್ಥಾಪಿಸಿ</string>
     <string name="t_5373dc43a3">ಆರೈಕೆ</string>
     <string name="t_ddc1a36266">ಋತುವನ್ನು ಪರಿಗಣಿಸಿ</string>
+    <string name="t_8a4653acae">ತೋಟದ ಫೈಲ್ Android ಬ್ಯಾಕಪ್‌ಗೆ ಹೋಗುತ್ತದೆ — ಇತರ ಆ್ಯಪ್‌ಗಳ ಡೇಟಾದ ಜೊತೆಗೆ, Google ನ ನಿಯಮಗಳ ಪ್ರಕಾರ.</string>
     <string name="t_8041745a9b">ತೋಟದ ಫೈಲ್ iPhone ಬ್ಯಾಕಪ್‌ಗೆ ಹೋಗುತ್ತದೆ — ನಿಮ್ಮ ಉಳಿದ ಡೇಟಾದೊಂದಿಗೆ, Apple ನಿಯಮಗಳಂತೆ.</string>
     <string name="t_92c396e199">ಆಫ್ರಿಕನ್ ವಯೊಲೆಟ್</string>
     <string name="t_99c7c8c714">ಆಕಾರಗಳು</string>
@@ -618,6 +649,7 @@
     <string name="t_84b22ed2aa">ಬಣ್ಣ</string>
     <string name="t_7ceb6b0f96">ಅಲೆಯ ಬಣ್ಣ</string>
     <string name="t_4d7209b9c1">ವಿನ್ಯಾಸದ ಬಣ್ಣ</string>
+    <string name="t_8c038b5d5a">ವಾಲ್‌ಪೇಪರ್ ಬಣ್ಣಗಳು</string>
     <string name="t_2a6d22be37">ಬಣ್ಣ, ದಟ್ಟತೆ, ಎತ್ತರ — ಫೋಟೋದಿಂದ.</string>
     <string name="t_ac08f8dec7">ಹೂವು</string>
     <string name="t_4924d77144">ಅಂಕಿಗಳು</string>
@@ -634,11 +666,14 @@
     <string name="t_febbc7512c">ನಿಮ್ಮ ತೋಟವನ್ನು ತೆರೆಯಲು</string>
     <string name="t_e250a6df76">ಶೂ ದಾರ</string>
     <string name="t_723a09005e">ಫರ್ ಕೋಟ್</string>
+    <string name="t_68656a952e">ಈ ಆವೃತ್ತಿ Sprout ಗೆ ತುಂಬಾ ಹಳೆಯದು.</string>
     <string name="t_b3bf1682b8">ಇದು ನಿಮ್ಮ ತೋಟ</string>
     <string name="t_d342de941a">ಇದು ನಿಮ್ಮದೇ ಕೋಡ್: ನೀವು ಈಗಾಗಲೇ ಕೋಷ್ಟಕದಲ್ಲಿದ್ದೀರಿ.</string>
     <string name="t_3a925bfac5">ಈ iPhone ಸ್ಕ್ಯಾನ್ ಮಾಡಲಾಗದು: LiDAR ಬೇಕು.</string>
+    <string name="t_8536fc8767">ಈ ಫೋನ್ AR ಬೆಂಬಲಿಸುವುದಿಲ್ಲ</string>
     <string name="t_c7e64e73eb">ಎಚೆವೇರಿಯಾ</string>
     <string name="t_77789a486b">ಯುಕ್ಕಾ</string>
+    <string name="t_ed3f0e507a">ಭಾಷೆ</string>
     <string name="t_3f264c02f1">ಸಮಯಕ್ಕೆ ಸರಿಯಾಗಿ %s</string>
     <string name="t_cc86ef708c">ನೀವು</string>
     <string name="t_2e06422eda">ಮಣ್ಣು ಒಣಗಿದೆ</string>
@@ -667,4 +702,11 @@
     <string name="t_d8e6f5387c">ನಿಮಿಷಕ್ಕೆ ಒಮ್ಮೆಗಿಂತ ಹೆಚ್ಚು</string>
     <string name="t_d959d34275">ಸತತ %d</string>
     <string name="t_34eb9e66db">• %1$s (%2$s, “%3$s”) — %4$s</string>
+    <string name="shortcut_add">ಸೇರಿಸಿ</string>
+    <string name="shortcut_search">ಹುಡುಕಿ</string>
+    <string name="shortcut_stats">ಅಂಕಿಅಂಶಗಳು</string>
+    <string name="shortcut_thirst">ಯಾರಿಗೆ ನೀರು</string>
+    <string name="tile_label">ಯಾರಿಗೆ ನೀರು</string>
+    <string name="widget_description">ಹೆಚ್ಚು ಒಣಗಿದ ಗಿಡಗಳು ಮತ್ತು “ನೀರು ಹಾಕಿ” ಬಟನ್.</string>
+    <string name="widget_name">ಯಾರಿಗೆ ನೀರು</string>
 </resources>

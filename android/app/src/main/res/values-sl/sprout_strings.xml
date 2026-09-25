@@ -33,9 +33,13 @@
     <string name="t_197eb092cd">%d %%</string>
     <string name="t_45b8ac5695" formatted="false">20–40 % vode</string>
     <string name="t_3d6c2541b9" formatted="false">40 % vode ali več</string>
+    <string name="t_5f5e0de553">AR se ni zagnal</string>
+    <string name="t_957c85ce41">AR nariše rastlino čez to, kar vidi kamera. Posnetki ne gredo nikamor.</string>
     <string name="t_14c72c397f">AR – obogatena resničnost</string>
     <string name="t_484d12fea8">AR je obogatena resničnost: kamera pokaže vašo sobo in v njej 3D-rastlino. Modeli vrst so že v aplikaciji, svojega pa lahko zamislite po fotografiji ali skenirate.</string>
+    <string name="t_5c4b538eba">AR je obogatena resničnost: kamera pokaže vašo sobo in v njej prostorsko rastlino. Modeli vrst so že v aplikaciji, svojega pa si lahko izmislite po fotografiji.</string>
     <string name="t_809c431aa4">AR, model in nastavitve</string>
+    <string name="t_acec2ec7d0">Android %s ali novejši</string>
     <string name="t_302a05a1ac">Sprout o vas ne zbira nobenih podatkov in jih nikamor ne pošilja.</string>
     <string name="t_9585992548">iOS 26 ali novejši</string>
     <string name="t_c65910cd34">»%1$s« in še %2$s potrebujejo vodo</string>
@@ -74,6 +78,7 @@
     <string name="t_a8bcae2d9a">Vasilisa</string>
     <string name="t_f79b25b05d">Vaš vrt kot osončje: rastline krožijo po svojih tirnicah zalivanja. Pokukajte – tam lahko celo poslušate mesec.</string>
     <string name="t_19ff316e6f">Povlecite drsnik – vrt skoči dneve naprej, kot da zalivate pravočasno.</string>
+    <string name="t_ddf5bf682d">Premikajte telefon počasneje</string>
     <string name="t_3f52bd53a9">Vrnitev</string>
     <string name="t_c7aaa96778">Razveljavi</string>
     <string name="t_f10d238768">Nazaj na pripravljen model</string>
@@ -102,6 +107,7 @@
     <string name="t_2b5f40f213">Vsa zalivanja te rastline. Napačen vnos izbrišete z dolgim pritiskom.</string>
     <string name="t_2f07cfc9c2">Vse zalite</string>
     <string name="t_3b5143902e">Skupaj</string>
+    <string name="t_eeb8caeb95">Prilepi</string>
     <string name="t_c12ee51dd9">Ves čas</string>
     <string name="t_1059a1d77d">Včeraj, %s</string>
     <string name="t_fe4b0c80f0">Izberi</string>
@@ -121,6 +127,7 @@
     <string name="t_68ae695380">Senzor gibanja</string>
     <string name="t_827d544645">Datumi</string>
     <string name="t_0bcd158c3d">Z dvema prstoma zasuk, s ščipom velikost</string>
+    <string name="t_9978ac34b2">Dejanja</string>
     <string name="t_b6ef08401f">Dan</string>
     <string name="t_abbebfc85b">Dan, ko si bodo tri rastline ali več hkrati zaželele vode – priročno jih je zaliti vse naenkrat.</string>
     <string name="t_e0c0ceee56">Drevesce</string>
@@ -141,6 +148,7 @@
     <string name="t_fdf0f98738">Če zalivate pred rokom, aplikacija to opazi in predlaga krajši razmik.</string>
     <string name="t_19f25d5784">Več</string>
     <string name="t_7db203bdda">Še en krog</string>
+    <string name="t_bbe42739db">Poskusi znova</string>
     <string name="t_0fb6d09e78">Želijo vodo</string>
     <string name="t_ef28cc1496">V obdobju</string>
     <string name="t_70efc9651a">V tem obdobju ni bilo zalivanja.</string>
@@ -181,6 +189,7 @@
     <string name="t_b335f763ea">Izginile bodo vse rastline in ves dnevnik zalivanja. Tega ni mogoče razveljaviti.</string>
     <string name="t_53d55db39f">Povzetek</string>
     <string name="t_779e8b3e28">Vklopite jih v nastavitvah telefona: Sprout → Obvestila.</string>
+    <string name="t_9c47ca16c4">Namestijo se iz Google Play, brezplačno. Potem se AR odpre takoj.</string>
     <string name="t_46c7be08dd">Delovna soba</string>
     <string name="t_0112d57d0b">Obreži</string>
     <string name="t_01b9b803e7">Obrez fotografije</string>
@@ -189,6 +198,7 @@
     <string name="t_223428bd3c">Vsaka pika je eno zalivanje. Višje ko je pika, več vode je še bilo v zemlji.</string>
     <string name="t_e1439f1755">Vsako zalivanje je nota: bližnji planeti pojejo višje.</string>
     <string name="t_f0a22d9d1a">Kot sistem</string>
+    <string name="t_087f6705ed">Kot v telefonu</string>
     <string name="t_696586f496">Kako vam je ime?</string>
     <string name="t_7013b69dab">Kako uporabljati</string>
     <string name="t_d4066ba693">Kako se rastlina zdaj imenuje?</string>
@@ -197,6 +207,9 @@
     <string name="t_7b105a68e6">Kalanhoja</string>
     <string name="t_60f6304f34">Kalateja</string>
     <string name="t_fe0790d4e2">Koledar zalivanj</string>
+    <string name="t_f2d0f5cc41">Kamero uporablja druga aplikacija</string>
+    <string name="t_37620de860">Kamera je v nastavitvah telefona prepovedana. Dovolite jo tam in se vrnite.</string>
+    <string name="t_601947a61c">Kamera in fotografije</string>
     <string name="t_d8e43f5730">Kamera prikaže vašo sobo, aplikacija pa vanjo postavi prostorsko rastlino. Lahko jo zavrtite, povečate in zalijete z zalivalko.</string>
     <string name="t_8671ea9e33">Kapljica</string>
     <string name="t_85618413ed">Vsak kvadrat je dan iz zadnjih štirih mesecev: čim močnejša barva, tem več zalivanj. Tapnite kvadrat za datum.</string>
@@ -207,6 +220,7 @@
     <string name="t_eb1aa42a32">Vzdevki rastlin, vrste, vlažnost, datumi — vse, kar vnesete, je v datoteki v aplikaciji, na samem telefonu. Tam so tudi nastavitve. Nič od tega ne zapusti naprave.</string>
     <string name="t_1c8e21179b">Gumbi</string>
     <string name="t_49cdfd9292">Gumbi naokrog</string>
+    <string name="t_2ecb4451da">Gumbi in kartice v barvah ozadja telefona.</string>
     <string name="t_725347e425">Kdaj</string>
     <string name="t_512bafe5b5">Ko vlažnost pade pod</string>
     <string name="t_72e18d38d9">Kdaj zalivate</string>
@@ -264,7 +278,9 @@
     <string name="t_18f71e9762">Glasba sfer</string>
     <string name="t_0b854eb300">Muc</string>
     <string name="t_7a7164238c">Meta</string>
+    <string name="t_06ec0f34bf">V telefonu ni nastavljeno zaklepanje zaslona.</string>
     <string name="t_272e98dde1">Ta telefon nima ne Face ID ne gesla.</string>
+    <string name="t_339d955a3c">Usmerite kamero v tla z vzorcem ali v pohištvo</string>
     <string name="t_4dd78d95e6">Nameri</string>
     <string name="t_c96769af49">Tapnite »+«, da ustvarite prvo.</string>
     <string name="t_730cde94e5">Tapnite »?« zraven nje – razložimo preprosto. Vse besede so zbrane v slovarčku v nastavitvah.</string>
@@ -310,9 +326,14 @@
     <string name="t_da731c70ca">Nova soba</string>
     <string name="t_87b55f8287">Nova soba …</string>
     <string name="t_4a30361774">Potreben je iPhone s senzorjem LiDAR – modeli Pro od iPhona 12 Pro naprej.</string>
+    <string name="t_7283f54f30">Potrebna je kamera</string>
+    <string name="t_ba43c393fc">Potrebne so storitve Google Play za AR</string>
     <string name="t_b9c9ff652d">O aplikaciji</string>
+    <string name="t_7bee71b043">Posodobite storitve Google Play za AR</string>
+    <string name="t_c2f668e54f">Posodobi</string>
     <string name="t_3a3478672d">Obhodite rastlino s telefonom – nastala bo njena natančna 3D-kopija. Snemanje traja nekaj minut, sestavljanje modela še nekaj; vse na telefonu.</string>
     <string name="t_bc8d2377f1">3D-kopija rastline za AR. Modeli vrst so že v aplikaciji, svojega pa lahko zamislite po fotografiji ali skenirate – gumb »Model« na zaslonu rastline.</string>
+    <string name="t_7eb02aa630">Prostorska kopija rastline za AR. Modeli vrst so že v aplikaciji, svojega pa si lahko izmislite po fotografiji — gumb »Model« na zaslonu rastline.</string>
     <string name="t_4b919d0c3d">Običajno za vrsto: %s</string>
     <string name="t_00495efa90">Običajno pri %s vode v zemlji</string>
     <string name="t_9bc6b67c85">En krog je en interval zalivanja. Bližnje tirnice imajo rastline, ki se hitro sušijo, oddaljene tiste potrpežljive.</string>
@@ -407,6 +428,7 @@
     <string name="t_0455b2eeff">Prikazano %1$d od %2$d: več bi bilo za telefon pretežko</string>
     <string name="t_387af5ff90">Znova pokaži namige</string>
     <string name="t_ca645a26b9">Zavrtite kolo – spodaj vidite, kako se nov interval prikaže na kartici.</string>
+    <string name="t_51b8f05bf7">Iskalno polje je na vrhu. Išče po vzdevkih, vrstah in zapiskih.</string>
     <string name="t_17c7b943fc">Iskalno polje je spodaj, ob vrstici zavihkov. Išče po vzdevku, vrsti in zapiskih.</string>
     <string name="t_cd1de7bdc3">Zalijte vse naenkrat in pošljite sosedu sporočilo.</string>
     <string name="t_c767922d35">Zalijte rastlino in tu boste videli, koliko vode je bilo v tistem trenutku v zemlji.</string>
@@ -446,6 +468,7 @@
     <string name="t_3ca46e3e76">Po zalivanju čez vzorec steče barvni val – tako vidite, da je zalivanje zabeleženo.</string>
     <string name="t_e101868e98">Zadnje zalivanje</string>
     <string name="t_d72166f389">Poglej v AR</string>
+    <string name="t_22f978c185">Poglejte rastlino v svoji sobi, naredite ji svoj model po fotografiji ali spremenite vzdevek, vrsto in razmik zalivanja.</string>
     <string name="t_f945f5f017">Oglejte si rastlino v svoji sobi, naredite ji svoj model – po fotografiji ali s skeniranjem – ali spremenite ime, vrsto in razmik zalivanja.</string>
     <string name="t_8845f9ee9d">Postavi</string>
     <string name="t_39a52fa645">Postavi vrt</string>
@@ -489,6 +512,7 @@
         <item quantity="other">Vsakih %d mesecev</item>
     </plurals>
     <string name="t_9caa86d668">Na koliko dni se rastlina zaliva – približno toliko časa se zemlja suši. Spremeni se v nastavitvah rastline.</string>
+    <string name="t_7882f56b39">Dovoli kamero</string>
     <string name="t_cc687c1fa5">Okvir objame rastlino z loncem? Potem začnite</string>
     <string name="t_0717b1b655">Razporedi</string>
     <string name="t_7ebd3688e2">Rastlina</string>
@@ -520,6 +544,7 @@
     <string name="t_cd59e4204b">Vrt je zaklenjen</string>
     <string name="t_e3b46fe6dd">Vaš vrt kot osončje: vsaka rastlina je planet, en krog je en interval zalivanja. Ko doseže vrata na vrhu, je čas za zalivanje.</string>
     <string name="t_5a05a6d3f9">Vrt se odpre samo s Face ID ali kodo telefona – nihče drug ne more pokukati.</string>
+    <string name="t_8401f09a45">Vrt se odpre samo s prstnim odtisom, obrazom ali zaklepanjem zaslona telefona — tujci ne pokukajo.</string>
     <string name="t_2306927b56">Vrt od %s</string>
     <string name="t_928ada7e39">Vrt stoji. Tapnite rastlino, da jo zalijete.</string>
     <string name="t_e4d56c1f85">Vrtnar</string>
@@ -538,6 +563,7 @@
     <string name="t_013255575f">Danes ni treba zaliti ničesar.</string>
     <string name="t_618a6abf44">Danes, %s</string>
     <string name="t_88be20fd06">Zdaj</string>
+    <string name="t_ad8df7482b">Storitve Google Play za AR na njem ne delujejo. Vse drugo v Sproutu deluje kot običajno.</string>
     <string name="t_b3c4b1be56">Omrežje</string>
     <string name="t_a872210c83">Moč vibriranja</string>
     <string name="t_04954ca725">Modra</string>
@@ -563,12 +589,14 @@
     </plurals>
     <string name="t_4a40d86849">Naslednje zalivanje: jutri</string>
     <string name="t_b0f07c6bde">Naslednje zalivanje: danes</string>
+    <string name="t_cef8f4a582">Pretemno — prižgite luč</string>
     <string name="t_6f8ca5c940">Slovarček</string>
     <string name="t_214438003b">Gledam fotografijo …</string>
     <string name="t_6fb5cb3976">Najprej nove</string>
     <string name="t_3189602bf1">Najprej suhe</string>
     <string name="t_4ff6829db6">Sneg</string>
     <string name="t_1b494791c5">Ni fotografije</string>
+    <string name="t_2cb357366d">Fotografije rastlin se prepoznajo kar v telefonu — nikamor se ne pošiljajo.</string>
     <string name="t_9e2d4d618a">Fotografija</string>
     <string name="t_d303471890">Fotografija je zamegljena – posnemite ostrejšo.</string>
     <string name="t_bee88a5c8c">Fotografija je preosvetljena – posnemite jo brez neposrednega sonca.</string>
@@ -593,6 +621,7 @@
     <string name="t_8335506cd9">Najbolj suha: %s.</string>
     <string name="t_31386bfdb5">Fotografirajte rastlino – telefon bo poskusil prepoznati vrsto.</string>
     <string name="t_2da75ff638">Rezultat na dan %s. Posodobi se, ko prijatelj znova pošlje kodo.</string>
+    <string name="t_d9467398b8">To se zgodi, ko kamero uporablja druga aplikacija. Poskusite znova.</string>
     <string name="t_109ff6015e">Copat</string>
     <string name="t_ba89e87d7f">Telefon bo prepoznal rastlino na fotografiji in si zamislil njen model: barve listov, cvetov in lonca, gostoto in višino. Vse se izračuna na telefonu, brez omrežja, v nekaj sekundah.</string>
     <string name="t_c9b9affc8d">Prepoznano: %1$s — %2$d %% gotovosti. Popravite, če ni prav.</string>
@@ -622,8 +651,10 @@
     <string name="t_8b19591d8a">Vzorec sledi nagibu</string>
     <string name="t_1cc281e997">Vzorec v ozadju se malo premakne, ko nagnete telefon – kot da leži globlje od zaslona.</string>
     <string name="t_c8f3f390c2">Koper</string>
+    <string name="t_ce88d35b18">Namesti</string>
     <string name="t_5373dc43a3">Nega</string>
     <string name="t_ddc1a36266">Upoštevaj letni čas</string>
+    <string name="t_8a4653acae">Datoteka vrta gre v varnostno kopijo Androida — skupaj s podatki drugih aplikacij, po Googlovih pravilih.</string>
     <string name="t_8041745a9b">Datoteka vrta gre v varnostno kopijo iPhona — skupaj z ostalimi vašimi podatki, po pravilih Appla.</string>
     <string name="t_92c396e199">Afriška vijolica</string>
     <string name="t_99c7c8c714">Oblike</string>
@@ -644,6 +675,7 @@
     <string name="t_84b22ed2aa">Barva</string>
     <string name="t_7ceb6b0f96">Barva vala</string>
     <string name="t_4d7209b9c1">Barva vzorca</string>
+    <string name="t_8c038b5d5a">Barve ozadja</string>
     <string name="t_2a6d22be37">Barve, gostota in višina – s fotografije.</string>
     <string name="t_ac08f8dec7">Cvetlica</string>
     <string name="t_4924d77144">Številke</string>
@@ -660,11 +692,14 @@
     <string name="t_febbc7512c">Za odpiranje vrta</string>
     <string name="t_e250a6df76">Vezalka</string>
     <string name="t_723a09005e">Krzno</string>
+    <string name="t_68656a952e">Ta različica je prestara za Sprout.</string>
     <string name="t_b3bf1682b8">To je vaš vrt</string>
     <string name="t_d342de941a">To je vaša lastna koda: v tabeli ste že.</string>
     <string name="t_3a925bfac5">Ta iPhone ne zna skenirati: potreben je LiDAR.</string>
+    <string name="t_8536fc8767">Ta telefon ne zmore AR</string>
     <string name="t_c7e64e73eb">Ehiverija</string>
     <string name="t_77789a486b">Juka</string>
+    <string name="t_ed3f0e507a">Jezik</string>
     <string name="t_3f264c02f1">pravočasno %s</string>
     <string name="t_cc86ef708c">vi</string>
     <string name="t_2e06422eda">zemlja je suha</string>
@@ -699,4 +734,11 @@
     <string name="t_d8e6f5387c">pogosteje kot enkrat na minuto</string>
     <string name="t_d959d34275">niz %d</string>
     <string name="t_34eb9e66db">• %1$s (%2$s, »%3$s«) — %4$s</string>
+    <string name="shortcut_add">Dodaj</string>
+    <string name="shortcut_search">Iskanje</string>
+    <string name="shortcut_stats">Statistika</string>
+    <string name="shortcut_thirst">Koga zaliti</string>
+    <string name="tile_label">Koga zaliti</string>
+    <string name="widget_description">Najbolj suhe rastline in gumb »Zalij«.</string>
+    <string name="widget_name">Koga zaliti</string>
 </resources>

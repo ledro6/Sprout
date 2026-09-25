@@ -24,9 +24,13 @@
     <string name="t_197eb092cd">%d%%</string>
     <string name="t_45b8ac5695" formatted="false">20–40% nước</string>
     <string name="t_3d6c2541b9" formatted="false">40% nước trở lên</string>
+    <string name="t_5f5e0de553">AR không khởi động được</string>
+    <string name="t_957c85ce41">AR vẽ cây lên trên hình ảnh mà camera nhìn thấy. Khung hình không được gửi đi đâu cả.</string>
     <string name="t_14c72c397f">AR – thực tế tăng cường</string>
     <string name="t_484d12fea8">AR là thực tế tăng cường: camera hiện căn phòng của bạn cùng một cây 3D. Mô hình các loài đã có sẵn trong ứng dụng, còn mô hình của riêng bạn có thể hình dung từ ảnh hoặc quét.</string>
+    <string name="t_5c4b538eba">AR là thực tế tăng cường: camera hiển thị căn phòng của bạn với một cây 3D bên trong. Mô hình các loài đã có sẵn trong ứng dụng, còn mô hình của riêng bạn có thể nghĩ ra từ một bức ảnh.</string>
     <string name="t_809c431aa4">AR, mô hình và cài đặt</string>
+    <string name="t_acec2ec7d0">Android %s trở lên</string>
     <string name="t_302a05a1ac">Sprout không thu thập bất kỳ thông tin nào về bạn và không gửi đi đâu cả.</string>
     <string name="t_9585992548">iOS 26 trở lên</string>
     <string name="t_c65910cd34">“%1$s” và %2$s nữa cần nước</string>
@@ -65,6 +69,7 @@
     <string name="t_a8bcae2d9a">Matilda</string>
     <string name="t_f79b25b05d">Khu vườn như một hệ mặt trời: cây cối xoay quanh quỹ đạo tưới của mình. Ghé xem nhé — bạn còn có thể nghe cả một tháng.</string>
     <string name="t_19ff316e6f">Kéo thanh trượt — khu vườn tiến lên vài ngày, như thể bạn tưới đúng lúc.</string>
+    <string name="t_ddf5bf682d">Di chuyển điện thoại chậm hơn</string>
     <string name="t_3f52bd53a9">Về</string>
     <string name="t_c7aaa96778">Hoàn tác</string>
     <string name="t_f10d238768">Quay lại mô hình có sẵn</string>
@@ -90,6 +95,7 @@
     <string name="t_2b5f40f213">Mọi lần tưới của cây này. Nhấn giữ một mục sai để xóa.</string>
     <string name="t_2f07cfc9c2">Đã tưới hết</string>
     <string name="t_3b5143902e">Tổng</string>
+    <string name="t_eeb8caeb95">Dán</string>
     <string name="t_c12ee51dd9">Mọi lúc</string>
     <string name="t_1059a1d77d">Hôm qua, %s</string>
     <string name="t_fe4b0c80f0">Chọn</string>
@@ -109,6 +115,7 @@
     <string name="t_68ae695380">Cảm biến chuyển động</string>
     <string name="t_827d544645">Ngày</string>
     <string name="t_0bcd158c3d">Hai ngón để xoay, chụm để đổi kích thước</string>
+    <string name="t_9978ac34b2">Thao tác</string>
     <string name="t_b6ef08401f">Ngày</string>
     <string name="t_abbebfc85b">Ngày mà ba cây trở lên cùng cần nước một lúc — tiện tưới tất cả trong một lần.</string>
     <string name="t_e0c0ceee56">Cây nhỏ</string>
@@ -129,6 +136,7 @@
     <string name="t_fdf0f98738">Nếu bạn tưới sớm hơn hạn, ứng dụng sẽ nhận ra và đề nghị rút ngắn chu kỳ.</string>
     <string name="t_19f25d5784">Thêm nữa</string>
     <string name="t_7db203bdda">Thêm một vòng</string>
+    <string name="t_bbe42739db">Thử lại</string>
     <string name="t_0fb6d09e78">Cần nước</string>
     <string name="t_ef28cc1496">Trong khoảng thời gian</string>
     <string name="t_70efc9651a">Không có lần tưới nào trong khoảng thời gian này.</string>
@@ -169,6 +177,7 @@
     <string name="t_b335f763ea">Tất cả cây và toàn bộ nhật ký tưới sẽ biến mất. Không thể hoàn tác.</string>
     <string name="t_53d55db39f">Tóm tắt</string>
     <string name="t_779e8b3e28">Hãy bật trong Cài đặt của điện thoại: Sprout → Thông báo.</string>
+    <string name="t_9c47ca16c4">Cài đặt miễn phí từ Google Play. Sau đó AR sẽ mở ngay.</string>
     <string name="t_46c7be08dd">Phòng làm việc</string>
     <string name="t_0112d57d0b">Cắt</string>
     <string name="t_01b9b803e7">Khung ảnh</string>
@@ -177,6 +186,7 @@
     <string name="t_223428bd3c">Mỗi chấm là một lần tưới. Chấm càng cao, đất càng còn nhiều nước.</string>
     <string name="t_e1439f1755">Mỗi lần tưới là một nốt nhạc: hành tinh gần hát cao hơn.</string>
     <string name="t_f0a22d9d1a">Theo hệ thống</string>
+    <string name="t_087f6705ed">Giống điện thoại</string>
     <string name="t_696586f496">Bạn tên là gì?</string>
     <string name="t_7013b69dab">Cách dùng</string>
     <string name="t_d4066ba693">Giờ cây tên là gì?</string>
@@ -185,6 +195,9 @@
     <string name="t_7b105a68e6">Trường sinh</string>
     <string name="t_60f6304f34">Đuôi công</string>
     <string name="t_fe0790d4e2">Lịch tưới</string>
+    <string name="t_f2d0f5cc41">Camera đang được ứng dụng khác sử dụng</string>
+    <string name="t_37620de860">Camera bị chặn trong cài đặt của điện thoại. Hãy cho phép ở đó rồi quay lại.</string>
+    <string name="t_601947a61c">Camera và ảnh</string>
     <string name="t_d8e43f5730">Camera hiển thị căn phòng của bạn, còn ứng dụng đặt vào đó một cây 3D. Bạn có thể xoay, phóng to và tưới bằng bình tưới.</string>
     <string name="t_8671ea9e33">Giọt nước</string>
     <string name="t_85618413ed">Mỗi ô là một ngày trong bốn tháng gần đây: màu càng đậm, càng tưới nhiều. Chạm vào ô để xem ngày.</string>
@@ -195,6 +208,7 @@
     <string name="t_eb1aa42a32">Biệt danh cây, loài, độ ẩm, ngày tháng — mọi thứ bạn nhập nằm trong một tệp bên trong ứng dụng, ngay trên điện thoại. Cả phần cài đặt cũng vậy. Không gì rời khỏi thiết bị.</string>
     <string name="t_1c8e21179b">Các nút</string>
     <string name="t_49cdfd9292">Các nút xung quanh</string>
+    <string name="t_2ecb4451da">Nút và thẻ theo màu hình nền của điện thoại.</string>
     <string name="t_725347e425">Khi nào</string>
     <string name="t_512bafe5b5">Khi độ ẩm dưới</string>
     <string name="t_72e18d38d9">Khi nào bạn tưới</string>
@@ -252,7 +266,9 @@
     <string name="t_18f71e9762">Nhạc của các thiên cầu</string>
     <string name="t_0b854eb300">Mèo Mun</string>
     <string name="t_7a7164238c">Bạc hà</string>
+    <string name="t_06ec0f34bf">Điện thoại chưa thiết lập khóa màn hình.</string>
     <string name="t_272e98dde1">Điện thoại này không có Face ID lẫn mật mã.</string>
+    <string name="t_339d955a3c">Hướng camera vào sàn nhà có hoa văn hoặc đồ nội thất</string>
     <string name="t_4dd78d95e6">Ngắm</string>
     <string name="t_c96769af49">Chạm “+” để tạo phòng đầu tiên.</string>
     <string name="t_730cde94e5">Chạm vào “?” bên cạnh — chúng tôi giải thích bằng lời đơn giản. Mọi từ đều có trong bảng thuật ngữ ở phần cài đặt.</string>
@@ -298,9 +314,14 @@
     <string name="t_da731c70ca">Phòng mới</string>
     <string name="t_87b55f8287">Phòng mới…</string>
     <string name="t_4a30361774">Cần iPhone có cảm biến LiDAR — các đời Pro từ iPhone 12 Pro.</string>
+    <string name="t_7283f54f30">Cần camera</string>
+    <string name="t_ba43c393fc">Cần Dịch vụ Google Play cho AR</string>
     <string name="t_b9c9ff652d">Giới thiệu</string>
+    <string name="t_7bee71b043">Hãy cập nhật Dịch vụ Google Play cho AR</string>
+    <string name="t_c2f668e54f">Cập nhật</string>
     <string name="t_3a3478672d">Cầm điện thoại đi quanh cây — bạn sẽ có bản sao 3D chính xác của nó. Chụp mất vài phút, dựng mô hình thêm vài phút nữa; tất cả trên điện thoại.</string>
     <string name="t_bc8d2377f1">Bản sao 3D của cây cho AR. Mô hình các loài đã có sẵn trong ứng dụng, còn mô hình của riêng bạn có thể hình dung từ ảnh hoặc quét — nút “Mô hình” trên màn hình cây.</string>
+    <string name="t_7eb02aa630">Bản sao 3D của cây để dùng trong AR. Mô hình các loài đã có sẵn trong ứng dụng, còn mô hình của riêng bạn có thể nghĩ ra từ một bức ảnh — nút “Mô hình” trên màn hình của cây.</string>
     <string name="t_4b919d0c3d">Thường với loài này: %s</string>
     <string name="t_00495efa90">Thường khi đất còn %s nước</string>
     <string name="t_9bc6b67c85">Một vòng là một khoảng tưới. Quỹ đạo gần thuộc về cây mau khô, quỹ đạo xa thuộc về cây kiên nhẫn.</string>
@@ -380,6 +401,7 @@
     <string name="t_0455b2eeff">Đang hiển thị %1$d/%2$d: nhiều hơn sẽ quá nặng cho điện thoại</string>
     <string name="t_387af5ff90">Hiện lại gợi ý</string>
     <string name="t_ca645a26b9">Xoay bánh xe — bên dưới sẽ thấy khoảng tưới mới hiện trên thẻ ra sao.</string>
+    <string name="t_51b8f05bf7">Ô tìm kiếm ở trên cùng. Tìm theo biệt danh, loài và ghi chú.</string>
     <string name="t_17c7b943fc">Ô tìm kiếm ở dưới cùng, cạnh thanh tab. Tìm theo biệt danh, loài và ghi chú.</string>
     <string name="t_cd1de7bdc3">Tưới tất cả một lượt và gửi hàng xóm một ghi chú.</string>
     <string name="t_c767922d35">Hãy tưới một cây, rồi ở đây bạn sẽ thấy lúc đó trong đất có bao nhiêu nước.</string>
@@ -416,6 +438,7 @@
     <string name="t_3ca46e3e76">Sau khi tưới, một làn sóng màu chạy qua hoa văn — dấu hiệu lần tưới đã được ghi nhận.</string>
     <string name="t_e101868e98">Lần tưới cuối</string>
     <string name="t_d72166f389">Xem bằng AR</string>
+    <string name="t_22f978c185">Ngắm cây ngay trong phòng bạn, tạo cho nó mô hình riêng từ ảnh hoặc đổi biệt danh, loài và chu kỳ tưới.</string>
     <string name="t_f945f5f017">Xem cây trong phòng của bạn, tạo cho cây mô hình riêng — từ ảnh hoặc bản quét — hoặc đổi tên, loài và khoảng cách tưới.</string>
     <string name="t_8845f9ee9d">Đặt</string>
     <string name="t_39a52fa645">Đặt khu vườn</string>
@@ -453,6 +476,7 @@
         <item quantity="other">%d tháng một lần</item>
     </plurals>
     <string name="t_9caa86d668">Bao nhiêu ngày tưới một lần — khoảng thời gian đất khô đi. Đổi trong phần cài đặt của cây.</string>
+    <string name="t_7882f56b39">Cho phép camera</string>
     <string name="t_cc687c1fa5">Khung đã bao trọn cây và chậu chưa? Vậy thì bắt đầu</string>
     <string name="t_0717b1b655">Sắp xếp</string>
     <string name="t_7ebd3688e2">Cây</string>
@@ -484,6 +508,7 @@
     <string name="t_cd59e4204b">Khu vườn đã khóa</string>
     <string name="t_e3b46fe6dd">Khu vườn như một hệ mặt trời: mỗi cây là một hành tinh, một vòng quỹ đạo là một khoảng tưới. Khi đến cổng ở trên cùng là lúc cần tưới.</string>
     <string name="t_5a05a6d3f9">Khu vườn chỉ mở bằng Face ID hoặc mật mã điện thoại — người khác không xem được.</string>
+    <string name="t_8401f09a45">Khu vườn chỉ mở bằng vân tay, khuôn mặt của bạn hoặc khóa màn hình điện thoại — người lạ không thể xem trộm.</string>
     <string name="t_2306927b56">Khu vườn từ %s</string>
     <string name="t_928ada7e39">Khu vườn đã được đặt. Chạm vào cây để tưới.</string>
     <string name="t_e4d56c1f85">Người làm vườn</string>
@@ -502,6 +527,7 @@
     <string name="t_013255575f">Hôm nay không cây nào cần tưới.</string>
     <string name="t_618a6abf44">Hôm nay, %s</string>
     <string name="t_88be20fd06">Bây giờ</string>
+    <string name="t_ad8df7482b">Dịch vụ Google Play cho AR không chạy trên điện thoại này. Mọi thứ khác trong Sprout vẫn hoạt động bình thường.</string>
     <string name="t_b3c4b1be56">Mạng</string>
     <string name="t_a872210c83">Độ mạnh của rung</string>
     <string name="t_04954ca725">Xanh dương</string>
@@ -524,12 +550,14 @@
     </plurals>
     <string name="t_4a40d86849">Lần tưới tiếp theo: ngày mai</string>
     <string name="t_b0f07c6bde">Lần tưới tiếp theo: hôm nay</string>
+    <string name="t_cef8f4a582">Quá tối — hãy bật đèn</string>
     <string name="t_6f8ca5c940">Bảng thuật ngữ</string>
     <string name="t_214438003b">Đang xem ảnh…</string>
     <string name="t_6fb5cb3976">Mới nhất trước</string>
     <string name="t_3189602bf1">Khô nhất trước</string>
     <string name="t_4ff6829db6">Tuyết</string>
     <string name="t_1b494791c5">Chưa có ảnh</string>
+    <string name="t_2cb357366d">Ảnh cây được nhận dạng ngay trên điện thoại — ảnh không được gửi đi đâu cả.</string>
     <string name="t_9e2d4d618a">Ảnh</string>
     <string name="t_d303471890">Ảnh bị mờ — hãy chụp rõ hơn.</string>
     <string name="t_bee88a5c8c">Ảnh bị cháy sáng — hãy chụp tránh nắng trực tiếp.</string>
@@ -554,6 +582,7 @@
     <string name="t_8335506cd9">Khô nhất: %s.</string>
     <string name="t_31386bfdb5">Chụp ảnh cây — điện thoại sẽ thử nhận ra loài cây.</string>
     <string name="t_2da75ff638">Điểm tính đến %s. Sẽ cập nhật khi bạn của bạn gửi lại mã.</string>
+    <string name="t_d9467398b8">Điều này xảy ra khi ứng dụng khác đang dùng camera. Hãy thử lại.</string>
     <string name="t_109ff6015e">Dép lê</string>
     <string name="t_ba89e87d7f">Điện thoại sẽ nhận ra cây trong ảnh và hình dung mô hình của nó: màu lá, hoa và chậu, độ dày và chiều cao. Tất cả tính trên điện thoại, không cần mạng, trong vài giây.</string>
     <string name="t_c9b9affc8d">Nhận ra: %1$s — chắc chắn %2$d%%. Hãy sửa nếu sai.</string>
@@ -583,8 +612,10 @@
     <string name="t_8b19591d8a">Hoa văn theo độ nghiêng</string>
     <string name="t_1cc281e997">Hoa văn nền dịch chuyển nhẹ khi bạn nghiêng điện thoại — như thể nằm sâu hơn màn hình.</string>
     <string name="t_c8f3f390c2">Thì là</string>
+    <string name="t_ce88d35b18">Cài đặt</string>
     <string name="t_5373dc43a3">Chăm sóc</string>
     <string name="t_ddc1a36266">Tính đến mùa</string>
+    <string name="t_8a4653acae">Tệp khu vườn được đưa vào bản sao lưu Android — cùng với dữ liệu của các ứng dụng khác, theo quy tắc của Google.</string>
     <string name="t_8041745a9b">Tệp khu vườn nằm trong bản sao lưu iPhone — cùng với các dữ liệu khác của bạn, theo quy định của Apple.</string>
     <string name="t_92c396e199">Violet châu Phi</string>
     <string name="t_99c7c8c714">Hình</string>
@@ -605,6 +636,7 @@
     <string name="t_84b22ed2aa">Màu</string>
     <string name="t_7ceb6b0f96">Màu sóng</string>
     <string name="t_4d7209b9c1">Màu hoa văn</string>
+    <string name="t_8c038b5d5a">Màu hình nền</string>
     <string name="t_2a6d22be37">Màu sắc, độ dày và chiều cao — từ ảnh.</string>
     <string name="t_ac08f8dec7">Hoa</string>
     <string name="t_4924d77144">Con số</string>
@@ -621,11 +653,14 @@
     <string name="t_febbc7512c">Để mở khu vườn của bạn</string>
     <string name="t_e250a6df76">Dây giày</string>
     <string name="t_723a09005e">Áo lông</string>
+    <string name="t_68656a952e">Phiên bản này quá cũ đối với Sprout.</string>
     <string name="t_b3bf1682b8">Đây là khu vườn của bạn</string>
     <string name="t_d342de941a">Đây là mã của chính bạn: bạn đã có trong bảng.</string>
     <string name="t_3a925bfac5">iPhone này không quét được: cần có LiDAR.</string>
+    <string name="t_8536fc8767">Điện thoại này không hỗ trợ AR</string>
     <string name="t_c7e64e73eb">Sen đá</string>
     <string name="t_77789a486b">Phất dụ</string>
+    <string name="t_ed3f0e507a">Ngôn ngữ</string>
     <string name="t_3f264c02f1">đúng lúc %s</string>
     <string name="t_cc86ef708c">bạn</string>
     <string name="t_2e06422eda">đất khô</string>
@@ -651,4 +686,11 @@
     <string name="t_d8e6f5387c">hơn một lần mỗi phút</string>
     <string name="t_d959d34275">chuỗi %d</string>
     <string name="t_34eb9e66db">• %1$s (%2$s, “%3$s”) — %4$s</string>
+    <string name="shortcut_add">Thêm</string>
+    <string name="shortcut_search">Tìm kiếm</string>
+    <string name="shortcut_stats">Thống kê</string>
+    <string name="shortcut_thirst">Tưới cây nào</string>
+    <string name="tile_label">Tưới cây nào</string>
+    <string name="widget_description">Những cây khô nhất và nút “Tưới”.</string>
+    <string name="widget_name">Tưới cây nào</string>
 </resources>

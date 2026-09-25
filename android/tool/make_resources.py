@@ -8,7 +8,8 @@
 Таблицы iOS (tool/strings/<язык>.json) только читаются: ключ — русский
 текст, перевод — строка или формы числа. Строки, которые есть только на
 Android (канал уведомлений, плитка быстрых настроек, ярлыки), лежат рядом —
-android/strings/<язык>.json, в том же виде.
+android/strings/<язык>.json, в том же виде. Где перевод iOS говорит «iPhone»,
+а на Android это просто телефон, — замена в android/strings/overrides/.
 
 Код зовёт `Lang.text("…")` / `Lang.format("…", …)` по-русски, как на iOS.
 Генератор даёт каждой строке имя ресурса по хэшу ключа и пишет таблицу
@@ -30,6 +31,7 @@ ANDROID = Path(__file__).resolve().parent.parent
 ROOT = ANDROID.parent
 TABLES = ROOT / "tool" / "strings"
 OVERLAY = ANDROID / "strings"
+OVERRIDES = OVERLAY / "overrides"
 RES = ANDROID / "app" / "src" / "main" / "res"
 KOTLIN = ANDROID / "app" / "src" / "main" / "kotlin"
 TABLE_KT = KOTLIN / "com" / "ledro6" / "sprout" / "platform" / "StringTable.kt"
@@ -86,6 +88,19 @@ TEMPLATE = re.compile(r'\bLang\.(?:text|format|key)\(\s*"(?:[^"\\]|\\.)*?(?<!\\)
 NAMED = re.compile(r'\bKey\(\s*"((?:[^"\\$]|\\.|\$(?![{A-Za-z_]))*)"')
 
 
+# Строки, которые зовут XML-файлы (манифест, виджет, ярлыки), — под
+# постоянными именами: хэш в XML не напишешь руками.
+XML_NAMES = {
+    "widget_name": "Кого полить",
+    "widget_description": "Самые сухие растения и кнопка «Полить».",
+    "shortcut_add": "Добавить",
+    "shortcut_stats": "Статистика",
+    "shortcut_search": "Поиск",
+    "shortcut_thirst": "Кого полить",
+    "tile_label": "Кого полить",
+}
+
+
 def load(folder, lang):
     path = folder / f"{lang}.json"
     if not path.exists():
@@ -103,6 +118,8 @@ def strings(lang):
     if clash:
         raise SystemExit(f"{lang}: ключи и в iOS, и в Android: {sorted(clash)[:3]}")
     base.update(extra)
+    # Замены: перевод iOS, где сказано «iPhone», а на Android это телефон.
+    base.update({k: v for k, v in load(OVERRIDES, lang).items() if not k.startswith("_")})
     return base
 
 
@@ -175,6 +192,10 @@ def resources(lang):
             extra = ' formatted="false"' if formatted(text) else ""
             lines.append(f'    <string name="{name(key, "t_")}"{extra}>'
                          f"{xml_text(text)}</string>")
+    for alias, key in sorted(XML_NAMES.items()):
+        value = table.get(key, key if lang == "ru" else None)
+        if isinstance(value, str):
+            lines.append(f'    <string name="{alias}">{xml_text(java(value))}</string>')
     lines.append("</resources>")
     return "\n".join(lines) + "\n"
 
@@ -286,6 +307,8 @@ def used():
                 continue
             line = text.count("\n", 0, match.start()) + 1
             found.setdefault(key, f"{path.relative_to(ANDROID)}:{line}")
+    for alias, key in XML_NAMES.items():
+        found.setdefault(key, f"XML @string/{alias}")
     return found
 
 
@@ -332,6 +355,15 @@ def check():
         if mine != overlay_keys:
             problems.append(f"{lang}: строки Android не совпадают с английскими: "
                             f"{sorted(mine ^ overlay_keys)[:3]}")
+    base_en = {k for k in load(TABLES, "en") if not k.startswith("_")}
+    for lang in LANGS:
+        for key, text in load(OVERRIDES, lang).items():
+            if key.startswith("_"):
+                continue
+            if key not in base_en:
+                problems.append(f"{lang}: замена «{key}» — нет такого ключа в таблицах iOS")
+            elif sorted(SPEC.findall(text)) != sorted(SPEC.findall(key)):
+                problems.append(f"{lang}: замена «{key}» — другие подстановки")
     code = set(used())
     idle = sorted(overlay_keys - code)
     if idle:

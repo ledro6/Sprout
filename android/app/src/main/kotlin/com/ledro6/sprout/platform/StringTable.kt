@@ -6,7 +6,7 @@ import com.ledro6.sprout.R
 /** Русский ключ → ресурс. Куски по двести строк: один метод JVM не вместил бы всё. */
 internal object StringTable {
     val texts: Map<String, Int> by lazy {
-        HashMap<String, Int>(1204).apply {
+        HashMap<String, Int>(1274).apply {
             part0(this)
             part1(this)
             part2(this)
@@ -48,9 +48,13 @@ internal object StringTable {
         map["%lld%%"] = R.string.t_197eb092cd
         map["20–40% воды"] = R.string.t_45b8ac5695
         map["40% воды и больше"] = R.string.t_3d6c2541b9
+        map["AR не запустился"] = R.string.t_5f5e0de553
+        map["AR рисует растение поверх того, что видит камера. Кадры никуда не уходят."] = R.string.t_957c85ce41
         map["AR — дополненная реальность"] = R.string.t_14c72c397f
         map["AR — дополненная реальность: камера показывает комнату, а в ней — объёмное растение. Модели видов уже в приложении, а свою можно придумать по фото или отсканировать."] = R.string.t_484d12fea8
+        map["AR — дополненная реальность: камера показывает комнату, а в ней — объёмное растение. Модели видов уже в приложении, а свою можно придумать по фото."] = R.string.t_5c4b538eba
         map["AR, модель и настройки"] = R.string.t_809c431aa4
+        map["Android %@ и новее"] = R.string.t_acec2ec7d0
         map["Sprout не собирает о вас никаких сведений и никуда их не передаёт."] = R.string.t_302a05a1ac
         map["iOS 26 и новее"] = R.string.t_9585992548
         map["«%1\$@» и ещё %2\$@ просят воды"] = R.string.t_c65910cd34
@@ -89,6 +93,7 @@ internal object StringTable {
         map["Василиса"] = R.string.t_a8bcae2d9a
         map["Ваш сад как солнечная система: растения кружат по орбитам полива. Загляните — там можно послушать месяц."] = R.string.t_f79b25b05d
         map["Ведите ползунок — сад перенесётся на дни вперёд, если поливать вовремя."] = R.string.t_19ff316e6f
+        map["Ведите телефон медленнее"] = R.string.t_ddf5bf682d
         map["Вернусь"] = R.string.t_3f52bd53a9
         map["Вернуть"] = R.string.t_c7aaa96778
         map["Вернуть готовую модель"] = R.string.t_f10d238768
@@ -111,6 +116,7 @@ internal object StringTable {
         map["Все поливы этого растения. Ошибочную запись удалит долгое нажатие."] = R.string.t_2b5f40f213
         map["Все политы"] = R.string.t_2f07cfc9c2
         map["Всего"] = R.string.t_3b5143902e
+        map["Вставить"] = R.string.t_eeb8caeb95
         map["Всё время"] = R.string.t_c12ee51dd9
         map["Вчера, %@"] = R.string.t_1059a1d77d
         map["Выбрать"] = R.string.t_fe4b0c80f0
@@ -130,6 +136,7 @@ internal object StringTable {
         map["Датчик движения"] = R.string.t_68ae695380
         map["Даты"] = R.string.t_827d544645
         map["Двумя пальцами — повернуть, щипком — размер"] = R.string.t_0bcd158c3d
+        map["Действия"] = R.string.t_9978ac34b2
         map["День"] = R.string.t_b6ef08401f
         map["День, когда воды попросят сразу три растения и больше, — удобно полить всех за один заход."] = R.string.t_abbebfc85b
         map["Деревце"] = R.string.t_e0c0ceee56
@@ -150,6 +157,7 @@ internal object StringTable {
         map["Если вы поливаете раньше срока, приложение заметит и предложит сделать срок короче."] = R.string.t_fdf0f98738
         map["Ещё"] = R.string.t_19f25d5784
         map["Ещё круг"] = R.string.t_7db203bdda
+        map["Ещё раз"] = R.string.t_bbe42739db
         map["Ждут воды"] = R.string.t_0fb6d09e78
         map["За период"] = R.string.t_ef28cc1496
         map["За этот период поливов не было."] = R.string.t_70efc9651a
@@ -190,6 +198,7 @@ internal object StringTable {
         map["Исчезнут все растения и весь журнал поливов. Вернуть их будет нельзя."] = R.string.t_b335f763ea
         map["Итог"] = R.string.t_53d55db39f
         map["Их включают в настройках телефона: Sprout → Уведомления."] = R.string.t_779e8b3e28
+        map["Их ставят из Google Play, бесплатно. Потом AR откроется сразу."] = R.string.t_9c47ca16c4
         map["Кабинет"] = R.string.t_46c7be08dd
         map["Кадр"] = R.string.t_0112d57d0b
         map["Кадр снимка"] = R.string.t_01b9b803e7
@@ -198,6 +207,7 @@ internal object StringTable {
         map["Каждая точка — полив. Чем выше точка, тем больше воды ещё было в земле."] = R.string.t_223428bd3c
         map["Каждый полив — нота: ближние планеты поют выше."] = R.string.t_e1439f1755
         map["Как в системе"] = R.string.t_f0a22d9d1a
+        map["Как в телефоне"] = R.string.t_087f6705ed
         map["Как вас зовут?"] = R.string.t_696586f496
         map["Как пользоваться"] = R.string.t_7013b69dab
         map["Как теперь зовут растение?"] = R.string.t_d4066ba693
@@ -206,6 +216,9 @@ internal object StringTable {
         map["Каланхоэ"] = R.string.t_7b105a68e6
         map["Калатея"] = R.string.t_60f6304f34
         map["Календарь поливов"] = R.string.t_fe0790d4e2
+        map["Камера занята другим приложением"] = R.string.t_f2d0f5cc41
+        map["Камера запрещена в настройках телефона. Разрешите её там и вернитесь."] = R.string.t_37620de860
+        map["Камера и фото"] = R.string.t_601947a61c
         map["Камера показывает вашу комнату, а приложение ставит в неё объёмное растение. Его можно повернуть, растянуть и полить лейкой."] = R.string.t_d8e43f5730
         map["Капля"] = R.string.t_8671ea9e33
         map["Квадрат — день за последние четыре месяца: чем гуще цвет, тем больше поливов. Нажмите на квадрат — появится дата."] = R.string.t_85618413ed
@@ -216,10 +229,14 @@ internal object StringTable {
         map["Клички растений, виды, влажность, даты — всё, что вы вводите, — лежит в файле внутри приложения, на самом телефоне. Там же настройки. Ничего из этого не покидает устройство."] = R.string.t_eb1aa42a32
         map["Кнопки"] = R.string.t_1c8e21179b
         map["Кнопки вокруг"] = R.string.t_49cdfd9292
+        map["Кнопки и плашки — в цветах обоев телефона."] = R.string.t_2ecb4451da
         map["Когда"] = R.string.t_725347e425
         map["Когда влажность ниже"] = R.string.t_512bafe5b5
         map["Когда поливаете"] = R.string.t_72e18d38d9
         map["Когда появятся поливы, здесь будет видно, в какие часы и дни вы поливаете."] = R.string.t_e772b4e685
+    }
+
+    private fun part1(map: HashMap<String, Int>) {
         map["Когда уезжаете и когда вернётесь."] = R.string.t_478d1fba37
         map["Кого поливают чаще всех, а кого дольше всех не поливали. Нажмите на растение — откроется его статистика."] = R.string.t_1326e545e5
         map["Кого полить"] = R.string.t_afc764442c
@@ -234,9 +251,6 @@ internal object StringTable {
         map["Комната появится, когда вы нажмёте «Готово»."] = R.string.t_2b88f89251
         map["Комнатное растение"] = R.string.t_6b63888899
         map["Комнаты"] = R.string.t_4085446d17
-    }
-
-    private fun part1(map: HashMap<String, Int>) {
         map["Компот"] = R.string.t_cc861ad78d
         map["Коралловый"] = R.string.t_a651d8828a
         map["Круг пройден. Можно ещё один — пониже или повыше"] = R.string.t_8103f9c9cd
@@ -276,7 +290,9 @@ internal object StringTable {
         map["Музыка сфер"] = R.string.t_18f71e9762
         map["Мурзик"] = R.string.t_0b854eb300
         map["Мята"] = R.string.t_7a7164238c
+        map["На телефоне не настроена блокировка экрана."] = R.string.t_06ec0f34bf
         map["На телефоне нет ни Face ID, ни код-пароля."] = R.string.t_272e98dde1
+        map["Наведите камеру на пол с узором или на мебель"] = R.string.t_339d955a3c
         map["Навести"] = R.string.t_4dd78d95e6
         map["Нажмите «+», чтобы завести первую."] = R.string.t_c96769af49
         map["Нажмите «?» рядом с ним — объясним простыми словами. Все слова собраны в словарике в настройках."] = R.string.t_730cde94e5
@@ -322,9 +338,14 @@ internal object StringTable {
         map["Новая комната"] = R.string.t_da731c70ca
         map["Новая комната…"] = R.string.t_87b55f8287
         map["Нужен iPhone с датчиком LiDAR — модели Pro, начиная с iPhone 12 Pro."] = R.string.t_4a30361774
+        map["Нужна камера"] = R.string.t_7283f54f30
+        map["Нужны сервисы Google Play для AR"] = R.string.t_ba43c393fc
         map["О приложении"] = R.string.t_b9c9ff652d
+        map["Обновите сервисы Google Play для AR"] = R.string.t_7bee71b043
+        map["Обновить"] = R.string.t_c2f668e54f
         map["Обойдите растение с телефоном по кругу — получится его точная объёмная копия. Съёмка займёт пару минут, сборка модели — ещё несколько; всё на телефоне."] = R.string.t_3a3478672d
         map["Объёмная копия растения для AR. Модели видов уже лежат в приложении, а свою можно придумать по фото или отсканировать — кнопка «Модель» на экране растения."] = R.string.t_bc8d2377f1
+        map["Объёмная копия растения для AR. Модели видов уже лежат в приложении, а свою можно придумать по фото — кнопка «Модель» на экране растения."] = R.string.t_7eb02aa630
         map["Обычно для вида: %@"] = R.string.t_4b919d0c3d
         map["Обычно — при %@ воды в земле"] = R.string.t_00495efa90
         map["Один круг — один срок полива. Ближние орбиты у тех, кто сохнет быстро, дальние — у терпеливых."] = R.string.t_9bc6b67c85
@@ -389,6 +410,7 @@ internal object StringTable {
         map["Показаны %1\$lld из %2\$lld: больше телефону тяжело"] = R.string.t_0455b2eeff
         map["Показать подсказки снова"] = R.string.t_387af5ff90
         map["Покрутите барабан — ниже видно, как новый срок ляжет на карточку."] = R.string.t_ca645a26b9
+        map["Поле поиска — вверху. Ищет по кличке, виду и заметкам."] = R.string.t_51b8f05bf7
         map["Поле поиска — внизу, у панели вкладок. Ищет по кличке, виду и заметкам."] = R.string.t_17c7b943fc
         map["Полейте всех разом и отправьте соседу памятку."] = R.string.t_cd1de7bdc3
         map["Полейте растение — и здесь появится, сколько воды было в земле в этот миг."] = R.string.t_c767922d35
@@ -415,6 +437,9 @@ internal object StringTable {
         map["Поменять срок"] = R.string.t_899c9c9df2
         map["Понятно"] = R.string.t_f127f2a1ee
         map["Пора пересадить"] = R.string.t_def135af67
+    }
+
+    private fun part2(map: HashMap<String, Int>) {
         map["Пора подкормить"] = R.string.t_740ec002bc
         map["Пора поливать"] = R.string.t_29809e09ec
         map["Порядок"] = R.string.t_f6f1e5272f
@@ -422,6 +447,7 @@ internal object StringTable {
         map["После полива по узору бежит цветная волна — так видно, что полив засчитан."] = R.string.t_3ca46e3e76
         map["Последний полив"] = R.string.t_e101868e98
         map["Посмотреть в AR"] = R.string.t_d72166f389
+        map["Посмотрите на растение у себя в комнате, сделайте ему свою модель по фото или поменяйте кличку, вид и срок полива."] = R.string.t_22f978c185
         map["Посмотрите на растение у себя в комнате, сделайте ему свою модель — по фото или сканом — или поменяйте кличку, вид и срок полива."] = R.string.t_f945f5f017
         map["Поставить"] = R.string.t_8845f9ee9d
         map["Поставить сад"] = R.string.t_39a52fa645
@@ -437,9 +463,6 @@ internal object StringTable {
         map["Привет"] = R.string.t_2805ae8e7e
         map["Привет! Меня не будет с %1\$@ по %2\$@."] = R.string.t_75f3a04d7a
         map["Привычки"] = R.string.t_009be8f2b4
-    }
-
-    private fun part2(map: HashMap<String, Int>) {
         map["Придумайте имя. По виду подставится обычный срок полива."] = R.string.t_dfb25f81c3
         map["Придумать"] = R.string.t_2a49f9fcaa
         map["Придумать по фото"] = R.string.t_8ca0bc595f
@@ -456,6 +479,7 @@ internal object StringTable {
         map["Пряные травы"] = R.string.t_08bcc9716f
         map["Раз в %@ дня"] = R.string.t_7ed34f32ae
         map["Раз в сколько дней растение поливают — примерно за столько земля высыхает. Меняется в настройках растения."] = R.string.t_9caa86d668
+        map["Разрешить камеру"] = R.string.t_7882f56b39
         map["Рамка обнимает растение с горшком? Тогда начинайте"] = R.string.t_cc687c1fa5
         map["Расставить"] = R.string.t_0717b1b655
         map["Растение"] = R.string.t_7ebd3688e2
@@ -487,6 +511,7 @@ internal object StringTable {
         map["Сад заперт"] = R.string.t_cd59e4204b
         map["Сад как солнечная система: растение — планета, круг — срок полива. Дошла до ворот наверху — пора поливать."] = R.string.t_e3b46fe6dd
         map["Сад открывается только по Face ID или код-паролю телефона — чужие не посмотрят."] = R.string.t_5a05a6d3f9
+        map["Сад открывается только по отпечатку пальца, лицу или коду разблокировки телефона — чужие не посмотрят."] = R.string.t_8401f09a45
         map["Сад с %@"] = R.string.t_2306927b56
         map["Сад стоит. Нажмите на растение, чтобы полить его."] = R.string.t_928ada7e39
         map["Садовод"] = R.string.t_e4d56c1f85
@@ -505,6 +530,7 @@ internal object StringTable {
         map["Сегодня поливать никого не нужно."] = R.string.t_013255575f
         map["Сегодня, %@"] = R.string.t_618a6abf44
         map["Сейчас"] = R.string.t_88be20fd06
+        map["Сервисы Google Play для AR на нём не работают. Всё остальное в Sprout работает как обычно."] = R.string.t_ad8df7482b
         map["Сеть"] = R.string.t_b3c4b1be56
         map["Сила вибрации"] = R.string.t_a872210c83
         map["Синий"] = R.string.t_04954ca725
@@ -524,12 +550,14 @@ internal object StringTable {
         map["Следующие поливы"] = R.string.t_a41966c98a
         map["Следующий полив: завтра"] = R.string.t_4a40d86849
         map["Следующий полив: сегодня"] = R.string.t_b0f07c6bde
+        map["Слишком темно — включите свет"] = R.string.t_cef8f4a582
         map["Словарик"] = R.string.t_6f8ca5c940
         map["Смотрю на снимок…"] = R.string.t_214438003b
         map["Сначала новые"] = R.string.t_6fb5cb3976
         map["Сначала сухие"] = R.string.t_3189602bf1
         map["Снег"] = R.string.t_4ff6829db6
         map["Снимка нет"] = R.string.t_1b494791c5
+        map["Снимки растений распознаются на самом телефоне — фото никуда не отправляются."] = R.string.t_2cb357366d
         map["Снимок"] = R.string.t_9e2d4d618a
         map["Снимок мыльный — снимите почётче."] = R.string.t_d303471890
         map["Снимок пересвечен — снимите без прямого солнца."] = R.string.t_bee88a5c8c
@@ -554,6 +582,7 @@ internal object StringTable {
         map["Суше всех — %@."] = R.string.t_8335506cd9
         map["Сфотографируйте растение — телефон попробует узнать его вид."] = R.string.t_31386bfdb5
         map["Счёт от %@. Обновится, когда друг пришлёт код снова."] = R.string.t_2da75ff638
+        map["Такое бывает, если камеру заняло другое приложение. Попробуйте ещё раз."] = R.string.t_d9467398b8
         map["Тапок"] = R.string.t_109ff6015e
         map["Телефон узнает растение на снимке и придумает его модель: возьмёт цвета листьев, цветов и горшка, густоту и рост. Всё считается на телефоне, без сети, — за пару секунд."] = R.string.t_ba89e87d7f
         map["Телефон узнал: %1\$@ — уверен на %2\$lld%%. Поправьте, если не так."] = R.string.t_c9b9affc8d
@@ -583,8 +612,10 @@ internal object StringTable {
         map["Узор за наклоном"] = R.string.t_8b19591d8a
         map["Узор на фоне чуть сдвигается, когда вы наклоняете телефон, — будто лежит глубже экрана."] = R.string.t_1cc281e997
         map["Укроп"] = R.string.t_c8f3f390c2
+        map["Установить"] = R.string.t_ce88d35b18
         map["Уход"] = R.string.t_5373dc43a3
         map["Учитывать время года"] = R.string.t_ddc1a36266
+        map["Файл сада попадает в резервную копию Android — туда же, куда и остальные данные приложений, по правилам Google."] = R.string.t_8a4653acae
         map["Файл сада попадает в резервную копию iPhone — туда же, куда и остальные ваши данные, по правилам Apple."] = R.string.t_8041745a9b
         map["Фиалка"] = R.string.t_92c396e199
         map["Фигурки"] = R.string.t_99c7c8c714
@@ -605,9 +636,13 @@ internal object StringTable {
         map["Цвет"] = R.string.t_84b22ed2aa
         map["Цвет волны"] = R.string.t_7ceb6b0f96
         map["Цвет узора"] = R.string.t_4d7209b9c1
+        map["Цвета обоев"] = R.string.t_8c038b5d5a
         map["Цвета, густота и рост — со снимка."] = R.string.t_2a6d22be37
         map["Цветок"] = R.string.t_ac08f8dec7
         map["Цифры"] = R.string.t_4924d77144
+    }
+
+    private fun part3(map: HashMap<String, Int>) {
         map["Час сада проходит здесь за секунду настоящего времени: иначе за один сеанс проценты влажности не сдвинулись бы ни на один. По этим же часам считаются и напоминания."] = R.string.t_f9723e1271
         map["Чаще всех"] = R.string.t_e4125db374
         map["Чем суше земля, тем ярче тень: оранжевая — скоро поливать, красная — пора."] = R.string.t_90d7fc066b
@@ -621,11 +656,14 @@ internal object StringTable {
         map["Чтобы открыть сад"] = R.string.t_febbc7512c
         map["Шнурок"] = R.string.t_e250a6df76
         map["Шуба"] = R.string.t_723a09005e
+        map["Эта версия слишком старая для Sprout."] = R.string.t_68656a952e
         map["Это ваш сад"] = R.string.t_b3bf1682b8
         map["Это ваш собственный код: в таблице вы и так есть."] = R.string.t_d342de941a
         map["Этот iPhone не умеет сканировать: нужен LiDAR."] = R.string.t_3a925bfac5
+        map["Этот телефон не умеет AR"] = R.string.t_8536fc8767
         map["Эхеверия"] = R.string.t_c7e64e73eb
         map["Юкка"] = R.string.t_77789a486b
+        map["Язык"] = R.string.t_ed3f0e507a
         map["вовремя %@"] = R.string.t_3f264c02f1
         map["вы"] = R.string.t_cc86ef708c
         map["земля сухая"] = R.string.t_2e06422eda
@@ -640,9 +678,6 @@ internal object StringTable {
         map["раз в час"] = R.string.t_ea86069e90
         map["счёт от %@"] = R.string.t_64f2328a39
         map["чаще раза в минуту"] = R.string.t_d8e6f5387c
-    }
-
-    private fun part3(map: HashMap<String, Int>) {
         map["череда %lld"] = R.string.t_d959d34275
         map["• %1\$@ (%2\$@, «%3\$@») — %4\$@"] = R.string.t_34eb9e66db
     }

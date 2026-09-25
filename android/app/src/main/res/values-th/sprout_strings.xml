@@ -24,9 +24,13 @@
     <string name="t_197eb092cd">%d%%</string>
     <string name="t_45b8ac5695" formatted="false">น้ำ 20–40%</string>
     <string name="t_3d6c2541b9" formatted="false">น้ำ 40% ขึ้นไป</string>
+    <string name="t_5f5e0de553">AR เริ่มทำงานไม่ได้</string>
+    <string name="t_957c85ce41">AR จะวาดต้นไม้ทับภาพที่กล้องเห็น ภาพไม่ถูกส่งไปที่ใดเลย</string>
     <string name="t_14c72c397f">AR – ความจริงเสริม</string>
     <string name="t_484d12fea8">AR คือความจริงเสริม: กล้องจะแสดงห้องของคุณพร้อมต้นไม้ 3 มิติ โมเดลของแต่ละชนิดมีอยู่ในแอปแล้ว ส่วนโมเดลของคุณเองจะจินตนาการจากรูปถ่ายหรือสแกนก็ได้</string>
+    <string name="t_5c4b538eba">AR คือความจริงเสริม: กล้องจะแสดงห้องของคุณพร้อมต้นไม้สามมิติอยู่ข้างใน โมเดลของแต่ละพันธุ์มีอยู่ในแอปแล้ว ส่วนโมเดลของคุณเองออกแบบจากรูปถ่ายได้</string>
     <string name="t_809c431aa4">AR โมเดล และการตั้งค่า</string>
+    <string name="t_acec2ec7d0">Android %s ขึ้นไป</string>
     <string name="t_302a05a1ac">Sprout ไม่เก็บข้อมูลใดๆ เกี่ยวกับคุณและไม่ส่งอะไรไปที่ไหน</string>
     <string name="t_9585992548">iOS 26 ขึ้นไป</string>
     <string name="t_c65910cd34">“%1$s” และอีก %2$s ต้องการน้ำ</string>
@@ -65,6 +69,7 @@
     <string name="t_a8bcae2d9a">มาทิลด้า</string>
     <string name="t_f79b25b05d">สวนของคุณเหมือนระบบสุริยะ: ต้นไม้โคจรไปตามวงโคจรการรดน้ำ ลองเข้าไปดูสิ — ฟังเสียงของทั้งเดือนได้ด้วย</string>
     <string name="t_19ff316e6f">ลากแถบเลื่อน — สวนจะข้ามไปข้างหน้าหลายวัน เหมือนคุณรดน้ำตรงเวลา</string>
+    <string name="t_ddf5bf682d">ขยับโทรศัพท์ให้ช้าลง</string>
     <string name="t_3f52bd53a9">กลับ</string>
     <string name="t_c7aaa96778">เลิกทำ</string>
     <string name="t_f10d238768">กลับไปใช้โมเดลสำเร็จรูป</string>
@@ -90,6 +95,7 @@
     <string name="t_2b5f40f213">การรดน้ำทั้งหมดของต้นนี้ แตะค้างที่รายการที่ผิดเพื่อลบ</string>
     <string name="t_2f07cfc9c2">รดน้ำครบแล้ว</string>
     <string name="t_3b5143902e">ทั้งหมด</string>
+    <string name="t_eeb8caeb95">วาง</string>
     <string name="t_c12ee51dd9">ทั้งหมด</string>
     <string name="t_1059a1d77d">เมื่อวาน %s</string>
     <string name="t_fe4b0c80f0">เลือก</string>
@@ -109,6 +115,7 @@
     <string name="t_68ae695380">เซ็นเซอร์การเคลื่อนไหว</string>
     <string name="t_827d544645">วันที่</string>
     <string name="t_0bcd158c3d">สองนิ้วเพื่อหมุน บีบเพื่อปรับขนาด</string>
+    <string name="t_9978ac34b2">การทำงาน</string>
     <string name="t_b6ef08401f">วัน</string>
     <string name="t_abbebfc85b">วันที่ต้นไม้สามต้นขึ้นไปต้องการน้ำพร้อมกัน — สะดวกที่จะรดทั้งหมดในครั้งเดียว</string>
     <string name="t_e0c0ceee56">ต้นไม้เล็ก</string>
@@ -129,6 +136,7 @@
     <string name="t_fdf0f98738">ถ้าคุณรดน้ำก่อนกำหนด แอปจะสังเกตเห็นและแนะนำให้ลดรอบให้สั้นลง</string>
     <string name="t_19f25d5784">เพิ่มเติม</string>
     <string name="t_7db203bdda">อีกหนึ่งรอบ</string>
+    <string name="t_bbe42739db">ลองอีกครั้ง</string>
     <string name="t_0fb6d09e78">ต้องการน้ำ</string>
     <string name="t_ef28cc1496">ในช่วงเวลานี้</string>
     <string name="t_70efc9651a">ไม่มีการรดน้ำในช่วงเวลานี้</string>
@@ -169,6 +177,7 @@
     <string name="t_b335f763ea">ต้นไม้ทั้งหมดและบันทึกการรดน้ำทั้งหมดจะหายไป ไม่สามารถเลิกทำได้</string>
     <string name="t_53d55db39f">สรุป</string>
     <string name="t_779e8b3e28">เปิดได้ในการตั้งค่าของโทรศัพท์: Sprout → การแจ้งเตือน</string>
+    <string name="t_9c47ca16c4">ติดตั้งได้จาก Google Play ฟรี จากนั้น AR จะเปิดทันที</string>
     <string name="t_46c7be08dd">ห้องทำงาน</string>
     <string name="t_0112d57d0b">ครอบตัด</string>
     <string name="t_01b9b803e7">การครอบตัดรูปถ่าย</string>
@@ -177,6 +186,7 @@
     <string name="t_223428bd3c">แต่ละจุดคือการรดน้ำหนึ่งครั้ง จุดยิ่งสูง แสดงว่าในดินยังมีน้ำเหลือมาก</string>
     <string name="t_e1439f1755">การรดน้ำแต่ละครั้งคือโน้ตหนึ่งตัว: ดาวเคราะห์วงใกล้ร้องเสียงสูงกว่า</string>
     <string name="t_f0a22d9d1a">ตามระบบ</string>
+    <string name="t_087f6705ed">ตามโทรศัพท์</string>
     <string name="t_696586f496">คุณชื่ออะไร</string>
     <string name="t_7013b69dab">วิธีใช้</string>
     <string name="t_d4066ba693">ตอนนี้ต้นไม้ชื่ออะไร</string>
@@ -185,6 +195,9 @@
     <string name="t_7b105a68e6">กุหลาบหิน</string>
     <string name="t_60f6304f34">คล้า</string>
     <string name="t_fe0790d4e2">ปฏิทินการรดน้ำ</string>
+    <string name="t_f2d0f5cc41">แอปอื่นกำลังใช้กล้องอยู่</string>
+    <string name="t_37620de860">กล้องถูกบล็อกในการตั้งค่าของโทรศัพท์ อนุญาตที่นั่นแล้วกลับมา</string>
+    <string name="t_601947a61c">กล้องและรูปภาพ</string>
     <string name="t_d8e43f5730">กล้องแสดงห้องของคุณ แล้วแอปจะวางต้นไม้สามมิติลงไป คุณหมุน ขยาย และรดน้ำด้วยบัวรดน้ำได้</string>
     <string name="t_8671ea9e33">หยดน้ำ</string>
     <string name="t_85618413ed">แต่ละช่องคือหนึ่งวันในสี่เดือนที่ผ่านมา: ยิ่งสีเข้ม ยิ่งรดน้ำบ่อย แตะช่องเพื่อดูวันที่</string>
@@ -195,6 +208,7 @@
     <string name="t_eb1aa42a32">ชื่อเล่นต้นไม้ พันธุ์ ความชื้น วันที่ — ทุกอย่างที่คุณป้อนอยู่ในไฟล์ภายในแอป บนโทรศัพท์ของคุณเอง การตั้งค่าก็เช่นกัน ไม่มีสิ่งใดออกไปจากอุปกรณ์</string>
     <string name="t_1c8e21179b">ปุ่ม</string>
     <string name="t_49cdfd9292">ปุ่มรอบ ๆ</string>
+    <string name="t_2ecb4451da">ปุ่มและการ์ดใช้สีตามวอลเปเปอร์ของโทรศัพท์</string>
     <string name="t_725347e425">เมื่อไร</string>
     <string name="t_512bafe5b5">เมื่อความชื้นต่ำกว่า</string>
     <string name="t_72e18d38d9">คุณรดน้ำเมื่อไร</string>
@@ -252,7 +266,9 @@
     <string name="t_18f71e9762">ดนตรีแห่งทรงกลม</string>
     <string name="t_0b854eb300">เหมียว</string>
     <string name="t_7a7164238c">สะระแหน่</string>
+    <string name="t_06ec0f34bf">โทรศัพท์นี้ยังไม่ได้ตั้งค่าการล็อกหน้าจอ</string>
     <string name="t_272e98dde1">โทรศัพท์นี้ไม่มีทั้ง Face ID และรหัส</string>
+    <string name="t_339d955a3c">หันกล้องไปที่พื้นที่มีลวดลายหรือเฟอร์นิเจอร์</string>
     <string name="t_4dd78d95e6">เล็ง</string>
     <string name="t_c96769af49">แตะ “+” เพื่อสร้างห้องแรก</string>
     <string name="t_730cde94e5">แตะ “?” ข้าง ๆ คำนั้น เราจะอธิบายง่าย ๆ คำทั้งหมดรวมอยู่ในอภิธานศัพท์ในการตั้งค่า</string>
@@ -298,9 +314,14 @@
     <string name="t_da731c70ca">ห้องใหม่</string>
     <string name="t_87b55f8287">ห้องใหม่…</string>
     <string name="t_4a30361774">ต้องใช้ iPhone ที่มีเซ็นเซอร์ LiDAR — รุ่น Pro ตั้งแต่ iPhone 12 Pro</string>
+    <string name="t_7283f54f30">ต้องใช้กล้อง</string>
+    <string name="t_ba43c393fc">ต้องมีบริการ Google Play สำหรับ AR</string>
     <string name="t_b9c9ff652d">เกี่ยวกับ</string>
+    <string name="t_7bee71b043">อัปเดตบริการ Google Play สำหรับ AR</string>
+    <string name="t_c2f668e54f">อัปเดต</string>
     <string name="t_3a3478672d">ถือโทรศัพท์เดินรอบต้นไม้ — คุณจะได้สำเนา 3 มิติที่แม่นยำ การถ่ายใช้เวลาไม่กี่นาที และการสร้างโมเดลอีกไม่กี่นาที ทั้งหมดในโทรศัพท์</string>
     <string name="t_bc8d2377f1">สำเนา 3 มิติของต้นไม้สำหรับ AR โมเดลของแต่ละชนิดมีอยู่ในแอปแล้ว ส่วนโมเดลของคุณเองจะจินตนาการจากรูปถ่ายหรือสแกนก็ได้ — ปุ่ม “โมเดล” ในหน้าต้นไม้</string>
+    <string name="t_7eb02aa630">สำเนาสามมิติของต้นไม้สำหรับ AR โมเดลของแต่ละพันธุ์มีอยู่ในแอปแล้ว ส่วนโมเดลของคุณเองออกแบบจากรูปถ่ายได้ — ปุ่ม “โมเดล” ในหน้าจอต้นไม้</string>
     <string name="t_4b919d0c3d">ปกติสำหรับพันธุ์นี้: %s</string>
     <string name="t_00495efa90">ปกติเมื่อดินมีน้ำ %s</string>
     <string name="t_9bc6b67c85">หนึ่งรอบคือหนึ่งช่วงรดน้ำ วงโคจรใกล้เป็นของต้นที่แห้งเร็ว วงโคจรไกลเป็นของต้นที่อดทน</string>
@@ -380,6 +401,7 @@
     <string name="t_0455b2eeff">แสดง %1$d จาก %2$d: มากกว่านี้จะหนักเกินไปสำหรับโทรศัพท์</string>
     <string name="t_387af5ff90">แสดงคำแนะนำอีกครั้ง</string>
     <string name="t_ca645a26b9">หมุนวงล้อ — ด้านล่างจะเห็นว่าช่วงรดน้ำใหม่แสดงบนการ์ดอย่างไร</string>
+    <string name="t_51b8f05bf7">ช่องค้นหาอยู่ด้านบน ค้นหาจากชื่อเล่น พันธุ์ และบันทึก</string>
     <string name="t_17c7b943fc">ช่องค้นหาอยู่ด้านล่าง ข้างแถบแท็บ ค้นหาจากชื่อเล่น ชนิด และโน้ต</string>
     <string name="t_cd1de7bdc3">รดน้ำทุกต้นในครั้งเดียว แล้วส่งโน้ตให้เพื่อนบ้าน</string>
     <string name="t_c767922d35">รดน้ำต้นไม้ แล้วคุณจะเห็นที่นี่ว่าตอนนั้นในดินมีน้ำเท่าไร</string>
@@ -416,6 +438,7 @@
     <string name="t_3ca46e3e76">หลังรดน้ำ จะมีคลื่นสีวิ่งผ่านลวดลาย เป็นสัญญาณว่าบันทึกการรดน้ำแล้ว</string>
     <string name="t_e101868e98">การรดน้ำครั้งล่าสุด</string>
     <string name="t_d72166f389">ดูใน AR</string>
+    <string name="t_22f978c185">ดูต้นไม้ในห้องของคุณ สร้างโมเดลเฉพาะของมันจากรูปถ่าย หรือเปลี่ยนชื่อเล่น พันธุ์ และรอบการรดน้ำ</string>
     <string name="t_f945f5f017">ดูต้นไม้ในห้องของคุณ สร้างโมเดลของมันเอง — จากรูปถ่ายหรือการสแกน — หรือเปลี่ยนชื่อ ชนิด และรอบการรดน้ำ</string>
     <string name="t_8845f9ee9d">วาง</string>
     <string name="t_39a52fa645">วางสวน</string>
@@ -453,6 +476,7 @@
         <item quantity="other">ทุก %d เดือน</item>
     </plurals>
     <string name="t_9caa86d668">รดน้ำทุกกี่วัน ซึ่งประมาณเท่ากับเวลาที่ดินใช้แห้ง เปลี่ยนได้ในการตั้งค่าของต้นไม้</string>
+    <string name="t_7882f56b39">อนุญาตกล้อง</string>
     <string name="t_cc687c1fa5">กรอบครอบต้นไม้กับกระถางแล้วหรือยัง ถ้าแล้วก็เริ่มได้เลย</string>
     <string name="t_0717b1b655">จัดเรียง</string>
     <string name="t_7ebd3688e2">ต้นไม้</string>
@@ -484,6 +508,7 @@
     <string name="t_cd59e4204b">สวนถูกล็อก</string>
     <string name="t_e3b46fe6dd">สวนของคุณเหมือนระบบสุริยะ: ต้นไม้แต่ละต้นคือดาวเคราะห์ หนึ่งรอบวงโคจรคือหนึ่งช่วงรดน้ำ เมื่อถึงประตูด้านบน ก็ถึงเวลารดน้ำ</string>
     <string name="t_5a05a6d3f9">สวนจะเปิดได้ด้วย Face ID หรือรหัสของโทรศัพท์เท่านั้น คนอื่นแอบดูไม่ได้</string>
+    <string name="t_8401f09a45">สวนจะเปิดได้ด้วยลายนิ้วมือ ใบหน้า หรือการล็อกหน้าจอของโทรศัพท์เท่านั้น — คนอื่นแอบดูไม่ได้</string>
     <string name="t_2306927b56">สวนตั้งแต่ %s</string>
     <string name="t_928ada7e39">วางสวนแล้ว แตะต้นไม้เพื่อรดน้ำ</string>
     <string name="t_e4d56c1f85">คนสวน</string>
@@ -502,6 +527,7 @@
     <string name="t_013255575f">วันนี้ไม่มีต้นไหนต้องรดน้ำ</string>
     <string name="t_618a6abf44">วันนี้ %s</string>
     <string name="t_88be20fd06">ตอนนี้</string>
+    <string name="t_ad8df7482b">บริการ Google Play สำหรับ AR ใช้กับเครื่องนี้ไม่ได้ ฟีเจอร์อื่นๆ ใน Sprout ใช้งานได้ตามปกติ</string>
     <string name="t_b3c4b1be56">เครือข่าย</string>
     <string name="t_a872210c83">ความแรงการสั่น</string>
     <string name="t_04954ca725">น้ำเงิน</string>
@@ -524,12 +550,14 @@
     </plurals>
     <string name="t_4a40d86849">รดน้ำครั้งถัดไป: พรุ่งนี้</string>
     <string name="t_b0f07c6bde">รดน้ำครั้งถัดไป: วันนี้</string>
+    <string name="t_cef8f4a582">มืดเกินไป — เปิดไฟ</string>
     <string name="t_6f8ca5c940">อภิธานศัพท์</string>
     <string name="t_214438003b">กำลังดูรูป…</string>
     <string name="t_6fb5cb3976">ใหม่ที่สุดก่อน</string>
     <string name="t_3189602bf1">แห้งที่สุดก่อน</string>
     <string name="t_4ff6829db6">หิมะ</string>
     <string name="t_1b494791c5">ไม่มีรูปถ่าย</string>
+    <string name="t_2cb357366d">รูปต้นไม้ถูกจดจำบนโทรศัพท์เอง — รูปภาพไม่ถูกส่งไปที่ใดเลย</string>
     <string name="t_9e2d4d618a">รูปถ่าย</string>
     <string name="t_d303471890">รูปเบลอ — ถ่ายใหม่ให้คมกว่านี้</string>
     <string name="t_bee88a5c8c">รูปสว่างเกินไป — ถ่ายโดยไม่ให้โดนแดดตรง</string>
@@ -554,6 +582,7 @@
     <string name="t_8335506cd9">แห้งที่สุด: %s</string>
     <string name="t_31386bfdb5">ถ่ายรูปต้นไม้ — โทรศัพท์จะลองจำแนกชนิดให้</string>
     <string name="t_2da75ff638">คะแนน ณ %s จะอัปเดตเมื่อเพื่อนส่งรหัสมาอีกครั้ง</string>
+    <string name="t_d9467398b8">เกิดขึ้นเมื่อแอปอื่นกำลังใช้กล้อง ลองอีกครั้ง</string>
     <string name="t_109ff6015e">รองเท้าแตะ</string>
     <string name="t_ba89e87d7f">โทรศัพท์จะจดจำต้นไม้ในรูปและจินตนาการโมเดลของมัน: สีใบ ดอก และกระถาง ความหนาแน่นและความสูง ทุกอย่างคำนวณในโทรศัพท์ ไม่ต้องใช้เน็ต ภายในไม่กี่วินาที</string>
     <string name="t_c9b9affc8d">จำได้ว่า: %1$s — มั่นใจ %2$d%% แก้ไขได้หากไม่ใช่</string>
@@ -583,8 +612,10 @@
     <string name="t_8b19591d8a">ลวดลายตามการเอียง</string>
     <string name="t_1cc281e997">ลวดลายพื้นหลังจะขยับเล็กน้อยเมื่อคุณเอียงโทรศัพท์ เหมือนอยู่ลึกกว่าหน้าจอ</string>
     <string name="t_c8f3f390c2">ผักชีลาว</string>
+    <string name="t_ce88d35b18">ติดตั้ง</string>
     <string name="t_5373dc43a3">การดูแล</string>
     <string name="t_ddc1a36266">คำนึงถึงฤดูกาล</string>
+    <string name="t_8a4653acae">ไฟล์สวนจะเข้าไปอยู่ในข้อมูลสำรองของ Android — พร้อมข้อมูลของแอปอื่นๆ ตามกฎของ Google</string>
     <string name="t_8041745a9b">ไฟล์สวนจะอยู่ในข้อมูลสำรองของ iPhone — พร้อมกับข้อมูลอื่นๆ ของคุณ ตามกฎของ Apple</string>
     <string name="t_92c396e199">แอฟริกันไวโอเล็ต</string>
     <string name="t_99c7c8c714">รูปทรง</string>
@@ -605,6 +636,7 @@
     <string name="t_84b22ed2aa">สี</string>
     <string name="t_7ceb6b0f96">สีคลื่น</string>
     <string name="t_4d7209b9c1">สีลวดลาย</string>
+    <string name="t_8c038b5d5a">สีวอลเปเปอร์</string>
     <string name="t_2a6d22be37">สี ความหนาแน่น และความสูง — จากรูปถ่าย</string>
     <string name="t_ac08f8dec7">ดอกไม้</string>
     <string name="t_4924d77144">ตัวเลข</string>
@@ -621,11 +653,14 @@
     <string name="t_febbc7512c">เพื่อเปิดสวนของคุณ</string>
     <string name="t_e250a6df76">เชือกผูกรองเท้า</string>
     <string name="t_723a09005e">เสื้อขนสัตว์</string>
+    <string name="t_68656a952e">เวอร์ชันนี้เก่าเกินไปสำหรับ Sprout</string>
     <string name="t_b3bf1682b8">นี่คือสวนของคุณ</string>
     <string name="t_d342de941a">นี่คือรหัสของคุณเอง: คุณอยู่ในตารางแล้ว</string>
     <string name="t_3a925bfac5">iPhone เครื่องนี้สแกนไม่ได้: ต้องมี LiDAR</string>
+    <string name="t_8536fc8767">โทรศัพท์นี้ไม่รองรับ AR</string>
     <string name="t_c7e64e73eb">อีเชเวอเรีย</string>
     <string name="t_77789a486b">ยัคคา</string>
+    <string name="t_ed3f0e507a">ภาษา</string>
     <string name="t_3f264c02f1">ตรงเวลา %s</string>
     <string name="t_cc86ef708c">คุณ</string>
     <string name="t_2e06422eda">ดินแห้ง</string>
@@ -651,4 +686,11 @@
     <string name="t_d8e6f5387c">บ่อยกว่านาทีละครั้ง</string>
     <string name="t_d959d34275">ต่อเนื่อง %d</string>
     <string name="t_34eb9e66db">• %1$s (%2$s, “%3$s”) — %4$s</string>
+    <string name="shortcut_add">เพิ่ม</string>
+    <string name="shortcut_search">ค้นหา</string>
+    <string name="shortcut_stats">สถิติ</string>
+    <string name="shortcut_thirst">ต้องรดน้ำต้นไหน</string>
+    <string name="tile_label">ต้องรดน้ำต้นไหน</string>
+    <string name="widget_description">ต้นไม้ที่แห้งที่สุดและปุ่ม “รดน้ำ”</string>
+    <string name="widget_name">ต้องรดน้ำต้นไหน</string>
 </resources>

@@ -30,9 +30,13 @@
     <string name="t_197eb092cd">%d%%</string>
     <string name="t_45b8ac5695" formatted="false">20–40% מים</string>
     <string name="t_3d6c2541b9" formatted="false">40% מים ומעלה</string>
+    <string name="t_5f5e0de553">ה־AR לא הופעל</string>
+    <string name="t_957c85ce41">ה־AR מצייר את הצמח מעל מה שהמצלמה רואה. הצילומים לא נשלחים לשום מקום.</string>
     <string name="t_14c72c397f">AR – מציאות רבודה</string>
     <string name="t_484d12fea8">AR היא מציאות רבודה: המצלמה מראה את החדר שלכם ובו צמח תלת־ממדי. מודלים של מינים כבר נמצאים באפליקציה, ואת שלכם אפשר לדמיין לפי תמונה או לסרוק.</string>
+    <string name="t_5c4b538eba">AR היא מציאות רבודה: המצלמה מראה את החדר שלכם ובו צמח תלת־ממדי. מודלים של המינים כבר נמצאים באפליקציה, ואת שלכם אפשר לדמיין מתמונה.</string>
     <string name="t_809c431aa4">AR, מודל והגדרות</string>
+    <string name="t_acec2ec7d0">Android %s ואילך</string>
     <string name="t_302a05a1ac">Sprout לא אוסף עליך שום מידע ולא שולח דבר לשום מקום.</string>
     <string name="t_9585992548">iOS 26 ומעלה</string>
     <string name="t_c65910cd34">“%1$s” ועוד %2$s צריכים מים</string>
@@ -71,6 +75,7 @@
     <string name="t_a8bcae2d9a">מתילדה</string>
     <string name="t_f79b25b05d">הגינה שלך כמו מערכת השמש: הצמחים חגים במסלולי ההשקיה שלהם. הציצו – אפשר אפילו להאזין לחודש.</string>
     <string name="t_19ff316e6f">גררו את המחוון – הגינה תקפוץ ימים קדימה, כאילו השקיתם בזמן.</string>
+    <string name="t_ddf5bf682d">הזיזו את הטלפון לאט יותר</string>
     <string name="t_3f52bd53a9">חוזר</string>
     <string name="t_c7aaa96778">ביטול פעולה</string>
     <string name="t_f10d238768">חזרה למודל המוכן</string>
@@ -98,6 +103,7 @@
     <string name="t_2b5f40f213">כל ההשקיות של הצמח הזה. רשומה שגויה נמחקת בלחיצה ארוכה.</string>
     <string name="t_2f07cfc9c2">כולם הושקו</string>
     <string name="t_3b5143902e">סך הכול</string>
+    <string name="t_eeb8caeb95">הדבקה</string>
     <string name="t_c12ee51dd9">כל הזמן</string>
     <string name="t_1059a1d77d">אתמול, %s</string>
     <string name="t_fe4b0c80f0">בחירה</string>
@@ -117,6 +123,7 @@
     <string name="t_68ae695380">חיישן תנועה</string>
     <string name="t_827d544645">תאריכים</string>
     <string name="t_0bcd158c3d">שתי אצבעות לסיבוב, צביטה לגודל</string>
+    <string name="t_9978ac34b2">פעולות</string>
     <string name="t_b6ef08401f">יום</string>
     <string name="t_abbebfc85b">יום שבו שלושה צמחים או יותר ירצו מים בבת אחת – נוח להשקות את כולם בסיבוב אחד.</string>
     <string name="t_e0c0ceee56">עץ קטן</string>
@@ -137,6 +144,7 @@
     <string name="t_fdf0f98738">אם משקים לפני הזמן, האפליקציה שמה לב ומציעה לקצר את התדירות.</string>
     <string name="t_19f25d5784">עוד</string>
     <string name="t_7db203bdda">עוד סיבוב</string>
+    <string name="t_bbe42739db">ניסיון חוזר</string>
     <string name="t_0fb6d09e78">מחכים למים</string>
     <string name="t_ef28cc1496">בתקופה</string>
     <string name="t_70efc9651a">לא היו השקיות בתקופה הזו.</string>
@@ -177,6 +185,7 @@
     <string name="t_b335f763ea">כל הצמחים וכל יומן ההשקיות ייעלמו. אי אפשר לבטל.</string>
     <string name="t_53d55db39f">סיכום</string>
     <string name="t_779e8b3e28">אפשר להפעיל אותן בהגדרות הטלפון: Sprout ← התראות.</string>
+    <string name="t_9c47ca16c4">מתקינים אותם מ־Google Play, בחינם. אחר כך ה־AR נפתח מיד.</string>
     <string name="t_46c7be08dd">חדר עבודה</string>
     <string name="t_0112d57d0b">חיתוך</string>
     <string name="t_01b9b803e7">חיתוך התמונה</string>
@@ -185,6 +194,7 @@
     <string name="t_223428bd3c">כל נקודה היא השקיה. ככל שהנקודה גבוהה יותר, כך נשארו יותר מים באדמה.</string>
     <string name="t_e1439f1755">כל השקיה היא תו: כוכבי הלכת הקרובים שרים גבוה יותר.</string>
     <string name="t_f0a22d9d1a">כמו במערכת</string>
+    <string name="t_087f6705ed">כמו בטלפון</string>
     <string name="t_696586f496">איך קוראים לך?</string>
     <string name="t_7013b69dab">איך משתמשים</string>
     <string name="t_d4066ba693">איך קוראים לצמח עכשיו?</string>
@@ -193,6 +203,9 @@
     <string name="t_7b105a68e6">קלנכואה</string>
     <string name="t_60f6304f34">קלתיאה</string>
     <string name="t_fe0790d4e2">לוח השקיות</string>
+    <string name="t_f2d0f5cc41">המצלמה בשימוש של אפליקציה אחרת</string>
+    <string name="t_37620de860">המצלמה חסומה בהגדרות הטלפון. אפשרו אותה שם וחזרו.</string>
+    <string name="t_601947a61c">מצלמה ותמונות</string>
     <string name="t_d8e43f5730">המצלמה מראה את החדר שלך, והאפליקציה מציבה בו צמח תלת־ממדי. אפשר לסובב אותו, להגדיל אותו ולהשקות אותו במזלף.</string>
     <string name="t_8671ea9e33">טיפה</string>
     <string name="t_85618413ed">כל ריבוע הוא יום מארבעת החודשים האחרונים: ככל שהצבע עז יותר, כך יותר השקיות. הקישו על ריבוע כדי לראות את התאריך.</string>
@@ -203,6 +216,7 @@
     <string name="t_eb1aa42a32">כינויי צמחים, זנים, לחות, תאריכים — כל מה שמזינים נשמר בקובץ בתוך האפליקציה, בטלפון עצמו. גם ההגדרות. שום דבר מזה לא יוצא מהמכשיר.</string>
     <string name="t_1c8e21179b">כפתורים</string>
     <string name="t_49cdfd9292">הכפתורים מסביב</string>
+    <string name="t_2ecb4451da">כפתורים וכרטיסים בצבעי הטפט של הטלפון.</string>
     <string name="t_725347e425">מתי</string>
     <string name="t_512bafe5b5">כשהלחות יורדת מתחת ל־</string>
     <string name="t_72e18d38d9">מתי משקים</string>
@@ -260,7 +274,9 @@
     <string name="t_18f71e9762">מוזיקת הספירות</string>
     <string name="t_0b854eb300">מיצי</string>
     <string name="t_7a7164238c">נענע</string>
+    <string name="t_06ec0f34bf">בטלפון לא מוגדרת נעילת מסך.</string>
     <string name="t_272e98dde1">בטלפון אין Face ID ואין קוד.</string>
+    <string name="t_339d955a3c">כוונו את המצלמה לרצפה עם דוגמה או לרהיט</string>
     <string name="t_4dd78d95e6">לכוון</string>
     <string name="t_c96769af49">הקישו על “+” כדי ליצור את הראשון.</string>
     <string name="t_730cde94e5">הקישו על ה־“?” שלידה – נסביר במילים פשוטות. כל המילים מרוכזות במילון שבהגדרות.</string>
@@ -306,9 +322,14 @@
     <string name="t_da731c70ca">חדר חדש</string>
     <string name="t_87b55f8287">חדר חדש…</string>
     <string name="t_4a30361774">נדרש אייפון עם חיישן LiDAR — דגמי Pro החל מ־iPhone 12 Pro.</string>
+    <string name="t_7283f54f30">נדרשת מצלמה</string>
+    <string name="t_ba43c393fc">נדרשים שירותי Google Play ל־AR</string>
     <string name="t_b9c9ff652d">אודות</string>
+    <string name="t_7bee71b043">עדכנו את שירותי Google Play ל־AR</string>
+    <string name="t_c2f668e54f">עדכון</string>
     <string name="t_3a3478672d">הקיפו את הצמח עם הטלפון — ויתקבל עותק תלת־ממדי מדויק שלו. הצילום לוקח כמה דקות, ובניית המודל עוד כמה; הכול בטלפון.</string>
     <string name="t_bc8d2377f1">עותק תלת־ממדי של הצמח ל־AR. מודלים של מינים כבר נמצאים באפליקציה, ואת שלכם אפשר לדמיין לפי תמונה או לסרוק — כפתור „מודל” במסך הצמח.</string>
+    <string name="t_7eb02aa630">עותק תלת־ממדי של הצמח ל־AR. מודלים של המינים כבר נמצאים באפליקציה, ואת שלכם אפשר לדמיין מתמונה — הכפתור ״מודל״ במסך הצמח.</string>
     <string name="t_4b919d0c3d">מקובל לזן: %s</string>
     <string name="t_00495efa90">בדרך כלל כשיש %s מים באדמה</string>
     <string name="t_9bc6b67c85">הקפה אחת היא תדירות השקיה אחת. המסלולים הקרובים שייכים למתייבשים מהר, הרחוקים – לסבלניים.</string>
@@ -398,6 +419,7 @@
     <string name="t_0455b2eeff">מוצגים %1$d מתוך %2$d: יותר מזה כבד לטלפון</string>
     <string name="t_387af5ff90">הצגת הרמזים שוב</string>
     <string name="t_ca645a26b9">סובבו את הגלגל – למטה רואים איך התדירות החדשה תופיע על הכרטיס.</string>
+    <string name="t_51b8f05bf7">שדה החיפוש נמצא למעלה. הוא מחפש לפי כינויים, מינים והערות.</string>
     <string name="t_17c7b943fc">שדה החיפוש נמצא למטה, ליד סרגל הכרטיסיות. הוא מחפש לפי כינוי, סוג והערות.</string>
     <string name="t_cd1de7bdc3">השקו את כולם בבת אחת ושלחו לשכן פתק.</string>
     <string name="t_c767922d35">השקו צמח – וכאן יופיע כמה מים היו באדמה באותו רגע.</string>
@@ -436,6 +458,7 @@
     <string name="t_3ca46e3e76">אחרי השקיה עובר על הדוגמה גל צבעוני – כך יודעים שההשקיה נספרה.</string>
     <string name="t_e101868e98">השקיה אחרונה</string>
     <string name="t_d72166f389">הצגה ב־AR</string>
+    <string name="t_22f978c185">ראו את הצמח בחדר שלכם, צרו לו מודל משלו מתמונה או שנו כינוי, מין ומרווח השקיה.</string>
     <string name="t_f945f5f017">ראו את הצמח בחדר שלכם, צרו לו מודל משלו — לפי תמונה או בסריקה — או שנו את השם, המין ותדירות ההשקיה.</string>
     <string name="t_8845f9ee9d">הצבה</string>
     <string name="t_39a52fa645">הצבת הגינה</string>
@@ -477,6 +500,7 @@
         <item quantity="other">כל %d חודשים</item>
     </plurals>
     <string name="t_9caa86d668">כל כמה ימים משקים את הצמח – בערך בזמן הזה האדמה מתייבשת. משנים בהגדרות הצמח.</string>
+    <string name="t_7882f56b39">לאפשר מצלמה</string>
     <string name="t_cc687c1fa5">המסגרת מקיפה את הצמח והעציץ? אז התחילו</string>
     <string name="t_0717b1b655">סידור</string>
     <string name="t_7ebd3688e2">צמח</string>
@@ -508,6 +532,7 @@
     <string name="t_cd59e4204b">הגינה נעולה</string>
     <string name="t_e3b46fe6dd">הגינה שלך כמו מערכת השמש: כל צמח הוא כוכב לכת, הקפה אחת היא תדירות השקיה אחת. כשהוא מגיע לשער למעלה – הגיע הזמן להשקות.</string>
     <string name="t_5a05a6d3f9">הגינה נפתחת רק עם Face ID או קוד הגישה של הטלפון – אף אחד אחר לא יציץ.</string>
+    <string name="t_8401f09a45">הגינה נפתחת רק בטביעת אצבע, בזיהוי פנים או בנעילת המסך של הטלפון — זרים לא יציצו.</string>
     <string name="t_2306927b56">גינה מאז %s</string>
     <string name="t_928ada7e39">הגינה במקום. הקישו על צמח כדי להשקות אותו.</string>
     <string name="t_e4d56c1f85">גנן</string>
@@ -526,6 +551,7 @@
     <string name="t_013255575f">היום אין צורך להשקות אף צמח.</string>
     <string name="t_618a6abf44">היום, %s</string>
     <string name="t_88be20fd06">עכשיו</string>
+    <string name="t_ad8df7482b">שירותי Google Play ל־AR לא פועלים בו. כל השאר ב־Sprout עובד כרגיל.</string>
     <string name="t_b3c4b1be56">רשת</string>
     <string name="t_a872210c83">עוצמת הרטט</string>
     <string name="t_04954ca725">כחול</string>
@@ -550,12 +576,14 @@
     </plurals>
     <string name="t_4a40d86849">ההשקיה הבאה: מחר</string>
     <string name="t_b0f07c6bde">ההשקיה הבאה: היום</string>
+    <string name="t_cef8f4a582">חשוך מדי — הדליקו את האור</string>
     <string name="t_6f8ca5c940">מילון מונחים</string>
     <string name="t_214438003b">מסתכל על התמונה…</string>
     <string name="t_6fb5cb3976">החדשים קודם</string>
     <string name="t_3189602bf1">היבשים קודם</string>
     <string name="t_4ff6829db6">שלג</string>
     <string name="t_1b494791c5">אין תמונה</string>
+    <string name="t_2cb357366d">תמונות הצמחים מזוהות בטלפון עצמו — התמונות לא נשלחות לשום מקום.</string>
     <string name="t_9e2d4d618a">תמונה</string>
     <string name="t_d303471890">התמונה מטושטשת — צלמו חדה יותר.</string>
     <string name="t_bee88a5c8c">התמונה חשופה מדי — צלמו בלי שמש ישירה.</string>
@@ -580,6 +608,7 @@
     <string name="t_8335506cd9">הכי יבש: %s.</string>
     <string name="t_31386bfdb5">צלמו את הצמח — הטלפון ינסה לזהות את המין שלו.</string>
     <string name="t_2da75ff638">ניקוד מ־%s. יתעדכן כשהחבר ישלח את הקוד שוב.</string>
+    <string name="t_d9467398b8">זה קורה כשאפליקציה אחרת משתמשת במצלמה. נסו שוב.</string>
     <string name="t_109ff6015e">נעל בית</string>
     <string name="t_ba89e87d7f">הטלפון יזהה את הצמח בתמונה וידמיין את המודל שלו: צבעי העלים, הפרחים והעציץ, הצפיפות והגובה. הכול מחושב בטלפון, בלי רשת, תוך שניות.</string>
     <string name="t_c9b9affc8d">זוהה: %1$s — ודאות של %2$d%%. אפשר לתקן אם זה לא נכון.</string>
@@ -609,8 +638,10 @@
     <string name="t_8b19591d8a">הדוגמה עוקבת אחרי ההטיה</string>
     <string name="t_1cc281e997">הדוגמה ברקע זזה מעט כשמטים את הטלפון – כאילו היא מונחת עמוק יותר מהמסך.</string>
     <string name="t_c8f3f390c2">שמיר</string>
+    <string name="t_ce88d35b18">התקנה</string>
     <string name="t_5373dc43a3">טיפול</string>
     <string name="t_ddc1a36266">להתחשב בעונת השנה</string>
+    <string name="t_8a4653acae">קובץ הגינה נכנס לגיבוי של Android — יחד עם נתוני אפליקציות אחרות, לפי הכללים של Google.</string>
     <string name="t_8041745a9b">קובץ הגינה נכנס לגיבוי של ה־iPhone — יחד עם שאר הנתונים שלך, לפי הכללים של Apple.</string>
     <string name="t_92c396e199">סיגלית אפריקנית</string>
     <string name="t_99c7c8c714">צורות</string>
@@ -631,6 +662,7 @@
     <string name="t_84b22ed2aa">צבע</string>
     <string name="t_7ceb6b0f96">צבע הגל</string>
     <string name="t_4d7209b9c1">צבע הדוגמה</string>
+    <string name="t_8c038b5d5a">צבעי הטפט</string>
     <string name="t_2a6d22be37">צבעים, צפיפות וגובה — מהתמונה.</string>
     <string name="t_ac08f8dec7">פרח</string>
     <string name="t_4924d77144">מספרים</string>
@@ -647,11 +679,14 @@
     <string name="t_febbc7512c">כדי לפתוח את הגינה</string>
     <string name="t_e250a6df76">שרוך</string>
     <string name="t_723a09005e">פרווה</string>
+    <string name="t_68656a952e">הגרסה הזו ישנה מדי בשביל Sprout.</string>
     <string name="t_b3bf1682b8">זו הגינה שלך</string>
     <string name="t_d342de941a">זה הקוד שלך: כבר נמצאים בטבלה.</string>
     <string name="t_3a925bfac5">האייפון הזה לא יכול לסרוק: נדרש LiDAR.</string>
+    <string name="t_8536fc8767">הטלפון הזה לא תומך ב־AR</string>
     <string name="t_c7e64e73eb">אצ׳ווריה</string>
     <string name="t_77789a486b">יוקה</string>
+    <string name="t_ed3f0e507a">שפה</string>
     <string name="t_3f264c02f1">בזמן %s</string>
     <string name="t_cc86ef708c">את/ה</string>
     <string name="t_2e06422eda">האדמה יבשה</string>
@@ -683,4 +718,11 @@
     <string name="t_d8e6f5387c">יותר מפעם בדקה</string>
     <string name="t_d959d34275">רצף %d</string>
     <string name="t_34eb9e66db">• %1$s (%2$s, “%3$s”) — %4$s</string>
+    <string name="shortcut_add">הוספה</string>
+    <string name="shortcut_search">חיפוש</string>
+    <string name="shortcut_stats">סטטיסטיקה</string>
+    <string name="shortcut_thirst">את מי להשקות</string>
+    <string name="tile_label">את מי להשקות</string>
+    <string name="widget_description">הצמחים היבשים ביותר וכפתור “השקיה”.</string>
+    <string name="widget_name">את מי להשקות</string>
 </resources>

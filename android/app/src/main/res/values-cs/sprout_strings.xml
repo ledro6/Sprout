@@ -30,9 +30,13 @@
     <string name="t_197eb092cd">%d %%</string>
     <string name="t_45b8ac5695" formatted="false">20–40 % vody</string>
     <string name="t_3d6c2541b9" formatted="false">40 % vody a víc</string>
+    <string name="t_5f5e0de553">AR se nespustilo</string>
+    <string name="t_957c85ce41">AR kreslí rostlinu přes to, co vidí fotoaparát. Záběry nikam neodcházejí.</string>
     <string name="t_14c72c397f">AR – rozšířená realita</string>
     <string name="t_484d12fea8">AR je rozšířená realita: fotoaparát ukazuje váš pokoj a v něm 3D rostlinu. Modely druhů jsou už v aplikaci a vlastní můžete vymyslet podle fotky nebo naskenovat.</string>
+    <string name="t_5c4b538eba">AR je rozšířená realita: fotoaparát ukazuje váš pokoj a v něm prostorovou rostlinu. Modely druhů už jsou v aplikaci a vlastní si můžete nechat vymyslet podle fotky.</string>
     <string name="t_809c431aa4">AR, model a nastavení</string>
+    <string name="t_acec2ec7d0">Android %s a novější</string>
     <string name="t_302a05a1ac">Sprout o vás nesbírá žádné údaje a nikam nic neposílá.</string>
     <string name="t_9585992548">iOS 26 nebo novější</string>
     <string name="t_c65910cd34">„%1$s“ a ještě %2$s potřebují vodu</string>
@@ -71,6 +75,7 @@
     <string name="t_a8bcae2d9a">Vasilisa</string>
     <string name="t_f79b25b05d">Vaše zahrada jako sluneční soustava: rostliny krouží po drahách zalévání. Nahlédněte – dá se tam i poslechnout měsíc.</string>
     <string name="t_19ff316e6f">Táhněte posuvníkem – zahrada se přenese o dny dopředu, jako byste zalévali včas.</string>
+    <string name="t_ddf5bf682d">Pohybujte telefonem pomaleji</string>
     <string name="t_3f52bd53a9">Návrat</string>
     <string name="t_c7aaa96778">Vrátit</string>
     <string name="t_f10d238768">Zpět na hotový model</string>
@@ -98,6 +103,7 @@
     <string name="t_2b5f40f213">Všechna zalití této rostliny. Chybný záznam smažete dlouhým podržením.</string>
     <string name="t_2f07cfc9c2">Vše zalito</string>
     <string name="t_3b5143902e">Celkem</string>
+    <string name="t_eeb8caeb95">Vložit</string>
     <string name="t_c12ee51dd9">Celou dobu</string>
     <string name="t_1059a1d77d">Včera, %s</string>
     <string name="t_fe4b0c80f0">Vybrat</string>
@@ -117,6 +123,7 @@
     <string name="t_68ae695380">Senzor pohybu</string>
     <string name="t_827d544645">Data</string>
     <string name="t_0bcd158c3d">Dvěma prsty otočit, sevřením změnit velikost</string>
+    <string name="t_9978ac34b2">Akce</string>
     <string name="t_b6ef08401f">Den</string>
     <string name="t_abbebfc85b">Den, kdy si tři a více rostlin řekne o vodu najednou – šikovné zalít všechny naráz.</string>
     <string name="t_e0c0ceee56">Stromek</string>
@@ -137,6 +144,7 @@
     <string name="t_fdf0f98738">Když zaléváte dřív, aplikace si toho všimne a navrhne kratší interval.</string>
     <string name="t_19f25d5784">Další</string>
     <string name="t_7db203bdda">Ještě jedno kolo</string>
+    <string name="t_bbe42739db">Zkusit znovu</string>
     <string name="t_0fb6d09e78">Čekají na vodu</string>
     <string name="t_ef28cc1496">Za období</string>
     <string name="t_70efc9651a">V tomto období se nezalévalo.</string>
@@ -177,6 +185,7 @@
     <string name="t_b335f763ea">Zmizí všechny rostliny i celý deník zálivek. Nepůjde to vrátit.</string>
     <string name="t_53d55db39f">Souhrn</string>
     <string name="t_779e8b3e28">Zapněte je v Nastavení telefonu: Sprout → Oznámení.</string>
+    <string name="t_9c47ca16c4">Instalují se z Google Play, zdarma. Pak se AR otevře hned.</string>
     <string name="t_46c7be08dd">Pracovna</string>
     <string name="t_0112d57d0b">Oříznout</string>
     <string name="t_01b9b803e7">Výřez fotky</string>
@@ -185,6 +194,7 @@
     <string name="t_223428bd3c">Každý bod je jedno zalití. Čím výš je bod, tím víc vody ještě bylo v hlíně.</string>
     <string name="t_e1439f1755">Každé zalití je tón: blízké planety zpívají výš.</string>
     <string name="t_f0a22d9d1a">Podle systému</string>
+    <string name="t_087f6705ed">Jako v telefonu</string>
     <string name="t_696586f496">Jak se jmenujete?</string>
     <string name="t_7013b69dab">Jak aplikaci používat</string>
     <string name="t_d4066ba693">Jak se teď rostlina jmenuje?</string>
@@ -193,6 +203,9 @@
     <string name="t_7b105a68e6">Kalanchoe</string>
     <string name="t_60f6304f34">Kalatea</string>
     <string name="t_fe0790d4e2">Kalendář zálivek</string>
+    <string name="t_f2d0f5cc41">Fotoaparát používá jiná aplikace</string>
+    <string name="t_37620de860">Fotoaparát je zakázaný v nastavení telefonu. Povolte ho tam a vraťte se.</string>
+    <string name="t_601947a61c">Fotoaparát a fotky</string>
     <string name="t_d8e43f5730">Fotoaparát ukazuje váš pokoj a aplikace do něj postaví prostorovou rostlinu. Můžete ji otočit, zvětšit a zalít konví.</string>
     <string name="t_8671ea9e33">Kapka</string>
     <string name="t_85618413ed">Každý čtverec je den za poslední čtyři měsíce: čím sytější barva, tím víc zálivek. Klepnutím na čtverec uvidíte datum.</string>
@@ -203,6 +216,7 @@
     <string name="t_eb1aa42a32">Přezdívky rostlin, druhy, vlhkost, data — vše, co zadáte, leží v souboru uvnitř aplikace, přímo v telefonu. Stejně tak nastavení. Nic z toho neopouští zařízení.</string>
     <string name="t_1c8e21179b">Tlačítka</string>
     <string name="t_49cdfd9292">Tlačítka okolo</string>
+    <string name="t_2ecb4451da">Tlačítka a karty v barvách tapety telefonu.</string>
     <string name="t_725347e425">Kdy</string>
     <string name="t_512bafe5b5">Když vlhkost klesne pod</string>
     <string name="t_72e18d38d9">Kdy zaléváte</string>
@@ -260,7 +274,9 @@
     <string name="t_18f71e9762">Hudba sfér</string>
     <string name="t_0b854eb300">Mourek</string>
     <string name="t_7a7164238c">Máta</string>
+    <string name="t_06ec0f34bf">V telefonu není nastavený zámek obrazovky.</string>
     <string name="t_272e98dde1">Tento telefon nemá Face ID ani kód.</string>
+    <string name="t_339d955a3c">Namiřte fotoaparát na podlahu se vzorem nebo na nábytek</string>
     <string name="t_4dd78d95e6">Zamířit</string>
     <string name="t_c96769af49">Klepnutím na „+“ vytvoříte první.</string>
     <string name="t_730cde94e5">Klepněte na „?“ vedle něj – vysvětlíme ho jednoduše. Všechna slova najdete ve slovníčku v nastavení.</string>
@@ -306,9 +322,14 @@
     <string name="t_da731c70ca">Nová místnost</string>
     <string name="t_87b55f8287">Nová místnost…</string>
     <string name="t_4a30361774">Potřebujete iPhone se senzorem LiDAR – modely Pro od iPhonu 12 Pro.</string>
+    <string name="t_7283f54f30">Je potřeba fotoaparát</string>
+    <string name="t_ba43c393fc">Jsou potřeba Služby Google Play pro AR</string>
     <string name="t_b9c9ff652d">O aplikaci</string>
+    <string name="t_7bee71b043">Aktualizujte Služby Google Play pro AR</string>
+    <string name="t_c2f668e54f">Aktualizovat</string>
     <string name="t_3a3478672d">Obejděte rostlinu s telefonem dokola – vznikne její přesná 3D kopie. Snímání zabere pár minut, sestavení modelu dalších pár; vše v telefonu.</string>
     <string name="t_bc8d2377f1">3D kopie rostliny pro AR. Modely druhů jsou už v aplikaci a vlastní můžete vymyslet podle fotky nebo naskenovat – tlačítko „Model“ na obrazovce rostliny.</string>
+    <string name="t_7eb02aa630">Prostorová kopie rostliny pro AR. Modely druhů už jsou v aplikaci a vlastní si můžete nechat vymyslet podle fotky — tlačítko „Model“ na obrazovce rostliny.</string>
     <string name="t_4b919d0c3d">Obvyklé pro druh: %s</string>
     <string name="t_00495efa90">Obvykle při %s vody v hlíně</string>
     <string name="t_9bc6b67c85">Jeden oběh je jeden interval zalévání. Blízké dráhy mají rostliny, které rychle vysychají, vzdálené ty trpělivé.</string>
@@ -398,6 +419,7 @@
     <string name="t_0455b2eeff">Zobrazeno %1$d z %2$d: víc by bylo na telefon moc</string>
     <string name="t_387af5ff90">Znovu zobrazit tipy</string>
     <string name="t_ca645a26b9">Otočte kolečkem – níže uvidíte, jak se nový interval zobrazí na kartě.</string>
+    <string name="t_51b8f05bf7">Pole hledání je nahoře. Hledá podle přezdívek, druhů a poznámek.</string>
     <string name="t_17c7b943fc">Pole hledání je dole u panelu karet. Hledá podle přezdívky, druhu a poznámek.</string>
     <string name="t_cd1de7bdc3">Zalijte všechny najednou a pošlete sousedovi lístek.</string>
     <string name="t_c767922d35">Zalijte rostlinu a tady uvidíte, kolik vody v tu chvíli bylo v hlíně.</string>
@@ -436,6 +458,7 @@
     <string name="t_3ca46e3e76">Po zalití přeběhne vzorem barevná vlna – tak poznáte, že se zálivka započítala.</string>
     <string name="t_e101868e98">Poslední zalití</string>
     <string name="t_d72166f389">Zobrazit v AR</string>
+    <string name="t_22f978c185">Podívejte se na rostlinu u sebe v pokoji, udělejte jí vlastní model podle fotky nebo změňte přezdívku, druh a interval zalévání.</string>
     <string name="t_f945f5f017">Prohlédněte si rostlinu u sebe v pokoji, udělejte jí vlastní model – z fotky nebo skenem – nebo změňte jméno, druh a interval zálivky.</string>
     <string name="t_8845f9ee9d">Umístit</string>
     <string name="t_39a52fa645">Umístit zahradu</string>
@@ -477,6 +500,7 @@
         <item quantity="other">Každých %d měsíců</item>
     </plurals>
     <string name="t_9caa86d668">Jednou za kolik dní se rostlina zalévá – zhruba za tak dlouho zemina vyschne. Mění se v nastavení rostliny.</string>
+    <string name="t_7882f56b39">Povolit fotoaparát</string>
     <string name="t_cc687c1fa5">Obepíná rámeček rostlinu s květináčem? Tak začněte</string>
     <string name="t_0717b1b655">Uspořádat</string>
     <string name="t_7ebd3688e2">Rostlina</string>
@@ -508,6 +532,7 @@
     <string name="t_cd59e4204b">Zahrada je zamčená</string>
     <string name="t_e3b46fe6dd">Vaše zahrada jako sluneční soustava: každá rostlina je planeta, jeden oběh je jeden interval zalévání. Když dorazí k bráně nahoře, je čas zalít.</string>
     <string name="t_5a05a6d3f9">Zahrada se otevře jen přes Face ID nebo kód telefonu – nikdo jiný se nepodívá.</string>
+    <string name="t_8401f09a45">Zahrada se otevře jen otiskem prstu, obličejem nebo zámkem obrazovky telefonu — cizí se nepodívají.</string>
     <string name="t_2306927b56">Zahrada od %s</string>
     <string name="t_928ada7e39">Zahrada stojí. Klepnutím na rostlinu ji zalijete.</string>
     <string name="t_e4d56c1f85">Zahradník</string>
@@ -526,6 +551,7 @@
     <string name="t_013255575f">Dnes není potřeba nic zalévat.</string>
     <string name="t_618a6abf44">Dnes, %s</string>
     <string name="t_88be20fd06">Teď</string>
+    <string name="t_ad8df7482b">Služby Google Play pro AR na něm nefungují. Všechno ostatní ve Sprout funguje jako obvykle.</string>
     <string name="t_b3c4b1be56">Síť</string>
     <string name="t_a872210c83">Síla vibrací</string>
     <string name="t_04954ca725">Modrá</string>
@@ -550,12 +576,14 @@
     </plurals>
     <string name="t_4a40d86849">Další zálivka: zítra</string>
     <string name="t_b0f07c6bde">Další zálivka: dnes</string>
+    <string name="t_cef8f4a582">Moc tma — rozsviťte</string>
     <string name="t_6f8ca5c940">Slovníček</string>
     <string name="t_214438003b">Prohlížím fotku…</string>
     <string name="t_6fb5cb3976">Nejnovější první</string>
     <string name="t_3189602bf1">Nejsušší první</string>
     <string name="t_4ff6829db6">Sníh</string>
     <string name="t_1b494791c5">Bez fotky</string>
+    <string name="t_2cb357366d">Fotky rostlin se rozpoznávají přímo v telefonu — nikam se neposílají.</string>
     <string name="t_9e2d4d618a">Fotka</string>
     <string name="t_d303471890">Fotka je rozmazaná – vyfoťte ostřejší.</string>
     <string name="t_bee88a5c8c">Fotka je přepálená – vyfoťte ji mimo přímé slunce.</string>
@@ -580,6 +608,7 @@
     <string name="t_8335506cd9">Nejsušší: %s.</string>
     <string name="t_31386bfdb5">Vyfoťte rostlinu – telefon zkusí poznat její druh.</string>
     <string name="t_2da75ff638">Skóre k %s. Aktualizuje se, až přítel pošle kód znovu.</string>
+    <string name="t_d9467398b8">Stává se to, když fotoaparát používá jiná aplikace. Zkuste to znovu.</string>
     <string name="t_109ff6015e">Bačkora</string>
     <string name="t_ba89e87d7f">Telefon pozná rostlinu na fotce a vymyslí její model: barvy listů, květů a květináče, hustotu a výšku. Vše se počítá v telefonu, bez sítě, za pár sekund.</string>
     <string name="t_c9b9affc8d">Rozpoznáno: %1$s — jistota %2$d %%. Pokud to nesedí, opravte to.</string>
@@ -609,8 +638,10 @@
     <string name="t_8b19591d8a">Vzor sleduje náklon</string>
     <string name="t_1cc281e997">Vzor v pozadí se trochu posune, když nakloníte telefon – jako by ležel hlouběji než displej.</string>
     <string name="t_c8f3f390c2">Kopr</string>
+    <string name="t_ce88d35b18">Instalovat</string>
     <string name="t_5373dc43a3">Péče</string>
     <string name="t_ddc1a36266">Brát ohled na roční období</string>
+    <string name="t_8a4653acae">Soubor zahrady se ukládá do zálohy Androidu — spolu s daty ostatních aplikací, podle pravidel Googlu.</string>
     <string name="t_8041745a9b">Soubor zahrady se ukládá do zálohy iPhonu — tam, kde jsou i ostatní vaše data, podle pravidel Applu.</string>
     <string name="t_92c396e199">Africká fialka</string>
     <string name="t_99c7c8c714">Tvary</string>
@@ -631,6 +662,7 @@
     <string name="t_84b22ed2aa">Barva</string>
     <string name="t_7ceb6b0f96">Barva vlny</string>
     <string name="t_4d7209b9c1">Barva vzoru</string>
+    <string name="t_8c038b5d5a">Barvy tapety</string>
     <string name="t_2a6d22be37">Barvy, hustota a výška – z fotky.</string>
     <string name="t_ac08f8dec7">Květina</string>
     <string name="t_4924d77144">Čísla</string>
@@ -647,11 +679,14 @@
     <string name="t_febbc7512c">Abyste otevřeli zahradu</string>
     <string name="t_e250a6df76">Tkanička</string>
     <string name="t_723a09005e">Kožich</string>
+    <string name="t_68656a952e">Tato verze je pro Sprout příliš stará.</string>
     <string name="t_b3bf1682b8">Tohle je vaše zahrada</string>
     <string name="t_d342de941a">Je to váš vlastní kód: v tabulce už jste.</string>
     <string name="t_3a925bfac5">Tento iPhone neumí skenovat: potřebuje LiDAR.</string>
+    <string name="t_8536fc8767">Tento telefon AR neumí</string>
     <string name="t_c7e64e73eb">Echeverie</string>
     <string name="t_77789a486b">Juka</string>
+    <string name="t_ed3f0e507a">Jazyk</string>
     <string name="t_3f264c02f1">včas %s</string>
     <string name="t_cc86ef708c">vy</string>
     <string name="t_2e06422eda">hlína je suchá</string>
@@ -683,4 +718,11 @@
     <string name="t_d8e6f5387c">častěji než jednou za minutu</string>
     <string name="t_d959d34275">série %d</string>
     <string name="t_34eb9e66db">• %1$s (%2$s, „%3$s“) — %4$s</string>
+    <string name="shortcut_add">Přidat</string>
+    <string name="shortcut_search">Hledat</string>
+    <string name="shortcut_stats">Statistiky</string>
+    <string name="shortcut_thirst">Co zalít</string>
+    <string name="tile_label">Co zalít</string>
+    <string name="widget_description">Nejsušší rostliny a tlačítko „Zalít“.</string>
+    <string name="widget_name">Co zalít</string>
 </resources>

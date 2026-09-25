@@ -27,9 +27,13 @@
     <string name="t_197eb092cd">%d%%</string>
     <string name="t_45b8ac5695" formatted="false">20–40% ପାଣି</string>
     <string name="t_3d6c2541b9" formatted="false">40% କିମ୍ବା ଅଧିକ ପାଣି</string>
+    <string name="t_5f5e0de553">AR ଆରମ୍ଭ ହେଲା ନାହିଁ</string>
+    <string name="t_957c85ce41">କ୍ୟାମେରା ଯାହା ଦେଖେ ତା ଉପରେ AR ଗଛଟି ଆଙ୍କେ। ଫ୍ରେମ୍ କେଉଁଠିକୁ ପଠାଯାଏ ନାହିଁ।</string>
     <string name="t_14c72c397f">AR — ସମ୍ପ୍ରସାରିତ ବାସ୍ତବତା</string>
     <string name="t_484d12fea8">AR ଅର୍ଥାତ୍ ଅଗମେଣ୍ଟେଡ୍ ରିଆଲିଟି: କ୍ୟାମେରା ଆପଣଙ୍କ କୋଠରୀ ଓ ସେଥିରେ 3D ଗଛ ଦେଖାଏ। ପ୍ରଜାତିର ମଡେଲ୍ ଆପ୍‌ରେ ଆଗରୁ ଅଛି, ଆଉ ନିଜର ମଡେଲ୍ ଫଟୋରୁ କଳ୍ପନା କରି ବା ସ୍କାନ୍ କରି ବନାଇପାରିବେ।</string>
+    <string name="t_5c4b538eba">AR ହେଉଛି ଅଗମେଣ୍ଟେଡ୍ ରିଆଲିଟି: କ୍ୟାମେରା ଆପଣଙ୍କ କୋଠରୀ ଦେଖାଏ, ଆଉ ସେଥିରେ ଏକ ତ୍ରିମାତ୍ରିକ ଗଛ। ପ୍ରଜାତିର ମଡେଲ୍ ଆପ୍‌ରେ ଅଛି, ଆଉ ନିଜ ମଡେଲ୍ ଫଟୋରୁ ତିଆରି କରାଯାଇପାରେ।</string>
     <string name="t_809c431aa4">AR, ମଡେଲ୍ ଓ ସେଟିଂସ୍</string>
+    <string name="t_acec2ec7d0">Android %s କିମ୍ବା ପରବର୍ତ୍ତୀ</string>
     <string name="t_302a05a1ac">Sprout ଆପଣଙ୍କ ବିଷୟରେ କୌଣସି ସୂଚନା ସଂଗ୍ରହ କରେ ନାହିଁ ଏବଂ କୁଆଡ଼େ କିଛି ପଠାଏ ନାହିଁ।</string>
     <string name="t_9585992548">iOS 26 କିମ୍ବା ପରବର୍ତ୍ତୀ</string>
     <string name="t_c65910cd34">“%1$s” ଏବଂ ଆଉ %2$s କୁ ପାଣି ଦରକାର</string>
@@ -68,6 +72,7 @@
     <string name="t_a8bcae2d9a">ମାଟିଲ୍ଡା</string>
     <string name="t_f79b25b05d">ଆପଣଙ୍କ ବଗିଚା ସୌରମଣ୍ଡଳ ପରି: ଗଛମାନେ ପାଣିର କକ୍ଷପଥରେ ଘୂରନ୍ତି। ଥରେ ଦେଖନ୍ତୁ — ଗୋଟିଏ ମାସ ଶୁଣି ବି ପାରିବେ।</string>
     <string name="t_19ff316e6f">ସ୍ଲାଇଡର୍ ଟାଣନ୍ତୁ — ବଗିଚା କିଛି ଦିନ ଆଗକୁ ଯିବ, ଯେପରି ଆପଣ ଠିକ୍ ସମୟରେ ପାଣି ଦିଅନ୍ତି।</string>
+    <string name="t_ddf5bf682d">ଫୋନ୍‌କୁ ଆହୁରି ଧୀରେ ଘୁଞ୍ଚାନ୍ତୁ</string>
     <string name="t_3f52bd53a9">ଫେରିବା</string>
     <string name="t_c7aaa96778">ପୂର୍ବବତ୍ କରନ୍ତୁ</string>
     <string name="t_f10d238768">ପ୍ରସ୍ତୁତ ମଡେଲ୍‌କୁ ଫେରନ୍ତୁ</string>
@@ -94,6 +99,7 @@
     <string name="t_2b5f40f213">ଏହି ଗଛକୁ ଦିଆଯାଇଥିବା ସମସ୍ତ ପାଣି। ଭୁଲ୍ ଏଣ୍ଟ୍ରି ଲମ୍ବା ଚାପି ଡିଲିଟ୍ କରନ୍ତୁ।</string>
     <string name="t_2f07cfc9c2">ସମସ୍ତଙ୍କୁ ପାଣି ଦିଆଗଲା</string>
     <string name="t_3b5143902e">ମୋଟ</string>
+    <string name="t_eeb8caeb95">ପେଷ୍ଟ କରନ୍ତୁ</string>
     <string name="t_c12ee51dd9">ସବୁ ସମୟ</string>
     <string name="t_1059a1d77d">ଗତକାଲି, %s</string>
     <string name="t_fe4b0c80f0">ବାଛନ୍ତୁ</string>
@@ -113,6 +119,7 @@
     <string name="t_68ae695380">ଗତି ସେନ୍ସର୍</string>
     <string name="t_827d544645">ତାରିଖ</string>
     <string name="t_0bcd158c3d">ଦୁଇ ଆଙ୍ଗୁଠିରେ ଘୁରାନ୍ତୁ, ଚିମୁଟିରେ ଆକାର ବଦଳାନ୍ତୁ</string>
+    <string name="t_9978ac34b2">କାର୍ଯ୍ୟ</string>
     <string name="t_b6ef08401f">ଦିନ</string>
     <string name="t_abbebfc85b">ଯେଉଁ ଦିନ ତିନି କିମ୍ବା ଅଧିକ ଗଛ ଏକାସାଙ୍ଗରେ ପାଣି ମାଗିବେ — ସମସ୍ତଙ୍କୁ ଥରକରେ ପାଣି ଦେବା ସହଜ।</string>
     <string name="t_e0c0ceee56">ଛୋଟ ଗଛ</string>
@@ -133,6 +140,7 @@
     <string name="t_fdf0f98738">ଯଦି ଆପଣ ସମୟ ପୂର୍ବରୁ ପାଣି ଦିଅନ୍ତି, ଆପ୍ ତାହା ଲକ୍ଷ୍ୟ କରି ବ୍ୟବଧାନ କମାଇବାକୁ ପରାମର୍ଶ ଦିଏ।</string>
     <string name="t_19f25d5784">ଅଧିକ</string>
     <string name="t_7db203bdda">ଆଉ ଗୋଟିଏ ପରିକ୍ରମା</string>
+    <string name="t_bbe42739db">ପୁଣି ଚେଷ୍ଟା କରନ୍ତୁ</string>
     <string name="t_0fb6d09e78">ପାଣି ଦରକାର</string>
     <string name="t_ef28cc1496">ଅବଧିରେ</string>
     <string name="t_70efc9651a">ଏହି ଅବଧିରେ ପାଣି ଦିଆଯାଇ ନାହିଁ।</string>
@@ -173,6 +181,7 @@
     <string name="t_b335f763ea">ସମସ୍ତ ଗଛ ଏବଂ ସମ୍ପୂର୍ଣ୍ଣ ପାଣି ରେକର୍ଡ ଲିଭିଯିବ। ଏହାକୁ ଫେରାଇ ହେବ ନାହିଁ।</string>
     <string name="t_53d55db39f">ସାରାଂଶ</string>
     <string name="t_779e8b3e28">ଫୋନ୍ ସେଟିଂସ୍‌ରେ ଚାଲୁ କରନ୍ତୁ: Sprout → ବିଜ୍ଞପ୍ତି।</string>
+    <string name="t_9c47ca16c4">ଏଗୁଡ଼ିକ Google Playରୁ ମାଗଣାରେ ଇନଷ୍ଟଲ୍ ହୁଏ। ତା ପରେ AR ତୁରନ୍ତ ଖୋଲିବ।</string>
     <string name="t_46c7be08dd">ପଢ଼ା ଘର</string>
     <string name="t_0112d57d0b">କ୍ରପ୍</string>
     <string name="t_01b9b803e7">ଫଟୋ କ୍ରପ୍</string>
@@ -181,6 +190,7 @@
     <string name="t_223428bd3c">ପ୍ରତ୍ୟେକ ବିନ୍ଦୁ ଏକ ଥର ପାଣି ଦେବା। ବିନ୍ଦୁ ଯେତେ ଉଚ୍ଚ, ମାଟିରେ ସେତେ ଅଧିକ ପାଣି ଥିଲା।</string>
     <string name="t_e1439f1755">ପ୍ରତି ଥର ପାଣି ଦେବା ଏକ ସ୍ୱର: ନିକଟ ଗ୍ରହମାନେ ଉଚ୍ଚ ସ୍ୱରେ ଗାଆନ୍ତି।</string>
     <string name="t_f0a22d9d1a">ସିଷ୍ଟମ୍ ପରି</string>
+    <string name="t_087f6705ed">ଫୋନ୍ ଭଳି</string>
     <string name="t_696586f496">ଆପଣଙ୍କ ନାମ କ’ଣ?</string>
     <string name="t_7013b69dab">କିପରି ବ୍ୟବହାର କରିବେ</string>
     <string name="t_d4066ba693">ଏବେ ଗଛର ନାମ କ’ଣ?</string>
@@ -189,6 +199,9 @@
     <string name="t_7b105a68e6">କାଲାଞ୍ଚୋ</string>
     <string name="t_60f6304f34">କ୍ୟାଲାଥିଆ</string>
     <string name="t_fe0790d4e2">ପାଣି ଦେବା କ୍ୟାଲେଣ୍ଡର୍</string>
+    <string name="t_f2d0f5cc41">କ୍ୟାମେରା ଅନ୍ୟ ଏକ ଆପ୍ ବ୍ୟବହାର କରୁଛି</string>
+    <string name="t_37620de860">ଫୋନ୍ ସେଟିଂସ୍‌ରେ କ୍ୟାମେରା ବାରଣ ହୋଇଛି। ସେଠାରେ ଅନୁମତି ଦେଇ ଫେରି ଆସନ୍ତୁ।</string>
+    <string name="t_601947a61c">କ୍ୟାମେରା ଓ ଫଟୋ</string>
     <string name="t_d8e43f5730">କ୍ୟାମେରା ଆପଣଙ୍କ କୋଠରୀ ଦେଖାଏ, ଆଉ ଆପ୍ ସେଥିରେ ଏକ ତ୍ରିମାତ୍ରିକ ଗଛ ରଖେ। ଆପଣ ଏହାକୁ ବୁଲାଇ, ବଡ଼ କରି ଓ ଝାରିରେ ପାଣି ଦେଇ ପାରିବେ।</string>
     <string name="t_8671ea9e33">ବୁନ୍ଦା</string>
     <string name="t_85618413ed">ପ୍ରତି ବର୍ଗ ଗତ ଚାରି ମାସର ଗୋଟିଏ ଦିନ: ରଙ୍ଗ ଯେତେ ଗାଢ଼, ପାଣି ସେତେ ବେଶି। ତାରିଖ ଦେଖିବାକୁ ବର୍ଗରେ ଟାପ୍ କରନ୍ତୁ।</string>
@@ -199,6 +212,7 @@
     <string name="t_eb1aa42a32">ଗଛର ଡାକନାମ, ପ୍ରଜାତି, ଆର୍ଦ୍ରତା, ତାରିଖ — ଆପଣ ଯାହା ଲେଖନ୍ତି ସବୁ ଆପ୍ ଭିତରର ଏକ ଫାଇଲ୍‌ରେ, ଫୋନ୍‌ରେ ହିଁ ରହେ। ସେଟିଂସ୍ ମଧ୍ୟ ସେଠାରେ। ଏଥିରୁ କିଛି ଡିଭାଇସ୍ ଛାଡ଼େ ନାହିଁ।</string>
     <string name="t_1c8e21179b">ବଟନ୍</string>
     <string name="t_49cdfd9292">ଚାରିପାଖର ବଟନ୍</string>
+    <string name="t_2ecb4451da">ବଟନ୍ ଓ କାର୍ଡ ଫୋନ୍‌ର ୱାଲପେପର୍ ରଙ୍ଗରେ।</string>
     <string name="t_725347e425">କେବେ</string>
     <string name="t_512bafe5b5">ଯେତେବେଳେ ଆର୍ଦ୍ରତା ଏହାଠାରୁ କମ୍</string>
     <string name="t_72e18d38d9">ଆପଣ କେବେ ପାଣି ଦିଅନ୍ତି</string>
@@ -256,7 +270,9 @@
     <string name="t_18f71e9762">ଗୋଲକର ସଙ୍ଗୀତ</string>
     <string name="t_0b854eb300">ମିନି</string>
     <string name="t_7a7164238c">ପୋଦିନା</string>
+    <string name="t_06ec0f34bf">ଏହି ଫୋନ୍‌ରେ ସ୍କ୍ରିନ୍ ଲକ୍ ସେଟ୍ ହୋଇନାହିଁ।</string>
     <string name="t_272e98dde1">ଏହି ଫୋନ୍‌ରେ Face ID କିମ୍ବା ପାସକୋଡ୍ କିଛି ନାହିଁ।</string>
+    <string name="t_339d955a3c">କ୍ୟାମେରାକୁ ନକ୍ସା ଥିବା ଚଟାଣ କିମ୍ବା ଆସବାବପତ୍ର ଆଡ଼କୁ କରନ୍ତୁ</string>
     <string name="t_4dd78d95e6">ଲକ୍ଷ୍ୟ କରନ୍ତୁ</string>
     <string name="t_c96769af49">ପ୍ରଥମଟି ତିଆରି କରିବାକୁ “+” ଟାପ୍ କରନ୍ତୁ।</string>
     <string name="t_730cde94e5">ପାଖରେ ଥିବା “?” ରେ ଟାପ୍ କରନ୍ତୁ — ସରଳ ଭାଷାରେ ବୁଝାଇବୁ। ସମସ୍ତ ଶବ୍ଦ ସେଟିଂସର ଶବ୍ଦକୋଷରେ ଅଛି।</string>
@@ -302,9 +318,14 @@
     <string name="t_da731c70ca">ନୂଆ ରୁମ୍</string>
     <string name="t_87b55f8287">ନୂଆ ରୁମ୍…</string>
     <string name="t_4a30361774">LiDAR ସେନ୍ସର୍ ଥିବା iPhone ଦରକାର — iPhone 12 Pro ଠାରୁ Pro ମଡେଲ୍।</string>
+    <string name="t_7283f54f30">କ୍ୟାମେରା ଦରକାର</string>
+    <string name="t_ba43c393fc">AR ପାଇଁ Google Play ସେବା ଦରକାର</string>
     <string name="t_b9c9ff652d">ବିଷୟରେ</string>
+    <string name="t_7bee71b043">AR ପାଇଁ Google Play ସେବା ଅପଡେଟ୍ କରନ୍ତୁ</string>
+    <string name="t_c2f668e54f">ଅପଡେଟ୍ କରନ୍ତୁ</string>
     <string name="t_3a3478672d">ଫୋନ୍ ଧରି ଗଛ ଚାରିପାଖେ ବୁଲନ୍ତୁ — ତା’ର ସଠିକ୍ 3D ନକଲ ତିଆରି ହେବ। ସୁଟିଂରେ କିଛି ମିନିଟ୍ ଓ ମଡେଲ୍ ତିଆରିରେ ଆଉ କିଛି; ସବୁ ଫୋନ୍‌ରେ।</string>
     <string name="t_bc8d2377f1">AR ପାଇଁ ଗଛର 3D ନକଲ। ପ୍ରଜାତିର ମଡେଲ୍ ଆପ୍‌ରେ ଆଗରୁ ଅଛି, ଆଉ ନିଜର ମଡେଲ୍ ଫଟୋରୁ କଳ୍ପନା କରି ବା ସ୍କାନ୍ କରି ବନାଇପାରିବେ — ଗଛ ସ୍କ୍ରିନ୍‌ରେ “ମଡେଲ୍” ବଟନ୍।</string>
+    <string name="t_7eb02aa630">AR ପାଇଁ ଗଛର ତ୍ରିମାତ୍ରିକ ନକଲ। ପ୍ରଜାତିର ମଡେଲ୍ ଆପ୍‌ରେ ଅଛି, ଆଉ ନିଜ ମଡେଲ୍ ଫଟୋରୁ ତିଆରି କରାଯାଇପାରେ — ଗଛ ସ୍କ୍ରିନ୍‌ରେ “ମଡେଲ୍” ବଟନ୍।</string>
     <string name="t_4b919d0c3d">ଏହି ପ୍ରଜାତି ପାଇଁ ସାଧାରଣତଃ: %s</string>
     <string name="t_00495efa90">ସାଧାରଣତଃ ଯେତେବେଳେ ମାଟିରେ %s ପାଣି ଥାଏ</string>
     <string name="t_9bc6b67c85">ଗୋଟିଏ ପରିକ୍ରମା ଏକ ପାଣି ଦେବା ବ୍ୟବଧାନ। ନିକଟ କକ୍ଷପଥ ଶୀଘ୍ର ଶୁଖୁଥିବାଙ୍କର, ଦୂର ଧୈର୍ଯ୍ୟଶୀଳଙ୍କର।</string>
@@ -389,6 +410,7 @@
     <string name="t_0455b2eeff">%2$d ରୁ %1$d ଦେଖାଯାଉଛି: ଅଧିକ ହେଲେ ଫୋନ୍ ପାଇଁ ଭାରୀ</string>
     <string name="t_387af5ff90">ସଙ୍କେତ ପୁଣି ଦେଖାନ୍ତୁ</string>
     <string name="t_ca645a26b9">ଚକ ଘୁରାନ୍ତୁ — ତଳେ ଦେଖାଯିବ ନୂଆ ବ୍ୟବଧାନ କାର୍ଡରେ କିପରି ଦେଖାଯିବ।</string>
+    <string name="t_51b8f05bf7">ସନ୍ଧାନ ଫିଲ୍ଡ ଉପରେ ଅଛି। ଏହା ଡାକନାମ, ପ୍ରଜାତି ଓ ନୋଟ୍‌ରେ ଖୋଜେ।</string>
     <string name="t_17c7b943fc">ସନ୍ଧାନ ଘର ତଳେ, ଟାବ୍ ବାର୍ ପାଖରେ। ଡାକନାମ, ପ୍ରଜାତି ଓ ନୋଟ୍‌ରେ ଖୋଜେ।</string>
     <string name="t_cd1de7bdc3">ସମସ୍ତଙ୍କୁ ଏକାଥରେ ପାଣି ଦିଅନ୍ତୁ ଓ ପଡ଼ୋଶୀଙ୍କୁ ଚିଠି ପଠାନ୍ତୁ।</string>
     <string name="t_c767922d35">କୌଣସି ଗଛକୁ ପାଣି ଦିଅନ୍ତୁ — ସେହି ମୁହୂର୍ତ୍ତରେ ମାଟିରେ କେତେ ପାଣି ଥିଲା ଏଠାରେ ଦେଖାଯିବ।</string>
@@ -426,6 +448,7 @@
     <string name="t_3ca46e3e76">ପାଣି ଦେବା ପରେ ନକ୍ସା ଉପରେ ରଙ୍ଗୀନ ଢେଉ ଦୌଡ଼େ — ଏଥିରୁ ଜଣାପଡ଼େ ପାଣି ଦେବା ଗଣାଗଲା।</string>
     <string name="t_e101868e98">ଶେଷ ପାଣି</string>
     <string name="t_d72166f389">AR ରେ ଦେଖନ୍ତୁ</string>
+    <string name="t_22f978c185">ଗଛଟିକୁ ନିଜ କୋଠରୀରେ ଦେଖନ୍ତୁ, ଫଟୋରୁ ତାର ନିଜ ମଡେଲ୍ ତିଆରି କରନ୍ତୁ, କିମ୍ବା ଡାକନାମ, ପ୍ରଜାତି ଓ ପାଣି ଦେବା ବ୍ୟବଧାନ ବଦଳାନ୍ତୁ।</string>
     <string name="t_f945f5f017">ଗଛକୁ ନିଜ କୋଠରୀରେ ଦେଖନ୍ତୁ, ତା’ର ନିଜ ମଡେଲ୍ ବନାନ୍ତୁ — ଫଟୋ ବା ସ୍କାନ୍‌ରୁ — କିମ୍ବା ନାମ, ପ୍ରଜାତି ଓ ପାଣି ଦେବା ବ୍ୟବଧାନ ବଦଳାନ୍ତୁ।</string>
     <string name="t_8845f9ee9d">ରଖନ୍ତୁ</string>
     <string name="t_39a52fa645">ବଗିଚା ରଖନ୍ତୁ</string>
@@ -465,6 +488,7 @@
         <item quantity="other">ପ୍ରତି %d ମାସରେ</item>
     </plurals>
     <string name="t_9caa86d668">ଗଛକୁ କେତେ ଦିନରେ ଥରେ ପାଣି ଦିଆଯାଏ — ପ୍ରାୟ ସେତିକି ସମୟରେ ମାଟି ଶୁଖେ। ଗଛର ସେଟିଂସରେ ବଦଳାଇ ହେବ।</string>
+    <string name="t_7882f56b39">କ୍ୟାମେରାକୁ ଅନୁମତି ଦିଅନ୍ତୁ</string>
     <string name="t_cc687c1fa5">ଫ୍ରେମ୍ ଗଛ ଓ ଟବକୁ ଘେରିଛି କି? ତେବେ ଆରମ୍ଭ କରନ୍ତୁ</string>
     <string name="t_0717b1b655">ସଜାନ୍ତୁ</string>
     <string name="t_7ebd3688e2">ଗଛ</string>
@@ -496,6 +520,7 @@
     <string name="t_cd59e4204b">ବଗିଚା ଲକ୍ ଅଛି</string>
     <string name="t_e3b46fe6dd">ଆପଣଙ୍କ ବଗିଚା ସୌରମଣ୍ଡଳ ପରି: ପ୍ରତ୍ୟେକ ଗଛ ଏକ ଗ୍ରହ, ଗୋଟିଏ ପରିକ୍ରମା ଏକ ପାଣି ଦେବା ବ୍ୟବଧାନ। ଉପରର ଦ୍ୱାରରେ ପହଞ୍ଚିଲେ ପାଣି ଦେବା ସମୟ।</string>
     <string name="t_5a05a6d3f9">ବଗିଚା କେବଳ Face ID ବା ଫୋନର ପାସକୋଡରେ ଖୋଲେ — ଅନ୍ୟ କେହି ଚୋରା ଦେଖି ପାରିବେ ନାହିଁ।</string>
+    <string name="t_8401f09a45">ବଗିଚା କେବଳ ଆପଣଙ୍କ ଆଙ୍ଗୁଠି ଚିହ୍ନ, ମୁହଁ କିମ୍ବା ଫୋନ୍‌ର ସ୍କ୍ରିନ୍ ଲକ୍‌ରେ ଖୋଲେ — ଅନ୍ୟମାନେ ଚାହିଁ ପାରିବେ ନାହିଁ।</string>
     <string name="t_2306927b56">%s ରୁ ବଗିଚା</string>
     <string name="t_928ada7e39">ବଗିଚା ରଖାଗଲା। ପାଣି ଦେବାକୁ ଗଛ ଉପରେ ଟାପ୍ କରନ୍ତୁ।</string>
     <string name="t_e4d56c1f85">ମାଳି</string>
@@ -514,6 +539,7 @@
     <string name="t_013255575f">ଆଜି କାହାକୁ ପାଣି ଦେବା ଦରକାର ନାହିଁ।</string>
     <string name="t_618a6abf44">ଆଜି, %s</string>
     <string name="t_88be20fd06">ବର୍ତ୍ତମାନ</string>
+    <string name="t_ad8df7482b">ଏଥିରେ AR ପାଇଁ Google Play ସେବା ଚାଲେ ନାହିଁ। Sproutର ବାକି ସବୁ ସାଧାରଣ ଭାବରେ କାମ କରେ।</string>
     <string name="t_b3c4b1be56">ନେଟୱାର୍କ</string>
     <string name="t_a872210c83">କମ୍ପନର ଶକ୍ତି</string>
     <string name="t_04954ca725">ନୀଳ</string>
@@ -537,12 +563,14 @@
     </plurals>
     <string name="t_4a40d86849">ପରବର୍ତ୍ତୀ ପାଣି: କାଲି</string>
     <string name="t_b0f07c6bde">ପରବର୍ତ୍ତୀ ପାଣି: ଆଜି</string>
+    <string name="t_cef8f4a582">ବହୁତ ଅନ୍ଧାର — ଆଲୁଅ ଜାଳନ୍ତୁ</string>
     <string name="t_6f8ca5c940">ଶବ୍ଦକୋଷ</string>
     <string name="t_214438003b">ଫଟୋ ଦେଖୁଛି…</string>
     <string name="t_6fb5cb3976">ସବୁଠାରୁ ନୂଆ ଆଗେ</string>
     <string name="t_3189602bf1">ସବୁଠାରୁ ଶୁଖିଲା ଆଗେ</string>
     <string name="t_4ff6829db6">ବରଫ</string>
     <string name="t_1b494791c5">ଫଟୋ ନାହିଁ</string>
+    <string name="t_2cb357366d">ଗଛର ଫଟୋ ଫୋନ୍‌ରେ ହିଁ ଚିହ୍ନଟ ହୁଏ — ଛବି କେଉଁଠିକୁ ପଠାଯାଏ ନାହିଁ।</string>
     <string name="t_9e2d4d618a">ଫଟୋ</string>
     <string name="t_d303471890">ଫଟୋ ଅସ୍ପଷ୍ଟ — ଅଧିକ ସ୍ପଷ୍ଟ ଉଠାନ୍ତୁ।</string>
     <string name="t_bee88a5c8c">ଫଟୋରେ ଅଧିକ ଆଲୋକ — ସିଧା ଖରା ବିନା ଉଠାନ୍ତୁ।</string>
@@ -567,6 +595,7 @@
     <string name="t_8335506cd9">ସବୁଠୁ ଶୁଖିଲା: %s।</string>
     <string name="t_31386bfdb5">ଗଛର ଫଟୋ ଉଠାନ୍ତୁ — ଫୋନ୍ ତାର ପ୍ରଜାତି ଚିହ୍ନିବାକୁ ଚେଷ୍ଟା କରିବ।</string>
     <string name="t_2da75ff638">%s ପର୍ଯ୍ୟନ୍ତ ସ୍କୋର୍। ବନ୍ଧୁ ପୁଣି କୋଡ୍ ପଠାଇଲେ ଅପଡେଟ୍ ହେବ।</string>
+    <string name="t_d9467398b8">ଅନ୍ୟ ଏକ ଆପ୍ କ୍ୟାମେରା ବ୍ୟବହାର କଲେ ଏପରି ହୁଏ। ପୁଣି ଚେଷ୍ଟା କରନ୍ତୁ।</string>
     <string name="t_109ff6015e">ଚପଲ</string>
     <string name="t_ba89e87d7f">ଫୋନ୍ ଫଟୋରେ ଗଛ ଚିହ୍ନି ତା’ର ମଡେଲ୍ କଳ୍ପନା କରିବ: ପତ୍ର, ଫୁଲ ଓ ଟବର ରଙ୍ଗ, ଘନତା ଓ ଉଚ୍ଚତା। ସବୁ ଫୋନ୍‌ରେ, ଇଣ୍ଟରନେଟ୍ ବିନା, କିଛି ସେକେଣ୍ଡରେ।</string>
     <string name="t_c9b9affc8d">ଚିହ୍ନାଗଲା: %1$s — %2$d%% ନିଶ୍ଚିତ। ଭୁଲ୍ ହେଲେ ସୁଧାରନ୍ତୁ।</string>
@@ -596,8 +625,10 @@
     <string name="t_8b19591d8a">ନକ୍ସା ଢଳିବା ସହ ଘୁଞ୍ଚେ</string>
     <string name="t_1cc281e997">ଫୋନ ଢଳାଇଲେ ପୃଷ୍ଠଭୂମିର ନକ୍ସା ଟିକେ ଘୁଞ୍ଚେ — ଯେପରି ସ୍କ୍ରିନଠାରୁ ଗଭୀରରେ ଅଛି।</string>
     <string name="t_c8f3f390c2">ସୋଇ</string>
+    <string name="t_ce88d35b18">ଇନଷ୍ଟଲ୍ କରନ୍ତୁ</string>
     <string name="t_5373dc43a3">ଯତ୍ନ</string>
     <string name="t_ddc1a36266">ଋତୁ ବିଚାର କରନ୍ତୁ</string>
+    <string name="t_8a4653acae">ବଗିଚା ଫାଇଲ୍ Android ବ୍ୟାକଅପ୍‌ରେ ଯାଏ — ଅନ୍ୟ ଆପ୍‌ର ଡାଟା ସହିତ, Googleର ନିୟମ ଅନୁସାରେ।</string>
     <string name="t_8041745a9b">ବଗିଚା ଫାଇଲ୍ iPhone ବ୍ୟାକଅପ୍‌ରେ ଯାଏ — ଆପଣଙ୍କ ବାକି ଡାଟା ସହ, Apple ନିୟମ ଅନୁସାରେ।</string>
     <string name="t_92c396e199">ଆଫ୍ରିକୀୟ ଭାୟୋଲେଟ୍</string>
     <string name="t_99c7c8c714">ଆକୃତି</string>
@@ -618,6 +649,7 @@
     <string name="t_84b22ed2aa">ରଙ୍ଗ</string>
     <string name="t_7ceb6b0f96">ଢେଉର ରଙ୍ଗ</string>
     <string name="t_4d7209b9c1">ନକ୍ସାର ରଙ୍ଗ</string>
+    <string name="t_8c038b5d5a">ୱାଲପେପର୍ ରଙ୍ଗ</string>
     <string name="t_2a6d22be37">ରଙ୍ଗ, ଘନତା ଓ ଉଚ୍ଚତା — ଫଟୋରୁ।</string>
     <string name="t_ac08f8dec7">ଫୁଲ</string>
     <string name="t_4924d77144">ସଂଖ୍ୟା</string>
@@ -634,11 +666,14 @@
     <string name="t_febbc7512c">ଆପଣଙ୍କ ବଗିଚା ଖୋଲିବା ପାଇଁ</string>
     <string name="t_e250a6df76">ଜୋତା ଫିତା</string>
     <string name="t_723a09005e">ଫର୍ କୋଟ୍</string>
+    <string name="t_68656a952e">ଏହି ସଂସ୍କରଣ Sprout ପାଇଁ ବହୁତ ପୁରୁଣା।</string>
     <string name="t_b3bf1682b8">ଏହା ଆପଣଙ୍କ ବଗିଚା</string>
     <string name="t_d342de941a">ଏହା ଆପଣଙ୍କ ନିଜ କୋଡ୍: ଆପଣ ପୂର୍ବରୁ ସାରଣୀରେ ଅଛନ୍ତି।</string>
     <string name="t_3a925bfac5">ଏହି iPhone ସ୍କାନ୍ କରିପାରେନାହିଁ: LiDAR ଦରକାର।</string>
+    <string name="t_8536fc8767">ଏହି ଫୋନ୍ AR ଚଳାଇପାରେ ନାହିଁ</string>
     <string name="t_c7e64e73eb">ଏଚେଭେରିଆ</string>
     <string name="t_77789a486b">ୟୁକା</string>
+    <string name="t_ed3f0e507a">ଭାଷା</string>
     <string name="t_3f264c02f1">ଠିକ୍ ସମୟରେ %s</string>
     <string name="t_cc86ef708c">ଆପଣ</string>
     <string name="t_2e06422eda">ମାଟି ଶୁଖିଲା</string>
@@ -667,4 +702,11 @@
     <string name="t_d8e6f5387c">ମିନିଟରେ ଥରେରୁ ଅଧିକ</string>
     <string name="t_d959d34275">କ୍ରମାଗତ %d</string>
     <string name="t_34eb9e66db">• %1$s (%2$s, “%3$s”) — %4$s</string>
+    <string name="shortcut_add">ଯୋଡ଼ନ୍ତୁ</string>
+    <string name="shortcut_search">ସନ୍ଧାନ</string>
+    <string name="shortcut_stats">ପରିସଂଖ୍ୟାନ</string>
+    <string name="shortcut_thirst">କାହାକୁ ପାଣି ଦେବା</string>
+    <string name="tile_label">କାହାକୁ ପାଣି ଦେବା</string>
+    <string name="widget_description">ସବୁଠାରୁ ଶୁଖିଲା ଗଛ ଏବଂ “ପାଣି ଦିଅନ୍ତୁ” ବଟନ୍।</string>
+    <string name="widget_name">କାହାକୁ ପାଣି ଦେବା</string>
 </resources>

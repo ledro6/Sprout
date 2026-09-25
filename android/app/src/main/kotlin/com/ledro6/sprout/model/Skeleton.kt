@@ -20,6 +20,9 @@ object Skeleton {
         "MMM" to "LLL",
         "EEEE" to "EEEE",
         "EEEEdMMMM" to "EEEE, d MMMM",
+        "EEEEE" to "EEEEE",
+        "LLLLL" to "LLLLL",
+        "MMMyy" to "LLL yy",
         "Hm" to "HH:mm",
         "hm" to "h:mm a",
     )

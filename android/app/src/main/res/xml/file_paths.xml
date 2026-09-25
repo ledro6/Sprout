@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Камера пишет снимок во временную папку; больше приложение ничего не отдаёт. -->
+<paths>
+    <cache-path name="camera" path="camera/" />
+</paths>

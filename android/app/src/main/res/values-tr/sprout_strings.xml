@@ -27,9 +27,13 @@
     <string name="t_197eb092cd">%%%d</string>
     <string name="t_45b8ac5695" formatted="false">%20–40 su</string>
     <string name="t_3d6c2541b9" formatted="false">%40 su ve üzeri</string>
+    <string name="t_5f5e0de553">AR başlamadı</string>
+    <string name="t_957c85ce41">AR, bitkiyi kameranın gördüğünün üzerine çizer. Görüntüler hiçbir yere gitmez.</string>
     <string name="t_14c72c397f">AR — artırılmış gerçeklik</string>
     <string name="t_484d12fea8">AR artırılmış gerçekliktir: kamera odanızı ve içinde 3B bir bitkiyi gösterir. Tür modelleri uygulamada hazır; kendi modelinizi fotoğraftan tasarlayabilir ya da tarayabilirsiniz.</string>
+    <string name="t_5c4b538eba">AR, artırılmış gerçeklik demektir: kamera odanızı ve içinde üç boyutlu bir bitkiyi gösterir. Türlerin modelleri zaten uygulamada; kendi modelinizi bir fotoğraftan tasarlatabilirsiniz.</string>
     <string name="t_809c431aa4">AR, model ve ayarlar</string>
+    <string name="t_acec2ec7d0">Android %s veya üstü</string>
     <string name="t_302a05a1ac">Sprout hakkınızda hiçbir bilgi toplamaz ve hiçbir yere göndermez.</string>
     <string name="t_9585992548">iOS 26 veya sonrası</string>
     <string name="t_c65910cd34">“%1$s” ve %2$s daha su istiyor</string>
@@ -68,6 +72,7 @@
     <string name="t_a8bcae2d9a">Vasilisa</string>
     <string name="t_f79b25b05d">Bahçeniz bir güneş sistemi gibi: bitkiler sulama yörüngelerinde döner. Bir göz atın — bir ayı dinleyebilirsiniz bile.</string>
     <string name="t_19ff316e6f">Sürgüyü kaydırın — zamanında sularsanız bahçe günlerce ileri gider.</string>
+    <string name="t_ddf5bf682d">Telefonu daha yavaş hareket ettirin</string>
     <string name="t_3f52bd53a9">Dönüş</string>
     <string name="t_c7aaa96778">Geri al</string>
     <string name="t_f10d238768">Hazır modele dön</string>
@@ -94,6 +99,7 @@
     <string name="t_2b5f40f213">Bu bitkinin tüm sulamaları. Yanlış bir kaydı uzun basarak silebilirsiniz.</string>
     <string name="t_2f07cfc9c2">Hepsi sulandı</string>
     <string name="t_3b5143902e">Toplam</string>
+    <string name="t_eeb8caeb95">Yapıştır</string>
     <string name="t_c12ee51dd9">Tüm zamanlar</string>
     <string name="t_1059a1d77d">Dün, %s</string>
     <string name="t_fe4b0c80f0">Seç</string>
@@ -113,6 +119,7 @@
     <string name="t_68ae695380">Hareket sensörü</string>
     <string name="t_827d544645">Tarihler</string>
     <string name="t_0bcd158c3d">İki parmakla döndür, sıkıştırarak boyutlandır</string>
+    <string name="t_9978ac34b2">İşlemler</string>
     <string name="t_b6ef08401f">Gün</string>
     <string name="t_abbebfc85b">Üç ya da daha fazla bitkinin aynı anda su isteyeceği bir gün — hepsini tek seferde sulamak için ideal.</string>
     <string name="t_e0c0ceee56">Ağaççık</string>
@@ -133,6 +140,7 @@
     <string name="t_fdf0f98738">Zamanından önce sularsanız uygulama bunu fark eder ve aralığı kısaltmayı önerir.</string>
     <string name="t_19f25d5784">Daha fazla</string>
     <string name="t_7db203bdda">Bir tur daha</string>
+    <string name="t_bbe42739db">Tekrar dene</string>
     <string name="t_0fb6d09e78">Su bekliyor</string>
     <string name="t_ef28cc1496">Dönemde</string>
     <string name="t_70efc9651a">Bu dönemde sulama yapılmadı.</string>
@@ -173,6 +181,7 @@
     <string name="t_b335f763ea">Tüm bitkiler ve bütün sulama günlüğü silinecek. Bu işlem geri alınamaz.</string>
     <string name="t_53d55db39f">Özet</string>
     <string name="t_779e8b3e28">Telefonun Ayarlar’ından açın: Sprout → Bildirimler.</string>
+    <string name="t_9c47ca16c4">Google Play’den ücretsiz yüklenir. Ardından AR hemen açılır.</string>
     <string name="t_46c7be08dd">Çalışma odası</string>
     <string name="t_0112d57d0b">Kırp</string>
     <string name="t_01b9b803e7">Fotoğraf kırpması</string>
@@ -181,6 +190,7 @@
     <string name="t_223428bd3c">Her nokta bir sulama. Nokta ne kadar yüksekse toprakta o kadar su vardı.</string>
     <string name="t_e1439f1755">Her sulama bir nota: iç gezegenler daha ince söyler.</string>
     <string name="t_f0a22d9d1a">Sisteme göre</string>
+    <string name="t_087f6705ed">Telefondaki gibi</string>
     <string name="t_696586f496">Adınız ne?</string>
     <string name="t_7013b69dab">Nasıl kullanılır</string>
     <string name="t_d4066ba693">Bitkinin adı artık ne?</string>
@@ -189,6 +199,9 @@
     <string name="t_7b105a68e6">Kalanşo</string>
     <string name="t_60f6304f34">Kalatya</string>
     <string name="t_fe0790d4e2">Sulama takvimi</string>
+    <string name="t_f2d0f5cc41">Kamerayı başka bir uygulama kullanıyor</string>
+    <string name="t_37620de860">Kameraya telefon ayarlarında izin verilmemiş. Oradan izin verip geri dönün.</string>
+    <string name="t_601947a61c">Kamera ve fotoğraflar</string>
     <string name="t_d8e43f5730">Kamera odanızı gösterir, uygulama da içine üç boyutlu bir bitki yerleştirir. Onu döndürebilir, büyütebilir ve sulama kabıyla sulayabilirsiniz.</string>
     <string name="t_8671ea9e33">Damla</string>
     <string name="t_85618413ed">Her kare son dört aydan bir gün: renk ne kadar koyuysa o kadar çok sulama. Tarihi görmek için bir kareye dokunun.</string>
@@ -199,6 +212,7 @@
     <string name="t_eb1aa42a32">Bitki takma adları, türler, nem, tarihler — girdiğiniz her şey uygulamanın içindeki bir dosyada, telefonun kendisinde durur. Ayarlar da orada. Hiçbiri cihazdan çıkmaz.</string>
     <string name="t_1c8e21179b">Düğmeler</string>
     <string name="t_49cdfd9292">Etraftaki düğmeler</string>
+    <string name="t_2ecb4451da">Düğmeler ve kartlar telefonun duvar kâğıdı renklerinde.</string>
     <string name="t_725347e425">Ne zaman</string>
     <string name="t_512bafe5b5">Nem şunun altına düşünce</string>
     <string name="t_72e18d38d9">Ne zaman suluyorsunuz</string>
@@ -256,7 +270,9 @@
     <string name="t_18f71e9762">Kürelerin müziği</string>
     <string name="t_0b854eb300">Pamuk</string>
     <string name="t_7a7164238c">Nane</string>
+    <string name="t_06ec0f34bf">Telefonda ekran kilidi ayarlanmamış.</string>
     <string name="t_272e98dde1">Bu telefonda ne Face ID ne de parola var.</string>
+    <string name="t_339d955a3c">Kamerayı desenli bir zemine ya da mobilyaya doğrultun</string>
     <string name="t_4dd78d95e6">Nişan al</string>
     <string name="t_c96769af49">İlkini oluşturmak için “+”ya dokunun.</string>
     <string name="t_730cde94e5">Yanındaki “?” işaretine dokunun, basitçe açıklayalım. Tüm kelimeler ayarlardaki sözlükte toplanmıştır.</string>
@@ -302,9 +318,14 @@
     <string name="t_da731c70ca">Yeni oda</string>
     <string name="t_87b55f8287">Yeni oda…</string>
     <string name="t_4a30361774">LiDAR sensörlü bir iPhone gerekir — iPhone 12 Pro ve sonraki Pro modeller.</string>
+    <string name="t_7283f54f30">Kamera gerekli</string>
+    <string name="t_ba43c393fc">AR için Google Play Hizmetleri gerekli</string>
     <string name="t_b9c9ff652d">Hakkında</string>
+    <string name="t_7bee71b043">AR için Google Play Hizmetleri’ni güncelleyin</string>
+    <string name="t_c2f668e54f">Güncelle</string>
     <string name="t_3a3478672d">Telefonla bitkinin etrafında dolaşın — onun birebir 3B kopyası çıkar. Çekim birkaç dakika, modelin oluşturulması birkaç dakika daha sürer; hepsi telefonda.</string>
     <string name="t_bc8d2377f1">Bitkinin AR için 3B kopyası. Tür modelleri uygulamada hazır; kendi modelinizi fotoğraftan tasarlayabilir ya da tarayabilirsiniz — bitki ekranındaki “Model” düğmesi.</string>
+    <string name="t_7eb02aa630">Bitkinin AR için üç boyutlu kopyası. Türlerin modelleri zaten uygulamada; kendi modelinizi bir fotoğraftan tasarlatabilirsiniz — bitki ekranındaki “Model” düğmesi.</string>
     <string name="t_4b919d0c3d">Tür için olağan: %s</string>
     <string name="t_00495efa90">Genellikle toprakta %s su varken</string>
     <string name="t_9bc6b67c85">Bir tur bir sulama aralığıdır. İç yörüngeler çabuk kuruyanların, dış yörüngeler sabırlıların.</string>
@@ -389,6 +410,7 @@
     <string name="t_0455b2eeff">%1$d/%2$d gösteriliyor: fazlası telefonu yorar</string>
     <string name="t_387af5ff90">İpuçlarını yeniden göster</string>
     <string name="t_ca645a26b9">Çarkı çevirin — aşağıda yeni aralığın karta nasıl yansıdığını görürsünüz.</string>
+    <string name="t_51b8f05bf7">Arama alanı üstte. Takma ad, tür ve notlarda arar.</string>
     <string name="t_17c7b943fc">Arama alanı altta, sekme çubuğunun yanında. Takma ad, tür ve notlarda arar.</string>
     <string name="t_cd1de7bdc3">Hepsini bir kerede sulayın ve komşunuza bir not gönderin.</string>
     <string name="t_c767922d35">Bir bitkiyi sulayın — o anda toprakta ne kadar su olduğunu burada görürsünüz.</string>
@@ -426,6 +448,7 @@
     <string name="t_3ca46e3e76">Sulamadan sonra desenin üzerinden renkli bir dalga geçer; sulamanın sayıldığını böyle anlarsınız.</string>
     <string name="t_e101868e98">Son sulama</string>
     <string name="t_d72166f389">AR’de gör</string>
+    <string name="t_22f978c185">Bitkiyi kendi odanızda görün, ona fotoğraftan kendi modelini yapın ya da takma adını, türünü ve sulama aralığını değiştirin.</string>
     <string name="t_f945f5f017">Bitkiyi odanızda görün, ona kendi modelini yapın — fotoğraftan ya da taramayla — veya adını, türünü ve sulama aralığını değiştirin.</string>
     <string name="t_8845f9ee9d">Yerleştir</string>
     <string name="t_39a52fa645">Bahçeyi yerleştir</string>
@@ -465,6 +488,7 @@
         <item quantity="other">%d ayda bir</item>
     </plurals>
     <string name="t_9caa86d668">Bitkinin kaç günde bir sulandığı; toprak aşağı yukarı bu sürede kurur. Bitkinin ayarlarından değiştirilir.</string>
+    <string name="t_7882f56b39">Kameraya izin ver</string>
     <string name="t_cc687c1fa5">Çerçeve bitkiyi saksısıyla sarıyor mu? O zaman başlayın</string>
     <string name="t_0717b1b655">Düzenle</string>
     <string name="t_7ebd3688e2">Bitki</string>
@@ -496,6 +520,7 @@
     <string name="t_cd59e4204b">Bahçe kilitli</string>
     <string name="t_e3b46fe6dd">Bahçeniz bir güneş sistemi gibi: her bitki bir gezegen, bir tur bir sulama aralığı. Yukarıdaki kapıya ulaşınca sulama vakti.</string>
     <string name="t_5a05a6d3f9">Bahçe yalnızca Face ID veya telefonun parolasıyla açılır; başkaları göz atamaz.</string>
+    <string name="t_8401f09a45">Bahçe yalnızca parmak izinizle, yüzünüzle veya telefonun ekran kilidiyle açılır — yabancılar göz atamaz.</string>
     <string name="t_2306927b56">Bahçe başlangıcı: %s</string>
     <string name="t_928ada7e39">Bahçe yerleşti. Sulamak için bir bitkiye dokunun.</string>
     <string name="t_e4d56c1f85">Bahçıvan</string>
@@ -514,6 +539,7 @@
     <string name="t_013255575f">Bugün sulanacak bitki yok.</string>
     <string name="t_618a6abf44">Bugün, %s</string>
     <string name="t_88be20fd06">Şimdi</string>
+    <string name="t_ad8df7482b">AR için Google Play Hizmetleri bu telefonda çalışmıyor. Sprout’taki diğer her şey her zamanki gibi çalışır.</string>
     <string name="t_b3c4b1be56">Ağ</string>
     <string name="t_a872210c83">Titreşim gücü</string>
     <string name="t_04954ca725">Mavi</string>
@@ -537,12 +563,14 @@
     </plurals>
     <string name="t_4a40d86849">Sonraki sulama: yarın</string>
     <string name="t_b0f07c6bde">Sonraki sulama: bugün</string>
+    <string name="t_cef8f4a582">Çok karanlık — ışığı açın</string>
     <string name="t_6f8ca5c940">Sözlük</string>
     <string name="t_214438003b">Fotoğrafa bakıyorum…</string>
     <string name="t_6fb5cb3976">Önce en yeni</string>
     <string name="t_3189602bf1">Önce en kuru</string>
     <string name="t_4ff6829db6">Kar</string>
     <string name="t_1b494791c5">Fotoğraf yok</string>
+    <string name="t_2cb357366d">Bitki fotoğrafları telefonun kendisinde tanınır — fotoğraflar hiçbir yere gönderilmez.</string>
     <string name="t_9e2d4d618a">Fotoğraf</string>
     <string name="t_d303471890">Fotoğraf bulanık — daha net bir tane çekin.</string>
     <string name="t_bee88a5c8c">Fotoğraf fazla pozlanmış — doğrudan güneş olmadan çekin.</string>
@@ -567,6 +595,7 @@
     <string name="t_8335506cd9">En kuru: %s.</string>
     <string name="t_31386bfdb5">Bitkinin fotoğrafını çekin — telefon türünü tanımaya çalışacak.</string>
     <string name="t_2da75ff638">%s tarihli puan. Arkadaşınız kodu yeniden gönderince güncellenir.</string>
+    <string name="t_d9467398b8">Kamerayı başka bir uygulama kullanırken olur. Tekrar deneyin.</string>
     <string name="t_109ff6015e">Terlik</string>
     <string name="t_ba89e87d7f">Telefon fotoğraftaki bitkiyi tanıyıp modelini tasarlar: yaprak, çiçek ve saksı renklerini, sıklığı ve boyu alır. Hepsi telefonda, internetsiz, birkaç saniyede hesaplanır.</string>
     <string name="t_c9b9affc8d">Tanındı: %1$s — %%%2$d emin. Yanlışsa düzeltin.</string>
@@ -596,8 +625,10 @@
     <string name="t_8b19591d8a">Desen eğimi izler</string>
     <string name="t_1cc281e997">Telefonu eğdiğinizde arka plandaki desen biraz kayar; sanki ekrandan daha derindeymiş gibi.</string>
     <string name="t_c8f3f390c2">Dereotu</string>
+    <string name="t_ce88d35b18">Yükle</string>
     <string name="t_5373dc43a3">Bakım</string>
     <string name="t_ddc1a36266">Mevsimi hesaba kat</string>
+    <string name="t_8a4653acae">Bahçe dosyası Android yedeğine girer — diğer uygulamaların verileriyle birlikte, Google’ın kurallarına göre.</string>
     <string name="t_8041745a9b">Bahçe dosyası, diğer verilerinizle birlikte ve Apple’ın kurallarına göre iPhone yedeğine girer.</string>
     <string name="t_92c396e199">Afrika menekşesi</string>
     <string name="t_99c7c8c714">Şekiller</string>
@@ -618,6 +649,7 @@
     <string name="t_84b22ed2aa">Renk</string>
     <string name="t_7ceb6b0f96">Dalga rengi</string>
     <string name="t_4d7209b9c1">Desen rengi</string>
+    <string name="t_8c038b5d5a">Duvar kâğıdı renkleri</string>
     <string name="t_2a6d22be37">Renkler, sıklık ve boy fotoğraftan.</string>
     <string name="t_ac08f8dec7">Çiçek</string>
     <string name="t_4924d77144">Sayılar</string>
@@ -634,11 +666,14 @@
     <string name="t_febbc7512c">Bahçenizi açmak için</string>
     <string name="t_e250a6df76">Bağcık</string>
     <string name="t_723a09005e">Kürk</string>
+    <string name="t_68656a952e">Bu sürüm Sprout için çok eski.</string>
     <string name="t_b3bf1682b8">Burası sizin bahçeniz</string>
     <string name="t_d342de941a">Bu sizin kendi kodunuz: zaten tablodasınız.</string>
     <string name="t_3a925bfac5">Bu iPhone tarama yapamaz: LiDAR gerekir.</string>
+    <string name="t_8536fc8767">Bu telefon AR desteklemiyor</string>
     <string name="t_c7e64e73eb">Ekeverya</string>
     <string name="t_77789a486b">Yuka</string>
+    <string name="t_ed3f0e507a">Dil</string>
     <string name="t_3f264c02f1">zamanında %s</string>
     <string name="t_cc86ef708c">siz</string>
     <string name="t_2e06422eda">toprak kuru</string>
@@ -667,4 +702,11 @@
     <string name="t_d8e6f5387c">dakikada birden sık</string>
     <string name="t_d959d34275">seri %d</string>
     <string name="t_34eb9e66db">• %1$s (%2$s, “%3$s”) — %4$s</string>
+    <string name="shortcut_add">Ekle</string>
+    <string name="shortcut_search">Ara</string>
+    <string name="shortcut_stats">İstatistikler</string>
+    <string name="shortcut_thirst">Kimi sulamalı</string>
+    <string name="tile_label">Kimi sulamalı</string>
+    <string name="widget_description">En kuru bitkiler ve bir “Sula” düğmesi.</string>
+    <string name="widget_name">Kimi sulamalı</string>
 </resources>

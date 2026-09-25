@@ -27,9 +27,13 @@
     <string name="t_197eb092cd">%d %%</string>
     <string name="t_45b8ac5695" formatted="false">20–40 % vettä</string>
     <string name="t_3d6c2541b9" formatted="false">40 % vettä tai enemmän</string>
+    <string name="t_5f5e0de553">AR ei käynnistynyt</string>
+    <string name="t_957c85ce41">AR piirtää kasvin sen päälle, mitä kamera näkee. Kuvat eivät lähde minnekään.</string>
     <string name="t_14c72c397f">AR – lisätty todellisuus</string>
     <string name="t_484d12fea8">AR on lisätty todellisuus: kamera näyttää huoneesi ja siinä 3D-kasvin. Lajien mallit tulevat sovelluksen mukana, ja oman voit kuvitella kuvasta tai skannata.</string>
+    <string name="t_5c4b538eba">AR on lisätty todellisuus: kamera näyttää huoneesi ja siinä kolmiulotteisen kasvin. Lajien mallit ovat jo sovelluksessa, ja oman voit keksiä kuvan perusteella.</string>
     <string name="t_809c431aa4">AR, malli ja asetukset</string>
+    <string name="t_acec2ec7d0">Android %s tai uudempi</string>
     <string name="t_302a05a1ac">Sprout ei kerää sinusta mitään tietoja eikä lähetä mitään mihinkään.</string>
     <string name="t_9585992548">iOS 26 tai uudempi</string>
     <string name="t_c65910cd34">”%1$s” ja lisäksi %2$s tarvitsevat vettä</string>
@@ -68,6 +72,7 @@
     <string name="t_a8bcae2d9a">Matilda</string>
     <string name="t_f79b25b05d">Puutarhasi aurinkokuntana: kasvit kiertävät kasteluratojaan. Kurkista – siellä voi jopa kuunnella kuukauden.</string>
     <string name="t_19ff316e6f">Vedä liukusäädintä – puutarha hyppää päiviä eteenpäin, ikään kuin kastelisit ajallaan.</string>
+    <string name="t_ddf5bf682d">Liikuta puhelinta hitaammin</string>
     <string name="t_3f52bd53a9">Paluu</string>
     <string name="t_c7aaa96778">Kumoa</string>
     <string name="t_f10d238768">Takaisin valmiiseen malliin</string>
@@ -94,6 +99,7 @@
     <string name="t_2b5f40f213">Kaikki tämän kasvin kastelut. Väärän merkinnän voit poistaa pitkällä painalluksella.</string>
     <string name="t_2f07cfc9c2">Kaikki kasteltu</string>
     <string name="t_3b5143902e">Yhteensä</string>
+    <string name="t_eeb8caeb95">Liitä</string>
     <string name="t_c12ee51dd9">Koko aika</string>
     <string name="t_1059a1d77d">Eilen, %s</string>
     <string name="t_fe4b0c80f0">Valitse</string>
@@ -113,6 +119,7 @@
     <string name="t_68ae695380">Liiketunnistin</string>
     <string name="t_827d544645">Päivät</string>
     <string name="t_0bcd158c3d">Kaksi sormea kääntää, nipistys muuttaa kokoa</string>
+    <string name="t_9978ac34b2">Toiminnot</string>
     <string name="t_b6ef08401f">Päivä</string>
     <string name="t_abbebfc85b">Päivä, jolloin kolme kasvia tai enemmän haluaa vettä yhtä aikaa – kätevää kastella kaikki kerralla.</string>
     <string name="t_e0c0ceee56">Pikkupuu</string>
@@ -133,6 +140,7 @@
     <string name="t_fdf0f98738">Jos kastelet ennen aikaa, appi huomaa sen ja ehdottaa lyhyempää väliä.</string>
     <string name="t_19f25d5784">Lisää</string>
     <string name="t_7db203bdda">Vielä kierros</string>
+    <string name="t_bbe42739db">Yritä uudelleen</string>
     <string name="t_0fb6d09e78">Tarvitsevat vettä</string>
     <string name="t_ef28cc1496">Jaksolla</string>
     <string name="t_70efc9651a">Tällä jaksolla ei kasteltu.</string>
@@ -173,6 +181,7 @@
     <string name="t_b335f763ea">Kaikki kasvit ja koko kastelupäiväkirja katoavat. Tätä ei voi kumota.</string>
     <string name="t_53d55db39f">Yhteenveto</string>
     <string name="t_779e8b3e28">Laita ne päälle puhelimen asetuksista: Sprout → Ilmoitukset.</string>
+    <string name="t_9c47ca16c4">Ne asennetaan Google Playsta ilmaiseksi. Sen jälkeen AR aukeaa heti.</string>
     <string name="t_46c7be08dd">Työhuone</string>
     <string name="t_0112d57d0b">Rajaa</string>
     <string name="t_01b9b803e7">Kuvan rajaus</string>
@@ -181,6 +190,7 @@
     <string name="t_223428bd3c">Jokainen piste on kastelu. Mitä korkeammalla piste on, sitä enemmän mullassa oli vielä vettä.</string>
     <string name="t_e1439f1755">Jokainen kastelu on nuotti: sisemmät planeetat laulavat korkeammalta.</string>
     <string name="t_f0a22d9d1a">Kuten järjestelmä</string>
+    <string name="t_087f6705ed">Kuten puhelimessa</string>
     <string name="t_696586f496">Mikä sinun nimesi on?</string>
     <string name="t_7013b69dab">Näin käytät</string>
     <string name="t_d4066ba693">Mikä kasvin nimi on nyt?</string>
@@ -189,6 +199,9 @@
     <string name="t_7b105a68e6">Kalanchoe</string>
     <string name="t_60f6304f34">Kalatea</string>
     <string name="t_fe0790d4e2">Kastelukalenteri</string>
+    <string name="t_f2d0f5cc41">Toinen sovellus käyttää kameraa</string>
+    <string name="t_37620de860">Kamera on estetty puhelimen asetuksissa. Salli se siellä ja palaa takaisin.</string>
+    <string name="t_601947a61c">Kamera ja kuvat</string>
     <string name="t_d8e43f5730">Kamera näyttää huoneesi, ja appi asettaa siihen 3D-kasvin. Voit kääntää sitä, suurentaa sitä ja kastella sen kastelukannulla.</string>
     <string name="t_8671ea9e33">Pisara</string>
     <string name="t_85618413ed">Jokainen ruutu on päivä neljän viime kuukauden ajalta: mitä tummempi väri, sitä enemmän kasteluja. Näet päivämäärän napauttamalla ruutua.</string>
@@ -199,6 +212,7 @@
     <string name="t_eb1aa42a32">Kasvien lempinimet, lajit, kosteus, päivämäärät – kaikki syöttämäsi on tiedostossa apin sisällä, itse puhelimessa. Samoin asetukset. Mikään niistä ei poistu laitteesta.</string>
     <string name="t_1c8e21179b">Painikkeet</string>
     <string name="t_49cdfd9292">Painikkeet ympärillä</string>
+    <string name="t_2ecb4451da">Painikkeet ja kortit taustakuvan väreissä.</string>
     <string name="t_725347e425">Milloin</string>
     <string name="t_512bafe5b5">Kun kosteus on alle</string>
     <string name="t_72e18d38d9">Milloin kastelet</string>
@@ -256,7 +270,9 @@
     <string name="t_18f71e9762">Sfäärien musiikki</string>
     <string name="t_0b854eb300">Mirri</string>
     <string name="t_7a7164238c">Minttu</string>
+    <string name="t_06ec0f34bf">Puhelimeen ei ole asetettu näytön lukitusta.</string>
     <string name="t_272e98dde1">Tässä puhelimessa ei ole Face ID:tä eikä pääsykoodia.</string>
+    <string name="t_339d955a3c">Suuntaa kamera kuvioituun lattiaan tai huonekaluun</string>
     <string name="t_4dd78d95e6">Tähtää</string>
     <string name="t_c96769af49">Luo ensimmäinen napauttamalla ”+”.</string>
     <string name="t_730cde94e5">Napauta sen vieressä olevaa ”?” – selitämme sen yksinkertaisesti. Kaikki sanat löytyvät asetusten sanastosta.</string>
@@ -302,9 +318,14 @@
     <string name="t_da731c70ca">Uusi huone</string>
     <string name="t_87b55f8287">Uusi huone…</string>
     <string name="t_4a30361774">Tarvitaan iPhone, jossa on LiDAR-anturi – Pro-mallit iPhone 12 Prosta alkaen.</string>
+    <string name="t_7283f54f30">Kamera tarvitaan</string>
+    <string name="t_ba43c393fc">AR:n Google Play -palvelut tarvitaan</string>
     <string name="t_b9c9ff652d">Tietoja</string>
+    <string name="t_7bee71b043">Päivitä AR:n Google Play -palvelut</string>
+    <string name="t_c2f668e54f">Päivitä</string>
     <string name="t_3a3478672d">Kierrä kasvi puhelimen kanssa – saat siitä tarkan 3D-kopion. Kuvaus kestää pari minuuttia ja mallin kokoaminen muutaman lisää; kaikki puhelimessa.</string>
     <string name="t_bc8d2377f1">Kasvin 3D-kopio AR:ää varten. Lajien mallit tulevat sovelluksen mukana, ja oman voit kuvitella kuvasta tai skannata – Malli-painike kasvin näkymässä.</string>
+    <string name="t_7eb02aa630">Kasvin kolmiulotteinen kopio AR:ää varten. Lajien mallit ovat jo sovelluksessa, ja oman voit keksiä kuvan perusteella — kasvin näytön Malli-painike.</string>
     <string name="t_4b919d0c3d">Lajille tavallista: %s</string>
     <string name="t_00495efa90">Yleensä, kun vettä on %s</string>
     <string name="t_9bc6b67c85">Yksi kierros on yksi kasteluväli. Sisemmät radat kuuluvat nopeasti kuivuville, ulommat kärsivällisille.</string>
@@ -389,6 +410,7 @@
     <string name="t_0455b2eeff">Näytetään %1$d/%2$d: enempää puhelin ei jaksa</string>
     <string name="t_387af5ff90">Näytä vihjeet uudelleen</string>
     <string name="t_ca645a26b9">Pyöritä rullaa – alla näet, miltä uusi väli näyttää kortilla.</string>
+    <string name="t_51b8f05bf7">Hakukenttä on ylhäällä. Se hakee lempinimistä, lajeista ja muistiinpanoista.</string>
     <string name="t_17c7b943fc">Hakukenttä on alhaalla välilehtipalkin vieressä. Se hakee lempinimistä, lajeista ja muistiinpanoista.</string>
     <string name="t_cd1de7bdc3">Kastele kaikki kerralla ja lähetä naapurille muistilappu.</string>
     <string name="t_c767922d35">Kastele kasvi, niin näet tässä, paljonko mullassa oli sillä hetkellä vettä.</string>
@@ -426,6 +448,7 @@
     <string name="t_3ca46e3e76">Kastelun jälkeen kuvion yli kulkee värikäs aalto – siitä näet, että kastelu kirjattiin.</string>
     <string name="t_e101868e98">Viimeisin kastelu</string>
     <string name="t_d72166f389">Näytä AR:ssä</string>
+    <string name="t_22f978c185">Katso kasvia omassa huoneessasi, tee sille oma malli kuvan perusteella tai vaihda lempinimi, laji ja kasteluväli.</string>
     <string name="t_f945f5f017">Katso kasvia huoneessasi, anna sille oma malli – kuvasta tai skannaamalla – tai vaihda nimi, laji ja kasteluväli.</string>
     <string name="t_8845f9ee9d">Aseta</string>
     <string name="t_39a52fa645">Aseta puutarha</string>
@@ -465,6 +488,7 @@
         <item quantity="other">%d kuukauden välein</item>
     </plurals>
     <string name="t_9caa86d668">Kuinka usein kasvi kastellaan – suunnilleen niin kauan multa kuivuu. Muutetaan kasvin asetuksissa.</string>
+    <string name="t_7882f56b39">Salli kamera</string>
     <string name="t_cc687c1fa5">Ympäröikö kehys kasvin ja ruukun? Aloita sitten</string>
     <string name="t_0717b1b655">Järjestä</string>
     <string name="t_7ebd3688e2">Kasvi</string>
@@ -496,6 +520,7 @@
     <string name="t_cd59e4204b">Puutarha on lukittu</string>
     <string name="t_e3b46fe6dd">Puutarhasi aurinkokuntana: jokainen kasvi on planeetta, yksi kierros on yksi kasteluväli. Kun se saavuttaa portin ylhäällä, on aika kastella.</string>
     <string name="t_5a05a6d3f9">Puutarha aukeaa vain Face ID:llä tai puhelimen pääsykoodilla – muut eivät pääse kurkkimaan.</string>
+    <string name="t_8401f09a45">Puutarha aukeaa vain sormenjäljellä, kasvoilla tai puhelimen näytön lukituksella — vieraat eivät pääse kurkkimaan.</string>
     <string name="t_2306927b56">Puutarha alkaen %s</string>
     <string name="t_928ada7e39">Puutarha on paikallaan. Kastele kasvi napauttamalla sitä.</string>
     <string name="t_e4d56c1f85">Puutarhuri</string>
@@ -514,6 +539,7 @@
     <string name="t_013255575f">Tänään ei tarvitse kastella mitään.</string>
     <string name="t_618a6abf44">Tänään, %s</string>
     <string name="t_88be20fd06">Nyt</string>
+    <string name="t_ad8df7482b">AR:n Google Play -palvelut eivät toimi siinä. Kaikki muu Sproutissa toimii tavalliseen tapaan.</string>
     <string name="t_b3c4b1be56">Verkko</string>
     <string name="t_a872210c83">Värinän voimakkuus</string>
     <string name="t_04954ca725">Sininen</string>
@@ -537,12 +563,14 @@
     </plurals>
     <string name="t_4a40d86849">Seuraava kastelu: huomenna</string>
     <string name="t_b0f07c6bde">Seuraava kastelu: tänään</string>
+    <string name="t_cef8f4a582">Liian pimeää — sytytä valo</string>
     <string name="t_6f8ca5c940">Sanasto</string>
     <string name="t_214438003b">Katson kuvaa…</string>
     <string name="t_6fb5cb3976">Uusimmat ensin</string>
     <string name="t_3189602bf1">Kuivimmat ensin</string>
     <string name="t_4ff6829db6">Lumi</string>
     <string name="t_1b494791c5">Ei kuvaa</string>
+    <string name="t_2cb357366d">Kasvien kuvat tunnistetaan puhelimessa itsessään — kuvia ei lähetetä minnekään.</string>
     <string name="t_9e2d4d618a">Kuva</string>
     <string name="t_d303471890">Kuva on epätarkka – ota tarkempi.</string>
     <string name="t_bee88a5c8c">Kuva on ylivalottunut – ota se ilman suoraa aurinkoa.</string>
@@ -567,6 +595,7 @@
     <string name="t_8335506cd9">Kuivin: %s.</string>
     <string name="t_31386bfdb5">Kuvaa kasvi – puhelin yrittää tunnistaa lajin.</string>
     <string name="t_2da75ff638">Pisteet %s. Päivittyy, kun kaverisi lähettää koodin uudelleen.</string>
+    <string name="t_d9467398b8">Näin käy, kun toinen sovellus käyttää kameraa. Yritä uudelleen.</string>
     <string name="t_109ff6015e">Tossu</string>
     <string name="t_ba89e87d7f">Puhelin tunnistaa kasvin kuvasta ja kuvittelee sen mallin: lehtien, kukkien ja ruukun värit, tuuheuden ja korkeuden. Kaikki lasketaan puhelimessa, ilman verkkoa, parissa sekunnissa.</string>
     <string name="t_c9b9affc8d">Tunnistettu: %1$s – %2$d %% varma. Korjaa, jos se on väärin.</string>
@@ -596,8 +625,10 @@
     <string name="t_8b19591d8a">Kuvio seuraa kallistusta</string>
     <string name="t_1cc281e997">Taustan kuvio siirtyy hieman, kun kallistat puhelinta – kuin se olisi näyttöä syvemmällä.</string>
     <string name="t_c8f3f390c2">Tilli</string>
+    <string name="t_ce88d35b18">Asenna</string>
     <string name="t_5373dc43a3">Hoito</string>
     <string name="t_ddc1a36266">Huomioi vuodenaika</string>
+    <string name="t_8a4653acae">Puutarhatiedosto tallentuu Androidin varmuuskopioon — muiden sovellusten tietojen mukana, Googlen sääntöjen mukaan.</string>
     <string name="t_8041745a9b">Puutarhatiedosto menee iPhonen varmuuskopioon – muiden tietojesi mukana, Applen sääntöjen mukaan.</string>
     <string name="t_92c396e199">Paavalinkukka</string>
     <string name="t_99c7c8c714">Kuviot</string>
@@ -618,6 +649,7 @@
     <string name="t_84b22ed2aa">Väri</string>
     <string name="t_7ceb6b0f96">Aallon väri</string>
     <string name="t_4d7209b9c1">Kuvion väri</string>
+    <string name="t_8c038b5d5a">Taustakuvan värit</string>
     <string name="t_2a6d22be37">Värit, tuuheus ja korkeus – kuvasta.</string>
     <string name="t_ac08f8dec7">Kukka</string>
     <string name="t_4924d77144">Luvut</string>
@@ -634,11 +666,14 @@
     <string name="t_febbc7512c">Puutarhan avaamiseksi</string>
     <string name="t_e250a6df76">Kengännauha</string>
     <string name="t_723a09005e">Turkki</string>
+    <string name="t_68656a952e">Tämä versio on liian vanha Sproutille.</string>
     <string name="t_b3bf1682b8">Tämä on puutarhasi</string>
     <string name="t_d342de941a">Tämä on oma koodisi: olet jo taulukossa.</string>
     <string name="t_3a925bfac5">Tämä iPhone ei osaa skannata: tarvitaan LiDAR.</string>
+    <string name="t_8536fc8767">Tämä puhelin ei tue AR:ää</string>
     <string name="t_c7e64e73eb">Echeveria</string>
     <string name="t_77789a486b">Jukka</string>
+    <string name="t_ed3f0e507a">Kieli</string>
     <string name="t_3f264c02f1">ajallaan %s</string>
     <string name="t_cc86ef708c">sinä</string>
     <string name="t_2e06422eda">multa on kuiva</string>
@@ -667,4 +702,11 @@
     <string name="t_d8e6f5387c">useammin kuin kerran minuutissa</string>
     <string name="t_d959d34275">putki %d</string>
     <string name="t_34eb9e66db">• %1$s (%2$s, ”%3$s”) – %4$s</string>
+    <string name="shortcut_add">Lisää</string>
+    <string name="shortcut_search">Haku</string>
+    <string name="shortcut_stats">Tilastot</string>
+    <string name="shortcut_thirst">Ketkä kastellaan</string>
+    <string name="tile_label">Ketkä kastellaan</string>
+    <string name="widget_description">Kuivimmat kasvit ja Kastele-painike.</string>
+    <string name="widget_name">Ketkä kastellaan</string>
 </resources>

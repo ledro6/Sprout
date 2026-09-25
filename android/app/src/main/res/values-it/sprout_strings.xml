@@ -27,9 +27,13 @@
     <string name="t_197eb092cd">%d%%</string>
     <string name="t_45b8ac5695" formatted="false">20–40% d’acqua</string>
     <string name="t_3d6c2541b9" formatted="false">40% d’acqua o più</string>
+    <string name="t_5f5e0de553">L’AR non è partita</string>
+    <string name="t_957c85ce41">L’AR disegna la pianta sopra ciò che vede la fotocamera. Le immagini non vanno da nessuna parte.</string>
     <string name="t_14c72c397f">AR – realtà aumentata</string>
     <string name="t_484d12fea8">L’AR è la realtà aumentata: la fotocamera mostra la tua stanza con dentro una pianta in 3D. I modelli delle specie sono già nell’app, il tuo puoi immaginarlo da una foto o scansionarlo.</string>
+    <string name="t_5c4b538eba">L’AR è la realtà aumentata: la fotocamera mostra la tua stanza con una pianta in 3D. I modelli delle specie sono già nell’app, e il tuo puoi immaginarlo da una foto.</string>
     <string name="t_809c431aa4">AR, modello e impostazioni</string>
+    <string name="t_acec2ec7d0">Android %s o successivo</string>
     <string name="t_302a05a1ac">Sprout non raccoglie informazioni su di te e non invia nulla.</string>
     <string name="t_9585992548">iOS 26 o successivo</string>
     <string name="t_c65910cd34">“%1$s” e altre %2$s hanno bisogno d’acqua</string>
@@ -68,6 +72,7 @@
     <string name="t_a8bcae2d9a">Matilde</string>
     <string name="t_f79b25b05d">Il tuo giardino come un sistema solare: le piante girano sulle loro orbite di annaffiatura. Dai un’occhiata: puoi perfino ascoltare un mese.</string>
     <string name="t_19ff316e6f">Trascina il cursore: il giardino va avanti di giorni, come se annaffiassi in tempo.</string>
+    <string name="t_ddf5bf682d">Muovi il telefono più lentamente</string>
     <string name="t_3f52bd53a9">Torno</string>
     <string name="t_c7aaa96778">Annulla</string>
     <string name="t_f10d238768">Torna al modello pronto</string>
@@ -94,6 +99,7 @@
     <string name="t_2b5f40f213">Tutte le annaffiature di questa pianta. Tieni premuta una voce sbagliata per eliminarla.</string>
     <string name="t_2f07cfc9c2">Tutte annaffiate</string>
     <string name="t_3b5143902e">Totale</string>
+    <string name="t_eeb8caeb95">Incolla</string>
     <string name="t_c12ee51dd9">Sempre</string>
     <string name="t_1059a1d77d">Ieri, %s</string>
     <string name="t_fe4b0c80f0">Scegli</string>
@@ -113,6 +119,7 @@
     <string name="t_68ae695380">Sensore di movimento</string>
     <string name="t_827d544645">Date</string>
     <string name="t_0bcd158c3d">Due dita per ruotare, pizzica per ridimensionare</string>
+    <string name="t_9978ac34b2">Azioni</string>
     <string name="t_b6ef08401f">Giorno</string>
     <string name="t_abbebfc85b">Un giorno in cui tre o più piante vorranno acqua insieme: comodo annaffiarle tutte in una volta.</string>
     <string name="t_e0c0ceee56">Alberello</string>
@@ -133,6 +140,7 @@
     <string name="t_fdf0f98738">Se annaffi prima del tempo, l’app se ne accorge e propone di accorciare l’intervallo.</string>
     <string name="t_19f25d5784">Altro</string>
     <string name="t_7db203bdda">Un altro giro</string>
+    <string name="t_bbe42739db">Riprova</string>
     <string name="t_0fb6d09e78">Chiedono acqua</string>
     <string name="t_ef28cc1496">Nel periodo</string>
     <string name="t_70efc9651a">Nessuna annaffiatura in questo periodo.</string>
@@ -173,6 +181,7 @@
     <string name="t_b335f763ea">Spariranno tutte le piante e tutto il registro delle annaffiature. Non si potrà annullare.</string>
     <string name="t_53d55db39f">Riepilogo</string>
     <string name="t_779e8b3e28">Attivale nelle Impostazioni del telefono: Sprout → Notifiche.</string>
+    <string name="t_9c47ca16c4">Si installano da Google Play, gratis. Poi l’AR si apre subito.</string>
     <string name="t_46c7be08dd">Studio</string>
     <string name="t_0112d57d0b">Ritaglia</string>
     <string name="t_01b9b803e7">Ritaglio della foto</string>
@@ -181,6 +190,7 @@
     <string name="t_223428bd3c">Ogni punto è un’annaffiatura. Più è in alto, più acqua c’era ancora nella terra.</string>
     <string name="t_e1439f1755">Ogni annaffiatura è una nota: i pianeti vicini cantano più acuto.</string>
     <string name="t_f0a22d9d1a">Come il sistema</string>
+    <string name="t_087f6705ed">Come nel telefono</string>
     <string name="t_696586f496">Come ti chiami?</string>
     <string name="t_7013b69dab">Come si usa</string>
     <string name="t_d4066ba693">Come si chiama ora la pianta?</string>
@@ -189,6 +199,9 @@
     <string name="t_7b105a68e6">Kalanchoe</string>
     <string name="t_60f6304f34">Calathea</string>
     <string name="t_fe0790d4e2">Calendario delle annaffiature</string>
+    <string name="t_f2d0f5cc41">La fotocamera è usata da un’altra app</string>
+    <string name="t_37620de860">La fotocamera è bloccata nelle impostazioni del telefono. Consentila lì e torna qui.</string>
+    <string name="t_601947a61c">Fotocamera e foto</string>
     <string name="t_d8e43f5730">La fotocamera mostra la tua stanza e l’app ci mette una pianta in 3D. Puoi ruotarla, ingrandirla e annaffiarla con un annaffiatoio.</string>
     <string name="t_8671ea9e33">Goccia</string>
     <string name="t_85618413ed">Ogni quadrato è un giorno degli ultimi quattro mesi: più intenso il colore, più annaffiature. Tocca un quadrato per vedere la data.</string>
@@ -199,6 +212,7 @@
     <string name="t_eb1aa42a32">Soprannomi delle piante, specie, umidità, date: tutto ciò che inserisci resta in un file dentro l’app, sul telefono stesso. Anche le impostazioni. Niente lascia il dispositivo.</string>
     <string name="t_1c8e21179b">Pulsanti</string>
     <string name="t_49cdfd9292">I pulsanti intorno</string>
+    <string name="t_2ecb4451da">Pulsanti e schede nei colori del tuo sfondo.</string>
     <string name="t_725347e425">Quando</string>
     <string name="t_512bafe5b5">Quando l’umidità scende sotto</string>
     <string name="t_72e18d38d9">Quando annaffi</string>
@@ -256,7 +270,9 @@
     <string name="t_18f71e9762">Musica delle sfere</string>
     <string name="t_0b854eb300">Micio</string>
     <string name="t_7a7164238c">Menta</string>
+    <string name="t_06ec0f34bf">Sul telefono non è impostato il blocco schermo.</string>
     <string name="t_272e98dde1">Questo telefono non ha né Face ID né codice.</string>
+    <string name="t_339d955a3c">Punta la fotocamera su un pavimento con un motivo o su un mobile</string>
     <string name="t_4dd78d95e6">Inquadra</string>
     <string name="t_c96769af49">Tocca “+” per creare la prima.</string>
     <string name="t_730cde94e5">Tocca il “?” accanto e te la spieghiamo in parole semplici. Tutte le parole sono nel glossario delle impostazioni.</string>
@@ -302,9 +318,14 @@
     <string name="t_da731c70ca">Nuova stanza</string>
     <string name="t_87b55f8287">Nuova stanza…</string>
     <string name="t_4a30361774">Serve un iPhone con sensore LiDAR: modelli Pro da iPhone 12 Pro in poi.</string>
+    <string name="t_7283f54f30">Serve la fotocamera</string>
+    <string name="t_ba43c393fc">Servono i Google Play Services per l’AR</string>
     <string name="t_b9c9ff652d">Info</string>
+    <string name="t_7bee71b043">Aggiorna i Google Play Services per l’AR</string>
+    <string name="t_c2f668e54f">Aggiorna</string>
     <string name="t_3a3478672d">Gira intorno alla pianta con il telefono e otterrai la sua copia 3D esatta. La ripresa richiede un paio di minuti, la costruzione del modello qualcuno in più; tutto sul telefono.</string>
     <string name="t_bc8d2377f1">Una copia 3D della pianta per l’AR. I modelli delle specie sono già nell’app, il tuo puoi immaginarlo da una foto o scansionarlo: pulsante «Modello» nella schermata della pianta.</string>
+    <string name="t_7eb02aa630">Una copia in 3D della pianta per l’AR. I modelli delle specie sono già nell’app, e il tuo puoi immaginarlo da una foto: il pulsante «Modello» nella schermata della pianta.</string>
     <string name="t_4b919d0c3d">Di solito per la specie: %s</string>
     <string name="t_00495efa90">Di solito con il %s d’acqua nella terra</string>
     <string name="t_9bc6b67c85">Un’orbita è un intervallo di annaffiatura. Le orbite vicine sono di chi si asciuga in fretta, quelle lontane delle pazienti.</string>
@@ -389,6 +410,7 @@
     <string name="t_0455b2eeff">%1$d di %2$d visualizzate: di più sarebbe troppo per il telefono</string>
     <string name="t_387af5ff90">Mostra di nuovo i suggerimenti</string>
     <string name="t_ca645a26b9">Gira la ruota: sotto vedi come il nuovo intervallo apparirà sulla scheda.</string>
+    <string name="t_51b8f05bf7">Il campo di ricerca è in alto. Cerca per soprannomi, specie e note.</string>
     <string name="t_17c7b943fc">Il campo di ricerca è in basso, vicino alla barra dei pannelli. Cerca per soprannome, specie e note.</string>
     <string name="t_cd1de7bdc3">Annaffia tutte in una volta e manda un promemoria al vicino.</string>
     <string name="t_c767922d35">Annaffia una pianta e qui vedrai quanta acqua c’era nella terra in quel momento.</string>
@@ -426,6 +448,7 @@
     <string name="t_3ca46e3e76">Dopo l’annaffiatura un’onda colorata attraversa il motivo: così sai che l’annaffiatura è stata registrata.</string>
     <string name="t_e101868e98">Ultima annaffiatura</string>
     <string name="t_d72166f389">Guarda in AR</string>
+    <string name="t_22f978c185">Guarda la pianta nella tua stanza, dalle un modello tutto suo da una foto o cambia soprannome, specie e intervallo di annaffiatura.</string>
     <string name="t_f945f5f017">Guarda la pianta nella tua stanza, dalle un modello tutto suo, da foto o da scansione, oppure cambia nome, specie e intervallo di annaffiatura.</string>
     <string name="t_8845f9ee9d">Posiziona</string>
     <string name="t_39a52fa645">Posiziona giardino</string>
@@ -465,6 +488,7 @@
         <item quantity="other">Ogni %d mesi</item>
     </plurals>
     <string name="t_9caa86d668">Ogni quanti giorni si annaffia la pianta: più o meno il tempo che la terra impiega ad asciugarsi. Si cambia nelle impostazioni della pianta.</string>
+    <string name="t_7882f56b39">Consenti fotocamera</string>
     <string name="t_cc687c1fa5">La cornice racchiude pianta e vaso? Allora inizia</string>
     <string name="t_0717b1b655">Riordina</string>
     <string name="t_7ebd3688e2">Pianta</string>
@@ -496,6 +520,7 @@
     <string name="t_cd59e4204b">Giardino bloccato</string>
     <string name="t_e3b46fe6dd">Il tuo giardino come un sistema solare: ogni pianta è un pianeta, un’orbita è un intervallo di annaffiatura. Quando arriva alla porta in alto, è ora di annaffiare.</string>
     <string name="t_5a05a6d3f9">Il giardino si apre solo con Face ID o il codice del telefono: nessun altro può sbirciare.</string>
+    <string name="t_8401f09a45">Il giardino si apre solo con la tua impronta, il tuo volto o il blocco schermo del telefono: nessun altro può sbirciare.</string>
     <string name="t_2306927b56">Giardino dal %s</string>
     <string name="t_928ada7e39">Il giardino è posizionato. Tocca una pianta per annaffiarla.</string>
     <string name="t_e4d56c1f85">Giardiniere</string>
@@ -514,6 +539,7 @@
     <string name="t_013255575f">Oggi non c’è niente da annaffiare.</string>
     <string name="t_618a6abf44">Oggi, %s</string>
     <string name="t_88be20fd06">Adesso</string>
+    <string name="t_ad8df7482b">I Google Play Services per l’AR non funzionano su questo telefono. Tutto il resto di Sprout funziona come sempre.</string>
     <string name="t_b3c4b1be56">Rete</string>
     <string name="t_a872210c83">Intensità vibrazione</string>
     <string name="t_04954ca725">Blu</string>
@@ -537,12 +563,14 @@
     </plurals>
     <string name="t_4a40d86849">Prossima annaffiatura: domani</string>
     <string name="t_b0f07c6bde">Prossima annaffiatura: oggi</string>
+    <string name="t_cef8f4a582">Troppo buio: accendi la luce</string>
     <string name="t_6f8ca5c940">Glossario</string>
     <string name="t_214438003b">Guardo la foto…</string>
     <string name="t_6fb5cb3976">Prima le più recenti</string>
     <string name="t_3189602bf1">Prima le più secche</string>
     <string name="t_4ff6829db6">Neve</string>
     <string name="t_1b494791c5">Nessuna foto</string>
+    <string name="t_2cb357366d">Le foto delle piante vengono riconosciute sul telefono stesso: le immagini non vengono inviate da nessuna parte.</string>
     <string name="t_9e2d4d618a">Foto</string>
     <string name="t_d303471890">La foto è sfocata: scattane una più nitida.</string>
     <string name="t_bee88a5c8c">La foto è sovraesposta: scattala senza sole diretto.</string>
@@ -567,6 +595,7 @@
     <string name="t_8335506cd9">La più secca: %s.</string>
     <string name="t_31386bfdb5">Fotografa la pianta: il telefono proverà a riconoscerne la specie.</string>
     <string name="t_2da75ff638">Punteggio del %s. Si aggiornerà quando il tuo amico invierà di nuovo il codice.</string>
+    <string name="t_d9467398b8">Succede quando un’altra app usa la fotocamera. Riprova.</string>
     <string name="t_109ff6015e">Pantofola</string>
     <string name="t_ba89e87d7f">Il telefono riconoscerà la pianta nella foto e ne immaginerà il modello: colori di foglie, fiori e vaso, densità e altezza. Tutto sul telefono, offline, in un paio di secondi.</string>
     <string name="t_c9b9affc8d">Riconosciuta: %1$s, sicuro al %2$d%%. Correggi se non è giusto.</string>
@@ -596,8 +625,10 @@
     <string name="t_8b19591d8a">Motivo segue l’inclinazione</string>
     <string name="t_1cc281e997">Il motivo dello sfondo si sposta un po’ quando inclini il telefono, come se fosse più in profondità dello schermo.</string>
     <string name="t_c8f3f390c2">Aneto</string>
+    <string name="t_ce88d35b18">Installa</string>
     <string name="t_5373dc43a3">Cura</string>
     <string name="t_ddc1a36266">Considera la stagione</string>
+    <string name="t_8a4653acae">Il file del giardino finisce nel backup di Android, insieme agli altri dati delle app, secondo le regole di Google.</string>
     <string name="t_8041745a9b">Il file del giardino finisce nel backup dell’iPhone, insieme al resto dei tuoi dati, secondo le regole di Apple.</string>
     <string name="t_92c396e199">Violetta africana</string>
     <string name="t_99c7c8c714">Figure</string>
@@ -618,6 +649,7 @@
     <string name="t_84b22ed2aa">Colore</string>
     <string name="t_7ceb6b0f96">Colore dell’onda</string>
     <string name="t_4d7209b9c1">Colore del motivo</string>
+    <string name="t_8c038b5d5a">Colori dello sfondo</string>
     <string name="t_2a6d22be37">Colori, densità e altezza, dalla foto.</string>
     <string name="t_ac08f8dec7">Fiore</string>
     <string name="t_4924d77144">Numeri</string>
@@ -634,11 +666,14 @@
     <string name="t_febbc7512c">Per aprire il tuo giardino</string>
     <string name="t_e250a6df76">Laccio</string>
     <string name="t_723a09005e">Pelliccia</string>
+    <string name="t_68656a952e">Questa versione è troppo vecchia per Sprout.</string>
     <string name="t_b3bf1682b8">Questo è il tuo giardino</string>
     <string name="t_d342de941a">È il tuo codice: sei già in classifica.</string>
     <string name="t_3a925bfac5">Questo iPhone non può fare scansioni: serve il LiDAR.</string>
+    <string name="t_8536fc8767">Questo telefono non supporta l’AR</string>
     <string name="t_c7e64e73eb">Echeveria</string>
     <string name="t_77789a486b">Yucca</string>
+    <string name="t_ed3f0e507a">Lingua</string>
     <string name="t_3f264c02f1">in tempo %s</string>
     <string name="t_cc86ef708c">tu</string>
     <string name="t_2e06422eda">terra secca</string>
@@ -667,4 +702,11 @@
     <string name="t_d8e6f5387c">più di una volta al minuto</string>
     <string name="t_d959d34275">serie %d</string>
     <string name="t_34eb9e66db">• %1$s (%2$s, “%3$s”) — %4$s</string>
+    <string name="shortcut_add">Aggiungi</string>
+    <string name="shortcut_search">Cerca</string>
+    <string name="shortcut_stats">Statistiche</string>
+    <string name="shortcut_thirst">Chi annaffiare</string>
+    <string name="tile_label">Chi annaffiare</string>
+    <string name="widget_description">Le piante più secche e un pulsante “Annaffia”.</string>
+    <string name="widget_name">Chi annaffiare</string>
 </resources>

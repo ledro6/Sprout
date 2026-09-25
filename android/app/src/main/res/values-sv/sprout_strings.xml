@@ -27,9 +27,13 @@
     <string name="t_197eb092cd">%d %%</string>
     <string name="t_45b8ac5695" formatted="false">20–40 % vatten</string>
     <string name="t_3d6c2541b9" formatted="false">40 % vatten eller mer</string>
+    <string name="t_5f5e0de553">AR startade inte</string>
+    <string name="t_957c85ce41">AR ritar växten ovanpå det kameran ser. Bilderna skickas ingenstans.</string>
     <string name="t_14c72c397f">AR – förstärkt verklighet</string>
     <string name="t_484d12fea8">AR är förstärkt verklighet: kameran visar ditt rum med en 3D-växt i. Artmodeller finns redan i appen, och en egen kan du föreställa dig från ett foto eller skanna.</string>
+    <string name="t_5c4b538eba">AR är förstärkt verklighet: kameran visar ditt rum med en växt i 3D i det. Modeller av arterna finns redan i appen, och en egen kan du hitta på utifrån ett foto.</string>
     <string name="t_809c431aa4">AR, modell och inställningar</string>
+    <string name="t_acec2ec7d0">Android %s eller senare</string>
     <string name="t_302a05a1ac">Sprout samlar inga uppgifter om dig och skickar inget någonstans.</string>
     <string name="t_9585992548">iOS 26 eller senare</string>
     <string name="t_c65910cd34">”%1$s” och %2$s till behöver vatten</string>
@@ -68,6 +72,7 @@
     <string name="t_a8bcae2d9a">Matilda</string>
     <string name="t_f79b25b05d">Din trädgård som ett solsystem: växterna kretsar i sina vattningsbanor. Ta en titt – där kan du till och med lyssna på en månad.</string>
     <string name="t_19ff316e6f">Dra reglaget – trädgården hoppar dagar framåt, som om du vattnar i tid.</string>
+    <string name="t_ddf5bf682d">För telefonen långsammare</string>
     <string name="t_3f52bd53a9">Tillbaka</string>
     <string name="t_c7aaa96778">Ångra</string>
     <string name="t_f10d238768">Tillbaka till färdig modell</string>
@@ -94,6 +99,7 @@
     <string name="t_2b5f40f213">Alla vattningar av den här växten. Håll ned en felaktig post för att radera den.</string>
     <string name="t_2f07cfc9c2">Alla vattnade</string>
     <string name="t_3b5143902e">Totalt</string>
+    <string name="t_eeb8caeb95">Klistra in</string>
     <string name="t_c12ee51dd9">All tid</string>
     <string name="t_1059a1d77d">I går, %s</string>
     <string name="t_fe4b0c80f0">Välj</string>
@@ -113,6 +119,7 @@
     <string name="t_68ae695380">Rörelsesensor</string>
     <string name="t_827d544645">Datum</string>
     <string name="t_0bcd158c3d">Två fingrar vrider, nyp för storlek</string>
+    <string name="t_9978ac34b2">Åtgärder</string>
     <string name="t_b6ef08401f">Dag</string>
     <string name="t_abbebfc85b">En dag då tre eller fler växter vill ha vatten samtidigt – smidigt att vattna alla på en gång.</string>
     <string name="t_e0c0ceee56">Litet träd</string>
@@ -133,6 +140,7 @@
     <string name="t_fdf0f98738">Vattnar du före tiden märker appen det och föreslår ett kortare intervall.</string>
     <string name="t_19f25d5784">Mer</string>
     <string name="t_7db203bdda">Ett varv till</string>
+    <string name="t_bbe42739db">Försök igen</string>
     <string name="t_0fb6d09e78">Behöver vatten</string>
     <string name="t_ef28cc1496">Under perioden</string>
     <string name="t_70efc9651a">Inga vattningar under perioden.</string>
@@ -173,6 +181,7 @@
     <string name="t_b335f763ea">Alla växter och hela vattningsloggen försvinner. Det går inte att ångra.</string>
     <string name="t_53d55db39f">Sammanfattning</string>
     <string name="t_779e8b3e28">Slå på dem i telefonens Inställningar: Sprout → Notiser.</string>
+    <string name="t_9c47ca16c4">De installeras från Google Play, gratis. Sedan öppnas AR direkt.</string>
     <string name="t_46c7be08dd">Arbetsrum</string>
     <string name="t_0112d57d0b">Beskär</string>
     <string name="t_01b9b803e7">Fotobeskärning</string>
@@ -181,6 +190,7 @@
     <string name="t_223428bd3c">Varje prick är en vattning. Ju högre pricken, desto mer vatten fanns kvar i jorden.</string>
     <string name="t_e1439f1755">Varje vattning är en ton: inre planeter sjunger ljusare.</string>
     <string name="t_f0a22d9d1a">Som systemet</string>
+    <string name="t_087f6705ed">Som i telefonen</string>
     <string name="t_696586f496">Vad heter du?</string>
     <string name="t_7013b69dab">Så använder du appen</string>
     <string name="t_d4066ba693">Vad heter växten nu?</string>
@@ -189,6 +199,9 @@
     <string name="t_7b105a68e6">Kalanchoe</string>
     <string name="t_60f6304f34">Korgmaranta</string>
     <string name="t_fe0790d4e2">Vattningskalender</string>
+    <string name="t_f2d0f5cc41">Kameran används av en annan app</string>
+    <string name="t_37620de860">Kameran är blockerad i telefonens inställningar. Tillåt den där och kom tillbaka.</string>
+    <string name="t_601947a61c">Kamera och bilder</string>
     <string name="t_d8e43f5730">Kameran visar ditt rum och appen ställer in en 3D-växt i det. Du kan vrida den, göra den större och vattna den med en vattenkanna.</string>
     <string name="t_8671ea9e33">Droppe</string>
     <string name="t_85618413ed">Varje ruta är en dag från de senaste fyra månaderna: ju starkare färg, desto fler vattningar. Tryck på en ruta för att se datumet.</string>
@@ -199,6 +212,7 @@
     <string name="t_eb1aa42a32">Växternas smeknamn, arter, fukt, datum – allt du skriver in ligger i en fil i appen, på själva telefonen. Där finns också inställningarna. Inget av det lämnar enheten.</string>
     <string name="t_1c8e21179b">Knappar</string>
     <string name="t_49cdfd9292">Knapparna runtom</string>
+    <string name="t_2ecb4451da">Knappar och kort i bakgrundsbildens färger.</string>
     <string name="t_725347e425">När</string>
     <string name="t_512bafe5b5">När fukten är under</string>
     <string name="t_72e18d38d9">När du vattnar</string>
@@ -256,7 +270,9 @@
     <string name="t_18f71e9762">Sfärernas musik</string>
     <string name="t_0b854eb300">Misse</string>
     <string name="t_7a7164238c">Mynta</string>
+    <string name="t_06ec0f34bf">Telefonen har inget skärmlås inställt.</string>
     <string name="t_272e98dde1">Telefonen har varken Face ID eller lösenkod.</string>
+    <string name="t_339d955a3c">Rikta kameran mot ett mönstrat golv eller mot möbler</string>
     <string name="t_4dd78d95e6">Sikta</string>
     <string name="t_c96769af49">Tryck på ”+” för att skapa det första.</string>
     <string name="t_730cde94e5">Tryck på ”?” bredvid så förklarar vi enkelt. Alla ord finns samlade i ordlistan i inställningarna.</string>
@@ -302,9 +318,14 @@
     <string name="t_da731c70ca">Nytt rum</string>
     <string name="t_87b55f8287">Nytt rum …</string>
     <string name="t_4a30361774">Kräver en iPhone med LiDAR-sensor – Pro-modeller från iPhone 12 Pro.</string>
+    <string name="t_7283f54f30">Kameran behövs</string>
+    <string name="t_ba43c393fc">Google Play-tjänster för AR behövs</string>
     <string name="t_b9c9ff652d">Om</string>
+    <string name="t_7bee71b043">Uppdatera Google Play-tjänster för AR</string>
+    <string name="t_c2f668e54f">Uppdatera</string>
     <string name="t_3a3478672d">Gå runt växten med telefonen – så får du en exakt 3D-kopia. Fotograferingen tar ett par minuter och modellbygget några till; allt på telefonen.</string>
     <string name="t_bc8d2377f1">En 3D-kopia av växten för AR. Artmodeller finns redan i appen, och en egen kan du föreställa dig från ett foto eller skanna – knappen ”Modell” på växtskärmen.</string>
+    <string name="t_7eb02aa630">En 3D-kopia av växten för AR. Modeller av arterna finns redan i appen, och en egen kan du hitta på utifrån ett foto – knappen ”Modell” på växtens skärm.</string>
     <string name="t_4b919d0c3d">Vanligt för arten: %s</string>
     <string name="t_00495efa90">Oftast vid %s vatten i jorden</string>
     <string name="t_9bc6b67c85">Ett varv är ett vattningsintervall. De inre banorna hör till de som torkar fort, de yttre till de tålmodiga.</string>
@@ -389,6 +410,7 @@
     <string name="t_0455b2eeff">Visar %1$d av %2$d: fler blir för tungt för telefonen</string>
     <string name="t_387af5ff90">Visa tips igen</string>
     <string name="t_ca645a26b9">Snurra hjulet – nedanför ser du hur det nya intervallet hamnar på kortet.</string>
+    <string name="t_51b8f05bf7">Sökfältet finns högst upp. Det söker bland smeknamn, arter och anteckningar.</string>
     <string name="t_17c7b943fc">Sökfältet finns längst ned vid flikfältet. Det söker på smeknamn, art och anteckningar.</string>
     <string name="t_cd1de7bdc3">Vattna alla på en gång och skicka en lapp till grannen.</string>
     <string name="t_c767922d35">Vattna en växt så ser du här hur mycket vatten som fanns i jorden i det ögonblicket.</string>
@@ -426,6 +448,7 @@
     <string name="t_3ca46e3e76">Efter vattning sveper en färgad våg över mönstret – så ser du att vattningen räknats.</string>
     <string name="t_e101868e98">Senaste vattning</string>
     <string name="t_d72166f389">Visa i AR</string>
+    <string name="t_22f978c185">Se växten i ditt rum, ge den en egen modell utifrån ett foto eller ändra smeknamn, art och vattningsintervall.</string>
     <string name="t_f945f5f017">Se växten i ditt rum, ge den en egen modell – från foto eller skanning – eller ändra namn, art och vattningsintervall.</string>
     <string name="t_8845f9ee9d">Placera</string>
     <string name="t_39a52fa645">Placera trädgård</string>
@@ -465,6 +488,7 @@
         <item quantity="other">En gång på %d månader</item>
     </plurals>
     <string name="t_9caa86d668">Hur ofta växten vattnas – ungefär så lång tid det tar för jorden att torka. Ändras i växtens inställningar.</string>
+    <string name="t_7882f56b39">Tillåt kameran</string>
     <string name="t_cc687c1fa5">Omsluter ramen växt och kruka? Börja då</string>
     <string name="t_0717b1b655">Ordna</string>
     <string name="t_7ebd3688e2">Växt</string>
@@ -496,6 +520,7 @@
     <string name="t_cd59e4204b">Trädgården är låst</string>
     <string name="t_e3b46fe6dd">Din trädgård som ett solsystem: varje växt är en planet, ett varv är ett vattningsintervall. När den når porten högst upp är det dags att vattna.</string>
     <string name="t_5a05a6d3f9">Trädgården öppnas bara med Face ID eller telefonens lösenkod – ingen annan kan kika.</string>
+    <string name="t_8401f09a45">Trädgården öppnas bara med ditt fingeravtryck, ansikte eller telefonens skärmlås – ingen annan kan kika.</string>
     <string name="t_2306927b56">Trädgård sedan %s</string>
     <string name="t_928ada7e39">Trädgården står på plats. Tryck på en växt för att vattna den.</string>
     <string name="t_e4d56c1f85">Trädgårdsmästare</string>
@@ -514,6 +539,7 @@
     <string name="t_013255575f">Inget behöver vattnas i dag.</string>
     <string name="t_618a6abf44">I dag, %s</string>
     <string name="t_88be20fd06">Nu</string>
+    <string name="t_ad8df7482b">Google Play-tjänster för AR fungerar inte på den. Allt annat i Sprout fungerar som vanligt.</string>
     <string name="t_b3c4b1be56">Nätverk</string>
     <string name="t_a872210c83">Vibrationsstyrka</string>
     <string name="t_04954ca725">Blå</string>
@@ -537,12 +563,14 @@
     </plurals>
     <string name="t_4a40d86849">Nästa vattning: i morgon</string>
     <string name="t_b0f07c6bde">Nästa vattning: i dag</string>
+    <string name="t_cef8f4a582">För mörkt – tänd lampan</string>
     <string name="t_6f8ca5c940">Ordlista</string>
     <string name="t_214438003b">Tittar på fotot …</string>
     <string name="t_6fb5cb3976">Nyaste först</string>
     <string name="t_3189602bf1">Torraste först</string>
     <string name="t_4ff6829db6">Snö</string>
     <string name="t_1b494791c5">Inget foto</string>
+    <string name="t_2cb357366d">Växtfoton känns igen på själva telefonen – bilderna skickas ingenstans.</string>
     <string name="t_9e2d4d618a">Foto</string>
     <string name="t_d303471890">Fotot är suddigt – ta ett skarpare.</string>
     <string name="t_bee88a5c8c">Fotot är överexponerat – ta det utan direkt sol.</string>
@@ -567,6 +595,7 @@
     <string name="t_8335506cd9">Torrast: %s.</string>
     <string name="t_31386bfdb5">Fota växten – telefonen försöker känna igen arten.</string>
     <string name="t_2da75ff638">Poäng från %s. Uppdateras när vännen skickar koden igen.</string>
+    <string name="t_d9467398b8">Det händer när en annan app använder kameran. Försök igen.</string>
     <string name="t_109ff6015e">Toffel</string>
     <string name="t_ba89e87d7f">Telefonen känner igen växten på fotot och föreställer sig dess modell: färger på blad, blommor och kruka, täthet och höjd. Allt räknas på telefonen, offline, på ett par sekunder.</string>
     <string name="t_c9b9affc8d">Igenkänd: %1$s – %2$d %% säker. Rätta om det inte stämmer.</string>
@@ -596,8 +625,10 @@
     <string name="t_8b19591d8a">Mönstret följer lutningen</string>
     <string name="t_1cc281e997">Mönstret i bakgrunden rör sig lite när du lutar telefonen – som om det låg djupare än skärmen.</string>
     <string name="t_c8f3f390c2">Dill</string>
+    <string name="t_ce88d35b18">Installera</string>
     <string name="t_5373dc43a3">Skötsel</string>
     <string name="t_ddc1a36266">Ta hänsyn till årstiden</string>
+    <string name="t_8a4653acae">Trädgårdsfilen hamnar i Android-säkerhetskopian – tillsammans med övriga appdata, enligt Googles regler.</string>
     <string name="t_8041745a9b">Trädgårdsfilen följer med i iPhonens säkerhetskopia – tillsammans med resten av dina data, enligt Apples regler.</string>
     <string name="t_92c396e199">Saintpaulia</string>
     <string name="t_99c7c8c714">Figurer</string>
@@ -618,6 +649,7 @@
     <string name="t_84b22ed2aa">Färg</string>
     <string name="t_7ceb6b0f96">Vågfärg</string>
     <string name="t_4d7209b9c1">Mönsterfärg</string>
+    <string name="t_8c038b5d5a">Bakgrundsfärger</string>
     <string name="t_2a6d22be37">Färger, täthet och höjd – från fotot.</string>
     <string name="t_ac08f8dec7">Blomma</string>
     <string name="t_4924d77144">Siffror</string>
@@ -634,11 +666,14 @@
     <string name="t_febbc7512c">För att öppna din trädgård</string>
     <string name="t_e250a6df76">Skosnöre</string>
     <string name="t_723a09005e">Pälsen</string>
+    <string name="t_68656a952e">Den här versionen är för gammal för Sprout.</string>
     <string name="t_b3bf1682b8">Det här är din trädgård</string>
     <string name="t_d342de941a">Det är din egen kod: du finns redan i tabellen.</string>
     <string name="t_3a925bfac5">Den här iPhonen kan inte skanna: den behöver LiDAR.</string>
+    <string name="t_8536fc8767">Den här telefonen klarar inte AR</string>
     <string name="t_c7e64e73eb">Echeveria</string>
     <string name="t_77789a486b">Palmlilja</string>
+    <string name="t_ed3f0e507a">Språk</string>
     <string name="t_3f264c02f1">i tid %s</string>
     <string name="t_cc86ef708c">du</string>
     <string name="t_2e06422eda">jorden är torr</string>
@@ -667,4 +702,11 @@
     <string name="t_d8e6f5387c">oftare än en gång i minuten</string>
     <string name="t_d959d34275">svit %d</string>
     <string name="t_34eb9e66db">• %1$s (%2$s, ”%3$s”) – %4$s</string>
+    <string name="shortcut_add">Lägg till</string>
+    <string name="shortcut_search">Sök</string>
+    <string name="shortcut_stats">Statistik</string>
+    <string name="shortcut_thirst">Vem ska vattnas</string>
+    <string name="tile_label">Vem ska vattnas</string>
+    <string name="widget_description">De torraste växterna och en ”Vattna”-knapp.</string>
+    <string name="widget_name">Vem ska vattnas</string>
 </resources>

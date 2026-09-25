@@ -33,9 +33,13 @@
     <string name="t_197eb092cd">%d%%</string>
     <string name="t_45b8ac5695" formatted="false">20–40% води</string>
     <string name="t_3d6c2541b9" formatted="false">40% води й більше</string>
+    <string name="t_5f5e0de553">AR не запустився</string>
+    <string name="t_957c85ce41">AR малює рослину поверх того, що бачить камера. Кадри нікуди не йдуть.</string>
     <string name="t_14c72c397f">AR — доповнена реальність</string>
     <string name="t_484d12fea8">AR — доповнена реальність: камера показує кімнату, а в ній — об’ємну рослину. Моделі видів уже в застосунку, а свою можна вигадати за фото або відсканувати.</string>
+    <string name="t_5c4b538eba">AR — доповнена реальність: камера показує кімнату, а в ній — об’ємну рослину. Моделі видів уже в застосунку, а свою можна вигадати за фото.</string>
     <string name="t_809c431aa4">AR, модель і налаштування</string>
+    <string name="t_acec2ec7d0">Android %s і новіші</string>
     <string name="t_302a05a1ac">Sprout не збирає про вас жодних відомостей і нікуди їх не передає.</string>
     <string name="t_9585992548">iOS 26 і новіші</string>
     <string name="t_c65910cd34">«%1$s» і ще %2$s просять води</string>
@@ -74,6 +78,7 @@
     <string name="t_a8bcae2d9a">Василина</string>
     <string name="t_f79b25b05d">Ваш сад як Сонячна система: рослини кружляють орбітами поливу. Загляньте — там можна послухати місяць.</string>
     <string name="t_19ff316e6f">Ведіть повзунок — сад перенесеться на дні вперед, якщо поливати вчасно.</string>
+    <string name="t_ddf5bf682d">Ведіть телефон повільніше</string>
     <string name="t_3f52bd53a9">Повернуся</string>
     <string name="t_c7aaa96778">Повернути</string>
     <string name="t_f10d238768">Повернути готову модель</string>
@@ -102,6 +107,7 @@
     <string name="t_2b5f40f213">Усі поливи цієї рослини. Помилковий запис видалить довге натискання.</string>
     <string name="t_2f07cfc9c2">Усі политі</string>
     <string name="t_3b5143902e">Усього</string>
+    <string name="t_eeb8caeb95">Вставити</string>
     <string name="t_c12ee51dd9">Весь час</string>
     <string name="t_1059a1d77d">Учора, %s</string>
     <string name="t_fe4b0c80f0">Вибрати</string>
@@ -121,6 +127,7 @@
     <string name="t_68ae695380">Датчик руху</string>
     <string name="t_827d544645">Дати</string>
     <string name="t_0bcd158c3d">Двома пальцями — повернути, щипком — розмір</string>
+    <string name="t_9978ac34b2">Дії</string>
     <string name="t_b6ef08401f">День</string>
     <string name="t_abbebfc85b">День, коли води попросять одразу три рослини й більше, — зручно полити всіх за один захід.</string>
     <string name="t_e0c0ceee56">Деревце</string>
@@ -141,6 +148,7 @@
     <string name="t_fdf0f98738">Якщо ви поливаєте раніше строку, застосунок помітить і запропонує зробити строк коротшим.</string>
     <string name="t_19f25d5784">Ще</string>
     <string name="t_7db203bdda">Ще одне коло</string>
+    <string name="t_bbe42739db">Ще раз</string>
     <string name="t_0fb6d09e78">Чекають на воду</string>
     <string name="t_ef28cc1496">За період</string>
     <string name="t_70efc9651a">За цей період поливів не було.</string>
@@ -181,6 +189,7 @@
     <string name="t_b335f763ea">Зникнуть усі рослини й увесь журнал поливів. Повернути їх буде неможливо.</string>
     <string name="t_53d55db39f">Підсумок</string>
     <string name="t_779e8b3e28">Їх вмикають у налаштуваннях телефона: Sprout → Сповіщення.</string>
+    <string name="t_9c47ca16c4">Їх ставлять із Google Play, безкоштовно. Потім AR відкриється одразу.</string>
     <string name="t_46c7be08dd">Кабінет</string>
     <string name="t_0112d57d0b">Кадр</string>
     <string name="t_01b9b803e7">Кадр знімка</string>
@@ -189,6 +198,7 @@
     <string name="t_223428bd3c">Кожна точка — полив. Що вища точка, то більше води ще було в землі.</string>
     <string name="t_e1439f1755">Кожен полив — нота: ближні планети співають вище.</string>
     <string name="t_f0a22d9d1a">Як у системі</string>
+    <string name="t_087f6705ed">Як у телефоні</string>
     <string name="t_696586f496">Як вас звати?</string>
     <string name="t_7013b69dab">Як користуватися</string>
     <string name="t_d4066ba693">Як тепер звати рослину?</string>
@@ -197,6 +207,9 @@
     <string name="t_7b105a68e6">Каланхое</string>
     <string name="t_60f6304f34">Калатея</string>
     <string name="t_fe0790d4e2">Календар поливів</string>
+    <string name="t_f2d0f5cc41">Камера зайнята іншим застосунком</string>
+    <string name="t_37620de860">Камеру заборонено в налаштуваннях телефона. Дозвольте її там і поверніться.</string>
+    <string name="t_601947a61c">Камера і фото</string>
     <string name="t_d8e43f5730">Камера показує вашу кімнату, а застосунок ставить у неї об’ємну рослину. Її можна повернути, розтягнути й полити з лійки.</string>
     <string name="t_8671ea9e33">Крапля</string>
     <string name="t_85618413ed">Квадрат — день за останні чотири місяці: що густіший колір, то більше поливів. Натисніть на квадрат — з’явиться дата.</string>
@@ -207,6 +220,7 @@
     <string name="t_eb1aa42a32">Клички рослин, види, вологість, дати — усе, що ви вводите, лежить у файлі всередині застосунку, на самому телефоні. Там само налаштування. Ніщо з цього не залишає пристрій.</string>
     <string name="t_1c8e21179b">Кнопки</string>
     <string name="t_49cdfd9292">Кнопки довкола</string>
+    <string name="t_2ecb4451da">Кнопки й плашки — у кольорах шпалер телефона.</string>
     <string name="t_725347e425">Коли</string>
     <string name="t_512bafe5b5">Коли вологість нижче</string>
     <string name="t_72e18d38d9">Коли поливаєте</string>
@@ -264,7 +278,9 @@
     <string name="t_18f71e9762">Музика сфер</string>
     <string name="t_0b854eb300">Мурчик</string>
     <string name="t_7a7164238c">М’ята</string>
+    <string name="t_06ec0f34bf">На телефоні не налаштовано блокування екрана.</string>
     <string name="t_272e98dde1">На телефоні немає ні Face ID, ні код-пароля.</string>
+    <string name="t_339d955a3c">Наведіть камеру на підлогу з візерунком або на меблі</string>
     <string name="t_4dd78d95e6">Навести</string>
     <string name="t_c96769af49">Натисніть «+», щоб створити першу.</string>
     <string name="t_730cde94e5">Натисніть «?» поруч із ним — пояснимо простими словами. Усі слова зібрано в словничку в налаштуваннях.</string>
@@ -310,9 +326,14 @@
     <string name="t_da731c70ca">Нова кімната</string>
     <string name="t_87b55f8287">Нова кімната…</string>
     <string name="t_4a30361774">Потрібен iPhone із сенсором LiDAR — моделі Pro, починаючи з iPhone 12 Pro.</string>
+    <string name="t_7283f54f30">Потрібна камера</string>
+    <string name="t_ba43c393fc">Потрібні сервіси Google Play для AR</string>
     <string name="t_b9c9ff652d">Про застосунок</string>
+    <string name="t_7bee71b043">Оновіть сервіси Google Play для AR</string>
+    <string name="t_c2f668e54f">Оновити</string>
     <string name="t_3a3478672d">Обійдіть рослину з телефоном по колу — вийде її точна об’ємна копія. Зйомка триватиме кілька хвилин, збирання моделі — ще кілька; усе на телефоні.</string>
     <string name="t_bc8d2377f1">Об’ємна копія рослини для AR. Моделі видів уже лежать у застосунку, а свою можна вигадати за фото або відсканувати — кнопка «Модель» на екрані рослини.</string>
+    <string name="t_7eb02aa630">Об’ємна копія рослини для AR. Моделі видів уже лежать у застосунку, а свою можна вигадати за фото — кнопка «Модель» на екрані рослини.</string>
     <string name="t_4b919d0c3d">Зазвичай для виду: %s</string>
     <string name="t_00495efa90">Зазвичай — за %s води в землі</string>
     <string name="t_9bc6b67c85">Одне коло — один строк поливу. Ближні орбіти в тих, хто сохне швидко, дальні — у терплячих.</string>
@@ -407,6 +428,7 @@
     <string name="t_0455b2eeff">Показано %1$d з %2$d: більше телефону важко</string>
     <string name="t_387af5ff90">Показати підказки знову</string>
     <string name="t_ca645a26b9">Покрутіть барабан — нижче видно, як новий строк ляже на картку.</string>
+    <string name="t_51b8f05bf7">Поле пошуку — вгорі. Шукає за кличкою, видом і нотатками.</string>
     <string name="t_17c7b943fc">Поле пошуку — внизу, біля панелі вкладок. Шукає за кличкою, видом і нотатками.</string>
     <string name="t_cd1de7bdc3">Полийте всіх разом і надішліть сусідові пам’ятку.</string>
     <string name="t_c767922d35">Полийте рослину — і тут з’явиться, скільки води було в землі цієї миті.</string>
@@ -446,6 +468,7 @@
     <string name="t_3ca46e3e76">Після поливу візерунком біжить кольорова хвиля — так видно, що полив зараховано.</string>
     <string name="t_e101868e98">Останній полив</string>
     <string name="t_d72166f389">Подивитися в AR</string>
+    <string name="t_22f978c185">Подивіться на рослину у себе в кімнаті, зробіть їй свою модель за фото або змініть кличку, вид і строк поливу.</string>
     <string name="t_f945f5f017">Подивіться на рослину у себе в кімнаті, зробіть їй власну модель — за фото чи сканом — або змініть кличку, вид і термін поливу.</string>
     <string name="t_8845f9ee9d">Поставити</string>
     <string name="t_39a52fa645">Поставити сад</string>
@@ -489,6 +512,7 @@
         <item quantity="other">Раз на %d місяця</item>
     </plurals>
     <string name="t_9caa86d668">Раз на скільки днів рослину поливають — приблизно за стільки висихає земля. Змінюється в налаштуваннях рослини.</string>
+    <string name="t_7882f56b39">Дозволити камеру</string>
     <string name="t_cc687c1fa5">Рамка обіймає рослину з горщиком? Тоді починайте</string>
     <string name="t_0717b1b655">Розставити</string>
     <string name="t_7ebd3688e2">Рослина</string>
@@ -520,6 +544,7 @@
     <string name="t_cd59e4204b">Сад замкнено</string>
     <string name="t_e3b46fe6dd">Сад як Сонячна система: рослина — планета, коло — строк поливу. Дійшла до воріт угорі — час поливати.</string>
     <string name="t_5a05a6d3f9">Сад відкривається лише за Face ID або кодом-паролем телефона — чужі не подивляться.</string>
+    <string name="t_8401f09a45">Сад відкривається лише за відбитком пальця, обличчям або кодом розблокування телефона — чужі не подивляться.</string>
     <string name="t_2306927b56">Сад з %s</string>
     <string name="t_928ada7e39">Сад стоїть. Натисніть на рослину, щоб полити її.</string>
     <string name="t_e4d56c1f85">Садівник</string>
@@ -538,6 +563,7 @@
     <string name="t_013255575f">Сьогодні нікого не треба поливати.</string>
     <string name="t_618a6abf44">Сьогодні, %s</string>
     <string name="t_88be20fd06">Зараз</string>
+    <string name="t_ad8df7482b">Сервіси Google Play для AR на ньому не працюють. Усе інше в Sprout працює як звичайно.</string>
     <string name="t_b3c4b1be56">Мережа</string>
     <string name="t_a872210c83">Сила вібрації</string>
     <string name="t_04954ca725">Синій</string>
@@ -563,12 +589,14 @@
     </plurals>
     <string name="t_4a40d86849">Наступний полив: завтра</string>
     <string name="t_b0f07c6bde">Наступний полив: сьогодні</string>
+    <string name="t_cef8f4a582">Надто темно — увімкніть світло</string>
     <string name="t_6f8ca5c940">Словничок</string>
     <string name="t_214438003b">Дивлюся на знімок…</string>
     <string name="t_6fb5cb3976">Спочатку нові</string>
     <string name="t_3189602bf1">Спочатку сухі</string>
     <string name="t_4ff6829db6">Сніг</string>
     <string name="t_1b494791c5">Знімка немає</string>
+    <string name="t_2cb357366d">Знімки рослин розпізнаються на самому телефоні — фото нікуди не надсилаються.</string>
     <string name="t_9e2d4d618a">Знімок</string>
     <string name="t_d303471890">Знімок розмитий — зніміть чіткіше.</string>
     <string name="t_bee88a5c8c">Знімок пересвічений — зніміть без прямого сонця.</string>
@@ -593,6 +621,7 @@
     <string name="t_8335506cd9">Найсухіша — %s.</string>
     <string name="t_31386bfdb5">Сфотографуйте рослину — телефон спробує впізнати її вид.</string>
     <string name="t_2da75ff638">Рахунок від %s. Оновиться, коли друг надішле код знову.</string>
+    <string name="t_d9467398b8">Таке буває, якщо камеру зайняв інший застосунок. Спробуйте ще раз.</string>
     <string name="t_109ff6015e">Капець</string>
     <string name="t_ba89e87d7f">Телефон упізнає рослину на знімку й вигадає її модель: візьме кольори листя, квітів і горщика, густоту та зріст. Усе рахується на телефоні, без мережі, — за кілька секунд.</string>
     <string name="t_c9b9affc8d">Телефон упізнав: %1$s — упевнений на %2$d%%. Виправте, якщо не так.</string>
@@ -622,8 +651,10 @@
     <string name="t_8b19591d8a">Візерунок за нахилом</string>
     <string name="t_1cc281e997">Візерунок на тлі трохи зсувається, коли ви нахиляєте телефон, — ніби лежить глибше за екран.</string>
     <string name="t_c8f3f390c2">Кріп</string>
+    <string name="t_ce88d35b18">Установити</string>
     <string name="t_5373dc43a3">Догляд</string>
     <string name="t_ddc1a36266">Враховувати пору року</string>
+    <string name="t_8a4653acae">Файл саду потрапляє в резервну копію Android — туди ж, куди й інші дані застосунків, за правилами Google.</string>
     <string name="t_8041745a9b">Файл саду потрапляє в резервну копію iPhone — туди ж, куди й решта ваших даних, за правилами Apple.</string>
     <string name="t_92c396e199">Фіалка</string>
     <string name="t_99c7c8c714">Фігурки</string>
@@ -644,6 +675,7 @@
     <string name="t_84b22ed2aa">Колір</string>
     <string name="t_7ceb6b0f96">Колір хвилі</string>
     <string name="t_4d7209b9c1">Колір візерунка</string>
+    <string name="t_8c038b5d5a">Кольори шпалер</string>
     <string name="t_2a6d22be37">Кольори, густота й зріст — зі знімка.</string>
     <string name="t_ac08f8dec7">Квітка</string>
     <string name="t_4924d77144">Цифри</string>
@@ -660,11 +692,14 @@
     <string name="t_febbc7512c">Щоб відкрити сад</string>
     <string name="t_e250a6df76">Шнурок</string>
     <string name="t_723a09005e">Шуба</string>
+    <string name="t_68656a952e">Ця версія надто стара для Sprout.</string>
     <string name="t_b3bf1682b8">Це ваш сад</string>
     <string name="t_d342de941a">Це ваш власний код: у таблиці ви й так є.</string>
     <string name="t_3a925bfac5">Цей iPhone не вміє сканувати: потрібен LiDAR.</string>
+    <string name="t_8536fc8767">Цей телефон не вміє AR</string>
     <string name="t_c7e64e73eb">Ехеверія</string>
     <string name="t_77789a486b">Юка</string>
+    <string name="t_ed3f0e507a">Мова</string>
     <string name="t_3f264c02f1">вчасно %s</string>
     <string name="t_cc86ef708c">ви</string>
     <string name="t_2e06422eda">земля суха</string>
@@ -699,4 +734,11 @@
     <string name="t_d8e6f5387c">частіше ніж раз на хвилину</string>
     <string name="t_d959d34275">серія %d</string>
     <string name="t_34eb9e66db">• %1$s (%2$s, «%3$s») — %4$s</string>
+    <string name="shortcut_add">Додати</string>
+    <string name="shortcut_search">Пошук</string>
+    <string name="shortcut_stats">Статистика</string>
+    <string name="shortcut_thirst">Кого полити</string>
+    <string name="tile_label">Кого полити</string>
+    <string name="widget_description">Найсухіші рослини й кнопка «Полити».</string>
+    <string name="widget_name">Кого полити</string>
 </resources>

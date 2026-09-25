@@ -24,9 +24,13 @@
     <string name="t_197eb092cd">%d%%</string>
     <string name="t_45b8ac5695" formatted="false">水分20〜40%</string>
     <string name="t_3d6c2541b9" formatted="false">水分40%以上</string>
+    <string name="t_5f5e0de553">ARを開始できませんでした</string>
+    <string name="t_957c85ce41">ARはカメラに映る景色の上に植物を描きます。映像はどこにも送信されません。</string>
     <string name="t_14c72c397f">AR（拡張現実）</string>
     <string name="t_484d12fea8">ARは拡張現実です。カメラに部屋が映り、そこに立体の植物が現れます。種類ごとのモデルはアプリに入っていて、自分のモデルは写真から考えるかスキャンで作れます。</string>
+    <string name="t_5c4b538eba">AR（拡張現実）では、カメラに映る部屋の中に立体の植物が現れます。種類ごとのモデルはアプリに入っていて、自分のモデルは写真から作れます。</string>
     <string name="t_809c431aa4">AR・モデル・設定</string>
+    <string name="t_acec2ec7d0">Android %s以降</string>
     <string name="t_302a05a1ac">Sproutはあなたに関する情報を一切集めず、どこにも送信しません。</string>
     <string name="t_9585992548">iOS 26以降</string>
     <string name="t_c65910cd34">「%1$s」ほか%2$sが水を欲しがっています</string>
@@ -65,6 +69,7 @@
     <string name="t_a8bcae2d9a">マチルダ</string>
     <string name="t_f79b25b05d">庭を太陽系に見立てて：植物が水やりの軌道を回ります。のぞいてみて — 1か月の音を聴くこともできます。</string>
     <string name="t_19ff316e6f">スライダーを動かすと、きちんと水やりした場合の数日後の庭へ。</string>
+    <string name="t_ddf5bf682d">スマートフォンをもっとゆっくり動かしてください</string>
     <string name="t_3f52bd53a9">帰宅</string>
     <string name="t_c7aaa96778">取り消す</string>
     <string name="t_f10d238768">既製モデルに戻す</string>
@@ -90,6 +95,7 @@
     <string name="t_2b5f40f213">この植物の水やりすべて。間違った記録は長押しで削除できます。</string>
     <string name="t_2f07cfc9c2">すべて水やり済み</string>
     <string name="t_3b5143902e">合計</string>
+    <string name="t_eeb8caeb95">貼り付け</string>
     <string name="t_c12ee51dd9">全期間</string>
     <string name="t_1059a1d77d">昨日 %s</string>
     <string name="t_fe4b0c80f0">選択</string>
@@ -109,6 +115,7 @@
     <string name="t_68ae695380">モーションセンサー</string>
     <string name="t_827d544645">日付</string>
     <string name="t_0bcd158c3d">2本指で回転、ピンチでサイズ変更</string>
+    <string name="t_9978ac34b2">操作</string>
     <string name="t_b6ef08401f">日</string>
     <string name="t_abbebfc85b">3鉢以上が同時に水を欲しがる日。まとめて一度に水やりできて便利です。</string>
     <string name="t_e0c0ceee56">小さな木</string>
@@ -129,6 +136,7 @@
     <string name="t_fdf0f98738">予定より早く水をあげていると、アプリが気づいて間隔を短くするよう提案します。</string>
     <string name="t_19f25d5784">その他</string>
     <string name="t_7db203bdda">もう1周</string>
+    <string name="t_bbe42739db">もう一度</string>
     <string name="t_0fb6d09e78">水が必要</string>
     <string name="t_ef28cc1496">期間内</string>
     <string name="t_70efc9651a">この期間に水やりはありませんでした。</string>
@@ -168,7 +176,8 @@
     <string name="t_498abc5007">GitHubのソースコード</string>
     <string name="t_b335f763ea">すべての植物と水やりの記録が消えます。元に戻せません。</string>
     <string name="t_53d55db39f">まとめ</string>
-    <string name="t_779e8b3e28">iPhoneの設定でオンにしてください：Sprout → 通知。</string>
+    <string name="t_779e8b3e28">スマートフォンの設定でオンにしてください：Sprout → 通知。</string>
+    <string name="t_9c47ca16c4">Google Playから無料でインストールできます。その後、ARがすぐに開きます。</string>
     <string name="t_46c7be08dd">書斎</string>
     <string name="t_0112d57d0b">切り取り</string>
     <string name="t_01b9b803e7">写真の切り取り</string>
@@ -177,6 +186,7 @@
     <string name="t_223428bd3c">点の1つ1つが水やり。点が高いほど、土にまだ水が残っていました。</string>
     <string name="t_e1439f1755">水やりのたびに音が鳴ります：内側の惑星ほど高い音。</string>
     <string name="t_f0a22d9d1a">システムと同じ</string>
+    <string name="t_087f6705ed">スマートフォンの設定に合わせる</string>
     <string name="t_696586f496">お名前は？</string>
     <string name="t_7013b69dab">使いかた</string>
     <string name="t_d4066ba693">植物の新しい名前は？</string>
@@ -185,6 +195,9 @@
     <string name="t_7b105a68e6">カランコエ</string>
     <string name="t_60f6304f34">カラテア</string>
     <string name="t_fe0790d4e2">水やりカレンダー</string>
+    <string name="t_f2d0f5cc41">カメラは別のアプリが使用中です</string>
+    <string name="t_37620de860">カメラがスマートフォンの設定で許可されていません。設定で許可してから戻ってください。</string>
+    <string name="t_601947a61c">カメラと写真</string>
     <string name="t_d8e43f5730">カメラに映った部屋に、アプリが立体の植物を置きます。回したり、大きくしたり、じょうろで水をあげたりできます。</string>
     <string name="t_8671ea9e33">しずく</string>
     <string name="t_85618413ed">マスはこの4か月の1日を表し、色が濃いほど水やりが多い日です。マスをタップすると日付が出ます。</string>
@@ -192,9 +205,10 @@
     <string name="t_19b3335305">ケフィア</string>
     <string name="t_738d2f8168">ニックネーム</string>
     <string name="t_3bff3d2298">ニックネームと種類</string>
-    <string name="t_eb1aa42a32">植物のニックネーム、種類、湿度、日付 — 入力したものはすべてアプリ内のファイルに、iPhone本体に保存されます。設定も同様です。どれもデバイスの外には出ません。</string>
+    <string name="t_eb1aa42a32">植物のニックネーム、種類、湿度、日付 — 入力したものはすべてアプリ内のファイルに、スマートフォン本体に保存されます。設定も同様です。どれもデバイスの外には出ません。</string>
     <string name="t_1c8e21179b">ボタン</string>
     <string name="t_49cdfd9292">まわりのボタン</string>
+    <string name="t_2ecb4451da">ボタンやカードを壁紙の色にします。</string>
     <string name="t_725347e425">日程</string>
     <string name="t_512bafe5b5">湿度がこれより下がったら</string>
     <string name="t_72e18d38d9">水やりのタイミング</string>
@@ -233,7 +247,7 @@
     <string name="t_e5d0bafd66">好きな時間</string>
     <string name="t_45b593603e">ちびすけ</string>
     <string name="t_2f697998b9">タイムマシン</string>
-    <string name="t_e2be3c9ae3">床かテーブルの上で、ゆっくりiPhoneを動かしてください</string>
+    <string name="t_e2be3c9ae3">床かテーブルの上で、ゆっくりスマートフォンを動かしてください</string>
     <string name="t_8d0839c6c0">植物のまわりをゆっくり歩いてください</string>
     <string name="t_150ebbdfc4">ハニー</string>
     <string name="t_e558fb6e24">月</string>
@@ -252,7 +266,9 @@
     <string name="t_18f71e9762">天球の音楽</string>
     <string name="t_0b854eb300">タマ</string>
     <string name="t_7a7164238c">ミント</string>
+    <string name="t_06ec0f34bf">このスマートフォンには画面ロックが設定されていません。</string>
     <string name="t_272e98dde1">このiPhoneにはFace IDもパスコードもありません。</string>
+    <string name="t_339d955a3c">模様のある床や家具にカメラを向けてください</string>
     <string name="t_4dd78d95e6">狙う</string>
     <string name="t_c96769af49">「+」をタップして最初の部屋を作成します。</string>
     <string name="t_730cde94e5">横の「?」をタップすると、やさしく説明します。言葉はすべて設定の用語集にまとめてあります。</string>
@@ -273,11 +289,11 @@
     <string name="t_2804a0f54f">今日が水やり日の植物を、乾いている順に読み上げます。</string>
     <string name="t_9b3ebeab0c">ニックネームか種類で検索 —「バクシー」「モンステラ」。</string>
     <string name="t_00ecc69b29">植物を探す</string>
-    <string name="t_5b3fdda4e1">iPhoneを傾けると背景の模様が少し動きます。データはそのためだけに使われ、保存も送信もされません。</string>
+    <string name="t_5b3fdda4e1">スマートフォンを傾けると背景の模様が少し動きます。データはそのためだけに使われ、保存も送信もされません。</string>
     <string name="t_ece5d614e0">観葉植物の水やりリマインダー</string>
     <string name="t_36313764f0">水やりの通知</string>
     <string name="t_bc07988dcd">リマインダーと、季節に合わせた間隔の調整。</string>
-    <string name="t_9233244323">水やりの通知は、iPhone自身が計算した予定に基づいて作成します。プッシュサーバは関与しません。</string>
+    <string name="t_9233244323">水やりの通知は、スマートフォン自身が計算した予定に基づいて作成します。プッシュサーバは関与しません。</string>
     <string name="t_a01d4c3e32">肥料を通知</string>
     <string name="t_1c33a4207d">水やりを通知</string>
     <string name="t_7f17c7c62a">設定</string>
@@ -298,9 +314,14 @@
     <string name="t_da731c70ca">新しい部屋</string>
     <string name="t_87b55f8287">新しい部屋…</string>
     <string name="t_4a30361774">LiDARスキャナ搭載のiPhoneが必要です — iPhone 12 Pro以降のProモデル。</string>
+    <string name="t_7283f54f30">カメラが必要です</string>
+    <string name="t_ba43c393fc">AR用Google Play開発者サービスが必要です</string>
     <string name="t_b9c9ff652d">情報</string>
+    <string name="t_7bee71b043">AR用Google Play開発者サービスを更新してください</string>
+    <string name="t_c2f668e54f">更新</string>
     <string name="t_3a3478672d">スマホを持って植物のまわりを一周すると、正確な3Dコピーができます。撮影は数分、モデル作りはさらに数分。すべて端末内です。</string>
     <string name="t_bc8d2377f1">AR用の植物の3Dコピーです。種類ごとのモデルはアプリに入っていて、自分のモデルは写真から考えるかスキャンで作れます — 植物画面の「モデル」ボタンから。</string>
+    <string name="t_7eb02aa630">AR用の植物の立体コピー。種類ごとのモデルはアプリに入っていて、自分のモデルは写真から作れます — 植物の画面の「モデル」ボタン。</string>
     <string name="t_4b919d0c3d">この種類の目安：%s</string>
     <string name="t_00495efa90">ふだんは土の水分が%sのとき</string>
     <string name="t_9bc6b67c85">1周が水やりの間隔。内側の軌道は乾きやすい植物、外側は我慢強い植物です。</string>
@@ -380,6 +401,7 @@
     <string name="t_0455b2eeff">%2$d件中%1$d件を表示：これ以上は端末の負荷が大きすぎます</string>
     <string name="t_387af5ff90">ヒントをもう一度表示</string>
     <string name="t_ca645a26b9">ホイールを回すと、新しい間隔がカードにどう表示されるか下に出ます。</string>
+    <string name="t_51b8f05bf7">検索フィールドは上にあります。ニックネーム、種類、メモから探します。</string>
     <string name="t_17c7b943fc">検索フィールドは下、タブバーのそばにあります。ニックネーム・種類・メモから探します。</string>
     <string name="t_cd1de7bdc3">全員にまとめて水やりして、お隣さんにメモを送りましょう。</string>
     <string name="t_c767922d35">植物に水やりすると、そのとき土にどれだけ水があったかがここに表示されます。</string>
@@ -416,6 +438,7 @@
     <string name="t_3ca46e3e76">水やりのあと、模様に色の波が広がります。水やりが記録されたしるしです。</string>
     <string name="t_e101868e98">最後の水やり</string>
     <string name="t_d72166f389">ARで見る</string>
+    <string name="t_22f978c185">部屋の中で植物を見たり、写真から専用のモデルを作ったり、ニックネーム・種類・水やり間隔を変えたりできます。</string>
     <string name="t_f945f5f017">植物を自分の部屋で眺めたり、写真やスキャンで専用のモデルを作ったり、名前・種類・水やりの間隔を変えたりできます。</string>
     <string name="t_8845f9ee9d">配置</string>
     <string name="t_39a52fa645">庭を配置</string>
@@ -453,6 +476,7 @@
         <item quantity="other">%dか月に1回</item>
     </plurals>
     <string name="t_9caa86d668">何日ごとに水をあげるか。だいたい土が乾くまでの日数です。植物の設定で変えられます。</string>
+    <string name="t_7882f56b39">カメラを許可</string>
     <string name="t_cc687c1fa5">枠が植物と鉢を囲んでいますか？ それなら始めましょう</string>
     <string name="t_0717b1b655">並べ替え</string>
     <string name="t_7ebd3688e2">植物</string>
@@ -484,6 +508,7 @@
     <string name="t_cd59e4204b">庭はロックされています</string>
     <string name="t_e3b46fe6dd">庭を太陽系に見立てて：植物は惑星、1周が水やりの間隔。上のゲートに着いたら水やりどき。</string>
     <string name="t_5a05a6d3f9">庭はFace IDかスマホのパスコードでしか開きません。ほかの人にはのぞかれません。</string>
+    <string name="t_8401f09a45">庭は指紋、顔、またはスマートフォンの画面ロックでしか開きません — 他人はのぞけません。</string>
     <string name="t_2306927b56">%sから庭づくり</string>
     <string name="t_928ada7e39">庭を配置しました。植物をタップすると水やりできます。</string>
     <string name="t_e4d56c1f85">ガーデナー</string>
@@ -502,6 +527,7 @@
     <string name="t_013255575f">今日は水やりの必要な植物はありません。</string>
     <string name="t_618a6abf44">今日 %s</string>
     <string name="t_88be20fd06">いま</string>
+    <string name="t_ad8df7482b">このスマートフォンではAR用Google Play開発者サービスが動きません。Sproutのほかの機能はいつもどおり使えます。</string>
     <string name="t_b3c4b1be56">ネットワーク</string>
     <string name="t_a872210c83">振動の強さ</string>
     <string name="t_04954ca725">ブルー</string>
@@ -524,12 +550,14 @@
     </plurals>
     <string name="t_4a40d86849">次の水やり：明日</string>
     <string name="t_b0f07c6bde">次の水やり：今日</string>
+    <string name="t_cef8f4a582">暗すぎます — 明かりをつけてください</string>
     <string name="t_6f8ca5c940">用語集</string>
     <string name="t_214438003b">写真を見ています…</string>
     <string name="t_6fb5cb3976">新しい順</string>
     <string name="t_3189602bf1">乾いている順</string>
     <string name="t_4ff6829db6">ゆき</string>
     <string name="t_1b494791c5">写真なし</string>
+    <string name="t_2cb357366d">植物の写真はスマートフォン本体で認識されます — 画像はどこにも送信されません。</string>
     <string name="t_9e2d4d618a">写真</string>
     <string name="t_d303471890">写真がぼやけています — もっとはっきり撮ってください。</string>
     <string name="t_bee88a5c8c">写真が白飛びしています — 直射日光を避けて撮ってください。</string>
@@ -554,6 +582,7 @@
     <string name="t_8335506cd9">いちばん乾いている：%s</string>
     <string name="t_31386bfdb5">植物を撮影してください — 種類の判別を試みます。</string>
     <string name="t_2da75ff638">%s時点のスコア。友達がコードをもう一度送ると更新されます。</string>
+    <string name="t_d9467398b8">別のアプリがカメラを使っているときに起こります。もう一度お試しください。</string>
     <string name="t_109ff6015e">スリッパ</string>
     <string name="t_ba89e87d7f">写真の植物を認識して、葉・花・鉢の色、茂り具合、高さからモデルを考えます。すべて端末内で、オフラインのまま数秒で行います。</string>
     <string name="t_c9b9affc8d">認識結果：%1$s — 確信度%2$d%%。違っていたら修正してください。</string>
@@ -583,8 +612,10 @@
     <string name="t_8b19591d8a">傾きに合わせて模様が動く</string>
     <string name="t_1cc281e997">スマホを傾けると、背景の模様が少し動きます。画面より奥にあるように見えます。</string>
     <string name="t_c8f3f390c2">ディル</string>
+    <string name="t_ce88d35b18">インストール</string>
     <string name="t_5373dc43a3">お手入れ</string>
     <string name="t_ddc1a36266">季節を考慮</string>
+    <string name="t_8a4653acae">庭のファイルは、ほかのアプリのデータと一緒にGoogleのルールに従ってAndroidのバックアップに含まれます。</string>
     <string name="t_8041745a9b">庭のファイルは、ほかのデータと一緒にAppleのルールに従ってiPhoneのバックアップに含まれます。</string>
     <string name="t_92c396e199">セントポーリア</string>
     <string name="t_99c7c8c714">図形</string>
@@ -605,6 +636,7 @@
     <string name="t_84b22ed2aa">カラー</string>
     <string name="t_7ceb6b0f96">波の色</string>
     <string name="t_4d7209b9c1">模様の色</string>
+    <string name="t_8c038b5d5a">壁紙の色</string>
     <string name="t_2a6d22be37">色・茂り具合・高さは写真から。</string>
     <string name="t_ac08f8dec7">花</string>
     <string name="t_4924d77144">数字</string>
@@ -621,11 +653,14 @@
     <string name="t_febbc7512c">庭を開くため</string>
     <string name="t_e250a6df76">くつひも</string>
     <string name="t_723a09005e">コート</string>
+    <string name="t_68656a952e">このバージョンはSproutには古すぎます。</string>
     <string name="t_b3bf1682b8">ここがあなたの庭</string>
     <string name="t_d342de941a">これはあなた自身のコードです：すでに表に載っています。</string>
     <string name="t_3a925bfac5">このiPhoneではスキャンできません：LiDARが必要です。</string>
+    <string name="t_8536fc8767">このスマートフォンはARに対応していません</string>
     <string name="t_c7e64e73eb">エケベリア</string>
     <string name="t_77789a486b">ユッカ</string>
+    <string name="t_ed3f0e507a">言語</string>
     <string name="t_3f264c02f1">ちょうどいい %s</string>
     <string name="t_cc86ef708c">あなた</string>
     <string name="t_2e06422eda">土が乾いている</string>
@@ -651,4 +686,11 @@
     <string name="t_d8e6f5387c">1分に1回より多く</string>
     <string name="t_d959d34275">連続%d</string>
     <string name="t_34eb9e66db">• %1$s（%2$s、「%3$s」）— %4$s</string>
+    <string name="shortcut_add">追加</string>
+    <string name="shortcut_search">検索</string>
+    <string name="shortcut_stats">統計</string>
+    <string name="shortcut_thirst">水やりする植物</string>
+    <string name="tile_label">水やりする植物</string>
+    <string name="widget_description">いちばん乾いた植物と「水やり」ボタン。</string>
+    <string name="widget_name">水やりする植物</string>
 </resources>

@@ -58,6 +58,9 @@ object Lang {
         else -> null
     }
 
+    /** Целое — с разрядами, как принято в языке. */
+    fun number(value: Int): String = NumberFormat.getIntegerInstance(locale).format(value)
+
     /** Дробное — одним знаком и с запятой или точкой, как принято в языке. */
     fun decimal(number: Double): String {
         val style = NumberFormat.getNumberInstance(locale)

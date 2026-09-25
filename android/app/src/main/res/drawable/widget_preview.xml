@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Картинка виджета в списке виджетов: логотип на цвете приветствия. -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/sprout_welcome" />
+            <corners android:radius="24dp" />
+            <size android:width="180dp" android:height="180dp" />
+        </shape>
+    </item>
+    <item android:drawable="@drawable/splash_logo" />
+</layer-list>

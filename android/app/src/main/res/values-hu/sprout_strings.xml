@@ -27,9 +27,13 @@
     <string name="t_197eb092cd">%d%%</string>
     <string name="t_45b8ac5695" formatted="false">20–40% víz</string>
     <string name="t_3d6c2541b9" formatted="false">40% víz vagy több</string>
+    <string name="t_5f5e0de553">Az AR nem indult el</string>
+    <string name="t_957c85ce41">Az AR a kamera képére rajzolja a növényt. A képkockák sehová sem kerülnek.</string>
     <string name="t_14c72c397f">AR – kiterjesztett valóság</string>
     <string name="t_484d12fea8">Az AR kiterjesztett valóság: a kamera a szobádat mutatja, benne egy 3D-s növénnyel. A fajok modelljei már az appban vannak, sajátot pedig kitalálhatsz fotóból vagy beszkennelhetsz.</string>
+    <string name="t_5c4b538eba">Az AR kiterjesztett valóság: a kamera a szobádat mutatja, benne egy térbeli növénnyel. A fajok modelljei már benne vannak az appban, sajátot pedig fotó alapján találhatsz ki.</string>
     <string name="t_809c431aa4">AR, modell és beállítások</string>
+    <string name="t_acec2ec7d0">Android %s vagy újabb</string>
     <string name="t_302a05a1ac">A Sprout semmilyen adatot nem gyűjt rólad, és nem küld sehova.</string>
     <string name="t_9585992548">iOS 26 vagy újabb</string>
     <string name="t_c65910cd34">„%1$s” és még %2$s vizet kér</string>
@@ -68,6 +72,7 @@
     <string name="t_a8bcae2d9a">Vaszilisza</string>
     <string name="t_f79b25b05d">A kerted mint naprendszer: a növények az öntözési pályáikon keringenek. Nézz be – akár egy hónapot is meghallgathatsz.</string>
     <string name="t_19ff316e6f">Húzd a csúszkát – a kert napokat ugrik előre, mintha időben öntöznél.</string>
+    <string name="t_ddf5bf682d">Lassabban mozgasd a telefont</string>
     <string name="t_3f52bd53a9">Visszatérés</string>
     <string name="t_c7aaa96778">Visszavonás</string>
     <string name="t_f10d238768">Vissza a kész modellhez</string>
@@ -94,6 +99,7 @@
     <string name="t_2b5f40f213">A növény összes öntözése. Egy hibás bejegyzést hosszú nyomással törölhetsz.</string>
     <string name="t_2f07cfc9c2">Mind megöntözve</string>
     <string name="t_3b5143902e">Összesen</string>
+    <string name="t_eeb8caeb95">Beillesztés</string>
     <string name="t_c12ee51dd9">Mindig</string>
     <string name="t_1059a1d77d">Tegnap, %s</string>
     <string name="t_fe4b0c80f0">Kiválasztás</string>
@@ -113,6 +119,7 @@
     <string name="t_68ae695380">Mozgásérzékelő</string>
     <string name="t_827d544645">Dátumok</string>
     <string name="t_0bcd158c3d">Két ujjal forgatás, csippentéssel méret</string>
+    <string name="t_9978ac34b2">Műveletek</string>
     <string name="t_b6ef08401f">Nap</string>
     <string name="t_abbebfc85b">Egy nap, amikor három vagy több növény egyszerre kér vizet – kényelmes egyszerre megöntözni mindet.</string>
     <string name="t_e0c0ceee56">Kis fa</string>
@@ -133,6 +140,7 @@
     <string name="t_fdf0f98738">Ha a határidő előtt öntözöl, az alkalmazás észreveszi, és rövidebb gyakoriságot javasol.</string>
     <string name="t_19f25d5784">Továbbiak</string>
     <string name="t_7db203bdda">Még egy kör</string>
+    <string name="t_bbe42739db">Újra</string>
     <string name="t_0fb6d09e78">Vízre vár</string>
     <string name="t_ef28cc1496">Az időszakban</string>
     <string name="t_70efc9651a">Ebben az időszakban nem volt öntözés.</string>
@@ -173,6 +181,7 @@
     <string name="t_b335f763ea">Minden növény és a teljes öntözési napló eltűnik. Ez nem vonható vissza.</string>
     <string name="t_53d55db39f">Összegzés</string>
     <string name="t_779e8b3e28">Kapcsold be őket a telefon Beállításaiban: Sprout → Értesítések.</string>
+    <string name="t_9c47ca16c4">A Google Playből telepíthetők, ingyen. Utána az AR azonnal megnyílik.</string>
     <string name="t_46c7be08dd">Dolgozószoba</string>
     <string name="t_0112d57d0b">Körbevágás</string>
     <string name="t_01b9b803e7">Fotó kivágása</string>
@@ -181,6 +190,7 @@
     <string name="t_223428bd3c">Minden pont egy öntözés. Minél magasabban van, annál több víz volt még a földben.</string>
     <string name="t_e1439f1755">Minden öntözés egy hang: a belső bolygók magasabban énekelnek.</string>
     <string name="t_f0a22d9d1a">Rendszer szerint</string>
+    <string name="t_087f6705ed">Ahogy a telefonon</string>
     <string name="t_696586f496">Hogy hívnak?</string>
     <string name="t_7013b69dab">Hogyan használd</string>
     <string name="t_d4066ba693">Mi most a növény neve?</string>
@@ -189,6 +199,9 @@
     <string name="t_7b105a68e6">Kalanchoe</string>
     <string name="t_60f6304f34">Kalatea</string>
     <string name="t_fe0790d4e2">Öntözési naptár</string>
+    <string name="t_f2d0f5cc41">A kamerát egy másik app használja</string>
+    <string name="t_37620de860">A kamera tiltva van a telefon beállításaiban. Engedélyezd ott, és gyere vissza.</string>
+    <string name="t_601947a61c">Kamera és fotók</string>
     <string name="t_d8e43f5730">A kamera a szobádat mutatja, az alkalmazás pedig egy térbeli növényt tesz bele. Elforgathatod, felnagyíthatod és megöntözheted egy locsolókannával.</string>
     <string name="t_8671ea9e33">Csepp</string>
     <string name="t_85618413ed">Minden négyzet egy nap az elmúlt négy hónapból: minél erősebb a szín, annál több öntözés. Koppints egy négyzetre a dátumért.</string>
@@ -199,6 +212,7 @@
     <string name="t_eb1aa42a32">A növények becenevei, fajok, nedvesség, dátumok — minden, amit beírsz, egy fájlban van az alkalmazásban, magán a telefonon. A beállítások is. Semmi sem hagyja el az eszközt.</string>
     <string name="t_1c8e21179b">Gombok</string>
     <string name="t_49cdfd9292">Gombok körben</string>
+    <string name="t_2ecb4451da">Gombok és kártyák a háttérkép színeiben.</string>
     <string name="t_725347e425">Mikor</string>
     <string name="t_512bafe5b5">Ha a nedvesség kevesebb mint</string>
     <string name="t_72e18d38d9">Mikor öntözöl</string>
@@ -256,7 +270,9 @@
     <string name="t_18f71e9762">A szférák zenéje</string>
     <string name="t_0b854eb300">Cirmi</string>
     <string name="t_7a7164238c">Menta</string>
+    <string name="t_06ec0f34bf">A telefonon nincs beállítva képernyőzár.</string>
     <string name="t_272e98dde1">Ezen a telefonon nincs se Face ID, se jelkód.</string>
+    <string name="t_339d955a3c">Fordítsd a kamerát mintás padlóra vagy bútorra</string>
     <string name="t_4dd78d95e6">Célzás</string>
     <string name="t_c96769af49">Koppints a „+” gombra az első létrehozásához.</string>
     <string name="t_730cde94e5">Koppints a mellette lévő „?” jelre, és egyszerűen elmagyarázzuk. Minden szó megtalálható a beállítások szószedetében.</string>
@@ -302,9 +318,14 @@
     <string name="t_da731c70ca">Új szoba</string>
     <string name="t_87b55f8287">Új szoba…</string>
     <string name="t_4a30361774">LiDAR-érzékelős iPhone kell – Pro modellek az iPhone 12 Prótól.</string>
+    <string name="t_7283f54f30">Kamera szükséges</string>
+    <string name="t_ba43c393fc">AR-hez Google Play-szolgáltatások kellenek</string>
     <string name="t_b9c9ff652d">Névjegy</string>
+    <string name="t_7bee71b043">Frissítsd az AR-hez szükséges Google Play-szolgáltatásokat</string>
+    <string name="t_c2f668e54f">Frissítés</string>
     <string name="t_3a3478672d">Járd körbe a növényt a telefonnal – így elkészül a pontos 3D-másolata. A felvétel pár perc, a modell összerakása még néhány; minden a telefonon.</string>
     <string name="t_bc8d2377f1">A növény 3D-másolata AR-hez. A fajok modelljei már az appban vannak, sajátot pedig kitalálhatsz fotóból vagy beszkennelhetsz – „Modell” gomb a növény képernyőjén.</string>
+    <string name="t_7eb02aa630">A növény térbeli másolata AR-hez. A fajok modelljei már benne vannak az appban, sajátot pedig fotó alapján találhatsz ki — a növény képernyőjén a „Modell” gomb.</string>
     <string name="t_4b919d0c3d">A fajnál szokásos: %s</string>
     <string name="t_00495efa90">Általában %s víznél a földben</string>
     <string name="t_9bc6b67c85">Egy kör egy öntözési időköz. A belső pályák a gyorsan száradóké, a külsők a türelmeseké.</string>
@@ -389,6 +410,7 @@
     <string name="t_0455b2eeff">%1$d/%2$d látható: több túl nehéz lenne a telefonnak</string>
     <string name="t_387af5ff90">Tippek újra megjelenítése</string>
     <string name="t_ca645a26b9">Forgasd a kereket – lent látod, hogyan kerül az új időköz a kártyára.</string>
+    <string name="t_51b8f05bf7">A keresőmező felül van. Becenévre, fajra és jegyzetekre keres.</string>
     <string name="t_17c7b943fc">A keresőmező lent van, a lapsáv mellett. Becenévben, fajban és jegyzetekben keres.</string>
     <string name="t_cd1de7bdc3">Öntözz meg mindenkit egyszerre, és küldj egy üzenetet a szomszédnak.</string>
     <string name="t_c767922d35">Öntözz meg egy növényt, és itt látni fogod, mennyi víz volt a földben abban a pillanatban.</string>
@@ -426,6 +448,7 @@
     <string name="t_3ca46e3e76">Öntözés után színes hullám fut végig a mintán – így látod, hogy az öntözés beszámított.</string>
     <string name="t_e101868e98">Utolsó öntözés</string>
     <string name="t_d72166f389">Megtekintés AR-ben</string>
+    <string name="t_22f978c185">Nézd meg a növényt a saját szobádban, adj neki saját modellt fotó alapján, vagy módosítsd a becenevét, faját és öntözési időközét.</string>
     <string name="t_f945f5f017">Nézd meg a növényt a szobádban, adj neki saját modellt – fotóból vagy szkennelve –, vagy módosítsd a nevét, faját és öntözési idejét.</string>
     <string name="t_8845f9ee9d">Elhelyezés</string>
     <string name="t_39a52fa645">Kert elhelyezése</string>
@@ -465,6 +488,7 @@
         <item quantity="other">%d havonta</item>
     </plurals>
     <string name="t_9caa86d668">Hány naponta öntözik a növényt – nagyjából ennyi idő alatt szárad ki a föld. A növény beállításaiban módosítható.</string>
+    <string name="t_7882f56b39">Kamera engedélyezése</string>
     <string name="t_cc687c1fa5">A keret körülöleli a növényt és a cserepet? Akkor kezdd</string>
     <string name="t_0717b1b655">Elrendezés</string>
     <string name="t_7ebd3688e2">Növény</string>
@@ -496,6 +520,7 @@
     <string name="t_cd59e4204b">A kert zárolva</string>
     <string name="t_e3b46fe6dd">A kerted mint naprendszer: minden növény egy bolygó, egy kör egy öntözési időköz. Amikor eléri a kaput fent, ideje öntözni.</string>
     <string name="t_5a05a6d3f9">A kert csak Face ID-vel vagy a telefon jelkódjával nyílik – más nem nézhet bele.</string>
+    <string name="t_8401f09a45">A kert csak ujjlenyomattal, arccal vagy a telefon képernyőzárával nyílik meg — idegenek nem kukucskálnak bele.</string>
     <string name="t_2306927b56">Kert ettől: %s</string>
     <string name="t_928ada7e39">A kert a helyén van. Koppints egy növényre a megöntözéséhez.</string>
     <string name="t_e4d56c1f85">Kertész</string>
@@ -514,6 +539,7 @@
     <string name="t_013255575f">Ma semmit sem kell megöntözni.</string>
     <string name="t_618a6abf44">Ma, %s</string>
     <string name="t_88be20fd06">Most</string>
+    <string name="t_ad8df7482b">Az AR-hez szükséges Google Play-szolgáltatások nem futnak rajta. A Sproutban minden más a megszokott módon működik.</string>
     <string name="t_b3c4b1be56">Hálózat</string>
     <string name="t_a872210c83">Rezgés erőssége</string>
     <string name="t_04954ca725">Kék</string>
@@ -537,12 +563,14 @@
     </plurals>
     <string name="t_4a40d86849">Következő öntözés: holnap</string>
     <string name="t_b0f07c6bde">Következő öntözés: ma</string>
+    <string name="t_cef8f4a582">Túl sötét — kapcsolj villanyt</string>
     <string name="t_6f8ca5c940">Szószedet</string>
     <string name="t_214438003b">Nézem a fotót…</string>
     <string name="t_6fb5cb3976">A legújabbak elöl</string>
     <string name="t_3189602bf1">A legszárazabbak elöl</string>
     <string name="t_4ff6829db6">Hó</string>
     <string name="t_1b494791c5">Nincs fotó</string>
+    <string name="t_2cb357366d">A növényfotókat maga a telefon ismeri fel — a képek sehová sem mennek.</string>
     <string name="t_9e2d4d618a">Fotó</string>
     <string name="t_d303471890">A fotó elmosódott – készíts élesebbet.</string>
     <string name="t_bee88a5c8c">A fotó túlexponált – készítsd közvetlen nap nélkül.</string>
@@ -567,6 +595,7 @@
     <string name="t_8335506cd9">A legszárazabb: %s.</string>
     <string name="t_31386bfdb5">Fotózd le a növényt – a telefon megpróbálja felismerni a faját.</string>
     <string name="t_2da75ff638">Pontszám: %s. Frissül, amikor a barátod újra elküldi a kódot.</string>
+    <string name="t_d9467398b8">Ez akkor fordul elő, ha a kamerát egy másik app használja. Próbáld újra.</string>
     <string name="t_109ff6015e">Papucs</string>
     <string name="t_ba89e87d7f">A telefon felismeri a növényt a fotón, és kitalálja a modelljét: a levelek, virágok és a cserép színét, a sűrűséget és a magasságot. Minden a telefonon fut, net nélkül, pár másodperc alatt.</string>
     <string name="t_c9b9affc8d">Felismerve: %1$s — %2$d%%-os biztonsággal. Javítsd, ha nem ez.</string>
@@ -596,8 +625,10 @@
     <string name="t_8b19591d8a">A minta követi a döntést</string>
     <string name="t_1cc281e997">A háttér mintája kicsit elmozdul, ha megdöntöd a telefont – mintha mélyebben lenne a kijelzőnél.</string>
     <string name="t_c8f3f390c2">Kapor</string>
+    <string name="t_ce88d35b18">Telepítés</string>
     <string name="t_5373dc43a3">Gondozás</string>
     <string name="t_ddc1a36266">Évszak figyelembevétele</string>
+    <string name="t_8a4653acae">A kertfájl bekerül az Android biztonsági mentésébe — a többi app adataival együtt, a Google szabályai szerint.</string>
     <string name="t_8041745a9b">A kert fájlja bekerül az iPhone biztonsági mentésébe — a többi adatoddal együtt, az Apple szabályai szerint.</string>
     <string name="t_92c396e199">Afrikai ibolya</string>
     <string name="t_99c7c8c714">Formák</string>
@@ -618,6 +649,7 @@
     <string name="t_84b22ed2aa">Szín</string>
     <string name="t_7ceb6b0f96">Hullám színe</string>
     <string name="t_4d7209b9c1">Minta színe</string>
+    <string name="t_8c038b5d5a">Háttérkép színei</string>
     <string name="t_2a6d22be37">Színek, sűrűség és magasság – a fotóról.</string>
     <string name="t_ac08f8dec7">Virág</string>
     <string name="t_4924d77144">Számok</string>
@@ -634,11 +666,14 @@
     <string name="t_febbc7512c">A kert megnyitásához</string>
     <string name="t_e250a6df76">Cipőfűző</string>
     <string name="t_723a09005e">Bunda</string>
+    <string name="t_68656a952e">Ez a verzió túl régi a Sprouthoz.</string>
     <string name="t_b3bf1682b8">Ez a te kerted</string>
     <string name="t_d342de941a">Ez a saját kódod: már szerepelsz a táblázatban.</string>
     <string name="t_3a925bfac5">Ez az iPhone nem tud szkennelni: LiDAR kell hozzá.</string>
+    <string name="t_8536fc8767">Ez a telefon nem tud AR-t</string>
     <string name="t_c7e64e73eb">Echeveria</string>
     <string name="t_77789a486b">Jukka</string>
+    <string name="t_ed3f0e507a">Nyelv</string>
     <string name="t_3f264c02f1">időben %s</string>
     <string name="t_cc86ef708c">te</string>
     <string name="t_2e06422eda">a föld száraz</string>
@@ -667,4 +702,11 @@
     <string name="t_d8e6f5387c">percenként többször</string>
     <string name="t_d959d34275">sorozat: %d</string>
     <string name="t_34eb9e66db">• %1$s (%2$s, „%3$s”) — %4$s</string>
+    <string name="shortcut_add">Hozzáadás</string>
+    <string name="shortcut_search">Keresés</string>
+    <string name="shortcut_stats">Statisztika</string>
+    <string name="shortcut_thirst">Kit kell öntözni</string>
+    <string name="tile_label">Kit kell öntözni</string>
+    <string name="widget_description">A legszárazabb növények és egy „Öntözés” gomb.</string>
+    <string name="widget_name">Kit kell öntözni</string>
 </resources>

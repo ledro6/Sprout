@@ -24,9 +24,13 @@
     <string name="t_197eb092cd">%d%%</string>
     <string name="t_45b8ac5695" formatted="false">20–40% air</string>
     <string name="t_3d6c2541b9" formatted="false">40% air atau lebih</string>
+    <string name="t_5f5e0de553">AR tidak dapat dimulai</string>
+    <string name="t_957c85ce41">AR menggambar tanaman di atas apa yang dilihat kamera. Gambar tidak dikirim ke mana pun.</string>
     <string name="t_14c72c397f">AR – realitas tertambah</string>
     <string name="t_484d12fea8">AR adalah realitas tertambah: kamera menampilkan ruangan Anda dengan tanaman 3D di dalamnya. Model jenis-jenis tanaman sudah ada di aplikasi, dan model Anda sendiri bisa dibayangkan dari foto atau dipindai.</string>
+    <string name="t_5c4b538eba">AR adalah realitas tertambah: kamera menampilkan ruangan Anda dengan tanaman 3D di dalamnya. Model spesies sudah ada di aplikasi, dan model Anda sendiri bisa dirancang dari foto.</string>
     <string name="t_809c431aa4">AR, model, dan pengaturan</string>
+    <string name="t_acec2ec7d0">Android %s atau yang lebih baru</string>
     <string name="t_302a05a1ac">Sprout tidak mengumpulkan informasi apa pun tentangmu dan tidak mengirimkan apa pun ke mana pun.</string>
     <string name="t_9585992548">iOS 26 atau lebih baru</string>
     <string name="t_c65910cd34">“%1$s” dan %2$s lagi butuh air</string>
@@ -65,6 +69,7 @@
     <string name="t_a8bcae2d9a">Matilda</string>
     <string name="t_f79b25b05d">Kebun Anda seperti tata surya: tanaman beredar di orbit siramnya. Lihatlah — Anda bahkan bisa mendengarkan sebulan.</string>
     <string name="t_19ff316e6f">Geser penggeser — kebun melompat beberapa hari ke depan, seolah Anda menyiram tepat waktu.</string>
+    <string name="t_ddf5bf682d">Gerakkan ponsel lebih pelan</string>
     <string name="t_3f52bd53a9">Pulang</string>
     <string name="t_c7aaa96778">Urungkan</string>
     <string name="t_f10d238768">Kembali ke model siap pakai</string>
@@ -90,6 +95,7 @@
     <string name="t_2b5f40f213">Semua siraman tanaman ini. Tekan lama catatan yang salah untuk menghapusnya.</string>
     <string name="t_2f07cfc9c2">Semua sudah disiram</string>
     <string name="t_3b5143902e">Total</string>
+    <string name="t_eeb8caeb95">Tempel</string>
     <string name="t_c12ee51dd9">Sepanjang waktu</string>
     <string name="t_1059a1d77d">Kemarin, %s</string>
     <string name="t_fe4b0c80f0">Pilih</string>
@@ -109,6 +115,7 @@
     <string name="t_68ae695380">Sensor gerak</string>
     <string name="t_827d544645">Tanggal</string>
     <string name="t_0bcd158c3d">Dua jari untuk memutar, cubit untuk ukuran</string>
+    <string name="t_9978ac34b2">Tindakan</string>
     <string name="t_b6ef08401f">Hari</string>
     <string name="t_abbebfc85b">Hari ketika tiga tanaman atau lebih meminta air bersamaan — praktis untuk menyiram semuanya sekaligus.</string>
     <string name="t_e0c0ceee56">Pohon kecil</string>
@@ -129,6 +136,7 @@
     <string name="t_fdf0f98738">Kalau kamu menyiram sebelum waktunya, aplikasi menyadarinya dan menyarankan jarak yang lebih pendek.</string>
     <string name="t_19f25d5784">Lainnya</string>
     <string name="t_7db203bdda">Satu putaran lagi</string>
+    <string name="t_bbe42739db">Coba lagi</string>
     <string name="t_0fb6d09e78">Butuh air</string>
     <string name="t_ef28cc1496">Dalam periode</string>
     <string name="t_70efc9651a">Tidak ada siraman dalam periode ini.</string>
@@ -169,6 +177,7 @@
     <string name="t_b335f763ea">Semua tanaman dan seluruh catatan penyiraman akan hilang. Tidak bisa dibatalkan.</string>
     <string name="t_53d55db39f">Ringkasan</string>
     <string name="t_779e8b3e28">Aktifkan di Pengaturan ponsel: Sprout → Notifikasi.</string>
+    <string name="t_9c47ca16c4">Dipasang dari Google Play, gratis. Setelah itu AR langsung terbuka.</string>
     <string name="t_46c7be08dd">Ruang kerja</string>
     <string name="t_0112d57d0b">Pangkas</string>
     <string name="t_01b9b803e7">Potongan foto</string>
@@ -177,6 +186,7 @@
     <string name="t_223428bd3c">Tiap titik adalah satu siraman. Makin tinggi titiknya, makin banyak air yang masih ada di tanah.</string>
     <string name="t_e1439f1755">Tiap siraman adalah nada: planet dekat bernyanyi lebih tinggi.</string>
     <string name="t_f0a22d9d1a">Ikuti sistem</string>
+    <string name="t_087f6705ed">Seperti di ponsel</string>
     <string name="t_696586f496">Siapa namamu?</string>
     <string name="t_7013b69dab">Cara pakai</string>
     <string name="t_d4066ba693">Apa nama tanaman ini sekarang?</string>
@@ -185,6 +195,9 @@
     <string name="t_7b105a68e6">Kalanchoe</string>
     <string name="t_60f6304f34">Calathea</string>
     <string name="t_fe0790d4e2">Kalender penyiraman</string>
+    <string name="t_f2d0f5cc41">Kamera sedang dipakai aplikasi lain</string>
+    <string name="t_37620de860">Kamera diblokir di setelan ponsel. Izinkan di sana lalu kembali.</string>
+    <string name="t_601947a61c">Kamera dan foto</string>
     <string name="t_d8e43f5730">Kamera menampilkan ruanganmu, lalu aplikasi menaruh tanaman 3D di dalamnya. Kamu bisa memutar, memperbesar, dan menyiramnya dengan gembor.</string>
     <string name="t_8671ea9e33">Tetes</string>
     <string name="t_85618413ed">Setiap kotak adalah satu hari dari empat bulan terakhir: makin pekat warnanya, makin sering disiram. Ketuk kotak untuk melihat tanggalnya.</string>
@@ -195,6 +208,7 @@
     <string name="t_eb1aa42a32">Nama panggilan tanaman, spesies, kelembapan, tanggal — semua yang kamu masukkan tersimpan di file dalam aplikasi, di ponsel itu sendiri. Begitu juga pengaturannya. Tidak ada yang keluar dari perangkat.</string>
     <string name="t_1c8e21179b">Tombol</string>
     <string name="t_49cdfd9292">Tombol di sekitar</string>
+    <string name="t_2ecb4451da">Tombol dan kartu mengikuti warna wallpaper ponsel.</string>
     <string name="t_725347e425">Kapan</string>
     <string name="t_512bafe5b5">Saat kelembapan di bawah</string>
     <string name="t_72e18d38d9">Kapan Anda menyiram</string>
@@ -252,7 +266,9 @@
     <string name="t_18f71e9762">Musik antariksa</string>
     <string name="t_0b854eb300">Pus</string>
     <string name="t_7a7164238c">Mint</string>
+    <string name="t_06ec0f34bf">Ponsel ini belum menyetel kunci layar.</string>
     <string name="t_272e98dde1">Ponsel ini tidak punya Face ID maupun kode sandi.</string>
+    <string name="t_339d955a3c">Arahkan kamera ke lantai bermotif atau ke perabot</string>
     <string name="t_4dd78d95e6">Bidik</string>
     <string name="t_c96769af49">Ketuk “+” untuk membuat yang pertama.</string>
     <string name="t_730cde94e5">Ketuk “?” di sebelahnya — kami jelaskan dengan kata sederhana. Semua kata ada di glosarium di pengaturan.</string>
@@ -298,9 +314,14 @@
     <string name="t_da731c70ca">Ruangan baru</string>
     <string name="t_87b55f8287">Ruangan baru…</string>
     <string name="t_4a30361774">Perlu iPhone dengan sensor LiDAR — model Pro mulai iPhone 12 Pro.</string>
+    <string name="t_7283f54f30">Perlu kamera</string>
+    <string name="t_ba43c393fc">Perlu Layanan Google Play untuk AR</string>
     <string name="t_b9c9ff652d">Tentang</string>
+    <string name="t_7bee71b043">Perbarui Layanan Google Play untuk AR</string>
+    <string name="t_c2f668e54f">Perbarui</string>
     <string name="t_3a3478672d">Kelilingi tanaman dengan ponsel — Anda akan mendapat salinan 3D-nya yang persis. Pengambilan gambar butuh beberapa menit, penyusunan model beberapa menit lagi; semua di ponsel.</string>
     <string name="t_bc8d2377f1">Salinan 3D tanaman untuk AR. Model jenis-jenis tanaman sudah ada di aplikasi, dan model Anda sendiri bisa dibayangkan dari foto atau dipindai — tombol “Model” di layar tanaman.</string>
+    <string name="t_7eb02aa630">Salinan 3D tanaman untuk AR. Model spesies sudah ada di aplikasi, dan model Anda sendiri bisa dirancang dari foto — tombol “Model” di layar tanaman.</string>
     <string name="t_4b919d0c3d">Biasanya untuk spesies ini: %s</string>
     <string name="t_00495efa90">Biasanya saat %s air di tanah</string>
     <string name="t_9bc6b67c85">Satu putaran adalah satu jarak siram. Orbit dekat milik yang cepat kering, orbit jauh milik yang sabar.</string>
@@ -380,6 +401,7 @@
     <string name="t_0455b2eeff">Menampilkan %1$d dari %2$d: lebih banyak akan terlalu berat untuk ponsel</string>
     <string name="t_387af5ff90">Tampilkan petunjuk lagi</string>
     <string name="t_ca645a26b9">Putar roda — di bawahnya terlihat bagaimana jarak siram baru tampil di kartu.</string>
+    <string name="t_51b8f05bf7">Kolom pencarian ada di atas. Mencari berdasarkan nama panggilan, spesies, dan catatan.</string>
     <string name="t_17c7b943fc">Kolom pencarian ada di bawah, dekat bar tab. Mencari berdasarkan nama panggilan, spesies, dan catatan.</string>
     <string name="t_cd1de7bdc3">Siram semuanya sekaligus dan kirim catatan ke tetangga.</string>
     <string name="t_c767922d35">Siram tanaman, dan di sini Anda akan melihat berapa banyak air di tanah saat itu.</string>
@@ -416,6 +438,7 @@
     <string name="t_3ca46e3e76">Setelah menyiram, gelombang berwarna melintasi pola — tanda penyiraman sudah tercatat.</string>
     <string name="t_e101868e98">Siraman terakhir</string>
     <string name="t_d72166f389">Lihat dalam AR</string>
+    <string name="t_22f978c185">Lihat tanaman di ruangan Anda, buatkan model sendiri dari foto, atau ubah nama panggilan, spesies, dan jarak penyiraman.</string>
     <string name="t_f945f5f017">Lihat tanaman di ruangan Anda, buatkan model sendiri — dari foto atau pindaian — atau ubah nama, jenis, dan jarak penyiraman.</string>
     <string name="t_8845f9ee9d">Letakkan</string>
     <string name="t_39a52fa645">Letakkan kebun</string>
@@ -453,6 +476,7 @@
         <item quantity="other">Setiap %d bulan</item>
     </plurals>
     <string name="t_9caa86d668">Tiap berapa hari tanaman disiram — kira-kira selama itu tanah mengering. Bisa diubah di pengaturan tanaman.</string>
+    <string name="t_7882f56b39">Izinkan kamera</string>
     <string name="t_cc687c1fa5">Bingkainya sudah melingkupi tanaman dan potnya? Kalau begitu mulai</string>
     <string name="t_0717b1b655">Atur</string>
     <string name="t_7ebd3688e2">Tanaman</string>
@@ -484,6 +508,7 @@
     <string name="t_cd59e4204b">Kebun terkunci</string>
     <string name="t_e3b46fe6dd">Kebun Anda seperti tata surya: tiap tanaman adalah planet, satu putaran adalah satu jarak siram. Saat mencapai gerbang di atas, saatnya menyiram.</string>
     <string name="t_5a05a6d3f9">Kebun hanya terbuka dengan Face ID atau kode sandi ponsel — orang lain tidak bisa mengintip.</string>
+    <string name="t_8401f09a45">Taman hanya terbuka dengan sidik jari, wajah, atau kunci layar ponsel Anda — orang lain tidak bisa mengintip.</string>
     <string name="t_2306927b56">Kebun sejak %s</string>
     <string name="t_928ada7e39">Kebun sudah diletakkan. Ketuk tanaman untuk menyiramnya.</string>
     <string name="t_e4d56c1f85">Tukang kebun</string>
@@ -502,6 +527,7 @@
     <string name="t_013255575f">Hari ini tidak ada yang perlu disiram.</string>
     <string name="t_618a6abf44">Hari ini, %s</string>
     <string name="t_88be20fd06">Sekarang</string>
+    <string name="t_ad8df7482b">Layanan Google Play untuk AR tidak berjalan di ponsel ini. Semua fitur lain di Sprout berfungsi seperti biasa.</string>
     <string name="t_b3c4b1be56">Jaringan</string>
     <string name="t_a872210c83">Kekuatan getaran</string>
     <string name="t_04954ca725">Biru</string>
@@ -524,12 +550,14 @@
     </plurals>
     <string name="t_4a40d86849">Penyiraman berikutnya: besok</string>
     <string name="t_b0f07c6bde">Penyiraman berikutnya: hari ini</string>
+    <string name="t_cef8f4a582">Terlalu gelap — nyalakan lampu</string>
     <string name="t_6f8ca5c940">Glosarium</string>
     <string name="t_214438003b">Sedang melihat foto…</string>
     <string name="t_6fb5cb3976">Terbaru dulu</string>
     <string name="t_3189602bf1">Terkering dulu</string>
     <string name="t_4ff6829db6">Salju</string>
     <string name="t_1b494791c5">Tidak ada foto</string>
+    <string name="t_2cb357366d">Foto tanaman dikenali di ponsel itu sendiri — gambar tidak dikirim ke mana pun.</string>
     <string name="t_9e2d4d618a">Foto</string>
     <string name="t_d303471890">Fotonya buram — ambil yang lebih tajam.</string>
     <string name="t_bee88a5c8c">Fotonya terlalu terang — ambil tanpa sinar matahari langsung.</string>
@@ -554,6 +582,7 @@
     <string name="t_8335506cd9">Paling kering: %s.</string>
     <string name="t_31386bfdb5">Foto tanamannya — ponsel akan mencoba mengenali jenisnya.</string>
     <string name="t_2da75ff638">Skor per %s. Diperbarui saat temanmu mengirim kodenya lagi.</string>
+    <string name="t_d9467398b8">Ini terjadi saat aplikasi lain memakai kamera. Coba lagi.</string>
     <string name="t_109ff6015e">Sandal</string>
     <string name="t_ba89e87d7f">Ponsel akan mengenali tanaman di foto dan membayangkan modelnya: warna daun, bunga, dan pot, kerapatan dan tinggi. Semua dihitung di ponsel, tanpa internet, dalam beberapa detik.</string>
     <string name="t_c9b9affc8d">Dikenali: %1$s — yakin %2$d%%. Perbaiki kalau salah.</string>
@@ -583,8 +612,10 @@
     <string name="t_8b19591d8a">Pola mengikuti kemiringan</string>
     <string name="t_1cc281e997">Pola latar bergeser sedikit saat kamu memiringkan ponsel — seolah berada lebih dalam dari layar.</string>
     <string name="t_c8f3f390c2">Adas</string>
+    <string name="t_ce88d35b18">Pasang</string>
     <string name="t_5373dc43a3">Perawatan</string>
     <string name="t_ddc1a36266">Perhitungkan musim</string>
+    <string name="t_8a4653acae">File taman masuk ke cadangan Android — bersama data aplikasi lain, sesuai aturan Google.</string>
     <string name="t_8041745a9b">File kebun masuk ke cadangan iPhone — bersama data lainnya, sesuai aturan Apple.</string>
     <string name="t_92c396e199">Violet Afrika</string>
     <string name="t_99c7c8c714">Bentuk</string>
@@ -605,6 +636,7 @@
     <string name="t_84b22ed2aa">Warna</string>
     <string name="t_7ceb6b0f96">Warna gelombang</string>
     <string name="t_4d7209b9c1">Warna pola</string>
+    <string name="t_8c038b5d5a">Warna wallpaper</string>
     <string name="t_2a6d22be37">Warna, kerapatan, dan tinggi — dari foto.</string>
     <string name="t_ac08f8dec7">Bunga</string>
     <string name="t_4924d77144">Angka</string>
@@ -621,11 +653,14 @@
     <string name="t_febbc7512c">Untuk membuka kebunmu</string>
     <string name="t_e250a6df76">Tali sepatu</string>
     <string name="t_723a09005e">Mantel bulu</string>
+    <string name="t_68656a952e">Versi ini terlalu lama untuk Sprout.</string>
     <string name="t_b3bf1682b8">Ini kebunmu</string>
     <string name="t_d342de941a">Ini kodemu sendiri: kamu sudah ada di tabel.</string>
     <string name="t_3a925bfac5">iPhone ini tidak bisa memindai: perlu LiDAR.</string>
+    <string name="t_8536fc8767">Ponsel ini tidak mendukung AR</string>
     <string name="t_c7e64e73eb">Echeveria</string>
     <string name="t_77789a486b">Yuka</string>
+    <string name="t_ed3f0e507a">Bahasa</string>
     <string name="t_3f264c02f1">tepat waktu %s</string>
     <string name="t_cc86ef708c">kamu</string>
     <string name="t_2e06422eda">tanah kering</string>
@@ -651,4 +686,11 @@
     <string name="t_d8e6f5387c">lebih dari sekali per menit</string>
     <string name="t_d959d34275">beruntun %d</string>
     <string name="t_34eb9e66db">• %1$s (%2$s, “%3$s”) — %4$s</string>
+    <string name="shortcut_add">Tambah</string>
+    <string name="shortcut_search">Cari</string>
+    <string name="shortcut_stats">Statistik</string>
+    <string name="shortcut_thirst">Siapa yang disiram</string>
+    <string name="tile_label">Siapa yang disiram</string>
+    <string name="widget_description">Tanaman terkering dan tombol “Siram”.</string>
+    <string name="widget_name">Siapa yang disiram</string>
 </resources>

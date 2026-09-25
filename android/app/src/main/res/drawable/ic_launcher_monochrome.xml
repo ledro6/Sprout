@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Значок для тематических значков Android 13+: одним цветом. Собрано из кривых логотипа (SproutShapes), те же, что на iPhone. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <group
+        android:translateX="37.228"
+        android:translateY="26.000"
+        android:scaleX="0.40724"
+        android:scaleY="0.40724">
+        <path
+            android:pathData="M28.6188,70.2674 L3.7228,49.3268 L3.7228,85.8565 L28.6188,108.8912 Z"
+            android:strokeColor="#FF000000"
+            android:strokeWidth="7.4455"
+            android:strokeLineJoin="miter"
+            android:strokeLineCap="butt"
+            android:fillColor="#00000000" />
+        <path
+            android:pathData="M28.6188,123.5496 L28.6188,108.8912"
+            android:strokeColor="#FF000000"
+            android:strokeWidth="7.4455"
+            android:strokeLineJoin="miter"
+            android:strokeLineCap="butt"
+            android:fillColor="#00000000" />
+        <path
+            android:pathData="M41.4157,63.5198 L41.4157,115.4059 L78.6435,85.6238 L78.6435,32.1089 Z"
+            android:strokeColor="#FF000000"
+            android:strokeWidth="7.4455"
+            android:strokeLineJoin="miter"
+            android:strokeLineCap="butt"
+            android:fillColor="#00000000" />
+        <path
+            android:pathData="M41.4157,115.4059 L41.4157,137.5099"
+            android:strokeColor="#FF000000"
+            android:strokeWidth="7.4455"
+            android:strokeLineJoin="miter"
+            android:strokeLineCap="butt"
+            android:fillColor="#00000000" />
+        <path
+            android:pathData="M43.5097,13.9604 L27.2227,27.2228 L27.2227,50.0248 L30.7127,54.2129 L43.5097,43.2772 Z"
+            android:strokeColor="#FF000000"
+            android:strokeWidth="7.4455"
+            android:strokeLineJoin="miter"
+            android:strokeLineCap="butt"
+            android:fillColor="#00000000" />
+        <path
+            android:pathData="M5.8169,39.9268 L12.3317,26.5248 L19.3118,39.9268 L12.3317,46.0694 Z"
+            android:fillColor="#FF000000" />
+        <path
+            android:pathData="M51.4207,23.2939 L62.8779,0.0000 L75.1535,23.2939 L62.8779,33.9703 Z"
+            android:fillColor="#FF000000" />
+    </group>
+</vector>

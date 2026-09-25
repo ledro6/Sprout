@@ -27,9 +27,13 @@
     <string name="t_197eb092cd">%d%%</string>
     <string name="t_45b8ac5695" formatted="false">20–40% de água</string>
     <string name="t_3d6c2541b9" formatted="false">40% de água ou mais</string>
+    <string name="t_5f5e0de553">A RA não iniciou</string>
+    <string name="t_957c85ce41">A RA desenha a planta sobre o que a câmera vê. As imagens não vão para lugar nenhum.</string>
     <string name="t_14c72c397f">RA — realidade aumentada</string>
     <string name="t_484d12fea8">RA é realidade aumentada: a câmera mostra o seu cômodo com uma planta em 3D. Os modelos das espécies já vêm no app, e o seu você pode imaginar pela foto ou escanear.</string>
+    <string name="t_5c4b538eba">RA é realidade aumentada: a câmera mostra o seu cômodo com uma planta em 3D dentro. Os modelos das espécies já vêm no app, e o seu próprio você pode imaginar a partir de uma foto.</string>
     <string name="t_809c431aa4">RA, modelo e ajustes</string>
+    <string name="t_acec2ec7d0">Android %s ou posterior</string>
     <string name="t_302a05a1ac">O Sprout não coleta nenhuma informação sobre você e não envia nada para lugar nenhum.</string>
     <string name="t_9585992548">iOS 26 ou posterior</string>
     <string name="t_c65910cd34">“%1$s” e mais %2$s precisam de água</string>
@@ -68,6 +72,7 @@
     <string name="t_a8bcae2d9a">Matilde</string>
     <string name="t_f79b25b05d">Seu jardim como um sistema solar: as plantas giram em suas órbitas de rega. Dê uma olhada — dá até para ouvir um mês.</string>
     <string name="t_19ff316e6f">Arraste o controle — o jardim avança dias, como se você regasse na hora certa.</string>
+    <string name="t_ddf5bf682d">Mova o celular mais devagar</string>
     <string name="t_3f52bd53a9">Volto</string>
     <string name="t_c7aaa96778">Desfazer</string>
     <string name="t_f10d238768">Voltar ao modelo pronto</string>
@@ -94,6 +99,7 @@
     <string name="t_2b5f40f213">Todas as regas desta planta. Toque e segure um registro errado para apagá-lo.</string>
     <string name="t_2f07cfc9c2">Todas regadas</string>
     <string name="t_3b5143902e">Total</string>
+    <string name="t_eeb8caeb95">Colar</string>
     <string name="t_c12ee51dd9">Tudo</string>
     <string name="t_1059a1d77d">Ontem, %s</string>
     <string name="t_fe4b0c80f0">Escolher</string>
@@ -113,6 +119,7 @@
     <string name="t_68ae695380">Sensor de movimento</string>
     <string name="t_827d544645">Datas</string>
     <string name="t_0bcd158c3d">Dois dedos para girar, pinça para o tamanho</string>
+    <string name="t_9978ac34b2">Ações</string>
     <string name="t_b6ef08401f">Dia</string>
     <string name="t_abbebfc85b">Um dia em que três ou mais plantas vão pedir água ao mesmo tempo — prático para regar todas de uma vez.</string>
     <string name="t_e0c0ceee56">Arvorezinha</string>
@@ -133,6 +140,7 @@
     <string name="t_fdf0f98738">Se você rega antes da hora, o app percebe e sugere encurtar o intervalo.</string>
     <string name="t_19f25d5784">Mais</string>
     <string name="t_7db203bdda">Mais uma volta</string>
+    <string name="t_bbe42739db">Tentar de novo</string>
     <string name="t_0fb6d09e78">Pedem água</string>
     <string name="t_ef28cc1496">No período</string>
     <string name="t_70efc9651a">Nenhuma rega neste período.</string>
@@ -173,6 +181,7 @@
     <string name="t_b335f763ea">Todas as plantas e todo o histórico de regas vão sumir. Não será possível desfazer.</string>
     <string name="t_53d55db39f">Resumo</string>
     <string name="t_779e8b3e28">Ative-as nos Ajustes do celular: Sprout → Notificações.</string>
+    <string name="t_9c47ca16c4">Eles vêm do Google Play, de graça. Depois disso, a RA abre na hora.</string>
     <string name="t_46c7be08dd">Escritório</string>
     <string name="t_0112d57d0b">Recortar</string>
     <string name="t_01b9b803e7">Recorte da foto</string>
@@ -181,6 +190,7 @@
     <string name="t_223428bd3c">Cada ponto é uma rega. Quanto mais alto, mais água ainda havia na terra.</string>
     <string name="t_e1439f1755">Cada rega é uma nota: os planetas próximos cantam mais agudo.</string>
     <string name="t_f0a22d9d1a">Igual ao sistema</string>
+    <string name="t_087f6705ed">Igual ao celular</string>
     <string name="t_696586f496">Qual é o seu nome?</string>
     <string name="t_7013b69dab">Como usar</string>
     <string name="t_d4066ba693">Como a planta se chama agora?</string>
@@ -189,6 +199,9 @@
     <string name="t_7b105a68e6">Kalanchoe</string>
     <string name="t_60f6304f34">Calatéia</string>
     <string name="t_fe0790d4e2">Calendário de regas</string>
+    <string name="t_f2d0f5cc41">A câmera está sendo usada por outro app</string>
+    <string name="t_37620de860">A câmera está bloqueada nas configurações do celular. Permita-a lá e volte.</string>
+    <string name="t_601947a61c">Câmera e fotos</string>
     <string name="t_d8e43f5730">A câmera mostra o seu cômodo, e o app coloca nele uma planta em 3D. Dá para girar, aumentar e regar com um regador.</string>
     <string name="t_8671ea9e33">Gota</string>
     <string name="t_85618413ed">Cada quadrado é um dia dos últimos quatro meses: quanto mais forte a cor, mais regas. Toque num quadrado para ver a data.</string>
@@ -199,6 +212,7 @@
     <string name="t_eb1aa42a32">Apelidos das plantas, espécies, umidade, datas — tudo o que você digita fica num arquivo dentro do app, no próprio celular. Os ajustes também. Nada disso sai do aparelho.</string>
     <string name="t_1c8e21179b">Botões</string>
     <string name="t_49cdfd9292">Botões ao redor</string>
+    <string name="t_2ecb4451da">Botões e cartões nas cores do seu plano de fundo.</string>
     <string name="t_725347e425">Quando</string>
     <string name="t_512bafe5b5">Quando a umidade ficar abaixo de</string>
     <string name="t_72e18d38d9">Quando você rega</string>
@@ -256,7 +270,9 @@
     <string name="t_18f71e9762">Música das esferas</string>
     <string name="t_0b854eb300">Bichano</string>
     <string name="t_7a7164238c">Hortelã</string>
+    <string name="t_06ec0f34bf">Este celular não tem bloqueio de tela configurado.</string>
     <string name="t_272e98dde1">Este celular não tem Face ID nem código.</string>
+    <string name="t_339d955a3c">Aponte a câmera para um chão com estampa ou para um móvel</string>
     <string name="t_4dd78d95e6">Mirar</string>
     <string name="t_c96769af49">Toque em “+” para criar o primeiro.</string>
     <string name="t_730cde94e5">Toque no “?” ao lado e explicamos em palavras simples. Todas as palavras estão no glossário dos ajustes.</string>
@@ -302,9 +318,14 @@
     <string name="t_da731c70ca">Novo cômodo</string>
     <string name="t_87b55f8287">Novo cômodo…</string>
     <string name="t_4a30361774">Precisa de um iPhone com sensor LiDAR: modelos Pro a partir do iPhone 12 Pro.</string>
+    <string name="t_7283f54f30">Câmera necessária</string>
+    <string name="t_ba43c393fc">Serviços do Google Play para RA necessários</string>
     <string name="t_b9c9ff652d">Sobre</string>
+    <string name="t_7bee71b043">Atualize os Serviços do Google Play para RA</string>
+    <string name="t_c2f668e54f">Atualizar</string>
     <string name="t_3a3478672d">Dê a volta na planta com o celular e você terá uma cópia 3D exata dela. A captura leva uns dois minutos e a montagem do modelo, mais alguns; tudo no celular.</string>
     <string name="t_bc8d2377f1">Uma cópia 3D da planta para RA. Os modelos das espécies já vêm no app, e o seu você pode imaginar pela foto ou escanear — botão “Modelo” na tela da planta.</string>
+    <string name="t_7eb02aa630">Uma cópia 3D da planta para RA. Os modelos das espécies já vêm no app, e o seu próprio você pode imaginar a partir de uma foto — o botão “Modelo” na tela da planta.</string>
     <string name="t_4b919d0c3d">O comum para a espécie: %s</string>
     <string name="t_00495efa90">Geralmente com %s de água na terra</string>
     <string name="t_9bc6b67c85">Uma órbita é um intervalo de rega. As órbitas próximas são das que secam rápido; as distantes, das pacientes.</string>
@@ -389,6 +410,7 @@
     <string name="t_0455b2eeff">Mostrando %1$d de %2$d: mais seria pesado para o celular</string>
     <string name="t_387af5ff90">Mostrar dicas de novo</string>
     <string name="t_ca645a26b9">Gire a roda — abaixo você vê como o novo intervalo fica no cartão.</string>
+    <string name="t_51b8f05bf7">O campo de busca fica no topo. Ele procura por apelidos, espécies e notas.</string>
     <string name="t_17c7b943fc">O campo de busca fica embaixo, junto à barra de abas. Busca por apelido, espécie e notas.</string>
     <string name="t_cd1de7bdc3">Regue todas de uma vez e mande um recado ao vizinho.</string>
     <string name="t_c767922d35">Regue uma planta e aqui você verá quanta água havia na terra naquele momento.</string>
@@ -426,6 +448,7 @@
     <string name="t_3ca46e3e76">Depois da rega, uma onda colorida percorre o padrão — assim você sabe que a rega foi contada.</string>
     <string name="t_e101868e98">Última rega</string>
     <string name="t_d72166f389">Ver em RA</string>
+    <string name="t_22f978c185">Veja a planta no seu cômodo, dê a ela um modelo próprio a partir de uma foto ou mude o apelido, a espécie e o intervalo de rega.</string>
     <string name="t_f945f5f017">Veja a planta no seu cômodo, dê a ela um modelo próprio — pela foto ou por escaneamento — ou mude o nome, a espécie e o intervalo de rega.</string>
     <string name="t_8845f9ee9d">Colocar</string>
     <string name="t_39a52fa645">Colocar jardim</string>
@@ -465,6 +488,7 @@
         <item quantity="other">A cada %d meses</item>
     </plurals>
     <string name="t_9caa86d668">De quantos em quantos dias a planta é regada — mais ou menos o tempo que a terra leva para secar. Dá para mudar nos ajustes da planta.</string>
+    <string name="t_7882f56b39">Permitir câmera</string>
     <string name="t_cc687c1fa5">A moldura envolve a planta e o vaso? Então comece</string>
     <string name="t_0717b1b655">Reorganizar</string>
     <string name="t_7ebd3688e2">Planta</string>
@@ -496,6 +520,7 @@
     <string name="t_cd59e4204b">Jardim bloqueado</string>
     <string name="t_e3b46fe6dd">Seu jardim como um sistema solar: cada planta é um planeta e uma órbita é um intervalo de rega. Ao chegar ao portão no alto, é hora de regar.</string>
     <string name="t_5a05a6d3f9">O jardim só abre com o Face ID ou o código do celular — ninguém mais consegue espiar.</string>
+    <string name="t_8401f09a45">O jardim só abre com a sua digital, o seu rosto ou o bloqueio de tela do celular — ninguém mais bisbilhota.</string>
     <string name="t_2306927b56">Jardim desde %s</string>
     <string name="t_928ada7e39">O jardim está no lugar. Toque numa planta para regá-la.</string>
     <string name="t_e4d56c1f85">Jardineiro</string>
@@ -514,6 +539,7 @@
     <string name="t_013255575f">Hoje nenhuma planta precisa de rega.</string>
     <string name="t_618a6abf44">Hoje, %s</string>
     <string name="t_88be20fd06">Agora</string>
+    <string name="t_ad8df7482b">Os Serviços do Google Play para RA não funcionam nele. Todo o resto do Sprout funciona normalmente.</string>
     <string name="t_b3c4b1be56">Rede</string>
     <string name="t_a872210c83">Força da vibração</string>
     <string name="t_04954ca725">Azul</string>
@@ -537,12 +563,14 @@
     </plurals>
     <string name="t_4a40d86849">Próxima rega: amanhã</string>
     <string name="t_b0f07c6bde">Próxima rega: hoje</string>
+    <string name="t_cef8f4a582">Escuro demais — acenda a luz</string>
     <string name="t_6f8ca5c940">Glossário</string>
     <string name="t_214438003b">Olhando a foto…</string>
     <string name="t_6fb5cb3976">Mais novas primeiro</string>
     <string name="t_3189602bf1">Mais secas primeiro</string>
     <string name="t_4ff6829db6">Neve</string>
     <string name="t_1b494791c5">Sem foto</string>
+    <string name="t_2cb357366d">As fotos das plantas são reconhecidas no próprio celular — as imagens não são enviadas para lugar nenhum.</string>
     <string name="t_9e2d4d618a">Foto</string>
     <string name="t_d303471890">A foto está borrada: tire uma mais nítida.</string>
     <string name="t_bee88a5c8c">A foto está estourada: tire longe do sol direto.</string>
@@ -567,6 +595,7 @@
     <string name="t_8335506cd9">A mais seca: %s.</string>
     <string name="t_31386bfdb5">Fotografe a planta: o celular vai tentar reconhecer a espécie.</string>
     <string name="t_2da75ff638">Pontuação de %s. Atualiza quando seu amigo enviar o código de novo.</string>
+    <string name="t_d9467398b8">Isso acontece quando outro app está usando a câmera. Tente de novo.</string>
     <string name="t_109ff6015e">Chinelo</string>
     <string name="t_ba89e87d7f">O celular vai reconhecer a planta na foto e imaginar o modelo dela: cores das folhas, das flores e do vaso, densidade e altura. Tudo é calculado no celular, sem internet, em poucos segundos.</string>
     <string name="t_c9b9affc8d">Reconhecida: %1$s — %2$d%% de certeza. Corrija se não for.</string>
@@ -596,8 +625,10 @@
     <string name="t_8b19591d8a">Padrão segue a inclinação</string>
     <string name="t_1cc281e997">O padrão do fundo se desloca um pouco quando você inclina o celular — como se estivesse mais fundo que a tela.</string>
     <string name="t_c8f3f390c2">Endro</string>
+    <string name="t_ce88d35b18">Instalar</string>
     <string name="t_5373dc43a3">Cuidados</string>
     <string name="t_ddc1a36266">Considerar a estação do ano</string>
+    <string name="t_8a4653acae">O arquivo do jardim entra no backup do Android — junto com os outros dados dos apps, pelas regras do Google.</string>
     <string name="t_8041745a9b">O arquivo do jardim vai para o backup do iPhone — junto com o resto dos seus dados, pelas regras da Apple.</string>
     <string name="t_92c396e199">Violeta-africana</string>
     <string name="t_99c7c8c714">Figuras</string>
@@ -618,6 +649,7 @@
     <string name="t_84b22ed2aa">Cor</string>
     <string name="t_7ceb6b0f96">Cor da onda</string>
     <string name="t_4d7209b9c1">Cor do padrão</string>
+    <string name="t_8c038b5d5a">Cores do plano de fundo</string>
     <string name="t_2a6d22be37">Cores, densidade e altura, tiradas da foto.</string>
     <string name="t_ac08f8dec7">Flor</string>
     <string name="t_4924d77144">Números</string>
@@ -634,11 +666,14 @@
     <string name="t_febbc7512c">Para abrir seu jardim</string>
     <string name="t_e250a6df76">Cadarço</string>
     <string name="t_723a09005e">Casaco</string>
+    <string name="t_68656a952e">Esta versão é antiga demais para o Sprout.</string>
     <string name="t_b3bf1682b8">Este é o seu jardim</string>
     <string name="t_d342de941a">Este é o seu próprio código: você já está na tabela.</string>
     <string name="t_3a925bfac5">Este iPhone não escaneia: precisa de LiDAR.</string>
+    <string name="t_8536fc8767">Este celular não é compatível com RA</string>
     <string name="t_c7e64e73eb">Echeveria</string>
     <string name="t_77789a486b">Iúca</string>
+    <string name="t_ed3f0e507a">Idioma</string>
     <string name="t_3f264c02f1">na hora certa %s</string>
     <string name="t_cc86ef708c">você</string>
     <string name="t_2e06422eda">terra seca</string>
@@ -667,4 +702,11 @@
     <string name="t_d8e6f5387c">mais de uma vez por minuto</string>
     <string name="t_d959d34275">sequência %d</string>
     <string name="t_34eb9e66db">• %1$s (%2$s, “%3$s”) — %4$s</string>
+    <string name="shortcut_add">Adicionar</string>
+    <string name="shortcut_search">Buscar</string>
+    <string name="shortcut_stats">Estatísticas</string>
+    <string name="shortcut_thirst">Quem regar</string>
+    <string name="tile_label">Quem regar</string>
+    <string name="widget_description">As plantas mais secas e um botão “Regar”.</string>
+    <string name="widget_name">Quem regar</string>
 </resources>

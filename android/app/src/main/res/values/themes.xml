@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+      Окно приложения. Всё остальное рисует Compose (Material 3); тема окна —
+      для полос системы, фона до первого кадра и системных окон AppCompat.
+    -->
+    <style name="Theme.Sprout" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/sprout_accent</item>
+        <item name="android:windowBackground">@color/sprout_window</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+    </style>
+
+    <!-- Системная заставка (Android 12+ и библиотека для старых): цвет приветствия и логотип. -->
+    <style name="Theme.Sprout.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/sprout_welcome</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/splash_logo</item>
+        <item name="postSplashScreenTheme">@style/Theme.Sprout</item>
+    </style>
+</resources>

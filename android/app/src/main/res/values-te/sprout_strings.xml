@@ -27,9 +27,13 @@
     <string name="t_197eb092cd">%d%%</string>
     <string name="t_45b8ac5695" formatted="false">20–40% నీరు</string>
     <string name="t_3d6c2541b9" formatted="false">40% లేదా అంతకంటే ఎక్కువ నీరు</string>
+    <string name="t_5f5e0de553">AR ప్రారంభం కాలేదు</string>
+    <string name="t_957c85ce41">కెమెరా చూసే దాని మీద AR మొక్కను గీస్తుంది. ఫ్రేమ్‌లు ఎక్కడికీ వెళ్లవు.</string>
     <string name="t_14c72c397f">AR — ఆగ్మెంటెడ్ రియాలిటీ</string>
     <string name="t_484d12fea8">AR అంటే ఆగ్మెంటెడ్ రియాలిటీ: కెమెరా మీ గదిని, అందులో ఒక 3D మొక్కను చూపిస్తుంది. జాతుల మోడల్‌లు యాప్‌లోనే ఉన్నాయి; మీ సొంత మోడల్‌ను ఫోటో నుండి ఊహించవచ్చు లేదా స్కాన్ చేయవచ్చు.</string>
+    <string name="t_5c4b538eba">AR అంటే ఆగ్మెంటెడ్ రియాలిటీ: కెమెరా మీ గదిని, అందులో ఒక త్రిమితీయ మొక్కను చూపిస్తుంది. జాతుల మోడల్‌లు యాప్‌లోనే ఉన్నాయి, మీ సొంత మోడల్‌ను ఫోటో నుండి రూపొందించవచ్చు.</string>
     <string name="t_809c431aa4">AR, మోడల్, సెట్టింగ్‌లు</string>
+    <string name="t_acec2ec7d0">Android %s లేదా తర్వాతిది</string>
     <string name="t_302a05a1ac">Sprout మీ గురించి ఎలాంటి సమాచారాన్నీ సేకరించదు, ఎక్కడికీ పంపదు.</string>
     <string name="t_9585992548">iOS 26 లేదా తర్వాతిది</string>
     <string name="t_c65910cd34">“%1$s” మరియు మరో %2$sకి నీళ్లు కావాలి</string>
@@ -68,6 +72,7 @@
     <string name="t_a8bcae2d9a">మటిల్డా</string>
     <string name="t_f79b25b05d">మీ తోట సౌర కుటుంబంలా: మొక్కలు తమ నీటి కక్ష్యల్లో తిరుగుతాయి. ఒకసారి చూడండి — ఒక నెలను వినవచ్చు కూడా.</string>
     <string name="t_19ff316e6f">స్లైడర్ లాగండి — మీరు సమయానికి నీళ్లు పోసినట్లుగా తోట కొన్ని రోజులు ముందుకు వెళ్తుంది.</string>
+    <string name="t_ddf5bf682d">ఫోన్‌ను ఇంకా నెమ్మదిగా కదిలించండి</string>
     <string name="t_3f52bd53a9">తిరిగి రావడం</string>
     <string name="t_c7aaa96778">రద్దు చేయి</string>
     <string name="t_f10d238768">సిద్ధమైన మోడల్‌కు తిరిగి</string>
@@ -94,6 +99,7 @@
     <string name="t_2b5f40f213">ఈ మొక్కకు పోసిన అన్ని నీళ్లు. తప్పు ఎంట్రీని ఎక్కువసేపు నొక్కి తొలగించండి.</string>
     <string name="t_2f07cfc9c2">అన్నింటికీ నీళ్లు పోశారు</string>
     <string name="t_3b5143902e">మొత్తం</string>
+    <string name="t_eeb8caeb95">అతికించు</string>
     <string name="t_c12ee51dd9">మొత్తం కాలం</string>
     <string name="t_1059a1d77d">నిన్న, %s</string>
     <string name="t_fe4b0c80f0">ఎంచుకో</string>
@@ -113,6 +119,7 @@
     <string name="t_68ae695380">చలన సెన్సార్</string>
     <string name="t_827d544645">తేదీలు</string>
     <string name="t_0bcd158c3d">రెండు వేళ్లతో తిప్పండి, పించ్‌తో పరిమాణం మార్చండి</string>
+    <string name="t_9978ac34b2">చర్యలు</string>
     <string name="t_b6ef08401f">రోజు</string>
     <string name="t_abbebfc85b">మూడు లేదా అంతకంటే ఎక్కువ మొక్కలు ఒకేసారి నీళ్లు అడిగే రోజు — అన్నింటికీ ఒకేసారి పోయడం సులువు.</string>
     <string name="t_e0c0ceee56">చిన్న చెట్టు</string>
@@ -133,6 +140,7 @@
     <string name="t_fdf0f98738">మీరు గడువుకు ముందే నీళ్లు పోస్తే, యాప్ గమనించి విరామాన్ని తగ్గించమని సూచిస్తుంది.</string>
     <string name="t_19f25d5784">మరిన్ని</string>
     <string name="t_7db203bdda">ఇంకో చుట్టు</string>
+    <string name="t_bbe42739db">మళ్లీ ప్రయత్నించండి</string>
     <string name="t_0fb6d09e78">నీళ్లు కావాలి</string>
     <string name="t_ef28cc1496">వ్యవధిలో</string>
     <string name="t_70efc9651a">ఈ వ్యవధిలో నీళ్లు పోయలేదు.</string>
@@ -173,6 +181,7 @@
     <string name="t_b335f763ea">అన్ని మొక్కలు, నీళ్ల రికార్డు మొత్తం పోతాయి. దీన్ని వెనక్కి తీసుకురాలేరు.</string>
     <string name="t_53d55db39f">సారాంశం</string>
     <string name="t_779e8b3e28">ఫోన్ సెట్టింగ్‌లలో ఆన్ చేయండి: Sprout → నోటిఫికేషన్‌లు.</string>
+    <string name="t_9c47ca16c4">వీటిని Google Play నుండి ఉచితంగా ఇన్‌స్టాల్ చేస్తారు. ఆ తర్వాత AR వెంటనే తెరుచుకుంటుంది.</string>
     <string name="t_46c7be08dd">చదువుకునే గది</string>
     <string name="t_0112d57d0b">క్రాప్</string>
     <string name="t_01b9b803e7">ఫోటో క్రాప్</string>
@@ -181,6 +190,7 @@
     <string name="t_223428bd3c">ప్రతి చుక్క ఒకసారి నీళ్లు పోయడం. చుక్క ఎంత ఎత్తులో ఉంటే మట్టిలో అంత ఎక్కువ నీరు మిగిలి ఉంది.</string>
     <string name="t_e1439f1755">ప్రతిసారి నీళ్లు పోయడం ఒక స్వరం: దగ్గరి గ్రహాలు ఎత్తైన స్వరంలో పాడతాయి.</string>
     <string name="t_f0a22d9d1a">సిస్టమ్ లాగా</string>
+    <string name="t_087f6705ed">ఫోన్‌లో లాగే</string>
     <string name="t_696586f496">మీ పేరు ఏమిటి?</string>
     <string name="t_7013b69dab">ఎలా ఉపయోగించాలి</string>
     <string name="t_d4066ba693">ఇప్పుడు మొక్క పేరు ఏమిటి?</string>
@@ -189,6 +199,9 @@
     <string name="t_7b105a68e6">కలాంచో</string>
     <string name="t_60f6304f34">కలాథియా</string>
     <string name="t_fe0790d4e2">నీళ్ల క్యాలెండర్</string>
+    <string name="t_f2d0f5cc41">కెమెరాను వేరే యాప్ ఉపయోగిస్తోంది</string>
+    <string name="t_37620de860">ఫోన్ సెట్టింగ్‌లలో కెమెరా నిషేధించబడింది. అక్కడ అనుమతించి తిరిగి రండి.</string>
+    <string name="t_601947a61c">కెమెరా మరియు ఫోటోలు</string>
     <string name="t_d8e43f5730">కెమెరా మీ గదిని చూపిస్తుంది, యాప్ అందులో ఒక త్రిమితీయ మొక్కను ఉంచుతుంది. మీరు దాన్ని తిప్పవచ్చు, పెద్దది చేయవచ్చు, జారీతో నీళ్లు పోయవచ్చు.</string>
     <string name="t_8671ea9e33">బిందువు</string>
     <string name="t_85618413ed">ప్రతి చతురస్రం గత నాలుగు నెలల్లో ఒక రోజు: రంగు ఎంత ముదురైతే అన్ని ఎక్కువ నీళ్లు. తేదీ చూడటానికి చతురస్రంపై నొక్కండి.</string>
@@ -199,6 +212,7 @@
     <string name="t_eb1aa42a32">మొక్కల ముద్దుపేర్లు, జాతులు, తేమ, తేదీలు — మీరు నమోదు చేసేవన్నీ యాప్ లోపలి ఫైల్‌లో, ఫోన్‌లోనే ఉంటాయి. సెట్టింగ్‌లు కూడా అక్కడే. వీటిలో ఏదీ పరికరాన్ని వదిలి వెళ్లదు.</string>
     <string name="t_1c8e21179b">బటన్‌లు</string>
     <string name="t_49cdfd9292">చుట్టూ ఉన్న బటన్లు</string>
+    <string name="t_2ecb4451da">బటన్‌లు, కార్డ్‌లు ఫోన్ వాల్‌పేపర్ రంగుల్లో.</string>
     <string name="t_725347e425">ఎప్పుడు</string>
     <string name="t_512bafe5b5">తేమ దీని కంటే తగ్గినప్పుడు</string>
     <string name="t_72e18d38d9">మీరు ఎప్పుడు నీళ్లు పోస్తారు</string>
@@ -256,7 +270,9 @@
     <string name="t_18f71e9762">గోళాల సంగీతం</string>
     <string name="t_0b854eb300">మిన్ని</string>
     <string name="t_7a7164238c">పుదీనా</string>
+    <string name="t_06ec0f34bf">ఈ ఫోన్‌లో స్క్రీన్ లాక్ సెట్ చేయలేదు.</string>
     <string name="t_272e98dde1">ఈ ఫోన్‌లో Face ID గానీ పాస్‌కోడ్ గానీ లేదు.</string>
+    <string name="t_339d955a3c">కెమెరాను డిజైన్ ఉన్న నేల లేదా ఫర్నిచర్ వైపు తిప్పండి</string>
     <string name="t_4dd78d95e6">గురిపెట్టు</string>
     <string name="t_c96769af49">మొదటిదాన్ని సృష్టించడానికి “+” నొక్కండి.</string>
     <string name="t_730cde94e5">పక్కనే ఉన్న “?” పై ట్యాప్ చేయండి — సులభమైన మాటల్లో వివరిస్తాం. అన్ని పదాలు సెట్టింగ్‌లలోని పదకోశంలో ఉన్నాయి.</string>
@@ -302,9 +318,14 @@
     <string name="t_da731c70ca">కొత్త గది</string>
     <string name="t_87b55f8287">కొత్త గది…</string>
     <string name="t_4a30361774">LiDAR సెన్సార్ ఉన్న iPhone కావాలి — iPhone 12 Pro నుండి Pro మోడల్‌లు.</string>
+    <string name="t_7283f54f30">కెమెరా కావాలి</string>
+    <string name="t_ba43c393fc">AR కోసం Google Play సేవలు కావాలి</string>
     <string name="t_b9c9ff652d">గురించి</string>
+    <string name="t_7bee71b043">AR కోసం Google Play సేవలను అప్‌డేట్ చేయండి</string>
+    <string name="t_c2f668e54f">అప్‌డేట్ చేయి</string>
     <string name="t_3a3478672d">ఫోన్‌తో మొక్క చుట్టూ తిరగండి — దాని ఖచ్చితమైన 3D ప్రతి వస్తుంది. చిత్రీకరణకు కొన్ని నిమిషాలు, మోడల్ తయారీకి మరికొన్ని; అంతా ఫోన్‌లోనే.</string>
     <string name="t_bc8d2377f1">AR కోసం మొక్క 3D ప్రతి. జాతుల మోడల్‌లు యాప్‌లోనే ఉన్నాయి; మీ సొంత మోడల్‌ను ఫోటో నుండి ఊహించవచ్చు లేదా స్కాన్ చేయవచ్చు — మొక్క స్క్రీన్‌లో “మోడల్” బటన్.</string>
+    <string name="t_7eb02aa630">AR కోసం మొక్క యొక్క త్రిమితీయ ప్రతి. జాతుల మోడల్‌లు యాప్‌లోనే ఉన్నాయి, మీ సొంత మోడల్‌ను ఫోటో నుండి రూపొందించవచ్చు — మొక్క స్క్రీన్‌లోని “మోడల్” బటన్.</string>
     <string name="t_4b919d0c3d">ఈ జాతికి సాధారణంగా: %s</string>
     <string name="t_00495efa90">సాధారణంగా మట్టిలో %s నీరు ఉన్నప్పుడు</string>
     <string name="t_9bc6b67c85">ఒక చుట్టు ఒక నీళ్లు పోసే విరామం. దగ్గరి కక్ష్యలు త్వరగా ఎండే వాటివి, దూరపువి ఓపిక గలవాటివి.</string>
@@ -389,6 +410,7 @@
     <string name="t_0455b2eeff">%2$dలో %1$d చూపబడ్డాయి: ఇంకా ఎక్కువ అయితే ఫోన్‌కు భారం</string>
     <string name="t_387af5ff90">సూచనలను మళ్లీ చూపించు</string>
     <string name="t_ca645a26b9">చక్రం తిప్పండి — కొత్త విరామం కార్డుపై ఎలా కనిపిస్తుందో కింద కనిపిస్తుంది.</string>
+    <string name="t_51b8f05bf7">శోధన ఫీల్డ్ పైన ఉంది. ఇది ముద్దుపేరు, జాతి, గమనికలలో వెతుకుతుంది.</string>
     <string name="t_17c7b943fc">శోధన ఫీల్డ్ కింద, ట్యాబ్ బార్ దగ్గర ఉంది. ముద్దుపేరు, జాతి, నోట్స్‌లో వెతుకుతుంది.</string>
     <string name="t_cd1de7bdc3">అన్నింటికీ ఒకేసారి నీళ్లు పోసి పొరుగువారికి చీటీ పంపండి.</string>
     <string name="t_c767922d35">ఒక మొక్కకు నీళ్లు పోయండి — ఆ క్షణంలో మట్టిలో ఎంత నీరు ఉందో ఇక్కడ కనిపిస్తుంది.</string>
@@ -426,6 +448,7 @@
     <string name="t_3ca46e3e76">నీళ్లు పోసిన తర్వాత నమూనాపై రంగుల అల పరుగెడుతుంది — నీళ్లు పోసింది లెక్కలోకి వచ్చిందని అలా తెలుస్తుంది.</string>
     <string name="t_e101868e98">చివరిసారి నీళ్లు</string>
     <string name="t_d72166f389">AR లో చూడు</string>
+    <string name="t_22f978c185">మొక్కను మీ గదిలో చూడండి, ఫోటో నుండి దానికి సొంత మోడల్ చేయండి, లేదా ముద్దుపేరు, జాతి, నీరు పోసే విరామాన్ని మార్చండి.</string>
     <string name="t_f945f5f017">మొక్కను మీ గదిలో చూడండి, దానికి సొంత మోడల్ చేయండి — ఫోటో లేదా స్కాన్‌తో — లేదా పేరు, జాతి, నీళ్ల వ్యవధి మార్చండి.</string>
     <string name="t_8845f9ee9d">ఉంచు</string>
     <string name="t_39a52fa645">తోటను ఉంచు</string>
@@ -465,6 +488,7 @@
         <item quantity="other">ప్రతి %d నెలలకు</item>
     </plurals>
     <string name="t_9caa86d668">మొక్కకు ఎన్ని రోజులకొకసారి నీళ్లు పోస్తారు — సుమారుగా అన్ని రోజుల్లో మట్టి ఎండుతుంది. మొక్క సెట్టింగ్‌లలో మార్చవచ్చు.</string>
+    <string name="t_7882f56b39">కెమెరాను అనుమతించు</string>
     <string name="t_cc687c1fa5">ఫ్రేమ్ మొక్కను, కుండీని చుట్టుముట్టిందా? అయితే మొదలుపెట్టండి</string>
     <string name="t_0717b1b655">అమర్చు</string>
     <string name="t_7ebd3688e2">మొక్క</string>
@@ -496,6 +520,7 @@
     <string name="t_cd59e4204b">తోట లాక్ చేయబడింది</string>
     <string name="t_e3b46fe6dd">మీ తోట సౌర కుటుంబంలా: ప్రతి మొక్క ఒక గ్రహం, ఒక చుట్టు ఒక నీళ్లు పోసే విరామం. పై ద్వారం చేరగానే నీళ్లు పోసే సమయం.</string>
     <string name="t_5a05a6d3f9">తోట Face ID లేదా ఫోన్ పాస్‌కోడ్‌తో మాత్రమే తెరుచుకుంటుంది — వేరెవరూ తొంగిచూడలేరు.</string>
+    <string name="t_8401f09a45">తోట మీ వేలిముద్ర, ముఖం లేదా ఫోన్ స్క్రీన్ లాక్‌తో మాత్రమే తెరుచుకుంటుంది — ఇతరులు తొంగి చూడలేరు.</string>
     <string name="t_2306927b56">%s నుండి తోట</string>
     <string name="t_928ada7e39">తోట ఉంచబడింది. నీళ్లు పోయడానికి మొక్కను నొక్కండి.</string>
     <string name="t_e4d56c1f85">తోటమాలి</string>
@@ -514,6 +539,7 @@
     <string name="t_013255575f">ఈరోజు ఏ మొక్కకూ నీళ్లు అవసరం లేదు.</string>
     <string name="t_618a6abf44">ఈరోజు, %s</string>
     <string name="t_88be20fd06">ఇప్పుడు</string>
+    <string name="t_ad8df7482b">దీనిపై AR కోసం Google Play సేవలు పనిచేయవు. Sproutలో మిగతావన్నీ ఎప్పటిలాగే పనిచేస్తాయి.</string>
     <string name="t_b3c4b1be56">నెట్‌వర్క్</string>
     <string name="t_a872210c83">కంపన బలం</string>
     <string name="t_04954ca725">నీలం</string>
@@ -537,12 +563,14 @@
     </plurals>
     <string name="t_4a40d86849">తదుపరి నీళ్లు: రేపు</string>
     <string name="t_b0f07c6bde">తదుపరి నీళ్లు: ఈరోజు</string>
+    <string name="t_cef8f4a582">చాలా చీకటిగా ఉంది — లైట్ వేయండి</string>
     <string name="t_6f8ca5c940">పదకోశం</string>
     <string name="t_214438003b">ఫోటోను చూస్తున్నాను…</string>
     <string name="t_6fb5cb3976">కొత్తవి ముందు</string>
     <string name="t_3189602bf1">బాగా ఎండినవి ముందు</string>
     <string name="t_4ff6829db6">మంచు</string>
     <string name="t_1b494791c5">ఫోటో లేదు</string>
+    <string name="t_2cb357366d">మొక్కల ఫోటోలను ఫోన్‌లోనే గుర్తిస్తారు — చిత్రాలు ఎక్కడికీ పంపబడవు.</string>
     <string name="t_9e2d4d618a">ఫోటో</string>
     <string name="t_d303471890">ఫోటో మసకగా ఉంది — స్పష్టంగా తీయండి.</string>
     <string name="t_bee88a5c8c">ఫోటోలో వెలుతురు ఎక్కువ — నేరుగా ఎండ లేకుండా తీయండి.</string>
@@ -567,6 +595,7 @@
     <string name="t_8335506cd9">అత్యంత ఎండినది: %s.</string>
     <string name="t_31386bfdb5">మొక్క ఫోటో తీయండి — ఫోన్ దాని జాతిని గుర్తించడానికి ప్రయత్నిస్తుంది.</string>
     <string name="t_2da75ff638">%s వరకు స్కోర్. స్నేహితుడు మళ్లీ కోడ్ పంపినప్పుడు నవీకరించబడుతుంది.</string>
+    <string name="t_d9467398b8">వేరే యాప్ కెమెరాను ఉపయోగిస్తున్నప్పుడు ఇలా జరుగుతుంది. మళ్లీ ప్రయత్నించండి.</string>
     <string name="t_109ff6015e">చెప్పు</string>
     <string name="t_ba89e87d7f">ఫోన్ ఫోటోలోని మొక్కను గుర్తించి దాని మోడల్‌ను ఊహిస్తుంది: ఆకులు, పువ్వులు, కుండీ రంగులు, దట్టం, ఎత్తు. అంతా ఫోన్‌లోనే, ఇంటర్నెట్ లేకుండా, కొన్ని సెకన్లలో.</string>
     <string name="t_c9b9affc8d">గుర్తించబడింది: %1$s — %2$d%% నమ్మకం. తప్పైతే సరిచేయండి.</string>
@@ -596,8 +625,10 @@
     <string name="t_8b19591d8a">వంపును అనుసరించే డిజైన్</string>
     <string name="t_1cc281e997">ఫోన్‌ను వంచినప్పుడు నేపథ్య నమూనా కొద్దిగా జరుగుతుంది — తెర కంటే లోతులో ఉన్నట్టు.</string>
     <string name="t_c8f3f390c2">సోయా కూర</string>
+    <string name="t_ce88d35b18">ఇన్‌స్టాల్ చేయి</string>
     <string name="t_5373dc43a3">సంరక్షణ</string>
     <string name="t_ddc1a36266">కాలాన్ని పరిగణించు</string>
+    <string name="t_8a4653acae">తోట ఫైల్ Android బ్యాకప్‌లోకి వెళుతుంది — ఇతర యాప్‌ల డేటాతో పాటు, Google నియమాల ప్రకారం.</string>
     <string name="t_8041745a9b">తోట ఫైల్ iPhone బ్యాకప్‌లోకి వెళ్తుంది — మీ మిగతా డేటాతో పాటు, Apple నియమాల ప్రకారం.</string>
     <string name="t_92c396e199">ఆఫ్రికన్ వయొలెట్</string>
     <string name="t_99c7c8c714">ఆకారాలు</string>
@@ -618,6 +649,7 @@
     <string name="t_84b22ed2aa">రంగు</string>
     <string name="t_7ceb6b0f96">అల రంగు</string>
     <string name="t_4d7209b9c1">డిజైన్ రంగు</string>
+    <string name="t_8c038b5d5a">వాల్‌పేపర్ రంగులు</string>
     <string name="t_2a6d22be37">రంగులు, దట్టం, ఎత్తు — ఫోటో నుండి.</string>
     <string name="t_ac08f8dec7">పువ్వు</string>
     <string name="t_4924d77144">సంఖ్యలు</string>
@@ -634,11 +666,14 @@
     <string name="t_febbc7512c">మీ తోటను తెరవడానికి</string>
     <string name="t_e250a6df76">షూ లేస్</string>
     <string name="t_723a09005e">ఫర్ కోట్</string>
+    <string name="t_68656a952e">ఈ వెర్షన్ Sproutకి చాలా పాతది.</string>
     <string name="t_b3bf1682b8">ఇది మీ తోట</string>
     <string name="t_d342de941a">ఇది మీ సొంత కోడ్: మీరు ఇప్పటికే పట్టికలో ఉన్నారు.</string>
     <string name="t_3a925bfac5">ఈ iPhone స్కాన్ చేయలేదు: LiDAR కావాలి.</string>
+    <string name="t_8536fc8767">ఈ ఫోన్‌లో AR పనిచేయదు</string>
     <string name="t_c7e64e73eb">ఎచెవేరియా</string>
     <string name="t_77789a486b">యుక్కా</string>
+    <string name="t_ed3f0e507a">భాష</string>
     <string name="t_3f264c02f1">సమయానికి %s</string>
     <string name="t_cc86ef708c">మీరు</string>
     <string name="t_2e06422eda">మట్టి ఎండిపోయింది</string>
@@ -667,4 +702,11 @@
     <string name="t_d8e6f5387c">నిమిషానికి ఒకసారి కంటే ఎక్కువ</string>
     <string name="t_d959d34275">వరుసగా %d</string>
     <string name="t_34eb9e66db">• %1$s (%2$s, “%3$s”) — %4$s</string>
+    <string name="shortcut_add">జోడించు</string>
+    <string name="shortcut_search">వెతుకు</string>
+    <string name="shortcut_stats">గణాంకాలు</string>
+    <string name="shortcut_thirst">ఎవరికి నీళ్లు</string>
+    <string name="tile_label">ఎవరికి నీళ్లు</string>
+    <string name="widget_description">బాగా ఎండిన మొక్కలు మరియు “నీళ్లు పోయండి” బటన్.</string>
+    <string name="widget_name">ఎవరికి నీళ్లు</string>
 </resources>

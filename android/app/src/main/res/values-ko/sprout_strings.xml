@@ -24,9 +24,13 @@
     <string name="t_197eb092cd">%d%%</string>
     <string name="t_45b8ac5695" formatted="false">수분 20–40%</string>
     <string name="t_3d6c2541b9" formatted="false">수분 40% 이상</string>
+    <string name="t_5f5e0de553">AR이 시작되지 않았습니다</string>
+    <string name="t_957c85ce41">AR은 카메라가 보는 장면 위에 식물을 그립니다. 영상은 어디로도 전송되지 않습니다.</string>
     <string name="t_14c72c397f">AR(증강 현실)</string>
     <string name="t_484d12fea8">AR은 증강 현실이에요. 카메라에 내 방이 보이고 그 안에 3D 식물이 나타나요. 종별 모델은 앱에 들어 있고, 내 모델은 사진으로 상상하거나 스캔해서 만들 수 있어요.</string>
+    <string name="t_5c4b538eba">AR(증강 현실)은 카메라에 비친 방 안에 입체 식물을 보여 줍니다. 종별 모델은 이미 앱에 들어 있고, 나만의 모델은 사진으로 만들 수 있습니다.</string>
     <string name="t_809c431aa4">AR, 모델 및 설정</string>
+    <string name="t_acec2ec7d0">Android %s 이상</string>
     <string name="t_302a05a1ac">Sprout은 사용자에 관한 어떤 정보도 수집하지 않으며 어디에도 보내지 않아요.</string>
     <string name="t_9585992548">iOS 26 이상</string>
     <string name="t_c65910cd34">‘%1$s’ 외 %2$s에 물이 필요해요</string>
@@ -65,6 +69,7 @@
     <string name="t_a8bcae2d9a">마틸다</string>
     <string name="t_f79b25b05d">정원을 태양계처럼: 식물이 물주기 궤도를 돕니다. 들어가 보세요 — 한 달을 들어 볼 수도 있어요.</string>
     <string name="t_19ff316e6f">슬라이더를 움직이면 제때 물을 준다고 가정했을 때 며칠 뒤의 정원으로 갑니다.</string>
+    <string name="t_ddf5bf682d">휴대전화를 더 천천히 움직이세요</string>
     <string name="t_3f52bd53a9">귀가</string>
     <string name="t_c7aaa96778">실행 취소</string>
     <string name="t_f10d238768">기본 모델로 되돌리기</string>
@@ -90,6 +95,7 @@
     <string name="t_2b5f40f213">이 식물의 모든 물주기. 잘못된 항목은 길게 눌러 삭제하세요.</string>
     <string name="t_2f07cfc9c2">모두 물 줌</string>
     <string name="t_3b5143902e">전체</string>
+    <string name="t_eeb8caeb95">붙여넣기</string>
     <string name="t_c12ee51dd9">전체</string>
     <string name="t_1059a1d77d">어제 %s</string>
     <string name="t_fe4b0c80f0">선택</string>
@@ -109,6 +115,7 @@
     <string name="t_68ae695380">동작 센서</string>
     <string name="t_827d544645">날짜</string>
     <string name="t_0bcd158c3d">두 손가락으로 회전, 핀치로 크기 조절</string>
+    <string name="t_9978ac34b2">작업</string>
     <string name="t_b6ef08401f">일</string>
     <string name="t_abbebfc85b">세 식물 이상이 한꺼번에 물을 원하는 날 — 한 번에 모두 물을 주기 좋아요.</string>
     <string name="t_e0c0ceee56">작은 나무</string>
@@ -129,6 +136,7 @@
     <string name="t_fdf0f98738">예정보다 일찍 물을 주면 앱이 알아채고 간격을 줄이자고 제안해요.</string>
     <string name="t_19f25d5784">더 보기</string>
     <string name="t_7db203bdda">한 바퀴 더</string>
+    <string name="t_bbe42739db">다시 시도</string>
     <string name="t_0fb6d09e78">물 필요</string>
     <string name="t_ef28cc1496">기간 내</string>
     <string name="t_70efc9651a">이 기간에는 물주기가 없었어요.</string>
@@ -169,6 +177,7 @@
     <string name="t_b335f763ea">모든 식물과 물주기 기록이 사라져요. 되돌릴 수 없어요.</string>
     <string name="t_53d55db39f">요약</string>
     <string name="t_779e8b3e28">기기 설정에서 켜세요: Sprout → 알림.</string>
+    <string name="t_9c47ca16c4">Google Play에서 무료로 설치합니다. 그러면 AR이 바로 열립니다.</string>
     <string name="t_46c7be08dd">서재</string>
     <string name="t_0112d57d0b">자르기</string>
     <string name="t_01b9b803e7">사진 자르기</string>
@@ -177,6 +186,7 @@
     <string name="t_223428bd3c">점 하나가 물주기 한 번입니다. 점이 높을수록 흙에 물이 더 남아 있었어요.</string>
     <string name="t_e1439f1755">물을 줄 때마다 음이 울려요: 안쪽 행성일수록 높은 음이에요.</string>
     <string name="t_f0a22d9d1a">시스템 설정</string>
+    <string name="t_087f6705ed">휴대전화 설정과 같게</string>
     <string name="t_696586f496">이름이 무엇인가요?</string>
     <string name="t_7013b69dab">사용법</string>
     <string name="t_d4066ba693">식물의 새 이름은?</string>
@@ -185,6 +195,9 @@
     <string name="t_7b105a68e6">칼랑코에</string>
     <string name="t_60f6304f34">칼라데아</string>
     <string name="t_fe0790d4e2">물주기 달력</string>
+    <string name="t_f2d0f5cc41">다른 앱이 카메라를 사용 중입니다</string>
+    <string name="t_37620de860">휴대전화 설정에서 카메라가 차단되어 있습니다. 설정에서 허용한 뒤 돌아오세요.</string>
+    <string name="t_601947a61c">카메라 및 사진</string>
     <string name="t_d8e43f5730">카메라가 방을 보여 주고, 앱이 그 안에 입체 식물을 놓아요. 돌리고, 키우고, 물뿌리개로 물을 줄 수 있어요.</string>
     <string name="t_8671ea9e33">물방울</string>
     <string name="t_85618413ed">칸 하나는 최근 넉 달 중 하루예요. 색이 진할수록 물을 많이 준 날이에요. 칸을 탭하면 날짜가 보여요.</string>
@@ -195,6 +208,7 @@
     <string name="t_eb1aa42a32">식물 별명, 종, 습도, 날짜 — 입력한 모든 것은 앱 안의 파일에, 기기 자체에 저장돼요. 설정도 마찬가지예요. 어떤 것도 기기 밖으로 나가지 않아요.</string>
     <string name="t_1c8e21179b">버튼</string>
     <string name="t_49cdfd9292">주변 버튼</string>
+    <string name="t_2ecb4451da">버튼과 카드가 배경화면 색상을 따릅니다.</string>
     <string name="t_725347e425">일정</string>
     <string name="t_512bafe5b5">습도가 다음보다 낮으면</string>
     <string name="t_72e18d38d9">물을 주는 때</string>
@@ -252,7 +266,9 @@
     <string name="t_18f71e9762">천구의 음악</string>
     <string name="t_0b854eb300">나비</string>
     <string name="t_7a7164238c">민트</string>
+    <string name="t_06ec0f34bf">이 휴대전화에는 화면 잠금이 설정되어 있지 않습니다.</string>
     <string name="t_272e98dde1">이 기기에는 Face ID도 암호도 없어요.</string>
+    <string name="t_339d955a3c">무늬가 있는 바닥이나 가구에 카메라를 비추세요</string>
     <string name="t_4dd78d95e6">조준</string>
     <string name="t_c96769af49">‘+’를 탭하여 첫 방을 만드세요.</string>
     <string name="t_730cde94e5">옆의 ‘?’를 탭하면 쉽게 설명해 드려요. 모든 단어는 설정의 용어집에 모여 있어요.</string>
@@ -298,9 +314,14 @@
     <string name="t_da731c70ca">새로운 방</string>
     <string name="t_87b55f8287">새로운 방…</string>
     <string name="t_4a30361774">LiDAR 센서가 있는 iPhone이 필요해요 — iPhone 12 Pro 이후 Pro 모델.</string>
+    <string name="t_7283f54f30">카메라가 필요합니다</string>
+    <string name="t_ba43c393fc">AR용 Google Play 서비스가 필요합니다</string>
     <string name="t_b9c9ff652d">정보</string>
+    <string name="t_7bee71b043">AR용 Google Play 서비스를 업데이트하세요</string>
+    <string name="t_c2f668e54f">업데이트</string>
     <string name="t_3a3478672d">휴대폰을 들고 식물 주위를 돌면 정확한 3D 사본이 생겨요. 촬영은 몇 분, 모델 만들기는 몇 분 더 걸려요. 모두 기기에서 해요.</string>
     <string name="t_bc8d2377f1">AR용 식물 3D 사본이에요. 종별 모델은 앱에 들어 있고, 내 모델은 사진으로 상상하거나 스캔해서 만들 수 있어요 — 식물 화면의 ‘모델’ 버튼.</string>
+    <string name="t_7eb02aa630">AR용 식물의 입체 사본입니다. 종별 모델은 이미 앱에 들어 있고, 나만의 모델은 사진으로 만들 수 있습니다 — 식물 화면의 ‘모델’ 버튼.</string>
     <string name="t_4b919d0c3d">이 종의 보통 주기: %s</string>
     <string name="t_00495efa90">보통 흙에 수분이 %s일 때</string>
     <string name="t_9bc6b67c85">한 바퀴가 물주기 간격입니다. 안쪽 궤도는 빨리 마르는 식물, 바깥쪽은 참을성 있는 식물이에요.</string>
@@ -380,6 +401,7 @@
     <string name="t_0455b2eeff">%2$d개 중 %1$d개 표시: 더 많으면 기기에 무리예요</string>
     <string name="t_387af5ff90">힌트 다시 보기</string>
     <string name="t_ca645a26b9">휠을 돌리면 새 간격이 카드에 어떻게 보일지 아래에 나와요.</string>
+    <string name="t_51b8f05bf7">검색 필드는 위쪽에 있습니다. 별명, 종, 메모로 찾습니다.</string>
     <string name="t_17c7b943fc">검색 필드는 아래쪽 탭 막대 옆에 있어요. 별명, 종류, 메모에서 찾아요.</string>
     <string name="t_cd1de7bdc3">모두에게 한 번에 물을 주고 이웃에게 메모를 보내세요.</string>
     <string name="t_c767922d35">식물에 물을 주면, 그 순간 흙에 수분이 얼마나 있었는지 여기에 표시돼요.</string>
@@ -416,6 +438,7 @@
     <string name="t_3ca46e3e76">물을 주고 나면 무늬 위로 색 물결이 퍼져요. 물주기가 기록됐다는 뜻이에요.</string>
     <string name="t_e101868e98">마지막 물주기</string>
     <string name="t_d72166f389">AR로 보기</string>
+    <string name="t_22f978c185">내 방에서 식물을 보고, 사진으로 전용 모델을 만들거나 별명, 종, 물 주기 간격을 바꾸세요.</string>
     <string name="t_f945f5f017">식물을 내 방에서 보고, 사진이나 스캔으로 전용 모델을 만들거나, 이름·종·물주기 간격을 바꿀 수 있어요.</string>
     <string name="t_8845f9ee9d">배치</string>
     <string name="t_39a52fa645">정원 배치</string>
@@ -453,6 +476,7 @@
         <item quantity="other">%d개월에 한 번</item>
     </plurals>
     <string name="t_9caa86d668">며칠마다 물을 주는지예요. 대략 흙이 마르는 데 걸리는 날수예요. 식물 설정에서 바꿀 수 있어요.</string>
+    <string name="t_7882f56b39">카메라 허용</string>
     <string name="t_cc687c1fa5">틀이 식물과 화분을 감싸나요? 그럼 시작하세요</string>
     <string name="t_0717b1b655">정렬</string>
     <string name="t_7ebd3688e2">식물</string>
@@ -484,6 +508,7 @@
     <string name="t_cd59e4204b">정원이 잠겨 있어요</string>
     <string name="t_e3b46fe6dd">정원을 태양계처럼: 식물 하나가 행성, 한 바퀴가 물주기 간격입니다. 위쪽 관문에 닿으면 물줄 시간이에요.</string>
     <string name="t_5a05a6d3f9">정원은 Face ID나 휴대폰 암호로만 열려요. 다른 사람은 볼 수 없어요.</string>
+    <string name="t_8401f09a45">정원은 지문, 얼굴 또는 휴대전화의 화면 잠금으로만 열립니다 — 다른 사람은 볼 수 없습니다.</string>
     <string name="t_2306927b56">%s부터 가꾼 정원</string>
     <string name="t_928ada7e39">정원을 배치했어요. 식물을 탭하면 물을 줄 수 있어요.</string>
     <string name="t_e4d56c1f85">정원사</string>
@@ -502,6 +527,7 @@
     <string name="t_013255575f">오늘은 물을 줄 식물이 없어요.</string>
     <string name="t_618a6abf44">오늘 %s</string>
     <string name="t_88be20fd06">지금</string>
+    <string name="t_ad8df7482b">이 휴대전화에서는 AR용 Google Play 서비스가 작동하지 않습니다. Sprout의 나머지 기능은 평소처럼 작동합니다.</string>
     <string name="t_b3c4b1be56">네트워크</string>
     <string name="t_a872210c83">진동 세기</string>
     <string name="t_04954ca725">파랑</string>
@@ -524,12 +550,14 @@
     </plurals>
     <string name="t_4a40d86849">다음 물주기: 내일</string>
     <string name="t_b0f07c6bde">다음 물주기: 오늘</string>
+    <string name="t_cef8f4a582">너무 어둡습니다 — 불을 켜세요</string>
     <string name="t_6f8ca5c940">용어집</string>
     <string name="t_214438003b">사진을 보는 중…</string>
     <string name="t_6fb5cb3976">최신순</string>
     <string name="t_3189602bf1">마른 순</string>
     <string name="t_4ff6829db6">눈송이</string>
     <string name="t_1b494791c5">사진 없음</string>
+    <string name="t_2cb357366d">식물 사진은 휴대전화 자체에서 인식됩니다 — 사진은 어디로도 전송되지 않습니다.</string>
     <string name="t_9e2d4d618a">사진</string>
     <string name="t_d303471890">사진이 흐려요 — 더 선명하게 찍어 주세요.</string>
     <string name="t_bee88a5c8c">사진이 너무 밝아요 — 직사광선을 피해서 찍어 주세요.</string>
@@ -554,6 +582,7 @@
     <string name="t_8335506cd9">가장 마른 식물: %s</string>
     <string name="t_31386bfdb5">식물 사진을 찍으면 휴대폰이 종을 알아보려고 해요.</string>
     <string name="t_2da75ff638">%s 기준 점수. 친구가 코드를 다시 보내면 업데이트돼요.</string>
+    <string name="t_d9467398b8">다른 앱이 카메라를 사용할 때 이런 일이 생깁니다. 다시 시도하세요.</string>
     <string name="t_109ff6015e">슬리퍼</string>
     <string name="t_ba89e87d7f">휴대폰이 사진 속 식물을 알아보고 모델을 상상해요. 잎·꽃·화분의 색과 무성함, 키를 가져오죠. 모두 기기에서, 인터넷 없이, 몇 초 만에 계산해요.</string>
     <string name="t_c9b9affc8d">인식됨: %1$s — 확신도 %2$d%%. 틀렸다면 고쳐 주세요.</string>
@@ -583,8 +612,10 @@
     <string name="t_8b19591d8a">기울기에 따라 무늬 이동</string>
     <string name="t_1cc281e997">휴대폰을 기울이면 배경 무늬가 살짝 움직여요. 화면보다 깊이 있는 것처럼요.</string>
     <string name="t_c8f3f390c2">딜</string>
+    <string name="t_ce88d35b18">설치</string>
     <string name="t_5373dc43a3">관리</string>
     <string name="t_ddc1a36266">계절 반영</string>
+    <string name="t_8a4653acae">정원 파일은 다른 앱 데이터와 함께 Google의 규칙에 따라 Android 백업에 포함됩니다.</string>
     <string name="t_8041745a9b">정원 파일은 다른 데이터와 함께 Apple의 규칙에 따라 iPhone 백업에 포함돼요.</string>
     <string name="t_92c396e199">아프리칸 바이올렛</string>
     <string name="t_99c7c8c714">도형</string>
@@ -605,6 +636,7 @@
     <string name="t_84b22ed2aa">색상</string>
     <string name="t_7ceb6b0f96">물결 색상</string>
     <string name="t_4d7209b9c1">무늬 색상</string>
+    <string name="t_8c038b5d5a">배경화면 색상</string>
     <string name="t_2a6d22be37">색, 무성함, 키는 사진에서 가져와요.</string>
     <string name="t_ac08f8dec7">꽃</string>
     <string name="t_4924d77144">숫자</string>
@@ -621,11 +653,14 @@
     <string name="t_febbc7512c">정원을 열기 위해</string>
     <string name="t_e250a6df76">신발끈</string>
     <string name="t_723a09005e">털코트</string>
+    <string name="t_68656a952e">이 버전은 Sprout에 너무 오래되었습니다.</string>
     <string name="t_b3bf1682b8">여기가 당신의 정원이에요</string>
     <string name="t_d342de941a">내 코드예요: 이미 표에 있어요.</string>
     <string name="t_3a925bfac5">이 iPhone은 스캔할 수 없어요: LiDAR가 필요해요.</string>
+    <string name="t_8536fc8767">이 휴대전화는 AR을 지원하지 않습니다</string>
     <string name="t_c7e64e73eb">에케베리아</string>
     <string name="t_77789a486b">유카</string>
+    <string name="t_ed3f0e507a">언어</string>
     <string name="t_3f264c02f1">제때 %s</string>
     <string name="t_cc86ef708c">나</string>
     <string name="t_2e06422eda">흙이 말랐음</string>
@@ -651,4 +686,11 @@
     <string name="t_d8e6f5387c">1분에 한 번보다 자주</string>
     <string name="t_d959d34275">연속 %d</string>
     <string name="t_34eb9e66db">• %1$s (%2$s, ‘%3$s’) — %4$s</string>
+    <string name="shortcut_add">추가</string>
+    <string name="shortcut_search">검색</string>
+    <string name="shortcut_stats">통계</string>
+    <string name="shortcut_thirst">물 줄 식물</string>
+    <string name="tile_label">물 줄 식물</string>
+    <string name="widget_description">가장 마른 식물과 ‘물주기’ 버튼.</string>
+    <string name="widget_name">물 줄 식물</string>
 </resources>

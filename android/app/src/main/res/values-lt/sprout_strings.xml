@@ -30,9 +30,13 @@
     <string name="t_197eb092cd">%d %%</string>
     <string name="t_45b8ac5695" formatted="false">20–40 % vandens</string>
     <string name="t_3d6c2541b9" formatted="false">40 % vandens ir daugiau</string>
+    <string name="t_5f5e0de553">AR nepasileido</string>
+    <string name="t_957c85ce41">AR piešia augalą ant to, ką mato kamera. Kadrai niekur nesiunčiami.</string>
     <string name="t_14c72c397f">AR – papildytoji realybė</string>
     <string name="t_484d12fea8">AR – papildytoji realybė: kamera rodo jūsų kambarį, o jame – 3D augalą. Rūšių modeliai jau yra programoje, o savo galite sugalvoti pagal nuotrauką arba nuskenuoti.</string>
+    <string name="t_5c4b538eba">AR – papildytoji realybė: kamera rodo jūsų kambarį su trimačiu augalu jame. Rūšių modeliai jau yra programėlėje, o savo galite sugalvoti pagal nuotrauką.</string>
     <string name="t_809c431aa4">AR, modelis ir nustatymai</string>
+    <string name="t_acec2ec7d0">Android %s ar naujesnė</string>
     <string name="t_302a05a1ac">Sprout nerenka jokios informacijos apie jus ir niekur nieko nesiunčia.</string>
     <string name="t_9585992548">iOS 26 ar naujesnė</string>
     <string name="t_c65910cd34">„%1$s“ ir dar %2$s reikia vandens</string>
@@ -71,6 +75,7 @@
     <string name="t_a8bcae2d9a">Vasilisa</string>
     <string name="t_f79b25b05d">Jūsų sodas kaip Saulės sistema: augalai sukasi laistymo orbitomis. Užsukite – ten galima net pasiklausyti mėnesio.</string>
     <string name="t_19ff316e6f">Vilkite slankiklį – sodas peršoks dienomis į priekį, lyg laistytumėte laiku.</string>
+    <string name="t_ddf5bf682d">Veskite telefoną lėčiau</string>
     <string name="t_3f52bd53a9">Grįžtu</string>
     <string name="t_c7aaa96778">Anuliuoti</string>
     <string name="t_f10d238768">Grąžinti paruoštą modelį</string>
@@ -98,6 +103,7 @@
     <string name="t_2b5f40f213">Visi šio augalo laistymai. Klaidingą įrašą ištrinsite ilgai paspaudę.</string>
     <string name="t_2f07cfc9c2">Visi palaistyti</string>
     <string name="t_3b5143902e">Iš viso</string>
+    <string name="t_eeb8caeb95">Įklijuoti</string>
     <string name="t_c12ee51dd9">Visas laikas</string>
     <string name="t_1059a1d77d">Vakar, %s</string>
     <string name="t_fe4b0c80f0">Pasirinkti</string>
@@ -117,6 +123,7 @@
     <string name="t_68ae695380">Judesio jutiklis</string>
     <string name="t_827d544645">Datos</string>
     <string name="t_0bcd158c3d">Dviem pirštais – pasukti, suimant – dydis</string>
+    <string name="t_9978ac34b2">Veiksmai</string>
     <string name="t_b6ef08401f">Diena</string>
     <string name="t_abbebfc85b">Diena, kai trys ar daugiau augalų vienu metu norės vandens – patogu palaistyti visus iš karto.</string>
     <string name="t_e0c0ceee56">Medelis</string>
@@ -137,6 +144,7 @@
     <string name="t_fdf0f98738">Jei laistote anksčiau laiko, programa tai pastebės ir pasiūlys trumpesnį intervalą.</string>
     <string name="t_19f25d5784">Daugiau</string>
     <string name="t_7db203bdda">Dar vienas ratas</string>
+    <string name="t_bbe42739db">Bandyti dar kartą</string>
     <string name="t_0fb6d09e78">Laukia vandens</string>
     <string name="t_ef28cc1496">Per laikotarpį</string>
     <string name="t_70efc9651a">Per šį laikotarpį nelaistyta.</string>
@@ -177,6 +185,7 @@
     <string name="t_b335f763ea">Išnyks visi augalai ir visas laistymo žurnalas. Atšaukti nebus galima.</string>
     <string name="t_53d55db39f">Suvestinė</string>
     <string name="t_779e8b3e28">Įjunkite juos telefono nustatymuose: Sprout → Pranešimai.</string>
+    <string name="t_9c47ca16c4">Jos diegiamos iš „Google Play“, nemokamai. Po to AR atsidarys iš karto.</string>
     <string name="t_46c7be08dd">Darbo kambarys</string>
     <string name="t_0112d57d0b">Apkirpti</string>
     <string name="t_01b9b803e7">Nuotraukos kadras</string>
@@ -185,6 +194,7 @@
     <string name="t_223428bd3c">Kiekvienas taškas – laistymas. Kuo aukščiau taškas, tuo daugiau vandens dar buvo žemėje.</string>
     <string name="t_e1439f1755">Kiekvienas laistymas – nata: artimos planetos dainuoja aukščiau.</string>
     <string name="t_f0a22d9d1a">Kaip sistemoje</string>
+    <string name="t_087f6705ed">Kaip telefone</string>
     <string name="t_696586f496">Kuo jūs vardu?</string>
     <string name="t_7013b69dab">Kaip naudotis</string>
     <string name="t_d4066ba693">Kaip dabar vadinasi augalas?</string>
@@ -193,6 +203,9 @@
     <string name="t_7b105a68e6">Kalankė</string>
     <string name="t_60f6304f34">Kalatėja</string>
     <string name="t_fe0790d4e2">Laistymų kalendorius</string>
+    <string name="t_f2d0f5cc41">Kamerą naudoja kita programėlė</string>
+    <string name="t_37620de860">Kamera uždrausta telefono nustatymuose. Leiskite ją ten ir grįžkite.</string>
+    <string name="t_601947a61c">Kamera ir nuotraukos</string>
     <string name="t_d8e43f5730">Kamera rodo jūsų kambarį, o programa į jį pastato erdvinį augalą. Jį galima pasukti, padidinti ir palaistyti laistytuvu.</string>
     <string name="t_8671ea9e33">Lašas</string>
     <string name="t_85618413ed">Kiekvienas kvadratas – diena iš paskutinių keturių mėnesių: kuo sodresnė spalva, tuo daugiau laistymų. Bakstelėkite kvadratą, kad pamatytumėte datą.</string>
@@ -203,6 +216,7 @@
     <string name="t_eb1aa42a32">Augalų pravardės, rūšys, drėgmė, datos – viskas, ką įvedate, laikoma faile programoje, pačiame telefone. Ten ir nustatymai. Niekas iš to nepalieka įrenginio.</string>
     <string name="t_1c8e21179b">Mygtukai</string>
     <string name="t_49cdfd9292">Mygtukai aplink</string>
+    <string name="t_2ecb4451da">Mygtukai ir kortelės – telefono ekrano fono spalvomis.</string>
     <string name="t_725347e425">Kada</string>
     <string name="t_512bafe5b5">Kai drėgmė mažesnė nei</string>
     <string name="t_72e18d38d9">Kada laistote</string>
@@ -260,7 +274,9 @@
     <string name="t_18f71e9762">Sferų muzika</string>
     <string name="t_0b854eb300">Murkis</string>
     <string name="t_7a7164238c">Mėta</string>
+    <string name="t_06ec0f34bf">Telefone nenustatytas ekrano užraktas.</string>
     <string name="t_272e98dde1">Šiame telefone nėra nei Face ID, nei kodo.</string>
+    <string name="t_339d955a3c">Nukreipkite kamerą į raštuotas grindis ar baldus</string>
     <string name="t_4dd78d95e6">Nutaikyti</string>
     <string name="t_c96769af49">Bakstelėkite „+“, kad sukurtumėte pirmąjį.</string>
     <string name="t_730cde94e5">Palieskite šalia esantį „?“ – paaiškinsime paprastai. Visi žodžiai surinkti žodynėlyje nustatymuose.</string>
@@ -306,9 +322,14 @@
     <string name="t_da731c70ca">Naujas kambarys</string>
     <string name="t_87b55f8287">Naujas kambarys…</string>
     <string name="t_4a30361774">Reikia iPhone su LiDAR jutikliu – Pro modelių nuo iPhone 12 Pro.</string>
+    <string name="t_7283f54f30">Reikia kameros</string>
+    <string name="t_ba43c393fc">Reikia „Google Play“ paslaugų, skirtų AR</string>
     <string name="t_b9c9ff652d">Apie</string>
+    <string name="t_7bee71b043">Atnaujinkite „Google Play“ paslaugas, skirtas AR</string>
+    <string name="t_c2f668e54f">Atnaujinti</string>
     <string name="t_3a3478672d">Apeikite augalą su telefonu – gausite tikslią jo 3D kopiją. Fotografavimas užtruks porą minučių, modelio kūrimas – dar kelias; viskas telefone.</string>
     <string name="t_bc8d2377f1">Augalo 3D kopija AR. Rūšių modeliai jau yra programoje, o savo galite sugalvoti pagal nuotrauką arba nuskenuoti – mygtukas „Modelis“ augalo ekrane.</string>
+    <string name="t_7eb02aa630">Trimatė augalo kopija AR. Rūšių modeliai jau yra programėlėje, o savo galite sugalvoti pagal nuotrauką – mygtukas „Modelis“ augalo ekrane.</string>
     <string name="t_4b919d0c3d">Įprasta rūšiai: %s</string>
     <string name="t_00495efa90">Paprastai esant %s vandens žemėje</string>
     <string name="t_9bc6b67c85">Vienas ratas – vienas laistymo intervalas. Artimos orbitos – greitai džiūstančių, tolimos – kantriųjų.</string>
@@ -398,6 +419,7 @@
     <string name="t_0455b2eeff">Rodoma %1$d iš %2$d: daugiau telefonui būtų per sunku</string>
     <string name="t_387af5ff90">Rodyti patarimus iš naujo</string>
     <string name="t_ca645a26b9">Pasukite ratuką – žemiau matysite, kaip naujas intervalas atrodys kortelėje.</string>
+    <string name="t_51b8f05bf7">Paieškos laukas – viršuje. Ieško pagal pravardes, rūšis ir pastabas.</string>
     <string name="t_17c7b943fc">Paieškos laukas yra apačioje, prie skirtukų juostos. Ieško pagal pravardę, rūšį ir pastabas.</string>
     <string name="t_cd1de7bdc3">Palaistykite visus iš karto ir nusiųskite kaimynui raštelį.</string>
     <string name="t_c767922d35">Palaistykite augalą ir čia pamatysite, kiek vandens tuo metu buvo žemėje.</string>
@@ -436,6 +458,7 @@
     <string name="t_3ca46e3e76">Po laistymo raštu nubėga spalvota banga – taip matyti, kad laistymas įskaitytas.</string>
     <string name="t_e101868e98">Paskutinis laistymas</string>
     <string name="t_d72166f389">Žiūrėti AR</string>
+    <string name="t_22f978c185">Pažiūrėkite į augalą savo kambaryje, sukurkite jam savo modelį pagal nuotrauką arba pakeiskite pravardę, rūšį ir laistymo intervalą.</string>
     <string name="t_f945f5f017">Pažiūrėkite į augalą savo kambaryje, sukurkite jam savo modelį – pagal nuotrauką ar skenavimu – arba pakeiskite vardą, rūšį ir laistymo intervalą.</string>
     <string name="t_8845f9ee9d">Pastatyti</string>
     <string name="t_39a52fa645">Pastatyti sodą</string>
@@ -477,6 +500,7 @@
         <item quantity="other">Kas %d mėnesių</item>
     </plurals>
     <string name="t_9caa86d668">Kas kiek dienų augalas laistomas – maždaug per tiek išdžiūsta žemė. Keičiama augalo nustatymuose.</string>
+    <string name="t_7882f56b39">Leisti kamerą</string>
     <string name="t_cc687c1fa5">Ar rėmelis apima augalą su vazonu? Tada pradėkite</string>
     <string name="t_0717b1b655">Išdėstyti</string>
     <string name="t_7ebd3688e2">Augalas</string>
@@ -508,6 +532,7 @@
     <string name="t_cd59e4204b">Sodas užrakintas</string>
     <string name="t_e3b46fe6dd">Jūsų sodas kaip Saulės sistema: kiekvienas augalas – planeta, vienas ratas – vienas laistymo intervalas. Pasiekęs vartus viršuje, laikas laistyti.</string>
     <string name="t_5a05a6d3f9">Sodas atsidaro tik su Face ID arba telefono kodu – svetimi nepažiūrės.</string>
+    <string name="t_8401f09a45">Sodas atsidaro tik piršto atspaudu, veidu ar telefono ekrano užraktu – svetimi nepažiūrės.</string>
     <string name="t_2306927b56">Sodas nuo %s</string>
     <string name="t_928ada7e39">Sodas pastatytas. Bakstelėkite augalą, kad jį palaistytumėte.</string>
     <string name="t_e4d56c1f85">Sodininkas</string>
@@ -526,6 +551,7 @@
     <string name="t_013255575f">Šiandien laistyti nieko nereikia.</string>
     <string name="t_618a6abf44">Šiandien, %s</string>
     <string name="t_88be20fd06">Dabar</string>
+    <string name="t_ad8df7482b">„Google Play“ paslaugos, skirtos AR, jame neveikia. Visa kita „Sprout“ veikia kaip įprasta.</string>
     <string name="t_b3c4b1be56">Tinklas</string>
     <string name="t_a872210c83">Vibracijos stiprumas</string>
     <string name="t_04954ca725">Mėlyna</string>
@@ -550,12 +576,14 @@
     </plurals>
     <string name="t_4a40d86849">Kitas laistymas: rytoj</string>
     <string name="t_b0f07c6bde">Kitas laistymas: šiandien</string>
+    <string name="t_cef8f4a582">Per tamsu – įjunkite šviesą</string>
     <string name="t_6f8ca5c940">Žodynėlis</string>
     <string name="t_214438003b">Žiūriu į nuotrauką…</string>
     <string name="t_6fb5cb3976">Pirma naujausi</string>
     <string name="t_3189602bf1">Pirma sausiausi</string>
     <string name="t_4ff6829db6">Sniegas</string>
     <string name="t_1b494791c5">Nuotraukos nėra</string>
+    <string name="t_2cb357366d">Augalų nuotraukos atpažįstamos pačiame telefone – niekur nesiunčiamos.</string>
     <string name="t_9e2d4d618a">Nuotrauka</string>
     <string name="t_d303471890">Nuotrauka neryški – nufotografuokite ryškiau.</string>
     <string name="t_bee88a5c8c">Nuotrauka pereksponuota – fotografuokite be tiesioginės saulės.</string>
@@ -580,6 +608,7 @@
     <string name="t_8335506cd9">Sausiausias: %s.</string>
     <string name="t_31386bfdb5">Nufotografuokite augalą – telefonas pabandys atpažinti jo rūšį.</string>
     <string name="t_2da75ff638">Rezultatas nuo %s. Atsinaujins, kai draugas vėl atsiųs kodą.</string>
+    <string name="t_d9467398b8">Taip nutinka, kai kamerą naudoja kita programėlė. Bandykite dar kartą.</string>
     <string name="t_109ff6015e">Šlepetė</string>
     <string name="t_ba89e87d7f">Telefonas atpažins augalą nuotraukoje ir sugalvos jo modelį: lapų, žiedų ir vazono spalvas, tankumą ir aukštį. Viskas skaičiuojama telefone, be interneto, per porą sekundžių.</string>
     <string name="t_c9b9affc8d">Atpažinta: %1$s – tikimybė %2$d %%. Pataisykite, jei ne tas.</string>
@@ -609,8 +638,10 @@
     <string name="t_8b19591d8a">Raštas seka posvyrį</string>
     <string name="t_1cc281e997">Fono raštas truputį pasislenka, kai pakreipiate telefoną, – tarsi būtų giliau už ekraną.</string>
     <string name="t_c8f3f390c2">Krapas</string>
+    <string name="t_ce88d35b18">Įdiegti</string>
     <string name="t_5373dc43a3">Priežiūra</string>
     <string name="t_ddc1a36266">Atsižvelgti į metų laiką</string>
+    <string name="t_8a4653acae">Sodo failas patenka į „Android“ atsarginę kopiją – kartu su kitų programėlių duomenimis, pagal „Google“ taisykles.</string>
     <string name="t_8041745a9b">Sodo failas patenka į iPhone atsarginę kopiją – kartu su kitais jūsų duomenimis, pagal Apple taisykles.</string>
     <string name="t_92c396e199">Afrikinė žibuoklė</string>
     <string name="t_99c7c8c714">Figūros</string>
@@ -631,6 +662,7 @@
     <string name="t_84b22ed2aa">Spalva</string>
     <string name="t_7ceb6b0f96">Bangos spalva</string>
     <string name="t_4d7209b9c1">Rašto spalva</string>
+    <string name="t_8c038b5d5a">Ekrano fono spalvos</string>
     <string name="t_2a6d22be37">Spalvos, tankumas ir aukštis – iš nuotraukos.</string>
     <string name="t_ac08f8dec7">Gėlė</string>
     <string name="t_4924d77144">Skaičiai</string>
@@ -647,11 +679,14 @@
     <string name="t_febbc7512c">Kad atvertumėte sodą</string>
     <string name="t_e250a6df76">Raištelis</string>
     <string name="t_723a09005e">Kailiniai</string>
+    <string name="t_68656a952e">Ši versija per sena „Sprout“.</string>
     <string name="t_b3bf1682b8">Tai jūsų sodas</string>
     <string name="t_d342de941a">Tai jūsų pačių kodas: lentelėje jūs jau esate.</string>
     <string name="t_3a925bfac5">Šis iPhone negali skenuoti: reikia LiDAR.</string>
+    <string name="t_8536fc8767">Šis telefonas nepalaiko AR</string>
     <string name="t_c7e64e73eb">Eševerija</string>
     <string name="t_77789a486b">Juka</string>
+    <string name="t_ed3f0e507a">Kalba</string>
     <string name="t_3f264c02f1">laiku %s</string>
     <string name="t_cc86ef708c">jūs</string>
     <string name="t_2e06422eda">žemė sausa</string>
@@ -683,4 +718,11 @@
     <string name="t_d8e6f5387c">dažniau nei kartą per minutę</string>
     <string name="t_d959d34275">serija %d</string>
     <string name="t_34eb9e66db">• %1$s (%2$s, „%3$s“) – %4$s</string>
+    <string name="shortcut_add">Pridėti</string>
+    <string name="shortcut_search">Paieška</string>
+    <string name="shortcut_stats">Statistika</string>
+    <string name="shortcut_thirst">Ką laistyti</string>
+    <string name="tile_label">Ką laistyti</string>
+    <string name="widget_description">Sausiausi augalai ir mygtukas „Palaistyti“.</string>
+    <string name="widget_name">Ką laistyti</string>
 </resources>

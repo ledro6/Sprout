@@ -24,9 +24,13 @@
     <string name="t_197eb092cd">%d%%</string>
     <string name="t_45b8ac5695" formatted="false">水分 20–40%</string>
     <string name="t_3d6c2541b9" formatted="false">水分 40% 以上</string>
+    <string name="t_5f5e0de553">AR 未能啟動</string>
+    <string name="t_957c85ce41">AR 會把植物畫在相機看到的畫面上。畫面不會傳送到任何地方。</string>
     <string name="t_14c72c397f">AR：擴增實境</string>
     <string name="t_484d12fea8">AR 即擴增實境：相機會顯示你的房間，裡面有一株 3D 植物。各品種的模型已內建在 App 中，你自己的模型可以根據照片構想或掃描產生。</string>
+    <string name="t_5c4b538eba">AR 即擴增實境：相機顯示你的房間，裡面有一株立體植物。各品種的模型已經在 App 裡，你自己的模型可以根據照片來設計。</string>
     <string name="t_809c431aa4">AR、模型與設定</string>
+    <string name="t_acec2ec7d0">Android %s 或以上版本</string>
     <string name="t_302a05a1ac">Sprout 不會收集你的任何資訊，也不會傳送到任何地方。</string>
     <string name="t_9585992548">iOS 26 或以上版本</string>
     <string name="t_c65910cd34">「%1$s」和另外%2$s需要澆水</string>
@@ -65,6 +69,7 @@
     <string name="t_a8bcae2d9a">小瑪</string>
     <string name="t_f79b25b05d">把花園想像成太陽系：植物沿著澆水軌道運行。進去看看——還能聽一整個月。</string>
     <string name="t_19ff316e6f">拖移滑桿——假如按時澆水，花園會快轉好幾天。</string>
+    <string name="t_ddf5bf682d">請更慢地移動手機</string>
     <string name="t_3f52bd53a9">返回</string>
     <string name="t_c7aaa96778">還原</string>
     <string name="t_f10d238768">恢復現成模型</string>
@@ -90,6 +95,7 @@
     <string name="t_2b5f40f213">這株植物的所有澆水紀錄。長按錯誤的紀錄即可刪除。</string>
     <string name="t_2f07cfc9c2">都已澆水</string>
     <string name="t_3b5143902e">總計</string>
+    <string name="t_eeb8caeb95">貼上</string>
     <string name="t_c12ee51dd9">全部</string>
     <string name="t_1059a1d77d">昨天 %s</string>
     <string name="t_fe4b0c80f0">選擇</string>
@@ -109,6 +115,7 @@
     <string name="t_68ae695380">動作感測器</string>
     <string name="t_827d544645">日期</string>
     <string name="t_0bcd158c3d">雙指旋轉，捏合縮放</string>
+    <string name="t_9978ac34b2">動作</string>
     <string name="t_b6ef08401f">日</string>
     <string name="t_abbebfc85b">三株以上植物同時要水的日子——剛好一次澆完。</string>
     <string name="t_e0c0ceee56">小樹</string>
@@ -129,6 +136,7 @@
     <string name="t_fdf0f98738">如果你總是提前澆水，App 會注意到，並建議縮短間隔。</string>
     <string name="t_19f25d5784">更多</string>
     <string name="t_7db203bdda">再繞一圈</string>
+    <string name="t_bbe42739db">重試</string>
     <string name="t_0fb6d09e78">等著澆水</string>
     <string name="t_ef28cc1496">本期間</string>
     <string name="t_70efc9651a">這段期間沒有澆水。</string>
@@ -169,6 +177,7 @@
     <string name="t_b335f763ea">所有植物和全部澆水紀錄都會消失。此動作無法復原。</string>
     <string name="t_53d55db39f">總結</string>
     <string name="t_779e8b3e28">請在手機的設定中開啟：Sprout → 通知。</string>
+    <string name="t_9c47ca16c4">可從 Google Play 免費安裝。之後 AR 會立即開啟。</string>
     <string name="t_46c7be08dd">書房</string>
     <string name="t_0112d57d0b">裁切</string>
     <string name="t_01b9b803e7">照片裁切</string>
@@ -177,6 +186,7 @@
     <string name="t_223428bd3c">每個點代表一次澆水。點越高，土裡剩的水越多。</string>
     <string name="t_e1439f1755">每次澆水都是一個音符：內圈的行星唱得更高。</string>
     <string name="t_f0a22d9d1a">跟隨系統</string>
+    <string name="t_087f6705ed">跟隨手機</string>
     <string name="t_696586f496">你叫什麼名字？</string>
     <string name="t_7013b69dab">使用方式</string>
     <string name="t_d4066ba693">這株植物現在叫什麼？</string>
@@ -185,6 +195,9 @@
     <string name="t_7b105a68e6">長壽花</string>
     <string name="t_60f6304f34">竹芋</string>
     <string name="t_fe0790d4e2">澆水行事曆</string>
+    <string name="t_f2d0f5cc41">相機正被其他應用程式使用</string>
+    <string name="t_37620de860">相機在手機設定中被禁止。請在那裡允許後再回來。</string>
+    <string name="t_601947a61c">相機和照片</string>
     <string name="t_d8e43f5730">相機顯示你的房間，App 把一株立體植物放進去。你可以轉動它、放大它，還能用澆水壺幫它澆水。</string>
     <string name="t_8671ea9e33">水滴</string>
     <string name="t_85618413ed">每個方塊代表最近四個月中的一天：顏色越深，澆水越多。點一下方塊即可查看日期。</string>
@@ -195,6 +208,7 @@
     <string name="t_eb1aa42a32">植物暱稱、品種、濕度、日期——你輸入的一切都儲存在 App 內的檔案中，就在手機上。設定也是如此。這些都不會離開裝置。</string>
     <string name="t_1c8e21179b">按鈕</string>
     <string name="t_49cdfd9292">四周的按鈕</string>
+    <string name="t_2ecb4451da">按鈕和卡片採用手機桌布的顏色。</string>
     <string name="t_725347e425">時間</string>
     <string name="t_512bafe5b5">濕度低於</string>
     <string name="t_72e18d38d9">你何時澆水</string>
@@ -252,7 +266,9 @@
     <string name="t_18f71e9762">天體音樂</string>
     <string name="t_0b854eb300">咪咪</string>
     <string name="t_7a7164238c">薄荷</string>
+    <string name="t_06ec0f34bf">這支手機沒有設定螢幕鎖定。</string>
     <string name="t_272e98dde1">這支手機既沒有 Face ID 也沒有密碼。</string>
+    <string name="t_339d955a3c">把相機對準有花紋的地面或家具</string>
     <string name="t_4dd78d95e6">對準</string>
     <string name="t_c96769af49">點一下「+」建立第一個房間。</string>
     <string name="t_730cde94e5">點一下旁邊的「?」，我們用簡單的話解釋。所有詞語都收在設定裡的詞彙表中。</string>
@@ -298,9 +314,14 @@
     <string name="t_da731c70ca">新房間</string>
     <string name="t_87b55f8287">新房間⋯</string>
     <string name="t_4a30361774">需要配備光學雷達掃描器的 iPhone——iPhone 12 Pro 及更新的 Pro 機型。</string>
+    <string name="t_7283f54f30">需要相機</string>
+    <string name="t_ba43c393fc">需要 Google Play 服務（AR 版）</string>
     <string name="t_b9c9ff652d">關於</string>
+    <string name="t_7bee71b043">請更新 Google Play 服務（AR 版）</string>
+    <string name="t_c2f668e54f">更新</string>
     <string name="t_3a3478672d">拿著手機繞植物走一圈，就能得到它精確的 3D 副本。拍攝需要幾分鐘，產生模型還需幾分鐘；全部在手機上完成。</string>
     <string name="t_bc8d2377f1">用於 AR 的植物 3D 副本。各品種的模型已內建在 App 中，你自己的模型可以根據照片構想或掃描產生——植物頁面上的「模型」按鈕。</string>
+    <string name="t_7eb02aa630">植物的立體副本，供 AR 使用。各品種的模型已經在 App 裡，你自己的模型可以根據照片來設計——植物頁面上的「模型」按鈕。</string>
     <string name="t_4b919d0c3d">該品種通常：%s</string>
     <string name="t_00495efa90">通常在土中水分為 %s 時</string>
     <string name="t_9bc6b67c85">繞一圈就是一個澆水間隔。內圈屬於乾得快的植物，外圈屬於耐得住的植物。</string>
@@ -380,6 +401,7 @@
     <string name="t_0455b2eeff">已顯示%1$d/%2$d：再多手機會吃不消</string>
     <string name="t_387af5ff90">再次顯示提示</string>
     <string name="t_ca645a26b9">轉動滾輪——下方能看到新的間隔在卡片上會如何顯示。</string>
+    <string name="t_51b8f05bf7">搜尋欄位在頂端。可依暱稱、品種和備註搜尋。</string>
     <string name="t_17c7b943fc">搜尋欄位在底部標籤列旁邊。可依暱稱、品種和備註搜尋。</string>
     <string name="t_cd1de7bdc3">一次替所有植物澆水，再傳一張便條給鄰居。</string>
     <string name="t_c767922d35">澆一次水，這裡就會顯示那一刻土裡有多少水。</string>
@@ -416,6 +438,7 @@
     <string name="t_3ca46e3e76">澆水後，一道彩色波浪劃過圖案——表示這次澆水已記錄。</string>
     <string name="t_e101868e98">上次澆水</string>
     <string name="t_d72166f389">在 AR 中查看</string>
+    <string name="t_22f978c185">在你的房間裡看看植物，用照片幫它做專屬模型，或修改暱稱、品種和澆水間隔。</string>
     <string name="t_f945f5f017">在你的房間裡看看植物，為它做一個專屬模型——用照片或掃描——或更改名字、種類和澆水間隔。</string>
     <string name="t_8845f9ee9d">放置</string>
     <string name="t_39a52fa645">放置花園</string>
@@ -453,6 +476,7 @@
         <item quantity="other">每%d個月一次</item>
     </plurals>
     <string name="t_9caa86d668">每隔幾天澆一次水——大約就是土變乾所需的天數。可在植物設定中修改。</string>
+    <string name="t_7882f56b39">允許使用相機</string>
     <string name="t_cc687c1fa5">框住植物和花盆了嗎？那就開始吧</string>
     <string name="t_0717b1b655">重新排列</string>
     <string name="t_7ebd3688e2">植物</string>
@@ -484,6 +508,7 @@
     <string name="t_cd59e4204b">花園已鎖定</string>
     <string name="t_e3b46fe6dd">把花園想像成太陽系：每株植物是一顆行星，繞一圈就是一個澆水間隔。抵達頂端的門時，就該澆水了。</string>
     <string name="t_5a05a6d3f9">花園只能用 Face ID 或手機密碼打開——別人看不到。</string>
+    <string name="t_8401f09a45">花園只能用你的指紋、臉孔或手機的螢幕鎖定開啟——別人看不到。</string>
     <string name="t_2306927b56">%s起的花園</string>
     <string name="t_928ada7e39">花園已放置。點一下植物即可澆水。</string>
     <string name="t_e4d56c1f85">園丁</string>
@@ -502,6 +527,7 @@
     <string name="t_013255575f">今天沒有需要澆水的植物。</string>
     <string name="t_618a6abf44">今天 %s</string>
     <string name="t_88be20fd06">現在</string>
+    <string name="t_ad8df7482b">這支手機無法執行 Google Play 服務（AR 版）。Sprout 的其他功能照常可用。</string>
     <string name="t_b3c4b1be56">網路</string>
     <string name="t_a872210c83">震動強度</string>
     <string name="t_04954ca725">藍色</string>
@@ -524,12 +550,14 @@
     </plurals>
     <string name="t_4a40d86849">下次澆水：明天</string>
     <string name="t_b0f07c6bde">下次澆水：今天</string>
+    <string name="t_cef8f4a582">太暗了——請開燈</string>
     <string name="t_6f8ca5c940">詞彙表</string>
     <string name="t_214438003b">正在看照片⋯</string>
     <string name="t_6fb5cb3976">最新的在前</string>
     <string name="t_3189602bf1">最乾的在前</string>
     <string name="t_4ff6829db6">雪花</string>
     <string name="t_1b494791c5">沒有照片</string>
+    <string name="t_2cb357366d">植物照片會在手機本機上辨識——圖片不會傳送到任何地方。</string>
     <string name="t_9e2d4d618a">照片</string>
     <string name="t_d303471890">照片模糊——請拍得更清晰些。</string>
     <string name="t_bee88a5c8c">照片過曝——請避開陽光直射拍攝。</string>
@@ -554,6 +582,7 @@
     <string name="t_8335506cd9">最乾的：%s。</string>
     <string name="t_31386bfdb5">替植物拍張照——手機會嘗試辨識它的種類。</string>
     <string name="t_2da75ff638">截至%s的分數。朋友再次傳來代碼時會更新。</string>
+    <string name="t_d9467398b8">其他應用程式佔用相機時會發生這種情況。請重試。</string>
     <string name="t_109ff6015e">拖鞋</string>
     <string name="t_ba89e87d7f">手機會辨識照片中的植物並構想它的模型：葉、花和花盆的顏色，以及茂密程度和高度。一切都在手機上離線完成，只需幾秒。</string>
     <string name="t_c9b9affc8d">辨識結果：%1$s——把握%2$d%%。如不正確請修改。</string>
@@ -583,8 +612,10 @@
     <string name="t_8b19591d8a">圖案隨傾斜移動</string>
     <string name="t_1cc281e997">傾斜手機時，背景圖案會輕微移動——好像它在螢幕更深處。</string>
     <string name="t_c8f3f390c2">蒔蘿</string>
+    <string name="t_ce88d35b18">安裝</string>
     <string name="t_5373dc43a3">照顧</string>
     <string name="t_ddc1a36266">考量季節</string>
+    <string name="t_8a4653acae">花園檔案會與其他應用程式的資料一起，依照 Google 的規則納入 Android 備份。</string>
     <string name="t_8041745a9b">花園檔案會與你的其他資料一起，依照 Apple 的規則納入 iPhone 備份。</string>
     <string name="t_92c396e199">非洲堇</string>
     <string name="t_99c7c8c714">圖形</string>
@@ -605,6 +636,7 @@
     <string name="t_84b22ed2aa">顏色</string>
     <string name="t_7ceb6b0f96">波紋顏色</string>
     <string name="t_4d7209b9c1">圖案顏色</string>
+    <string name="t_8c038b5d5a">桌布顏色</string>
     <string name="t_2a6d22be37">顏色、茂密程度和高度都來自照片。</string>
     <string name="t_ac08f8dec7">花</string>
     <string name="t_4924d77144">數字</string>
@@ -621,11 +653,14 @@
     <string name="t_febbc7512c">以打開你的花園</string>
     <string name="t_e250a6df76">鞋帶</string>
     <string name="t_723a09005e">毛毛大衣</string>
+    <string name="t_68656a952e">此版本對 Sprout 來說太舊了。</string>
     <string name="t_b3bf1682b8">這是你的花園</string>
     <string name="t_d342de941a">這是你自己的代碼：你已經在表格中了。</string>
     <string name="t_3a925bfac5">此 iPhone 無法掃描：需要光學雷達。</string>
+    <string name="t_8536fc8767">這支手機不支援 AR</string>
     <string name="t_c7e64e73eb">石蓮花</string>
     <string name="t_77789a486b">絲蘭</string>
+    <string name="t_ed3f0e507a">語言</string>
     <string name="t_3f264c02f1">剛好 %s</string>
     <string name="t_cc86ef708c">你</string>
     <string name="t_2e06422eda">土已乾</string>
@@ -651,4 +686,11 @@
     <string name="t_d8e6f5387c">每分鐘不只一次</string>
     <string name="t_d959d34275">連續%d</string>
     <string name="t_34eb9e66db">• %1$s（%2$s，「%3$s」）——%4$s</string>
+    <string name="shortcut_add">加入</string>
+    <string name="shortcut_search">搜尋</string>
+    <string name="shortcut_stats">統計</string>
+    <string name="shortcut_thirst">該澆誰</string>
+    <string name="tile_label">該澆誰</string>
+    <string name="widget_description">最乾的植物和「澆水」按鈕。</string>
+    <string name="widget_name">該澆誰</string>
 </resources>

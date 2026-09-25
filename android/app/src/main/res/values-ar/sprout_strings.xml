@@ -39,9 +39,13 @@
     <string name="t_197eb092cd">%d٪</string>
     <string name="t_45b8ac5695">20–40٪ ماء</string>
     <string name="t_3d6c2541b9">40٪ ماء أو أكثر</string>
+    <string name="t_5f5e0de553">لم يبدأ الواقع المعزز</string>
+    <string name="t_957c85ce41">يرسم الواقع المعزز النبتة فوق ما تراه الكاميرا. لا تذهب اللقطات إلى أي مكان.</string>
     <string name="t_14c72c397f">الواقع المعزز (AR)</string>
     <string name="t_484d12fea8">الواقع المعزز: تُظهر الكاميرا غرفتك وفيها نبتة ثلاثية الأبعاد. نماذج الأنواع موجودة في التطبيق، ويمكنك تخيّل نموذجك الخاص من صورة أو مسحه.</string>
+    <string name="t_5c4b538eba">الواقع المعزز (AR): تُظهر الكاميرا غرفتك وفيها نبتة مجسّمة. نماذج الأنواع موجودة في التطبيق، ويمكنك تخيّل نموذجك الخاص من صورة.</string>
     <string name="t_809c431aa4">الواقع المعزز والنموذج والإعدادات</string>
+    <string name="t_acec2ec7d0">Android %s أو أحدث</string>
     <string name="t_302a05a1ac">لا يجمع Sprout أي معلومات عنك ولا يرسل شيئًا إلى أي مكان.</string>
     <string name="t_9585992548">iOS 26 أو أحدث</string>
     <string name="t_c65910cd34">«%1$s» و%2$s أخرى تحتاج إلى الماء</string>
@@ -80,6 +84,7 @@
     <string name="t_a8bcae2d9a">ماتيلدا</string>
     <string name="t_f79b25b05d">حديقتك كالمجموعة الشمسية: النبتات تدور في مدارات السقي. ألقِ نظرة — يمكنك حتى الاستماع إلى شهر.</string>
     <string name="t_19ff316e6f">اسحب المنزلق — تتقدم الحديقة أيامًا إلى الأمام، كأنك تسقي في الوقت المناسب.</string>
+    <string name="t_ddf5bf682d">حرّك الهاتف ببطء أكثر</string>
     <string name="t_3f52bd53a9">العودة</string>
     <string name="t_c7aaa96778">تراجع</string>
     <string name="t_f10d238768">العودة إلى النموذج الجاهز</string>
@@ -110,6 +115,7 @@
     <string name="t_2b5f40f213">كل مرات سقي هذه النبتة. احذف السجل الخاطئ بضغطة مطوّلة.</string>
     <string name="t_2f07cfc9c2">سُقيت كلها</string>
     <string name="t_3b5143902e">الإجمالي</string>
+    <string name="t_eeb8caeb95">لصق</string>
     <string name="t_c12ee51dd9">كل الوقت</string>
     <string name="t_1059a1d77d">أمس، %s</string>
     <string name="t_fe4b0c80f0">اختيار</string>
@@ -129,6 +135,7 @@
     <string name="t_68ae695380">مستشعر الحركة</string>
     <string name="t_827d544645">التواريخ</string>
     <string name="t_0bcd158c3d">إصبعان للتدوير، والقرص لتغيير الحجم</string>
+    <string name="t_9978ac34b2">إجراءات</string>
     <string name="t_b6ef08401f">يوم</string>
     <string name="t_abbebfc85b">يوم تطلب فيه ثلاث نبتات أو أكثر الماء في آن واحد — مريح أن تسقيها كلها دفعة واحدة.</string>
     <string name="t_e0c0ceee56">شجرة صغيرة</string>
@@ -149,6 +156,7 @@
     <string name="t_fdf0f98738">إذا سقيت قبل الموعد، يلاحظ التطبيق ذلك ويقترح تقصير المدة.</string>
     <string name="t_19f25d5784">المزيد</string>
     <string name="t_7db203bdda">دورة أخرى</string>
+    <string name="t_bbe42739db">إعادة المحاولة</string>
     <string name="t_0fb6d09e78">تنتظر الماء</string>
     <string name="t_ef28cc1496">في الفترة</string>
     <string name="t_70efc9651a">لم تكن هناك سقيات في هذه الفترة.</string>
@@ -189,6 +197,7 @@
     <string name="t_b335f763ea">ستختفي كل النباتات وسجل السقي كاملًا. لا يمكن التراجع.</string>
     <string name="t_53d55db39f">الملخص</string>
     <string name="t_779e8b3e28">شغّلها من إعدادات الهاتف: Sprout ← الإشعارات.</string>
+    <string name="t_9c47ca16c4">تُثبَّت من Google Play مجانًا. بعدها يفتح الواقع المعزز فورًا.</string>
     <string name="t_46c7be08dd">غرفة المكتب</string>
     <string name="t_0112d57d0b">قص</string>
     <string name="t_01b9b803e7">قص الصورة</string>
@@ -197,6 +206,7 @@
     <string name="t_223428bd3c">كل نقطة سقية. كلما ارتفعت النقطة، كان في التربة ماء أكثر.</string>
     <string name="t_e1439f1755">كل سقية نغمة: الكواكب القريبة تغني بصوت أعلى.</string>
     <string name="t_f0a22d9d1a">مثل النظام</string>
+    <string name="t_087f6705ed">كما في الهاتف</string>
     <string name="t_696586f496">ما اسمك؟</string>
     <string name="t_7013b69dab">طريقة الاستخدام</string>
     <string name="t_d4066ba693">ما اسم النبتة الآن؟</string>
@@ -205,6 +215,9 @@
     <string name="t_7b105a68e6">كالانشو</string>
     <string name="t_60f6304f34">كالاثيا</string>
     <string name="t_fe0790d4e2">تقويم السقي</string>
+    <string name="t_f2d0f5cc41">تطبيق آخر يستخدم الكاميرا</string>
+    <string name="t_37620de860">الكاميرا ممنوعة في إعدادات الهاتف. اسمح بها هناك ثم عُد.</string>
+    <string name="t_601947a61c">الكاميرا والصور</string>
     <string name="t_d8e43f5730">تعرض الكاميرا غرفتك، ويضع التطبيق فيها نبتة مجسّمة. يمكنك تدويرها وتكبيرها وسقيها بإبريق السقي.</string>
     <string name="t_8671ea9e33">قطرة</string>
     <string name="t_85618413ed">كل مربع يوم من الأشهر الأربعة الأخيرة: كلما اشتد اللون زاد السقي. اضغط مربعًا لترى تاريخه.</string>
@@ -215,6 +228,7 @@
     <string name="t_eb1aa42a32">ألقاب النباتات والأنواع والرطوبة والتواريخ — كل ما تدخله محفوظ في ملف داخل التطبيق، على الهاتف نفسه. وكذلك الإعدادات. لا شيء من ذلك يغادر الجهاز.</string>
     <string name="t_1c8e21179b">الأزرار</string>
     <string name="t_49cdfd9292">الأزرار من حولك</string>
+    <string name="t_2ecb4451da">الأزرار والبطاقات بألوان خلفية الهاتف.</string>
     <string name="t_725347e425">متى</string>
     <string name="t_512bafe5b5">عندما تقل الرطوبة عن</string>
     <string name="t_72e18d38d9">متى تسقي</string>
@@ -272,7 +286,9 @@
     <string name="t_18f71e9762">موسيقى الأفلاك</string>
     <string name="t_0b854eb300">بسبوس</string>
     <string name="t_7a7164238c">نعناع</string>
+    <string name="t_06ec0f34bf">لم يُضبط قفل للشاشة على هذا الهاتف.</string>
     <string name="t_272e98dde1">لا يوجد في هذا الهاتف بصمة وجه ولا رمز دخول.</string>
+    <string name="t_339d955a3c">وجّه الكاميرا إلى أرضية بها نقوش أو إلى قطعة أثاث</string>
     <string name="t_4dd78d95e6">صوّب</string>
     <string name="t_c96769af49">اضغط «+» لإنشاء أول غرفة.</string>
     <string name="t_730cde94e5">المس «؟» بجانبها وسنشرحها بكلمات بسيطة. كل الكلمات مجموعة في المسرد داخل الإعدادات.</string>
@@ -318,9 +334,14 @@
     <string name="t_da731c70ca">غرفة جديدة</string>
     <string name="t_87b55f8287">غرفة جديدة…</string>
     <string name="t_4a30361774">يلزم iPhone بمستشعر LiDAR — طرازات Pro بدءًا من iPhone 12 Pro.</string>
+    <string name="t_7283f54f30">الكاميرا مطلوبة</string>
+    <string name="t_ba43c393fc">خدمات Google Play للواقع المعزز مطلوبة</string>
     <string name="t_b9c9ff652d">حول</string>
+    <string name="t_7bee71b043">حدّث خدمات Google Play للواقع المعزز</string>
+    <string name="t_c2f668e54f">تحديث</string>
     <string name="t_3a3478672d">در حول النبتة بهاتفك — لتحصل على نسخة ثلاثية الأبعاد دقيقة منها. يستغرق التصوير دقيقتين، وبناء النموذج بضع دقائق أخرى؛ كل ذلك على الهاتف.</string>
     <string name="t_bc8d2377f1">نسخة ثلاثية الأبعاد من النبتة للواقع المعزز. نماذج الأنواع موجودة في التطبيق، ويمكنك تخيّل نموذجك الخاص من صورة أو مسحه — زر «النموذج» في شاشة النبتة.</string>
+    <string name="t_7eb02aa630">نسخة مجسّمة من النبتة للواقع المعزز. نماذج الأنواع موجودة في التطبيق، ويمكنك تخيّل نموذجك الخاص من صورة — زر «النموذج» في شاشة النبتة.</string>
     <string name="t_4b919d0c3d">المعتاد لهذا النوع: %s</string>
     <string name="t_00495efa90">عادةً حين يكون في التربة %s ماء</string>
     <string name="t_9bc6b67c85">الدورة الواحدة موعد سقي واحد. المدارات القريبة للتي تجف بسرعة، والبعيدة للصبورة.</string>
@@ -425,6 +446,7 @@
     <string name="t_0455b2eeff">يُعرض %1$d من %2$d: أكثر من ذلك يُثقل الهاتف</string>
     <string name="t_387af5ff90">عرض التلميحات مجددًا</string>
     <string name="t_ca645a26b9">أدِر العجلة — ترى في الأسفل كيف سيظهر الموعد الجديد على البطاقة.</string>
+    <string name="t_51b8f05bf7">حقل البحث في الأعلى. يبحث في الألقاب والأنواع والملاحظات.</string>
     <string name="t_17c7b943fc">حقل البحث في الأسفل بجوار شريط علامات التبويب. يبحث في الألقاب والأنواع والملاحظات.</string>
     <string name="t_cd1de7bdc3">اسقِ الجميع دفعة واحدة وأرسل إلى الجار مذكرة.</string>
     <string name="t_c767922d35">اسقِ نبتة، وسترى هنا كم كان في التربة من ماء في تلك اللحظة.</string>
@@ -466,6 +488,7 @@
     <string name="t_3ca46e3e76">بعد السقي تمرّ موجة ملوّنة عبر النقش، وهكذا تعرف أن السقي احتُسب.</string>
     <string name="t_e101868e98">آخر سقية</string>
     <string name="t_d72166f389">عرض بالواقع المعزز</string>
+    <string name="t_22f978c185">شاهد النبتة في غرفتك، واصنع لها نموذجًا خاصًا من صورة، أو غيّر لقبها ونوعها وموعد سقيها.</string>
     <string name="t_f945f5f017">شاهد النبتة في غرفتك، واصنع لها نموذجها الخاص — من صورة أو بالمسح — أو غيّر اسمها ونوعها وموعد سقيها.</string>
     <string name="t_8845f9ee9d">وضع</string>
     <string name="t_39a52fa645">وضع الحديقة</string>
@@ -513,6 +536,7 @@
         <item quantity="other">كل %d شهر</item>
     </plurals>
     <string name="t_9caa86d668">كل كم يومًا تُسقى النبتة، وهي تقريبًا المدة التي تجف فيها التربة. يُغيَّر في إعدادات النبتة.</string>
+    <string name="t_7882f56b39">السماح بالكاميرا</string>
     <string name="t_cc687c1fa5">هل يحيط الإطار بالنبتة وأصيصها؟ ابدأ إذن</string>
     <string name="t_0717b1b655">ترتيب</string>
     <string name="t_7ebd3688e2">نبتة</string>
@@ -544,6 +568,7 @@
     <string name="t_cd59e4204b">الحديقة مقفلة</string>
     <string name="t_e3b46fe6dd">حديقتك كالمجموعة الشمسية: كل نبتة كوكب، ودورة واحدة موعد سقي واحد. حين تبلغ البوابة في الأعلى يحين وقت السقي.</string>
     <string name="t_5a05a6d3f9">لا تُفتح الحديقة إلا بـ Face ID أو رمز الهاتف، فلا يطّلع عليها أحد غيرك.</string>
+    <string name="t_8401f09a45">لا تُفتح الحديقة إلا ببصمة إصبعك أو وجهك أو قفل شاشة الهاتف — لن يتلصص الغرباء.</string>
     <string name="t_2306927b56">الحديقة منذ %s</string>
     <string name="t_928ada7e39">الحديقة في مكانها. اضغط على نبتة لسقيها.</string>
     <string name="t_e4d56c1f85">بستاني</string>
@@ -562,6 +587,7 @@
     <string name="t_013255575f">لا حاجة لسقي أي نبتة اليوم.</string>
     <string name="t_618a6abf44">اليوم، %s</string>
     <string name="t_88be20fd06">الآن</string>
+    <string name="t_ad8df7482b">لا تعمل عليه خدمات Google Play للواقع المعزز. كل ما عدا ذلك في Sprout يعمل كالمعتاد.</string>
     <string name="t_b3c4b1be56">الشبكة</string>
     <string name="t_a872210c83">قوة الاهتزاز</string>
     <string name="t_04954ca725">أزرق</string>
@@ -589,12 +615,14 @@
     </plurals>
     <string name="t_4a40d86849">السقي التالي: غدًا</string>
     <string name="t_b0f07c6bde">السقي التالي: اليوم</string>
+    <string name="t_cef8f4a582">مظلم جدًا — شغّل الضوء</string>
     <string name="t_6f8ca5c940">المسرد</string>
     <string name="t_214438003b">أتفحّص الصورة…</string>
     <string name="t_6fb5cb3976">الأحدث أولًا</string>
     <string name="t_3189602bf1">الأكثر جفافًا أولًا</string>
     <string name="t_4ff6829db6">ثلج</string>
     <string name="t_1b494791c5">لا توجد صورة</string>
+    <string name="t_2cb357366d">تُتعرَّف صور النباتات على الهاتف نفسه — لا تُرسل الصور إلى أي مكان.</string>
     <string name="t_9e2d4d618a">صورة</string>
     <string name="t_d303471890">الصورة غير واضحة — التقط صورة أوضح.</string>
     <string name="t_bee88a5c8c">الصورة شديدة الإضاءة — التقطها بعيدًا عن الشمس المباشرة.</string>
@@ -619,6 +647,7 @@
     <string name="t_8335506cd9">الأجف: %s.</string>
     <string name="t_31386bfdb5">صوّر النبتة — سيحاول الهاتف التعرّف على نوعها.</string>
     <string name="t_2da75ff638">النقاط بتاريخ %s. ستتحدث عندما يرسل صديقك الرمز مجددًا.</string>
+    <string name="t_d9467398b8">يحدث هذا عندما يستخدم تطبيق آخر الكاميرا. حاول مرة أخرى.</string>
     <string name="t_109ff6015e">شبشب</string>
     <string name="t_ba89e87d7f">سيتعرّف الهاتف على النبتة في الصورة ويتخيّل نموذجها: ألوان الأوراق والأزهار والأصيص، والكثافة والطول. كل شيء يُحسب على الهاتف دون اتصال، في ثوانٍ.</string>
     <string name="t_c9b9affc8d">تم التعرف: %1$s — بثقة %2$d٪. صحّح إن لم يكن صحيحًا.</string>
@@ -648,8 +677,10 @@
     <string name="t_8b19591d8a">النقش يتبع الإمالة</string>
     <string name="t_1cc281e997">يتحرك نقش الخلفية قليلًا عندما تُميل الهاتف، كأنه أعمق من الشاشة.</string>
     <string name="t_c8f3f390c2">شبت</string>
+    <string name="t_ce88d35b18">تثبيت</string>
     <string name="t_5373dc43a3">العناية</string>
     <string name="t_ddc1a36266">مراعاة فصل السنة</string>
+    <string name="t_8a4653acae">يدخل ملف الحديقة في النسخة الاحتياطية لـ Android — مع بيانات التطبيقات الأخرى، وفق قواعد Google.</string>
     <string name="t_8041745a9b">يدخل ملف الحديقة في النسخة الاحتياطية للـ iPhone — مع بقية بياناتك، وفق قواعد Apple.</string>
     <string name="t_92c396e199">بنفسج أفريقي</string>
     <string name="t_99c7c8c714">الأشكال</string>
@@ -670,6 +701,7 @@
     <string name="t_84b22ed2aa">اللون</string>
     <string name="t_7ceb6b0f96">لون الموجة</string>
     <string name="t_4d7209b9c1">لون النقش</string>
+    <string name="t_8c038b5d5a">ألوان الخلفية</string>
     <string name="t_2a6d22be37">الألوان والكثافة والطول — من الصورة.</string>
     <string name="t_ac08f8dec7">زهرة</string>
     <string name="t_4924d77144">الأرقام</string>
@@ -686,11 +718,14 @@
     <string name="t_febbc7512c">لفتح حديقتك</string>
     <string name="t_e250a6df76">رباط</string>
     <string name="t_723a09005e">فروة</string>
+    <string name="t_68656a952e">هذا الإصدار قديم جدًا على Sprout.</string>
     <string name="t_b3bf1682b8">هذه حديقتك</string>
     <string name="t_d342de941a">هذا رمزك أنت: أنت موجود في الجدول بالفعل.</string>
     <string name="t_3a925bfac5">لا يستطيع هذا الـ iPhone المسح: يلزم LiDAR.</string>
+    <string name="t_8536fc8767">هذا الهاتف لا يدعم الواقع المعزز</string>
     <string name="t_c7e64e73eb">إيشيفيريا</string>
     <string name="t_77789a486b">يوكا</string>
+    <string name="t_ed3f0e507a">اللغة</string>
     <string name="t_3f264c02f1">في الوقت المناسب %s</string>
     <string name="t_cc86ef708c">أنت</string>
     <string name="t_2e06422eda">التربة جافة</string>
@@ -731,4 +766,11 @@
     <string name="t_d8e6f5387c">أكثر من مرة في الدقيقة</string>
     <string name="t_d959d34275">السلسلة %d</string>
     <string name="t_34eb9e66db">• %1$s (%2$s، «%3$s») — %4$s</string>
+    <string name="shortcut_add">إضافة</string>
+    <string name="shortcut_search">بحث</string>
+    <string name="shortcut_stats">الإحصاءات</string>
+    <string name="shortcut_thirst">من يحتاج السقي</string>
+    <string name="tile_label">من يحتاج السقي</string>
+    <string name="widget_description">النباتات الأكثر جفافًا وزر «اسقِ».</string>
+    <string name="widget_name">من يحتاج السقي</string>
 </resources>

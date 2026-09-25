@@ -27,9 +27,13 @@
     <string name="t_197eb092cd">%d%%</string>
     <string name="t_45b8ac5695" formatted="false">২০–৪০% জল</string>
     <string name="t_3d6c2541b9" formatted="false">৪০% বা বেশি জল</string>
+    <string name="t_5f5e0de553">AR চালু হয়নি</string>
+    <string name="t_957c85ce41">ক্যামেরা যা দেখে তার ওপরে AR গাছটি আঁকে। ছবিগুলো কোথাও পাঠানো হয় না।</string>
     <string name="t_14c72c397f">AR — অগমেন্টেড রিয়েলিটি</string>
     <string name="t_484d12fea8">AR মানে অগমেন্টেড রিয়ালিটি: ক্যামেরা আপনার ঘর দেখায়, আর তাতে একটি 3D গাছ। প্রজাতির মডেল অ্যাপেই আছে, আর নিজেরটা ছবি থেকে কল্পনা করে বা স্ক্যান করে বানানো যায়।</string>
+    <string name="t_5c4b538eba">AR মানে অগমেন্টেড রিয়েলিটি: ক্যামেরা আপনার ঘর দেখায়, আর তার মধ্যে একটি ত্রিমাত্রিক গাছ। প্রজাতির মডেল অ্যাপেই আছে, আর নিজের মডেল ছবি থেকে বানিয়ে নেওয়া যায়।</string>
     <string name="t_809c431aa4">AR, মডেল ও সেটিংস</string>
+    <string name="t_acec2ec7d0">Android %s বা তার পরের</string>
     <string name="t_302a05a1ac">Sprout আপনার সম্পর্কে কোনো তথ্য সংগ্রহ করে না এবং কোথাও কিছু পাঠায় না।</string>
     <string name="t_9585992548">iOS 26 বা পরবর্তী</string>
     <string name="t_c65910cd34">“%1$s” এবং আরও %2$s-এর জল দরকার</string>
@@ -68,6 +72,7 @@
     <string name="t_a8bcae2d9a">মাটিল্ডা</string>
     <string name="t_f79b25b05d">আপনার বাগান সৌরজগতের মতো: গাছেরা জলের কক্ষপথে ঘোরে। একবার দেখুন — একটা মাস শুনতেও পারবেন।</string>
     <string name="t_19ff316e6f">স্লাইডার টানুন — বাগান কয়েক দিন এগিয়ে যাবে, যেন আপনি ঠিক সময়ে জল দেন।</string>
+    <string name="t_ddf5bf682d">ফোন আরও ধীরে সরান</string>
     <string name="t_3f52bd53a9">ফিরছি</string>
     <string name="t_c7aaa96778">পূর্বাবস্থা</string>
     <string name="t_f10d238768">তৈরি মডেলে ফিরুন</string>
@@ -94,6 +99,7 @@
     <string name="t_2b5f40f213">এই গাছের সব জল দেওয়ার রেকর্ড। ভুল এন্ট্রি দীর্ঘ চাপে মুছুন।</string>
     <string name="t_2f07cfc9c2">সবাইকে জল দেওয়া হয়েছে</string>
     <string name="t_3b5143902e">মোট</string>
+    <string name="t_eeb8caeb95">পেস্ট করুন</string>
     <string name="t_c12ee51dd9">সব সময়</string>
     <string name="t_1059a1d77d">গতকাল, %s</string>
     <string name="t_fe4b0c80f0">বেছে নিন</string>
@@ -113,6 +119,7 @@
     <string name="t_68ae695380">গতি সেন্সর</string>
     <string name="t_827d544645">তারিখ</string>
     <string name="t_0bcd158c3d">দুই আঙুলে ঘোরান, চিমটি দিয়ে আকার বদলান</string>
+    <string name="t_9978ac34b2">কাজ</string>
     <string name="t_b6ef08401f">দিন</string>
     <string name="t_abbebfc85b">যেদিন তিন বা তার বেশি গাছ একসঙ্গে জল চাইবে — সবাইকে একবারে জল দেওয়া সুবিধাজনক।</string>
     <string name="t_e0c0ceee56">ছোট গাছ</string>
@@ -133,6 +140,7 @@
     <string name="t_fdf0f98738">সময়ের আগে জল দিলে অ্যাপ তা লক্ষ করে ব্যবধান কমানোর পরামর্শ দেয়।</string>
     <string name="t_19f25d5784">আরও</string>
     <string name="t_7db203bdda">আরেক পাক</string>
+    <string name="t_bbe42739db">আবার চেষ্টা করুন</string>
     <string name="t_0fb6d09e78">জল চায়</string>
     <string name="t_ef28cc1496">সময়কালে</string>
     <string name="t_70efc9651a">এই সময়কালে জল দেওয়া হয়নি।</string>
@@ -173,6 +181,7 @@
     <string name="t_b335f763ea">সব গাছ ও পুরো জল দেওয়ার হিসাব মুছে যাবে। এটি ফেরানো যাবে না।</string>
     <string name="t_53d55db39f">সারসংক্ষেপ</string>
     <string name="t_779e8b3e28">ফোনের সেটিংসে চালু করুন: Sprout → বিজ্ঞপ্তি।</string>
+    <string name="t_9c47ca16c4">এগুলো Google Play থেকে বিনামূল্যে ইনস্টল হয়। তারপর AR সঙ্গে সঙ্গে খুলবে।</string>
     <string name="t_46c7be08dd">পড়ার ঘর</string>
     <string name="t_0112d57d0b">ক্রপ</string>
     <string name="t_01b9b803e7">ছবির ক্রপ</string>
@@ -181,6 +190,7 @@
     <string name="t_223428bd3c">প্রতিটি বিন্দু একবার জল দেওয়া। বিন্দু যত উঁচু, মাটিতে তত বেশি জল তখনও ছিল।</string>
     <string name="t_e1439f1755">প্রতিবার জল দেওয়া একটি সুর: কাছের গ্রহরা উঁচু সুরে গায়।</string>
     <string name="t_f0a22d9d1a">সিস্টেমের মতো</string>
+    <string name="t_087f6705ed">ফোনের মতো</string>
     <string name="t_696586f496">আপনার নাম কী?</string>
     <string name="t_7013b69dab">কীভাবে ব্যবহার করবেন</string>
     <string name="t_d4066ba693">গাছটির নাম এখন কী?</string>
@@ -189,6 +199,9 @@
     <string name="t_7b105a68e6">কালাঞ্চো</string>
     <string name="t_60f6304f34">ক্যালাথিয়া</string>
     <string name="t_fe0790d4e2">জল দেওয়ার ক্যালেন্ডার</string>
+    <string name="t_f2d0f5cc41">ক্যামেরা অন্য অ্যাপ ব্যবহার করছে</string>
+    <string name="t_37620de860">ফোনের সেটিংসে ক্যামেরা বন্ধ করা আছে। সেখানে অনুমতি দিয়ে ফিরে আসুন।</string>
+    <string name="t_601947a61c">ক্যামেরা ও ছবি</string>
     <string name="t_d8e43f5730">ক্যামেরা আপনার ঘর দেখায়, আর অ্যাপ সেখানে একটি ত্রিমাত্রিক গাছ রাখে। আপনি সেটি ঘোরাতে, বড় করতে আর ঝাঁঝরি দিয়ে জল দিতে পারেন।</string>
     <string name="t_8671ea9e33">ফোঁটা</string>
     <string name="t_85618413ed">প্রতিটি ঘর গত চার মাসের একটি দিন: রং যত গাঢ়, জল তত বেশি। তারিখ দেখতে একটি ঘরে ট্যাপ করুন।</string>
@@ -199,6 +212,7 @@
     <string name="t_eb1aa42a32">গাছের ডাকনাম, প্রজাতি, আর্দ্রতা, তারিখ — আপনি যা লেখেন সবই অ্যাপের ভেতরের একটি ফাইলে, ফোনেই থাকে। সেটিংসও সেখানে। এর কিছুই ডিভাইস ছেড়ে যায় না।</string>
     <string name="t_1c8e21179b">বোতাম</string>
     <string name="t_49cdfd9292">চারপাশের বোতাম</string>
+    <string name="t_2ecb4451da">বোতাম আর কার্ড ফোনের ওয়ালপেপারের রঙে।</string>
     <string name="t_725347e425">কখন</string>
     <string name="t_512bafe5b5">যখন আর্দ্রতা এর নিচে</string>
     <string name="t_72e18d38d9">আপনি কখন জল দেন</string>
@@ -256,7 +270,9 @@
     <string name="t_18f71e9762">গোলকের সংগীত</string>
     <string name="t_0b854eb300">মিনি</string>
     <string name="t_7a7164238c">পুদিনা</string>
+    <string name="t_06ec0f34bf">এই ফোনে স্ক্রিন লক সেট করা নেই।</string>
     <string name="t_272e98dde1">এই ফোনে Face ID বা পাসকোড কোনোটিই নেই।</string>
+    <string name="t_339d955a3c">ক্যামেরা নকশা করা মেঝে বা আসবাবের দিকে ধরুন</string>
     <string name="t_4dd78d95e6">তাক করুন</string>
     <string name="t_c96769af49">প্রথমটি তৈরি করতে “+” ট্যাপ করুন।</string>
     <string name="t_730cde94e5">পাশের “?”-এ ট্যাপ করুন — সহজ ভাষায় বুঝিয়ে দেব। সব শব্দ সেটিংসের শব্দকোষে রাখা আছে।</string>
@@ -302,9 +318,14 @@
     <string name="t_da731c70ca">নতুন ঘর</string>
     <string name="t_87b55f8287">নতুন ঘর…</string>
     <string name="t_4a30361774">LiDAR সেন্সরযুক্ত iPhone লাগবে — iPhone 12 Pro থেকে Pro মডেলগুলো।</string>
+    <string name="t_7283f54f30">ক্যামেরা লাগবে</string>
+    <string name="t_ba43c393fc">AR-এর জন্য Google Play পরিষেবা লাগবে</string>
     <string name="t_b9c9ff652d">সম্পর্কে</string>
+    <string name="t_7bee71b043">AR-এর জন্য Google Play পরিষেবা আপডেট করুন</string>
+    <string name="t_c2f668e54f">আপডেট করুন</string>
     <string name="t_3a3478672d">ফোন নিয়ে গাছের চারপাশে ঘুরুন — তার নিখুঁত 3D প্রতিলিপি তৈরি হবে। ছবি তুলতে কয়েক মিনিট, মডেল বানাতে আরও কয়েক মিনিট; সবই ফোনে।</string>
     <string name="t_bc8d2377f1">AR-এর জন্য গাছের 3D প্রতিলিপি। প্রজাতির মডেল অ্যাপেই আছে, আর নিজেরটা ছবি থেকে কল্পনা করে বা স্ক্যান করে বানানো যায় — গাছের পর্দায় “মডেল” বোতাম।</string>
+    <string name="t_7eb02aa630">AR-এর জন্য গাছের ত্রিমাত্রিক প্রতিরূপ। প্রজাতির মডেল অ্যাপেই আছে, আর নিজের মডেল ছবি থেকে বানিয়ে নেওয়া যায় — গাছের স্ক্রিনে “মডেল” বোতাম।</string>
     <string name="t_4b919d0c3d">এই প্রজাতির জন্য সাধারণত: %s</string>
     <string name="t_00495efa90">সাধারণত যখন মাটিতে %s জল থাকে</string>
     <string name="t_9bc6b67c85">এক পাক মানে জল দেওয়ার একটি ব্যবধান। কাছের কক্ষপথ তাড়াতাড়ি শুকোনো গাছের, দূরেরগুলো ধৈর্যশীলদের।</string>
@@ -389,6 +410,7 @@
     <string name="t_0455b2eeff">%2$d-এর মধ্যে %1$dটি দেখানো হচ্ছে: আরও হলে ফোনের জন্য ভারী</string>
     <string name="t_387af5ff90">ইঙ্গিত আবার দেখান</string>
     <string name="t_ca645a26b9">চাকা ঘোরান — নিচে দেখবেন নতুন ব্যবধান কার্ডে কেমন দেখাবে।</string>
+    <string name="t_51b8f05bf7">খোঁজার ঘর ওপরে। এটি ডাকনাম, প্রজাতি আর নোটে খোঁজে।</string>
     <string name="t_17c7b943fc">খোঁজার ঘর নিচে, ট্যাব বারের পাশে। ডাকনাম, প্রজাতি আর নোটে খোঁজে।</string>
     <string name="t_cd1de7bdc3">সবাইকে একসঙ্গে জল দিন আর প্রতিবেশীকে চিরকুট পাঠান।</string>
     <string name="t_c767922d35">কোনো গাছে জল দিন — সেই মুহূর্তে মাটিতে কতটা জল ছিল এখানে দেখা যাবে।</string>
@@ -426,6 +448,7 @@
     <string name="t_3ca46e3e76">জল দেওয়ার পর নকশার ওপর দিয়ে রঙিন ঢেউ বয়ে যায় — এতে বোঝা যায় জল দেওয়া গণনা হয়েছে।</string>
     <string name="t_e101868e98">শেষ জল দেওয়া</string>
     <string name="t_d72166f389">AR-এ দেখুন</string>
+    <string name="t_22f978c185">নিজের ঘরে গাছটি দেখুন, ছবি থেকে তার নিজস্ব মডেল বানান, অথবা ডাকনাম, প্রজাতি আর জল দেওয়ার ব্যবধান বদলান।</string>
     <string name="t_f945f5f017">গাছটিকে নিজের ঘরে দেখুন, তার নিজের মডেল বানান — ছবি থেকে বা স্ক্যান করে — অথবা নাম, প্রজাতি ও জল দেওয়ার ব্যবধান বদলান।</string>
     <string name="t_8845f9ee9d">রাখুন</string>
     <string name="t_39a52fa645">বাগান রাখুন</string>
@@ -465,6 +488,7 @@
         <item quantity="other">প্রতি %d মাসে</item>
     </plurals>
     <string name="t_9caa86d668">কত দিন পরপর গাছে জল দেওয়া হয় — মোটামুটি এতদিনে মাটি শুকোয়। গাছের সেটিংসে বদলানো যায়।</string>
+    <string name="t_7882f56b39">ক্যামেরার অনুমতি দিন</string>
     <string name="t_cc687c1fa5">ফ্রেম কি গাছ আর টব ঘিরে আছে? তাহলে শুরু করুন</string>
     <string name="t_0717b1b655">সাজান</string>
     <string name="t_7ebd3688e2">গাছ</string>
@@ -496,6 +520,7 @@
     <string name="t_cd59e4204b">বাগান লক করা</string>
     <string name="t_e3b46fe6dd">আপনার বাগান সৌরজগতের মতো: প্রতিটি গাছ একটি গ্রহ, এক পাক মানে জল দেওয়ার একটি ব্যবধান। ওপরের দরজায় পৌঁছালে জল দেওয়ার সময়।</string>
     <string name="t_5a05a6d3f9">বাগান শুধু Face ID বা ফোনের পাসকোড দিয়ে খোলে — অন্য কেউ উঁকি দিতে পারবে না।</string>
+    <string name="t_8401f09a45">বাগান খোলে শুধু আপনার আঙুলের ছাপ, মুখ বা ফোনের স্ক্রিন লক দিয়ে — অন্যরা উঁকি দিতে পারবে না।</string>
     <string name="t_2306927b56">%s থেকে বাগান</string>
     <string name="t_928ada7e39">বাগান রাখা হয়েছে। জল দিতে গাছে ট্যাপ করুন।</string>
     <string name="t_e4d56c1f85">মালি</string>
@@ -514,6 +539,7 @@
     <string name="t_013255575f">আজ কাউকে জল দিতে হবে না।</string>
     <string name="t_618a6abf44">আজ, %s</string>
     <string name="t_88be20fd06">এখন</string>
+    <string name="t_ad8df7482b">এতে AR-এর জন্য Google Play পরিষেবা চলে না। Sprout-এর বাকি সব কিছু আগের মতোই কাজ করে।</string>
     <string name="t_b3c4b1be56">নেটওয়ার্ক</string>
     <string name="t_a872210c83">কম্পনের জোর</string>
     <string name="t_04954ca725">নীল</string>
@@ -537,12 +563,14 @@
     </plurals>
     <string name="t_4a40d86849">পরের জল: আগামীকাল</string>
     <string name="t_b0f07c6bde">পরের জল: আজ</string>
+    <string name="t_cef8f4a582">খুব অন্ধকার — আলো জ্বালান</string>
     <string name="t_6f8ca5c940">শব্দকোষ</string>
     <string name="t_214438003b">ছবিটা দেখছি…</string>
     <string name="t_6fb5cb3976">সবচেয়ে নতুন আগে</string>
     <string name="t_3189602bf1">সবচেয়ে শুকনো আগে</string>
     <string name="t_4ff6829db6">তুষার</string>
     <string name="t_1b494791c5">কোনো ছবি নেই</string>
+    <string name="t_2cb357366d">গাছের ছবি ফোনেই চেনা হয় — ছবিগুলো কোথাও পাঠানো হয় না।</string>
     <string name="t_9e2d4d618a">ছবি</string>
     <string name="t_d303471890">ছবিটা ঝাপসা — আরও পরিষ্কার একটা তুলুন।</string>
     <string name="t_bee88a5c8c">ছবিতে আলো বেশি — সরাসরি রোদ এড়িয়ে তুলুন।</string>
@@ -567,6 +595,7 @@
     <string name="t_8335506cd9">সবচেয়ে শুকনো: %s।</string>
     <string name="t_31386bfdb5">গাছের ছবি তুলুন — ফোন তার প্রজাতি চেনার চেষ্টা করবে।</string>
     <string name="t_2da75ff638">%s পর্যন্ত স্কোর। বন্ধু আবার কোড পাঠালে আপডেট হবে।</string>
+    <string name="t_d9467398b8">অন্য কোনো অ্যাপ ক্যামেরা ব্যবহার করলে এমন হয়। আবার চেষ্টা করুন।</string>
     <string name="t_109ff6015e">চটি</string>
     <string name="t_ba89e87d7f">ফোন ছবিতে গাছ চিনে তার মডেল কল্পনা করবে: পাতা, ফুল আর টবের রং, ঘনত্ব আর উচ্চতা। সবই ফোনে, ইন্টারনেট ছাড়া, কয়েক সেকেন্ডে।</string>
     <string name="t_c9b9affc8d">চেনা গেছে: %1$s — %2$d%% নিশ্চিত। ভুল হলে ঠিক করুন।</string>
@@ -596,8 +625,10 @@
     <string name="t_8b19591d8a">নকশা হেলানো অনুসরণ করে</string>
     <string name="t_1cc281e997">ফোন হেলালে পটভূমির নকশা একটু সরে যায় — যেন স্ক্রিনের চেয়ে গভীরে আছে।</string>
     <string name="t_c8f3f390c2">শুলফা</string>
+    <string name="t_ce88d35b18">ইনস্টল করুন</string>
     <string name="t_5373dc43a3">যত্ন</string>
     <string name="t_ddc1a36266">ঋতু বিবেচনা করুন</string>
+    <string name="t_8a4653acae">বাগানের ফাইল Android ব্যাকআপে যায় — অন্য অ্যাপের ডেটার সঙ্গে, Google-এর নিয়ম অনুযায়ী।</string>
     <string name="t_8041745a9b">বাগানের ফাইল iPhone ব্যাকআপে যায় — আপনার বাকি ডেটার সঙ্গে, Apple-এর নিয়ম অনুযায়ী।</string>
     <string name="t_92c396e199">আফ্রিকান ভায়োলেট</string>
     <string name="t_99c7c8c714">আকৃতি</string>
@@ -618,6 +649,7 @@
     <string name="t_84b22ed2aa">রং</string>
     <string name="t_7ceb6b0f96">ঢেউয়ের রং</string>
     <string name="t_4d7209b9c1">নকশার রং</string>
+    <string name="t_8c038b5d5a">ওয়ালপেপারের রং</string>
     <string name="t_2a6d22be37">রং, ঘনত্ব ও উচ্চতা — ছবি থেকে।</string>
     <string name="t_ac08f8dec7">ফুল</string>
     <string name="t_4924d77144">সংখ্যা</string>
@@ -634,11 +666,14 @@
     <string name="t_febbc7512c">আপনার বাগান খুলতে</string>
     <string name="t_e250a6df76">জুতোর ফিতে</string>
     <string name="t_723a09005e">ফারের কোট</string>
+    <string name="t_68656a952e">এই সংস্করণটি Sprout-এর জন্য খুব পুরোনো।</string>
     <string name="t_b3bf1682b8">এটি আপনার বাগান</string>
     <string name="t_d342de941a">এটি আপনার নিজের কোড: আপনি তো আগে থেকেই তালিকায় আছেন।</string>
     <string name="t_3a925bfac5">এই iPhone স্ক্যান করতে পারে না: LiDAR লাগবে।</string>
+    <string name="t_8536fc8767">এই ফোনে AR চলে না</string>
     <string name="t_c7e64e73eb">একেভেরিয়া</string>
     <string name="t_77789a486b">ইউকা</string>
+    <string name="t_ed3f0e507a">ভাষা</string>
     <string name="t_3f264c02f1">ঠিক সময়ে %s</string>
     <string name="t_cc86ef708c">আপনি</string>
     <string name="t_2e06422eda">মাটি শুকনো</string>
@@ -667,4 +702,11 @@
     <string name="t_d8e6f5387c">মিনিটে একবারের বেশি</string>
     <string name="t_d959d34275">টানা %d</string>
     <string name="t_34eb9e66db">• %1$s (%2$s, “%3$s”) — %4$s</string>
+    <string name="shortcut_add">যোগ করুন</string>
+    <string name="shortcut_search">খুঁজুন</string>
+    <string name="shortcut_stats">পরিসংখ্যান</string>
+    <string name="shortcut_thirst">কাকে জল দিতে হবে</string>
+    <string name="tile_label">কাকে জল দিতে হবে</string>
+    <string name="widget_description">সবচেয়ে শুকনো গাছ ও “জল দিন” বোতাম।</string>
+    <string name="widget_name">কাকে জল দিতে হবে</string>
 </resources>

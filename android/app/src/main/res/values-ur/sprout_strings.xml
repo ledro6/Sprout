@@ -27,9 +27,13 @@
     <string name="t_197eb092cd">%d%%</string>
     <string name="t_45b8ac5695" formatted="false">20–40% پانی</string>
     <string name="t_3d6c2541b9" formatted="false">40% پانی یا زیادہ</string>
+    <string name="t_5f5e0de553">AR شروع نہیں ہوا</string>
+    <string name="t_957c85ce41">کیمرا جو دیکھتا ہے اس کے اوپر AR پودا بناتا ہے۔ فریم کہیں نہیں بھیجے جاتے۔</string>
     <string name="t_14c72c397f">AR — بڑھی ہوئی حقیقت</string>
     <string name="t_484d12fea8">AR یعنی افزودہ حقیقت: کیمرا آپ کا کمرا اور اس میں 3D پودا دکھاتا ہے۔ اقسام کے ماڈل ایپ میں پہلے سے موجود ہیں، اور اپنا ماڈل تصویر سے تصور کر کے یا اسکین کر کے بنا سکتے ہیں۔</string>
+    <string name="t_5c4b538eba">AR یعنی بڑھی ہوئی حقیقت: کیمرا آپ کا کمرا دکھاتا ہے اور اس میں ایک سہ جہتی پودا۔ انواع کے ماڈل ایپ میں پہلے سے ہیں، اور اپنا ماڈل تصویر سے بنوایا جا سکتا ہے۔</string>
     <string name="t_809c431aa4">AR، ماڈل اور ترتیبات</string>
+    <string name="t_acec2ec7d0">Android %s یا بعد کا</string>
     <string name="t_302a05a1ac">Sprout آپ کے بارے میں کوئی معلومات جمع نہیں کرتی اور کہیں کچھ نہیں بھیجتی۔</string>
     <string name="t_9585992548">iOS 26 یا بعد کا</string>
     <string name="t_c65910cd34">“%1$s” اور مزید %2$s کو پانی چاہیے</string>
@@ -68,6 +72,7 @@
     <string name="t_a8bcae2d9a">مٹیلڈا</string>
     <string name="t_f79b25b05d">آپ کا باغ نظامِ شمسی کی طرح: پودے اپنے پانی کے مداروں پر گھومتے ہیں۔ ایک نظر ڈالیں — آپ ایک مہینہ سن بھی سکتے ہیں۔</string>
     <string name="t_19ff316e6f">سلائیڈر کھینچیں — باغ کئی دن آگے چلا جائے گا، جیسے آپ بروقت پانی دیتے ہوں۔</string>
+    <string name="t_ddf5bf682d">فون کو مزید آہستہ گھمائیں</string>
     <string name="t_3f52bd53a9">واپسی</string>
     <string name="t_c7aaa96778">کالعدم کریں</string>
     <string name="t_f10d238768">تیار ماڈل پر واپس</string>
@@ -94,6 +99,7 @@
     <string name="t_2b5f40f213">اس پودے کی تمام آبیاریاں۔ غلط اندراج دیر تک دبا کر حذف کریں۔</string>
     <string name="t_2f07cfc9c2">سب کو پانی مل گیا</string>
     <string name="t_3b5143902e">کل</string>
+    <string name="t_eeb8caeb95">چسپاں کریں</string>
     <string name="t_c12ee51dd9">سارا وقت</string>
     <string name="t_1059a1d77d">کل، %s</string>
     <string name="t_fe4b0c80f0">منتخب کریں</string>
@@ -113,6 +119,7 @@
     <string name="t_68ae695380">حرکت سینسر</string>
     <string name="t_827d544645">تاریخیں</string>
     <string name="t_0bcd158c3d">دو انگلیوں سے گھمائیں، چٹکی سے سائز بدلیں</string>
+    <string name="t_9978ac34b2">کارروائیاں</string>
     <string name="t_b6ef08401f">دن</string>
     <string name="t_abbebfc85b">وہ دن جب تین یا زیادہ پودے ایک ساتھ پانی مانگیں گے — سب کو ایک ہی بار میں پانی دینا آسان۔</string>
     <string name="t_e0c0ceee56">چھوٹا درخت</string>
@@ -133,6 +140,7 @@
     <string name="t_fdf0f98738">اگر آپ وقت سے پہلے پانی دیں تو ایپ نوٹ کر کے وقفہ کم کرنے کا مشورہ دیتی ہے۔</string>
     <string name="t_19f25d5784">مزید</string>
     <string name="t_7db203bdda">ایک اور چکر</string>
+    <string name="t_bbe42739db">دوبارہ کوشش کریں</string>
     <string name="t_0fb6d09e78">پانی کے منتظر</string>
     <string name="t_ef28cc1496">مدت میں</string>
     <string name="t_70efc9651a">اس مدت میں پانی نہیں دیا گیا۔</string>
@@ -173,6 +181,7 @@
     <string name="t_b335f763ea">تمام پودے اور آبپاشی کا پورا ریکارڈ مٹ جائے گا۔ اسے واپس نہیں لایا جا سکتا۔</string>
     <string name="t_53d55db39f">خلاصہ</string>
     <string name="t_779e8b3e28">انہیں فون کی ترتیبات میں آن کریں: Sprout ← اطلاعات۔</string>
+    <string name="t_9c47ca16c4">یہ Google Play سے مفت انسٹال ہوتی ہیں۔ پھر AR فوراً کھل جائے گا۔</string>
     <string name="t_46c7be08dd">دفتر</string>
     <string name="t_0112d57d0b">کراپ</string>
     <string name="t_01b9b803e7">تصویر کا کراپ</string>
@@ -181,6 +190,7 @@
     <string name="t_223428bd3c">ہر نقطہ ایک بار پانی دینا ہے۔ نقطہ جتنا اونچا، مٹی میں اتنا زیادہ پانی باقی تھا۔</string>
     <string name="t_e1439f1755">ہر بار پانی دینا ایک سُر ہے: قریبی سیارے اونچا گاتے ہیں۔</string>
     <string name="t_f0a22d9d1a">سسٹم کی طرح</string>
+    <string name="t_087f6705ed">فون کی طرح</string>
     <string name="t_696586f496">آپ کا نام کیا ہے؟</string>
     <string name="t_7013b69dab">استعمال کا طریقہ</string>
     <string name="t_d4066ba693">اب پودے کا نام کیا ہے؟</string>
@@ -189,6 +199,9 @@
     <string name="t_7b105a68e6">کلانچو</string>
     <string name="t_60f6304f34">کیلاتھیا</string>
     <string name="t_fe0790d4e2">آبپاشی کا کیلنڈر</string>
+    <string name="t_f2d0f5cc41">کیمرا کوئی اور ایپ استعمال کر رہی ہے</string>
+    <string name="t_37620de860">فون کی ترتیبات میں کیمرے پر پابندی ہے۔ وہاں اجازت دیں اور واپس آئیں۔</string>
+    <string name="t_601947a61c">کیمرا اور تصاویر</string>
     <string name="t_d8e43f5730">کیمرا آپ کا کمرا دکھاتا ہے اور ایپ اس میں ایک سہ جہتی پودا رکھ دیتی ہے۔ آپ اسے گھما، بڑا کر اور فوارے سے پانی دے سکتے ہیں۔</string>
     <string name="t_8671ea9e33">قطرہ</string>
     <string name="t_85618413ed">ہر خانہ پچھلے چار مہینوں کا ایک دن ہے: رنگ جتنا گہرا، آبپاشی اتنی زیادہ۔ تاریخ دیکھنے کے لیے خانے پر ٹیپ کریں۔</string>
@@ -199,6 +212,7 @@
     <string name="t_eb1aa42a32">پودوں کے عرفی نام، انواع، نمی، تاریخیں — جو کچھ آپ درج کرتے ہیں وہ ایپ کے اندر ایک فائل میں، فون ہی پر رہتا ہے۔ ترتیبات بھی وہیں ہیں۔ اس میں سے کچھ بھی آلے سے باہر نہیں جاتا۔</string>
     <string name="t_1c8e21179b">بٹن</string>
     <string name="t_49cdfd9292">اردگرد کے بٹن</string>
+    <string name="t_2ecb4451da">بٹن اور کارڈ فون کے وال پیپر کے رنگوں میں۔</string>
     <string name="t_725347e425">کب</string>
     <string name="t_512bafe5b5">جب نمی اس سے کم ہو</string>
     <string name="t_72e18d38d9">آپ کب پانی دیتے ہیں</string>
@@ -256,7 +270,9 @@
     <string name="t_18f71e9762">افلاک کی موسیقی</string>
     <string name="t_0b854eb300">منی</string>
     <string name="t_7a7164238c">پودینہ</string>
+    <string name="t_06ec0f34bf">اس فون پر اسکرین لاک سیٹ نہیں ہے۔</string>
     <string name="t_272e98dde1">اس فون میں نہ Face ID ہے نہ پاس کوڈ۔</string>
+    <string name="t_339d955a3c">کیمرے کو نقش دار فرش یا فرنیچر کی طرف کریں</string>
     <string name="t_4dd78d95e6">نشانہ لیں</string>
     <string name="t_c96769af49">پہلا بنانے کے لیے “+” پر تھپتھپائیں۔</string>
     <string name="t_730cde94e5">ساتھ والے “؟” پر ٹیپ کریں — ہم آسان الفاظ میں سمجھائیں گے۔ سارے الفاظ ترتیبات کی لغت میں جمع ہیں۔</string>
@@ -302,9 +318,14 @@
     <string name="t_da731c70ca">نیا کمرہ</string>
     <string name="t_87b55f8287">نیا کمرہ…</string>
     <string name="t_4a30361774">LiDAR سینسر والا iPhone چاہیے — iPhone 12 Pro سے آگے کے Pro ماڈل۔</string>
+    <string name="t_7283f54f30">کیمرا چاہیے</string>
+    <string name="t_ba43c393fc">AR کے لیے Google Play سروسز چاہییں</string>
     <string name="t_b9c9ff652d">تعارف</string>
+    <string name="t_7bee71b043">AR کے لیے Google Play سروسز اپ ڈیٹ کریں</string>
+    <string name="t_c2f668e54f">اپ ڈیٹ کریں</string>
     <string name="t_3a3478672d">فون لے کر پودے کے گرد گھومیں — اس کی درست 3D نقل بن جائے گی۔ عکس بندی میں چند منٹ اور ماڈل بننے میں کچھ اور؛ سب فون پر۔</string>
     <string name="t_bc8d2377f1">AR کے لیے پودے کی 3D نقل۔ اقسام کے ماڈل ایپ میں پہلے سے موجود ہیں، اور اپنا ماڈل تصویر سے تصور کر کے یا اسکین کر کے بنا سکتے ہیں — پودے کی اسکرین پر ”ماڈل“ بٹن۔</string>
+    <string name="t_7eb02aa630">AR کے لیے پودے کی سہ جہتی نقل۔ انواع کے ماڈل ایپ میں پہلے سے ہیں، اور اپنا ماڈل تصویر سے بنوایا جا سکتا ہے — پودے کی اسکرین پر “ماڈل” بٹن۔</string>
     <string name="t_4b919d0c3d">اس نوع کے لیے عام: %s</string>
     <string name="t_00495efa90">عموماً جب مٹی میں %s پانی ہو</string>
     <string name="t_9bc6b67c85">ایک چکر پانی دینے کا ایک وقفہ ہے۔ قریب کے مدار جلد سوکھنے والوں کے ہیں، دور کے صابر پودوں کے۔</string>
@@ -389,6 +410,7 @@
     <string name="t_0455b2eeff">%2$d میں سے %1$d دکھائے گئے: زیادہ فون پر بھاری ہوں گے</string>
     <string name="t_387af5ff90">اشارے دوبارہ دکھائیں</string>
     <string name="t_ca645a26b9">پہیہ گھمائیں — نیچے نظر آئے گا کہ نیا وقفہ کارڈ پر کیسا لگے گا۔</string>
+    <string name="t_51b8f05bf7">تلاش کا خانہ اوپر ہے۔ یہ عرفی نام، نوع اور نوٹس میں تلاش کرتا ہے۔</string>
     <string name="t_17c7b943fc">تلاش کا خانہ نیچے، ٹیب بار کے پاس ہے۔ عرفی نام، قسم اور نوٹس میں تلاش کرتا ہے۔</string>
     <string name="t_cd1de7bdc3">سب کو ایک ساتھ پانی دیں اور پڑوسی کو پرچی بھیجیں۔</string>
     <string name="t_c767922d35">کسی پودے کو پانی دیں — یہاں دکھے گا کہ اس لمحے مٹی میں کتنا پانی تھا۔</string>
@@ -426,6 +448,7 @@
     <string name="t_3ca46e3e76">پانی دینے کے بعد نقش پر رنگین لہر دوڑتی ہے — یوں پتا چلتا ہے کہ پانی دینا شمار ہو گیا۔</string>
     <string name="t_e101868e98">آخری آبیاری</string>
     <string name="t_d72166f389">AR میں دیکھیں</string>
+    <string name="t_22f978c185">پودے کو اپنے کمرے میں دیکھیں، تصویر سے اس کا اپنا ماڈل بنائیں، یا عرفی نام، نوع اور پانی دینے کا وقفہ بدلیں۔</string>
     <string name="t_f945f5f017">پودے کو اپنے کمرے میں دیکھیں، اس کا اپنا ماڈل بنائیں — تصویر یا اسکین سے — یا نام، قسم اور آبپاشی کا وقفہ بدلیں۔</string>
     <string name="t_8845f9ee9d">رکھیں</string>
     <string name="t_39a52fa645">باغ رکھیں</string>
@@ -465,6 +488,7 @@
         <item quantity="other">ہر %d مہینے بعد</item>
     </plurals>
     <string name="t_9caa86d668">پودے کو کتنے دن بعد پانی دیا جاتا ہے — تقریباً اتنے میں مٹی سوکھتی ہے۔ پودے کی ترتیبات میں بدلا جا سکتا ہے۔</string>
+    <string name="t_7882f56b39">کیمرے کی اجازت دیں</string>
     <string name="t_cc687c1fa5">کیا فریم پودے اور گملے کو گھیرے ہوئے ہے؟ تو شروع کریں</string>
     <string name="t_0717b1b655">ترتیب دیں</string>
     <string name="t_7ebd3688e2">پودا</string>
@@ -496,6 +520,7 @@
     <string name="t_cd59e4204b">باغ مقفل ہے</string>
     <string name="t_e3b46fe6dd">آپ کا باغ نظامِ شمسی کی طرح: ہر پودا ایک سیارہ، ایک چکر پانی دینے کا ایک وقفہ۔ اوپر کے دروازے تک پہنچے تو پانی دینے کا وقت۔</string>
     <string name="t_5a05a6d3f9">باغ صرف Face ID یا فون کے پاس کوڈ سے کھلتا ہے — کوئی اور نہیں جھانک سکتا۔</string>
+    <string name="t_8401f09a45">باغ صرف آپ کے فنگر پرنٹ، چہرے یا فون کے اسکرین لاک سے کھلتا ہے — دوسرے جھانک نہیں سکتے۔</string>
     <string name="t_2306927b56">%s سے باغ</string>
     <string name="t_928ada7e39">باغ رکھ دیا گیا۔ پانی دینے کے لیے پودے پر تھپتھپائیں۔</string>
     <string name="t_e4d56c1f85">مالی</string>
@@ -514,6 +539,7 @@
     <string name="t_013255575f">آج کسی پودے کو پانی کی ضرورت نہیں۔</string>
     <string name="t_618a6abf44">آج، %s</string>
     <string name="t_88be20fd06">ابھی</string>
+    <string name="t_ad8df7482b">اس پر AR کے لیے Google Play سروسز نہیں چلتیں۔ Sprout میں باقی سب کچھ معمول کے مطابق کام کرتا ہے۔</string>
     <string name="t_b3c4b1be56">نیٹ ورک</string>
     <string name="t_a872210c83">ارتعاش کی طاقت</string>
     <string name="t_04954ca725">نیلا</string>
@@ -537,12 +563,14 @@
     </plurals>
     <string name="t_4a40d86849">اگلا پانی: کل</string>
     <string name="t_b0f07c6bde">اگلا پانی: آج</string>
+    <string name="t_cef8f4a582">بہت اندھیرا ہے — روشنی جلائیں</string>
     <string name="t_6f8ca5c940">لغت</string>
     <string name="t_214438003b">تصویر دیکھ رہا ہوں…</string>
     <string name="t_6fb5cb3976">سب سے نئے پہلے</string>
     <string name="t_3189602bf1">سب سے خشک پہلے</string>
     <string name="t_4ff6829db6">برف</string>
     <string name="t_1b494791c5">کوئی تصویر نہیں</string>
+    <string name="t_2cb357366d">پودوں کی تصاویر فون پر ہی پہچانی جاتی ہیں — تصاویر کہیں نہیں بھیجی جاتیں۔</string>
     <string name="t_9e2d4d618a">تصویر</string>
     <string name="t_d303471890">تصویر دھندلی ہے — زیادہ صاف لیں۔</string>
     <string name="t_bee88a5c8c">تصویر میں روشنی زیادہ ہے — سیدھی دھوپ سے ہٹ کر لیں۔</string>
@@ -567,6 +595,7 @@
     <string name="t_8335506cd9">سب سے خشک: %s۔</string>
     <string name="t_31386bfdb5">پودے کی تصویر لیں — فون اس کی قسم پہچاننے کی کوشش کرے گا۔</string>
     <string name="t_2da75ff638">%s تک کا اسکور۔ دوست کے دوبارہ کوڈ بھیجنے پر اپ ڈیٹ ہوگا۔</string>
+    <string name="t_d9467398b8">ایسا تب ہوتا ہے جب کوئی اور ایپ کیمرا استعمال کر رہی ہو۔ دوبارہ کوشش کریں۔</string>
     <string name="t_109ff6015e">چپل</string>
     <string name="t_ba89e87d7f">فون تصویر میں پودے کو پہچان کر اس کے ماڈل کا تصور کرے گا: پتوں، پھولوں اور گملے کے رنگ، گھنا پن اور قد۔ سب کچھ فون پر، انٹرنیٹ کے بغیر، چند سیکنڈ میں۔</string>
     <string name="t_c9b9affc8d">پہچانا گیا: %1$s — %2$d%% یقین۔ غلط ہو تو درست کریں۔</string>
@@ -596,8 +625,10 @@
     <string name="t_8b19591d8a">نقش جھکاؤ کے ساتھ</string>
     <string name="t_1cc281e997">فون جھکانے پر پس منظر کا نقش ذرا سا سرکتا ہے، جیسے اسکرین سے گہرائی میں ہو۔</string>
     <string name="t_c8f3f390c2">سویا</string>
+    <string name="t_ce88d35b18">انسٹال کریں</string>
     <string name="t_5373dc43a3">دیکھ بھال</string>
     <string name="t_ddc1a36266">موسم کا خیال رکھیں</string>
+    <string name="t_8a4653acae">باغ کی فائل Android بیک اپ میں جاتی ہے — دوسری ایپس کے ڈیٹا کے ساتھ، Google کے قواعد کے مطابق۔</string>
     <string name="t_8041745a9b">باغ کی فائل iPhone بیک اپ میں جاتی ہے — آپ کے باقی ڈیٹا کے ساتھ، Apple کے اصولوں کے مطابق۔</string>
     <string name="t_92c396e199">افریقی بنفشہ</string>
     <string name="t_99c7c8c714">شکلیں</string>
@@ -618,6 +649,7 @@
     <string name="t_84b22ed2aa">رنگ</string>
     <string name="t_7ceb6b0f96">لہر کا رنگ</string>
     <string name="t_4d7209b9c1">نقش کا رنگ</string>
+    <string name="t_8c038b5d5a">وال پیپر کے رنگ</string>
     <string name="t_2a6d22be37">رنگ، گھنا پن اور قد — تصویر سے۔</string>
     <string name="t_ac08f8dec7">پھول</string>
     <string name="t_4924d77144">اعداد</string>
@@ -634,11 +666,14 @@
     <string name="t_febbc7512c">اپنا باغ کھولنے کے لیے</string>
     <string name="t_e250a6df76">تسمہ</string>
     <string name="t_723a09005e">فر کوٹ</string>
+    <string name="t_68656a952e">یہ ورژن Sprout کے لیے بہت پرانا ہے۔</string>
     <string name="t_b3bf1682b8">یہ آپ کا باغ ہے</string>
     <string name="t_d342de941a">یہ آپ کا اپنا کوڈ ہے: آپ پہلے ہی جدول میں ہیں۔</string>
     <string name="t_3a925bfac5">یہ iPhone اسکین نہیں کر سکتا: LiDAR چاہیے۔</string>
+    <string name="t_8536fc8767">یہ فون AR نہیں چلا سکتا</string>
     <string name="t_c7e64e73eb">ایکیویریا</string>
     <string name="t_77789a486b">یوکا</string>
+    <string name="t_ed3f0e507a">زبان</string>
     <string name="t_3f264c02f1">بروقت %s</string>
     <string name="t_cc86ef708c">آپ</string>
     <string name="t_2e06422eda">مٹی خشک ہے</string>
@@ -667,4 +702,11 @@
     <string name="t_d8e6f5387c">منٹ میں ایک بار سے زیادہ</string>
     <string name="t_d959d34275">مسلسل %d</string>
     <string name="t_34eb9e66db">• %1$s (%2$s، “%3$s”) — %4$s</string>
+    <string name="shortcut_add">شامل کریں</string>
+    <string name="shortcut_search">تلاش کریں</string>
+    <string name="shortcut_stats">اعداد و شمار</string>
+    <string name="shortcut_thirst">کسے پانی دینا ہے</string>
+    <string name="tile_label">کسے پانی دینا ہے</string>
+    <string name="widget_description">سب سے خشک پودے اور “پانی دیں” بٹن۔</string>
+    <string name="widget_name">کسے پانی دینا ہے</string>
 </resources>

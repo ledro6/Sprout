@@ -27,9 +27,13 @@
     <string name="t_197eb092cd">%d %%</string>
     <string name="t_45b8ac5695" formatted="false">20–40 % Wasser</string>
     <string name="t_3d6c2541b9" formatted="false">40 % Wasser oder mehr</string>
+    <string name="t_5f5e0de553">AR ist nicht gestartet</string>
+    <string name="t_957c85ce41">AR zeichnet die Pflanze über das, was die Kamera sieht. Die Bilder gehen nirgendwohin.</string>
     <string name="t_14c72c397f">AR – Augmented Reality</string>
     <string name="t_484d12fea8">AR ist erweiterte Realität: Die Kamera zeigt dein Zimmer und darin eine 3D-Pflanze. Artmodelle sind schon in der App, ein eigenes kannst du aus einem Foto erdenken oder scannen.</string>
+    <string name="t_5c4b538eba">AR ist erweiterte Realität: Die Kamera zeigt dein Zimmer mit einer 3D-Pflanze darin. Modelle der Arten sind schon in der App, und ein eigenes kannst du dir aus einem Foto ausdenken lassen.</string>
     <string name="t_809c431aa4">AR, Modell und Einstellungen</string>
+    <string name="t_acec2ec7d0">Android %s oder neuer</string>
     <string name="t_302a05a1ac">Sprout sammelt keine Informationen über dich und gibt nichts weiter.</string>
     <string name="t_9585992548">iOS 26 oder neuer</string>
     <string name="t_c65910cd34">„%1$s“ und noch %2$s brauchen Wasser</string>
@@ -68,6 +72,7 @@
     <string name="t_a8bcae2d9a">Mathilda</string>
     <string name="t_f79b25b05d">Dein Garten als Sonnensystem: Die Pflanzen kreisen auf ihren Gießbahnen. Schau rein – dort kannst du dir sogar einen Monat anhören.</string>
     <string name="t_19ff316e6f">Zieh am Regler – der Garten springt Tage voraus, als würdest du pünktlich gießen.</string>
+    <string name="t_ddf5bf682d">Bewege das Telefon langsamer</string>
     <string name="t_3f52bd53a9">Rückkehr</string>
     <string name="t_c7aaa96778">Widerrufen</string>
     <string name="t_f10d238768">Fertiges Modell zurück</string>
@@ -94,6 +99,7 @@
     <string name="t_2b5f40f213">Alle Güsse dieser Pflanze. Einen falschen Eintrag löschst du durch langes Drücken.</string>
     <string name="t_2f07cfc9c2">Alle gegossen</string>
     <string name="t_3b5143902e">Gesamt</string>
+    <string name="t_eeb8caeb95">Einfügen</string>
     <string name="t_c12ee51dd9">Gesamt</string>
     <string name="t_1059a1d77d">Gestern, %s</string>
     <string name="t_fe4b0c80f0">Auswählen</string>
@@ -113,6 +119,7 @@
     <string name="t_68ae695380">Bewegungssensor</string>
     <string name="t_827d544645">Daten</string>
     <string name="t_0bcd158c3d">Mit zwei Fingern drehen, mit Aufziehen die Größe ändern</string>
+    <string name="t_9978ac34b2">Aktionen</string>
     <string name="t_b6ef08401f">Tag</string>
     <string name="t_abbebfc85b">Ein Tag, an dem drei oder mehr Pflanzen gleichzeitig Wasser wollen – praktisch, alle in einem Durchgang zu gießen.</string>
     <string name="t_e0c0ceee56">Bäumchen</string>
@@ -133,6 +140,7 @@
     <string name="t_fdf0f98738">Gießt du früher als fällig, merkt die App das und schlägt ein kürzeres Intervall vor.</string>
     <string name="t_19f25d5784">Mehr</string>
     <string name="t_7db203bdda">Noch eine Runde</string>
+    <string name="t_bbe42739db">Noch einmal</string>
     <string name="t_0fb6d09e78">Brauchen Wasser</string>
     <string name="t_ef28cc1496">Im Zeitraum</string>
     <string name="t_70efc9651a">In diesem Zeitraum wurde nicht gegossen.</string>
@@ -173,6 +181,7 @@
     <string name="t_b335f763ea">Alle Pflanzen und das ganze Gießprotokoll verschwinden. Das lässt sich nicht rückgängig machen.</string>
     <string name="t_53d55db39f">Übersicht</string>
     <string name="t_779e8b3e28">Aktiviere sie in den Einstellungen des Telefons: Sprout → Mitteilungen.</string>
+    <string name="t_9c47ca16c4">Sie kommen kostenlos aus Google Play. Danach öffnet sich AR sofort.</string>
     <string name="t_46c7be08dd">Arbeitszimmer</string>
     <string name="t_0112d57d0b">Zuschneiden</string>
     <string name="t_01b9b803e7">Fotoausschnitt</string>
@@ -181,6 +190,7 @@
     <string name="t_223428bd3c">Jeder Punkt ist ein Guss. Je höher der Punkt, desto mehr Wasser war noch in der Erde.</string>
     <string name="t_e1439f1755">Jeder Guss ist ein Ton: Innere Planeten singen höher.</string>
     <string name="t_f0a22d9d1a">Wie System</string>
+    <string name="t_087f6705ed">Wie im Telefon</string>
     <string name="t_696586f496">Wie heißt du?</string>
     <string name="t_7013b69dab">So funktioniert’s</string>
     <string name="t_d4066ba693">Wie heißt die Pflanze jetzt?</string>
@@ -189,6 +199,9 @@
     <string name="t_7b105a68e6">Kalanchoe</string>
     <string name="t_60f6304f34">Korbmarante</string>
     <string name="t_fe0790d4e2">Gießkalender</string>
+    <string name="t_f2d0f5cc41">Die Kamera wird von einer anderen App benutzt</string>
+    <string name="t_37620de860">Die Kamera ist in den Einstellungen des Telefons gesperrt. Erlaube sie dort und komm zurück.</string>
+    <string name="t_601947a61c">Kamera und Fotos</string>
     <string name="t_d8e43f5730">Die Kamera zeigt deinen Raum, und die App stellt eine 3D-Pflanze hinein. Du kannst sie drehen, größer ziehen und mit einer Gießkanne gießen.</string>
     <string name="t_8671ea9e33">Tropfen</string>
     <string name="t_85618413ed">Jedes Quadrat ist ein Tag der letzten vier Monate: je kräftiger die Farbe, desto mehr gegossen. Tippe auf ein Quadrat, um das Datum zu sehen.</string>
@@ -199,6 +212,7 @@
     <string name="t_eb1aa42a32">Namen der Pflanzen, Arten, Feuchtigkeit, Daten — alles, was du eingibst, liegt in einer Datei in der App, auf dem Telefon selbst. Dort liegen auch die Einstellungen. Nichts davon verlässt das Gerät.</string>
     <string name="t_1c8e21179b">Tasten</string>
     <string name="t_49cdfd9292">Tasten ringsum</string>
+    <string name="t_2ecb4451da">Tasten und Karten in den Farben deines Hintergrundbilds.</string>
     <string name="t_725347e425">Wann</string>
     <string name="t_512bafe5b5">Wenn die Feuchtigkeit unter</string>
     <string name="t_72e18d38d9">Wann du gießt</string>
@@ -256,7 +270,9 @@
     <string name="t_18f71e9762">Sphärenmusik</string>
     <string name="t_0b854eb300">Mieze</string>
     <string name="t_7a7164238c">Minze</string>
+    <string name="t_06ec0f34bf">Auf dem Telefon ist keine Displaysperre eingerichtet.</string>
     <string name="t_272e98dde1">Dieses Telefon hat weder Face ID noch einen Code.</string>
+    <string name="t_339d955a3c">Richte die Kamera auf einen gemusterten Boden oder auf Möbel</string>
     <string name="t_4dd78d95e6">Anvisieren</string>
     <string name="t_c96769af49">Tippe auf „+“, um den ersten anzulegen.</string>
     <string name="t_730cde94e5">Tippe auf das „?“ daneben – wir erklären es in einfachen Worten. Alle Wörter stehen im Glossar in den Einstellungen.</string>
@@ -302,9 +318,14 @@
     <string name="t_da731c70ca">Neuer Raum</string>
     <string name="t_87b55f8287">Neuer Raum …</string>
     <string name="t_4a30361774">Braucht ein iPhone mit LiDAR-Sensor – Pro-Modelle ab iPhone 12 Pro.</string>
+    <string name="t_7283f54f30">Kamera nötig</string>
+    <string name="t_ba43c393fc">Google Play-Dienste für AR nötig</string>
     <string name="t_b9c9ff652d">Über die App</string>
+    <string name="t_7bee71b043">Aktualisiere die Google Play-Dienste für AR</string>
+    <string name="t_c2f668e54f">Aktualisieren</string>
     <string name="t_3a3478672d">Geh mit dem Telefon um die Pflanze herum – so entsteht eine genaue 3D-Kopie. Die Aufnahme dauert ein paar Minuten, der Modellbau noch ein paar; alles auf dem Telefon.</string>
     <string name="t_bc8d2377f1">Eine 3D-Kopie der Pflanze für AR. Artmodelle sind schon in der App, ein eigenes kannst du aus einem Foto erdenken oder scannen – Taste „Modell“ auf dem Pflanzenbildschirm.</string>
+    <string name="t_7eb02aa630">Eine 3D-Kopie der Pflanze für AR. Modelle der Arten sind schon in der App, und ein eigenes lässt sich aus einem Foto ausdenken — die Taste „Modell“ auf der Pflanzenseite.</string>
     <string name="t_4b919d0c3d">Üblich für die Art: %s</string>
     <string name="t_00495efa90">Meist bei %s Wasser in der Erde</string>
     <string name="t_9bc6b67c85">Eine Umlaufbahn ist ein Gießintervall. Innen kreisen die, die schnell austrocknen, außen die Geduldigen.</string>
@@ -389,6 +410,7 @@
     <string name="t_0455b2eeff">%1$d von %2$d angezeigt: Mehr wäre zu viel für das Telefon</string>
     <string name="t_387af5ff90">Tipps erneut zeigen</string>
     <string name="t_ca645a26b9">Dreh am Rad – darunter siehst du, wie das neue Intervall auf der Karte aussieht.</string>
+    <string name="t_51b8f05bf7">Das Suchfeld ist oben. Es sucht nach Spitznamen, Arten und Notizen.</string>
     <string name="t_17c7b943fc">Das Suchfeld ist unten bei der Tableiste. Gesucht wird nach Spitzname, Art und Notizen.</string>
     <string name="t_cd1de7bdc3">Gieß alle auf einmal und schick deinem Nachbarn eine Notiz.</string>
     <string name="t_c767922d35">Gieß eine Pflanze – dann siehst du hier, wie viel Wasser in diesem Moment in der Erde war.</string>
@@ -426,6 +448,7 @@
     <string name="t_3ca46e3e76">Nach dem Gießen läuft eine farbige Welle über das Muster – so siehst du, dass das Gießen gezählt hat.</string>
     <string name="t_e101868e98">Zuletzt gegossen</string>
     <string name="t_d72166f389">In AR ansehen</string>
+    <string name="t_22f978c185">Sieh dir die Pflanze in deinem Zimmer an, gib ihr ein eigenes Modell aus einem Foto oder ändere Spitzname, Art und Gießintervall.</string>
     <string name="t_f945f5f017">Sieh dir die Pflanze in deinem Zimmer an, gib ihr ein eigenes Modell – aus Foto oder Scan – oder ändere Name, Art und Gießintervall.</string>
     <string name="t_8845f9ee9d">Platzieren</string>
     <string name="t_39a52fa645">Garten platzieren</string>
@@ -465,6 +488,7 @@
         <item quantity="other">Alle %d Monate</item>
     </plurals>
     <string name="t_9caa86d668">Wie oft die Pflanze gegossen wird – etwa so lange braucht die Erde zum Austrocknen. Änderbar in den Einstellungen der Pflanze.</string>
+    <string name="t_7882f56b39">Kamera erlauben</string>
     <string name="t_cc687c1fa5">Umschließt der Rahmen Pflanze und Topf? Dann los</string>
     <string name="t_0717b1b655">Anordnen</string>
     <string name="t_7ebd3688e2">Pflanze</string>
@@ -496,6 +520,7 @@
     <string name="t_cd59e4204b">Garten gesperrt</string>
     <string name="t_e3b46fe6dd">Dein Garten als Sonnensystem: Jede Pflanze ist ein Planet, eine Umlaufbahn ist ein Gießintervall. Erreicht sie das Tor oben, ist es Zeit zu gießen.</string>
     <string name="t_5a05a6d3f9">Der Garten öffnet sich nur mit Face ID oder dem Code deines Telefons – niemand sonst kann reinschauen.</string>
+    <string name="t_8401f09a45">Der Garten öffnet sich nur mit deinem Fingerabdruck, Gesicht oder der Displaysperre des Telefons — Fremde schauen nicht hinein.</string>
     <string name="t_2306927b56">Garten seit %s</string>
     <string name="t_928ada7e39">Der Garten steht. Tippe auf eine Pflanze, um sie zu gießen.</string>
     <string name="t_e4d56c1f85">Gärtner</string>
@@ -514,6 +539,7 @@
     <string name="t_013255575f">Heute muss nichts gegossen werden.</string>
     <string name="t_618a6abf44">Heute, %s</string>
     <string name="t_88be20fd06">Jetzt</string>
+    <string name="t_ad8df7482b">Die Google Play-Dienste für AR laufen darauf nicht. Alles andere in Sprout funktioniert wie gewohnt.</string>
     <string name="t_b3c4b1be56">Netzwerk</string>
     <string name="t_a872210c83">Stärke der Haptik</string>
     <string name="t_04954ca725">Blau</string>
@@ -537,12 +563,14 @@
     </plurals>
     <string name="t_4a40d86849">Nächstes Gießen: morgen</string>
     <string name="t_b0f07c6bde">Nächstes Gießen: heute</string>
+    <string name="t_cef8f4a582">Zu dunkel — mach Licht an</string>
     <string name="t_6f8ca5c940">Glossar</string>
     <string name="t_214438003b">Ich sehe mir das Foto an …</string>
     <string name="t_6fb5cb3976">Neueste zuerst</string>
     <string name="t_3189602bf1">Trockenste zuerst</string>
     <string name="t_4ff6829db6">Schnee</string>
     <string name="t_1b494791c5">Kein Foto</string>
+    <string name="t_2cb357366d">Pflanzenfotos werden auf dem Telefon selbst erkannt — Bilder werden nirgendwohin gesendet.</string>
     <string name="t_9e2d4d618a">Foto</string>
     <string name="t_d303471890">Das Foto ist unscharf – mach ein schärferes.</string>
     <string name="t_bee88a5c8c">Das Foto ist überbelichtet – mach eins ohne direkte Sonne.</string>
@@ -567,6 +595,7 @@
     <string name="t_8335506cd9">Am trockensten: %s.</string>
     <string name="t_31386bfdb5">Fotografiere die Pflanze – das Telefon versucht, die Art zu erkennen.</string>
     <string name="t_2da75ff638">Stand vom %s. Wird aktualisiert, wenn dein Freund den Code erneut schickt.</string>
+    <string name="t_d9467398b8">Das passiert, wenn eine andere App die Kamera benutzt. Versuch es noch einmal.</string>
     <string name="t_109ff6015e">Pantoffel</string>
     <string name="t_ba89e87d7f">Das Telefon erkennt die Pflanze auf dem Foto und erdenkt ihr Modell: Farben von Blättern, Blüten und Topf, Dichte und Höhe. Alles läuft auf dem Telefon, offline, in ein paar Sekunden.</string>
     <string name="t_c9b9affc8d">Erkannt: %1$s — zu %2$d %% sicher. Korrigiere es, falls es nicht stimmt.</string>
@@ -596,8 +625,10 @@
     <string name="t_8b19591d8a">Muster folgt der Neigung</string>
     <string name="t_1cc281e997">Das Hintergrundmuster verschiebt sich leicht, wenn du das Telefon neigst – als läge es tiefer als der Bildschirm.</string>
     <string name="t_c8f3f390c2">Dill</string>
+    <string name="t_ce88d35b18">Installieren</string>
     <string name="t_5373dc43a3">Pflege</string>
     <string name="t_ddc1a36266">Jahreszeiten berücksichtigen</string>
+    <string name="t_8a4653acae">Die Gartendatei landet im Android-Backup — dort, wo auch die übrigen App-Daten liegen, nach den Regeln von Google.</string>
     <string name="t_8041745a9b">Die Gartendatei landet im iPhone-Backup — dort, wo auch deine übrigen Daten liegen, nach den Regeln von Apple.</string>
     <string name="t_92c396e199">Usambaraveilchen</string>
     <string name="t_99c7c8c714">Figuren</string>
@@ -618,6 +649,7 @@
     <string name="t_84b22ed2aa">Farbe</string>
     <string name="t_7ceb6b0f96">Wellenfarbe</string>
     <string name="t_4d7209b9c1">Musterfarbe</string>
+    <string name="t_8c038b5d5a">Farben des Hintergrundbilds</string>
     <string name="t_2a6d22be37">Farben, Dichte und Höhe – aus dem Foto.</string>
     <string name="t_ac08f8dec7">Blume</string>
     <string name="t_4924d77144">Zahlen</string>
@@ -634,11 +666,14 @@
     <string name="t_febbc7512c">Um deinen Garten zu öffnen</string>
     <string name="t_e250a6df76">Schnürsenkel</string>
     <string name="t_723a09005e">Pelzmantel</string>
+    <string name="t_68656a952e">Diese Version ist zu alt für Sprout.</string>
     <string name="t_b3bf1682b8">Das ist dein Garten</string>
     <string name="t_d342de941a">Das ist dein eigener Code: Du bist schon in der Tabelle.</string>
     <string name="t_3a925bfac5">Dieses iPhone kann nicht scannen: Es braucht LiDAR.</string>
+    <string name="t_8536fc8767">Dieses Telefon kann kein AR</string>
     <string name="t_c7e64e73eb">Echeverie</string>
     <string name="t_77789a486b">Yucca</string>
+    <string name="t_ed3f0e507a">Sprache</string>
     <string name="t_3f264c02f1">pünktlich %s</string>
     <string name="t_cc86ef708c">du</string>
     <string name="t_2e06422eda">Erde ist trocken</string>
@@ -667,4 +702,11 @@
     <string name="t_d8e6f5387c">öfter als einmal pro Minute</string>
     <string name="t_d959d34275">Serie %d</string>
     <string name="t_34eb9e66db">• %1$s (%2$s, „%3$s“) — %4$s</string>
+    <string name="shortcut_add">Hinzufügen</string>
+    <string name="shortcut_search">Suchen</string>
+    <string name="shortcut_stats">Statistik</string>
+    <string name="shortcut_thirst">Wen gießen</string>
+    <string name="tile_label">Wen gießen</string>
+    <string name="widget_description">Die trockensten Pflanzen und eine „Gießen“-Taste.</string>
+    <string name="widget_name">Wen gießen</string>
 </resources>

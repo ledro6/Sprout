@@ -1,0 +1,329 @@
+{
+ "source": "420b703aa8271dc3",
+ "height": 0.3246,
+ "spread": 0.082,
+ "looks": [
+  {
+   "role": "pot",
+   "mean": [
+    232.9,
+    227.0,
+    215.1
+   ],
+   "tint": [
+    255.0,
+    255.0,
+    255.0
+   ],
+   "opacity": 1.0,
+   "wilts": false,
+   "wets": false
+  },
+  {
+   "role": "soil",
+   "mean": [
+    136.7,
+    102.8,
+    73.7
+   ],
+   "tint": [
+    255.0,
+    255.0,
+    255.0
+   ],
+   "opacity": 1.0,
+   "wilts": false,
+   "wets": true
+  },
+  {
+   "role": "other",
+   "mean": [
+    184.0,
+    176.3,
+    162.7
+   ],
+   "tint": [
+    255.0,
+    255.0,
+    255.0
+   ],
+   "opacity": 1.0,
+   "wilts": false,
+   "wets": false
+  },
+  {
+   "role": "leaf",
+   "mean": [
+    90.7,
+    144.0,
+    82.8
+   ],
+   "tint": [
+    255.0,
+    255.0,
+    255.0
+   ],
+   "opacity": 1.0,
+   "wilts": true,
+   "wets": false
+  },
+  {
+   "role": "other",
+   "mean": [
+    226.0,
+    214.0,
+    170.0
+   ],
+   "tint": [
+    226.0,
+    214.0,
+    170.0
+   ],
+   "opacity": 1.0,
+   "wilts": false,
+   "wets": false
+  },
+  {
+   "role": "other",
+   "mean": [
+    238.0,
+    230.0,
+    200.0
+   ],
+   "tint": [
+    238.0,
+    230.0,
+    200.0
+   ],
+   "opacity": 1.0,
+   "wilts": false,
+   "wets": false
+  },
+  {
+   "role": "flower",
+   "mean": [
+    248.3,
+    216.9,
+    110.4
+   ],
+   "tint": [
+    255.0,
+    255.0,
+    255.0
+   ],
+   "opacity": 1.0,
+   "wilts": false,
+   "wets": false
+  },
+  {
+   "role": "other",
+   "mean": [
+    250.0,
+    244.0,
+    220.0
+   ],
+   "tint": [
+    250.0,
+    244.0,
+    220.0
+   ],
+   "opacity": 1.0,
+   "wilts": false,
+   "wets": false
+  },
+  {
+   "role": "other",
+   "mean": [
+    250.0,
+    222.0,
+    120.0
+   ],
+   "tint": [
+    250.0,
+    222.0,
+    120.0
+   ],
+   "opacity": 1.0,
+   "wilts": false,
+   "wets": false
+  },
+  {
+   "role": "other",
+   "mean": [
+    200.0,
+    220.0,
+    120.0
+   ],
+   "tint": [
+    200.0,
+    220.0,
+    120.0
+   ],
+   "opacity": 1.0,
+   "wilts": false,
+   "wets": false
+  }
+ ],
+ "pieces": [
+  {
+   "look": 0,
+   "base": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "yaw": 0.0,
+   "rise": 0.0,
+   "roll": 0.0,
+   "size": 1.0,
+   "sag": 0.0,
+   "sway": 0.0,
+   "delay": 0.0,
+   "phase": 0.0
+  },
+  {
+   "look": 1,
+   "base": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "yaw": 0.0,
+   "rise": 0.0,
+   "roll": 0.0,
+   "size": 1.0,
+   "sag": 0.0,
+   "sway": 0.0,
+   "delay": 0.0,
+   "phase": 0.0
+  },
+  {
+   "look": 2,
+   "base": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "yaw": 0.0,
+   "rise": 0.0,
+   "roll": 0.0,
+   "size": 1.0,
+   "sag": 0.0,
+   "sway": 0.0,
+   "delay": 0.0,
+   "phase": 0.0
+  },
+  {
+   "look": 3,
+   "base": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "yaw": 0.0,
+   "rise": 0.0,
+   "roll": 0.0,
+   "size": 1.0,
+   "sag": 0.0,
+   "sway": 0.0,
+   "delay": 0.0,
+   "phase": 0.0
+  },
+  {
+   "look": 4,
+   "base": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "yaw": 0.0,
+   "rise": 0.0,
+   "roll": 0.0,
+   "size": 1.0,
+   "sag": 0.0,
+   "sway": 0.0,
+   "delay": 0.0,
+   "phase": 0.0
+  },
+  {
+   "look": 5,
+   "base": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "yaw": 0.0,
+   "rise": 0.0,
+   "roll": 0.0,
+   "size": 1.0,
+   "sag": 0.0,
+   "sway": 0.0,
+   "delay": 0.0,
+   "phase": 0.0
+  },
+  {
+   "look": 6,
+   "base": [
+    -0.02775,
+    0.30756,
+    0.02062
+   ],
+   "yaw": 1.9904,
+   "rise": 1.39278,
+   "roll": 0.0,
+   "size": 1.0,
+   "sag": 0.0,
+   "sway": 0.03,
+   "delay": 0.9,
+   "phase": 0.1281
+  },
+  {
+   "look": 7,
+   "base": [
+    -0.02775,
+    0.30756,
+    0.02062
+   ],
+   "yaw": 1.9904,
+   "rise": 1.39278,
+   "roll": 0.0,
+   "size": 1.0,
+   "sag": 0.0,
+   "sway": 0.03,
+   "delay": 0.9,
+   "phase": 0.1281
+  },
+  {
+   "look": 8,
+   "base": [
+    -0.02775,
+    0.30756,
+    0.02062
+   ],
+   "yaw": 1.9904,
+   "rise": 1.39278,
+   "roll": 0.0,
+   "size": 1.0,
+   "sag": 0.0,
+   "sway": 0.03,
+   "delay": 0.9,
+   "phase": 0.1281
+  },
+  {
+   "look": 9,
+   "base": [
+    -0.02775,
+    0.30756,
+    0.02062
+   ],
+   "yaw": 1.9904,
+   "rise": 1.39278,
+   "roll": 0.0,
+   "size": 1.0,
+   "sag": 0.0,
+   "sway": 0.03,
+   "delay": 0.9,
+   "phase": 0.1281
+  }
+ ]
+}

@@ -27,9 +27,13 @@
     <string name="t_197eb092cd">%d %%</string>
     <string name="t_45b8ac5695" formatted="false">20–40 % vann</string>
     <string name="t_3d6c2541b9" formatted="false">40 % vann eller mer</string>
+    <string name="t_5f5e0de553">AR startet ikke</string>
+    <string name="t_957c85ce41">AR tegner planten oppå det kameraet ser. Bildene sendes ingen steder.</string>
     <string name="t_14c72c397f">AR – utvidet virkelighet</string>
     <string name="t_484d12fea8">AR er utvidet virkelighet: kameraet viser rommet ditt med en 3D-plante i. Artsmodeller følger allerede med appen, og din egen kan du forestille deg fra et bilde eller skanne.</string>
+    <string name="t_5c4b538eba">AR er utvidet virkelighet: kameraet viser rommet ditt med en 3D-plante i. Modeller av artene følger allerede med appen, og din egen kan du finne på ut fra et bilde.</string>
     <string name="t_809c431aa4">AR, modell og innstillinger</string>
+    <string name="t_acec2ec7d0">Android %s eller nyere</string>
     <string name="t_302a05a1ac">Sprout samler ikke inn noen opplysninger om deg og sender ingenting noe sted.</string>
     <string name="t_9585992548">iOS 26 eller nyere</string>
     <string name="t_c65910cd34">«%1$s» og %2$s til trenger vann</string>
@@ -68,6 +72,7 @@
     <string name="t_a8bcae2d9a">Mathilde</string>
     <string name="t_f79b25b05d">Hagen din som et solsystem: plantene sirkler i vanningsbanene sine. Ta en titt – der kan du til og med lytte til en måned.</string>
     <string name="t_19ff316e6f">Dra i glidebryteren – hagen hopper dager fremover, som om du vanner i tide.</string>
+    <string name="t_ddf5bf682d">Før telefonen saktere</string>
     <string name="t_3f52bd53a9">Tilbake</string>
     <string name="t_c7aaa96778">Angre</string>
     <string name="t_f10d238768">Tilbake til ferdig modell</string>
@@ -94,6 +99,7 @@
     <string name="t_2b5f40f213">Alle vanningene av denne planten. Hold inne en feil oppføring for å slette den.</string>
     <string name="t_2f07cfc9c2">Alle er vannet</string>
     <string name="t_3b5143902e">Totalt</string>
+    <string name="t_eeb8caeb95">Lim inn</string>
     <string name="t_c12ee51dd9">Hele tiden</string>
     <string name="t_1059a1d77d">I går, %s</string>
     <string name="t_fe4b0c80f0">Velg</string>
@@ -113,6 +119,7 @@
     <string name="t_68ae695380">Bevegelsessensor</string>
     <string name="t_827d544645">Datoer</string>
     <string name="t_0bcd158c3d">To fingre roterer, knip for størrelse</string>
+    <string name="t_9978ac34b2">Handlinger</string>
     <string name="t_b6ef08401f">Dag</string>
     <string name="t_abbebfc85b">En dag da tre eller flere planter vil ha vann samtidig – praktisk å vanne alle på én gang.</string>
     <string name="t_e0c0ceee56">Lite tre</string>
@@ -133,6 +140,7 @@
     <string name="t_fdf0f98738">Vanner du før tiden, merker appen det og foreslår et kortere intervall.</string>
     <string name="t_19f25d5784">Mer</string>
     <string name="t_7db203bdda">En runde til</string>
+    <string name="t_bbe42739db">Prøv igjen</string>
     <string name="t_0fb6d09e78">Trenger vann</string>
     <string name="t_ef28cc1496">I perioden</string>
     <string name="t_70efc9651a">Ingen vanninger i perioden.</string>
@@ -173,6 +181,7 @@
     <string name="t_b335f763ea">Alle planter og hele vanningsloggen forsvinner. Dette kan ikke angres.</string>
     <string name="t_53d55db39f">Oppsummering</string>
     <string name="t_779e8b3e28">Slå dem på i telefonens Innstillinger: Sprout → Varslinger.</string>
+    <string name="t_9c47ca16c4">De installeres fra Google Play, gratis. Deretter åpnes AR med én gang.</string>
     <string name="t_46c7be08dd">Kontor</string>
     <string name="t_0112d57d0b">Beskjær</string>
     <string name="t_01b9b803e7">Bildeutsnitt</string>
@@ -181,6 +190,7 @@
     <string name="t_223428bd3c">Hvert punkt er en vanning. Jo høyere punktet, desto mer vann var igjen i jorden.</string>
     <string name="t_e1439f1755">Hver vanning er en tone: indre planeter synger lysere.</string>
     <string name="t_f0a22d9d1a">Som systemet</string>
+    <string name="t_087f6705ed">Som på telefonen</string>
     <string name="t_696586f496">Hva heter du?</string>
     <string name="t_7013b69dab">Slik bruker du appen</string>
     <string name="t_d4066ba693">Hva heter planten nå?</string>
@@ -189,6 +199,9 @@
     <string name="t_7b105a68e6">Kalanchoe</string>
     <string name="t_60f6304f34">Kurvmaranta</string>
     <string name="t_fe0790d4e2">Vanningskalender</string>
+    <string name="t_f2d0f5cc41">Kameraet brukes av en annen app</string>
+    <string name="t_37620de860">Kameraet er blokkert i telefonens innstillinger. Tillat det der, og kom tilbake.</string>
+    <string name="t_601947a61c">Kamera og bilder</string>
     <string name="t_d8e43f5730">Kameraet viser rommet ditt, og appen setter en 3D-plante inn i det. Du kan snu den, gjøre den større og vanne den med vannkanne.</string>
     <string name="t_8671ea9e33">Dråpe</string>
     <string name="t_85618413ed">Hver rute er en dag fra de siste fire månedene: jo sterkere farge, desto flere vanninger. Trykk på en rute for å se datoen.</string>
@@ -199,6 +212,7 @@
     <string name="t_eb1aa42a32">Kallenavn på planter, arter, fukt, datoer – alt du skriver inn, ligger i en fil i appen, på selve telefonen. Det gjør innstillingene også. Ingenting av det forlater enheten.</string>
     <string name="t_1c8e21179b">Knapper</string>
     <string name="t_49cdfd9292">Knappene rundt</string>
+    <string name="t_2ecb4451da">Knapper og kort i bakgrunnsbildets farger.</string>
     <string name="t_725347e425">Når</string>
     <string name="t_512bafe5b5">Når fukten er under</string>
     <string name="t_72e18d38d9">Når du vanner</string>
@@ -256,7 +270,9 @@
     <string name="t_18f71e9762">Sfærenes musikk</string>
     <string name="t_0b854eb300">Pusur</string>
     <string name="t_7a7164238c">Mynte</string>
+    <string name="t_06ec0f34bf">Telefonen har ingen skjermlås.</string>
     <string name="t_272e98dde1">Telefonen har verken Face ID eller kode.</string>
+    <string name="t_339d955a3c">Rett kameraet mot et mønstret gulv eller mot møbler</string>
     <string name="t_4dd78d95e6">Sikt</string>
     <string name="t_c96769af49">Trykk på «+» for å opprette det første.</string>
     <string name="t_730cde94e5">Trykk på «?» ved siden av, så forklarer vi det enkelt. Alle ordene er samlet i ordlisten i innstillingene.</string>
@@ -302,9 +318,14 @@
     <string name="t_da731c70ca">Nytt rom</string>
     <string name="t_87b55f8287">Nytt rom …</string>
     <string name="t_4a30361774">Krever en iPhone med LiDAR-sensor – Pro-modeller fra iPhone 12 Pro.</string>
+    <string name="t_7283f54f30">Kameraet trengs</string>
+    <string name="t_ba43c393fc">Google Play-tjenester for AR trengs</string>
     <string name="t_b9c9ff652d">Om</string>
+    <string name="t_7bee71b043">Oppdater Google Play-tjenester for AR</string>
+    <string name="t_c2f668e54f">Oppdater</string>
     <string name="t_3a3478672d">Gå rundt planten med telefonen – så får du en nøyaktig 3D-kopi. Opptaket tar et par minutter og byggingen av modellen noen til; alt på telefonen.</string>
     <string name="t_bc8d2377f1">En 3D-kopi av planten for AR. Artsmodeller følger allerede med appen, og din egen kan du forestille deg fra et bilde eller skanne – knappen «Modell» på planteskjermen.</string>
+    <string name="t_7eb02aa630">En 3D-kopi av planten for AR. Modeller av artene følger allerede med appen, og din egen kan du finne på ut fra et bilde – knappen «Modell» på plantens skjerm.</string>
     <string name="t_4b919d0c3d">Vanlig for arten: %s</string>
     <string name="t_00495efa90">Oftest ved %s vann i jorden</string>
     <string name="t_9bc6b67c85">Én runde er ett vanningsintervall. De indre banene tilhører de som tørker fort, de ytre de tålmodige.</string>
@@ -389,6 +410,7 @@
     <string name="t_0455b2eeff">Viser %1$d av %2$d: flere blir for tungt for telefonen</string>
     <string name="t_387af5ff90">Vis tips igjen</string>
     <string name="t_ca645a26b9">Snurr hjulet – under ser du hvordan det nye intervallet havner på kortet.</string>
+    <string name="t_51b8f05bf7">Søkefeltet er øverst. Det søker i kallenavn, arter og notater.</string>
     <string name="t_17c7b943fc">Søkefeltet er nederst ved fanelinjen. Det søker på kallenavn, art og notater.</string>
     <string name="t_cd1de7bdc3">Vann alle på én gang og send naboen en lapp.</string>
     <string name="t_c767922d35">Vann en plante, så ser du her hvor mye vann det var i jorden i det øyeblikket.</string>
@@ -426,6 +448,7 @@
     <string name="t_3ca46e3e76">Etter vanning går en farget bølge over mønsteret – slik ser du at vanningen er registrert.</string>
     <string name="t_e101868e98">Siste vanning</string>
     <string name="t_d72166f389">Se i AR</string>
+    <string name="t_22f978c185">Se planten i rommet ditt, gi den en egen modell ut fra et bilde, eller endre kallenavn, art og vanningsintervall.</string>
     <string name="t_f945f5f017">Se planten i rommet ditt, gi den sin egen modell – fra bilde eller skanning – eller endre navn, art og vanningsintervall.</string>
     <string name="t_8845f9ee9d">Plasser</string>
     <string name="t_39a52fa645">Plasser hage</string>
@@ -465,6 +488,7 @@
         <item quantity="other">Hver %d. måned</item>
     </plurals>
     <string name="t_9caa86d668">Hvor ofte planten vannes – omtrent så lang tid jorda bruker på å tørke. Endres i plantens innstillinger.</string>
+    <string name="t_7882f56b39">Tillat kameraet</string>
     <string name="t_cc687c1fa5">Omslutter rammen plante og potte? Da kan du begynne</string>
     <string name="t_0717b1b655">Ordne</string>
     <string name="t_7ebd3688e2">Plante</string>
@@ -496,6 +520,7 @@
     <string name="t_cd59e4204b">Hagen er låst</string>
     <string name="t_e3b46fe6dd">Hagen din som et solsystem: hver plante er en planet, én runde er ett vanningsintervall. Når den når porten øverst, er det på tide å vanne.</string>
     <string name="t_5a05a6d3f9">Hagen åpnes bare med Face ID eller telefonens kode – ingen andre kan kikke.</string>
+    <string name="t_8401f09a45">Hagen åpnes bare med fingeravtrykket, ansiktet ditt eller telefonens skjermlås – ingen andre kan titte.</string>
     <string name="t_2306927b56">Hage siden %s</string>
     <string name="t_928ada7e39">Hagen står på plass. Trykk på en plante for å vanne den.</string>
     <string name="t_e4d56c1f85">Gartner</string>
@@ -514,6 +539,7 @@
     <string name="t_013255575f">Ingen trenger vann i dag.</string>
     <string name="t_618a6abf44">I dag, %s</string>
     <string name="t_88be20fd06">Nå</string>
+    <string name="t_ad8df7482b">Google Play-tjenester for AR fungerer ikke på den. Alt annet i Sprout fungerer som vanlig.</string>
     <string name="t_b3c4b1be56">Nettverk</string>
     <string name="t_a872210c83">Vibreringsstyrke</string>
     <string name="t_04954ca725">Blå</string>
@@ -537,12 +563,14 @@
     </plurals>
     <string name="t_4a40d86849">Neste vanning: i morgen</string>
     <string name="t_b0f07c6bde">Neste vanning: i dag</string>
+    <string name="t_cef8f4a582">For mørkt – slå på lyset</string>
     <string name="t_6f8ca5c940">Ordliste</string>
     <string name="t_214438003b">Ser på bildet …</string>
     <string name="t_6fb5cb3976">Nyeste først</string>
     <string name="t_3189602bf1">Tørreste først</string>
     <string name="t_4ff6829db6">Snø</string>
     <string name="t_1b494791c5">Ikke noe bilde</string>
+    <string name="t_2cb357366d">Plantebilder gjenkjennes på selve telefonen – bildene sendes ingen steder.</string>
     <string name="t_9e2d4d618a">Bilde</string>
     <string name="t_d303471890">Bildet er uskarpt – ta et skarpere.</string>
     <string name="t_bee88a5c8c">Bildet er overeksponert – ta det uten direkte sol.</string>
@@ -567,6 +595,7 @@
     <string name="t_8335506cd9">Tørrest: %s.</string>
     <string name="t_31386bfdb5">Ta bilde av planten – telefonen prøver å kjenne igjen arten.</string>
     <string name="t_2da75ff638">Poeng fra %s. Oppdateres når vennen sender koden på nytt.</string>
+    <string name="t_d9467398b8">Dette skjer når en annen app bruker kameraet. Prøv igjen.</string>
     <string name="t_109ff6015e">Tøffel</string>
     <string name="t_ba89e87d7f">Telefonen kjenner igjen planten på bildet og forestiller seg modellen: farger på blader, blomster og potte, tetthet og høyde. Alt regnes på telefonen, uten nett, på et par sekunder.</string>
     <string name="t_c9b9affc8d">Gjenkjent: %1$s – %2$d %% sikker. Rett det hvis det er feil.</string>
@@ -596,8 +625,10 @@
     <string name="t_8b19591d8a">Mønsteret følger helningen</string>
     <string name="t_1cc281e997">Mønsteret i bakgrunnen flytter seg litt når du vipper telefonen – som om det ligger dypere enn skjermen.</string>
     <string name="t_c8f3f390c2">Dill</string>
+    <string name="t_ce88d35b18">Installer</string>
     <string name="t_5373dc43a3">Stell</string>
     <string name="t_ddc1a36266">Ta hensyn til årstiden</string>
+    <string name="t_8a4653acae">Hagefilen havner i Android-sikkerhetskopien – sammen med data fra andre apper, etter Googles regler.</string>
     <string name="t_8041745a9b">Hagefilen blir med i sikkerhetskopien av iPhonen – sammen med resten av dataene dine, etter Apples regler.</string>
     <string name="t_92c396e199">Saintpaulia</string>
     <string name="t_99c7c8c714">Figurer</string>
@@ -618,6 +649,7 @@
     <string name="t_84b22ed2aa">Farge</string>
     <string name="t_7ceb6b0f96">Bølgefarge</string>
     <string name="t_4d7209b9c1">Mønsterfarge</string>
+    <string name="t_8c038b5d5a">Bakgrunnsfarger</string>
     <string name="t_2a6d22be37">Farger, tetthet og høyde – fra bildet.</string>
     <string name="t_ac08f8dec7">Blomst</string>
     <string name="t_4924d77144">Tall</string>
@@ -634,11 +666,14 @@
     <string name="t_febbc7512c">For å åpne hagen din</string>
     <string name="t_e250a6df76">Skolisse</string>
     <string name="t_723a09005e">Pels</string>
+    <string name="t_68656a952e">Denne versjonen er for gammel for Sprout.</string>
     <string name="t_b3bf1682b8">Dette er hagen din</string>
     <string name="t_d342de941a">Det er din egen kode: du er allerede i tabellen.</string>
     <string name="t_3a925bfac5">Denne iPhonen kan ikke skanne: den trenger LiDAR.</string>
+    <string name="t_8536fc8767">Denne telefonen støtter ikke AR</string>
     <string name="t_c7e64e73eb">Echeveria</string>
     <string name="t_77789a486b">Palmelilje</string>
+    <string name="t_ed3f0e507a">Språk</string>
     <string name="t_3f264c02f1">i tide %s</string>
     <string name="t_cc86ef708c">deg</string>
     <string name="t_2e06422eda">jorden er tørr</string>
@@ -667,4 +702,11 @@
     <string name="t_d8e6f5387c">oftere enn én gang i minuttet</string>
     <string name="t_d959d34275">rekke %d</string>
     <string name="t_34eb9e66db">• %1$s (%2$s, «%3$s») – %4$s</string>
+    <string name="shortcut_add">Legg til</string>
+    <string name="shortcut_search">Søk</string>
+    <string name="shortcut_stats">Statistikk</string>
+    <string name="shortcut_thirst">Hvem skal vannes</string>
+    <string name="tile_label">Hvem skal vannes</string>
+    <string name="widget_description">De tørreste plantene og en «Vann»-knapp.</string>
+    <string name="widget_name">Hvem skal vannes</string>
 </resources>

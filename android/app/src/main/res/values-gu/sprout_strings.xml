@@ -27,9 +27,13 @@
     <string name="t_197eb092cd">%d%%</string>
     <string name="t_45b8ac5695" formatted="false">20–40% પાણી</string>
     <string name="t_3d6c2541b9" formatted="false">40% કે વધુ પાણી</string>
+    <string name="t_5f5e0de553">AR શરૂ થયું નહીં</string>
+    <string name="t_957c85ce41">કૅમેરા જે જુએ છે તેના પર AR છોડ દોરે છે. ફ્રેમ ક્યાંય મોકલાતી નથી.</string>
     <string name="t_14c72c397f">AR — ઑગ્મેન્ટેડ રિયાલિટી</string>
     <string name="t_484d12fea8">AR એટલે ઑગમેન્ટેડ રિયાલિટી: કૅમેરા તમારો ઓરડો અને તેમાં 3D છોડ બતાવે છે. જાતોનાં મૉડલ ઍપમાં જ છે, અને તમારું પોતાનું ફોટા પરથી કલ્પીને કે સ્કૅન કરીને બનાવી શકો.</string>
+    <string name="t_5c4b538eba">AR એટલે ઑગમેન્ટેડ રિયાલિટી: કૅમેરા તમારો ઓરડો બતાવે છે અને તેમાં એક ત્રિપરિમાણીય છોડ. પ્રજાતિઓનાં મૉડલ ઍપમાં જ છે, અને તમારું પોતાનું મૉડલ ફોટા પરથી બનાવી શકાય છે.</string>
     <string name="t_809c431aa4">AR, મૉડલ અને સેટિંગ્સ</string>
+    <string name="t_acec2ec7d0">Android %s કે પછીનું</string>
     <string name="t_302a05a1ac">Sprout તમારા વિશે કોઈ માહિતી એકઠી કરતું નથી અને ક્યાંય કંઈ મોકલતું નથી.</string>
     <string name="t_9585992548">iOS 26 કે પછીનું</string>
     <string name="t_c65910cd34">“%1$s” અને બીજા %2$sને પાણી જોઈએ</string>
@@ -68,6 +72,7 @@
     <string name="t_a8bcae2d9a">મટિલ્ડા</string>
     <string name="t_f79b25b05d">તમારો બગીચો સૂર્યમંડળ જેવો: છોડ પોતાની પાણીની ભ્રમણકક્ષામાં ફરે છે. એક નજર નાખો — એક મહિનો સાંભળી પણ શકો.</string>
     <string name="t_19ff316e6f">સ્લાઇડર ખસેડો — બગીચો થોડા દિવસ આગળ જશે, જાણે તમે સમયસર પાણી આપો છો.</string>
+    <string name="t_ddf5bf682d">ફોનને વધુ ધીમે ફેરવો</string>
     <string name="t_3f52bd53a9">પાછો આવીશ</string>
     <string name="t_c7aaa96778">પૂર્વવત્ કરો</string>
     <string name="t_f10d238768">તૈયાર મૉડલ પર પાછા</string>
@@ -94,6 +99,7 @@
     <string name="t_2b5f40f213">આ છોડને આપેલું બધું પાણી. ખોટી નોંધ લાંબું દબાવીને કાઢી નાખો.</string>
     <string name="t_2f07cfc9c2">બધાને પાણી આપ્યું</string>
     <string name="t_3b5143902e">કુલ</string>
+    <string name="t_eeb8caeb95">પેસ્ટ કરો</string>
     <string name="t_c12ee51dd9">આખો સમય</string>
     <string name="t_1059a1d77d">ગઈકાલે, %s</string>
     <string name="t_fe4b0c80f0">પસંદ કરો</string>
@@ -113,6 +119,7 @@
     <string name="t_68ae695380">ગતિ સેન્સર</string>
     <string name="t_827d544645">તારીખો</string>
     <string name="t_0bcd158c3d">બે આંગળીથી ફેરવો, ચપટીથી કદ બદલો</string>
+    <string name="t_9978ac34b2">ક્રિયાઓ</string>
     <string name="t_b6ef08401f">દિવસ</string>
     <string name="t_abbebfc85b">એવો દિવસ જ્યારે ત્રણ કે વધુ છોડ એક સાથે પાણી માગશે — બધાને એક જ વારમાં પાણી આપવું સરળ.</string>
     <string name="t_e0c0ceee56">નાનું ઝાડ</string>
@@ -133,6 +140,7 @@
     <string name="t_fdf0f98738">જો તમે સમય પહેલાં પાણી આપો, તો ઍપ નોંધ લઈને ગાળો ટૂંકો કરવાનું સૂચવે છે.</string>
     <string name="t_19f25d5784">વધુ</string>
     <string name="t_7db203bdda">વધુ એક ચક્કર</string>
+    <string name="t_bbe42739db">ફરી પ્રયાસ કરો</string>
     <string name="t_0fb6d09e78">પાણી જોઈએ</string>
     <string name="t_ef28cc1496">સમયગાળામાં</string>
     <string name="t_70efc9651a">આ સમયગાળામાં પાણી અપાયું નથી.</string>
@@ -173,6 +181,7 @@
     <string name="t_b335f763ea">બધા છોડ અને પાણી આપ્યાની આખી નોંધ ગાયબ થઈ જશે. આ પાછું લાવી શકાશે નહીં.</string>
     <string name="t_53d55db39f">સારાંશ</string>
     <string name="t_779e8b3e28">ફોનનાં સેટિંગ્સમાં ચાલુ કરો: Sprout → સૂચનાઓ.</string>
+    <string name="t_9c47ca16c4">તે Google Playમાંથી મફત ઇન્સ્ટૉલ થાય છે. પછી AR તરત ખૂલશે.</string>
     <string name="t_46c7be08dd">અભ્યાસ ખંડ</string>
     <string name="t_0112d57d0b">ક્રોપ</string>
     <string name="t_01b9b803e7">ફોટો ક્રોપ</string>
@@ -181,6 +190,7 @@
     <string name="t_223428bd3c">દરેક બિંદુ એક વાર પાણી આપવું છે. બિંદુ જેટલું ઊંચું, માટીમાં એટલું વધુ પાણી બાકી હતું.</string>
     <string name="t_e1439f1755">દરેક વાર પાણી આપવું એક સૂર છે: નજીકના ગ્રહો ઊંચા સૂરે ગાય છે.</string>
     <string name="t_f0a22d9d1a">સિસ્ટમ મુજબ</string>
+    <string name="t_087f6705ed">ફોન મુજબ</string>
     <string name="t_696586f496">તમારું નામ શું છે?</string>
     <string name="t_7013b69dab">કેવી રીતે વાપરવું</string>
     <string name="t_d4066ba693">હવે છોડનું નામ શું છે?</string>
@@ -189,6 +199,9 @@
     <string name="t_7b105a68e6">કલાંચો</string>
     <string name="t_60f6304f34">કેલેથિયા</string>
     <string name="t_fe0790d4e2">પાણી આપવાનું કૅલેન્ડર</string>
+    <string name="t_f2d0f5cc41">કૅમેરા બીજી ઍપ વાપરી રહી છે</string>
+    <string name="t_37620de860">ફોનનાં સેટિંગ્સમાં કૅમેરા પર પ્રતિબંધ છે. ત્યાં મંજૂરી આપીને પાછા આવો.</string>
+    <string name="t_601947a61c">કૅમેરા અને ફોટા</string>
     <string name="t_d8e43f5730">કૅમેરા તમારો ઓરડો બતાવે છે અને ઍપ તેમાં ત્રિપરિમાણીય છોડ મૂકે છે. તમે તેને ફેરવી, મોટો કરી અને ઝારીથી પાણી આપી શકો છો.</string>
     <string name="t_8671ea9e33">ટીપું</string>
     <string name="t_85618413ed">દરેક ખાનું છેલ્લા ચાર મહિનાનો એક દિવસ છે: રંગ જેટલો ઘાટો, પાણી એટલું વધુ. તારીખ જોવા ખાના પર ટૅપ કરો.</string>
@@ -199,6 +212,7 @@
     <string name="t_eb1aa42a32">છોડનાં હુલામણાં નામ, પ્રજાતિઓ, ભેજ, તારીખો — તમે જે લખો તે બધું ઍપની અંદરની ફાઇલમાં, ફોન પર જ રહે છે. સેટિંગ્સ પણ ત્યાં જ. આમાંનું કંઈ ડિવાઇસ બહાર જતું નથી.</string>
     <string name="t_1c8e21179b">બટન</string>
     <string name="t_49cdfd9292">આસપાસનાં બટન</string>
+    <string name="t_2ecb4451da">બટન અને કાર્ડ ફોનના વૉલપેપરના રંગોમાં.</string>
     <string name="t_725347e425">ક્યારે</string>
     <string name="t_512bafe5b5">જ્યારે ભેજ આનાથી ઓછો થાય</string>
     <string name="t_72e18d38d9">તમે ક્યારે પાણી આપો છો</string>
@@ -256,7 +270,9 @@
     <string name="t_18f71e9762">ગોળાઓનું સંગીત</string>
     <string name="t_0b854eb300">મીની</string>
     <string name="t_7a7164238c">ફુદીનો</string>
+    <string name="t_06ec0f34bf">આ ફોનમાં સ્ક્રીન લૉક સેટ નથી.</string>
     <string name="t_272e98dde1">આ ફોનમાં Face ID કે પાસકોડ નથી.</string>
+    <string name="t_339d955a3c">કૅમેરાને ભાતવાળી ફર્શ કે ફર્નિચર તરફ રાખો</string>
     <string name="t_4dd78d95e6">નિશાન લો</string>
     <string name="t_c96769af49">પહેલો બનાવવા “+” પર ટૅપ કરો.</string>
     <string name="t_730cde94e5">પાસેના “?” પર ટૅપ કરો — સરળ શબ્દોમાં સમજાવીશું. બધા શબ્દો સેટિંગ્સના શબ્દકોશમાં ભેગા છે.</string>
@@ -302,9 +318,14 @@
     <string name="t_da731c70ca">નવો રૂમ</string>
     <string name="t_87b55f8287">નવો રૂમ…</string>
     <string name="t_4a30361774">LiDAR સેન્સરવાળો iPhone જોઈએ — iPhone 12 Pro થી Pro મૉડલ.</string>
+    <string name="t_7283f54f30">કૅમેરા જોઈએ</string>
+    <string name="t_ba43c393fc">AR માટે Google Play સેવાઓ જોઈએ</string>
     <string name="t_b9c9ff652d">વિશે</string>
+    <string name="t_7bee71b043">AR માટે Google Play સેવાઓ અપડેટ કરો</string>
+    <string name="t_c2f668e54f">અપડેટ કરો</string>
     <string name="t_3a3478672d">ફોન લઈને છોડની આસપાસ ફરો — તેની ચોક્કસ 3D નકલ બનશે. શૂટિંગમાં થોડી મિનિટ અને મૉડલ બનાવવામાં થોડી વધુ; બધું ફોન પર.</string>
     <string name="t_bc8d2377f1">AR માટે છોડની 3D નકલ. જાતોનાં મૉડલ ઍપમાં જ છે, અને તમારું પોતાનું ફોટા પરથી કલ્પીને કે સ્કૅન કરીને બનાવી શકો — છોડની સ્ક્રીન પર “મૉડલ” બટન.</string>
+    <string name="t_7eb02aa630">AR માટે છોડની ત્રિપરિમાણીય નકલ. પ્રજાતિઓનાં મૉડલ ઍપમાં જ છે, અને તમારું પોતાનું મૉડલ ફોટા પરથી બનાવી શકાય છે — છોડની સ્ક્રીન પર “મૉડલ” બટન.</string>
     <string name="t_4b919d0c3d">આ પ્રજાતિ માટે સામાન્ય: %s</string>
     <string name="t_00495efa90">સામાન્ય રીતે જ્યારે માટીમાં %s પાણી હોય</string>
     <string name="t_9bc6b67c85">એક ચક્કર એટલે પાણી આપવાનો એક ગાળો. નજીકની કક્ષાઓ જલદી સુકાતા છોડની, દૂરની ધીરજવાળાની.</string>
@@ -389,6 +410,7 @@
     <string name="t_0455b2eeff">%2$d માંથી %1$d બતાવ્યા: વધુ ફોન માટે ભારે પડશે</string>
     <string name="t_387af5ff90">સંકેતો ફરી બતાવો</string>
     <string name="t_ca645a26b9">ચક્ર ફેરવો — નીચે દેખાશે કે નવો ગાળો કાર્ડ પર કેવો દેખાશે.</string>
+    <string name="t_51b8f05bf7">શોધ ફીલ્ડ ઉપર છે. તે હુલામણાં નામ, પ્રજાતિ અને નોંધોમાં શોધે છે.</string>
     <string name="t_17c7b943fc">શોધ ખાનું નીચે, ટૅબ બાર પાસે છે. હુલામણું નામ, જાત અને નોંધોમાં શોધે છે.</string>
     <string name="t_cd1de7bdc3">બધાને એક સાથે પાણી આપો અને પડોશીને ચિઠ્ઠી મોકલો.</string>
     <string name="t_c767922d35">કોઈ છોડને પાણી આપો — તે ક્ષણે માટીમાં કેટલું પાણી હતું તે અહીં દેખાશે.</string>
@@ -426,6 +448,7 @@
     <string name="t_3ca46e3e76">પાણી આપ્યા પછી ભાત પર રંગીન લહેર દોડે છે — એનાથી ખબર પડે છે કે પાણી આપવું ગણાઈ ગયું.</string>
     <string name="t_e101868e98">છેલ્લું પાણી</string>
     <string name="t_d72166f389">AR માં જુઓ</string>
+    <string name="t_22f978c185">છોડને તમારા ઓરડામાં જુઓ, ફોટા પરથી તેનું પોતાનું મૉડલ બનાવો, અથવા હુલામણું નામ, પ્રજાતિ અને પાણી આપવાનો ગાળો બદલો.</string>
     <string name="t_f945f5f017">છોડને તમારા ઓરડામાં જુઓ, તેનું પોતાનું મૉડલ બનાવો — ફોટા કે સ્કૅનથી — અથવા નામ, જાત અને પાણી આપવાનો ગાળો બદલો.</string>
     <string name="t_8845f9ee9d">મૂકો</string>
     <string name="t_39a52fa645">બગીચો મૂકો</string>
@@ -465,6 +488,7 @@
         <item quantity="other">દર %d મહિને</item>
     </plurals>
     <string name="t_9caa86d668">છોડને કેટલા દિવસે પાણી અપાય છે — લગભગ એટલામાં માટી સુકાય છે. છોડના સેટિંગ્સમાં બદલી શકાય છે.</string>
+    <string name="t_7882f56b39">કૅમેરાને મંજૂરી આપો</string>
     <string name="t_cc687c1fa5">શું ફ્રેમ છોડ અને કૂંડાને ઘેરે છે? તો શરૂ કરો</string>
     <string name="t_0717b1b655">ગોઠવો</string>
     <string name="t_7ebd3688e2">છોડ</string>
@@ -496,6 +520,7 @@
     <string name="t_cd59e4204b">બગીચો લૉક છે</string>
     <string name="t_e3b46fe6dd">તમારો બગીચો સૂર્યમંડળ જેવો: દરેક છોડ એક ગ્રહ, એક ચક્કર એટલે પાણી આપવાનો એક ગાળો. ઉપરના દરવાજે પહોંચે ત્યારે પાણી આપવાનો સમય.</string>
     <string name="t_5a05a6d3f9">બગીચો ફક્ત Face ID અથવા ફોનના પાસકોડથી ખૂલે છે — બીજું કોઈ ડોકિયું નહીં કરી શકે.</string>
+    <string name="t_8401f09a45">બગીચો ફક્ત તમારી ફિંગરપ્રિન્ટ, ચહેરા કે ફોનના સ્ક્રીન લૉકથી જ ખૂલે છે — બીજા ડોકિયું કરી શકતા નથી.</string>
     <string name="t_2306927b56">%s થી બગીચો</string>
     <string name="t_928ada7e39">બગીચો મુકાઈ ગયો. પાણી આપવા છોડ પર ટૅપ કરો.</string>
     <string name="t_e4d56c1f85">માળી</string>
@@ -514,6 +539,7 @@
     <string name="t_013255575f">આજે કોઈને પાણી આપવાની જરૂર નથી.</string>
     <string name="t_618a6abf44">આજે, %s</string>
     <string name="t_88be20fd06">હમણાં</string>
+    <string name="t_ad8df7482b">તેના પર AR માટે Google Play સેવાઓ ચાલતી નથી. Sproutમાં બાકી બધું હંમેશની જેમ કામ કરે છે.</string>
     <string name="t_b3c4b1be56">નેટવર્ક</string>
     <string name="t_a872210c83">કંપનની તીવ્રતા</string>
     <string name="t_04954ca725">વાદળી</string>
@@ -537,12 +563,14 @@
     </plurals>
     <string name="t_4a40d86849">આગળનું પાણી: કાલે</string>
     <string name="t_b0f07c6bde">આગળનું પાણી: આજે</string>
+    <string name="t_cef8f4a582">બહુ અંધારું છે — લાઇટ ચાલુ કરો</string>
     <string name="t_6f8ca5c940">શબ્દકોશ</string>
     <string name="t_214438003b">ફોટો જોઉં છું…</string>
     <string name="t_6fb5cb3976">સૌથી નવા પહેલાં</string>
     <string name="t_3189602bf1">સૌથી સૂકા પહેલાં</string>
     <string name="t_4ff6829db6">બરફ</string>
     <string name="t_1b494791c5">ફોટો નથી</string>
+    <string name="t_2cb357366d">છોડના ફોટા ફોનમાં જ ઓળખાય છે — ચિત્રો ક્યાંય મોકલાતાં નથી.</string>
     <string name="t_9e2d4d618a">ફોટો</string>
     <string name="t_d303471890">ફોટો ઝાંખો છે — વધુ સ્પષ્ટ લો.</string>
     <string name="t_bee88a5c8c">ફોટોમાં વધુ પડતો પ્રકાશ છે — સીધા તડકા વગર લો.</string>
@@ -567,6 +595,7 @@
     <string name="t_8335506cd9">સૌથી સૂકો: %s.</string>
     <string name="t_31386bfdb5">છોડનો ફોટો લો — ફોન તેની જાત ઓળખવાનો પ્રયાસ કરશે.</string>
     <string name="t_2da75ff638">%s સુધીનો સ્કોર. મિત્ર ફરી કોડ મોકલશે ત્યારે અપડેટ થશે.</string>
+    <string name="t_d9467398b8">બીજી ઍપ કૅમેરા વાપરતી હોય ત્યારે આવું થાય છે. ફરી પ્રયાસ કરો.</string>
     <string name="t_109ff6015e">ચંપલ</string>
     <string name="t_ba89e87d7f">ફોન ફોટામાં છોડ ઓળખીને તેનું મૉડલ કલ્પશે: પાંદડાં, ફૂલ અને કૂંડાના રંગ, ઘનતા અને ઊંચાઈ. બધું ફોન પર, ઇન્ટરનેટ વગર, થોડી સેકંડમાં.</string>
     <string name="t_c9b9affc8d">ઓળખાયું: %1$s — %2$d%% ખાતરી. ખોટું હોય તો સુધારો.</string>
@@ -596,8 +625,10 @@
     <string name="t_8b19591d8a">ભાત ઝુકાવ સાથે ફરે</string>
     <string name="t_1cc281e997">ફોન નમાવતાં પૃષ્ઠભૂમિની ભાત થોડી ખસે છે — જાણે સ્ક્રીનથી ઊંડે હોય.</string>
     <string name="t_c8f3f390c2">સુવા</string>
+    <string name="t_ce88d35b18">ઇન્સ્ટૉલ કરો</string>
     <string name="t_5373dc43a3">સંભાળ</string>
     <string name="t_ddc1a36266">ઋતુ ધ્યાનમાં લો</string>
+    <string name="t_8a4653acae">બગીચાની ફાઇલ Android બૅકઅપમાં જાય છે — બીજી ઍપના ડેટા સાથે, Googleના નિયમો મુજબ.</string>
     <string name="t_8041745a9b">બગીચાની ફાઇલ iPhone બૅકઅપમાં જાય છે — તમારા બાકીના ડેટા સાથે, Appleના નિયમો મુજબ.</string>
     <string name="t_92c396e199">આફ્રિકન વાયોલેટ</string>
     <string name="t_99c7c8c714">આકારો</string>
@@ -618,6 +649,7 @@
     <string name="t_84b22ed2aa">રંગ</string>
     <string name="t_7ceb6b0f96">લહેરનો રંગ</string>
     <string name="t_4d7209b9c1">ભાતનો રંગ</string>
+    <string name="t_8c038b5d5a">વૉલપેપરના રંગો</string>
     <string name="t_2a6d22be37">રંગ, ઘનતા અને ઊંચાઈ — ફોટામાંથી.</string>
     <string name="t_ac08f8dec7">ફૂલ</string>
     <string name="t_4924d77144">આંકડા</string>
@@ -634,11 +666,14 @@
     <string name="t_febbc7512c">તમારો બગીચો ખોલવા માટે</string>
     <string name="t_e250a6df76">દોરી</string>
     <string name="t_723a09005e">ફર કોટ</string>
+    <string name="t_68656a952e">આ વર્ઝન Sprout માટે બહુ જૂનું છે.</string>
     <string name="t_b3bf1682b8">આ તમારો બગીચો છે</string>
     <string name="t_d342de941a">આ તમારો પોતાનો કોડ છે: તમે પહેલેથી કોષ્ટકમાં છો.</string>
     <string name="t_3a925bfac5">આ iPhone સ્કૅન કરી શકતો નથી: LiDAR જોઈએ.</string>
+    <string name="t_8536fc8767">આ ફોન AR ચલાવી શકતો નથી</string>
     <string name="t_c7e64e73eb">એકેવેરિયા</string>
     <string name="t_77789a486b">યુક્કા</string>
+    <string name="t_ed3f0e507a">ભાષા</string>
     <string name="t_3f264c02f1">સમયસર %s</string>
     <string name="t_cc86ef708c">તમે</string>
     <string name="t_2e06422eda">માટી સૂકી છે</string>
@@ -667,4 +702,11 @@
     <string name="t_d8e6f5387c">મિનિટમાં એક વારથી વધુ</string>
     <string name="t_d959d34275">સળંગ %d</string>
     <string name="t_34eb9e66db">• %1$s (%2$s, “%3$s”) — %4$s</string>
+    <string name="shortcut_add">ઉમેરો</string>
+    <string name="shortcut_search">શોધો</string>
+    <string name="shortcut_stats">આંકડા</string>
+    <string name="shortcut_thirst">કોને પાણી આપવું</string>
+    <string name="tile_label">કોને પાણી આપવું</string>
+    <string name="widget_description">સૌથી સૂકા છોડ અને “પાણી આપો” બટન.</string>
+    <string name="widget_name">કોને પાણી આપવું</string>
 </resources>

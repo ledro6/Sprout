@@ -27,9 +27,13 @@
     <string name="t_197eb092cd">%d %%</string>
     <string name="t_45b8ac5695" formatted="false">20–40 % d’aigua</string>
     <string name="t_3d6c2541b9" formatted="false">40 % d’aigua o més</string>
+    <string name="t_5f5e0de553">La RA no s’ha iniciat</string>
+    <string name="t_957c85ce41">La RA dibuixa la planta sobre el que veu la càmera. Les imatges no van enlloc.</string>
     <string name="t_14c72c397f">RA — realitat augmentada</string>
     <string name="t_484d12fea8">La RA és realitat augmentada: la càmera mostra la teva habitació amb una planta en 3D. Els models de les espècies ja són a l’app, i el teu el pots imaginar a partir d’una foto o escanejar.</string>
+    <string name="t_5c4b538eba">La RA és realitat augmentada: la càmera mostra la teva habitació amb una planta en 3D a dins. Els models de les espècies ja vénen amb l’app, i el teu propi el pots imaginar a partir d’una foto.</string>
     <string name="t_809c431aa4">RA, model i ajustos</string>
+    <string name="t_acec2ec7d0">Android %s o posterior</string>
     <string name="t_302a05a1ac">Sprout no recull cap informació sobre tu ni l’envia enlloc.</string>
     <string name="t_9585992548">iOS 26 o posterior</string>
     <string name="t_c65910cd34">«%1$s» i %2$s més necessiten aigua</string>
@@ -68,6 +72,7 @@
     <string name="t_a8bcae2d9a">Matilde</string>
     <string name="t_f79b25b05d">El teu jardí com un sistema solar: les plantes giren per les seves òrbites de reg. Fes-hi un cop d’ull: fins i tot pots escoltar un mes.</string>
     <string name="t_19ff316e6f">Arrossega el control: el jardí avança dies, com si reguessis a temps.</string>
+    <string name="t_ddf5bf682d">Mou el telèfon més a poc a poc</string>
     <string name="t_3f52bd53a9">Torno</string>
     <string name="t_c7aaa96778">Desfés</string>
     <string name="t_f10d238768">Torna al model a punt</string>
@@ -94,6 +99,7 @@
     <string name="t_2b5f40f213">Tots els regs d’aquesta planta. Mantén premuda una entrada errònia per esborrar-la.</string>
     <string name="t_2f07cfc9c2">Totes regades</string>
     <string name="t_3b5143902e">Total</string>
+    <string name="t_eeb8caeb95">Enganxa</string>
     <string name="t_c12ee51dd9">Sempre</string>
     <string name="t_1059a1d77d">Ahir, %s</string>
     <string name="t_fe4b0c80f0">Tria</string>
@@ -113,6 +119,7 @@
     <string name="t_68ae695380">Sensor de moviment</string>
     <string name="t_827d544645">Dates</string>
     <string name="t_0bcd158c3d">Dos dits per girar, pessiga per a la mida</string>
+    <string name="t_9978ac34b2">Accions</string>
     <string name="t_b6ef08401f">Dia</string>
     <string name="t_abbebfc85b">Un dia en què tres plantes o més demanaran aigua alhora: pràctic per regar-les totes d’una vegada.</string>
     <string name="t_e0c0ceee56">Arbret</string>
@@ -133,6 +140,7 @@
     <string name="t_fdf0f98738">Si reges abans d’hora, l’app ho nota i et proposa escurçar l’interval.</string>
     <string name="t_19f25d5784">Més</string>
     <string name="t_7db203bdda">Una volta més</string>
+    <string name="t_bbe42739db">Torna-ho a provar</string>
     <string name="t_0fb6d09e78">Demanen aigua</string>
     <string name="t_ef28cc1496">En el període</string>
     <string name="t_70efc9651a">No hi ha hagut regs en aquest període.</string>
@@ -173,6 +181,7 @@
     <string name="t_b335f763ea">Desapareixeran totes les plantes i tot el registre de regades. No es podrà desfer.</string>
     <string name="t_53d55db39f">Resum</string>
     <string name="t_779e8b3e28">Activa-les a la configuració del telèfon: Sprout → Notificacions.</string>
+    <string name="t_9c47ca16c4">S’instal·len des de Google Play, de franc. Després la RA s’obre de seguida.</string>
     <string name="t_46c7be08dd">Despatx</string>
     <string name="t_0112d57d0b">Retalla</string>
     <string name="t_01b9b803e7">Retall de la foto</string>
@@ -181,6 +190,7 @@
     <string name="t_223428bd3c">Cada punt és un reg. Com més amunt, més aigua quedava a la terra.</string>
     <string name="t_e1439f1755">Cada reg és una nota: els planetes propers canten més agut.</string>
     <string name="t_f0a22d9d1a">Com el sistema</string>
+    <string name="t_087f6705ed">Com al telèfon</string>
     <string name="t_696586f496">Com et dius?</string>
     <string name="t_7013b69dab">Com s’utilitza</string>
     <string name="t_d4066ba693">Com es diu ara la planta?</string>
@@ -189,6 +199,9 @@
     <string name="t_7b105a68e6">Kalanchoe</string>
     <string name="t_60f6304f34">Calathea</string>
     <string name="t_fe0790d4e2">Calendari de regs</string>
+    <string name="t_f2d0f5cc41">Una altra app està fent servir la càmera</string>
+    <string name="t_37620de860">La càmera està bloquejada a la configuració del telèfon. Permet-la allà i torna.</string>
+    <string name="t_601947a61c">Càmera i fotos</string>
     <string name="t_d8e43f5730">La càmera mostra la teva habitació i l’app hi col·loca una planta en 3D. La pots girar, fer més gran i regar amb una regadora.</string>
     <string name="t_8671ea9e33">Gota</string>
     <string name="t_85618413ed">Cada quadrat és un dia dels últims quatre mesos: com més intens el color, més regs. Toca un quadrat per veure’n la data.</string>
@@ -199,6 +212,7 @@
     <string name="t_eb1aa42a32">Sobrenoms de les plantes, espècies, humitat, dates: tot el que escrius es desa en un fitxer dins l’app, al mateix telèfon. També la configuració. Res no surt del dispositiu.</string>
     <string name="t_1c8e21179b">Botons</string>
     <string name="t_49cdfd9292">Botons al voltant</string>
+    <string name="t_2ecb4451da">Botons i targetes amb els colors del teu fons de pantalla.</string>
     <string name="t_725347e425">Quan</string>
     <string name="t_512bafe5b5">Quan la humitat baixi de</string>
     <string name="t_72e18d38d9">Quan regues</string>
@@ -256,7 +270,9 @@
     <string name="t_18f71e9762">Música de les esferes</string>
     <string name="t_0b854eb300">Mixet</string>
     <string name="t_7a7164238c">Menta</string>
+    <string name="t_06ec0f34bf">Aquest telèfon no té cap bloqueig de pantalla configurat.</string>
     <string name="t_272e98dde1">Aquest telèfon no té Face ID ni codi.</string>
+    <string name="t_339d955a3c">Apunta la càmera a un terra amb dibuix o a un moble</string>
     <string name="t_4dd78d95e6">Apunta</string>
     <string name="t_c96769af49">Toca «+» per crear la primera.</string>
     <string name="t_730cde94e5">Toca el «?» del costat i t’ho expliquem amb paraules senzilles. Totes les paraules són al glossari de la configuració.</string>
@@ -302,9 +318,14 @@
     <string name="t_da731c70ca">Habitació nova</string>
     <string name="t_87b55f8287">Habitació nova…</string>
     <string name="t_4a30361774">Cal un iPhone amb sensor LiDAR: models Pro a partir de l’iPhone 12 Pro.</string>
+    <string name="t_7283f54f30">Cal la càmera</string>
+    <string name="t_ba43c393fc">Calen els Serveis de Google Play per a RA</string>
     <string name="t_b9c9ff652d">Informació</string>
+    <string name="t_7bee71b043">Actualitza els Serveis de Google Play per a RA</string>
+    <string name="t_c2f668e54f">Actualitza</string>
     <string name="t_3a3478672d">Fes la volta a la planta amb el telèfon i tindràs la seva còpia 3D exacta. La captura dura un parell de minuts i muntar el model, uns quants més; tot al telèfon.</string>
     <string name="t_bc8d2377f1">Una còpia 3D de la planta per a la RA. Els models de les espècies ja són a l’app, i el teu el pots imaginar a partir d’una foto o escanejar: botó «Model» a la pantalla de la planta.</string>
+    <string name="t_7eb02aa630">Una còpia en 3D de la planta per a la RA. Els models de les espècies ja vénen amb l’app, i el teu propi el pots imaginar a partir d’una foto: el botó «Model» a la pantalla de la planta.</string>
     <string name="t_4b919d0c3d">Habitual per a l’espècie: %s</string>
     <string name="t_00495efa90">Normalment amb un %s d’aigua a la terra</string>
     <string name="t_9bc6b67c85">Una òrbita és un interval de reg. Les òrbites properes són de les que s’assequen de pressa; les llunyanes, de les pacients.</string>
@@ -389,6 +410,7 @@
     <string name="t_0455b2eeff">Es mostren %1$d de %2$d: més seria massa per al telèfon</string>
     <string name="t_387af5ff90">Torna a mostrar els consells</string>
     <string name="t_ca645a26b9">Gira la roda: a sota veuràs com queda el nou interval a la targeta.</string>
+    <string name="t_51b8f05bf7">El camp de cerca és a dalt. Cerca per sobrenoms, espècies i notes.</string>
     <string name="t_17c7b943fc">El camp de cerca és a baix, al costat de la barra de pestanyes. Cerca per sobrenom, espècie i notes.</string>
     <string name="t_cd1de7bdc3">Rega-les totes alhora i envia una nota al veí.</string>
     <string name="t_c767922d35">Rega una planta i aquí veuràs quanta aigua hi havia a la terra en aquell moment.</string>
@@ -426,6 +448,7 @@
     <string name="t_3ca46e3e76">Després de regar, una onada de color recorre el motiu: així saps que el reg s’ha comptat.</string>
     <string name="t_e101868e98">Últim reg</string>
     <string name="t_d72166f389">Mostra en RA</string>
+    <string name="t_22f978c185">Mira la planta a la teva habitació, dona-li un model propi a partir d’una foto o canvia’n el sobrenom, l’espècie i l’interval de reg.</string>
     <string name="t_f945f5f017">Mira la planta a la teva habitació, dona-li un model propi —per foto o per escaneig— o canvia’n el nom, l’espècie i la freqüència de reg.</string>
     <string name="t_8845f9ee9d">Col·loca</string>
     <string name="t_39a52fa645">Col·loca el jardí</string>
@@ -465,6 +488,7 @@
         <item quantity="other">Cada %d mesos</item>
     </plurals>
     <string name="t_9caa86d668">Cada quants dies es rega la planta: més o menys el temps que triga a assecar-se la terra. Es canvia a la configuració de la planta.</string>
+    <string name="t_7882f56b39">Permet la càmera</string>
     <string name="t_cc687c1fa5">El requadre envolta la planta i el test? Doncs comença</string>
     <string name="t_0717b1b655">Reordena</string>
     <string name="t_7ebd3688e2">Planta</string>
@@ -496,6 +520,7 @@
     <string name="t_cd59e4204b">Jardí bloquejat</string>
     <string name="t_e3b46fe6dd">El teu jardí com un sistema solar: cada planta és un planeta i una òrbita és un interval de reg. Quan arriba a la porta de dalt, cal regar.</string>
     <string name="t_5a05a6d3f9">El jardí només s’obre amb Face ID o el codi del telèfon: ningú més hi pot tafanejar.</string>
+    <string name="t_8401f09a45">El jardí només s’obre amb la teva empremta, la teva cara o el bloqueig de pantalla del telèfon: ningú més no hi pot tafanejar.</string>
     <string name="t_2306927b56">Jardí des del %s</string>
     <string name="t_928ada7e39">El jardí és al seu lloc. Toca una planta per regar-la.</string>
     <string name="t_e4d56c1f85">Jardiner</string>
@@ -514,6 +539,7 @@
     <string name="t_013255575f">Avui no cal regar cap planta.</string>
     <string name="t_618a6abf44">Avui, %s</string>
     <string name="t_88be20fd06">Ara</string>
+    <string name="t_ad8df7482b">Els Serveis de Google Play per a RA no hi funcionen. Tota la resta de Sprout funciona com sempre.</string>
     <string name="t_b3c4b1be56">Xarxa</string>
     <string name="t_a872210c83">Intensitat de la vibració</string>
     <string name="t_04954ca725">Blau</string>
@@ -537,12 +563,14 @@
     </plurals>
     <string name="t_4a40d86849">Propera regada: demà</string>
     <string name="t_b0f07c6bde">Propera regada: avui</string>
+    <string name="t_cef8f4a582">Massa fosc: encén el llum</string>
     <string name="t_6f8ca5c940">Glossari</string>
     <string name="t_214438003b">Miro la foto…</string>
     <string name="t_6fb5cb3976">Primer les més noves</string>
     <string name="t_3189602bf1">Primer les més seques</string>
     <string name="t_4ff6829db6">Neu</string>
     <string name="t_1b494791c5">Sense foto</string>
+    <string name="t_2cb357366d">Les fotos de les plantes es reconeixen al mateix telèfon: les imatges no s’envien enlloc.</string>
     <string name="t_9e2d4d618a">Foto</string>
     <string name="t_d303471890">La foto està desenfocada: fes-ne una de més nítida.</string>
     <string name="t_bee88a5c8c">La foto està sobreexposada: fes-la sense sol directe.</string>
@@ -567,6 +595,7 @@
     <string name="t_8335506cd9">La més seca: %s.</string>
     <string name="t_31386bfdb5">Fotografia la planta: el telèfon provarà de reconèixer-ne l’espècie.</string>
     <string name="t_2da75ff638">Puntuació del %s. S’actualitzarà quan el teu amic torni a enviar el codi.</string>
+    <string name="t_d9467398b8">Passa quan una altra app fa servir la càmera. Torna-ho a provar.</string>
     <string name="t_109ff6015e">Sabatilla</string>
     <string name="t_ba89e87d7f">El telèfon reconeixerà la planta a la foto i n’imaginarà el model: colors de fulles, flors i test, densitat i alçada. Tot es calcula al telèfon, sense connexió, en un parell de segons.</string>
     <string name="t_c9b9affc8d">Reconeguda: %1$s, amb un %2$d %% de seguretat. Corregeix-ho si no és així.</string>
@@ -596,8 +625,10 @@
     <string name="t_8b19591d8a">El motiu segueix la inclinació</string>
     <string name="t_1cc281e997">El motiu del fons es mou una mica quan inclines el telèfon, com si fos més endins que la pantalla.</string>
     <string name="t_c8f3f390c2">Anet</string>
+    <string name="t_ce88d35b18">Instal·la</string>
     <string name="t_5373dc43a3">Cura</string>
     <string name="t_ddc1a36266">Tenir en compte l’estació</string>
+    <string name="t_8a4653acae">El fitxer del jardí va a la còpia de seguretat d’Android, juntament amb les altres dades de les apps, segons les normes de Google.</string>
     <string name="t_8041745a9b">El fitxer del jardí va a la còpia de seguretat de l’iPhone, amb la resta de les teves dades, segons les regles d’Apple.</string>
     <string name="t_92c396e199">Violeta africana</string>
     <string name="t_99c7c8c714">Figures</string>
@@ -618,6 +649,7 @@
     <string name="t_84b22ed2aa">Color</string>
     <string name="t_7ceb6b0f96">Color de l’ona</string>
     <string name="t_4d7209b9c1">Color del motiu</string>
+    <string name="t_8c038b5d5a">Colors del fons de pantalla</string>
     <string name="t_2a6d22be37">Colors, densitat i alçada, a partir de la foto.</string>
     <string name="t_ac08f8dec7">Flor</string>
     <string name="t_4924d77144">Xifres</string>
@@ -634,11 +666,14 @@
     <string name="t_febbc7512c">Per obrir el teu jardí</string>
     <string name="t_e250a6df76">Cordó</string>
     <string name="t_723a09005e">Abric</string>
+    <string name="t_68656a952e">Aquesta versió és massa antiga per a Sprout.</string>
     <string name="t_b3bf1682b8">Aquest és el teu jardí</string>
     <string name="t_d342de941a">És el teu propi codi: ja ets a la taula.</string>
     <string name="t_3a925bfac5">Aquest iPhone no pot escanejar: cal el LiDAR.</string>
+    <string name="t_8536fc8767">Aquest telèfon no admet la RA</string>
     <string name="t_c7e64e73eb">Echeveria</string>
     <string name="t_77789a486b">Iuca</string>
+    <string name="t_ed3f0e507a">Idioma</string>
     <string name="t_3f264c02f1">a temps %s</string>
     <string name="t_cc86ef708c">tu</string>
     <string name="t_2e06422eda">terra seca</string>
@@ -667,4 +702,11 @@
     <string name="t_d8e6f5387c">més d’una vegada per minut</string>
     <string name="t_d959d34275">ratxa %d</string>
     <string name="t_34eb9e66db">• %1$s (%2$s, «%3$s») — %4$s</string>
+    <string name="shortcut_add">Afegeix</string>
+    <string name="shortcut_search">Cerca</string>
+    <string name="shortcut_stats">Estadístiques</string>
+    <string name="shortcut_thirst">Què cal regar</string>
+    <string name="tile_label">Què cal regar</string>
+    <string name="widget_description">Les plantes més seques i un botó «Rega».</string>
+    <string name="widget_name">Què cal regar</string>
 </resources>

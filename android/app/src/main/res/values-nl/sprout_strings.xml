@@ -27,9 +27,13 @@
     <string name="t_197eb092cd">%d%%</string>
     <string name="t_45b8ac5695" formatted="false">20–40% water</string>
     <string name="t_3d6c2541b9" formatted="false">40% water of meer</string>
+    <string name="t_5f5e0de553">AR is niet gestart</string>
+    <string name="t_957c85ce41">AR tekent de plant over wat de camera ziet. De beelden gaan nergens heen.</string>
     <string name="t_14c72c397f">AR – augmented reality</string>
     <string name="t_484d12fea8">AR is augmented reality: de camera toont je kamer met een 3D-plant erin. Soortmodellen zitten al in de app, en een eigen model kun je bedenken vanaf een foto of scannen.</string>
+    <string name="t_5c4b538eba">AR is augmented reality: de camera toont je kamer met een 3D-plant erin. Modellen van de soorten zitten al in de app, en een eigen model kun je laten bedenken op basis van een foto.</string>
     <string name="t_809c431aa4">AR, model en instellingen</string>
+    <string name="t_acec2ec7d0">Android %s of nieuwer</string>
     <string name="t_302a05a1ac">Sprout verzamelt geen gegevens over je en stuurt niets door.</string>
     <string name="t_9585992548">iOS 26 of nieuwer</string>
     <string name="t_c65910cd34">‘%1$s’ en nog %2$s hebben water nodig</string>
@@ -68,6 +72,7 @@
     <string name="t_a8bcae2d9a">Mathilde</string>
     <string name="t_f79b25b05d">Je tuin als zonnestelsel: de planten draaien in hun gietbanen. Kijk eens – je kunt zelfs een maand beluisteren.</string>
     <string name="t_19ff316e6f">Sleep de schuifknop – de tuin springt dagen vooruit, alsof je op tijd water geeft.</string>
+    <string name="t_ddf5bf682d">Beweeg de telefoon langzamer</string>
     <string name="t_3f52bd53a9">Terug</string>
     <string name="t_c7aaa96778">Herstel</string>
     <string name="t_f10d238768">Terug naar kant-en-klaar model</string>
@@ -94,6 +99,7 @@
     <string name="t_2b5f40f213">Alle gietbeurten van deze plant. Houd een verkeerde invoer ingedrukt om die te verwijderen.</string>
     <string name="t_2f07cfc9c2">Allemaal water gegeven</string>
     <string name="t_3b5143902e">Totaal</string>
+    <string name="t_eeb8caeb95">Plakken</string>
     <string name="t_c12ee51dd9">Altijd</string>
     <string name="t_1059a1d77d">Gisteren, %s</string>
     <string name="t_fe4b0c80f0">Kies</string>
@@ -113,6 +119,7 @@
     <string name="t_68ae695380">Bewegingssensor</string>
     <string name="t_827d544645">Data</string>
     <string name="t_0bcd158c3d">Twee vingers om te draaien, knijp voor het formaat</string>
+    <string name="t_9978ac34b2">Acties</string>
     <string name="t_b6ef08401f">Dag</string>
     <string name="t_abbebfc85b">Een dag waarop drie of meer planten tegelijk water willen – handig om ze allemaal in één keer te gieten.</string>
     <string name="t_e0c0ceee56">Boompje</string>
@@ -133,6 +140,7 @@
     <string name="t_fdf0f98738">Geef je eerder water dan nodig, dan merkt de app dat en stelt een korter interval voor.</string>
     <string name="t_19f25d5784">Meer</string>
     <string name="t_7db203bdda">Nog een ronde</string>
+    <string name="t_bbe42739db">Opnieuw</string>
     <string name="t_0fb6d09e78">Willen water</string>
     <string name="t_ef28cc1496">In periode</string>
     <string name="t_70efc9651a">Geen gietbeurten in deze periode.</string>
@@ -173,6 +181,7 @@
     <string name="t_b335f763ea">Alle planten en het hele waterlogboek verdwijnen. Dit kan niet ongedaan worden gemaakt.</string>
     <string name="t_53d55db39f">Overzicht</string>
     <string name="t_779e8b3e28">Zet ze aan in de Instellingen van de telefoon: Sprout → Meldingen.</string>
+    <string name="t_9c47ca16c4">Je installeert ze gratis via Google Play. Daarna opent AR meteen.</string>
     <string name="t_46c7be08dd">Werkkamer</string>
     <string name="t_0112d57d0b">Snijd bij</string>
     <string name="t_01b9b803e7">Fotouitsnede</string>
@@ -181,6 +190,7 @@
     <string name="t_223428bd3c">Elke stip is een gietbeurt. Hoe hoger de stip, hoe meer water er nog in de aarde zat.</string>
     <string name="t_e1439f1755">Elke gietbeurt is een noot: binnenste planeten zingen hoger.</string>
     <string name="t_f0a22d9d1a">Zoals systeem</string>
+    <string name="t_087f6705ed">Zoals de telefoon</string>
     <string name="t_696586f496">Hoe heet je?</string>
     <string name="t_7013b69dab">Zo werkt het</string>
     <string name="t_d4066ba693">Hoe heet de plant nu?</string>
@@ -189,6 +199,9 @@
     <string name="t_7b105a68e6">Kalanchoë</string>
     <string name="t_60f6304f34">Calathea</string>
     <string name="t_fe0790d4e2">Gietkalender</string>
+    <string name="t_f2d0f5cc41">De camera wordt door een andere app gebruikt</string>
+    <string name="t_37620de860">De camera is geblokkeerd in de instellingen van de telefoon. Sta hem daar toe en kom terug.</string>
+    <string name="t_601947a61c">Camera en foto’s</string>
     <string name="t_d8e43f5730">De camera toont je kamer en de app zet er een 3D-plant in. Je kunt hem draaien, groter maken en water geven met een gieter.</string>
     <string name="t_8671ea9e33">Druppel</string>
     <string name="t_85618413ed">Elk vakje is een dag uit de laatste vier maanden: hoe voller de kleur, hoe vaker water gegeven. Tik op een vakje voor de datum.</string>
@@ -199,6 +212,7 @@
     <string name="t_eb1aa42a32">Bijnamen van planten, soorten, vochtigheid, data — alles wat je invoert staat in een bestand in de app, op de telefoon zelf. De instellingen ook. Niets daarvan verlaat het apparaat.</string>
     <string name="t_1c8e21179b">Knoppen</string>
     <string name="t_49cdfd9292">Knoppen rondom</string>
+    <string name="t_2ecb4451da">Knoppen en kaarten in de kleuren van je achtergrond.</string>
     <string name="t_725347e425">Wanneer</string>
     <string name="t_512bafe5b5">Als vochtigheid lager dan</string>
     <string name="t_72e18d38d9">Wanneer je water geeft</string>
@@ -256,7 +270,9 @@
     <string name="t_18f71e9762">Muziek der sferen</string>
     <string name="t_0b854eb300">Poekie</string>
     <string name="t_7a7164238c">Munt</string>
+    <string name="t_06ec0f34bf">Op deze telefoon is geen schermvergrendeling ingesteld.</string>
     <string name="t_272e98dde1">Deze telefoon heeft geen Face ID en geen toegangscode.</string>
+    <string name="t_339d955a3c">Richt de camera op een vloer met een patroon of op meubels</string>
     <string name="t_4dd78d95e6">Richten</string>
     <string name="t_c96769af49">Tik op ‘+’ om de eerste aan te maken.</string>
     <string name="t_730cde94e5">Tik op het ‘?’ ernaast, dan leggen we het eenvoudig uit. Alle woorden staan in de woordenlijst in de instellingen.</string>
@@ -302,9 +318,14 @@
     <string name="t_da731c70ca">Nieuwe kamer</string>
     <string name="t_87b55f8287">Nieuwe kamer…</string>
     <string name="t_4a30361774">Er is een iPhone met LiDAR-sensor nodig – Pro-modellen vanaf iPhone 12 Pro.</string>
+    <string name="t_7283f54f30">Camera nodig</string>
+    <string name="t_ba43c393fc">Google Play-services voor AR nodig</string>
     <string name="t_b9c9ff652d">Over</string>
+    <string name="t_7bee71b043">Werk de Google Play-services voor AR bij</string>
+    <string name="t_c2f668e54f">Bijwerken</string>
     <string name="t_3a3478672d">Loop met je telefoon om de plant heen – zo krijg je een exacte 3D-kopie. De opname duurt een paar minuten, het model bouwen nog een paar; alles op de telefoon.</string>
     <string name="t_bc8d2377f1">Een 3D-kopie van de plant voor AR. Soortmodellen zitten al in de app, en een eigen model kun je bedenken vanaf een foto of scannen – knop ‘Model’ op het plantscherm.</string>
+    <string name="t_7eb02aa630">Een 3D-kopie van de plant voor AR. Modellen van de soorten zitten al in de app, en een eigen model kun je laten bedenken op basis van een foto — de knop ‘Model’ op het plantscherm.</string>
     <string name="t_4b919d0c3d">Gebruikelijk voor de soort: %s</string>
     <string name="t_00495efa90">Meestal bij %s water in de aarde</string>
     <string name="t_9bc6b67c85">Eén baan is één gietinterval. Binnenbanen horen bij snelle drogers, buitenbanen bij de geduldigen.</string>
@@ -389,6 +410,7 @@
     <string name="t_0455b2eeff">%1$d van %2$d getoond: meer is te zwaar voor de telefoon</string>
     <string name="t_387af5ff90">Tips opnieuw tonen</string>
     <string name="t_ca645a26b9">Draai aan het wiel – eronder zie je hoe het nieuwe interval op de kaart komt.</string>
+    <string name="t_51b8f05bf7">Het zoekveld staat bovenaan. Het zoekt op bijnamen, soorten en notities.</string>
     <string name="t_17c7b943fc">Het zoekveld staat onderaan, bij de tabbalk. Het zoekt op bijnaam, soort en notities.</string>
     <string name="t_cd1de7bdc3">Geef iedereen tegelijk water en stuur de buren een briefje.</string>
     <string name="t_c767922d35">Geef een plant water – dan zie je hier hoeveel water er op dat moment in de aarde zat.</string>
@@ -426,6 +448,7 @@
     <string name="t_3ca46e3e76">Na het water geven loopt er een gekleurde golf over het patroon – zo zie je dat het water geven is geteld.</string>
     <string name="t_e101868e98">Laatste gietbeurt</string>
     <string name="t_d72166f389">Bekijk in AR</string>
+    <string name="t_22f978c185">Bekijk de plant in je kamer, geef hem een eigen model op basis van een foto of wijzig bijnaam, soort en gietinterval.</string>
     <string name="t_f945f5f017">Bekijk de plant in je kamer, geef hem een eigen model – van een foto of een scan – of wijzig naam, soort en gietinterval.</string>
     <string name="t_8845f9ee9d">Plaats</string>
     <string name="t_39a52fa645">Plaats tuin</string>
@@ -465,6 +488,7 @@
         <item quantity="other">Elke %d maanden</item>
     </plurals>
     <string name="t_9caa86d668">Om de hoeveel dagen de plant water krijgt – ongeveer zo lang doet de grond erover om op te drogen. Aan te passen in de instellingen van de plant.</string>
+    <string name="t_7882f56b39">Camera toestaan</string>
     <string name="t_cc687c1fa5">Sluit het kader om plant en pot? Begin dan</string>
     <string name="t_0717b1b655">Herschik</string>
     <string name="t_7ebd3688e2">Plant</string>
@@ -496,6 +520,7 @@
     <string name="t_cd59e4204b">Tuin vergrendeld</string>
     <string name="t_e3b46fe6dd">Je tuin als zonnestelsel: elke plant is een planeet, één baan is één gietinterval. Bereikt ze de poort bovenaan, dan is het tijd om water te geven.</string>
     <string name="t_5a05a6d3f9">De tuin gaat alleen open met Face ID of de toegangscode van je telefoon – niemand anders kan meekijken.</string>
+    <string name="t_8401f09a45">De tuin opent alleen met je vingerafdruk, gezicht of de schermvergrendeling van de telefoon — anderen kunnen niet meekijken.</string>
     <string name="t_2306927b56">Tuin sinds %s</string>
     <string name="t_928ada7e39">De tuin staat. Tik op een plant om hem water te geven.</string>
     <string name="t_e4d56c1f85">Tuinier</string>
@@ -514,6 +539,7 @@
     <string name="t_013255575f">Vandaag hoeft er niets water te krijgen.</string>
     <string name="t_618a6abf44">Vandaag, %s</string>
     <string name="t_88be20fd06">Nu</string>
+    <string name="t_ad8df7482b">De Google Play-services voor AR werken er niet op. Al het andere in Sprout werkt gewoon.</string>
     <string name="t_b3c4b1be56">Netwerk</string>
     <string name="t_a872210c83">Trilsterkte</string>
     <string name="t_04954ca725">Blauw</string>
@@ -537,12 +563,14 @@
     </plurals>
     <string name="t_4a40d86849">Volgende keer water: morgen</string>
     <string name="t_b0f07c6bde">Volgende keer water: vandaag</string>
+    <string name="t_cef8f4a582">Te donker — doe het licht aan</string>
     <string name="t_6f8ca5c940">Woordenlijst</string>
     <string name="t_214438003b">Ik bekijk de foto…</string>
     <string name="t_6fb5cb3976">Nieuwste eerst</string>
     <string name="t_3189602bf1">Droogste eerst</string>
     <string name="t_4ff6829db6">Sneeuw</string>
     <string name="t_1b494791c5">Geen foto</string>
+    <string name="t_2cb357366d">Plantfoto’s worden op de telefoon zelf herkend — beelden worden nergens heen gestuurd.</string>
     <string name="t_9e2d4d618a">Foto</string>
     <string name="t_d303471890">De foto is onscherp – maak een scherpere.</string>
     <string name="t_bee88a5c8c">De foto is overbelicht – maak er een zonder direct zonlicht.</string>
@@ -567,6 +595,7 @@
     <string name="t_8335506cd9">Het droogst: %s.</string>
     <string name="t_31386bfdb5">Maak een foto van de plant – de telefoon probeert de soort te herkennen.</string>
     <string name="t_2da75ff638">Score van %s. Wordt bijgewerkt als je vriend de code opnieuw stuurt.</string>
+    <string name="t_d9467398b8">Dit gebeurt als een andere app de camera gebruikt. Probeer het opnieuw.</string>
     <string name="t_109ff6015e">Slof</string>
     <string name="t_ba89e87d7f">De telefoon herkent de plant op de foto en bedenkt zijn model: kleuren van bladeren, bloemen en pot, dichtheid en hoogte. Alles draait op de telefoon, offline, in een paar seconden.</string>
     <string name="t_c9b9affc8d">Herkend: %1$s — %2$d%% zeker. Pas het aan als het niet klopt.</string>
@@ -596,8 +625,10 @@
     <string name="t_8b19591d8a">Patroon volgt kanteling</string>
     <string name="t_1cc281e997">Het patroon op de achtergrond verschuift een beetje als je de telefoon kantelt – alsof het dieper ligt dan het scherm.</string>
     <string name="t_c8f3f390c2">Dille</string>
+    <string name="t_ce88d35b18">Installeren</string>
     <string name="t_5373dc43a3">Verzorging</string>
     <string name="t_ddc1a36266">Houd rekening met seizoenen</string>
+    <string name="t_8a4653acae">Het tuinbestand gaat mee in de Android-back-up — samen met de andere appgegevens, volgens de regels van Google.</string>
     <string name="t_8041745a9b">Het tuinbestand gaat mee in de iPhone-reservekopie — samen met je andere gegevens, volgens de regels van Apple.</string>
     <string name="t_92c396e199">Kaaps viooltje</string>
     <string name="t_99c7c8c714">Figuren</string>
@@ -618,6 +649,7 @@
     <string name="t_84b22ed2aa">Kleur</string>
     <string name="t_7ceb6b0f96">Golfkleur</string>
     <string name="t_4d7209b9c1">Patroonkleur</string>
+    <string name="t_8c038b5d5a">Achtergrondkleuren</string>
     <string name="t_2a6d22be37">Kleuren, dichtheid en hoogte – uit de foto.</string>
     <string name="t_ac08f8dec7">Bloem</string>
     <string name="t_4924d77144">Cijfers</string>
@@ -634,11 +666,14 @@
     <string name="t_febbc7512c">Om je tuin te openen</string>
     <string name="t_e250a6df76">Veter</string>
     <string name="t_723a09005e">Bontjas</string>
+    <string name="t_68656a952e">Deze versie is te oud voor Sprout.</string>
     <string name="t_b3bf1682b8">Dit is je tuin</string>
     <string name="t_d342de941a">Dat is je eigen code: je staat al in de tabel.</string>
     <string name="t_3a925bfac5">Deze iPhone kan niet scannen: er is LiDAR nodig.</string>
+    <string name="t_8536fc8767">Deze telefoon ondersteunt geen AR</string>
     <string name="t_c7e64e73eb">Echeveria</string>
     <string name="t_77789a486b">Yucca</string>
+    <string name="t_ed3f0e507a">Taal</string>
     <string name="t_3f264c02f1">op tijd %s</string>
     <string name="t_cc86ef708c">jij</string>
     <string name="t_2e06422eda">aarde is droog</string>
@@ -667,4 +702,11 @@
     <string name="t_d8e6f5387c">vaker dan eens per minuut</string>
     <string name="t_d959d34275">reeks %d</string>
     <string name="t_34eb9e66db">• %1$s (%2$s, ‘%3$s’) — %4$s</string>
+    <string name="shortcut_add">Voeg toe</string>
+    <string name="shortcut_search">Zoek</string>
+    <string name="shortcut_stats">Statistieken</string>
+    <string name="shortcut_thirst">Wie water geven</string>
+    <string name="tile_label">Wie water geven</string>
+    <string name="widget_description">De droogste planten en een knop ‘Geef water’.</string>
+    <string name="widget_name">Wie water geven</string>
 </resources>

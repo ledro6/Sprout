@@ -27,9 +27,13 @@
     <string name="t_197eb092cd">%d%%</string>
     <string name="t_45b8ac5695" formatted="false">20–40% су</string>
     <string name="t_3d6c2541b9" formatted="false">40% су және одан көп</string>
+    <string name="t_5f5e0de553">AR іске қосылмады</string>
+    <string name="t_957c85ce41">AR өсімдікті камера көріп тұрғанның үстіне салады. Кадрлар ешқайда жіберілмейді.</string>
     <string name="t_14c72c397f">AR — толықтырылған шындық</string>
     <string name="t_484d12fea8">AR — толықтырылған шындық: камера бөлмеңізді, ал онда көлемді өсімдікті көрсетеді. Түрлердің модельдері қолданбада бар, ал өзіңіздікін сурет бойынша ойлап табуға не сканерлеуге болады.</string>
+    <string name="t_5c4b538eba">AR — толықтырылған шындық: камера бөлмені көрсетеді, ал оның ішінде — көлемді өсімдік. Түрлердің модельдері қолданбада бар, ал өзіңіздікін фото бойынша ойлап табуға болады.</string>
     <string name="t_809c431aa4">AR, модель және баптаулар</string>
+    <string name="t_acec2ec7d0">Android %s және жаңарақ</string>
     <string name="t_302a05a1ac">Sprout сіз туралы ешқандай мәлімет жинамайды және ешқайда жібермейді.</string>
     <string name="t_9585992548">iOS 26 және жаңарақ</string>
     <string name="t_c65910cd34">«%1$s» және тағы %2$s су сұрайды</string>
@@ -68,6 +72,7 @@
     <string name="t_a8bcae2d9a">Василиса</string>
     <string name="t_f79b25b05d">Бағыңыз Күн жүйесі сияқты: өсімдіктер суару орбиталарымен айналады. Кіріп көріңіз — онда бір айды тыңдауға болады.</string>
     <string name="t_19ff316e6f">Жүгірткіні жылжытыңыз — уағында суарсаңыз, бақ күндер алға жылжиды.</string>
+    <string name="t_ddf5bf682d">Телефонды баяуырақ жүргізіңіз</string>
     <string name="t_3f52bd53a9">Қайтамын</string>
     <string name="t_c7aaa96778">Қайтару</string>
     <string name="t_f10d238768">Дайын модельді қайтару</string>
@@ -94,6 +99,7 @@
     <string name="t_2b5f40f213">Осы өсімдіктің барлық суаруы. Қате жазбаны ұзақ басып жоюға болады.</string>
     <string name="t_2f07cfc9c2">Бәрі суарылды</string>
     <string name="t_3b5143902e">Барлығы</string>
+    <string name="t_eeb8caeb95">Қою</string>
     <string name="t_c12ee51dd9">Барлық уақыт</string>
     <string name="t_1059a1d77d">Кеше, %s</string>
     <string name="t_fe4b0c80f0">Таңдау</string>
@@ -113,6 +119,7 @@
     <string name="t_68ae695380">Қозғалыс датчигі</string>
     <string name="t_827d544645">Күндер</string>
     <string name="t_0bcd158c3d">Екі саусақпен — бұру, қысумен — өлшем</string>
+    <string name="t_9978ac34b2">Әрекеттер</string>
     <string name="t_b6ef08401f">Күн</string>
     <string name="t_abbebfc85b">Бірден үш немесе одан көп өсімдік су сұрайтын күн — бәрін бір-ақ рет суару ыңғайлы.</string>
     <string name="t_e0c0ceee56">Шағын ағаш</string>
@@ -133,6 +140,7 @@
     <string name="t_fdf0f98738">Мерзімінен бұрын суарсаңыз, қолданба мұны байқап, мерзімді қысқартуды ұсынады.</string>
     <string name="t_19f25d5784">Тағы</string>
     <string name="t_7db203bdda">Тағы бір айналым</string>
+    <string name="t_bbe42739db">Қайталау</string>
     <string name="t_0fb6d09e78">Су күтеді</string>
     <string name="t_ef28cc1496">Кезеңде</string>
     <string name="t_70efc9651a">Бұл кезеңде суару болған жоқ.</string>
@@ -173,6 +181,7 @@
     <string name="t_b335f763ea">Барлық өсімдіктер мен бүкіл суару журналы жойылады. Қайтару мүмкін болмайды.</string>
     <string name="t_53d55db39f">Қорытынды</string>
     <string name="t_779e8b3e28">Оларды телефон баптауларында қосыңыз: Sprout → Хабарландырулар.</string>
+    <string name="t_9c47ca16c4">Оларды Google Play-ден тегін орнатады. Содан кейін AR бірден ашылады.</string>
     <string name="t_46c7be08dd">Жұмыс бөлмесі</string>
     <string name="t_0112d57d0b">Кадр</string>
     <string name="t_01b9b803e7">Сурет кадры</string>
@@ -181,6 +190,7 @@
     <string name="t_223428bd3c">Әр нүкте — бір суару. Нүкте неғұрлым жоғары болса, топырақта соғұрлым көп су қалған.</string>
     <string name="t_e1439f1755">Әр суару — нота: жақын ғаламшарлар жоғары әндетеді.</string>
     <string name="t_f0a22d9d1a">Жүйедегідей</string>
+    <string name="t_087f6705ed">Телефондағыдай</string>
     <string name="t_696586f496">Атыңыз кім?</string>
     <string name="t_7013b69dab">Қалай пайдалану керек</string>
     <string name="t_d4066ba693">Өсімдіктің енді аты кім?</string>
@@ -189,6 +199,9 @@
     <string name="t_7b105a68e6">Каланхоэ</string>
     <string name="t_60f6304f34">Калатея</string>
     <string name="t_fe0790d4e2">Суару күнтізбесі</string>
+    <string name="t_f2d0f5cc41">Камераны басқа қолданба пайдаланып жатыр</string>
+    <string name="t_37620de860">Камераға телефон баптауларында тыйым салынған. Оны сол жерде рұқсат етіп, қайта оралыңыз.</string>
+    <string name="t_601947a61c">Камера және фото</string>
     <string name="t_d8e43f5730">Камера бөлмеңізді көрсетеді, ал қолданба оған көлемді өсімдік қояды. Оны бұруға, үлкейтуге және суғарғышпен суаруға болады.</string>
     <string name="t_8671ea9e33">Тамшы</string>
     <string name="t_85618413ed">Әр шаршы — соңғы төрт айдағы бір күн: түс неғұрлым қою болса, суару соғұрлым көп. Шаршыны түртсеңіз, күні шығады.</string>
@@ -199,6 +212,7 @@
     <string name="t_eb1aa42a32">Өсімдіктердің лақап аттары, түрлері, ылғал, күндер — сіз енгізгеннің бәрі қолданбаның ішіндегі файлда, телефонның өзінде жатады. Баптаулар да сонда. Ешқайсысы құрылғыдан шықпайды.</string>
     <string name="t_1c8e21179b">Батырмалар</string>
     <string name="t_49cdfd9292">Айналадағы түймелер</string>
+    <string name="t_2ecb4451da">Түймелер мен тақталар — телефон тұсқағазының түсінде.</string>
     <string name="t_725347e425">Қашан</string>
     <string name="t_512bafe5b5">Ылғал мынадан төмен болса</string>
     <string name="t_72e18d38d9">Қашан суарасыз</string>
@@ -256,7 +270,9 @@
     <string name="t_18f71e9762">Сфералар музыкасы</string>
     <string name="t_0b854eb300">Мысық</string>
     <string name="t_7a7164238c">Жалбыз</string>
+    <string name="t_06ec0f34bf">Телефонда экран құлпы бапталмаған.</string>
     <string name="t_272e98dde1">Телефонда Face ID да, құпия код та жоқ.</string>
+    <string name="t_339d955a3c">Камераны өрнегі бар еденге немесе жиһазға бағыттаңыз</string>
     <string name="t_4dd78d95e6">Бағыттау</string>
     <string name="t_c96769af49">Біріншісін жасау үшін «+» түймесін түртіңіз.</string>
     <string name="t_730cde94e5">Жанындағы «?» белгісін түртіңіз — қарапайым тілмен түсіндіреміз. Барлық сөздер параметрлердегі сөздікте жиналған.</string>
@@ -302,9 +318,14 @@
     <string name="t_da731c70ca">Жаңа бөлме</string>
     <string name="t_87b55f8287">Жаңа бөлме…</string>
     <string name="t_4a30361774">LiDAR датчигі бар iPhone керек — iPhone 12 Pro-дан бастап Pro модельдері.</string>
+    <string name="t_7283f54f30">Камера керек</string>
+    <string name="t_ba43c393fc">AR үшін Google Play қызметтері керек</string>
     <string name="t_b9c9ff652d">Қолданба туралы</string>
+    <string name="t_7bee71b043">AR үшін Google Play қызметтерін жаңартыңыз</string>
+    <string name="t_c2f668e54f">Жаңарту</string>
     <string name="t_3a3478672d">Өсімдікті телефонмен айналып шығыңыз — оның нақты көлемді көшірмесі шығады. Түсіру бірнеше минутқа, модельді құрастыру тағы бірнеше минутқа созылады; бәрі телефонда.</string>
     <string name="t_bc8d2377f1">AR-ға арналған өсімдіктің көлемді көшірмесі. Түрлердің модельдері қолданбада бар, ал өзіңіздікін сурет бойынша ойлап табуға не сканерлеуге болады — өсімдік экранындағы «Модель» түймесі.</string>
+    <string name="t_7eb02aa630">Өсімдіктің AR-ға арналған көлемді көшірмесі. Түрлердің модельдері қолданбада бар, ал өзіңіздікін фото бойынша ойлап табуға болады — өсімдік экранындағы «Модель» түймесі.</string>
     <string name="t_4b919d0c3d">Бұл түр үшін әдетте: %s</string>
     <string name="t_00495efa90">Әдетте топырақта %s су қалғанда</string>
     <string name="t_9bc6b67c85">Бір айналым — бір суару мерзімі. Жақын орбиталар тез кебетіндерде, алыстары — шыдамдыларда.</string>
@@ -389,6 +410,7 @@
     <string name="t_0455b2eeff">%1$d/%2$d көрсетілген: одан көбі телефонға ауыр</string>
     <string name="t_387af5ff90">Кеңестерді қайта көрсету</string>
     <string name="t_ca645a26b9">Барабанды айналдырыңыз — төменде жаңа мерзімнің карточкада қалай көрінетіні көрсетіледі.</string>
+    <string name="t_51b8f05bf7">Іздеу өрісі — жоғарыда. Лақап ат, түр және жазбалар бойынша іздейді.</string>
     <string name="t_17c7b943fc">Іздеу өрісі — төменде, қойындылар тақтасының жанында. Лақап аты, түрі және жазбалар бойынша іздейді.</string>
     <string name="t_cd1de7bdc3">Барлығын бірге суарып, көршіге жадынама жіберіңіз.</string>
     <string name="t_c767922d35">Өсімдікті суарыңыз — сол сәтте топырақта қанша су болғаны осында көрсетіледі.</string>
@@ -426,6 +448,7 @@
     <string name="t_3ca46e3e76">Суарғаннан кейін өрнек бойымен түрлі-түсті толқын жүреді — суару есептелгенін осылай көресіз.</string>
     <string name="t_e101868e98">Соңғы суару</string>
     <string name="t_d72166f389">AR-да көру</string>
+    <string name="t_22f978c185">Өсімдікті өз бөлмеңізде көріңіз, оған фото бойынша өз моделін жасаңыз немесе лақап атын, түрін және суару мерзімін өзгертіңіз.</string>
     <string name="t_f945f5f017">Өсімдікті бөлмеңізде көріңіз, оған өз моделін жасаңыз — сурет не скан бойынша — немесе атын, түрін және суару мерзімін өзгертіңіз.</string>
     <string name="t_8845f9ee9d">Қою</string>
     <string name="t_39a52fa645">Бақты қою</string>
@@ -465,6 +488,7 @@
         <item quantity="other">%d айда бір</item>
     </plurals>
     <string name="t_9caa86d668">Өсімдік неше күн сайын суарылады — топырақ шамамен сонша уақытта кебеді. Өсімдік параметрлерінде өзгертіледі.</string>
+    <string name="t_7882f56b39">Камераға рұқсат беру</string>
     <string name="t_cc687c1fa5">Жақтау өсімдікті құмырасымен қоса қамти ма? Онда бастаңыз</string>
     <string name="t_0717b1b655">Орналастыру</string>
     <string name="t_7ebd3688e2">Өсімдік</string>
@@ -496,6 +520,7 @@
     <string name="t_cd59e4204b">Бақ құлыпталған</string>
     <string name="t_e3b46fe6dd">Бақ — Күн жүйесі сияқты: өсімдік — ғаламшар, бір айналым — суару мерзімі. Жоғарыдағы қақпаға жетсе — суаратын уақыт.</string>
     <string name="t_5a05a6d3f9">Бақ тек Face ID немесе телефон құпия кодымен ашылады — бөгде адам көре алмайды.</string>
+    <string name="t_8401f09a45">Бақ тек саусақ ізімен, бетпен немесе телефонның құлып кодымен ашылады — бөтендер көрмейді.</string>
     <string name="t_2306927b56">Бақ басталған күн: %s</string>
     <string name="t_928ada7e39">Бақ орнады. Суару үшін өсімдікті түртіңіз.</string>
     <string name="t_e4d56c1f85">Бағбан</string>
@@ -514,6 +539,7 @@
     <string name="t_013255575f">Бүгін ешкімді суарудың қажеті жоқ.</string>
     <string name="t_618a6abf44">Бүгін, %s</string>
     <string name="t_88be20fd06">Қазір</string>
+    <string name="t_ad8df7482b">AR үшін Google Play қызметтері онда жұмыс істемейді. Sprout-тағы қалғанның бәрі әдеттегідей жұмыс істейді.</string>
     <string name="t_b3c4b1be56">Желі</string>
     <string name="t_a872210c83">Діріл күші</string>
     <string name="t_04954ca725">Көк</string>
@@ -537,12 +563,14 @@
     </plurals>
     <string name="t_4a40d86849">Келесі суару: ертең</string>
     <string name="t_b0f07c6bde">Келесі суару: бүгін</string>
+    <string name="t_cef8f4a582">Тым қараңғы — жарық жағыңыз</string>
     <string name="t_6f8ca5c940">Сөздік</string>
     <string name="t_214438003b">Суретті қарап жатырмын…</string>
     <string name="t_6fb5cb3976">Алдымен жаңалар</string>
     <string name="t_3189602bf1">Алдымен құрғақтар</string>
     <string name="t_4ff6829db6">Қар</string>
     <string name="t_1b494791c5">Сурет жоқ</string>
+    <string name="t_2cb357366d">Өсімдік суреттері телефонның өзінде танылады — фотолар ешқайда жіберілмейді.</string>
     <string name="t_9e2d4d618a">Сурет</string>
     <string name="t_d303471890">Сурет бұлыңғыр — анығырақ түсіріңіз.</string>
     <string name="t_bee88a5c8c">Сурет тым ашық — тікелей күнсіз түсіріңіз.</string>
@@ -567,6 +595,7 @@
     <string name="t_8335506cd9">Ең құрғағы: %s.</string>
     <string name="t_31386bfdb5">Өсімдікті суретке түсіріңіз — телефон оның түрін танып көреді.</string>
     <string name="t_2da75ff638">%s күнгі ұпай. Досыңыз кодты қайта жібергенде жаңарады.</string>
+    <string name="t_d9467398b8">Бұл камераны басқа қолданба алып қойғанда болады. Қайталап көріңіз.</string>
     <string name="t_109ff6015e">Тәпішке</string>
     <string name="t_ba89e87d7f">Телефон суреттегі өсімдікті танып, оның моделін ойлап табады: жапырақтың, гүлдің және құмыраның түсін, жиілігі мен бойын алады. Бәрі телефонда, желісіз, бірер секундта есептеледі.</string>
     <string name="t_c9b9affc8d">Танылды: %1$s — сенімділік %2$d%%. Қате болса, түзетіңіз.</string>
@@ -596,8 +625,10 @@
     <string name="t_8b19591d8a">Өрнек еңіске ереді</string>
     <string name="t_1cc281e997">Фондағы өрнек телефонды еңкейткенде сәл жылжиды — экраннан тереңірек жатқандай.</string>
     <string name="t_c8f3f390c2">Аскөк</string>
+    <string name="t_ce88d35b18">Орнату</string>
     <string name="t_5373dc43a3">Күтім</string>
     <string name="t_ddc1a36266">Жыл мезгілін ескеру</string>
+    <string name="t_8a4653acae">Бақ файлы Android сақтық көшірмесіне түседі — қолданбалардың басқа деректерімен бірге, Google ережелері бойынша.</string>
     <string name="t_8041745a9b">Бақ файлы iPhone сақтық көшірмесіне түседі — қалған деректеріңізбен бірге, Apple ережелері бойынша.</string>
     <string name="t_92c396e199">Шегіргүл</string>
     <string name="t_99c7c8c714">Фигуралар</string>
@@ -618,6 +649,7 @@
     <string name="t_84b22ed2aa">Түс</string>
     <string name="t_7ceb6b0f96">Толқын түсі</string>
     <string name="t_4d7209b9c1">Өрнек түсі</string>
+    <string name="t_8c038b5d5a">Тұсқағаз түстері</string>
     <string name="t_2a6d22be37">Түстер, жиілік пен бой — суреттен.</string>
     <string name="t_ac08f8dec7">Гүл</string>
     <string name="t_4924d77144">Сандар</string>
@@ -634,11 +666,14 @@
     <string name="t_febbc7512c">Бақты ашу үшін</string>
     <string name="t_e250a6df76">Бау</string>
     <string name="t_723a09005e">Тон</string>
+    <string name="t_68656a952e">Бұл нұсқа Sprout үшін тым ескі.</string>
     <string name="t_b3bf1682b8">Бұл — сіздің бағыңыз</string>
     <string name="t_d342de941a">Бұл өз кодыңыз: сіз кестеде бұрыннан барсыз.</string>
     <string name="t_3a925bfac5">Бұл iPhone сканерлей алмайды: LiDAR керек.</string>
+    <string name="t_8536fc8767">Бұл телефон AR-ды қолдамайды</string>
     <string name="t_c7e64e73eb">Эхеверия</string>
     <string name="t_77789a486b">Юкка</string>
+    <string name="t_ed3f0e507a">Тіл</string>
     <string name="t_3f264c02f1">уағында %s</string>
     <string name="t_cc86ef708c">сіз</string>
     <string name="t_2e06422eda">топырақ құрғақ</string>
@@ -667,4 +702,11 @@
     <string name="t_d8e6f5387c">минутына бір реттен жиі</string>
     <string name="t_d959d34275">қатарынан %d</string>
     <string name="t_34eb9e66db">• %1$s (%2$s, «%3$s») — %4$s</string>
+    <string name="shortcut_add">Қосу</string>
+    <string name="shortcut_search">Іздеу</string>
+    <string name="shortcut_stats">Статистика</string>
+    <string name="shortcut_thirst">Кімді суару керек</string>
+    <string name="tile_label">Кімді суару керек</string>
+    <string name="widget_description">Ең құрғақ өсімдіктер және «Суару» түймесі.</string>
+    <string name="widget_name">Кімді суару керек</string>
 </resources>
