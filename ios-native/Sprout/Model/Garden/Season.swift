@@ -1,4 +1,5 @@
 import Foundation
+import Observation
 
 /// Время года для полива: зимой земля сохнет медленнее — меньше света и
 /// тепла, растение почти не растёт, — летом быстрее. Полушарие — по стране
@@ -73,6 +74,21 @@ enum Season {
         growing = growing(month: month, side: here)
     }
 
+    /// Узор на этот день. Гирлянда — с 20 декабря по 10 января по обе
+    /// стороны экватора: Новый год встречают и там, где он летом. У экватора
+    /// ни снега, ни листопада.
+    static func motif(month: Int, day: Int, side: Side) -> Motif {
+        if (month == 12 && day >= 20) || (month == 1 && day <= 10) {
+            return .garland
+        }
+        guard side != .tropics else { return .plain }
+        switch northern(month, side) {
+        case 12, 1, 2: return .snow
+        case 9, 10, 11: return .leaves
+        default: return .plain
+        }
+    }
+
     /// Строка для экрана растения; летом и осенью молчит — там срок почти
     /// тот же.
     static func line(stretch: Double) -> String? {
@@ -82,6 +98,61 @@ enum Season {
         case ..<0.9: Lang.text("Лето: земля сохнет быстрее, поливать чаще")
         default: nil
         }
+    }
+}
+
+/// Узор по времени года: зимой в него вплетаются снежинки, осенью —
+/// кленовые листья, под Новый год капли горят гирляндой. Выбранные фигурки
+/// остаются — время года только добавляет свою.
+enum Motif: Equatable, Sendable {
+    case plain
+    case snow
+    case leaves
+    case garland
+
+    /// Номер добавленной фигурки в `SproutShapes.every`: снежинка и клён
+    /// идут за четырьмя из настроек, огоньки гирлянды — капли.
+    var extra: Int? {
+        switch self {
+        case .plain: nil
+        case .snow: 4
+        case .leaves: 5
+        case .garland: 1
+        }
+    }
+
+    /// Набор узора: выбранное и фигурка времени года. По порядку — как
+    /// `Settings.chosen`, чтобы раскладка не зависела от того, откуда набор.
+    func dress(_ chosen: [Int]) -> [Int] {
+        guard let extra, !chosen.contains(extra) else { return chosen }
+        return (chosen + [extra]).sorted()
+    }
+}
+
+/// Узор этого дня. Наблюдаемый: сменился день или выключили настройку —
+/// фон перерисовывается сам. Ставит корень при запуске и возвращении.
+@Observable
+final class Festive {
+    static let shared = Festive()
+
+    private(set) var motif: Motif = .plain
+
+    init() {}
+
+    /// Отвечает прежним узором, если он сменился, — по нему корень пускает
+    /// волну смены фигурок.
+    @discardableResult
+    func settle(on: Bool, now: Date = Date(),
+                region: String? = Locale.current.region?.identifier,
+                calendar: Calendar = .current) -> Motif? {
+        let day = calendar.dateComponents([.month, .day], from: now)
+        let next = on ? Season.motif(month: day.month ?? 1, day: day.day ?? 1,
+                                     side: Season.side(region: region))
+            : .plain
+        guard next != motif else { return nil }
+        let before = motif
+        motif = next
+        return before
     }
 }
 

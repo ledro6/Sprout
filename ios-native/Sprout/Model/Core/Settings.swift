@@ -214,6 +214,11 @@ final class Settings {
         didSet { store.set(!seasons, forKey: Key.flatYear) }
     }
 
+    /// Снежинки, листья и гирлянда в узоре, см. `Motif`.
+    var seasonalPattern: Bool {
+        didSet { store.set(!seasonalPattern, forKey: Key.plainPattern) }
+    }
+
     /// Разрешение спрашивает экран настроек, когда включают переключатель.
     var reminders: Bool {
         didSet { store.set(reminders, forKey: Key.reminders) }
@@ -303,6 +308,8 @@ final class Settings {
         static let stiffShapes = "stiffShapes"
         /// Тоже наоборот: время года учитывается по умолчанию.
         static let flatYear = "ignoreSeasons"
+        /// Тоже наоборот: узор по времени года — по умолчанию.
+        static let plainPattern = "plainPattern"
         static let toured = "toured"
         static let walked = "walkedScreens"
         static let launches = "launches"
@@ -347,6 +354,7 @@ final class Settings {
         parallax = !store.bool(forKey: Key.stillPattern)
         sway = !store.bool(forKey: Key.stiffShapes)
         seasons = !store.bool(forKey: Key.flatYear)
+        seasonalPattern = !store.bool(forKey: Key.plainPattern)
         reminders = store.bool(forKey: Key.reminders)
         let level = (store.double(forKey: Key.threshold) * 100).rounded()
         threshold = Self.thresholds.contains(Int(level)) ? level / 100

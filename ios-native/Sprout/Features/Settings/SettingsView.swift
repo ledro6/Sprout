@@ -128,6 +128,12 @@ struct SettingsView: View {
 
             SproutDivider()
 
+            switchRow("Узор по времени года", term: .motif, isOn: Binding(
+                get: { settings.seasonalPattern },
+                set: { dress($0) }))
+
+            SproutDivider()
+
             switchRow("Узор за наклоном", term: .parallax, isOn: Binding(
                 get: { settings.parallax },
                 set: { settings.parallax = $0 }))
@@ -140,6 +146,20 @@ struct SettingsView: View {
                 set: { settings.sway = $0 }))
                 .disabled(!settings.parallax)
         }
+    }
+
+    /// Снежинки, листья или гирлянда приходят и уходят той же волной, что
+    /// фигурки, — полосой сверху вниз, как падает снег: клетки у
+    /// переключателя нет.
+    private func dress(_ on: Bool) {
+        let chosen = settings.chosen
+        settings.seasonalPattern = on
+        guard let before = Festive.shared.settle(on: on) else { return }
+        let after = Festive.shared.motif
+        guard before.dress(chosen) != after.dress(chosen) else { return }
+        Launch.shared.reshape(from: before.dress(chosen),
+                              to: after.dress(chosen),
+                              front: .sweep(Double.pi / 2))
     }
 
     // MARK: - Звук и вибрация
@@ -227,8 +247,10 @@ struct SettingsView: View {
                 let on = settings.shapes.contains(index)
                 Button {
                     // Узор меняется волной из этой клетки; убрали фигурку —
-                    // волна сбегается в неё.
-                    let before = settings.chosen
+                    // волна сбегается в неё. Наборы — с фигуркой времени
+                    // года: иначе после волны она появлялась бы скачком.
+                    let motif = Festive.shared.motif
+                    let before = motif.dress(settings.chosen)
                     var changed = false
                     withAnimation(Motion.pill) {
                         changed = settings.toggle(shape: index)
@@ -237,7 +259,7 @@ struct SettingsView: View {
                     Feel.pick()
                     let spot = tileSpots.rect(index)
                     Launch.shared.reshape(
-                        from: before, to: settings.chosen,
+                        from: before, to: motif.dress(settings.chosen),
                         front: on
                             ? .collapse(CGPoint(x: spot.midX, y: spot.midY))
                             : .point(CGPoint(x: spot.midX, y: spot.midY)))

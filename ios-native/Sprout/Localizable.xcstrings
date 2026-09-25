@@ -43992,6 +43992,293 @@
         }
       }
     },
+    "Зимой в узор вплетаются снежинки, осенью — кленовые листья, а с 20 декабря по 10 января капли горят новогодней гирляндой.": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "في الشتاء تنضم ندف الثلج إلى النقش، وفي الخريف أوراق القيقب، ومن 20 ديسمبر إلى 10 يناير تتلألأ القطرات كزينة رأس السنة."
+          }
+        },
+        "bg": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "През зимата в шарката се вплитат снежинки, през есента — кленови листа, а от 20 декември до 10 януари капките светят като новогодишен гирлянд."
+          }
+        },
+        "bn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "শীতে নকশায় যোগ হয় তুষারকণা, শরতে — ম্যাপল পাতা, আর ২০ ডিসেম্বর থেকে ১০ জানুয়ারি ফোঁটাগুলো নববর্ষের আলোকমালার মতো জ্বলে।"
+          }
+        },
+        "ca": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A l’hivern el motiu s’omple de flocs de neu; a la tardor, de fulles d’auró; i del 20 de desembre al 10 de gener les gotes brillen com una garlanda de Nadal."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "V zimě se do vzoru vpletou sněhové vločky, na podzim javorové listy a od 20. prosince do 10. ledna svítí kapky jako vánoční řetěz."
+          }
+        },
+        "da": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Om vinteren får mønsteret snefnug, om efteråret ahornblade, og fra 20. december til 10. januar lyser dråberne som en julelyskæde."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Im Winter mischen sich Schneeflocken ins Muster, im Herbst Ahornblätter, und vom 20. Dezember bis 10. Januar leuchten die Tropfen wie eine Lichterkette."
+          }
+        },
+        "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Τον χειμώνα στο μοτίβο μπαίνουν νιφάδες χιονιού, το φθινόπωρο φύλλα σφενδάμου, και από 20 Δεκεμβρίου ως 10 Ιανουαρίου οι σταγόνες ανάβουν σαν γιορτινά λαμπάκια."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In winter, snowflakes join the pattern; in autumn, maple leaves; and from December 20 to January 10, the drops light up like holiday string lights."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "En invierno, al patrón se suman copos de nieve; en otoño, hojas de arce; y del 20 de diciembre al 10 de enero, las gotas brillan como una guirnalda navideña."
+          }
+        },
+        "fi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Talvella kuvioon ilmestyy lumihiutaleita, syksyllä vaahteranlehtiä, ja 20. joulukuuta–10. tammikuuta pisarat loistavat kuin jouluvalot."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "En hiver, des flocons de neige se glissent dans le motif ; en automne, des feuilles d’érable ; et du 20 décembre au 10 janvier, les gouttes s’illuminent comme une guirlande de fêtes."
+          }
+        },
+        "gu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "શિયાળામાં ભાતમાં હિમકણ ઉમેરાય છે, પાનખરમાં — મેપલનાં પાંદડાં, અને 20 ડિસેમ્બરથી 10 જાન્યુઆરી સુધી ટીપાં નવા વર્ષની રોશનીની જેમ ઝગમગે છે."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "בחורף נכנסים לדוגמה פתיתי שלג, בסתיו — עלי אדר, ומ־20 בדצמבר עד 10 בינואר הטיפות נדלקות כמו שרשרת אורות חגיגית."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "सर्दियों में पैटर्न में बर्फ़ के फाहे जुड़ जाते हैं, पतझड़ में — मेपल की पत्तियाँ, और 20 दिसंबर से 10 जनवरी तक बूँदें नए साल की झालर की तरह जगमगाती हैं।"
+          }
+        },
+        "hr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zimi se u uzorak upliću pahulje, ujesen javorovo lišće, a od 20. prosinca do 10. siječnja kapi svijetle kao blagdanske lampice."
+          }
+        },
+        "hu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Télen hópelyhek kerülnek a mintába, ősszel juharlevelek, december 20. és január 10. között pedig a cseppek ünnepi fényfüzérként világítanak."
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saat musim dingin, kepingan salju masuk ke pola; saat musim gugur, daun maple; dan dari 20 Desember sampai 10 Januari, tetesan air menyala seperti lampu hias Tahun Baru."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "D’inverno nel motivo compaiono fiocchi di neve, in autunno foglie d’acero, e dal 20 dicembre al 10 gennaio le gocce si accendono come lucine di Natale."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "冬は模様に雪の結晶が、秋はカエデの葉が加わります。12月20日から1月10日までは、しずくが年末年始のイルミネーションのように灯ります。"
+          }
+        },
+        "kk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Қыста өрнекке қар ұшқындары қосылады, күзде — үйеңкі жапырақтары, ал 20 желтоқсаннан 10 қаңтарға дейін тамшылар жаңажылдық шамшырақтай жанады."
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ಚಳಿಗಾಲದಲ್ಲಿ ವಿನ್ಯಾಸಕ್ಕೆ ಹಿಮದ ಹರಳುಗಳು ಸೇರುತ್ತವೆ, ಶರತ್ಕಾಲದಲ್ಲಿ — ಮೇಪಲ್ ಎಲೆಗಳು, ಮತ್ತು ಡಿಸೆಂಬರ್ 20 ರಿಂದ ಜನವರಿ 10 ರವರೆಗೆ ಹನಿಗಳು ಹೊಸ ವರ್ಷದ ದೀಪಾಲಂಕಾರದಂತೆ ಬೆಳಗುತ್ತವೆ."
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "겨울에는 무늬에 눈송이가, 가을에는 단풍잎이 더해지고, 12월 20일부터 1월 10일까지는 물방울이 연말 전구처럼 반짝입니다."
+          }
+        },
+        "lt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Žiemą į raštą įsipina snaigės, rudenį — klevo lapai, o nuo gruodžio 20 iki sausio 10 lašai šviečia kaip šventinė girlianda."
+          }
+        },
+        "ml": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ശൈത്യകാലത്ത് ഡിസൈനിൽ മഞ്ഞുതരികൾ ചേരുന്നു, ശരത്കാലത്ത് — മേപ്പിൾ ഇലകൾ, ഡിസംബർ 20 മുതൽ ജനുവരി 10 വരെ തുള്ളികൾ പുതുവത്സര ദീപമാല പോലെ തിളങ്ങുന്നു."
+          }
+        },
+        "mr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "हिवाळ्यात नक्षीत हिमकण येतात, शरदात — मेपलची पाने, आणि 20 डिसेंबर ते 10 जानेवारी थेंब नववर्षाच्या माळेसारखे उजळतात."
+          }
+        },
+        "ms": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pada musim sejuk, emping salji menyertai corak; pada musim luruh, daun mapel; dan dari 20 Disember hingga 10 Januari, titisan menyala seperti lampu hiasan Tahun Baharu."
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Om vinteren får mønsteret snøfnugg, om høsten lønneblader, og fra 20. desember til 10. januar lyser dråpene som en julelysslynge."
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In de winter komen er sneeuwvlokken in het patroon, in de herfst esdoornbladeren, en van 20 december tot 10 januari lichten de druppels op als een feestelijke lichtslinger."
+          }
+        },
+        "or": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ଶୀତରେ ନକ୍ସାରେ ହିମକଣା ମିଶେ, ଶରତରେ — ମେପଲ ପତ୍ର, ଆଉ 20 ଡିସେମ୍ବରରୁ 10 ଜାନୁଆରୀ ପର୍ଯ୍ୟନ୍ତ ବୁନ୍ଦାଗୁଡ଼ିକ ନୂଆ ବର୍ଷର ଆଲୋକମାଳା ପରି ଜଳେ।"
+          }
+        },
+        "pa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ਸਰਦੀਆਂ ਵਿੱਚ ਨਮੂਨੇ ਵਿੱਚ ਬਰਫ਼ ਦੇ ਫੰਬੇ ਜੁੜਦੇ ਹਨ, ਪਤਝੜ ਵਿੱਚ — ਮੇਪਲ ਦੇ ਪੱਤੇ, ਅਤੇ 20 ਦਸੰਬਰ ਤੋਂ 10 ਜਨਵਰੀ ਤੱਕ ਬੂੰਦਾਂ ਨਵੇਂ ਸਾਲ ਦੀਆਂ ਲੜੀਆਂ ਵਾਂਗ ਜਗਮਗਾਉਂਦੀਆਂ ਹਨ।"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zimą we wzór wplatają się płatki śniegu, jesienią — liście klonu, a od 20 grudnia do 10 stycznia krople świecą jak świąteczne lampki."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No inverno, flocos de neve entram no padrão; no outono, folhas de bordo; e de 20 de dezembro a 10 de janeiro, as gotas acendem como pisca-pisca de fim de ano."
+          }
+        },
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No inverno, entram no padrão flocos de neve; no outono, folhas de ácer; e de 20 de dezembro a 10 de janeiro, as gotas acendem-se como luzes de Natal."
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Iarna, în model apar fulgi de zăpadă, toamna — frunze de arțar, iar între 20 decembrie și 10 ianuarie picăturile se aprind ca o ghirlandă de sărbători."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "V zime sa do vzoru vpletú snehové vločky, na jeseň javorové listy a od 20. decembra do 10. januára kvapky svietia ako vianočná reťaz."
+          }
+        },
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pozimi se v vzorec vpletejo snežinke, jeseni javorjevi listi, od 20. decembra do 10. januarja pa kapljice zasvetijo kot praznične lučke."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "På vintern får mönstret snöflingor, på hösten lönnlöv, och från 20 december till 10 januari lyser dropparna som en ljusslinga."
+          }
+        },
+        "ta": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "குளிர்காலத்தில் வடிவமைப்பில் பனித்துகள்கள் சேரும், இலையுதிர்காலத்தில் — மேப்பிள் இலைகள், டிசம்பர் 20 முதல் ஜனவரி 10 வரை துளிகள் புத்தாண்டு விளக்குச் சரம் போல ஒளிரும்."
+          }
+        },
+        "te": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "చలికాలంలో డిజైన్‌లో మంచు రేకులు చేరుతాయి, శరదృతువులో — మేపుల్ ఆకులు, డిసెంబర్ 20 నుంచి జనవరి 10 వరకు బిందువులు కొత్త సంవత్సరపు దీపాల వరుసలా మెరుస్తాయి."
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ฤดูหนาวลวดลายจะมีเกล็ดหิมะ ฤดูใบไม้ร่วงมีใบเมเปิล และตั้งแต่ 20 ธันวาคมถึง 10 มกราคม หยดน้ำจะส่องแสงเหมือนไฟประดับปีใหม่"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kışın desene kar taneleri, sonbaharda akçaağaç yaprakları katılır; 20 Aralık’tan 10 Ocak’a kadar ise damlalar yılbaşı ışıkları gibi yanar."
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Взимку у візерунок вплітаються сніжинки, восени — кленове листя, а з 20 грудня до 10 січня краплі світяться новорічною гірляндою."
+          }
+        },
+        "ur": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "سردیوں میں نقش میں برف کے گالے شامل ہو جاتے ہیں، خزاں میں — میپل کے پتے، اور 20 دسمبر سے 10 جنوری تک قطرے نئے سال کی جھالر کی طرح جگمگاتے ہیں۔"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mùa đông, hoa văn có thêm bông tuyết; mùa thu — lá phong; còn từ 20 tháng 12 đến 10 tháng 1, những giọt nước sáng lên như dây đèn năm mới."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "冬天图案里会加入雪花，秋天是枫叶；12月20日至1月10日，水滴会像新年彩灯一样闪亮。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "冬天圖案裡會加入雪花，秋天是楓葉；12月20日至1月10日，水滴會像新年彩燈一樣閃亮。"
+          }
+        }
+      }
+    },
     "Зимой земля сохнет медленнее, летом — быстрее. Если включено, срок полива подстраивается сам.": {
       "extractionState": "manual",
       "localizations": {
@@ -168439,6 +168726,293 @@
           "stringUnit": {
             "state": "translated",
             "value": "傾斜手機時，背景圖案會輕微移動——好像它在螢幕更深處。"
+          }
+        }
+      }
+    },
+    "Узор по времени года": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "نقش حسب الموسم"
+          }
+        },
+        "bg": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Шарка според сезона"
+          }
+        },
+        "bn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ঋতু অনুযায়ী নকশা"
+          }
+        },
+        "ca": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Motiu segons l’estació"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vzor podle ročního období"
+          }
+        },
+        "da": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mønster efter årstiden"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Muster nach Jahreszeit"
+          }
+        },
+        "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Μοτίβο ανά εποχή"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Seasonal Pattern"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Patrón según la estación"
+          }
+        },
+        "fi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vuodenajan kuvio"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Motif de saison"
+          }
+        },
+        "gu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ઋતુ પ્રમાણે ભાત"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "דוגמה לפי עונה"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "मौसम के हिसाब से पैटर्न"
+          }
+        },
+        "hr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uzorak prema godišnjem dobu"
+          }
+        },
+        "hu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Évszakhoz illő minta"
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pola musiman"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Motivo di stagione"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "季節の模様"
+          }
+        },
+        "kk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Жыл мезгіліне сай өрнек"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ಋತುವಿಗೆ ತಕ್ಕ ವಿನ್ಯಾಸ"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "계절 무늬"
+          }
+        },
+        "lt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Metų laiko raštas"
+          }
+        },
+        "ml": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ഋതുവിനൊത്ത ഡിസൈൻ"
+          }
+        },
+        "mr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ऋतूनुसार नक्षी"
+          }
+        },
+        "ms": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Corak mengikut musim"
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mønster etter årstid"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Patroon per seizoen"
+          }
+        },
+        "or": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ଋତୁ ଅନୁସାରେ ନକ୍ସା"
+          }
+        },
+        "pa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ਰੁੱਤ ਮੁਤਾਬਕ ਨਮੂਨਾ"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wzór według pory roku"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Padrão da estação"
+          }
+        },
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Padrão da estação"
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Model după anotimp"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vzor podľa ročného obdobia"
+          }
+        },
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vzorec po letnem času"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mönster efter årstid"
+          }
+        },
+        "ta": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "பருவத்துக்கேற்ற வடிவமைப்பு"
+          }
+        },
+        "te": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ఋతువుకు తగ్గ డిజైన్"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ลวดลายตามฤดูกาล"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mevsime göre desen"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Візерунок за порою року"
+          }
+        },
+        "ur": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "موسم کے مطابق نقش"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hoa văn theo mùa"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "应季图案"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "應季圖案"
           }
         }
       }

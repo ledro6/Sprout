@@ -74,17 +74,97 @@ enum SproutShapes {
         return p
     }()
 
+    /// Снежинка: шесть лучей с круглыми концами и по паре веточек на каждом.
+    /// Лучи потолще, чем у настоящей: тонкая снежинка рядом с каплей
+    /// терялась. Шире капли на пункт — на гребне соседям хватает места.
+    static let snowflake: Path = {
+        var p = Path()
+        let middle = addedCentre
+        let reach: CGFloat = 15.6, beam: CGFloat = 3.8
+        let fork: CGFloat = 7.2, twig: CGFloat = 6.8, sprig: CGFloat = 3
+        for step in 0 ..< 6 {
+            let arm = CGAffineTransform(translationX: middle.x, y: middle.y)
+                .rotated(by: CGFloat(step) * .pi / 3)
+            // Скругление в полширины — круглые концы; луч идёт вверх от
+            // середины и поворачивается.
+            p.addRoundedRect(in: CGRect(x: -beam / 2, y: -reach,
+                                        width: beam, height: reach),
+                             cornerSize: CGSize(width: beam / 2,
+                                                height: beam / 2),
+                             transform: arm)
+            // Веточки расходятся наружу галочкой.
+            for side: CGFloat in [-1, 1] {
+                p.addRoundedRect(in: CGRect(x: -sprig / 2, y: -twig,
+                                            width: sprig, height: twig),
+                                 cornerSize: CGSize(width: sprig / 2,
+                                                    height: sprig / 2),
+                                 transform: arm.translatedBy(x: 0, y: -fork)
+                                     .rotated(by: side * 0.9))
+            }
+        }
+        p.addEllipse(in: CGRect(x: middle.x - 4, y: middle.y - 4,
+                                width: 8, height: 8))
+        return p
+    }()
+
+    /// Кленовый лист: три больших лопасти, две малых и черешок. Правая
+    /// половина от верхушки по часовой, левая — её зеркало. Углы чуть
+    /// скруглены, как всё в узоре.
+    static let maple: Path = {
+        let half: [CGPoint] = [
+            CGPoint(x: 0, y: -18), CGPoint(x: 3.4, y: -12.2),
+            CGPoint(x: 6.6, y: -13.8), CGPoint(x: 5.8, y: -6.8),
+            CGPoint(x: 10.8, y: -10.2), CGPoint(x: 11.6, y: -7.6),
+            CGPoint(x: 15.2, y: -8.6), CGPoint(x: 13.2, y: -2.6),
+            CGPoint(x: 14.8, y: -1), CGPoint(x: 8.8, y: 3.4),
+            CGPoint(x: 10.2, y: 7), CGPoint(x: 2.8, y: 5.8),
+            CGPoint(x: 1.5, y: 6.6), CGPoint(x: 1.5, y: 15),
+        ]
+        let outline = half + half.dropFirst().reversed().map {
+            CGPoint(x: -$0.x, y: $0.y)
+        }
+        // Коробка −18…15 по высоте: середину коробки ставим в общую.
+        return rounded(outline.map {
+            CGPoint(x: $0.x + addedCentre.x, y: $0.y + addedCentre.y + 1.5)
+        }, radius: 0.7)
+    }()
+
+    /// Многоугольник со скруглёнными углами: в каждый угол вписана дуга.
+    private static func rounded(_ points: [CGPoint], radius: CGFloat) -> Path {
+        var p = Path()
+        guard let first = points.first, let last = points.last else { return p }
+        p.move(to: CGPoint(x: (last.x + first.x) / 2, y: (last.y + first.y) / 2))
+        for (index, corner) in points.enumerated() {
+            p.addArc(tangent1End: corner,
+                     tangent2End: points[(index + 1) % points.count],
+                     radius: radius)
+        }
+        p.closeSubpath()
+        return p
+    }
+
     struct Piece {
         var path: Path
         var centre: CGPoint
     }
 
+    /// Фигурки из настроек — их выбирают и между ними мечется кутерьма.
     static let pieces: [Piece] = [
         Piece(path: leaf, centre: leafCentre),
         Piece(path: drop, centre: dropCentre),
         Piece(path: flower, centre: addedCentre),
         Piece(path: pot, centre: addedCentre),
     ]
+
+    /// Все фигурки узора: за выбираемыми — те, что приносит время года, см.
+    /// `Motif.extra`.
+    static let every: [Piece] = pieces + [
+        Piece(path: snowflake, centre: addedCentre),
+        Piece(path: maple, centre: addedCentre),
+    ]
+
+    /// Капля — она же огонёк гирлянды.
+    static let dropIndex = 1
 
     /// Самая широкая и высокая из фигурок — по ней они показываются рядом в
     /// настройках в своём размере.

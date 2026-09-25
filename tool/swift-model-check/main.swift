@@ -247,7 +247,7 @@ let keys = ["theme", "patternKinds", "patternShapes", "reminders",
             "remindThreshold", "patternTint", "waveTint",
             "hushedHaptics", "hapticStrength", "stillPattern", "stiffShapes",
             "plantLook", "plantOrder", "mutedSounds", "toured",
-            "walkedScreens", "launches", "avatarShot"]
+            "walkedScreens", "launches", "avatarShot", "plainPattern"]
 let store = UserDefaults.standard
 for key in keys { store.removeObject(forKey: key) }
 let fresh = Settings(store: store)
@@ -267,6 +267,10 @@ check(round2(fresh.threshold), "0.20", "порог по умолчанию — �
 check(fresh.toured == false, "знакомство по умолчанию ещё не показано")
 check(!fresh.seen(.stats), "подсказки экранов по умолчанию не показаны")
 check(fresh.avatarShot == nil, "фото хозяина по умолчанию нет — кружок с буквой")
+check(fresh.seasonalPattern, "узор по времени года по умолчанию включён")
+fresh.seasonalPattern = false
+check(!Settings(store: store).seasonalPattern, "выключенный узор времени года записан")
+fresh.seasonalPattern = true
 fresh.launched()
 check(fresh.firstRun, "первый запуск — первый")
 check(Settings(store: store).launches == 1, "счётчик запусков записан")
@@ -2697,6 +2701,60 @@ do {
           "у каждой модели, кроме трав, ответ есть")
     check(Toxicity.lily.line == "Смертельно опасно для кошек",
           "строка про лилию")
+}
+
+print("узор по времени года:")
+do {
+    func motif(_ month: Int, _ day: Int, _ side: Season.Side) -> String {
+        "\(Season.motif(month: month, day: day, side: side))"
+    }
+    check(motif(12, 20, .north), "garland", "гирлянда — с 20 декабря")
+    check(motif(1, 10, .north), "garland", "и по 10 января")
+    check(motif(12, 19, .north), "snow", "до неё — снежинки")
+    check(motif(1, 11, .north), "snow", "после неё — снова снежинки")
+    check(motif(2, 28, .north), "snow", "февраль — снежинки")
+    check(motif(3, 1, .north), "plain", "весной узор обычный")
+    check(motif(7, 15, .north), "plain", "летом тоже")
+    check(motif(9, 1, .north), "leaves", "сентябрь — кленовые листья")
+    check(motif(11, 30, .north), "leaves", "ноябрь — листья")
+    check(motif(7, 1, .south), "snow", "на юге июль — зима")
+    check(motif(4, 15, .south), "leaves", "а апрель — осень")
+    check(motif(12, 31, .south), "garland", "Новый год на юге — тоже гирлянда")
+    check(motif(1, 20, .south), "plain", "январь на юге — лето")
+    check(motif(1, 20, .tropics), "plain", "у экватора ни снега")
+    check(motif(10, 20, .tropics), "plain", "ни листопада")
+    check(motif(12, 25, .tropics), "garland", "а гирлянда есть")
+    check("\(Motif.snow.dress([0, 1]))", "[0, 1, 4]",
+          "зимой к выбранному добавляется снежинка")
+    check("\(Motif.leaves.dress([3, 2]))", "[2, 3, 5]",
+          "осенью — клён, набор по порядку")
+    check("\(Motif.garland.dress([0]))", "[0, 1]",
+          "гирлянде нужны капли — добавляются")
+    check("\(Motif.garland.dress([0, 1]))", "[0, 1]",
+          "капли уже есть — набор тот же")
+    check("\(Motif.plain.dress([2]))", "[2]", "без времени года — как выбрано")
+    let festive = Festive()
+    var winter = DateComponents()
+    winter.year = 2026
+    winter.month = 2
+    winter.day = 3
+    winter.hour = 12
+    var calendar = Calendar(identifier: .gregorian)
+    calendar.timeZone = TimeZone(identifier: "UTC")!
+    let february = calendar.date(from: winter)!
+    let first = festive.settle(on: true, now: february, region: "RU",
+                               calendar: calendar)
+    check(first.map { "\($0)" } ?? "—", "plain",
+          "первая установка отвечает прежним узором")
+    check("\(festive.motif)", "snow", "в феврале в России — снежинки")
+    check(festive.settle(on: true, now: february, region: "RU",
+                         calendar: calendar) == nil,
+          "тот же день — ничего не меняется")
+    check("\(festive.settle(on: true, now: february, region: "AU", calendar: calendar).map { "\($0)" } ?? "—")",
+          "snow", "в Австралии февраль — лето: прежние снежинки уходят")
+    check("\(festive.motif)", "plain", "и узор обычный")
+    festive.settle(on: false, now: february, region: "RU", calendar: calendar)
+    check("\(festive.motif)", "plain", "выключено — узор обычный круглый год")
 }
 
 print("другие языки:")

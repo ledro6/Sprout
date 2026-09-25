@@ -64,6 +64,9 @@ struct RootView: View {
         .onChange(of: settings.seasons, initial: true) { _, on in
             Season.settle(on: on)
         }
+        // Узор времени года — до первого кадра, чтобы всходы шли уже им.
+        // Переключатель в настройках ставит его сам, с волной.
+        .onAppear { Festive.shared.settle(on: settings.seasonalPattern) }
         // Тема — в корне: она должна достать и до листа настроек, и до
         // заставки. Пусто — за системой.
         .preferredColorScheme(scheme)
@@ -95,6 +98,7 @@ struct RootView: View {
                 // уведомлении.
                 garden.reload()
                 Season.settle(on: settings.seasons)
+                redress()
                 Task { await lock.unlock() }
             } else {
                 // Запираем на «неактивно», а не на «в фоне»: снимок для
@@ -123,6 +127,19 @@ struct RootView: View {
         case .light: .light
         case .dark: .dark
         }
+    }
+
+    /// Пока спали, мог наступить декабрь или Новый год: узор меняется
+    /// волной сверху вниз, как в настройках.
+    private func redress() {
+        let chosen = settings.chosen
+        guard let before = Festive.shared.settle(on: settings.seasonalPattern),
+              Launch.shared.step >= Launch.last
+        else { return }
+        let after = Festive.shared.motif.dress(chosen)
+        guard before.dress(chosen) != after else { return }
+        Launch.shared.reshape(from: before.dress(chosen), to: after,
+                              front: .sweep(Double.pi / 2))
     }
 
     /// Напоминание ставится при уходе с экрана и снимается при возвращении:

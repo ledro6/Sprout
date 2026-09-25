@@ -19,15 +19,29 @@ private struct SproutField: View {
     /// Угол холста в окне: лист настроек висит ниже окна.
     @State private var corner: CGPoint = .zero
 
+    /// Просили меньше движения — гирлянда горит, но не бежит.
+    @Environment(\.accessibilityReduceMotion) private var still
+
     var body: some View {
         // Настройку читаем телом поля, а не внутри `TimelineView`: на паузе
-        // расписания смена фигурок осталась бы незамеченной.
-        let shapes = Settings.shared.chosen
+        // расписания смена фигурок осталась бы незамеченной. Время года
+        // добавляет свою фигурку к выбранным.
+        let motif = Festive.shared.motif
+        let shapes = motif.dress(Settings.shared.chosen)
         let weave = Launch.shared.weave(for: shapes.count)
         let baseTint = Settings.shared.patternTint
         let waveTint = Settings.shared.waveTint
-        let repainting = Repaint.shared.start != nil
-        let frenzied = Frenzy.shared.start != nil
+        let busy = Cheer.shared.start != nil
+            || Launch.shared.bloomStart != nil
+            || Launch.shared.swapStart != nil
+            || Ember.shared.start != nil
+            || Repaint.shared.start != nil
+            || Frenzy.shared.start != nil
+        let lit = motif == .garland
+        // В режиме энергосбережения огонь тоже стоит: фон рисуется на каждом
+        // экране, и бегущая гирлянда — это холст десять раз в секунду.
+        let running = lit && !still
+            && !ProcessInfo.processInfo.isLowPowerModeEnabled
         return ZStack {
             Palette.background
 
@@ -37,13 +51,10 @@ private struct SproutField: View {
                 .overlay {
                     // Долю берём у `TimelineView`: он будит ровно к кадру.
                     // Нет ни волны, ни всходов, ни переходов — расписание на
-                    // паузе.
+                    // паузе; бежит одна гирлянда — будит реже.
                     TimelineView(.animation(
-                        paused: Cheer.shared.start == nil
-                            && Launch.shared.bloomStart == nil
-                            && Launch.shared.swapStart == nil
-                            && Ember.shared.start == nil
-                            && !repainting && !frenzied)) { frame in
+                        minimumInterval: busy ? nil : Motion.garlandFrame,
+                        paused: !busy && !running)) { frame in
                         SproutPattern(wave: Cheer.shared.wave(at: frame.date),
                                       origin: Cheer.shared.origin,
                                       canvas: corner,
@@ -62,7 +73,11 @@ private struct SproutField: View {
                                           ? Tilt.shared.lag : [],
                                       era: Tilt.shared.era,
                                       ember: Ember.shared
-                                          .smoulder(at: frame.date))
+                                          .smoulder(at: frame.date),
+                                      garland: lit ? (running
+                                          ? frame.date
+                                              .timeIntervalSinceReferenceDate
+                                          : 0) : nil)
                     }
                     .padding(-Metrics.parallax)
                     .offset(x: Tilt.shared.shift.width,

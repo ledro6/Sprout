@@ -46,6 +46,9 @@ struct SproutPattern: View {
     /// Тление, пока удаление можно отменить, см. `Ember`.
     var ember: Smoulder?
 
+    /// Часы гирлянды, секунды; пусто — гирлянды нет. Огоньки — капли узора.
+    var garland: Double?
+
     @Environment(\.colorScheme) private var scheme
 
     /// Шаг сетки из макета.
@@ -60,13 +63,16 @@ struct SproutPattern: View {
     /// цвет, и плавно значило бы по команде на фигурку.
     private static let tints = 6
 
-    /// Перелив цвета — тоже ступенями; вместе с синевой это 36 слоёв, в покое
-    /// занят один.
+    /// Перелив цвета — тоже ступенями; в покое занят один слой.
     private static let repaints = 6
 
-    /// В кутерьме вторая часть номера слоя — сам оттенок; этот номер значит
-    /// «как в настройках».
-    private static let plain = Tint.allCases.count
+    /// Вторая часть номера слоя: сперва ступени перелива, за ними — оттенки
+    /// по номеру, для кутерьмы и огоньков гирлянды. Одним рядом: оттенков
+    /// больше, чем ступеней, и общий номер залезал бы в соседнюю синеву.
+    private static let tones = repaints + Tint.allCases.count
+
+    /// Цвета огоньков — как у гирлянды на ёлке.
+    private static let bulbs: [Tint] = [.rose, .lemon, .blue, .amber, .green]
 
     /// Тление — третий множитель слоя, заводится только пока узор тлеет.
     private static let embers = 6
@@ -105,23 +111,23 @@ struct SproutPattern: View {
 
     private func split(_ slot: Int) -> (step: Int, tone: Int, burn: Int) {
         let rest = slot / embers
-        return (rest / Self.repaints, rest % Self.repaints, slot % embers)
+        return (rest / Self.tones, rest % Self.tones, slot % embers)
     }
 
     private func heat(_ burn: Int) -> Double {
         embers > 1 ? Double(burn) / Double(embers - 1) : 0
     }
 
-    private func paint(_ step: Int) -> (base: Shade, wave: Shade) {
-        if frolic != nil {
-            // У кутерьмы перелива нет: цвет меняется, когда фигурка проходит
-            // через ноль.
-            guard step < Self.plain else { return (baseShade, waveShade) }
-            let tint = Tint.allCases[step]
+    private func paint(_ tone: Int) -> (base: Shade, wave: Shade) {
+        // Оттенок по номеру — и в покое, и на гребне свой: у кутерьмы
+        // перелива нет, цвет меняется, когда фигурка проходит через ноль, а
+        // огонёк горит своим цветом и на волне.
+        if tone >= Self.repaints {
+            let tint = Tint.allCases[tone - Self.repaints]
             return (Shade(tint), Shade(tint))
         }
         guard let repaint else { return (baseShade, waveShade) }
-        let part = Double(step) / Double(Self.repaints - 1)
+        let part = Double(tone) / Double(Self.repaints - 1)
         return (Shade.mix(repaint.from, repaint.to, part),
                 Shade.mix(repaint.fromWave, repaint.toWave, part))
     }
@@ -147,14 +153,14 @@ struct SproutPattern: View {
     /// стоили бы в двести раз больше команд.
     private func pattern(covering size: CGSize) -> [Path] {
         var layers = [Path](repeating: Path(),
-                            count: Self.tints * Self.repaints * embers)
+                            count: Self.tints * Self.tones * embers)
         // Настройке не доверяем: промах по границам — падение. Цель берём у
         // идущего перехода: настройка может быть уже на нажатие впереди.
-        let picked = (swap?.to ?? shapes)
-            .filter(SproutShapes.pieces.indices.contains)
+        let every = SproutShapes.every
+        let picked = (swap?.to ?? shapes).filter(every.indices.contains)
         let list = picked.isEmpty ? [0] : picked
         let arrivingWeave = swap?.toWeave ?? weave
-        let leaving = swap?.from.filter(SproutShapes.pieces.indices.contains)
+        let leaving = swap?.from.filter(every.indices.contains)
         let centreY = SproutShapes.leafCentre.y
         var row = 0
         var y = -pitchY
@@ -179,9 +185,8 @@ struct SproutPattern: View {
                         if Frolic.chaotic(state) {
                             wild = Self.scramble(column, row, slot, state)
                                 % SproutShapes.pieces.count
-                            hue = state % Tint.allCases.count
-                        } else {
-                            hue = Self.plain
+                            hue = Self.repaints
+                                + state % Tint.allCases.count
                         }
                     } else if let swap, let leaving, !leaving.isEmpty {
                         let (share, old) = change(swap, at: middle, over: size)
@@ -194,9 +199,15 @@ struct SproutPattern: View {
                     let piece = wild ?? here[mesh.index(column: column,
                                                         slot: slot, row: row,
                                                         of: here.count)]
-                    let layer = (tint(of: grow) * Self.repaints
-                        + (hue ?? repainted(at: middle, over: size)))
-                        * embers + burn
+                    var step = tint(of: grow)
+                    var tone = hue ?? repainted(at: middle, over: size)
+                    if let garland, wild == nil,
+                       piece == SproutShapes.dropIndex {
+                        let bulb = Self.bulb(column, row, slot, at: garland)
+                        tone = bulb.tone
+                        step = max(step, bulb.step)
+                    }
+                    let layer = (step * Self.tones + tone) * embers + burn
                     // Черёд переходов считается по месту в сетке, а не по
                     // уплывшей фигурке; разъезд достаётся только месту, куда
                     // её кладут.
@@ -209,7 +220,7 @@ struct SproutPattern: View {
                         seat = CGPoint(x: middle.x + apart.width,
                                        y: middle.y + apart.height)
                     }
-                    add(SproutShapes.pieces[piece], at: seat,
+                    add(every[piece], at: seat,
                         scale: scale, slot: layer, to: &layers)
                 }
                 x += pitchX
@@ -236,6 +247,21 @@ struct SproutPattern: View {
         mix ^= state &* 2_654_435_761
         mix ^= mix >> 13
         return abs(mix)
+    }
+
+    /// Огонёк гирлянды: цвет — по месту, перемешанным номером, чтобы цвета
+    /// не шли полосами; яркость — бегущим огнём по диагонали, как у
+    /// настоящей гирлянды. Совсем не гаснет: погасший огонёк читался бы
+    /// обычной каплей.
+    private static func bulb(_ column: Int, _ row: Int, _ slot: Int,
+                             at time: Double) -> (tone: Int, step: Int) {
+        let colour = bulbs[scramble(column, row, slot, 7) % bulbs.count]
+        let place = Double(2 * column + slot + row)
+        let phase = time / Motion.garlandPeriod - place / Metrics.garlandSpan
+        let run = pow(max(0, cos(2 * .pi * phase)), 3)
+        let level = Metrics.garlandFloor + (1 - Metrics.garlandFloor) * run
+        return (repaints + colour.rawValue,
+                Int((level * Double(tints - 1)).rounded()))
     }
 
     private func add(_ piece: SproutShapes.Piece, at middle: CGPoint,
