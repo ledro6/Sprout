@@ -19,6 +19,8 @@ struct PlantView: View {
 
     @State private var staging = false
 
+    @State private var modelling = false
+
     /// Заметка правится на месте и ложится в сад, когда поле отпускают.
     @State private var noteDraft = ""
     @FocusState private var writing: Bool
@@ -118,6 +120,9 @@ struct PlantView: View {
         }
         .fullScreenCover(isPresented: $staging) {
             PlantAR(plantID: plantID).environment(garden)
+        }
+        .sheet(isPresented: $modelling) {
+            ModelSheet(plantID: plantID).environment(garden)
         }
         // Растение удалили — экран закрывается сам; вернуть можно с плашки
         // внизу.
@@ -296,22 +301,14 @@ struct PlantView: View {
     private func tools(_ plant: Plant) -> some View {
         HStack(spacing: Metrics.actionGap) {
             if PlantAR.available {
-                lookInAR(plant)
+                tool("В AR", action: { staging = true }) {
+                    ModelMark(plant: plant)
+                }
+                tool("Модель", icon: "cube.transparent") { modelling = true }
             }
             tool("Настройки", icon: "slider.horizontal.3") { tuning = true }
         }
         .sproutRide()
-    }
-
-    /// AR — только с готовой моделью. Пока она собирается, кнопка спит, а на
-    /// месте значка бегут проценты — см. `ModelMark`.
-    private func lookInAR(_ plant: Plant) -> some View {
-        let ready = Bench.shared.ready(plant)
-        return tool("Посмотреть в AR", action: { staging = true }) {
-            ModelMark(plant: plant)
-        }
-        .disabled(!ready)
-        .accessibilityValue(ready ? "" : Bench.preparing(nil))
     }
 
     private func tool(_ title: LocalizedStringKey, icon: String,
@@ -582,24 +579,22 @@ private struct Chrome: ViewModifier {
     }
 }
 
-/// Знак на кнопке AR: значок у готовой модели, проценты — пока она
-/// собирается, крутилка — пока мастерская до неё не дошла. Своим вью: доли
-/// меняются на каждый процент, и перерисовываться с ними должен знак, а не
-/// весь экран.
+/// Знак на кнопке AR: значок, а пока собирается своя модель по снимку —
+/// её проценты. AR открывается и тогда: до конца сборки в нём модель вида.
+/// Своим вью: доли меняются на каждый процент, и перерисовываться с ними
+/// должен знак, а не весь экран.
 private struct ModelMark: View {
     let plant: Plant
 
     var body: some View {
         let share = Bench.shared.share(plant)
         Group {
-            if share == 1 {
-                Image(systemName: "arkit")
-            } else if let share {
+            if let share, share < 1 {
                 Text(Bench.percent(share))
                     .monospacedDigit()
                     .contentTransition(.numericText())
             } else {
-                ProgressView()
+                Image(systemName: "arkit")
             }
         }
         .animation(Motion.number, value: share)

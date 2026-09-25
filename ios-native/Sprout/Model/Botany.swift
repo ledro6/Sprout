@@ -1,12 +1,15 @@
 import Foundation
 
-/// Двадцать видов, которые телефон умеет выращивать в объёме. Любой вид
-/// сада сводится к ближайшему из них; снимок подкрашивает модель под своё
-/// растение, а без снимка встаёт готовая модель вида.
+/// Виды, которые телефон умеет выращивать в объёме, — готовые модели лежат
+/// в приложении (см. `Stock`). Любой вид сада сводится к ближайшему из них;
+/// модель под своё растение — по кнопке, по снимку или сканом.
 enum Preset: String, Codable, CaseIterable, Sendable {
     case monstera, ficus, sansevieria, zamioculcas, spathiphyllum, orchid,
          aloe, cactus, echeveria, jade, dracaena, palm, fern, ivy,
-         chlorophytum, violet, begonia, pelargonium, herbs, tulip
+         chlorophytum, violet, begonia, pelargonium, herbs, tulip,
+         rose, hoya, mint, rosemary, kalanchoe, anthurium, calathea, pilea,
+         alocasia, lily, sunflower, lavender, citrus, haworthia, opuntia,
+         yucca, chrysanthemum
 
     var title: String {
         switch self {
@@ -30,6 +33,23 @@ enum Preset: String, Codable, CaseIterable, Sendable {
         case .pelargonium: Lang.text("Пеларгония")
         case .herbs: Lang.text("Пряные травы")
         case .tulip: Lang.text("Тюльпан")
+        case .rose: Lang.text("Роза")
+        case .hoya: Lang.text("Хойя")
+        case .mint: Lang.text("Мята")
+        case .rosemary: Lang.text("Розмарин")
+        case .kalanchoe: Lang.text("Каланхоэ")
+        case .anthurium: Lang.text("Антуриум")
+        case .calathea: Lang.text("Калатея")
+        case .pilea: Lang.text("Пилея")
+        case .alocasia: Lang.text("Алоказия")
+        case .lily: Lang.text("Лилия")
+        case .sunflower: Lang.text("Подсолнух")
+        case .lavender: Lang.text("Лаванда")
+        case .citrus: Lang.text("Лимонное дерево")
+        case .haworthia: Lang.text("Хавортия")
+        case .opuntia: Lang.text("Опунция")
+        case .yucca: Lang.text("Юкка")
+        case .chrysanthemum: Lang.text("Хризантема")
         }
     }
 
@@ -37,9 +57,14 @@ enum Preset: String, Codable, CaseIterable, Sendable {
     /// суккулент, а не роза. Сперва основы из таблицы, потом названия на
     /// языке телефона: «サボテン» — тоже кактус.
     static func of(_ species: String) -> Preset {
+        known(species) ?? .spathiphyllum
+    }
+
+    /// Вид узнан по названию; нет — название ничего не говорит, и модель
+    /// лучше подобрать по снимку.
+    static func known(_ species: String) -> Preset? {
         let name = species.lowercased()
         return stem(name) ?? named.first { name.contains($0.stem) }?.preset
-            ?? .spathiphyllum
     }
 
     private static func stem(_ name: String) -> Preset? {
@@ -65,32 +90,42 @@ enum Preset: String, Codable, CaseIterable, Sendable {
         ("сансевиер", .sansevieria), ("щучий", .sansevieria),
         ("замиокулькас", .zamioculcas), ("долларов", .zamioculcas),
         ("спатифил", .spathiphyllum), ("диффенбах", .spathiphyllum),
-        ("антуриум", .spathiphyllum), ("аглаонем", .spathiphyllum),
+        ("антуриум", .anthurium), ("аглаонем", .spathiphyllum),
         ("орхиде", .orchid), ("фаленопсис", .orchid),
-        ("алоэ", .aloe), ("хавортия", .aloe), ("агав", .aloe),
-        ("кактус", .cactus), ("опунци", .cactus), ("маммиллярия", .cactus),
+        ("алоказ", .alocasia), ("колоказ", .alocasia),
+        ("алоэ", .aloe), ("хавортия", .haworthia), ("гастери", .haworthia),
+        ("агав", .aloe),
+        ("кактус", .cactus), ("опунци", .opuntia), ("маммиллярия", .cactus),
         ("эхевери", .echeveria), ("суккулент", .echeveria),
         ("молодил", .echeveria), ("каменная роза", .echeveria),
         ("толстянк", .jade), ("крассул", .jade), ("денежное", .jade),
-        ("каланхоэ", .jade),
-        ("драцен", .dracaena), ("юкк", .dracaena), ("кордилин", .dracaena),
+        ("каланхоэ", .kalanchoe),
+        ("драцен", .dracaena), ("юкк", .yucca), ("нолин", .yucca),
+        ("кордилин", .dracaena),
         ("пальм", .palm), ("хамедоре", .palm), ("бамбук", .palm),
         ("папорот", .fern), ("нефролепис", .fern), ("мох", .fern),
-        ("плющ", .ivy), ("сциндапсус", .ivy), ("эпипремнум", .ivy),
-        ("хойя", .ivy), ("традесканц", .ivy),
+        ("хойя", .hoya), ("плющ", .ivy), ("сциндапсус", .ivy),
+        ("эпипремнум", .ivy), ("традесканц", .ivy),
+        ("калате", .calathea), ("марант", .calathea), ("ктенант", .calathea),
+        ("стромант", .calathea),
+        ("пиле", .pilea), ("пеперомия", .pilea),
         ("пряност", .herbs), ("пряные", .herbs),
         ("хлорофит", .chlorophytum), ("трав", .chlorophytum),
         ("фиалк", .violet), ("сенполи", .violet),
         ("бегони", .begonia),
         ("пеларгони", .pelargonium), ("герань", .pelargonium),
-        ("розмарин", .herbs),
-        ("роз", .pelargonium), ("ромашк", .pelargonium),
+        ("розмарин", .rosemary),
+        ("роз", .rose), ("хризантем", .chrysanthemum),
+        ("ромашк", .chrysanthemum), ("гербер", .chrysanthemum),
+        ("лаванд", .lavender),
+        ("лимон", .citrus), ("мандарин", .citrus), ("апельсин", .citrus),
+        ("цитрус", .citrus), ("каламондин", .citrus),
         ("цвет", .pelargonium),
-        ("базилик", .herbs), ("мят", .herbs),
+        ("базилик", .herbs), ("мят", .mint),
         ("зелень", .herbs), ("петрушк", .herbs), ("укроп", .herbs),
         ("кустик", .herbs), ("росток", .herbs),
-        ("тюльпан", .tulip), ("лили", .tulip), ("нарцисс", .tulip),
-        ("гиацинт", .tulip), ("крокус", .tulip), ("подсолнух", .tulip),
+        ("тюльпан", .tulip), ("лили", .lily), ("нарцисс", .tulip),
+        ("гиацинт", .tulip), ("крокус", .tulip), ("подсолнух", .sunflower),
         // Латинские родовые имена — их пишут почти на любом языке — и
         // английские названия.
         ("monst", .monstera), ("philodendron", .monstera),
@@ -99,34 +134,46 @@ enum Preset: String, Codable, CaseIterable, Sendable {
         ("snake plant", .sansevieria),
         ("zamioculcas", .zamioculcas), ("zz plant", .zamioculcas),
         ("spathiphyll", .spathiphyllum), ("peace lily", .spathiphyllum),
-        ("dieffenbach", .spathiphyllum), ("anthurium", .spathiphyllum),
+        ("dieffenbach", .spathiphyllum), ("anthurium", .anthurium),
         ("aglaonema", .spathiphyllum),
         ("orchid", .orchid), ("phalaenopsis", .orchid),
-        ("aloe", .aloe), ("haworth", .aloe), ("agave", .aloe),
-        ("cact", .cactus), ("kakt", .cactus), ("opuntia", .cactus),
-        ("mammillaria", .cactus),
+        ("alocasia", .alocasia), ("colocasia", .alocasia),
+        ("elephant ear", .alocasia),
+        ("aloe", .aloe), ("haworth", .haworthia), ("gasteria", .haworthia),
+        ("agave", .aloe),
+        ("opuntia", .opuntia), ("prickly pear", .opuntia),
+        ("cact", .cactus), ("kakt", .cactus), ("mammillaria", .cactus),
         ("echeveria", .echeveria), ("sempervivum", .echeveria),
         ("succulent", .echeveria),
-        ("crassula", .jade), ("jade", .jade), ("kalancho", .jade),
-        ("dracaena", .dracaena), ("yucca", .dracaena),
+        ("crassula", .jade), ("jade", .jade), ("kalancho", .kalanchoe),
+        ("dracaena", .dracaena), ("yucca", .yucca), ("nolina", .yucca),
         ("cordyline", .dracaena),
         ("chamaedorea", .palm), ("palm", .palm), ("bamboo", .palm),
         ("nephrolepis", .fern), ("fern", .fern), ("moss", .fern),
-        ("hedera", .ivy), ("ivy", .ivy), ("scindapsus", .ivy),
-        ("epipremnum", .ivy), ("pothos", .ivy), ("hoya", .ivy),
+        ("hoya", .hoya), ("hedera", .ivy), ("ivy", .ivy),
+        ("scindapsus", .ivy), ("epipremnum", .ivy), ("pothos", .ivy),
         ("tradescantia", .ivy),
+        ("calathea", .calathea), ("maranta", .calathea),
+        ("ctenanthe", .calathea), ("prayer plant", .calathea),
+        ("pilea", .pilea), ("peperomia", .pilea),
         ("chlorophytum", .chlorophytum), ("spider plant", .chlorophytum),
         ("saintpaulia", .violet), ("violet", .violet),
         ("begonia", .begonia),
         ("pelargonium", .pelargonium), ("geranium", .pelargonium),
-        ("rosmarinus", .herbs), ("rosemary", .herbs),
-        ("sunflower", .tulip),
-        ("rose", .pelargonium), ("daisy", .pelargonium),
+        ("rosmarinus", .rosemary), ("rosemary", .rosemary),
+        ("sunflower", .sunflower), ("helianthus", .sunflower),
+        ("chrysanthem", .chrysanthemum), ("daisy", .chrysanthemum),
+        ("gerbera", .chrysanthemum),
+        ("lavand", .lavender), ("lavender", .lavender),
+        ("citrus", .citrus), ("lemon", .citrus), ("mandarin", .citrus),
+        ("calamondin", .citrus),
+        ("rose", .rose),
         ("flower", .pelargonium),
-        ("basil", .herbs), ("mint", .herbs), ("parsley", .herbs),
-        ("dill", .herbs), ("herb", .herbs),
-        ("tulip", .tulip), ("lily", .tulip), ("narcissus", .tulip),
-        ("daffodil", .tulip), ("hyacinth", .tulip), ("crocus", .tulip),
+        ("basil", .herbs), ("mint", .mint), ("mentha", .mint),
+        ("parsley", .herbs), ("dill", .herbs), ("herb", .herbs),
+        ("tulip", .tulip), ("lily", .lily), ("lilium", .lily),
+        ("narcissus", .tulip), ("daffodil", .tulip), ("hyacinth", .tulip),
+        ("crocus", .tulip),
     ]
 }
 
@@ -163,8 +210,23 @@ enum Botany {
         case .violet: grower.violet()
         case .begonia: grower.begonia()
         case .pelargonium: grower.pelargonium()
-        case .herbs: grower.herbs()
+        case .herbs, .mint, .rosemary: grower.herbs()
         case .tulip: grower.tulip()
+        case .rose: grower.rose()
+        case .hoya: grower.ivy()
+        case .kalanchoe: grower.kalanchoe()
+        case .anthurium: grower.anthurium()
+        case .calathea: grower.calathea()
+        case .pilea: grower.pilea()
+        case .alocasia: grower.alocasia()
+        case .lily: grower.lily()
+        case .sunflower: grower.sunflower()
+        case .lavender: grower.lavender()
+        case .citrus: grower.citrus()
+        case .haworthia: grower.haworthia()
+        case .opuntia: grower.opuntia()
+        case .yucca: grower.yucca()
+        case .chrysanthemum: grower.chrysanthemum()
         }
         grower.kit.measure()
         return grower.kit
@@ -175,6 +237,7 @@ enum Botany {
 struct Grower {
     var kit = Kit()
     var rng: Seeded
+    let preset: Preset
     let traits: Traits?
     let seed: UInt32
     let species: String
@@ -185,10 +248,17 @@ struct Grower {
     init(_ blueprint: Blueprint, species: String,
          detail: Rig.Detail = .standard) {
         rng = Seeded(blueprint.seed + blueprint.preset.rawValue)
+        preset = blueprint.preset
         traits = blueprint.traits
         seed = UInt32(truncatingIfNeeded: Seeded.hash(blueprint.seed))
         self.species = species.lowercased()
         self.detail = detail
+    }
+
+    /// Свой вид — или, в чертежах прежних сборок, вписанное название: тогда
+    /// роза росла внутри пеларгонии, хойя — внутри плюща.
+    func grows(_ kind: Preset, named stem: String) -> Bool {
+        preset == kind || species.contains(stem)
     }
 
     /// Высота рисунка с поправкой на силу телефона — кратно восьми, как
@@ -1177,7 +1247,7 @@ struct Grower {
                 }
             }
         }
-        if species.contains("каланхоэ") || traits?.flower != nil {
+        if grows(.kalanchoe, named: "каланхоэ") || traits?.flower != nil {
             let colour = bloom(Channels(250, 120, 44))
             let petal = LeafLook(outline: .petal, aspect: 0.8, veins: .fan(5),
                                  base: colour, tip: lighter(colour, 0.15),
@@ -1344,7 +1414,7 @@ struct Grower {
 
     mutating func ivy() {
         pot()
-        let hoya = species.contains("хойя")
+        let hoya = grows(.hoya, named: "хойя")
         let base = green(hoya ? Channels(46, 100, 50) : Channels(56, 118, 50))
         var design = LeafLook(outline: hoya ? .oval : .heart,
                               aspect: hoya ? 0.52 : 0.82,
@@ -1403,6 +1473,35 @@ struct Grower {
             }
         }
         stems(vines, look: vineLook, sides: 5) { _ in 0.0022 }
+        if hoya { umbels(on: vines) }
+    }
+
+    /// Зонтики хойи: полушарие восковых звёздочек с красной серединкой.
+    /// Сетки лепестков мелкие: звёздочек десятки.
+    private mutating func umbels(on vines: [[Vec3]]) {
+        let colour = bloom(Channels(246, 220, 226))
+        let petal = LeafLook(outline: .petal, aspect: 0.8, veins: .none,
+                             base: colour, tip: lighter(colour, 0.3),
+                             vein: colour, glow: 0.35, mottle: 0.03)
+        let ring = whorl(petal, length: 0.0062, open: Float.pi / 2 - 0.05,
+                         bend: Sculpt.Bend(arch: 0.1, fold: 0.25),
+                         turns: Grower.evenly(5), rows: 5, columns: 5)
+        let star: Head = [Part(mesh: kit.add(ring), look: petalLook(petal)),
+                          dome(0.0015, color: Channels(176, 34, 64),
+                               squash: 0.8)]
+        for (index, vine) in vines.prefix(2).enumerated() {
+            let center = vine[min(10 + index * 3, vine.count - 1)]
+            for step in 0 ..< 14 {
+                let turn = Float(step) * 2.399_963
+                let lift = 0.35 + 0.9 * Float(step % 5) / 4
+                let out = Vec3(cos(lift) * cos(turn), sin(lift),
+                               cos(lift) * sin(turn)) * 0.011
+                place(flower: star,
+                      Pose(base: center + out, yaw: atan2(-out.z, out.x),
+                           rise: lift),
+                      sag: 0.4, delay: 0.85)
+            }
+        }
     }
 
     mutating func chlorophytum() {
@@ -1549,7 +1648,7 @@ struct Grower {
     }
 
     mutating func pelargonium() {
-        if species.contains("роз") { return rose() }
+        if grows(.rose, named: "роз") { return rose() }
         pot(.classic)
         let base = green(Channels(82, 140, 70))
         let design = LeafLook(outline: .round, aspect: 0.96,
@@ -1898,8 +1997,8 @@ struct Grower {
 
     mutating func herbs() {
         pot(.cylinder)
-        let mint = species.contains("мят")
-        let rosemary = species.contains("розмарин")
+        let mint = grows(.mint, named: "мят")
+        let rosemary = grows(.rosemary, named: "розмарин")
         let base = green(rosemary ? Channels(64, 100, 74)
             : (mint ? Channels(72, 146, 76) : Channels(74, 156, 62)))
         let design = LeafLook(outline: rosemary ? .strap : .ovate,

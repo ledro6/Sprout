@@ -52,7 +52,7 @@ struct PlantBookView: View {
         .toolbar(.visible, for: .navigationBar)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
-                WalkButton(walk: .book)
+                WalkButton(walk: .book, bare: true)
             }
         }
         .onAppear(perform: recount)

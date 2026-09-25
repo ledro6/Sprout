@@ -7,6 +7,7 @@ struct SproutApp: App {
     /// Кнопка «Полил» в уведомлении должна быть известна системе до того,
     /// как придёт первое.
     init() {
+        Settings.shared.launched()
         Notifier.register()
         // Записали сад — виджету пора перерисоваться.
         Garden.saved = { Task { @MainActor in Widgets.nudge() } }
@@ -70,9 +71,9 @@ struct RootView: View {
             // Картинки для виджета — тем же поводом: состав сада сменился.
             let rooms = garden.rooms
             Task(priority: .utility) { await Thumbs.export(rooms) }
-            // И модели для AR: без них AR не открыть. Недостающие
-            // собираются, лишние уходят; так и при запуске, и после
-            // переноса сада.
+            // И свои модели для AR: мастерская отмечает собранные и
+            // выбрасывает модели и сканы ушедших растений. Сама она ничего
+            // не собирает — готовые модели видов лежат в приложении.
             let plants = rooms.flatMap(\.plants)
             Task(priority: .utility) { await Workshop.shared.tend(plants) }
         }

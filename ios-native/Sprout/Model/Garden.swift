@@ -5,10 +5,10 @@ import Observation
 /// не по числу тактов: такт может задержаться.
 @Observable
 final class Garden {
-    /// Во сколько раз время сада быстрее настоящего: секунда за час, иначе за
-    /// сеанс проценты не сдвинулись бы. Захочется медленнее — это
-    /// единственное число.
-    static let speed: Double = 3_600
+    /// Во сколько раз время сада быстрее настоящего: втрое — сутки за восемь
+    /// часов. Проценты за день живые, но растения не пересыхают за вечер.
+    /// Захочется иначе — это единственное число.
+    static let speed: Double = 3
 
     /// Один сад на приложение — ради Siri: команда исполняется и без окон,
     /// когда корня интерфейса нет, и должна поливать тот же сад, что видят
@@ -214,6 +214,40 @@ final class Garden {
             plant.retime(dryingDays)
         }
         if !nickname.isEmpty, nickname != old.name { roster += 1 }
+    }
+
+    /// Своя модель по снимку: черты со снимка — в чертёж, зерно — номер
+    /// растения, чтобы модель собиралась одинаковой. Прежний скан уходит:
+    /// в силе последний выбор.
+    /// Вид модели — по названию; не узнали — тот, что узнал на снимке
+    /// классификатор (`kind`).
+    func imagine(_ id: Plant.ID, traits: Traits, kind: Preset? = nil) {
+        guard let plant = plant(id: id) else { return }
+        let preset = Preset.known(plant.species) ?? kind ?? .of(plant.species)
+        change(id) {
+            $0.plan = Blueprint(preset: preset, traits: traits, seed: id)
+            $0.scan = nil
+        }
+    }
+
+    /// Скан растения — файл уже лежит в `Scans`. Чертёж по снимку уходит.
+    func scanned(_ id: Plant.ID, file: String) {
+        guard plant(id: id) != nil else { return }
+        change(id) {
+            $0.scan = file
+            $0.plan = nil
+        }
+    }
+
+    /// Назад к готовой модели вида.
+    func unmodel(_ id: Plant.ID) {
+        guard let plant = plant(id: id),
+              plant.plan != nil || plant.scan != nil
+        else { return }
+        change(id) {
+            $0.plan = nil
+            $0.scan = nil
+        }
     }
 
     /// Подкормили: счёт до следующей — заново.

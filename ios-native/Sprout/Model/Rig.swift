@@ -50,8 +50,8 @@ struct Rig: Equatable, Sendable {
     var detail: Detail
     /// Сколько растений сад в AR ставит разом.
     var plants: Int
-    /// Сколько капель лейки в полёте.
-    var drops: Int
+    /// Сколько струек у сеточки лейки.
+    var jets: Int
     /// Сетка комнаты от LiDAR: растения прячутся за мебелью, тени ложатся на
     /// неё, капли разбиваются о стол.
     var room: Bool
@@ -83,14 +83,14 @@ struct Rig: Equatable, Sendable {
         let detail = detail(of: hardware)
         switch tier {
         case .lite:
-            return Rig(tier: tier, detail: detail, plants: 4, drops: 120,
+            return Rig(tier: tier, detail: detail, plants: 4, jets: 5,
                        room: hardware.lidar && !hardware.strained, hdr: false,
                        effects: false)
         case .standard:
-            return Rig(tier: tier, detail: detail, plants: 8, drops: 220,
+            return Rig(tier: tier, detail: detail, plants: 8, jets: 7,
                        room: hardware.lidar, hdr: true, effects: false)
         case .pro:
-            return Rig(tier: tier, detail: detail, plants: 12, drops: 400,
+            return Rig(tier: tier, detail: detail, plants: 12, jets: 9,
                        room: hardware.lidar, hdr: true, effects: true)
         }
     }

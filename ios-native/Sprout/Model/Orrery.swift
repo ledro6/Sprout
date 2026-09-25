@@ -1,12 +1,12 @@
 import Foundation
 
 /// Планетарий сада. Растение — планета, срок полива — год её орбиты. Наверху
-/// ворота полива: планета подходит к ним, когда земля высыхает, а политая —
-/// перелетает и идёт на новый круг. Ближние орбиты у тех, кто сохнет
-/// быстро, как у Меркурия; дальние — у терпеливых.
+/// луч полива: планета доходит до него, когда земля высыхает, и политая
+/// проходит сквозь него на новый круг — ровно, без скачка. Ближние орбиты у
+/// тех, кто сохнет быстро, как у Меркурия; дальние — у терпеливых.
 enum Orrery {
-    /// Половина ворот. Без них только что политая и ждущая полива планеты
-    /// стояли бы в одной точке.
+    /// Половина светлого сектора вокруг луча — только рисунок: сама планета
+    /// идёт по кругу ровно и проходит луч в миг полива.
     static let gate = 12.0 * .pi / 180
 
     /// Ближняя и дальняя орбиты — доли радиуса: в середине солнце.
@@ -100,11 +100,11 @@ enum Orrery {
         }
     }
 
-    /// Угол по часовой стрелке от верха: только что политая — сразу за
-    /// воротами, сухая — перед ними.
+    /// Угол по часовой стрелке от луча: только что политая — на нём, сухая
+    /// — снова на нём, круг спустя. Скорость по кругу постоянная: земля
+    /// сохнет ровно.
     static func angle(moisture: Double) -> Double {
-        let dried = 1 - min(max(moisture, 0), 1)
-        return gate + dried * (2 * .pi - 2 * gate)
+        (1 - min(max(moisture, 0), 1)) * 2 * .pi
     }
 
     /// Влажность через `days` дней сада, если поливать ровно тогда, когда
@@ -154,25 +154,32 @@ enum Orrery {
     }
 }
 
-/// Музыка сфер: каждый полив месяца — нота. Высота — по орбите: ближние
-/// поют выше, как у Кеплера; лад — пентатоника, и как ни сойдутся ноты,
-/// фальши нет. Звук собирается здесь, без звуковых библиотек: колокольчик —
-/// основной тон с обертонами и спадом, потом немного эха.
+/// Музыка сфер: каждый полив месяца — нота, ровно в миг, когда планета
+/// проходит луч. Высота — по орбите: ближние поют выше, как у Кеплера; лад —
+/// пентатоника, и как ни сойдутся ноты, фальши нет. Под нотами — тихий
+/// аккорд, чтобы они звучали мелодией, а не каплями. Звук собирается здесь,
+/// без звуковых библиотек: музыкальная шкатулка — основной тон с мягкими
+/// обертонами, стерео по орбитам и зал.
 enum Spheres {
     static let rate = 44_100
+
+    /// Стерео: ближние орбиты чуть левее, дальние — правее.
+    static let channels = 2
 
     /// Месяц сада пролетает за столько секунд.
     static let seconds = 20.0
 
-    /// Хвост после последней ноты — на затухание.
-    static let tail = 2.2
+    /// Хвост после последней ноты — на затухание зала.
+    static let tail = 3.0
 
-    /// Нота колокольчика и её спад.
-    static let ring = 1.7
+    /// Сколько звучит нота.
+    static let ring = 2.4
 
     struct Note: Hashable, Sendable {
         var at: Double
         var pitch: Double
+        /// −1 — слева, 1 — справа.
+        var pan: Double = 0
     }
 
     /// Мажорная пентатоника от ля малой октавы вверх на две с лишним
@@ -191,71 +198,166 @@ enum Spheres {
                       days: Double = Orrery.reach,
                       seconds: Double = seconds) -> [Note] {
         crossings.map {
-            Note(at: $0.day / days * seconds,
-                 pitch: pitch(rank: $0.rank, of: count))
+            let side = count > 1
+                ? Double($0.rank) / Double(count - 1) * 2 - 1 : 0
+            return Note(at: $0.day / days * seconds,
+                        pitch: pitch(rank: $0.rank, of: count),
+                        pan: side * 0.45)
         }
     }
 
-    /// Синус — поворотом на каждом отсчёте, а не `sin`: сотня нот по
-    /// полторы секунды иначе считалась бы заметно дольше.
+    /// Обертоны шкатулки: основной, октава, дуодецима и чуть расстроенный
+    /// четвёртый — он и даёт металлический язычок. Спад — секунды.
+    private static let partials: [(ratio: Double, level: Double,
+                                   decay: Double)] = [
+        (1, 1, 1.3), (2, 0.36, 0.62), (3, 0.13, 0.38), (4.07, 0.06, 0.24),
+    ]
+
+    /// Стерео чередованием: левый, правый, левый… Синус — поворотом на
+    /// каждом отсчёте, а не `sin`: сотня нот иначе считалась бы заметно
+    /// дольше.
     static func render(_ notes: [Note], seconds: Double = seconds) -> [Float] {
-        let length = Int((seconds + tail) * Double(rate))
-        var mix = [Double](repeating: 0, count: length)
-        // Основной тон, октава и «колокольный» обертон; у высоких спад
-        // быстрее.
-        let partials: [(ratio: Double, level: Double, decay: Double)] = [
-            (1, 1, 0.55), (2, 0.32, 0.32), (2.76, 0.14, 0.18),
-        ]
-        let attack = 0.006 * Double(rate)
+        let frames = Int((seconds + tail) * Double(rate))
+        var left = [Double](repeating: 0, count: frames)
+        var right = [Double](repeating: 0, count: frames)
+        let attack = 0.008 * Double(rate)
+        let release = 0.4 * Double(rate)
         for note in notes {
             let first = Int(note.at * Double(rate))
-            guard first >= 0, first < length else { continue }
-            let span = min(Int(ring * Double(rate)), length - first)
+            guard first >= 0, first < frames else { continue }
+            let span = min(Int(ring * Double(rate)), frames - first)
+            // Высокие гаснут быстрее — как у настоящей шкатулки.
+            let shorter = pow(440 / max(note.pitch, 1), 0.3)
+            let pan = min(max(note.pan, -1), 1)
+            let toLeft = cos((pan + 1) * .pi / 4)
+            let toRight = sin((pan + 1) * .pi / 4)
             for partial in partials {
                 let step = 2 * .pi * note.pitch * partial.ratio / Double(rate)
                 let (c, s) = (cos(step), sin(step))
                 var (x, y) = (1.0, 0.0)
-                let fade = exp(-1 / (partial.decay * Double(rate)))
-                var level = partial.level
+                let fade = exp(-1 / (partial.decay * shorter * Double(rate)))
+                var level = partial.level * voice
                 for n in 0 ..< span {
-                    let rise = Double(n) < attack ? Double(n) / attack : 1
-                    mix[first + n] += y * level * rise
+                    guard level > 0.000_2 else { break }
+                    // Мягкие начало и конец: без щелчков.
+                    let into = Double(n)
+                    let rest = Double(span - n)
+                    let edge = (into < attack
+                                ? 0.5 - 0.5 * cos(.pi * into / attack) : 1)
+                        * (rest < release
+                           ? 0.5 - 0.5 * cos(.pi * rest / release) : 1)
+                    let value = y * level * edge
+                    left[first + n] += value * toLeft
+                    right[first + n] += value * toRight
                     (x, y) = (x * c - y * s, x * s + y * c)
                     level *= fade
                 }
             }
         }
-        echo(&mix)
-        // Плотный парад не должен хрипеть: сжатие по гиперболическому
-        // тангенсу, потом громкость до запаса в десятую часть.
-        let peak = mix.reduce(0) { max($0, abs($1)) }
-        guard peak > 0 else { return mix.map { Float($0) } }
-        let drive = 1.6 / peak
-        let squashed = mix.map { tanh($0 * drive) }
-        let top = squashed.reduce(0) { max($0, abs($1)) }
-        let gain = top > 0 ? 0.9 / top : 1
-        return squashed.map { Float($0 * gain) }
+        pad(notes, &left, &right)
+        hall(&left, seed: 0)
+        hall(&right, seed: 23)
+        limit(&left, &right)
+        var out = [Float](repeating: 0, count: frames * channels)
+        let close = 0.05 * Double(rate)
+        for n in 0 ..< frames {
+            let rest = Double(frames - n)
+            let edge = rest < close ? rest / close : 1
+            out[2 * n] = Float(left[n] * edge)
+            out[2 * n + 1] = Float(right[n] * edge)
+        }
+        return out
     }
 
-    /// Три затухающих отражения — зал, а не комната.
-    private static func echo(_ mix: inout [Double]) {
-        let taps: [(delay: Double, level: Double)] = [
-            (0.083, 0.28), (0.131, 0.2), (0.197, 0.14),
-        ]
-        let dry = mix
-        for tap in taps {
-            let offset = Int(tap.delay * Double(rate))
-            guard offset > 0, offset < mix.count else { continue }
-            var wet = [Double](repeating: 0, count: mix.count)
-            for n in offset ..< mix.count {
-                wet[n] = dry[n - offset] * tap.level + wet[n - offset] * 0.35
-            }
-            for n in 0 ..< mix.count { mix[n] += wet[n] }
+    /// Громкость одной ноты: одинокая звучит ясно, а плотный парад
+    /// придерживает ограничитель.
+    private static let voice = 0.45
+
+    /// Ограничитель: звук подходит к потолку — усиление падает сразу и
+    /// возвращается за треть секунды. Не пережатие: плотный парад звучит
+    /// тише, но без хрипа.
+    private static func limit(_ left: inout [Double],
+                              _ right: inout [Double]) {
+        let ceiling = 0.9
+        let back = exp(-1 / (0.3 * Double(rate)))
+        var held = 0.0
+        for n in 0 ..< left.count {
+            held = max(max(abs(left[n]), abs(right[n])), held * back)
+            guard held > ceiling else { continue }
+            left[n] *= ceiling / held
+            right[n] *= ceiling / held
         }
     }
 
-    /// WAV: 16 бит, моно. Такой файл проигрыватель системы берёт прямо из
-    /// памяти.
+    /// Тихий аккорд под нотами — ля, ми и ля октавой выше, с медленным
+    /// дыханием. Вступает с первой нотой и тает к концу.
+    private static func pad(_ notes: [Note], _ left: inout [Double],
+                            _ right: inout [Double]) {
+        guard let first = notes.map(\.at).min(), first >= 0 else { return }
+        let frames = left.count
+        let start = Int(first * Double(rate))
+        guard start < frames else { return }
+        let chord: [(pitch: Double, level: Double)] = [
+            (110, 0.07), (164.81, 0.05), (220, 0.04),
+        ]
+        let rise = 1.6 * Double(rate)
+        let fall = 2.6 * Double(rate)
+        for (index, tone) in chord.enumerated() {
+            let step = 2 * .pi * tone.pitch / Double(rate)
+            let (c, s) = (cos(step), sin(step))
+            var (x, y) = (1.0, 0.0)
+            // Дыхание — тоже поворотом: медленная волна громкости.
+            let slow = 2 * .pi * (0.11 + 0.03 * Double(index)) / Double(rate)
+            let (sc, ss) = (cos(slow), sin(slow))
+            var (bx, by) = (1.0, 0.0)
+            for n in start ..< frames {
+                let swell = min(Double(n - start) / rise, 1)
+                    * min(Double(frames - n) / fall, 1)
+                let value = y * tone.level * voice * swell * (0.8 + 0.2 * by)
+                left[n] += value
+                right[n] += value
+                (x, y) = (x * c - y * s, x * s + y * c)
+                (bx, by) = (bx * sc - by * ss, bx * ss + by * sc)
+            }
+        }
+    }
+
+    /// Зал: четыре гребня с затуханием и мягкими верхами и два всепропускающих
+    /// — как у Шрёдера. У правого канала задержки чуть длиннее: зал шире.
+    private static func hall(_ signal: inout [Double], seed: Int) {
+        let dry = signal
+        let combs = [1116, 1188, 1277, 1356].map { $0 + seed }
+        var wet = [Double](repeating: 0, count: dry.count)
+        for delay in combs {
+            var line = [Double](repeating: 0, count: delay)
+            var index = 0
+            var soft = 0.0
+            for n in 0 ..< dry.count {
+                let out = line[index]
+                soft = out * 0.75 + soft * 0.25
+                line[index] = dry[n] + soft * 0.8
+                index = (index + 1) % delay
+                wet[n] += out
+            }
+        }
+        for delay in [556, 441].map({ $0 + seed / 2 }) {
+            var line = [Double](repeating: 0, count: delay)
+            var index = 0
+            for n in 0 ..< wet.count {
+                let held = line[index]
+                let out = held - wet[n]
+                line[index] = wet[n] + held * 0.5
+                index = (index + 1) % delay
+                wet[n] = out
+            }
+        }
+        for n in 0 ..< signal.count {
+            signal[n] = dry[n] * 0.85 + wet[n] * 0.07
+        }
+    }
+
+    /// WAV: 16 бит, стерео чередованием. Такой файл проигрыватель системы
+    /// берёт прямо из памяти.
     static func wav(_ samples: [Float]) -> Data {
         var data = Data()
         func put(_ text: String) { data.append(contentsOf: Array(text.utf8)) }
@@ -272,10 +374,10 @@ enum Spheres {
         put("fmt ")
         put32(16)
         put16(1)
-        put16(1)
+        put16(UInt16(channels))
         put32(UInt32(rate))
-        put32(UInt32(rate * 2))
-        put16(2)
+        put32(UInt32(rate * 2 * channels))
+        put16(UInt16(2 * channels))
         put16(16)
         put("data")
         put32(bytes)

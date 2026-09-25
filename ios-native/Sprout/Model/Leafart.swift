@@ -62,6 +62,8 @@ struct LeafLook: Equatable, Sendable {
         case speckles(Channels)
         /// Румянец к кончику — эхеверия, лепестки.
         case blush(Channels)
+        /// Пёрышки ёлочкой от жилки к краю — калатея.
+        case feather(Channels, Int)
     }
 
     var outline: Outline
@@ -315,6 +317,19 @@ enum Leafart {
         case .blush(let color):
             picture.shade { uv, old in
                 let k = pow(max(0, uv.y - 0.55) / 0.45, 1.5) * 0.85
+                return Leafart.blend(old, color, k)
+            }
+        case .feather(let color, let count):
+            picture.shade { uv, old in
+                let reach = half(look.outline, uv.y) * 0.48
+                guard reach > 1e-3 else { return old }
+                let across = abs(uv.x - 0.5) / reach
+                guard across < 0.8 else { return old }
+                // Ёлочка остриём к кончику: полоса отходит от жилки назад.
+                let turn = uv.y * Float(count) - across * 0.9
+                let wave = sin(turn * 2 * .pi)
+                let fade = 1 - pow(across / 0.8, 3)
+                let k = min(max(wave * 1.6 - 0.2, 0), 1) * 0.9 * fade
                 return Leafart.blend(old, color, k)
             }
         }

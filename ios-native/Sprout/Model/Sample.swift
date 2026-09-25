@@ -16,10 +16,10 @@ enum Sample {
         var line: String {
             switch self {
             case .fine: Lang.text("Модель построю по снимку.")
-            case .blurry: Lang.text("Снимок мыльный — возьму готовую модель вида.")
-            case .dark: Lang.text("Снимок тёмный — возьму готовую модель вида.")
-            case .bright: Lang.text("Снимок пересвечен — возьму готовую модель вида.")
-            case .empty: Lang.text("Растения на снимке не видно — возьму готовую модель вида.")
+            case .blurry: Lang.text("Снимок мыльный — снимите почётче.")
+            case .dark: Lang.text("Снимок тёмный — снимите при свете.")
+            case .bright: Lang.text("Снимок пересвечен — снимите без прямого солнца.")
+            case .empty: Lang.text("Растения на снимке не видно — снимите его целиком.")
             }
         }
     }

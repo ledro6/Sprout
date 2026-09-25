@@ -25,9 +25,6 @@ struct AddView: View {
     @State private var guess: Guess?
     @State private var looking = false
 
-    /// Разбор снимка для объёмной модели: годится ли он и какие цвета снять.
-    @State private var reading: Sample.Reading?
-
     @State private var name = ""
     @State private var species = ""
     @State private var room = ""
@@ -163,14 +160,6 @@ struct AddView: View {
                     .transition(.blurReplace)
             }
 
-            if let line = modelLine {
-                Label(line, systemImage: "cube.transparent")
-                    .font(Typography.settingNote)
-                    .foregroundStyle(.secondary)
-                    .fixedSize(horizontal: false, vertical: true)
-                    .id(line)
-                    .transition(.blurReplace)
-            }
         }
         .sproutRide()
         .onChange(of: item) { _, chosen in
@@ -228,12 +217,6 @@ struct AddView: View {
         return Lang.format("""
             Телефон узнал: %1$@ — уверен на %2$lld%%. Поправьте, если не так.
             """, guess.species, sure)
-    }
-
-    /// Что будет с объёмной моделью: по снимку или готовая.
-    private var modelLine: String? {
-        guard shot != nil, !looking, let reading else { return nil }
-        return reading.verdict.line
     }
 
     // MARK: - Растение
@@ -361,13 +344,9 @@ struct AddView: View {
     private func take(_ image: UIImage) async {
         withAnimation(Motion.appear) { shot = image }
         looking = true
-        async let sighted = Eye.guess(image)
-        async let studied = Eye.study(image)
-        let seen = await sighted
-        let read = await studied
+        let seen = await Eye.guess(image)
         withAnimation(Motion.number) {
             guess = seen
-            reading = read
             looking = false
             if let seen, species.trimmingCharacters(in: .whitespaces).isEmpty {
                 species = seen.species
@@ -383,7 +362,6 @@ struct AddView: View {
             fresh = nil
             item = nil
             guess = nil
-            reading = nil
         }
     }
 
@@ -408,14 +386,11 @@ struct AddView: View {
         let days = Int(period.rounded())
 
         let saved = shot.flatMap { Snapshot.keep($0) }
-        // Чертёж объёмной модели — из снимка, если он годится; модель
-        // собирается сразу, в фоне: без неё AR не открыть, а проценты сборки
-        // видны на карточке.
+        // Модель для AR — готовая модель вида: своя, по снимку или сканом,
+        // — только если хозяин попросит, на экране растения.
         let seedling = Plant.new(name: nickname, species: kind,
-                                 dryingDays: period, shot: saved,
-                                 traits: shot == nil ? nil : reading?.traits)
+                                 dryingDays: period, shot: saved)
         withAnimation(Motion.appear) { garden.add(seedling, to: place) }
-        Workshop.order(seedling)
         Cheer.shared.now(from: button.rect)
         Feel.planted()
         typing = false
@@ -437,7 +412,6 @@ struct AddView: View {
             fresh = nil
             item = nil
             guess = nil
-            reading = nil
             period = 7
         }
     }

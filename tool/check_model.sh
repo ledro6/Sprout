@@ -33,43 +33,10 @@ PY
 # shellcheck disable=SC2086
 "$SWIFTC" -typecheck $WIDGET_MODEL
 echo "модель виджета собирается: $(echo "$WIDGET_MODEL" | wc -w) файлов"
-"$SWIFTC" -O \
-  ios-native/Sprout/Model/Lang.swift \
-  ios-native/Sprout/Model/Season.swift \
-  ios-native/Sprout/Model/Care.swift \
-  ios-native/Sprout/Model/Trip.swift \
-  ios-native/Sprout/Model/Store.swift \
-  ios-native/Sprout/Model/Rig.swift \
-  ios-native/Sprout/Model/Plants.swift \
-  ios-native/Sprout/Model/Garden.swift \
-  ios-native/Sprout/Model/Settings.swift \
-  ios-native/Sprout/Model/Weave.swift \
-  ios-native/Sprout/Model/Tint.swift \
-  ios-native/Sprout/Model/Front.swift \
-  ios-native/Sprout/Model/Sway.swift \
-  ios-native/Sprout/Model/Frolic.swift \
-  ios-native/Sprout/Model/Pulse.swift \
-  ios-native/Sprout/Model/Crop.swift \
-  ios-native/Sprout/Model/Recents.swift \
-  ios-native/Sprout/Model/Score.swift \
-  ios-native/Sprout/Model/Diary.swift \
-  ios-native/Sprout/Model/Reminders.swift \
-  ios-native/Sprout/Model/Rival.swift \
-  ios-native/Sprout/Model/Species.swift \
-  ios-native/Sprout/Model/Shots.swift \
-  ios-native/Sprout/Model/Sculpt.swift \
-  ios-native/Sprout/Model/Canvas.swift \
-  ios-native/Sprout/Model/Leafart.swift \
-  ios-native/Sprout/Model/Kit.swift \
-  ios-native/Sprout/Model/Effort.swift \
-  ios-native/Sprout/Model/Bench.swift \
-  ios-native/Sprout/Model/Guide.swift \
-  ios-native/Sprout/Model/Almanac.swift \
-  ios-native/Sprout/Model/Orrery.swift \
-  ios-native/Sprout/Model/Walk.swift \
-  ios-native/Sprout/Model/Botany.swift \
-  ios-native/Sprout/Model/Sample.swift \
-  ios-native/Sprout/Model/Greenhouse.swift \
+# Список файлов — общий с tool/make_stock.py.
+MODEL=$(grep -v '^#' tool/model-files.txt)
+# shellcheck disable=SC2086
+"$SWIFTC" -O $MODEL \
   tool/swift-model-check/main.swift \
   -o "$OUT/check"
 # Сад пишет себя в Documents хозяина. Домашняя папка на время проверки

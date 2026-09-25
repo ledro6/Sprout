@@ -17,11 +17,15 @@ struct Care: Codable, Hashable, Sendable {
     /// цветущие просят еды каждые две недели, остальные — раз в три.
     static func usual(for preset: Preset) -> Care {
         switch preset {
-        case .cactus, .aloe, .echeveria, .jade, .sansevieria, .zamioculcas:
+        case .cactus, .aloe, .echeveria, .jade, .sansevieria, .zamioculcas,
+             .haworthia, .opuntia, .kalanchoe, .yucca:
             Care(feedEvery: 30, repotEvery: 730)
-        case .orchid:
+        case .orchid, .anthurium, .hoya:
             Care(feedEvery: 21, repotEvery: 730)
-        case .violet, .begonia, .pelargonium, .tulip, .herbs:
+        case .citrus:
+            Care(feedEvery: 14, repotEvery: 730)
+        case .violet, .begonia, .pelargonium, .tulip, .herbs, .rose, .mint,
+             .rosemary, .lily, .sunflower, .lavender, .chrysanthemum:
             Care(feedEvery: 14, repotEvery: 365)
         default:
             Care(feedEvery: 21, repotEvery: 365)

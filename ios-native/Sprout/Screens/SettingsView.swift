@@ -50,7 +50,7 @@ struct SettingsView: View {
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
-                    WalkButton(walk: .settings)
+                    WalkButton(walk: .settings, bare: true)
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Готово") { dismiss() }
@@ -282,16 +282,9 @@ struct SettingsView: View {
                 SproutDivider()
                     .transition(.opacity)
                 SproutBlock("Когда влажность ниже") {
-                    Picker("Когда напоминать",
-                           selection: Binding(get: { settings.threshold },
-                                              set: { settings.threshold = $0 })) {
-                        ForEach(Settings.thresholds, id: \.self) { level in
-                            Text(Lang.format("%lld%%", Int((level * 100).rounded())))
-                                .tag(level)
-                        }
-                    }
-                    .pickerStyle(.segmented)
-                    .labelsHidden()
+                    PercentWheel(share: Binding(
+                        get: { settings.threshold },
+                        set: { settings.threshold = $0 }))
                 }
                 .transition(.blurReplace)
             }

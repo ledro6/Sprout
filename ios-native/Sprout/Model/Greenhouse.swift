@@ -129,12 +129,14 @@ enum Pouring {
 
     /// Лейка держится над листвой: иначе высокое растение она проткнула бы
     /// корпусом. Струя тогда длиннее и проходит сквозь листья — как в жизни.
-    static func clearance(over height: Float) -> Float {
-        max(lowest, height - Greenhouse.soil + 0.02)
+    /// `soil` — где земля: у скана растения горшок не размечен.
+    static func clearance(over height: Float,
+                          soil: Float = Greenhouse.soil) -> Float {
+        max(lowest, height - soil + 0.02)
     }
     static let gravity: Float = 9.8
-    /// Капель в секунду.
-    static let rate = 110.0
+    /// Порций воды в секунду на струйку: из них сцена строит струю.
+    static let rate = 120.0
     /// Откуда лейка прилетает — назад и вверх от своего места.
     static let approach = SIMD2<Float>(-0.14, 0.12)
 
@@ -202,18 +204,47 @@ enum Pouring {
 
     /// Где встать кончику носика в полный наклон, чтобы струя падала в
     /// середину горшка.
-    static func tip(scale: Float, clearance: Float) -> SIMD2<Float> {
+    static func tip(scale: Float, clearance: Float,
+                    soil: Float = Greenhouse.soil) -> SIMD2<Float> {
         let velocity = launch(scale: scale)
         let height = clearance * scale
         let time = (velocity.y + (velocity.y * velocity.y
             + 2 * gravity * height).squareRoot()) / gravity
-        return SIMD2(-velocity.x * time, (Greenhouse.soil + clearance) * scale)
+        return SIMD2(-velocity.x * time, (soil + clearance) * scale)
     }
 
     /// Середина лейки, когда она на месте.
-    static func origin(scale: Float, clearance: Float) -> SIMD2<Float> {
-        tip(scale: scale, clearance: clearance)
+    static func origin(scale: Float, clearance: Float,
+                       soil: Float = Greenhouse.soil) -> SIMD2<Float> {
+        tip(scale: scale, clearance: clearance, soil: soil)
             - turn(WateringCan.tip * scale, by: angle)
+    }
+
+    /// Струйка из сеточки лейки: где её дырочка на сеточке — в долях радиуса
+    /// сеточки, поперёк носика — и насколько она отклоняется от общей струи,
+    /// в долях скорости. Средняя — толще и рвётся на капли позже.
+    struct Jet: Equatable, Sendable {
+        var hole: SIMD2<Float>
+        var lean: SIMD2<Float>
+        var width: Float
+        /// На какой доле полёта струйка рвётся на капли.
+        var breaks: Float
+    }
+
+    /// Радиус сеточки у лейки размера один.
+    static let rose: Float = 0.0165
+
+    /// Сеточка: одна струйка в середине и остальные кругом.
+    static func jets(_ count: Int) -> [Jet] {
+        guard count > 0 else { return [] }
+        let around = count - 1
+        return [Jet(hole: .zero, lean: .zero, width: 1, breaks: 0.8)]
+            + (0 ..< around).map { index in
+                let angle = 2 * Float.pi * Float(index) / Float(around)
+                let way = SIMD2(cos(angle), sin(angle))
+                return Jet(hole: way * 0.6, lean: way * 0.11, width: 0.62,
+                           breaks: 0.55 + 0.1 * Float(index % 3))
+            }
     }
 
     /// Кончик носика при этой позе.

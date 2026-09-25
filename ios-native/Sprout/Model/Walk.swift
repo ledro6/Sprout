@@ -10,6 +10,7 @@ struct Hint: Identifiable, Hashable, Sendable {
         case statsOrrery = "stats.orrery"
         case statsSum = "stats.sum"
         case statsAim = "stats.aim"
+        case statsCalendar = "stats.calendar"
         case statsAhead = "stats.ahead"
         case statsPlants = "stats.plants"
 
@@ -107,6 +108,13 @@ enum Walk: String, CaseIterable, Identifiable, Sendable {
                          Сколько воды оставалось в земле, когда вы поливали. \
                          Оранжевая зона — в самый раз.
                          """)),
+                Hint(target: .statsCalendar,
+                     title: Lang.text("Календарь поливов"),
+                     text: Lang.text("""
+                         Квадрат — день за последние четыре месяца: чем гуще \
+                         цвет, тем больше поливов. Нажмите на квадрат — \
+                         появится дата.
+                         """)),
                 Hint(target: .statsAhead, title: Lang.text("Прогноз"),
                      text: Lang.text("""
                          Скольким растениям понадобится вода в ближайшие дни. \
@@ -130,8 +138,8 @@ enum Walk: String, CaseIterable, Identifiable, Sendable {
                 Hint(target: .orreryGate, title: Lang.text("Ворота полива"),
                      text: Lang.text("""
                          Планета дошла до ворот — земля высохла, пора \
-                         поливать. Политая перелетает их и идёт на новый \
-                         круг.
+                         поливать. Политая проходит сквозь них и идёт на \
+                         новый круг.
                          """)),
                 Hint(target: .orreryCard,
                      title: Lang.text("Нажмите на планету"),
@@ -185,9 +193,10 @@ enum Walk: String, CaseIterable, Identifiable, Sendable {
                          Одно нажатие — и полив записан. Передумали — внизу \
                          появится «Вернуть».
                          """)),
-                Hint(target: .plantTools, title: Lang.text("AR и настройки"),
+                Hint(target: .plantTools, title: Lang.text("AR, модель и настройки"),
                      text: Lang.text("""
-                         Посмотрите на растение у себя в комнате или \
+                         Посмотрите на растение у себя в комнате, сделайте \
+                         ему свою модель — по фото или сканом — или \
                          поменяйте кличку, вид и срок полива.
                          """)),
                 Hint(target: .plantNotes, title: Lang.text("Заметки"),
@@ -206,7 +215,7 @@ enum Walk: String, CaseIterable, Identifiable, Sendable {
                 Hint(target: .addPicture, title: Lang.text("Снимок"),
                      text: Lang.text("""
                          Сфотографируйте растение — телефон попробует узнать \
-                         вид и соберёт модель для AR.
+                         его вид.
                          """)),
                 Hint(target: .addAbout, title: Lang.text("Кличка и вид"),
                      text: Lang.text("""
@@ -228,7 +237,8 @@ enum Walk: String, CaseIterable, Identifiable, Sendable {
             [
                 Hint(target: .profilePerson, title: Lang.text("Хозяин"),
                      text: Lang.text("""
-                         Назовитесь — приложение будет здороваться по имени.
+                         Назовитесь — приложение будет здороваться по имени. \
+                         Нажмите на кружок, чтобы поставить фото.
                          """)),
                 Hint(target: .profilePlot, title: Lang.text("Сад"),
                      text: Lang.text("""
@@ -243,8 +253,8 @@ enum Walk: String, CaseIterable, Identifiable, Sendable {
                          """)),
                 Hint(target: .profileMore, title: Lang.text("Ещё"),
                      text: Lang.text("""
-                         Сохраните сад в файл или перенесите его с другого \
-                         телефона.
+                         Настройки приложения и «Стереть сад» — если захотите \
+                         начать заново.
                          """)),
             ]
         case .search:
@@ -285,7 +295,7 @@ enum Walk: String, CaseIterable, Identifiable, Sendable {
             [
                 Hint(target: .tuningAbout, title: Lang.text("Кличка и вид"),
                      text: Lang.text("""
-                         Поменяли вид — модель для AR пересоберётся сама.
+                         Поменяли вид — в AR встанет модель нового вида.
                          """)),
                 Hint(target: .tuningHabits, title: Lang.text("Срок полива"),
                      text: Lang.text("""

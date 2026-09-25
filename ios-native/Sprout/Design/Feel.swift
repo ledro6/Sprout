@@ -61,6 +61,18 @@ enum Feel {
     static func sample() {
         Engine.shared.play(Knock.done)
     }
+
+    /// Комната сменилась — мягкий глубокий толчок, как у барабана с тяжёлой
+    /// осью: тупой, без щелчка. `weight` — сила.
+    static func turn(_ weight: Double = 0.7) {
+        Engine.shared.thud(weight)
+    }
+
+    /// Тянут к «Новой комнате» — гул, который растёт вместе с оттяжкой;
+    /// ноль — тишина.
+    static func pull(_ share: Double) {
+        Engine.shared.pull(share)
+    }
 }
 
 /// Taptic Engine — один на приложение: запуск движка на каждый полив стоил бы
@@ -80,9 +92,73 @@ private final class Engine {
     /// мешают и его не обрывают.
     private var playing: CHHapticPatternPlayer?
 
+    /// Гул оттяжки — один, сила меняется на ходу.
+    private var pulling: CHHapticAdvancedPatternPlayer?
+
     private init() {}
 
     private var strength: Double { Settings.shared.hapticStrength }
+
+    /// Толчок: удар почти без остроты и короткий низкий гул следом — рука
+    /// читает его глубиной, а не щелчком.
+    func thud(_ weight: Double) {
+        guard supported, strength > 0 else { return }
+        let deep = Float(Pulse.scaled(weight, by: strength))
+        do {
+            let pattern = try CHHapticPattern(events: [
+                CHHapticEvent(eventType: .hapticTransient, parameters: [
+                    CHHapticEventParameter(parameterID: .hapticIntensity,
+                                           value: deep),
+                    CHHapticEventParameter(parameterID: .hapticSharpness,
+                                           value: 0.1),
+                ], relativeTime: 0),
+                CHHapticEvent(eventType: .hapticContinuous, parameters: [
+                    CHHapticEventParameter(parameterID: .hapticIntensity,
+                                           value: deep * 0.55),
+                    CHHapticEventParameter(parameterID: .hapticSharpness,
+                                           value: 0.02),
+                ], relativeTime: 0, duration: 0.09),
+            ], parameters: [])
+            try alive().makePlayer(with: pattern)
+                .start(atTime: CHHapticTimeImmediate)
+        } catch {
+            engine = nil
+        }
+    }
+
+    /// Гул оттяжки: заводится с первой долей, дальше только меняет силу.
+    /// Кривая круче к концу — последние сантиметры чувствуются сильнее.
+    func pull(_ share: Double) {
+        guard supported else { return }
+        let level = Float(Pulse.scaled(pow(min(max(share, 0), 1), 1.4),
+                                       by: strength))
+        guard level > 0.02 else {
+            try? pulling?.stop(atTime: CHHapticTimeImmediate)
+            pulling = nil
+            return
+        }
+        do {
+            if pulling == nil {
+                let pattern = try CHHapticPattern(events: [
+                    CHHapticEvent(eventType: .hapticContinuous, parameters: [
+                        CHHapticEventParameter(parameterID: .hapticIntensity,
+                                               value: 1),
+                        CHHapticEventParameter(parameterID: .hapticSharpness,
+                                               value: 0.04),
+                    ], relativeTime: 0, duration: 30),
+                ], parameters: [])
+                let player = try alive().makeAdvancedPlayer(with: pattern)
+                try player.start(atTime: CHHapticTimeImmediate)
+                pulling = player
+            }
+            try pulling?.sendParameters([
+                CHHapticDynamicParameter(parameterID: .hapticIntensityControl,
+                                         value: level, relativeTime: 0),
+            ], atTime: CHHapticTimeImmediate)
+        } catch {
+            pulling = nil
+        }
+    }
 
     func play(_ pulse: Pulse, seconds: Double) {
         var taps = pulse.taps(over: seconds)

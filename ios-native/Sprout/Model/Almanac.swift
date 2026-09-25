@@ -180,6 +180,26 @@ struct Almanac: Sendable {
         var count: Int { plants.count }
     }
 
+    /// Клетка календаря поливов: день и сколько в нём поливов.
+    struct Cell: Identifiable, Hashable, Sendable {
+        var day: Date
+        var count: Int
+
+        var id: Date { day }
+    }
+
+    /// Рекорды — за всё время, какой бы период ни смотрели.
+    struct Records: Hashable, Sendable {
+        /// День, когда поливали больше всего, — последний из равных.
+        var busiest: Cell?
+        /// Самый ранний и самый поздний полив — минута суток.
+        var earliest: Int?
+        var latest: Int?
+        /// Самая длинная череда дней подряд с поливом.
+        var longest = 0
+        var total = 0
+    }
+
     var period: Period = .week
     var start = Date(timeIntervalSince1970: 0)
     var byMonth = false
@@ -199,9 +219,14 @@ struct Almanac: Sendable {
     var plants: [PlantLine] = []
     var now = Now()
     var ahead: [Ahead] = []
+    var cells: [Cell] = []
+    var records = Records()
 
     /// Прогноз — на две недели сада.
     static let horizon = 14
+
+    /// Календарь — шестнадцать недель, неделя — столбец.
+    static let weeks = 16
 
     /// «Всё время» по дням — пока саду меньше стольких дней.
     static let dailyUpTo = 45
@@ -286,7 +311,54 @@ struct Almanac: Sendable {
         }
         book.now = now(rooms)
         book.ahead = ahead(rooms)
+        book.cells = cells(log, today: today, calendar: calendar)
+        book.records = records(log, longest: score.best, calendar: calendar)
         return book
+    }
+
+    /// Дни от начала недели шестнадцать недель назад и до сегодня: столбцы
+    /// календаря — целые недели, как в календаре телефона.
+    static func cells(_ log: [Watering], today: Date,
+                      calendar: Calendar) -> [Cell] {
+        let back = calendar.date(byAdding: .day, value: -7 * (weeks - 1),
+                                 to: today) ?? today
+        let first = calendar.dateInterval(of: .weekOfYear, for: back)?.start
+            ?? back
+        var counts: [Date: Int] = [:]
+        for entry in log where entry.when >= first {
+            counts[calendar.startOfDay(for: entry.when), default: 0] += 1
+        }
+        var out: [Cell] = []
+        var day = calendar.startOfDay(for: first)
+        while day <= today {
+            out.append(Cell(day: day, count: counts[day] ?? 0))
+            guard let next = calendar.date(byAdding: .day, value: 1, to: day)
+            else { break }
+            day = next
+        }
+        return out
+    }
+
+    static func records(_ log: [Watering], longest: Int,
+                        calendar: Calendar) -> Records {
+        var records = Records()
+        records.total = log.count
+        records.longest = longest
+        var counts: [Date: Int] = [:]
+        for entry in log {
+            counts[calendar.startOfDay(for: entry.when), default: 0] += 1
+            let parts = calendar.dateComponents([.hour, .minute],
+                                                from: entry.when)
+            let minute = (parts.hour ?? 0) * 60 + (parts.minute ?? 0)
+            records.earliest = min(records.earliest ?? minute, minute)
+            records.latest = max(records.latest ?? minute, minute)
+        }
+        if let top = counts.max(by: { a, b in
+            a.value != b.value ? a.value < b.value : a.key < b.key
+        }) {
+            records.busiest = Cell(day: top.key, count: top.value)
+        }
+        return records
     }
 
     /// Начало периода и шаг графика. Неделя — семь дней с сегодняшним, месяц

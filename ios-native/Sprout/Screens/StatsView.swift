@@ -28,6 +28,8 @@ struct StatsView: View {
     @State private var pickedBar: Date?
     /// Дробью: ось прогноза числовая, и выбор приходит точкой на ней.
     @State private var pickedDay: Double?
+    /// Выбранный день календаря.
+    @State private var pickedCell: Date?
 
     @State private var board: Board = .most
 
@@ -77,6 +79,8 @@ struct StatsView: View {
                                 waterings
                                 aim.hintSpot(.statsAim)
                                 habits
+                                calendarGroup.hintSpot(.statsCalendar)
+                                if book.records.total > 0 { recordsGroup }
                                 forecast.hintSpot(.statsAhead)
                                 if !rooms.isEmpty { roomsGroup }
                                 if !book.plants.isEmpty {
@@ -370,16 +374,9 @@ struct StatsView: View {
             }
         }
         .chartXSelection(value: $pickedBar)
-        .chartOverlay { proxy in
-            // Нажали на столбик — волна идёт из него.
-            GeometryReader { geometry in
-                Color.clear
-                    .onChange(of: chosenBar?.start) { _, day in
-                        guard let day else { return }
-                        splash(on: day, proxy: proxy, geometry: geometry)
-                        Feel.pick()
-                    }
-            }
+        // Выбрали столбик — только тихий щелчок: смотрят, а не поливают.
+        .onChange(of: chosenBar?.start) { _, day in
+            if day != nil { Feel.pick() }
         }
         .frame(height: Metrics.chartHeight)
     }
@@ -402,19 +399,6 @@ struct StatsView: View {
         return book.period == .week
             ? date.formatted(.dateTime.weekday(.narrow))
             : date.formatted(.dateTime.day().month(.abbreviated))
-    }
-
-    /// Место столбика — сумма трёх систем координат: области построения, вью
-    /// и окна.
-    private func splash(on day: Date, proxy: ChartProxy,
-                        geometry: GeometryProxy) {
-        guard let anchor = proxy.plotFrame else { return }
-        let plot = geometry[anchor]
-        let window = geometry.frame(in: .global)
-        guard let x = proxy.position(forX: day) else { return }
-        Cheer.shared.queue(from: CGRect(x: window.minX + plot.minX + x - 6,
-                                        y: window.minY + plot.minY,
-                                        width: 12, height: plot.height))
     }
 
     // MARK: - Точность
@@ -504,6 +488,61 @@ struct StatsView: View {
                     }
                 }
                 WeekBars(days: book.weekdays)
+            }
+        }
+        .sproutRide()
+    }
+
+    // MARK: - Календарь и рекорды
+
+    private var cellCaption: String {
+        guard let pickedCell,
+              let cell = book.cells.first(where: { $0.day == pickedCell })
+        else {
+            return Lang.text("Квадрат — день: чем гуще цвет, тем больше поливов.")
+        }
+        let day = cell.day.formatted(.dateTime.day().month(.wide))
+        return Lang.format("%1$@: %2$@", day,
+                           Lang.format("%lld поливов", cell.count))
+    }
+
+    private var calendarGroup: some View {
+        SproutGroup("Календарь поливов") {
+            Text(cellCaption)
+                .font(Typography.settingNote)
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+                .contentTransition(.numericText())
+                .animation(Motion.number, value: pickedCell)
+            WateringCalendar(cells: book.cells, colour: colour,
+                             picked: $pickedCell)
+        }
+        .sproutRide()
+    }
+
+    private var recordsGroup: some View {
+        let records = book.records
+        return SproutGroup("Рекорды") {
+            Grid(alignment: .leading, horizontalSpacing: 12,
+                 verticalSpacing: 18) {
+                GridRow {
+                    StatTile(value: records.busiest?.count.formatted() ?? "—",
+                             caption: "Больше всего за день",
+                             note: records.busiest.map {
+                                 $0.day.formatted(.dateTime.day().month(.wide)
+                                     .year())
+                             })
+                    StatTile(value: Lang.format("%lld дней", records.longest),
+                             caption: "Самая длинная череда")
+                }
+                GridRow {
+                    StatTile(value: records.earliest.map { Stats.time($0) }
+                                 ?? "—",
+                             caption: "Самый ранний полив")
+                    StatTile(value: records.latest.map { Stats.time($0) }
+                                 ?? "—",
+                             caption: "Самый поздний полив")
+                }
             }
         }
         .sproutRide()
@@ -669,8 +708,10 @@ struct StatsView: View {
                 }
             }
             .pickerStyle(.segmented)
+            // По месту, а не по растению: сменили список — строки стоят, а
+            // буквы в них перетекают размытием, как проценты на карточке.
             ForEach(Array(ranked.prefix(5).enumerated()),
-                    id: \.element.id) { item in
+                    id: \.offset) { item in
                 if item.offset > 0 { SproutDivider() }
                 NavigationLink(value: StatsRoute.book(item.element.id)) {
                     plant(item.offset + 1, item.element)
@@ -697,11 +738,13 @@ struct StatsView: View {
                     .font(Typography.settingRow)
                     .foregroundStyle(Palette.ink)
                     .lineLimit(1)
+                    .contentTransition(.numericText())
                 Text([line.species, line.room].filter { !$0.isEmpty }
                         .joined(separator: " · "))
                     .font(Typography.figureCaption)
                     .foregroundStyle(.secondary)
                     .lineLimit(1)
+                    .contentTransition(.numericText())
             }
             Spacer(minLength: 8)
             Text(board == .driest ? Stats.percent(line.moisture)

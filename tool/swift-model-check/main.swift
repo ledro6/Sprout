@@ -171,9 +171,9 @@ print("часы сада:")
 let garden = Garden()
 garden.rooms = Seed.rooms
 let start = Date()
-// 24 секунды при секунде за час — ровно сутки.
+// Ровно сутки сада — сколько бы ни длились они на часах.
 garden.advance(to: start)
-garden.advance(to: start.addingTimeInterval(24))
+garden.advance(to: start.addingTimeInterval(86_400 / Garden.speed))
 let baksik = garden.plant(id: "baksik")!
 check(round2(baksik.moisture), "0.78", "за сутки Баксик потерял девятую часть")
 
@@ -247,7 +247,7 @@ let keys = ["theme", "patternKinds", "patternShapes", "reminders",
             "remindThreshold", "patternTint", "waveTint",
             "hushedHaptics", "hapticStrength", "stillPattern", "stiffShapes",
             "plantLook", "plantOrder", "mutedSounds", "toured",
-            "walkedScreens"]
+            "walkedScreens", "launches", "avatarShot"]
 let store = UserDefaults.standard
 for key in keys { store.removeObject(forKey: key) }
 let fresh = Settings(store: store)
@@ -266,6 +266,21 @@ check(fresh.sway, "и фигурки по умолчанию расходятс�
 check(round2(fresh.threshold), "0.20", "порог по умолчанию — двадцать процентов")
 check(fresh.toured == false, "знакомство по умолчанию ещё не показано")
 check(!fresh.seen(.stats), "подсказки экранов по умолчанию не показаны")
+check(fresh.avatarShot == nil, "фото хозяина по умолчанию нет — кружок с буквой")
+fresh.launched()
+check(fresh.firstRun, "первый запуск — первый")
+check(Settings(store: store).launches == 1, "счётчик запусков записан")
+let second = Settings(store: store)
+second.launched()
+check(!second.firstRun, "второй запуск — уже не первый")
+store.removeObject(forKey: "launches")
+store.set(true, forKey: "toured")
+let veteran = Settings(store: store)
+veteran.launched()
+check(!veteran.firstRun,
+      "сад с прошлых сборок: знакомство было — и запуск уже не первый")
+store.removeObject(forKey: "toured")
+store.removeObject(forKey: "launches")
 
 print("фигурки узора включаются по одной:")
 fresh.toggle(shape: 2)
@@ -285,10 +300,11 @@ fresh.look = .list
 fresh.order = .thirsty
 fresh.toggle(shape: 3)
 fresh.reminders = true
-fresh.threshold = 0.3
+fresh.threshold = 0.37
 fresh.patternTint = .rose
 fresh.waveTint = .amber
 fresh.toured = true
+fresh.avatarShot = "me.jpg"
 fresh.mark(.stats)
 fresh.mark(.plant)
 let reopened = Settings(store: store)
@@ -297,10 +313,11 @@ check("\(reopened.look)", "list", "и вид списком")
 check("\(reopened.order)", "thirsty", "и порядок «сначала сухие»")
 check("\(reopened.chosen)", "[2, 3]", "и набор фигурок")
 check(reopened.reminders, "и переключатель напоминаний")
-check(round2(reopened.threshold), "0.30", "и порог")
+check(round2(reopened.threshold), "0.37", "и порог — любым процентом")
 check("\(reopened.patternTint)", "rose", "и цвет узора")
 check("\(reopened.waveTint)", "amber", "и цвет волны")
 check(reopened.toured, "и то, что знакомство уже было")
+check(reopened.avatarShot == "me.jpg", "и фото хозяина")
 check(reopened.seen(.stats) && reopened.seen(.plant) && !reopened.seen(.add),
       "и какие подсказки уже показаны")
 reopened.rewalk()
@@ -334,7 +351,7 @@ check(round2(Settings(store: store).hapticStrength), "1.00",
 store.removeObject(forKey: "hapticStrength")
 
 print("оттенки:")
-check("\(Tint.allCases.count)", "5", "пять оттенков на выбор")
+check("\(Tint.allCases.count)", "11", "одиннадцать оттенков на выбор")
 check(Set(Tint.allCases.map(\.title)).count == Tint.allCases.count,
       "названия не повторяются")
 check(Set(Tint.allCases.map(\.pale)).count == Tint.allCases.count,
@@ -910,14 +927,17 @@ func delay(_ moisture: Double, _ dryingDays: Double = 7,
     else { return "никогда" }
     return round2(seconds)
 }
-// Час сада за секунду: 0.3 от семи суток — 2.1 суток сада, то есть 50.4
-// секунды.
-check(delay(0.50), "50.40", "с 50% до 20% при недельной сушке — 50.4 секунды")
-check(delay(0.50, 14), "100.80", "вдвое медленнее сохнет — вдвое дольше ждать")
+// Сад втрое быстрее настоящего: 0.3 от семи суток — 2.1 суток сада, то есть
+// 0.7 настоящих суток.
+func real(days: Double) -> String { round2(days * 86_400 / Garden.speed) }
+check(delay(0.50), real(days: 2.1),
+      "с 50% до 20% при недельной сушке — 2.1 суток сада")
+check(delay(0.50, 14), real(days: 4.2),
+      "вдвое медленнее сохнет — вдвое дольше ждать")
 check(delay(0.20), "0.00", "ровно на пороге — уже пора")
 check(delay(0.05), "0.00", "ниже порога — тем более")
 check(delay(0.50, 0), "никогда", "без скорости сушки срока нет")
-check(delay(0.50, 7, 0.4), "16.80", "порог выше — ждать меньше")
+check(delay(0.50, 7, 0.4), real(days: 0.7), "порог выше — ждать меньше")
 
 print("кого будить первым:")
 let thirsty = [
@@ -940,7 +960,8 @@ let single = Reminder.next(in: [Room(name: "Комната", plants: [
 ])], threshold: 0.2)!
 check(single.plant.name, "Борис", "в одиночку — он один и есть")
 check("\(single.others)", "0", "соседей нет")
-check(round2(single.after), "36.00", "0.3 от пяти суток — 36 секунд")
+check(round2(single.after), real(days: 1.5),
+      "0.3 от пяти суток — полтора дня сада")
 check(Reminder.text(for: single), "«Борис» просит воды", "строка про одного")
 
 check(Reminder.next(in: [], threshold: 0.2) == nil,
@@ -1542,30 +1563,53 @@ do {
     check(fern.opaque > 0.2 && fern.opaque < 0.8, "вайя — перышки, а не заливка")
 }
 
-print("двадцать видов в объёме:")
+print("готовые виды в объёме:")
 do {
     check(Preset.of("Монстера") == .monstera, "монстера")
     check(Preset.of("Каменная роза") == .echeveria, "каменная роза — суккулент")
-    check(Preset.of("Розмарин") == .herbs, "розмарин — пряные травы")
-    check(Preset.of("Роза") == .pelargonium, "роза — цветущий куст")
-    check(Preset.of("Розы чайные") == .pelargonium, "и во множественном числе")
+    check(Preset.of("Розмарин") == .rosemary, "розмарин — свой, хоть и с «роз»")
+    check(Preset.of("Роза") == .rose, "роза — своя модель")
+    check(Preset.of("Розы чайные") == .rose, "и во множественном числе")
     check(Preset.of("Тюльпан") == .tulip, "тюльпан")
+    check(Preset.of("Лилия") == .lily, "лилия")
+    check(Preset.of("Хойя карноза") == .hoya, "хойя — не плющ")
+    check(Preset.of("Мята перечная") == .mint, "мята — не просто травы")
+    check(Preset.of("Каланхоэ Блоссфельда") == .kalanchoe,
+          "каланхоэ — не толстянка")
+    check(Preset.of("Лимон") == .citrus, "лимон — дерево с плодами")
+    check(Preset.of("Опунция") == .opuntia && Preset.of("Юкка") == .yucca
+            && Preset.of("Калатея") == .calathea
+            && Preset.of("Алоказия") == .alocasia,
+          "новые виды узнаются по названию")
     check(Preset.of("Баобаб") == .spathiphyllum, "незнакомый — спатифиллум")
     check(Preset.of("Monstera deliciosa") == .monstera, "латинское имя")
     check(Preset.of("Snake plant") == .sansevieria, "английское название")
     check(Preset.of("Peace lily") == .spathiphyllum,
           "«peace lily» — спатифиллум, а не лилия")
-    check(Preset.of("Rosemary") == .herbs, "rosemary — травы, хоть и с rose")
-    check(Preset.of("Sunflower") == .tulip, "sunflower — не просто flower")
+    check(Preset.of("Rosemary") == .rosemary, "rosemary — не роза")
+    check(Preset.of("Sunflower") == .sunflower, "sunflower — не просто flower")
     check(Preset.of("Kaktus") == .cactus, "кактус по-немецки и по-польски")
     check(Preset.allCases.allSatisfy { Preset.of($0.title) == $0 },
           "своё же название каждый вид узнаёт")
-    check(Preset.allCases.count == 20, "видов ровно двадцать")
+    check(Preset.allCases.count == 37, "готовых видов — тридцать семь")
     let species = Set(Seed.rooms.flatMap(\.plants).map(\.species))
     check(species.allSatisfy { name in
         Preset.allCases.contains(Preset.of(name))
-    }, "каждый вид сада сводится к одному из двадцати")
+    }, "каждый вид сада сводится к одному из готовых")
 
+    // Готовые модели лежат в приложении — выращенные tool/make_stock.py.
+    // Рецепт поменялся, а их не пересобрали — телефон показал бы прежние.
+    let summary = (try? Data(contentsOf: URL(
+        fileURLWithPath: "tool/stock-models/manifest.json")))
+        .flatMap { try? JSONSerialization.jsonObject(with: $0) }
+        as? [String: Any]
+    let bundled = Dictionary(
+        ((summary?["kits"] as? [[String: Any]]) ?? []).compactMap { row in
+            (row["preset"] as? String).map { ($0, row) }
+        }, uniquingKeysWith: { first, _ in first })
+    check(summary?["version"] as? Int == Int(Kit.version),
+          "готовые модели — той же версии, что и сборка")
+    var stale: [String] = []
     var slow: [String] = []
     var odd: [String] = []
     var total = 0
@@ -1574,6 +1618,15 @@ do {
         let kit = Botany.grow(.stock(preset), species: preset.title)
         let spent = Date().timeIntervalSince(started)
         total += kit.triangles
+        let row = bundled[preset.rawValue]
+        let file = "ios-native/Sprout/Assets.xcassets/Stock/stock-"
+            + "\(preset.rawValue).dataset/stock-\(preset.rawValue).kit"
+        if row?["triangles"] as? Int != kit.triangles
+            || row?["pieces"] as? Int != kit.pieces.count
+            || row?["pictures"] as? Int != kit.pictures.count
+            || !FileManager.default.fileExists(atPath: file) {
+            stale.append(preset.rawValue)
+        }
         if spent > 1.5 { slow.append("\(preset) \(round2(spent)) с") }
         let meshes = kit.meshes.map(sound)
         let broken = meshes.filter { !$0.intact || $0.agree < 0.9 }.count
@@ -1594,9 +1647,16 @@ do {
               + "\(kit.pieces.count) деталей, \(kit.pictures.count) картинок, "
               + "\(round2(spent)) с")
     }
+    check(stale.isEmpty,
+          "готовые модели в приложении свежие — иначе tool/make_stock.py: "
+              + "\(stale)")
+    check(bundled.count == Preset.allCases.count,
+          "и лишних среди них нет")
     check(odd.isEmpty, "каждый вид вырастает целым и в разумных размерах: \(odd)")
     check(slow.isEmpty, "и быстро: \(slow)")
-    check(total > 20 * 15_000, "и детально: в среднем \(total / 20) треугольников")
+    let kinds = Preset.allCases.count
+    check(total > kinds * 15_000,
+          "и детально: в среднем \(total / kinds) треугольников")
 
     // Роза — свой рецепт внутри цветущего куста: спираль лепестков.
     let rose = Botany.grow(.stock("Роза"), species: "Роза")
@@ -1609,7 +1669,8 @@ do {
               + "\(round2(Double(rose.height)))")
     // Цветок — не один круг лепестков: у каждого цветущего вида есть
     // тычинки или пыльники — детали цветка, которые не вянут и не вырезаны.
-    for preset in [Preset.orchid, .violet, .begonia, .pelargonium, .tulip] {
+    for preset in [Preset.orchid, .violet, .begonia, .pelargonium, .tulip,
+                   .lily, .chrysanthemum, .kalanchoe, .citrus, .hoya] {
         let kit = Botany.grow(.stock(preset), species: preset.title)
         let petals = Set(kit.pieces.filter {
             kit.looks[$0.look].cutout && !kit.looks[$0.look].wilts
@@ -1829,6 +1890,90 @@ do {
     let origin = Pouring.origin(scale: 1, clearance: Pouring.clearance(over: 0.4))
     check(origin.y - 0.06 > 0.4 - Greenhouse.soil,
           "над высоким растением лейка висит выше листвы")
+
+    // Струйки сеточки: у каждой свой сдвиг и разлёт, и все — в горшок.
+    let rose = Pouring.jets(7)
+    check(rose.count == 7 && rose[0].hole == .zero && rose[0].width == 1,
+          "средняя струйка — в середине и толще")
+    check(Set(rose.dropFirst().map { $0.hole }).count == 6,
+          "остальные — каждая из своей дырочки")
+    check(Pouring.jets(0).isEmpty, "без струек — без воды")
+    for scale in [Float(0.35), 1, 2.5] {
+        let clearance = Pouring.clearance(over: 0.45)
+        let tip = Pouring.tip(scale: scale, clearance: clearance)
+        let launch = Pouring.launch(scale: scale)
+        let pace = (launch * launch).sum().squareRoot()
+        let heading = launch / pace
+        let across = SIMD2(-heading.y, heading.x)
+        var landed = 0
+        for jet in rose {
+            let start = tip + across * jet.hole.y * Pouring.rose * scale
+            let bent = launch + across * jet.lean.y * pace
+            var drop = Droplet(
+                position: Vec3(start.x, start.y,
+                               jet.hole.x * Pouring.rose * scale),
+                velocity: Vec3(bent.x, bent.y, jet.lean.x * pace))
+            while drop.position.y > Greenhouse.soil * scale && drop.age < 3 {
+                drop.fall(1 / 240)
+            }
+            let reach = (drop.position.x * drop.position.x
+                + drop.position.z * drop.position.z).squareRoot()
+            if reach < Greenhouse.potInner * scale * 0.9 { landed += 1 }
+        }
+        check(landed == rose.count,
+              "все струйки сеточки — в горшок (размер \(scale))")
+    }
+    let low = Pouring.tip(scale: 1, clearance: 0.2, soil: 0.3)
+    check(abs(low.y - 0.5) < 1e-5, "у скана земля выше — и лейка выше")
+
+    // Струя целиком: сеточка льёт две секунды, кадры по 1/60.
+    for scale in [Float(0.5), 1, 2] {
+        let clearance = Pouring.clearance(over: 0.3)
+        var rill = Rill(jets: 7)
+        let flight = Rill.flight(scale: scale, clearance: clearance)
+        rill.begin(scale: scale, flight: flight)
+        let tip = Pouring.tip(scale: scale, clearance: clearance)
+        let launch = Pouring.launch(scale: scale)
+        var first: Double?
+        var hits = 0
+        var widest = 0
+        var broken = false
+        var clock = 0.0
+        let dt = 1.0 / 60
+        while clock < 4 {
+            if clock < 2 {
+                rill.pour(from: Vec3(tip.x, tip.y, 0),
+                          jet: Vec3(launch.x, launch.y, 0),
+                          side: Vec3(0, 0, 1), dt: dt)
+            } else {
+                rill.stop()
+            }
+            clock += dt
+            if let hit = rill.fly(Float(dt),
+                                  ground: Greenhouse.soil * scale,
+                                  center: .zero,
+                                  mouth: Greenhouse.potInner * scale,
+                                  floor: -0.02) {
+                first = first ?? clock
+                hits += 1
+                let reach = (hit.x * hit.x + hit.z * hit.z).squareRoot()
+                if reach > Greenhouse.potInner * scale { broken = true }
+            }
+            let mesh = rill.geometry()
+            widest = max(widest, mesh.vertices.count)
+            if mesh.indices.contains(where: { Int($0) >= mesh.vertices.count })
+                || mesh.vertices.contains(where: { $0.position.x.isNaN }) {
+                broken = true
+            }
+            if widest > rill.room.vertices { broken = true }
+        }
+        check(first.map { $0 < Double(flight) + 0.1 } ?? false,
+              "струя долетает до земли за время полёта (размер \(scale))")
+        check(hits > 60 && !broken,
+              "льётся в горшок, сетка целая и в своих буферах "
+                  + "(размер \(scale), точек до \(widest))")
+        check(rill.idle, "лейка выпрямилась — струя долетела и кончилась")
+    }
 }
 
 print("время года:")
@@ -1993,7 +2138,7 @@ do {
     let lite = Rig.of(a14)
     check(full.plants > Rig.of(a15).plants && Rig.of(a15).plants > lite.plants,
           "чем сильнее телефон, тем больше растений в саду разом")
-    check(full.drops > lite.drops && full.effects && !lite.effects && full.hdr,
+    check(full.jets > lite.jets && full.effects && !lite.effects && full.hdr,
           "и больше капель, и дорогие эффекты только на сильных")
     check(Rig.of(a17pro).room && !Rig.of(a19).room,
           "сетка комнаты — только с LiDAR")
@@ -2083,7 +2228,7 @@ do {
         table.append("        .\(preset.rawValue): ["
             + row.map(grouped).joined(separator: ", ") + "],")
     }
-    check(!drift, "таблица работы сходится со сборкой всех двадцати видов")
+    check(!drift, "таблица работы сходится со сборкой всех видов")
     if drift { print(table.joined(separator: "\n")) }
 
     var shares: [Double] = []
@@ -2108,35 +2253,69 @@ do {
           "работы больше, чем ждали, — доля упирается в единицу")
 }
 
-print("модель для AR: готовность:")
+print("модель для AR: выбор хозяина:")
+do {
+    let yard = Garden()
+    let id = yard.rooms[0].plants[0].id
+    let colours = Traits(leaf: Channels(90, 160, 60), variegation: nil,
+                         flower: nil, pot: nil, density: 1.1, stretch: 1)
+    check(yard.plant(id: id)?.plan == nil && yard.plant(id: id)?.scan == nil,
+          "в саду по умолчанию — готовые модели видов")
+    yard.imagine(id, traits: colours)
+    let plan = yard.plant(id: id)?.plan
+    check(plan?.traits == colours && plan?.seed == id
+            && plan?.preset == Preset.of(yard.plant(id: id)!.species),
+          "придумать по снимку — чертёж с чертами снимка и видом растения")
+    yard.scanned(id, file: "скан.usdz")
+    check(yard.plant(id: id)?.scan == "скан.usdz"
+            && yard.plant(id: id)?.plan == nil,
+          "скан сменяет модель по снимку: в силе последний выбор")
+    yard.imagine(id, traits: colours)
+    check(yard.plant(id: id)?.scan == nil, "и наоборот")
+    yard.unmodel(id)
+    check(yard.plant(id: id)?.plan == nil && yard.plant(id: id)?.scan == nil,
+          "вернуть готовую модель вида")
+    yard.tune(id, name: "", species: "Комнатное растение",
+              dryingDays: yard.plant(id: id)!.dryingDays)
+    yard.imagine(id, traits: colours, kind: .fern)
+    check(yard.plant(id: id)?.plan?.preset == .fern,
+          "вид не узнан по названию — берётся узнанный на снимке")
+    check(Preset.known("Комнатное растение") == nil
+            && Preset.known("Фикус Бенджамина") == .ficus,
+          "по названию узнаётся не всякий вид — и это видно")
+    let saved = try? JSONEncoder().encode(Plant.new(name: "Скан",
+                                                    species: "Фикус",
+                                                    dryingDays: 7))
+    check(saved.flatMap { try? JSONDecoder().decode(Plant.self, from: $0) }?
+            .scan == nil,
+          "растения прежних сборок читаются без скана")
+}
+
+print("модель для AR: своя по снимку:")
 MainActor.assumeIsolated {
     let bench = Bench()
-    var one = plantNamed("Раз", moisture: 0.5, dryingDays: 7)
-    let two = plantNamed("Два", moisture: 0.5, dryingDays: 7)
-    let stamp = one.blueprint.fingerprint
-    check(bench.share(one) == nil, "о ком мастерская не знает — ничего")
-    bench.note(one.id, stamp: stamp, share: 0.4)
-    bench.note(one.id, stamp: stamp, share: 0.3)
-    check(bench.share(one) == 0.4, "запоздавший отчёт долю не убавляет")
-    check(!bench.ready(one), "пока модель собирается, AR нет")
-    check(bench.finished.isEmpty,
-          "а готовые не трогаются: большие экраны не перерисовываются")
-    bench.note(one.id, stamp: stamp, share: 1)
-    check(bench.ready(one), "собралась — AR есть")
-    check(bench.finished[one.id] == stamp, "и попала в готовые")
-    bench.queue(one)
-    check(bench.ready(one), "заказ готовой модели её не сбрасывает")
-    check(!bench.ready([one, two]), "сад в AR — только когда готовы все")
-    check(round2(bench.share([one, two])), "0.50",
-          "готовность сада — средняя, неизвестные — нулём")
-    check(!bench.ready([]), "пустой сад в AR не открыть")
-    one.species = "Монстера"
-    check(bench.share(one) == nil,
-          "сменился вид — прежняя модель не в счёт")
-    check(!bench.ready(one), "и AR ждёт новую")
-    bench.queue(one)
-    check(bench.share(one) == 0, "новую заказали — с нуля")
-    check(bench.finished[one.id] == nil, "прежняя ушла из готовых")
+    let stock = plantNamed("Раз", moisture: 0.5, dryingDays: 7)
+    var own = stock
+    own.plan = Blueprint(preset: .monstera, traits: Traits(
+        leaf: Channels(90, 160, 60), variegation: nil, flower: nil, pot: nil,
+        density: 1, stretch: 1), seed: stock.id)
+    let stamp = own.plan!.fingerprint
+    bench.queue(stock)
+    check(bench.share(stock) == nil,
+          "без своей модели — ничего не собирается: AR берёт готовую вида")
+    check(bench.share(own) == nil, "о ком мастерская не знает — ничего")
+    bench.queue(own)
+    check(bench.share(own) == 0, "свою модель заказали — сразу ноль")
+    bench.note(own.id, stamp: stamp, share: 0.4)
+    bench.note(own.id, stamp: stamp, share: 0.3)
+    check(bench.share(own) == 0.4, "запоздавший отчёт долю не убавляет")
+    check(!bench.built(own), "пока собирается — AR показывает модель вида")
+    bench.note(own.id, stamp: stamp, share: 1)
+    check(bench.built(own), "собралась — AR покажет её")
+    bench.queue(own)
+    check(bench.built(own), "повторный заказ собранную не сбрасывает")
+    own.plan?.preset = .ficus
+    check(bench.share(own) == nil, "сменился вид — прежняя сборка не в счёт")
     check(Bench.percent(0.426), "42%", "проценты — вниз, до целого")
     check(Bench.percent(1.3), "100%", "и не больше сотни")
     check(Bench.preparing(nil), "Модель готовится",
@@ -2241,6 +2420,23 @@ do {
           "записи без остатка воды в точность не идут")
     check(book.peakHour == 19 && book.hours[19] == 3,
           "чаще всего поливают в семь вечера")
+    check(book.cells.last?.day == week.startOfDay(for: noon)
+          && book.cells.last?.count == 1,
+          "календарь кончается сегодняшним днём")
+    check(week.component(.weekday, from: book.cells.first!.day) == 2,
+          "и начинается с начала недели")
+    check(book.cells.count > (Almanac.weeks - 1) * 7
+          && book.cells.count <= Almanac.weeks * 7,
+          "шестнадцать недель, текущая — не целиком")
+    check(book.cells.reduce(0) { $0 + $1.count } == 8,
+          "в календаре все поливы, кроме прошлогоднего")
+    check(book.records.total == 9 && book.records.longest == 4,
+          "рекорды — за всё время")
+    check(book.records.busiest?.count == 1
+          && book.records.busiest?.day == week.startOfDay(for: noon),
+          "день с наибольшим числом поливов — последний из равных")
+    check(book.records.earliest == 8 * 60 && book.records.latest == 19 * 60,
+          "самый ранний полив — в восемь, самый поздний — в семь вечера")
     check(book.weekdays.first?.number == 2,
           "неделя с понедельника, если так в календаре")
     check(book.weekdays.map(\.count) == [0, 1, 1, 1, 1, 1, 0],
@@ -2319,14 +2515,24 @@ do {
     check(sky.first!.radius == Orrery.inner && sky.last!.radius == Orrery.outer,
           "ближняя и дальняя — по краям")
     check(sky.map(\.rank) == [0, 1, 2, 3], "номера по порядку")
-    check(abs(Orrery.angle(moisture: 1) - Orrery.gate) < 1e-9,
-          "политая — сразу за воротами")
-    check(abs(Orrery.angle(moisture: 0) - (2 * .pi - Orrery.gate)) < 1e-9,
-          "сухая — перед воротами")
+    check(Orrery.angle(moisture: 1) == 0, "политая — на луче")
+    check(abs(Orrery.angle(moisture: 0) - 2 * .pi) < 1e-9,
+          "сухая — снова на луче, круг спустя")
     check(abs(Orrery.angle(moisture: 0.5) - .pi) < 1e-9,
           "половина воды — внизу")
+    check(abs((Orrery.angle(moisture: 0.9) - Orrery.angle(moisture: 1))
+              - (Orrery.angle(moisture: 0) - Orrery.angle(moisture: 0.1)))
+              < 1e-9,
+          "ход ровный: у луча не быстрее, чем внизу")
     let half = Orrery.Orbit(id: "x", name: "x", period: 10, moisture: 0.5,
                             radius: 0.5, rank: 0)
+    let coming = Orrery.sky([half], ahead: 4.999)[0].angle
+    let gone = Orrery.sky([half], ahead: 5.001)[0].angle
+    check(2 * .pi - coming < 0.01 && gone < 0.01,
+          "луч планета проходит в миг полива, не перескакивая")
+    check(Spheres.notes(Orrery.crossings([half], within: 30), count: 1)
+            .map { round2($0.at) } == ["3.33", "10.00", "16.67"],
+          "нота — когда планета на луче")
     check(round2(Orrery.moisture(half, after: 3)), "0.20",
           "до сухой земли — сохнет по сроку")
     check(round2(Orrery.moisture(half, after: 5)), "1.00",
@@ -2369,18 +2575,35 @@ do {
     check(round2(notes.first?.at ?? -1), "10.00",
           "середина месяца — на десятой секунде")
     let sound = Spheres.render([Spheres.Note(at: 1, pitch: 440)])
+    let second = Spheres.rate * Spheres.channels
     let length = Int((Spheres.seconds + Spheres.tail) * Double(Spheres.rate))
-    check(sound.count == length, "длина — месяц и хвост")
-    check(sound.prefix(Spheres.rate).allSatisfy { $0 == 0 },
+        * Spheres.channels
+    check(sound.count == length, "длина — месяц и хвост, оба канала")
+    check(sound.prefix(second).allSatisfy { $0 == 0 },
           "до первой ноты тишина")
-    let ring = sound[Spheres.rate ..< Spheres.rate + 4_410]
+    let ring = sound[second ..< second + second / 10]
     check(ring.contains { abs($0) > 0.3 }, "нота звучит")
     check(sound.allSatisfy { abs($0) <= 0.91 }, "громкость с запасом")
+    check(abs(sound.last ?? 1) < 0.001, "к концу — стихает, без щелчка")
+    let crowd = (0 ..< 12).map {
+        Spheres.Note(at: 2, pitch: Spheres.pitch(rank: $0, of: 12))
+    }
+    check(Spheres.render(crowd).allSatisfy { abs($0) <= 0.91 },
+          "плотный парад не зашкаливает")
+    let wide = Spheres.render([Spheres.Note(at: 1, pitch: 440, pan: -1)])
+    let heard = wide[second ..< second + second / 10]
+    let left = stride(from: heard.startIndex, to: heard.endIndex, by: 2)
+        .map { abs(heard[$0]) }.max() ?? 0
+    let right = stride(from: heard.startIndex + 1, to: heard.endIndex, by: 2)
+        .map { abs(heard[$0]) }.max() ?? 0
+    check(left > 0.3 && right < left / 4, "нота слева — в левом канале")
     let file = Spheres.wav(sound)
     check(file.count == 44 + 2 * sound.count, "WAV: заголовок и 16 бит")
     check(String(decoding: file.prefix(4), as: UTF8.self) == "RIFF"
           && String(decoding: file[8 ..< 12], as: UTF8.self) == "WAVE",
           "WAV: метки на месте")
+    check(file[22] == UInt8(Spheres.channels) && file[23] == 0,
+          "WAV: стерео")
 }
 
 print("подсказки экранов:")

@@ -6,9 +6,10 @@ import UIKit
 
 /// Сцена дополненной реальности: ставит на пол или стол одно растение или
 /// весь сад комнаты, держит их живыми — листья никнут и поднимаются по
-/// влажности, покачиваются, — и разыгрывает полив лейкой. Формы и
-/// расписание — в модели (`Greenhouse`, `Pouring`, `Plot`), сила телефона —
-/// в `Rig`; здесь только перевод в RealityKit и жизнь по кадрам.
+/// влажности, покачиваются, — и разыгрывает полив лейкой: вода — на Metal,
+/// см. `Stream`. Формы и расписание — в модели (`Greenhouse`, `Pouring`,
+/// `Rill`, `Plot`), сила телефона — в `Rig`; здесь только перевод в
+/// RealityKit и жизнь по кадрам. Растение со сканом стоит сканом.
 @MainActor
 @Observable
 final class Stage {
@@ -68,26 +69,21 @@ final class Stage {
     @ObservationIgnored private var aim: SIMD3<Float>?
 
     @ObservationIgnored private var can: ModelEntity?
-    @ObservationIgnored private var drops: [Drop] = []
+    @ObservationIgnored private var stream: Stream?
+    /// Сканы растений — вместо моделей из набора.
+    @ObservationIgnored private var figures: [Plant.ID: Entity] = [:]
 
     @ObservationIgnored private var clock: Double = 0
     @ObservationIgnored private var poured: Double = 0
     /// Куда льёт лейка: вправо от взгляда — её видно сбоку, вместе со струёй.
     @ObservationIgnored private var toward = Vec3(1, 0, 0)
     @ObservationIgnored private var lift = Pouring.lowest
-    @ObservationIgnored private var owed: Double = 0
     @ObservationIgnored private var wet = false
     @ObservationIgnored private var streaming = false
     /// Пауза между растениями очереди — лейка успевает улететь.
     @ObservationIgnored private var resting: Double = -1
 
     private static let up = Vec3(0, 1, 0)
-    private static let drop: Float = 0.0032
-
-    private struct Drop {
-        let entity: ModelEntity
-        var droplet: Droplet?
-    }
 
     /// Одно растение или сад. Больше, чем тянет телефон, не ставим — лишние
     /// считаются в `left`.
@@ -100,16 +96,39 @@ final class Stage {
         loaded = 0
         chosen = shown.count == 1 ? shown.first?.id : nil
         tint = Settings.shared.waveTint.vivid
-        // Пока камера ищет пол, модели достаются из кэша — или собираются,
-        // если их там нет.
+        // Пока камера ищет пол, модели достаются из приложения, свои — с
+        // диска, сканы — из своих файлов.
         Task { @MainActor [weak self] in
             for plant in shown {
-                let kit = await Workshop.shared.kit(for: plant)
+                var figure: Entity?
+                if let url = Scans.file(of: plant) {
+                    figure = try? await Entity(contentsOf: url)
+                }
+                var kit: Kit?
+                if figure == nil { kit = await Workshop.shared.kit(for: plant) }
                 guard let self else { return }
-                self.kits[plant.id] = kit
+                if let figure {
+                    self.kits[plant.id] = Self.settle(figure)
+                    self.figures[plant.id] = figure
+                } else if let kit {
+                    self.kits[plant.id] = kit
+                }
                 self.loaded += 1
             }
         }
+    }
+
+    /// Скан ставится донышком на пол и серединой на ось; для раскладки сада
+    /// и лейки его мерки — в пустом наборе: высота и размах.
+    private static func settle(_ figure: Entity) -> Kit {
+        let bounds = figure.visualBounds(relativeTo: nil)
+        figure.position = SIMD3(-bounds.center.x, -bounds.min.y,
+                                -bounds.center.z)
+        Craft.shadows(figure)
+        var kit = Kit()
+        kit.height = max(bounds.extents.y, 0.05)
+        kit.spread = max(bounds.extents.x, bounds.extents.z, 0.05) / 2
+        return kit
     }
 
     // MARK: - Сессия
@@ -288,7 +307,7 @@ final class Stage {
         if moved { tags = points }
 
         if phase == .watering { pour(dt) }
-        fly(dt)
+        flow(dt)
         if phase == .placed, resting >= 0, clock >= resting {
             resting = -1
             next()
@@ -332,15 +351,15 @@ final class Stage {
             let spot = spots.indices.contains(index) ? spots[index] : .zero
             let offset: Vec3 = right * spot.x + forward * (spot.y - depth / 2)
             let moisture = garden?.plant(id: id)?.moisture ?? 1
-            let bed = Bed(id: id, kit: kit, at: aim + offset, facing: facing,
-                          moisture: moisture,
+            let bed = Bed(id: id, kit: kit, figure: figures[id],
+                          at: aim + offset, facing: facing, moisture: moisture,
                           planted: clock + Double(index) * 0.18)
             view.scene.addAnchor(bed.anchor)
             _ = view.installGestures([.rotation, .scale, .translation],
                                      for: bed.root)
             beds.append(bed)
         }
-        drops = []
+        stream?.reset()
         can = nil
         target = nil
         reticle?.isEnabled = false
@@ -357,7 +376,7 @@ final class Stage {
         for bed in beds { view?.scene.removeAnchor(bed.anchor) }
         beds = []
         can = nil
-        drops = []
+        stream?.reset()
         target = nil
         tags = [:]
         queue = []
@@ -409,23 +428,19 @@ final class Stage {
         look.y = 0
         let ahead = look.size > 0.01 ? look.unit : Vec3(0, 0, -1)
         toward = ahead.crossed(Self.up).unit
-        lift = Pouring.clearance(over: bed.kit.height)
+        lift = Pouring.clearance(over: bed.kit.height, soil: bed.soil)
         wet = false
         streaming = false
-        owed = 0
-        // Лейка и капли переезжают к тому, кого поливают: их счёт — в
+        // Лейка и вода переезжают к тому, кого поливают: их счёт — в
         // пространстве его якоря.
         if can == nil {
             let made = makeCan()
             can = made
         }
         can?.setParent(bed.anchor)
-        if drops.isEmpty { drops = makeDrops() }
-        for drop in drops {
-            drop.entity.isEnabled = false
-            drop.entity.setParent(bed.anchor)
-        }
-        for index in drops.indices { drops[index].droplet = nil }
+        let water = stream ?? Stream(jets: rig.jets)
+        stream = water
+        water.begin(on: bed.anchor, scale: bed.root.scale.x, clearance: lift)
         poured = clock
         phase = .watering
     }
@@ -437,7 +452,8 @@ final class Stage {
         let pose = Pouring.pose(at: t)
         let scale = root.scale.x
         let base = root.position
-        let settled = Pouring.origin(scale: scale, clearance: lift)
+        let settled = Pouring.origin(scale: scale, clearance: lift,
+                                     soil: bed.soil)
         let away: SIMD2<Float> = Pouring.approach * (scale * (1 - pose.travel))
         let origin = settled + away
         can.position = at(origin, from: base)
@@ -452,22 +468,12 @@ final class Stage {
                 streaming = true
                 Chime.stream.play()
             }
-            owed += Pouring.rate * dt
             let tip = Pouring.spout(from: origin, tilt: pose.tilt, scale: scale)
             let launch = Pouring.launch(scale: scale, tilt: pose.tilt)
-            let side = toward.crossed(Self.up).unit
-            let mouth = at(tip, from: base)
-            let jet = at(launch, from: .zero)
-            while owed >= 1 {
-                owed -= 1
-                let spread = Float.random(in: 0.94 ... 1.06)
-                let aside: Float = Float.random(in: -0.03 ... 0.03)
-                    * Pouring.speed * scale.squareRoot()
-                let jitter: Float = Float.random(in: -0.004 ... 0.004) * scale
-                let start: Vec3 = mouth + side * jitter
-                let velocity: Vec3 = jet * spread + side * aside
-                spawn(Droplet(position: start, velocity: velocity))
-            }
+            stream?.pour(from: at(tip, from: base), jet: at(launch, from: .zero),
+                         side: toward.crossed(Self.up).unit, dt: dt)
+        } else {
+            stream?.stop()
         }
         if t >= Pouring.total {
             can.isEnabled = false
@@ -488,71 +494,23 @@ final class Stage {
         return base + ahead + rise
     }
 
-    private func spawn(_ droplet: Droplet) {
-        guard let free = drops.firstIndex(where: { $0.droplet == nil })
-        else { return }
-        drops[free].droplet = droplet
-        drops[free].entity.isEnabled = true
-        drops[free].entity.position = droplet.position
-    }
-
-    /// Капли летят сами по себе: впиталась в землю — брызги и полив; мимо
-    /// горшка — пропала на полу.
-    private func fly(_ dt: Double) {
-        guard let bed = target, !drops.isEmpty else { return }
+    /// Вода летит сама по себе: коснулась земли в горшке — полив засчитан,
+    /// по земле пошли круги.
+    private func flow(_ dt: Double) {
+        guard let stream, let bed = target, !stream.idle else {
+            target?.soak(nil, dt: dt)
+            return
+        }
         let root = bed.root
         let base = root.position
         let scale = root.scale.x
-        let ground = base.y + Greenhouse.soil * scale
-        for index in drops.indices {
-            guard var droplet = drops[index].droplet else { continue }
-            droplet.fall(Float(dt))
-            let entity = drops[index].entity
-            var off = droplet.position - base
-            off.y = 0
-            if !droplet.splash, droplet.position.y <= ground,
-               off.size <= Greenhouse.potInner * scale {
-                drops[index].droplet = nil
-                entity.isEnabled = false
-                splash(at: Vec3(droplet.position.x, ground, droplet.position.z),
-                       scale: scale)
-                if !wet {
-                    wet = true
-                    onWatered?(bed.id)
-                }
-                continue
-            }
-            if droplet.position.y < base.y - 0.02 || droplet.age > 2.5
-                || (droplet.splash && droplet.age > 0.35) {
-                drops[index].droplet = nil
-                entity.isEnabled = false
-                continue
-            }
-            entity.position = droplet.position
-            // Капля вытягивается вдоль полёта — так она читается струёй.
-            let speed = droplet.velocity.size
-            let stretch = 1 + min(speed * 3, 2.2)
-            entity.scale = SIMD3(scale, scale * stretch, scale)
-            if speed > 0.01 {
-                entity.orientation = simd_quatf(from: Self.up,
-                                                to: droplet.velocity / speed)
-            }
-            drops[index].droplet = droplet
-        }
-    }
-
-    private func splash(at point: Vec3, scale: Float) {
-        for _ in 0 ..< 2 {
-            let angle = Float.random(in: 0 ..< 2 * Float.pi)
-            let out = Float.random(in: 0.08 ... 0.2) * scale.squareRoot()
-            var droplet = Droplet(
-                position: point,
-                velocity: Vec3(cos(angle) * out,
-                               Float.random(in: 0.35 ... 0.6)
-                                   * scale.squareRoot(),
-                               sin(angle) * out))
-            droplet.splash = true
-            spawn(droplet)
+        let hit = stream.fly(Float(dt), ground: base.y + bed.soil * scale,
+                             center: base, mouth: bed.mouth * scale,
+                             floor: base.y - 0.02)
+        bed.soak(hit, dt: dt)
+        if hit != nil, !wet {
+            wet = true
+            onWatered?(bed.id)
         }
     }
 
@@ -585,25 +543,11 @@ final class Stage {
         made.isEnabled = false
         return made
     }
-
-    /// Сколько капель в полёте — по силе телефона.
-    private func makeDrops() -> [Drop] {
-        var water = PhysicallyBasedMaterial()
-        water.baseColor = .init(tint: Craft.color(Channels(170, 215, 255)))
-        water.roughness = .init(floatLiteral: 0.05)
-        water.metallic = .init(floatLiteral: 0)
-        water.blending = .transparent(opacity: .init(floatLiteral: 0.75))
-        let sphere = MeshResource.generateSphere(radius: Self.drop)
-        return (0 ..< rig.drops).map { _ in
-            let entity = ModelEntity(mesh: sphere, materials: [water])
-            entity.isEnabled = false
-            return Drop(entity: entity, droplet: nil)
-        }
-    }
 }
 
 /// Растение на полу: якорь, модель и то, как она живёт — распускается,
-/// никнет по влажности, покачивается, перекрашивает увядание.
+/// никнет по влажности, покачивается, перекрашивает увядание. Скан стоит
+/// как есть: он не никнет, зато он — само растение.
 @MainActor
 private final class Bed {
     /// Шарнир на месте крепления детали и то, как она живёт.
@@ -617,7 +561,15 @@ private final class Bed {
     let anchor: AnchorEntity
     let root: ModelEntity
     let frame = Entity()
+    /// Где земля и какой ширины горлышко горшка — туда целит лейка. У скана
+    /// горшок не размечен: земля — на трети высоты, горлышко — по ширине.
+    let soil: Float
+    let mouth: Float
     private var ring: ModelEntity?
+    /// Вода на земле: круги от струи, сколько воды и куда бьёт струя.
+    private var puddle: ModelEntity?
+    private var wetness: Float = 0
+    private var spot = SIMD2<Float>(0.5, 0.5)
     private var parts: [Part] = []
     /// Детали по материалам: увядание перекрашивает их разом.
     private var dressed: [Int: [ModelEntity]] = [:]
@@ -631,12 +583,19 @@ private final class Bed {
     private var ringed: Double = -1
     private let planted: Double
 
-    init(id: Plant.ID, kit: Kit, at point: Vec3, facing: Float,
-         moisture: Double, planted: Double) {
+    init(id: Plant.ID, kit: Kit, figure: Entity? = nil, at point: Vec3,
+         facing: Float, moisture: Double, planted: Double) {
         self.id = id
         self.kit = kit
         self.planted = planted
         shown = moisture
+        if figure != nil {
+            soil = min(max(kit.height * 0.3, 0.05), 0.35)
+            mouth = min(max(kit.spread * 0.5, 0.04), 0.2)
+        } else {
+            soil = Greenhouse.soil
+            mouth = Greenhouse.potInner
+        }
         anchor = AnchorEntity(world: point)
         root = ModelEntity()
         let box = ShapeResource.generateBox(size: SIMD3(
@@ -649,6 +608,11 @@ private final class Bed {
         frame.scale = SIMD3(repeating: 0.001)
         root.addChild(frame)
         build()
+        if let figure {
+            frame.addChild(figure)
+        } else {
+            puddle = makePuddle()
+        }
         anchor.addChild(root)
     }
 
@@ -687,6 +651,43 @@ private final class Bed {
         }
         repaint()
         if abs(shown - ringed) > 0.004 { reshape() }
+    }
+
+    // MARK: - Вода на земле
+
+    /// Струя бьёт в землю в `hit` (в пространстве якоря) — там круги и
+    /// прибывает вода; перестала — лужица впитывается.
+    func soak(_ hit: Vec3?, dt: Double) {
+        guard let puddle else { return }
+        let before = wetness
+        if let hit {
+            let local = frame.convert(position: hit, from: anchor)
+            spot = SIMD2(0.5 + local.x / (2 * Greenhouse.potInner),
+                         0.5 + local.z / (2 * Greenhouse.potInner))
+            wetness = min(wetness + Float(dt) * 3, 1)
+        } else {
+            wetness = max(wetness - Float(dt) * 0.35, 0)
+        }
+        guard wetness > 0 || before > 0 else { return }
+        puddle.isEnabled = wetness > 0
+        if let material = WaterLook.puddle(strength: wetness, spot: spot) {
+            puddle.model?.materials = [material]
+        }
+    }
+
+    /// Плёнка воды по земле горшка — тем же куполом, что земля, чуть выше.
+    private func makePuddle() -> ModelEntity? {
+        let soil = Greenhouse.soil
+        let film = Sculpt.lathe([
+            SIMD2(Greenhouse.potInner - 0.002, soil - 0.0005),
+            SIMD2(0.045, soil + 0.0065), SIMD2(0, soil + 0.0095),
+        ], segments: 64).mappedFromAbove(radius: Greenhouse.potInner)
+        guard let material = WaterLook.puddle(strength: 0, spot: spot),
+              let made = Craft.model(film, material)
+        else { return nil }
+        made.isEnabled = false
+        frame.addChild(made)
+        return made
     }
 
     // MARK: - Сборка
@@ -868,6 +869,14 @@ private enum Craft {
 
     static func shadow(_ entity: ModelEntity) {
         entity.components.set(GroundingShadowComponent(castsShadow: true))
+    }
+
+    /// Тени у всех сеток скана — он приходит деревом сущностей.
+    static func shadows(_ entity: Entity) {
+        if entity.components.has(ModelComponent.self) {
+            entity.components.set(GroundingShadowComponent(castsShadow: true))
+        }
+        for child in entity.children { shadows(child) }
     }
 
     static func paint(_ color: Channels, rough: Float,

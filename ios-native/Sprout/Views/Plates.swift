@@ -10,6 +10,40 @@ final class Spots {
     func rect(_ key: Int) -> CGRect { rects[key] ?? .zero }
 }
 
+/// Процент барабаном — порог влажности для напоминаний: любой целый, а не
+/// шаг в десять. Подпись числа — из каталога: у кого знак впереди, у кого
+/// через пробел.
+struct PercentWheel: View {
+    @Binding var share: Double
+
+    var range: ClosedRange<Int> = Settings.thresholds
+
+    private var whole: Int {
+        min(max(Int((share * 100).rounded()), range.lowerBound),
+            range.upperBound)
+    }
+
+    var body: some View {
+        HStack(spacing: 6) {
+            Picker(Lang.format("%lld%%", whole), selection: Binding(
+                get: { whole },
+                set: { share = Double($0) / 100 })) {
+                ForEach(range, id: \.self) { value in
+                    Text(Lang.format("%lld%%", value)).tag(value)
+                }
+            }
+            .pickerStyle(.wheel)
+            .labelsHidden()
+            .frame(width: Metrics.wheelWidth + 24, height: Metrics.wheelHeight)
+            .clipped()
+            Spacer(minLength: 0)
+        }
+        .font(Typography.settingRow)
+        .foregroundStyle(Palette.ink)
+        .accessibilityElement(children: .contain)
+    }
+}
+
 /// Срок полива барабаном, как в «Таймере»: «Раз в [N] дней». Дробный срок —
 /// 4,5 дня из таблицы видов — барабан показывает ближайшим целым и не
 /// трогает, пока его не крутили.
@@ -189,8 +223,13 @@ struct SproutTints: View {
         self.pick = pick
     }
 
+    /// По шесть в ряд: одиннадцать кружков в одну строку не влезают.
+    private static let columns = Array(repeating: GridItem(.flexible(),
+                                                           spacing: 6),
+                                       count: 6)
+
     var body: some View {
-        HStack(spacing: 6) {
+        LazyVGrid(columns: Self.columns, spacing: 8) {
             ForEach(Tint.allCases) { tint in
                 let picked = tint == current
                 Button {

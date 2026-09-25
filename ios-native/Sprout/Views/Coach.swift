@@ -17,10 +17,12 @@ final class Coach {
 
     private init() {}
 
-    /// Сами — только при первом заходе и после знакомства: оно важнее.
+    /// Сами — только в первый запуск приложения, при первом заходе на экран
+    /// и после знакомства: оно важнее. Со второго запуска — только по «?».
     func offer(_ walk: Walk) {
         let settings = Settings.shared
-        guard self.walk == nil, settings.toured, !settings.seen(walk)
+        guard self.walk == nil, settings.toured, settings.firstRun,
+              !settings.seen(walk)
         else { return }
         start(walk)
     }
@@ -160,8 +162,10 @@ private struct CoachLayer: View {
         if hints.indices.contains(step) {
             let hint = hints[step].0
             let rect = hints[step].1
-            let hole = window(rect)
-            let place = side(for: hole)
+            let place = side(for: window(rect))
+            // Пузырь внизу поверх большого окна — окно кончается над ним:
+            // иначе пузырь лёг бы на ободок.
+            let hole = place == .pinned ? trimmed(window(rect)) : window(rect)
             ZStack {
                 shade(hole)
                 ring(hole)
@@ -186,6 +190,19 @@ private struct CoachLayer: View {
         let screen = CGRect(origin: .zero, size: size)
             .insetBy(dx: 4, dy: insets.top > 0 ? 4 : 0)
         return wide.intersection(screen).isNull ? wide : wide.intersection(screen)
+    }
+
+    /// Нижний край, до которого можно класть пузырь: над панелью вкладок.
+    /// Безопасная зона её знает не всегда — поэтому не меньше запаса.
+    private var floor: CGFloat { max(insets.bottom, Metrics.coachFloor) }
+
+    /// Окно, обрезанное над пузырём внизу. Слишком низкое не режем: окно
+    /// в палец высотой читалось бы поломкой.
+    private func trimmed(_ hole: CGRect) -> CGRect {
+        let top = size.height - floor - Self.edge - tall - Self.gap
+        guard hole.maxY > top, top - hole.minY >= 60 else { return hole }
+        return CGRect(x: hole.minX, y: hole.minY, width: hole.width,
+                      height: top - hole.minY)
     }
 
     private func radius(_ hole: CGRect) -> CGFloat {
@@ -227,7 +244,7 @@ private struct CoachLayer: View {
 
     private func side(for hole: CGRect) -> Side {
         let need = tall + Self.gap + Self.arrow
-        if size.height - insets.bottom - Self.edge - hole.maxY >= need {
+        if size.height - floor - Self.edge - hole.maxY >= need {
             return .below
         }
         if hole.minY - insets.top - Self.edge >= need { return .above }
@@ -313,7 +330,7 @@ private struct CoachLayer: View {
                 card
                     .frame(maxWidth: .infinity, maxHeight: .infinity,
                            alignment: .bottom)
-                    .padding(.bottom, insets.bottom + Self.edge)
+                    .padding(.bottom, floor + Self.edge)
             }
         }
     }
@@ -323,7 +340,7 @@ private struct CoachLayer: View {
     private func reveal(_ target: Hint.Target, rect: CGRect) {
         guard let scroll else { return }
         let visible = rect.minY >= insets.top
-            && rect.maxY <= size.height - insets.bottom
+            && rect.maxY <= size.height - floor
         guard !visible else { return }
         let anchor: UnitPoint = rect.height > size.height * 0.55 ? .top : .center
         withAnimation(Motion.arrange) { scroll.scrollTo(target, anchor: anchor) }
@@ -346,15 +363,27 @@ private struct Beak: Shape {
 struct WalkButton: View {
     let walk: Walk
 
+    /// В панели навигации стекло под кнопкой рисует система — своё легло
+    /// бы вторым, и кнопка читалась бы двойной.
+    var bare = false
+
     var body: some View {
-        Button { Coach.shared.start(walk) } label: {
-            Image(systemName: "questionmark")
-                .font(.system(size: Metrics.gearGlyph - 4, weight: .semibold))
-                .foregroundStyle(Palette.ink)
-                .frame(width: Metrics.gearBox, height: Metrics.gearBox)
+        if bare {
+            Button { Coach.shared.start(walk) } label: {
+                Image(systemName: "questionmark")
+            }
+            .accessibilityLabel("Подсказки")
+        } else {
+            Button { Coach.shared.start(walk) } label: {
+                Image(systemName: "questionmark")
+                    .font(.system(size: Metrics.gearGlyph - 4,
+                                  weight: .semibold))
+                    .foregroundStyle(Palette.ink)
+                    .frame(width: Metrics.gearBox, height: Metrics.gearBox)
+            }
+            .buttonStyle(.glass)
+            .buttonBorderShape(.circle)
+            .accessibilityLabel("Подсказки")
         }
-        .buttonStyle(.glass)
-        .buttonBorderShape(.circle)
-        .accessibilityLabel("Подсказки")
     }
 }

@@ -1,9 +1,9 @@
 import Foundation
 import Observation
 
-/// Готовность моделей для дополненной реальности — по растениям. Пишет
-/// мастерская, читают экраны: карточка показывает проценты, а входы в AR
-/// ждут готовой модели.
+/// Как идёт сборка своих моделей — по растениям. Пишет мастерская, читают
+/// экраны: пока модель по снимку собирается, карточка показывает проценты.
+/// AR их не ждёт: без своей модели он ставит готовую модель вида.
 @MainActor
 @Observable
 final class Bench {
@@ -19,39 +19,23 @@ final class Bench {
     /// значок, пункт меню, отметка на кнопке.
     private(set) var marks: [Plant.ID: Mark] = [:]
 
-    /// Готовые модели: растение → отпечаток чертежа. Меняется, только когда
-    /// модель собралась или её заказали заново, — большие экраны смотрят
-    /// сюда и не перерисовываются на каждый процент.
-    private(set) var finished: [Plant.ID: String] = [:]
-
     /// Отпечаток чертежа считается кодированием — помним готовые: экраны
     /// спрашивают каждую секунду.
     @ObservationIgnored private var stamps: [Blueprint: String] = [:]
 
     init() {}
 
-    /// Доля готовности модели, 0…1. Нет — мастерская ещё не смотрела это
-    /// растение или его чертёж сменился, а новую модель ещё не заказали.
+    /// Доля готовности своей модели, 0…1. Нет — своей модели нет, её
+    /// чертёж сменился или мастерская до неё ещё не дошла.
     func share(_ plant: Plant) -> Double? {
-        guard let mark = marks[plant.id], mark.stamp == stamp(plant.blueprint)
+        guard let plan = plant.plan, let mark = marks[plant.id],
+              mark.stamp == stamp(plan)
         else { return nil }
         return mark.share
     }
 
-    func ready(_ plant: Plant) -> Bool {
-        finished[plant.id] == stamp(plant.blueprint)
-    }
-
-    /// Сад — когда готовы все его модели.
-    func ready(_ plants: [Plant]) -> Bool {
-        !plants.isEmpty && plants.allSatisfy { ready($0) }
-    }
-
-    /// Готовность сада — средняя по растениям; о ком не знаем — нулём.
-    func share(_ plants: [Plant]) -> Double {
-        guard !plants.isEmpty else { return 0 }
-        return plants.reduce(0) { $0 + (share($1) ?? 0) } / Double(plants.count)
-    }
+    /// Своя модель собрана — AR покажет её, а не модель вида.
+    func built(_ plant: Plant) -> Bool { share(plant) == 1 }
 
     /// Отчёт мастерской. По тому же чертежу доля не убывает: отчёты идут с
     /// другой очереди, и старый мог прийти позже нового.
@@ -61,16 +45,14 @@ final class Bench {
             return
         }
         marks[id] = Mark(stamp: stamp, share: share)
-        // Готовые — только при смене: запись без смены всё равно будит
-        // всех, кто на них смотрит.
-        let done = share == 1 ? stamp : nil
-        if finished[id] != done { finished[id] = done }
     }
 
     /// Модель заказали с экрана — карточка сразу показывает ноль, не
-    /// дожидаясь очереди мастерской. Готовую по тому же чертежу не трогает.
+    /// дожидаясь очереди мастерской. Собранную по тому же чертежу не
+    /// трогает.
     func queue(_ plant: Plant) {
-        note(plant.id, stamp: stamp(plant.blueprint), share: 0)
+        guard let plan = plant.plan else { return }
+        note(plant.id, stamp: stamp(plan), share: 0)
     }
 
     /// «42%» — долей по-местному: у кого знак впереди, у кого через пробел.

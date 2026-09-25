@@ -55,7 +55,7 @@ struct OrreryView: View {
         .toolbar(.hidden, for: .tabBar)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
-                WalkButton(walk: .orrery)
+                WalkButton(walk: .orrery, bare: true)
             }
         }
         .onChange(of: ahead) { old, new in
@@ -342,8 +342,12 @@ struct OrreryView: View {
         Task { @MainActor in
             await player.prepare(notes)
             preparing = false
-            player.start()
-            withAnimation(Motion.pill) { playing = Date() }
+            // Картинка трогается, когда звук дойдёт до ушей: нота — ровно
+            // когда планета на луче.
+            let delay = player.start()
+            withAnimation(Motion.pill) {
+                playing = Date().addingTimeInterval(delay)
+            }
         }
     }
 
@@ -494,14 +498,13 @@ struct OrreryDial: View {
                 style: StrokeStyle(lineWidth: small ? 1.5 : 2.5,
                                    lineCap: .round))
 
-            // Следы — пройденная часть круга: чем длиннее, тем суше.
+            // Следы — пройденная от луча часть круга: чем длиннее, тем суше.
             for planet in planets {
-                let travelled = planet.angle - Orrery.gate
+                let travelled = planet.angle
                 let steps = max(Int(travelled / (2 * .pi) * 72), 1)
                 var trail = Path()
                 for step in 0 ... steps {
-                    let angle = Orrery.gate
-                        + travelled * Double(step) / Double(steps)
+                    let angle = travelled * Double(step) / Double(steps)
                     let at = Self.spot(radius: planet.radius, angle: angle,
                                        in: size, small: small)
                     if step == 0 { trail.move(to: at) } else {
@@ -700,7 +703,14 @@ final class SpheresPlayer {
         player?.prepareToPlay()
     }
 
-    func start() { player?.play() }
+    /// Запускает звук чуть погодя, по часам звуковой карты, и отвечает,
+    /// через сколько секунд он станет слышен — с задержкой вывода: у
+    /// наушников по Bluetooth она в десятые доли секунды.
+    func start(lead: TimeInterval = 0.1) -> TimeInterval {
+        guard let player else { return 0 }
+        player.play(atTime: player.deviceCurrentTime + lead)
+        return lead + AVAudioSession.sharedInstance().outputLatency
+    }
 
     func stop() {
         player?.stop()

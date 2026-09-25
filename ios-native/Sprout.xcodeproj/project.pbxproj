@@ -59,6 +59,7 @@
 				Model/Kit.swift,
 				Model/Lang.swift,
 				Model/Leafart.swift,
+				Model/Nursery.swift,
 				Model/Plants.swift,
 				Model/Rig.swift,
 				Model/Score.swift,
@@ -320,7 +321,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
 			};
 			name = Debug;
 		};

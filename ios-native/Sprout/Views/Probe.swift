@@ -18,15 +18,6 @@ enum Probe {
 
     static var rig: Rig { Rig.of(hardware) }
 
-    /// Детализация моделей — только от графики и памяти: её спрашивает
-    /// мастерская со своей очереди, и ARKit там трогать незачем.
-    static var detail: Rig.Detail {
-        Rig.detail(of: Rig.Hardware(
-            gpu: gpu,
-            memory: Double(ProcessInfo.processInfo.physicalMemory) / 1_073_741_824,
-            lidar: false))
-    }
-
     /// Семейство графики: 9 — A17 Pro и новее, 8 — A15 и A16, 7 — A14.
     private static let gpu: Int = {
         guard let device = MTLCreateSystemDefaultDevice() else { return 6 }

@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 /// Страница главной: комната или «Новая комната» за последней.
 enum HomeLeaf: Hashable {
@@ -71,14 +72,16 @@ final class Glide {
     }
 }
 
-/// Лента комнат над полкой — вместо меню. Текущая комната крупно у края, за
-/// ней выглядывает следующая, размытая и гаснущая к краю экрана, а за
-/// последней — «Новая комната». Лента идёт за пальцем: `at` — положение
-/// листания страниц, дробное посреди жеста, — и выглядывающая комната на
-/// ходу набирает резкость, а уходящая тает в размытие.
+/// Лента комнат над полкой — барабан, а не список. Имена стоят на нём одно
+/// за другим: текущее — к нам лицом, следующее — сразу за ним, повёрнутое
+/// прочь, размытое и бледное, а за последней комнатой — «Новая комната».
+/// Листают — барабан проворачивается: выглядывающее имя разворачивается к
+/// нам и встаёт на место текущего, текущее уходит поворотом влево. Путь
+/// короткий — ширина одного имени, а не экрана. `at` — положение листания
+/// страниц, дробное посреди жеста.
 ///
 /// Пальца лента не берёт: листают страницы под ней, и смахнуть можно прямо
-/// по названию. Нажатие на выглядывающую комнату листает к ней.
+/// по названию. Нажатие на выглядывающее имя листает к нему.
 struct RoomStrip: View {
     let names: [String]
 
@@ -88,9 +91,6 @@ struct RoomStrip: View {
 
     /// Сколько с конца занято кнопками: поднявшись к ним, лента ужимается.
     var trail: CGFloat = 0
-
-    /// Сколько видно от следующей комнаты.
-    var peek: CGFloat = Metrics.roomPeek
 
     let go: (Int) -> Void
 
@@ -108,28 +108,39 @@ struct RoomStrip: View {
     /// Видимая часть ленты — без кнопок.
     private var span: CGFloat { max(width - trail, 1) }
 
-    /// Шаг между соседями: от следующей комнаты видно ровно `peek`.
-    private var step: CGFloat {
-        max(span - Metrics.contentMargin - peek, 1)
+    /// Шире — ужимается: имя целиком помещается в ленту.
+    private var widest: CGFloat {
+        max(span - Metrics.contentMargin - Metrics.roomTail, 40)
     }
 
     var body: some View {
-        // Внутри ленты — слева направо, а зеркалим сами: сдвиги и края
-        // считаются числами, и справа налево они должны идти от правого
-        // края, а не прыгать вслед за системой.
+        let widths = (0 ..< count).map { min(measure($0), widest) }
+        // Где на развёртке барабана начинается каждое имя и докуда он
+        // провёрнут сейчас: между страницами — пропорционально жесту.
+        let starts = widths.indices.map { index in
+            widths.prefix(index).reduce(0) { $0 + $1 + Metrics.roomGap }
+        }
+        let turned = spot(starts, at)
+        let step = spot(widths.map { $0 + Metrics.roomGap }, at)
+        // Внутри ленты — слева направо, а зеркалим сами: сдвиги, повороты и
+        // края считаются числами, и справа налево они идут от правого края.
         ZStack(alignment: .leading) {
             ForEach(0 ..< count, id: \.self) { index in
-                let away = CGFloat(index) - at
+                let along = starts[index] - turned
+                let away = along / max(step, 1)
                 // Дальше соседей не рисуем: их всё равно не видно.
                 if away > -1, away < 2 {
                     title(index)
-                        // Длинное имя ужимается раньше, чем доберётся до
-                        // выглядывающего соседа.
-                        .frame(width: wide, alignment: .leading)
+                        .frame(width: widths[index], alignment: .leading)
                         .environment(\.layoutDirection, direction)
+                        .rotation3DEffect(turn(away), axis: (x: 0, y: 1, z: 0),
+                                          anchor: hinge(away),
+                                          perspective: 0.8)
+                        .scaleEffect(1 - 0.06 * min(abs(away), 1),
+                                     anchor: hinge(away))
                         .blur(radius: haze(away))
                         .opacity(fade(away))
-                        .offset(x: place(away))
+                        .offset(x: left(along, widths[index]))
                 }
             }
         }
@@ -137,7 +148,9 @@ struct RoomStrip: View {
         .frame(maxHeight: .infinity)
         .mask { edges }
         .allowsHitTesting(false)
-        .overlay(alignment: flipped ? .leading : .trailing) { next }
+        .overlay(alignment: .leading) {
+            next(widths: widths, starts: starts, turned: turned)
+        }
         .environment(\.layoutDirection, .leftToRight)
         .frame(maxWidth: .infinity, alignment: .leading)
         .onGeometryChange(for: CGFloat.self) { $0.size.width }
@@ -159,14 +172,43 @@ struct RoomStrip: View {
         }
     }
 
-    /// Ширина места под имя.
-    private var wide: CGFloat { max(step - Metrics.roomGap, 1) }
+    /// Значение между страницами — по доле жеста.
+    private func spot(_ values: [CGFloat], _ at: CGFloat) -> CGFloat {
+        guard !values.isEmpty else { return 0 }
+        let place = min(max(at, 0), CGFloat(values.count - 1))
+        let low = Int(place.rounded(.down))
+        let high = min(low + 1, values.count - 1)
+        let share = place - CGFloat(low)
+        return values[low] + (values[high] - values[low]) * share
+    }
 
-    /// Левый край имени в ленте: текущее — у поля, следующее — на шаг
-    /// дальше. Справа налево — то же от правого края.
-    private func place(_ away: CGFloat) -> CGFloat {
-        let from = Metrics.contentMargin + away * step
+    /// Левый край имени в ленте. Справа налево — то же от правого края.
+    private func left(_ along: CGFloat, _ wide: CGFloat) -> CGFloat {
+        let from = Metrics.contentMargin + along
         return flipped ? span - from - wide : from
+    }
+
+    /// Поворот на барабане: следующее отвёрнуто вправо, уходящее — влево.
+    private func turn(_ away: CGFloat) -> Angle {
+        let degrees = away >= 0
+            ? Metrics.roomTurn * Double(min(away, 1.7))
+            : -Metrics.roomTurn * 1.2 * Double(min(-away, 1))
+        return .degrees(flipped ? -degrees : degrees)
+    }
+
+    /// Ось поворота — у ближнего к нам края имени.
+    private func hinge(_ away: CGFloat) -> UnitPoint {
+        (away >= 0) != flipped ? .leading : .trailing
+    }
+
+    /// Ширина имени по шрифту, а не по вёрстке: вёрстку каждый кадр жеста
+    /// ждать нельзя.
+    private func measure(_ index: Int) -> CGFloat {
+        let font = UIFont.systemFont(ofSize: size, weight: .semibold)
+        let text = name(index) as NSString
+        let wide = text.size(withAttributes: [.font: font]).width
+        // У «Новой комнаты» впереди плюс.
+        return ceil(index < names.count ? wide : wide + size * 1.4)
     }
 
     private func name(_ index: Int) -> String {
@@ -188,26 +230,28 @@ struct RoomStrip: View {
         .minimumScaleFactor(0.6)
     }
 
-    /// Текущая — резкая; соседи размыты тем сильнее, чем дальше от своего
-    /// места. В пунктах от кегля: доросшая подпись размывается так же.
+    /// Текущее — резкое; соседи размыты тем сильнее, чем дальше повёрнуты.
+    /// В пунктах от кегля: доросшая подпись размывается так же.
     private func haze(_ away: CGFloat) -> CGFloat {
-        size * Metrics.roomBlur * min(abs(away), 1)
+        size * Metrics.roomBlur * min(abs(away), 1.3)
     }
 
-    /// Выглядывающая — вполсилы; уходящая гаснет быстрее, чем уезжает.
+    /// Следующее — вполсилы, дальше — гаснет; уходящее гаснет быстрее, чем
+    /// уезжает.
     private func fade(_ away: CGFloat) -> Double {
         guard away >= 0 else {
             return Double(max(1 + away * Metrics.roomLeave, 0))
         }
         let near = 1 - Metrics.roomDim * min(away, 1)
-        return Double(near * min(max(2 - away, 0), 1))
+        let far = min(max((1.9 - away) / 0.7, 0), 1)
+        return Double(near * far)
     }
 
-    /// Края: у начала уходящая комната тает в поле, у конца выглядывающая
-    /// гаснет к краю — видно начало имени, а не обрубок.
+    /// Края: у начала уходящее имя тает в поле, у конца длинное следующее
+    /// гаснет к краю экрана, а не обрывается.
     private var edges: some View {
         let enter = min(Metrics.contentMargin / span, 0.5)
-        let leave = max(1 - peek / span, enter)
+        let leave = max(1 - Metrics.roomTail / span, enter)
         return LinearGradient(
             stops: [
                 .init(color: .clear, location: 0),
@@ -219,17 +263,22 @@ struct RoomStrip: View {
             endPoint: flipped ? .leading : .trailing)
     }
 
-    /// Выглядывающая комната нажимается — листаем к ней.
+    /// Выглядывающее имя нажимается — листаем к нему.
     @ViewBuilder
-    private var next: some View {
-        if current + 1 < count {
-            Button { go(current + 1) } label: {
+    private func next(widths: [CGFloat], starts: [CGFloat],
+                      turned: CGFloat) -> some View {
+        let index = current + 1
+        if index < count {
+            let wide = min(widths[index], max(span - Metrics.contentMargin
+                                              - (starts[index] - turned), 0))
+            Button { go(index) } label: {
                 Color.clear
-                    .frame(width: peek + Metrics.roomGap)
+                    .frame(width: max(wide, 1))
                     .frame(maxHeight: .infinity)
                     .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
+            .offset(x: left(starts[index] - turned, max(wide, 1)))
             .accessibilityHidden(true)
         }
     }

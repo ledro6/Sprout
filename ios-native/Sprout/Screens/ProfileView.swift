@@ -1,5 +1,5 @@
+import PhotosUI
 import SwiftUI
-import UniformTypeIdentifiers
 
 /// Профиль: хозяин, сад и соперники. Учётной записи нет, и экран её не
 /// изображает: «вход» — это замок на приложении, он в настройках, а соперники
@@ -19,14 +19,13 @@ struct ProfileView: View {
 
     @State private var opening = false
     @State private var erasing = false
-    @State private var importing = false
+
+    /// Фото хозяина, выбранное в медиатеке.
+    @State private var picking: PhotosPickerItem?
 
     @State private var trouble: String?
 
     @State private var welcomed: Rival?
-
-    /// Пересобирается при каждом появлении экрана, чтобы слепок был свежим.
-    @State private var backup: URL?
 
     @State private var swatches = Spots()
     @State private var paste = Spot()
@@ -67,9 +66,9 @@ struct ProfileView: View {
                 .walk(.profile, scroll: reader)
             }
         }
-        .onAppear {
-            recount()
-            makeBackup()
+        .onAppear { recount() }
+        .onChange(of: picking) { _, item in
+            Task { await portrait(item) }
         }
         .onChange(of: garden.log.count) { _, _ in
             withAnimation(Motion.number) { recount() }
@@ -94,27 +93,35 @@ struct ProfileView: View {
 
     // MARK: - Хозяин
 
-    /// Кружок с буквой, а не фото: Sprout про растения, а не про людей.
+    /// Кружок с фото хозяина — или с буквой, пока фото нет. Нажатие на
+    /// кружок открывает медиатеку.
     private var person: some View {
         SproutGroup("Хозяин") {
             HStack(spacing: 14) {
-                Circle()
-                    .fill(Palette.swatch(settings.avatarTint))
-                    .frame(width: Metrics.avatar, height: Metrics.avatar)
-                    .overlay {
-                        // Неназвавшемуся — значок человека: пустой кружок
-                        // читался бы недогрузившейся картинкой.
-                        if named {
-                            Text(letter)
-                                .font(Typography.avatar)
+                PhotosPicker(selection: $picking, matching: .images,
+                             photoLibrary: .shared()) {
+                    avatar
+                        .overlay(alignment: .bottomTrailing) {
+                            Image(systemName: "camera.fill")
+                                .font(.system(size: 11, weight: .semibold))
                                 .foregroundStyle(.white)
-                        } else {
-                            Image(systemName: "person.fill")
-                                .font(Typography.avatar)
-                                .foregroundStyle(.white)
+                                .padding(5)
+                                .background(Circle().fill(Palette.accent))
+                                .overlay {
+                                    Circle().strokeBorder(Palette.background,
+                                                          lineWidth: 1.5)
+                                }
+                        }
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel("Фото")
+                .contextMenu {
+                    if settings.avatarShot != nil {
+                        Button(role: .destructive) { unportrait() } label: {
+                            Label("Убрать фото", systemImage: "trash")
                         }
                     }
-                    .accessibilityHidden(true)
+                }
                 VStack(alignment: .leading, spacing: 3) {
                     Text(named ? garden.owner : Lang.text("Имя не задано"))
                         .font(Typography.navTitle)
@@ -136,19 +143,84 @@ struct ProfileView: View {
                 .font(Typography.settingNote)
             }
 
-            SproutDivider()
+            // Цвет — кружку без фото; с фото выбирать нечего.
+            if settings.avatarShot == nil {
+                SproutDivider()
 
-            SproutBlock("Цвет") {
-                // Волны отсюда нет нарочно: кружок хозяина не красит ни узор,
-                // ни всплеск.
-                SproutTints(current: settings.avatarTint,
-                            spots: swatches) { tint, _ in
-                    settings.avatarTint = tint
-                    Feel.pick()
+                SproutBlock("Цвет") {
+                    // Волны отсюда нет нарочно: кружок хозяина не красит ни
+                    // узор, ни всплеск.
+                    SproutTints(current: settings.avatarTint,
+                                spots: swatches) { tint, _ in
+                        settings.avatarTint = tint
+                        Feel.pick()
+                    }
                 }
+                .transition(.blurReplace)
             }
         }
+        .animation(Motion.appear, value: settings.avatarShot)
         .sproutRide()
+    }
+
+    /// Фото — кругом во весь кружок; без фото — буква или человечек.
+    @ViewBuilder
+    private var avatar: some View {
+        if let name = settings.avatarShot, let image = Snapshot.image(name) {
+            Image(uiImage: image)
+                .resizable()
+                .scaledToFill()
+                .frame(width: Metrics.avatar, height: Metrics.avatar)
+                .clipShape(Circle())
+                .transition(.blurReplace)
+        } else {
+            Circle()
+                .fill(Palette.swatch(settings.avatarTint))
+                .frame(width: Metrics.avatar, height: Metrics.avatar)
+                .overlay {
+                    // Неназвавшемуся — значок человека: пустой кружок
+                    // читался бы недогрузившейся картинкой.
+                    if named {
+                        Text(letter)
+                            .font(Typography.avatar)
+                            .foregroundStyle(.white)
+                    } else {
+                        Image(systemName: "person.fill")
+                            .font(Typography.avatar)
+                            .foregroundStyle(.white)
+                    }
+                }
+                .transition(.blurReplace)
+        }
+    }
+
+    /// Квадрат из середины снимка, ужатый, — в папку снимков; прежнее фото
+    /// уходит с диска.
+    @MainActor
+    private func portrait(_ item: PhotosPickerItem?) async {
+        guard let item,
+              let data = try? await item.loadTransferable(type: Data.self),
+              let image = UIImage(data: data)
+        else { return }
+        let width = Double(image.size.width)
+        let height = Double(image.size.height)
+        let side = min(width, height)
+        let square = Snapshot.cut(image, to: Crop(x: (width - side) / 2,
+                                                  y: (height - side) / 2,
+                                                  side: side))
+        guard let name = Snapshot.keep(square) else { return }
+        let old = settings.avatarShot
+        settings.avatarShot = name
+        if let old { Shots.drop(old) }
+        picking = nil
+        Feel.done()
+    }
+
+    private func unportrait() {
+        guard let old = settings.avatarShot else { return }
+        settings.avatarShot = nil
+        Shots.drop(old)
+        Feel.toss()
     }
 
     private var letter: String {
@@ -334,23 +406,6 @@ struct ProfileView: View {
 
             SproutDivider()
 
-            if let backup {
-                ShareLink(item: backup) {
-                    SproutLink("Сохранить сад в файл",
-                               icon: "square.and.arrow.down")
-                }
-                .buttonStyle(.plain)
-
-                SproutDivider()
-            }
-
-            Button { importing = true } label: {
-                SproutLink("Перенести сад из файла", icon: "tray.and.arrow.up")
-            }
-            .buttonStyle(.plain)
-
-            SproutDivider()
-
             Button(role: .destructive) { erasing = true } label: {
                 HStack(spacing: 12) {
                     Image(systemName: "trash")
@@ -373,42 +428,5 @@ struct ProfileView: View {
         } message: {
             Text("Исчезнут все растения и весь журнал поливов. Вернуть их будет нельзя.")
         }
-        .fileImporter(isPresented: $importing,
-                      allowedContentTypes: [.json]) { result in
-            take(file: result)
-        }
-    }
-
-    /// Во временную папку: файл живёт до отправки, и прибирает его система.
-    private func makeBackup() {
-        let encoder = JSONEncoder()
-        encoder.outputFormatting = [.prettyPrinted, .withoutEscapingSlashes]
-        guard let data = try? encoder.encode(garden.state) else { return }
-        let file = FileManager.default.temporaryDirectory
-            .appendingPathComponent(Lang.format("Сад — %@", garden.owner) + ".json")
-        guard (try? data.write(to: file, options: .atomic)) != nil else {
-            return
-        }
-        backup = file
-    }
-
-    /// Файл из чужой песочницы читается только с запросом доступа, иначе
-    /// система откажет молча.
-    private func take(file result: Result<URL, any Error>) {
-        guard case let .success(url) = result else { return }
-        let opened = url.startAccessingSecurityScopedResource()
-        defer { if opened { url.stopAccessingSecurityScopedResource() } }
-        guard let data = try? Data(contentsOf: url),
-              let state = try? JSONDecoder().decode(GardenState.self,
-                                                    from: data)
-        else {
-            trouble = Lang.text("Это не файл сада Sprout.")
-            Feel.wrong()
-            return
-        }
-        withAnimation(Motion.appear) { garden.restore(state) }
-        recount()
-        makeBackup()
-        Feel.done()
     }
 }

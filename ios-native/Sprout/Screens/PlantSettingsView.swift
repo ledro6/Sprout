@@ -273,9 +273,12 @@ struct PlantSettingsView: View {
             garden.tend(plantID, feedEvery: feedDraft, repotEvery: repotDraft)
             garden.relocate(plantID, to: room)
         }
-        // Сменился вид — сменилась и модель: собираем её заранее. Не
-        // сменился — мастерская скажет, что модель уже есть.
-        if let tuned = garden.plant(id: plantID) { Workshop.order(tuned) }
+        // Сменился вид — у своей модели по снимку сменился и чертёж:
+        // пересобираем её, раз хозяин её заказывал. Не сменился — мастерская
+        // скажет, что модель уже есть. У готовой модели вида собирать нечего.
+        if let tuned = garden.plant(id: plantID), tuned.plan != nil {
+            Workshop.order(tuned)
+        }
         if edited { Feel.done() }
         dismiss()
     }

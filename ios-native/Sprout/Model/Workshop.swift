@@ -1,86 +1,101 @@
 import Foundation
+import UIKit
 
-/// Мастерская моделей: собирает объёмную модель по чертежу в фоне и держит
-/// её в кэше на диске. Строит заранее — при посадке, при запуске и когда
-/// меняется состав сада: без готовой модели дополненной реальности нет.
-/// Кэш — в Caches: система может его вычистить, тогда модель соберётся по
-/// чертежу заново. Как идёт сборка, видно на карточках — см. `Bench`.
+/// Мастерская моделей. Готовые модели видов лежат в приложении (см.
+/// `Stock`): AR открывается сразу, и телефон ничего не собирает сам по себе.
+/// Свою модель по снимку он собирает только по просьбе хозяина — за доли
+/// секунды, обычной детализации — и хранит в Application Support: её
+/// заказали, и вычищать её, как кэш, система не должна. Как идёт сборка,
+/// видно на карточке — см. `Bench`. Скан растения — отдельно, см. `Scans`.
 actor Workshop {
     static let shared = Workshop()
 
-    /// Последние открытые — в памяти: второй раз сад открывается мгновенно.
-    /// Сад в AR ставит до дюжины растений разом — столько и держим.
+    /// Последние открытые — в памяти: сад в AR ставит до дюжины растений
+    /// разом, и второй раз он открывается мгновенно.
     private var recent: [String: Kit] = [:]
     private var order: [String] = []
     private static let kept = 12
 
-    /// Детализация по силе телефона, см. `Rig`. Известна с первой минуты:
-    /// первая же сборка должна быть под этот телефон.
-    let detail = Probe.detail
+    /// Своя модель — обычной детализации на любом телефоне: такой она
+    /// собирается за доли секунды, не греет телефон и не отличается от
+    /// готовых.
+    private static let detail = Rig.Detail.standard
 
     /// Сборка — почти все проценты; остаток — запись на диск.
     private static let building = 0.95
 
-    /// Готовая модель: из памяти, с диска или собранная сейчас.
+    /// Модель для AR: своя, если хозяин её заказал, иначе — модель вида из
+    /// приложения. Заказанную, но ещё не собранную (прежние сборки
+    /// строили её в кэше, а кэш вычищают) собираем здесь же — один раз.
     func kit(for plant: Plant) -> Kit {
-        let key = key(plant)
+        guard let plan = plant.plan else { return stock(plant.blueprint.preset) }
+        let key = Self.key(plant.id, plan)
         if let kit = recent[key] { return kit }
-        let kit = read(key) ?? build(plant, key: key)
+        if let kit = read(key) {
+            remember(kit, key)
+            return kit
+        }
+        return build(plant, plan, key: key)
+    }
+
+    /// Модель вида. Нет в приложении — так бывает, только если после смены
+    /// рецептов забыли запустить tool/make_stock.py, — растим здесь.
+    func stock(_ preset: Preset) -> Kit {
+        let key = "stock-\(preset.rawValue)"
+        if let kit = recent[key] { return kit }
+        let kit = Stock.kit(preset)
+            ?? Botany.grow(.stock(preset), species: preset.title,
+                           detail: Self.detail)
         remember(kit, key)
         return kit
     }
 
-    /// Собрать заранее, если модели ещё нет.
+    /// Собрать свою модель по снимку — хозяин попросил. Собранная по тому
+    /// же чертежу второй раз не собирается.
     func prepare(_ plant: Plant) {
-        let key = key(plant)
-        guard !has(key) else {
-            Self.report(plant.id, plant.blueprint.fingerprint, 1)
+        guard let plan = plant.plan else { return }
+        let key = Self.key(plant.id, plan)
+        guard recent[key] == nil, !exists(key) else {
+            Self.report(plant.id, plan.fingerprint, 1)
             return
         }
-        _ = build(plant, key: key)
+        _ = build(plant, plan, key: key)
     }
 
-    /// Обойти сад. Сперва сказать экранам, чьи модели готовы, а чьи ждут
-    /// очереди, — это быстро; потом собрать недостающие и выбросить модели
-    /// растений, которых больше нет.
+    /// Обойти сад при запуске и когда меняется его состав: сказать экранам,
+    /// чьи свои модели собраны, забрать собранные прежними сборками из
+    /// кэша и выбросить модели и сканы растений, которых больше нет. Сам
+    /// обход ничего не собирает.
     func tend(_ plants: [Plant]) {
-        var missing: [Plant] = []
+        adopt(plants)
+        var alive: Set<String> = []
         for plant in plants {
-            let ready = has(key(plant))
-            if !ready { missing.append(plant) }
-            Self.report(plant.id, plant.blueprint.fingerprint, ready ? 1 : 0)
+            guard let plan = plant.plan else { continue }
+            let key = Self.key(plant.id, plan)
+            alive.insert(key + ".kit")
+            if recent[key] != nil || exists(key) {
+                Self.report(plant.id, plan.fingerprint, 1)
+            }
         }
-        for plant in missing { prepare(plant) }
-        guard let folder = Workshop.folder,
-              let files = try? FileManager.default.contentsOfDirectory(
-                  atPath: folder.path)
-        else { return }
-        let alive = Set(plants.map { key($0) + ".kit" })
-        for file in files where !alive.contains(file) {
-            try? FileManager.default.removeItem(
-                at: folder.appendingPathComponent(file))
-        }
+        Self.sweep(Self.folder, keeping: alive)
+        Self.sweep(Scans.folder, keeping: Set(plants.compactMap(\.scan)))
     }
 
-    private func build(_ plant: Plant, key: String) -> Kit {
+    private func build(_ plant: Plant, _ plan: Blueprint, key: String) -> Kit {
         let id = plant.id
-        let stamp = plant.blueprint.fingerprint
-        let meter = Meter(expected: Effort.expected(plant.blueprint.preset,
-                                                    detail)) { share in
-            Self.report(id, stamp, share * Self.building)
+        let stamp = plan.fingerprint
+        let meter = Meter(expected: Effort.expected(plan.preset, Self.detail)) {
+            share in Self.report(id, stamp, share * Self.building)
         }
         let kit = Meter.$current.withValue(meter) {
-            Botany.grow(plant.blueprint, species: plant.species, detail: detail)
+            Botany.grow(plan, species: plant.species, detail: Self.detail)
         }
-        // Не записалась — держим в памяти: иначе модель считалась бы
-        // несобранной, и AR ждал бы её вечно.
-        if !write(kit, key) { remember(kit, key) }
+        // Не записалась — остаётся в памяти: иначе до конца сеанса её
+        // собирали бы заново при каждом открытии AR.
+        write(kit, key)
+        remember(kit, key)
         Self.report(id, stamp, 1)
         return kit
-    }
-
-    private func has(_ key: String) -> Bool {
-        recent[key] != nil || exists(key)
     }
 
     private func remember(_ kit: Kit, _ key: String) {
@@ -105,24 +120,15 @@ actor Workshop {
 
     // MARK: - Диск
 
-    /// Детализация — в ключе: пересел на другой телефон из резервной копии
-    /// — модели соберутся под него.
-    private func key(_ plant: Plant) -> String {
-        "\(plant.id)-\(plant.blueprint.fingerprint)-\(detail.key)"
+    /// Детализация одна, поэтому в ключе её нет: номер растения и чертёж.
+    private static func key(_ id: Plant.ID, _ plan: Blueprint) -> String {
+        "\(id)-\(plan.fingerprint)"
     }
 
-    private static let folder: URL? = {
-        guard let caches = FileManager.default.urls(
-            for: .cachesDirectory, in: .userDomainMask).first
-        else { return nil }
-        let folder = caches.appendingPathComponent("Models", isDirectory: true)
-        try? FileManager.default.createDirectory(
-            at: folder, withIntermediateDirectories: true)
-        return folder
-    }()
+    private static let folder = Scans.place("Models")
 
     private func file(_ key: String) -> URL? {
-        Workshop.folder?.appendingPathComponent(key + ".kit")
+        Self.folder?.appendingPathComponent(key + ".kit")
     }
 
     private func exists(_ key: String) -> Bool {
@@ -149,14 +155,88 @@ actor Workshop {
         else { return nil }
         return Kit(data as Data)
     }
+
+    /// Прежние сборки держали модели в кэше и с детализацией в имени.
+    /// Собранные туда свои модели переезжают — не собирать же их заново —
+    /// а сам кэш уходит.
+    private func adopt(_ plants: [Plant]) {
+        let manager = FileManager.default
+        guard let caches = manager.urls(for: .cachesDirectory,
+                                        in: .userDomainMask).first
+        else { return }
+        let old = caches.appendingPathComponent("Models", isDirectory: true)
+        guard let files = try? manager.contentsOfDirectory(atPath: old.path)
+        else { return }
+        for plant in plants {
+            guard let plan = plant.plan else { continue }
+            let key = Self.key(plant.id, plan)
+            guard !exists(key), let url = file(key),
+                  let found = files.first(where: { $0.hasPrefix(key + "-") })
+            else { continue }
+            try? manager.moveItem(at: old.appendingPathComponent(found),
+                                  to: url)
+        }
+        try? manager.removeItem(at: old)
+    }
+
+    private static func sweep(_ folder: URL?, keeping names: Set<String>) {
+        guard let folder,
+              let files = try? FileManager.default.contentsOfDirectory(
+                  atPath: folder.path)
+        else { return }
+        for file in files where !names.contains(file) {
+            try? FileManager.default.removeItem(
+                at: folder.appendingPathComponent(file))
+        }
+    }
 }
 
 extension Workshop {
-    /// Заказать модель с экрана — после посадки или смены вида: карточка
-    /// сразу показывает ноль процентов, сборка идёт в очереди мастерской.
+    /// Хозяин попросил свою модель — карточка сразу показывает ноль
+    /// процентов, сборка идёт в очереди мастерской.
     @MainActor
     static func order(_ plant: Plant) {
         Bench.shared.queue(plant)
-        Task(priority: .utility) { await shared.prepare(plant) }
+        Task(priority: .userInitiated) { await shared.prepare(plant) }
+    }
+}
+
+/// Готовые модели видов — в каталоге ресурсов приложения, сжатые DEFLATE
+/// без заголовка. Растит и кладёт их туда tool/make_stock.py.
+enum Stock {
+    static func kit(_ preset: Preset) -> Kit? {
+        guard let asset = NSDataAsset(name: "stock-\(preset.rawValue)"),
+              let data = try? (asset.data as NSData).decompressed(using: .zlib)
+        else { return nil }
+        return Kit(data as Data)
+    }
+}
+
+/// Сканы растений — модели USDZ из Object Capture, см. `ScanView`. Лежат в
+/// Application Support: скан — работа хозяина, а не кэш.
+enum Scans {
+    static let folder = place("Scans")
+
+    static func url(_ name: String) -> URL? {
+        folder?.appendingPathComponent(name)
+    }
+
+    /// Файл этого растения есть — его и ставим в AR.
+    static func file(of plant: Plant) -> URL? {
+        guard let name = plant.scan, let url = url(name),
+              FileManager.default.fileExists(atPath: url.path)
+        else { return nil }
+        return url
+    }
+
+    /// Папка в Application Support — заводится при первом обращении.
+    static func place(_ name: String) -> URL? {
+        guard let support = FileManager.default.urls(
+            for: .applicationSupportDirectory, in: .userDomainMask).first
+        else { return nil }
+        let folder = support.appendingPathComponent(name, isDirectory: true)
+        try? FileManager.default.createDirectory(
+            at: folder, withIntermediateDirectories: true)
+        return folder
     }
 }

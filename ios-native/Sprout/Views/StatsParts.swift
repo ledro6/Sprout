@@ -279,6 +279,59 @@ struct WeekBars: View {
     }
 }
 
+/// Календарь поливов: столбец — неделя, клетка — день; чем больше поливов,
+/// тем гуще цвет волны. Нажатая клетка обведена, её дата — в подписи.
+struct WateringCalendar: View {
+    let cells: [Almanac.Cell]
+    let colour: Color
+    @Binding var picked: Date?
+
+    var body: some View {
+        let weeks = stride(from: 0, to: cells.count, by: 7).map {
+            Array(cells[$0 ..< min($0 + 7, cells.count)])
+        }
+        let most = max(cells.map(\.count).max() ?? 0, 1)
+        let today = cells.last?.day
+        HStack(alignment: .top, spacing: 3) {
+            ForEach(weeks.indices, id: \.self) { week in
+                VStack(spacing: 3) {
+                    ForEach(weeks[week]) { cell in
+                        RoundedRectangle(cornerRadius: 3, style: .continuous)
+                            .fill(cell.count == 0
+                                  ? Palette.ink.opacity(0.07)
+                                  : colour.opacity(0.3 + 0.7
+                                      * Double(cell.count) / Double(most)))
+                            .aspectRatio(1, contentMode: .fit)
+                            .overlay {
+                                if picked == cell.day || today == cell.day {
+                                    RoundedRectangle(cornerRadius: 3,
+                                                     style: .continuous)
+                                        .strokeBorder(picked == cell.day
+                                                      ? Palette.ink
+                                                      : Palette.ink.opacity(0.35),
+                                                      lineWidth: 1.5)
+                                }
+                            }
+                            .contentShape(Rectangle())
+                            .onTapGesture {
+                                withAnimation(Motion.pill) {
+                                    picked = picked == cell.day ? nil : cell.day
+                                }
+                                Feel.pick()
+                            }
+                    }
+                }
+                .frame(maxWidth: .infinity, alignment: .top)
+            }
+        }
+        .animation(Motion.number, value: cells)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("Календарь поливов")
+        .accessibilityValue(Lang.format("%lld поливов",
+                                        cells.reduce(0) { $0 + $1.count }))
+    }
+}
+
 /// Слова и числа статистики, общие для её экранов.
 enum Stats {
     static func percent(_ share: Double) -> String {
@@ -311,6 +364,17 @@ enum Stats {
     /// Час по-местному: у кого «19:00», у кого «7 PM».
     static func hour(_ hour: Int, calendar: Calendar = .current) -> String {
         let moment = calendar.date(bySettingHour: hour, minute: 0, second: 0,
+                                   of: Date()) ?? Date()
+        return moment.formatted(Date.FormatStyle(calendar: calendar,
+                                                 timeZone: calendar.timeZone)
+            .hour(.defaultDigits(amPM: .abbreviated)).minute(.twoDigits)
+            .locale(Lang.locale))
+    }
+
+    /// Минута суток по-местному: «6:40» или «6:40 AM».
+    static func time(_ minute: Int, calendar: Calendar = .current) -> String {
+        let moment = calendar.date(bySettingHour: minute / 60,
+                                   minute: minute % 60, second: 0,
                                    of: Date()) ?? Date()
         return moment.formatted(Date.FormatStyle(calendar: calendar,
                                                  timeZone: calendar.timeZone)

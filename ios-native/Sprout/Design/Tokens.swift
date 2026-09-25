@@ -154,7 +154,7 @@ enum Typography {
     static let figureCaption = Font.system(.caption)
 
     /// Числами: между ними идёт плавный перебор при прокрутке.
-    static let roomSize: CGFloat = 17
+    static let roomSize: CGFloat = 22
     static let roomGrown: CGFloat = 34
 
     static let toastTitle = Font.system(.subheadline, weight: .semibold)
@@ -200,22 +200,24 @@ enum Metrics {
     /// палец.
     static let roomRow: CGFloat = 44
 
-    /// Сколько видно от следующей комнаты: в покое — начало имени, у
-    /// доросшей до заголовка подписи — буква-другая, дальше тесно кнопкам.
-    static let roomPeek: CGFloat = 64
-    static let roomPeekTight: CGFloat = 40
+    /// Зазор между текущим именем и следующим на барабане.
+    static let roomGap: CGFloat = 12
 
-    /// Зазор между концом длинного имени и выглядывающим соседом.
-    static let roomGap: CGFloat = 14
+    /// На сколько градусов отвёрнуто следующее имя — как на барабане
+    /// выбора: видно, что за ним есть ещё, но читается оно не сразу.
+    static let roomTurn: Double = 50
 
-    /// Размытие соседа — доля кегля: 2.4 pt у подписи в покое, 4.8 у
+    /// Сход у правого края: длинное следующее имя гаснет, а не обрывается.
+    static let roomTail: CGFloat = 36
+
+    /// Размытие соседа — доля кегля: 2.6 pt у подписи в покое, 4 у
     /// доросшей. Имя угадывается, но не читается текущим.
-    static let roomBlur: CGFloat = 0.14
+    static let roomBlur: CGFloat = 0.12
 
-    /// Выглядывающая комната — вполсилы; уходящая гаснет за шесть десятых
-    /// пути, раньше, чем доберётся до края.
-    static let roomDim: CGFloat = 0.4
-    static let roomLeave: CGFloat = 1.6
+    /// Выглядывающее имя — вполсилы; уходящее гаснет за две трети пути,
+    /// раньше, чем провернётся.
+    static let roomDim: CGFloat = 0.45
+    static let roomLeave: CGFloat = 1.5
 
     /// Между лентой и первыми карточками.
     static let shelfDrop: CGFloat = 19
@@ -299,6 +301,10 @@ enum Metrics {
     /// Значок готовности модели — в углу снимка, чуть отступив от
     /// скругления: не липнет к краю.
     static let modelBadgeInset: CGFloat = 7
+
+    /// Подсказки на экранах: ниже этого от низа экрана пузырь не встаёт —
+    /// там панель вкладок и полоска «Домой».
+    static let coachFloor: CGFloat = 96
 
     /// Пузырь пояснения: строк в пять, как сноска, а не лист.
     static let hintWidth: CGFloat = 280

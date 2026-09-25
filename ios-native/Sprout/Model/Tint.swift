@@ -4,7 +4,8 @@ import Foundation
 /// насыщенная для волны; доли и тему решает `Palette`. Живёт в модели, чтобы
 /// числа проверялись без `Color`.
 enum Tint: Int, CaseIterable, Identifiable, Sendable {
-    case green, blue, violet, amber, rose
+    case green, blue, violet, amber, rose, teal, sky, indigo, fuchsia, coral,
+         lemon
 
     var id: Int { rawValue }
 
@@ -20,6 +21,12 @@ enum Tint: Int, CaseIterable, Identifiable, Sendable {
         case .violet: Lang.text("Сиреневый")
         case .amber: Lang.text("Медовый")
         case .rose: Lang.text("Розовый")
+        case .teal: Lang.text("Бирюзовый")
+        case .sky: Lang.text("Небесный")
+        case .indigo: Lang.text("Индиго")
+        case .fuchsia: Lang.text("Фуксия")
+        case .coral: Lang.text("Коралловый")
+        case .lemon: Lang.text("Лимонный")
         }
     }
 
@@ -33,6 +40,12 @@ enum Tint: Int, CaseIterable, Identifiable, Sendable {
         case .violet: Channels(240, 233, 254)
         case .amber: Channels(255, 233, 208)
         case .rose: Channels(255, 230, 236)
+        case .teal: Channels(205, 245, 238)
+        case .sky: Channels(212, 241, 251)
+        case .indigo: Channels(233, 235, 255)
+        case .fuchsia: Channels(250, 231, 250)
+        case .coral: Channels(255, 232, 222)
+        case .lemon: Channels(245, 238, 190)
         }
     }
 
@@ -45,6 +58,12 @@ enum Tint: Int, CaseIterable, Identifiable, Sendable {
         case .violet: Channels(97, 24, 242)
         case .amber: Channels(255, 136, 0)
         case .rose: Channels(255, 13, 73)
+        case .teal: Channels(0, 168, 160)
+        case .sky: Channels(0, 172, 230)
+        case .indigo: Channels(72, 58, 222)
+        case .fuchsia: Channels(206, 38, 196)
+        case .coral: Channels(255, 94, 58)
+        case .lemon: Channels(226, 186, 0)
         }
     }
 }

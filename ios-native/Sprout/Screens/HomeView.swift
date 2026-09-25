@@ -13,10 +13,6 @@ struct HomeView: View {
     /// страниц, `scrollPosition`.
     @State private var target: HomeLeaf?
 
-    /// Где листание встало в последний раз — чтобы поднять клавиатуру, только
-    /// когда до «Новой комнаты» именно долистали.
-    @State private var landed: HomeLeaf?
-
     /// Листание и прокрутка страниц — каждый кадр, поэтому в стороне: см.
     /// `Glide`.
     @State private var glide = Glide()
@@ -53,13 +49,6 @@ struct HomeView: View {
     /// не всех, и пусть встанут те, кому пора.
     @State private var staged: [Plant.ID] = []
 
-    /// Сад в AR попросили извне, а модели ещё собираются: откроем, если
-    /// успеют за миг ожидания, — см. `Motion.summonGrace`.
-    @State private var summoned = false
-
-    /// Не успели — говорим об этом.
-    @State private var waiting = false
-
     /// Полка качается, как значки «Домой» в правке. Входят в неё, повёв
     /// карточку из меню, продержав палец дольше меню или пунктом
     /// «Расставить».
@@ -94,7 +83,7 @@ struct HomeView: View {
     /// на глаз, с запасом.
     @State private var floor: CGFloat = 90
 
-    @ScaledMetric(relativeTo: .headline)
+    @ScaledMetric(relativeTo: .title2)
     private var roomSize = Typography.roomSize
     @ScaledMetric(relativeTo: .largeTitle)
     private var roomGrown = Typography.roomGrown
@@ -195,37 +184,13 @@ struct HomeView: View {
         .fullScreenCover(isPresented: $staging) {
             PlantAR(ids: staged).environment(garden)
         }
-        // Кнопка действия или Siri попросили сад в AR. Моделей нет — ждём
-        // миг: при холодном запуске готовые находятся сразу. Не нашлись —
-        // говорим, что сад пока не открыть.
+        // Кнопка действия или Siri попросили сад в AR — модели видов в
+        // приложении, открываем сразу.
         .onChange(of: Summon.shared.garden) { _, asked in
             guard asked else { return }
             Summon.shared.garden = false
             guard PlantAR.available, !plants.isEmpty else { return }
-            guard !Bench.shared.ready(plants) else {
-                stage()
-                return
-            }
-            summoned = true
-            Task { @MainActor in
-                try? await Task.sleep(for: .seconds(Motion.summonGrace))
-                guard summoned else { return }
-                summoned = false
-                waiting = true
-            }
-        }
-        .onChange(of: Bench.shared.ready(plants)) { _, ready in
-            guard ready, summoned else { return }
-            summoned = false
             stage()
-        }
-        .alert("Модели ещё готовятся", isPresented: $waiting) {
-            Button("Понятно", role: .cancel) {}
-        } message: {
-            Text("""
-                Сад в AR можно будет открыть, когда соберутся модели \
-                растений. Сколько осталось — видно на карточках.
-                """)
         }
     }
 
@@ -242,8 +207,10 @@ struct HomeView: View {
                         .onGeometryChange(for: CGRect.self) {
                             $0.frame(in: .scrollView(axis: .horizontal))
                         } action: { frame in
+                            let before = glide.at
                             glide.track(page: item.offset, frame: frame,
                                         flipped: direction == .rightToLeft)
+                            feel(from: before, to: glide.at)
                         }
                 }
             }
@@ -336,16 +303,27 @@ struct HomeView: View {
         withAnimation(Motion.page) { target = leaves[index] }
     }
 
-    /// Листание встало. Долистали до «Новой комнаты» — сразу поле с
-    /// клавиатурой: за этим и листали. Пустой сад клавиатурой не встречаем —
-    /// там эта страница единственная, до неё не листали.
+    /// Листание встало — гул оттяжки стихает. Клавиатуру «Новая комната»
+    /// сама не поднимает: имя пишут, нажав на поле.
     private func settle() {
-        guard !leaves.isEmpty else { return }
-        let index = min(max(Int(glide.at.rounded()), 0), leaves.count - 1)
-        let now = leaves[index]
-        guard now != landed else { return }
-        landed = now
-        naming = now == .fresh && !garden.rooms.isEmpty
+        Feel.pull(0)
+    }
+
+    /// Отклик листания: на границе комнат — мягкий глубокий толчок, как у
+    /// барабана; к «Новой комнате» тянут — гул растёт вместе с оттяжкой, а
+    /// на ней самой толчок сильнее.
+    private func feel(from old: CGFloat, to new: CGFloat) {
+        guard old != new else { return }
+        let last = leaves.count - 1
+        let was = Int(old.rounded())
+        let now = Int(new.rounded())
+        if was != now, (0 ... last).contains(now) {
+            Feel.turn(now == last && !garden.rooms.isEmpty ? 1 : 0.7)
+        }
+        guard !garden.rooms.isEmpty else { return }
+        let pulled = new - CGFloat(last - 1)
+        Feel.pull(pulled > 0 && new < CGFloat(last) + 0.3
+                  ? Double(min(pulled, 1)) : 0)
     }
 
     /// Готовые имена — те, которых в саду ещё нет; «кухня» и «Кухня» —
@@ -370,7 +348,6 @@ struct HomeView: View {
         let added = withAnimation(Motion.arrange) { () -> Bool in
             guard garden.addRoom(trimmed) else { return false }
             target = .room(trimmed)
-            landed = .room(trimmed)
             return true
         }
         guard added else {
@@ -462,7 +439,9 @@ struct HomeView: View {
             }
             Section {
                 if PlantAR.available, !plants.isEmpty {
-                    GardenInAR(plants: plants, open: stage)
+                    Button(action: stage) {
+                        Label("Сад в AR", systemImage: "arkit")
+                    }
                 }
                 Button { tripping = true } label: {
                     Label("Уезжаю…", systemImage: "airplane.departure")
@@ -642,33 +621,6 @@ struct HomeView: View {
     }
 }
 
-/// «Сад в AR» в меню главной — когда готовы модели всех растений комнаты.
-/// Пока они собираются, пункт виден, но спит, а под ним — общие проценты.
-/// Своим вью: доли меняются на каждый процент, и перерисовываться с ними
-/// должен пункт, а не вся главная.
-private struct GardenInAR: View {
-    let plants: [Plant]
-    let open: () -> Void
-
-    var body: some View {
-        if Bench.shared.ready(plants) {
-            Button(action: open) {
-                Label("Сад в AR", systemImage: "arkit")
-            }
-        } else {
-            Button {} label: {
-                Label {
-                    Text("Сад в AR")
-                    Text(Lang.format("Модели готовятся: %@",
-                                     Bench.percent(Bench.shared.share(plants))))
-                } icon: {
-                    Image(systemName: "arkit")
-                }
-            }
-            .disabled(true)
-        }
-    }
-}
 
 /// Шапка главной: заголовок «Главная» и лента комнат. Своим вью: листание и
 /// прокрутка двигают её каждый кадр, и будить ими всю главную незачем.
@@ -720,8 +672,6 @@ private struct HomeHead: View {
                       // Ужимается с опережением: поднимаясь, лента не
                       // заезжает под кнопки.
                       trail: (corner + Metrics.roomGap) * min(grown * 1.5, 1),
-                      peek: Metrics.roomPeek
-                          + (Metrics.roomPeekTight - Metrics.roomPeek) * grown,
                       go: go)
                 .frame(height: row + (grownRow - row) * grown)
                 .sproutRide()

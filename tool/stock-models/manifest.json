@@ -1,0 +1,264 @@
+{
+  "kits": [
+    {
+      "bytes": 4393792,
+      "pictures": 7,
+      "pieces": 10,
+      "preset": "monstera",
+      "triangles": 11308
+    },
+    {
+      "bytes": 1274452,
+      "pictures": 5,
+      "pieces": 24,
+      "preset": "ficus",
+      "triangles": 20712
+    },
+    {
+      "bytes": 772576,
+      "pictures": 4,
+      "pieces": 13,
+      "preset": "sansevieria",
+      "triangles": 9136
+    },
+    {
+      "bytes": 910460,
+      "pictures": 5,
+      "pieces": 69,
+      "preset": "zamioculcas",
+      "triangles": 63856
+    },
+    {
+      "bytes": 1275760,
+      "pictures": 7,
+      "pieces": 24,
+      "preset": "spathiphyllum",
+      "triangles": 17904
+    },
+    {
+      "bytes": 1904384,
+      "pictures": 10,
+      "pieces": 31,
+      "preset": "orchid",
+      "triangles": 20968
+    },
+    {
+      "bytes": 1027988,
+      "pictures": 4,
+      "pieces": 21,
+      "preset": "aloe",
+      "triangles": 24200
+    },
+    {
+      "bytes": 2636112,
+      "pictures": 6,
+      "pieces": 10,
+      "preset": "cactus",
+      "triangles": 52512
+    },
+    {
+      "bytes": 994272,
+      "pictures": 4,
+      "pieces": 54,
+      "preset": "echeveria",
+      "triangles": 22496
+    },
+    {
+      "bytes": 691976,
+      "pictures": 4,
+      "pieces": 76,
+      "preset": "jade",
+      "triangles": 18416
+    },
+    {
+      "bytes": 671348,
+      "pictures": 5,
+      "pieces": 91,
+      "preset": "dracaena",
+      "triangles": 26460
+    },
+    {
+      "bytes": 959400,
+      "pictures": 5,
+      "pieces": 16,
+      "preset": "palm",
+      "triangles": 48384
+    },
+    {
+      "bytes": 775052,
+      "pictures": 3,
+      "pieces": 40,
+      "preset": "fern",
+      "triangles": 20000
+    },
+    {
+      "bytes": 1105632,
+      "pictures": 4,
+      "pieces": 52,
+      "preset": "ivy",
+      "triangles": 23488
+    },
+    {
+      "bytes": 653144,
+      "pictures": 4,
+      "pieces": 56,
+      "preset": "chlorophytum",
+      "triangles": 21412
+    },
+    {
+      "bytes": 1628640,
+      "pictures": 6,
+      "pieces": 55,
+      "preset": "violet",
+      "triangles": 35144
+    },
+    {
+      "bytes": 1766368,
+      "pictures": 6,
+      "pieces": 42,
+      "preset": "begonia",
+      "triangles": 42928
+    },
+    {
+      "bytes": 1900576,
+      "pictures": 8,
+      "pieces": 136,
+      "preset": "pelargonium",
+      "triangles": 81496
+    },
+    {
+      "bytes": 699964,
+      "pictures": 4,
+      "pieces": 87,
+      "preset": "herbs",
+      "triangles": 25000
+    },
+    {
+      "bytes": 1470708,
+      "pictures": 8,
+      "pieces": 38,
+      "preset": "tulip",
+      "triangles": 33508
+    },
+    {
+      "bytes": 1933852,
+      "pictures": 12,
+      "pieces": 94,
+      "preset": "rose",
+      "triangles": 80260
+    },
+    {
+      "bytes": 1227568,
+      "pictures": 6,
+      "pieces": 116,
+      "preset": "hoya",
+      "triangles": 40416
+    },
+    {
+      "bytes": 670364,
+      "pictures": 4,
+      "pieces": 63,
+      "preset": "mint",
+      "triangles": 18424
+    },
+    {
+      "bytes": 529604,
+      "pictures": 4,
+      "pieces": 113,
+      "preset": "rosemary",
+      "triangles": 31624
+    },
+    {
+      "bytes": 1032852,
+      "pictures": 6,
+      "pieces": 163,
+      "preset": "kalanchoe",
+      "triangles": 38368
+    },
+    {
+      "bytes": 1779088,
+      "pictures": 7,
+      "pieces": 18,
+      "preset": "anthurium",
+      "triangles": 13088
+    },
+    {
+      "bytes": 1103548,
+      "pictures": 4,
+      "pieces": 15,
+      "preset": "calathea",
+      "triangles": 14464
+    },
+    {
+      "bytes": 831240,
+      "pictures": 4,
+      "pieces": 20,
+      "preset": "pilea",
+      "triangles": 13120
+    },
+    {
+      "bytes": 2240856,
+      "pictures": 5,
+      "pieces": 8,
+      "preset": "alocasia",
+      "triangles": 8784
+    },
+    {
+      "bytes": 782736,
+      "pictures": 6,
+      "pieces": 59,
+      "preset": "lily",
+      "triangles": 26850
+    },
+    {
+      "bytes": 1659304,
+      "pictures": 10,
+      "pieces": 13,
+      "preset": "sunflower",
+      "triangles": 12744
+    },
+    {
+      "bytes": 625080,
+      "pictures": 4,
+      "pieces": 111,
+      "preset": "lavender",
+      "triangles": 42688
+    },
+    {
+      "bytes": 1361256,
+      "pictures": 8,
+      "pieces": 80,
+      "preset": "citrus",
+      "triangles": 42328
+    },
+    {
+      "bytes": 961480,
+      "pictures": 4,
+      "pieces": 26,
+      "preset": "haworthia",
+      "triangles": 15320
+    },
+    {
+      "bytes": 2057008,
+      "pictures": 6,
+      "pieces": 10,
+      "preset": "opuntia",
+      "triangles": 38016
+    },
+    {
+      "bytes": 663396,
+      "pictures": 5,
+      "pieces": 27,
+      "preset": "yucca",
+      "triangles": 10248
+    },
+    {
+      "bytes": 1007492,
+      "pictures": 8,
+      "pieces": 74,
+      "preset": "chrysanthemum",
+      "triangles": 55000
+    }
+  ],
+  "version": 2
+}

@@ -149,9 +149,15 @@ final class Settings {
         didSet { store.set(avatarTint.rawValue, forKey: Key.avatarTint) }
     }
 
+    /// Фото хозяина — имя файла среди снимков, см. `Shots`; нет — кружок
+    /// с буквой цвета `avatarTint`.
+    var avatarShot: String? {
+        didSet { store.set(avatarShot, forKey: Key.avatarShot) }
+    }
+
     /// Двадцать процентов по умолчанию — порог, на котором тень краснеет, см.
-    /// `Thirst.alarmBelow`.
-    static let thresholds: [Double] = [0.1, 0.2, 0.3, 0.4]
+    /// `Thirst.alarmBelow`. Выбирается барабаном — любым целым процентом.
+    static let thresholds = 1 ... 99
     static let defaultThreshold = 0.2
 
     var theme: Theme {
@@ -231,6 +237,17 @@ final class Settings {
 
     func seen(_ walk: Walk) -> Bool { walked.contains(walk.rawValue) }
 
+    /// Который по счёту запуск. Подсказки экранов сами показываются только в
+    /// первый: во второй раз хозяин уже знает, где что.
+    private(set) var launches: Int {
+        didSet { store.set(launches, forKey: Key.launches) }
+    }
+
+    var firstRun: Bool { launches <= 1 }
+
+    /// Зовётся один раз, при старте приложения.
+    func launched() { launches += 1 }
+
     func mark(_ walk: Walk) { walked.insert(walk.rawValue) }
 
     func rewalk() { walked = [] }
@@ -273,6 +290,7 @@ final class Settings {
         static let patternTint = "patternTint"
         static let waveTint = "waveTint"
         static let avatarTint = "avatarTint"
+        static let avatarShot = "avatarShot"
         /// Прежний переключатель, наоборот — «без отклика». Читается, пока
         /// силы не задали: выключивший отклик не должен почувствовать его
         /// снова.
@@ -287,6 +305,7 @@ final class Settings {
         static let flatYear = "ignoreSeasons"
         static let toured = "toured"
         static let walked = "walkedScreens"
+        static let launches = "launches"
     }
 
     /// Отсутствие ключа ловим отдельно: `UserDefaults` отвечает нулём, а ноль
@@ -318,6 +337,7 @@ final class Settings {
         patternTint = Self.tint(store, Key.patternTint) ?? Tint.defaultPattern
         waveTint = Self.tint(store, Key.waveTint) ?? Tint.defaultWave
         avatarTint = Self.tint(store, Key.avatarTint) ?? Tint.defaultAvatar
+        avatarShot = store.string(forKey: Key.avatarShot)
         if store.object(forKey: Key.strength) != nil {
             hapticStrength = min(max(store.double(forKey: Key.strength), 0), 1)
         } else {
@@ -328,10 +348,14 @@ final class Settings {
         sway = !store.bool(forKey: Key.stiffShapes)
         seasons = !store.bool(forKey: Key.flatYear)
         reminders = store.bool(forKey: Key.reminders)
-        let level = store.double(forKey: Key.threshold)
-        threshold = Self.thresholds.contains(level) ? level
+        let level = (store.double(forKey: Key.threshold) * 100).rounded()
+        threshold = Self.thresholds.contains(Int(level)) ? level / 100
             : Self.defaultThreshold
         toured = store.bool(forKey: Key.toured)
         walked = Set(store.stringArray(forKey: Key.walked) ?? [])
+        // Счётчика не было, а знакомство уже прошло — сад старый: первым
+        // этот запуск не считаем.
+        launches = max(store.integer(forKey: Key.launches),
+                       store.bool(forKey: Key.toured) ? 1 : 0)
     }
 }
