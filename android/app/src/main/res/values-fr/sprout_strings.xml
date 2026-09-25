@@ -14,14 +14,17 @@
     <string name="t_928d6589ea">%s — aucun arrosage</string>
     <plurals name="p_db3562f0a7">
         <item quantity="one">%d jour</item>
+        <item quantity="many">%d jours</item>
         <item quantity="other">%d jours</item>
     </plurals>
     <plurals name="p_28e529ebd3">
         <item quantity="one">%d arrosage</item>
+        <item quantity="many">%d arrosages</item>
         <item quantity="other">%d arrosages</item>
     </plurals>
     <plurals name="p_6f35cac0c2">
         <item quantity="one">%d plante</item>
+        <item quantity="many">%d plantes</item>
         <item quantity="other">%d plantes</item>
     </plurals>
     <string name="t_197eb092cd">%d %%</string>
@@ -86,6 +89,7 @@
     <string name="t_e1a8755821">Humidité %s</string>
     <plurals name="p_27b0ada25d">
         <item quantity="one">%d plante partira avec elle. Impossible de revenir en arrière.</item>
+        <item quantity="many">%d plantes partiront avec elle. Impossible de revenir en arrière.</item>
         <item quantity="other">%d plantes partiront avec elle. Impossible de revenir en arrière.</item>
     </plurals>
     <string name="t_a69d2c6bbf">À temps</string>
@@ -335,6 +339,7 @@
     <string name="t_a90b7cbc92">Garder</string>
     <plurals name="p_76a9a953b8">
         <item quantity="one">Encore %d seconde</item>
+        <item quantity="many">Encore %d secondes</item>
         <item quantity="other">Encore %d secondes</item>
     </plurals>
     <string name="t_1836fda1b4">Les autres tiendront seules : %s.</string>
@@ -365,10 +370,12 @@
     <string name="t_b58e2aaad8">Rempotage</string>
     <plurals name="p_b7eb1930d1">
         <item quantity="one">Rempotage dans %d jour</item>
+        <item quantity="many">Rempotage dans %d jours</item>
         <item quantity="other">Rempotage dans %d jours</item>
     </plurals>
     <plurals name="p_7afd736157">
         <item quantity="one">Rempotage dans %d mois</item>
+        <item quantity="many">Rempotage dans %d mois</item>
         <item quantity="other">Rempotage dans %d mois</item>
     </plurals>
     <string name="t_fe489db382">Rempotage, engrais, où elle aime être…</string>
@@ -394,12 +401,14 @@
     <string name="t_8644256dd5">Engrais et rempotage</string>
     <plurals name="p_e7ba642ee4">
         <item quantity="one">Engrais dans %d jour</item>
+        <item quantity="many">Engrais dans %d jours</item>
         <item quantity="other">Engrais dans %d jours</item>
     </plurals>
     <string name="t_c418f5f725">Astuces</string>
     <string name="t_03ed443146">Tournesol</string>
     <plurals name="p_697f80c3b3">
         <item quantity="one">Voyage — %d jour</item>
+        <item quantity="many">Voyage — %d jours</item>
         <item quantity="other">Voyage — %d jours</item>
     </plurals>
     <string name="t_b9d4cce05d">Merci d’arroser ces plantes :</string>
@@ -426,6 +435,7 @@
     <string name="t_4cde956bff">Arrosée</string>
     <plurals name="p_d0e1f2ab76">
         <item quantity="one">Arrosée. Prochain arrosage dans %d jour.</item>
+        <item quantity="many">Arrosée. Prochain arrosage dans %d jours.</item>
         <item quantity="other">Arrosée. Prochain arrosage dans %d jours.</item>
     </plurals>
     <string name="t_a4806bd7e8">Arrosé : %s. Humidité à cent pour cent.</string>
@@ -481,10 +491,12 @@
     <string name="t_7ed34f32ae">Tous les %s jours</string>
     <plurals name="p_c5594e7c4d">
         <item quantity="one">Tous les %d jour</item>
+        <item quantity="many">Tous les %d jours</item>
         <item quantity="other">Tous les %d jours</item>
     </plurals>
     <plurals name="p_1505adac86">
         <item quantity="one">Tous les %d mois</item>
+        <item quantity="many">Tous les %d mois</item>
         <item quantity="other">Tous les %d mois</item>
     </plurals>
     <string name="t_9caa86d668">Tous les combien de jours on arrose la plante — à peu près le temps que met la terre à sécher. Se modifie dans les réglages de la plante.</string>
@@ -559,6 +571,7 @@
     <string name="t_a41966c98a">Prochains arrosages</string>
     <plurals name="p_849396bc8e">
         <item quantity="one">Prochain arrosage : dans %d jour</item>
+        <item quantity="many">Prochain arrosage : dans %d jours</item>
         <item quantity="other">Prochain arrosage : dans %d jours</item>
     </plurals>
     <string name="t_4a40d86849">Prochain arrosage : demain</string>
@@ -685,14 +698,17 @@
     <string name="t_70f5246d28">tous les %s jours</string>
     <plurals name="p_613285a98e">
         <item quantity="one">tous les %d jour</item>
+        <item quantity="many">tous les %d jours</item>
         <item quantity="other">tous les %d jours</item>
     </plurals>
     <plurals name="p_b5f4df3c0f">
         <item quantity="one">toutes les %d minute</item>
+        <item quantity="many">toutes les %d minutes</item>
         <item quantity="other">toutes les %d minutes</item>
     </plurals>
     <plurals name="p_a97dce2bcd">
         <item quantity="one">toutes les %d heure</item>
+        <item quantity="many">toutes les %d heures</item>
         <item quantity="other">toutes les %d heures</item>
     </plurals>
     <string name="t_830856c657">une fois par jour</string>

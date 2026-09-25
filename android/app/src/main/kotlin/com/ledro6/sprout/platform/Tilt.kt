@@ -7,6 +7,7 @@ import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.os.SystemClock
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -27,9 +28,9 @@ import kotlin.math.sqrt
  */
 object Tilt : SensorEventListener {
     /** Общий сдвиг узора, dp. */
-    var shiftX by mutableStateOf(0f)
+    var shiftX by mutableFloatStateOf(0f)
         private set
-    var shiftY by mutableStateOf(0f)
+    var shiftY by mutableFloatStateOf(0f)
         private set
 
     /** Расхождение слоёв фигурок, огрублённое до полупункта, — пары x, y. */

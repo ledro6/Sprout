@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Что lint советует, но здесь сделано нарочно. -->
+<lint>
+    <!-- Иврит и индонезийский лежат и под старыми (iw, in), и под новыми (he, id)
+         именами папок — так их находит любой Android. Пишет make_resources.py. -->
+    <issue id="LocaleFolder" severity="ignore" />
+    <issue id="UnusedTranslation" severity="ignore" />
+    <!-- Версии подобраны друг под друга: Compose новее требует AGP 9.1, SceneView
+         новее — Compose новее. Обновлять — вместе, а не по одной. -->
+    <issue id="GradleDependency" severity="ignore" />
+    <issue id="NewerVersionAvailable" severity="ignore" />
+    <issue id="AndroidGradlePluginVersion" severity="ignore" />
+    <!-- targetSdk 36 — последний, на котором проверяет Robolectric. -->
+    <issue id="OldTargetApi" severity="ignore" />
+    <!-- Логотип заставки: 288 dp требует сама системная заставка Android 12+. -->
+    <issue id="VectorRaster">
+        <ignore path="src/main/res/drawable/splash_logo.xml" />
+    </issue>
+</lint>

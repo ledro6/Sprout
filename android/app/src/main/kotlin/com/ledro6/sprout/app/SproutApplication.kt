@@ -5,14 +5,11 @@ import android.content.res.Configuration
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ProcessLifecycleOwner
-import com.ledro6.sprout.model.Season
 import com.ledro6.sprout.platform.ArSupport
 import com.ledro6.sprout.platform.Lock
 import com.ledro6.sprout.platform.Notifier
 import com.ledro6.sprout.platform.Platform
 import com.ledro6.sprout.platform.Widgets
-import java.util.Calendar
-import java.util.Locale
 
 /**
  * Процесс приложения: язык и формат дат — до первого экрана, виджета или
@@ -46,7 +43,7 @@ open class SproutApplication : Application() {
     private fun back() {
         val sprout = Sprout.get(this)
         sprout.garden.reload()
-        Season.settle(sprout.settings.seasons, Calendar.getInstance().get(Calendar.MONTH) + 1, Locale.getDefault().country)
+        sprout.settle()
         Notifier.clear(this)
     }
 

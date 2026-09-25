@@ -24,6 +24,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDateRangePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -66,8 +67,8 @@ fun TripScreen(go: Go) {
     val context = LocalContext.current
     val density = LocalDensity.current.density
     val today = LocalDate.now()
-    var leave by rememberSaveable { mutableStateOf(today.plusDays(1).toEpochDay()) }
-    var back by rememberSaveable { mutableStateOf(today.plusDays(8).toEpochDay()) }
+    var leave by rememberSaveable { mutableLongStateOf(today.plusDays(1).toEpochDay()) }
+    var back by rememberSaveable { mutableLongStateOf(today.plusDays(8).toEpochDay()) }
     var picking by remember { mutableStateOf(false) }
     var watered by rememberSaveable { mutableStateOf(false) }
     var button by remember { mutableStateOf<Rect?>(null) }

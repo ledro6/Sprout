@@ -36,6 +36,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import androidx.core.graphics.createBitmap
 import com.ledro6.sprout.model.Crop
 import com.ledro6.sprout.model.Lang
 import com.ledro6.sprout.platform.Feel
@@ -127,7 +128,7 @@ fun Trim(image: Bitmap, cancel: () -> Unit, done: (Bitmap) -> Unit) {
 /** Вырезать кадр: не больше 1024 и не меньше 600 точек — крошечный кусок был бы мылом. */
 fun cut(image: Bitmap, crop: Crop): Bitmap {
     val out = crop.side.coerceIn(600.0, 1024.0).toInt()
-    val result = Bitmap.createBitmap(out, out, Bitmap.Config.ARGB_8888)
+    val result = createBitmap(out, out)
     val zoom = (out / crop.side).toFloat()
     Canvas(result).drawBitmap(
         image,

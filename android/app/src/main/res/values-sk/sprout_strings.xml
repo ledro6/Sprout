@@ -15,16 +15,19 @@
     <plurals name="p_db3562f0a7">
         <item quantity="one">%d deň</item>
         <item quantity="few">%d dni</item>
+        <item quantity="many">%d dní</item>
         <item quantity="other">%d dní</item>
     </plurals>
     <plurals name="p_28e529ebd3">
         <item quantity="one">%d poliatie</item>
         <item quantity="few">%d poliatia</item>
+        <item quantity="many">%d poliatí</item>
         <item quantity="other">%d poliatí</item>
     </plurals>
     <plurals name="p_6f35cac0c2">
         <item quantity="one">%d rastlina</item>
         <item quantity="few">%d rastliny</item>
+        <item quantity="many">%d rastlín</item>
         <item quantity="other">%d rastlín</item>
     </plurals>
     <string name="t_197eb092cd">%d %%</string>
@@ -90,6 +93,7 @@
     <plurals name="p_27b0ada25d">
         <item quantity="one">Spolu s ňou zmizne %d rastlina. Nebude sa to dať vrátiť.</item>
         <item quantity="few">Spolu s ňou zmiznú %d rastliny. Nebude sa to dať vrátiť.</item>
+        <item quantity="many">Spolu s ňou zmizne %d rastlín. Nebude sa to dať vrátiť.</item>
         <item quantity="other">Spolu s ňou zmizne %d rastlín. Nebude sa to dať vrátiť.</item>
     </plurals>
     <string name="t_a69d2c6bbf">Včas</string>
@@ -340,6 +344,7 @@
     <plurals name="p_76a9a953b8">
         <item quantity="one">Zostáva %d sekunda</item>
         <item quantity="few">Zostávajú %d sekundy</item>
+        <item quantity="many">Zostáva %d sekúnd</item>
         <item quantity="other">Zostáva %d sekúnd</item>
     </plurals>
     <string name="t_1836fda1b4">Ostatné to zvládnu samy: %s.</string>
@@ -371,11 +376,13 @@
     <plurals name="p_b7eb1930d1">
         <item quantity="one">Presádzanie o %d deň</item>
         <item quantity="few">Presádzanie o %d dni</item>
+        <item quantity="many">Presádzanie o %d dní</item>
         <item quantity="other">Presádzanie o %d dní</item>
     </plurals>
     <plurals name="p_7afd736157">
         <item quantity="one">Presádzanie o %d mesiac</item>
         <item quantity="few">Presádzanie o %d mesiace</item>
+        <item quantity="many">Presádzanie o %d mesiacov</item>
         <item quantity="other">Presádzanie o %d mesiacov</item>
     </plurals>
     <string name="t_fe489db382">Presádzanie, hnojivá, kde rada stojí…</string>
@@ -402,6 +409,7 @@
     <plurals name="p_e7ba642ee4">
         <item quantity="one">Hnojenie o %d deň</item>
         <item quantity="few">Hnojenie o %d dni</item>
+        <item quantity="many">Hnojenie o %d dní</item>
         <item quantity="other">Hnojenie o %d dní</item>
     </plurals>
     <string name="t_c418f5f725">Tipy</string>
@@ -409,6 +417,7 @@
     <plurals name="p_697f80c3b3">
         <item quantity="one">Cesta — %d deň</item>
         <item quantity="few">Cesta — %d dni</item>
+        <item quantity="many">Cesta — %d dní</item>
         <item quantity="other">Cesta — %d dní</item>
     </plurals>
     <string name="t_b9d4cce05d">Prosím, polej tieto rastliny:</string>
@@ -436,6 +445,7 @@
     <plurals name="p_d0e1f2ab76">
         <item quantity="one">Poliate. Ďalšie polievanie o %d deň.</item>
         <item quantity="few">Poliate. Ďalšie polievanie o %d dni.</item>
+        <item quantity="many">Poliate. Ďalšie polievanie o %d dní.</item>
         <item quantity="other">Poliate. Ďalšie polievanie o %d dní.</item>
     </plurals>
     <string name="t_a4806bd7e8">Poliate: %s. Vlhkosť je na sto percentách.</string>
@@ -492,11 +502,13 @@
     <plurals name="p_c5594e7c4d">
         <item quantity="one">Každý %d deň</item>
         <item quantity="few">Každé %d dni</item>
+        <item quantity="many">Každých %d dní</item>
         <item quantity="other">Každých %d dní</item>
     </plurals>
     <plurals name="p_1505adac86">
         <item quantity="one">Každý %d mesiac</item>
         <item quantity="few">Každé %d mesiace</item>
+        <item quantity="many">Každých %d mesiacov</item>
         <item quantity="other">Každých %d mesiacov</item>
     </plurals>
     <string name="t_9caa86d668">Raz za koľko dní sa rastlina polieva – zhruba za toľko zemina vyschne. Mení sa v nastaveniach rastliny.</string>
@@ -572,6 +584,7 @@
     <plurals name="p_849396bc8e">
         <item quantity="one">Ďalšie polievanie: o %d deň</item>
         <item quantity="few">Ďalšie polievanie: o %d dni</item>
+        <item quantity="many">Ďalšie polievanie: o %d dní</item>
         <item quantity="other">Ďalšie polievanie: o %d dní</item>
     </plurals>
     <string name="t_4a40d86849">Ďalšie polievanie: zajtra</string>
@@ -699,16 +712,19 @@
     <plurals name="p_613285a98e">
         <item quantity="one">každý %d deň</item>
         <item quantity="few">každé %d dni</item>
+        <item quantity="many">každých %d dní</item>
         <item quantity="other">každých %d dní</item>
     </plurals>
     <plurals name="p_b5f4df3c0f">
         <item quantity="one">každú %d minútu</item>
         <item quantity="few">každé %d minúty</item>
+        <item quantity="many">každých %d minút</item>
         <item quantity="other">každých %d minút</item>
     </plurals>
     <plurals name="p_a97dce2bcd">
         <item quantity="one">každú %d hodinu</item>
         <item quantity="few">každé %d hodiny</item>
+        <item quantity="many">každých %d hodín</item>
         <item quantity="other">každých %d hodín</item>
     </plurals>
     <string name="t_830856c657">raz denne</string>

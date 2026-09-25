@@ -58,6 +58,7 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
+import androidx.core.graphics.withTranslation
 import com.ledro6.sprout.R
 import com.ledro6.sprout.app.LocalSprout
 import com.ledro6.sprout.design.Effects
@@ -67,7 +68,6 @@ import com.ledro6.sprout.design.SproutShapes
 import com.ledro6.sprout.model.Front
 import com.ledro6.sprout.model.Hint
 import com.ledro6.sprout.model.Lang
-import com.ledro6.sprout.model.Season
 import com.ledro6.sprout.model.Settings
 import com.ledro6.sprout.model.Term
 import com.ledro6.sprout.model.Walk
@@ -91,7 +91,6 @@ import com.ledro6.sprout.ui.components.TermHint
 import com.ledro6.sprout.ui.components.hintSpot
 import com.ledro6.sprout.ui.onboarding.TourGate
 import com.ledro6.sprout.ui.stats.Segments
-import java.util.Calendar
 import java.util.Locale
 
 /** Языки приложения — те же 48, что на iPhone. */
@@ -301,13 +300,11 @@ private fun Pieces() {
                     val scale = minOf(size.width / SproutShapes.PIECE_W, size.height / SproutShapes.PIECE_H)
                     val paint = android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG).apply { color = colour.toArgb() }
                     drawIntoCanvas { canvas ->
-                        val native = canvas.nativeCanvas
-                        native.save()
-                        native.translate(size.width / 2, size.height / 2)
-                        native.scale(scale, scale)
-                        native.translate(-piece.centreX, -piece.centreY)
-                        native.drawPath(piece.path, paint)
-                        native.restore()
+                        canvas.nativeCanvas.withTranslation(size.width / 2, size.height / 2) {
+                            scale(scale, scale)
+                            translate(-piece.centreX, -piece.centreY)
+                            drawPath(piece.path, paint)
+                        }
                     }
                 }
             }
@@ -373,7 +370,7 @@ private fun Watering(modifier: Modifier) {
     SproutGroup(Lang.text("Полив"), modifier) {
         SwitchRow(Lang.text("Учитывать время года"), settings.seasons, term = Term.SEASONS) {
             settings.seasons = it
-            Season.settle(it, Calendar.getInstance().get(Calendar.MONTH) + 1, Locale.getDefault().country)
+            sprout.settle()
         }
         SproutDivider()
         SwitchRow(Lang.text("Напоминать о поливе"), settings.reminders, term = Term.REMINDERS) { want(it) }

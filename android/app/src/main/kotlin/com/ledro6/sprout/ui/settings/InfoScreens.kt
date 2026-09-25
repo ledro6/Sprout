@@ -1,7 +1,6 @@
 package com.ledro6.sprout.ui.settings
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Build
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -23,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import com.ledro6.sprout.BuildConfig
 import com.ledro6.sprout.R
 import com.ledro6.sprout.model.Lang
@@ -82,7 +82,7 @@ fun AboutScreen(go: Go) {
             Lang.text("Время идёт быстрее"),
         )
         TextButton(onClick = {
-            runCatching { context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/ledro6/Sprout"))) }
+            runCatching { context.startActivity(Intent(Intent.ACTION_VIEW, "https://github.com/ledro6/Sprout".toUri())) }
         }) {
             Text(Lang.text("Исходный код на GitHub"))
             Icon(painterResource(R.drawable.ic_arrow_outward), null, Modifier.padding(start = 6.dp).size(16.dp))

@@ -111,10 +111,10 @@ fun PlantPhoto(plant: Plant, modifier: Modifier = Modifier, radius: Dp = 16.dp) 
  */
 @Composable
 fun Modifier.plantGlow(plant: Plant, radius: Dp = Metrics.CARD_RADIUS.dp, shown: Boolean = true): Modifier =
-    if (!shown || plant.thirst == Thirst.CALM) this else this.then(glow(plant, radius))
+    if (!shown || plant.thirst == Thirst.CALM) this else glow(plant, radius)
 
 @Composable
-private fun glow(plant: Plant, radius: Dp): Modifier {
+private fun Modifier.glow(plant: Plant, radius: Dp): Modifier {
     val palette = LocalPalette.current
     val colour = if (plant.thirst == Thirst.ALARM) palette.alarm else palette.warn
     val strength = Metrics.GLOW_FAINT + (Metrics.GLOW_FULL - Metrics.GLOW_FAINT) * plant.alarm.toFloat()
@@ -129,9 +129,9 @@ private fun glow(plant: Plant, radius: Dp): Modifier {
     val paint = remember { Paint(Paint.ANTI_ALIAS_FLAG) }
     val alpha = strength * breath
     if (Build.VERSION.SDK_INT < 28) {
-        return Modifier.border(2.dp, colour.copy(alpha = alpha), RoundedCornerShape(radius))
+        return border(2.dp, colour.copy(alpha = alpha), RoundedCornerShape(radius))
     }
-    return Modifier.drawBehind {
+    return drawBehind {
         val blur = Metrics.GLOW_BLUR * density
         paint.color = colour.copy(alpha = alpha).toArgb()
         paint.maskFilter = BlurMaskFilter(blur, BlurMaskFilter.Blur.OUTER)

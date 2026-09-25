@@ -14,14 +14,17 @@
     <string name="t_928d6589ea">%s: sense regs</string>
     <plurals name="p_db3562f0a7">
         <item quantity="one">%d dia</item>
+        <item quantity="many">%d dies</item>
         <item quantity="other">%d dies</item>
     </plurals>
     <plurals name="p_28e529ebd3">
         <item quantity="one">%d regada</item>
+        <item quantity="many">%d regades</item>
         <item quantity="other">%d regades</item>
     </plurals>
     <plurals name="p_6f35cac0c2">
         <item quantity="one">%d planta</item>
+        <item quantity="many">%d plantes</item>
         <item quantity="other">%d plantes</item>
     </plurals>
     <string name="t_197eb092cd">%d %%</string>
@@ -86,6 +89,7 @@
     <string name="t_e1a8755821">Humitat %s</string>
     <plurals name="p_27b0ada25d">
         <item quantity="one">Amb ella se n’anirà %d planta. No es podrà desfer.</item>
+        <item quantity="many">Amb ella se n’aniran %d plantes. No es podrà desfer.</item>
         <item quantity="other">Amb ella se n’aniran %d plantes. No es podrà desfer.</item>
     </plurals>
     <string name="t_a69d2c6bbf">A temps</string>
@@ -335,6 +339,7 @@
     <string name="t_a90b7cbc92">Mantén</string>
     <plurals name="p_76a9a953b8">
         <item quantity="one">Queda %d segon</item>
+        <item quantity="many">Queden %d segons</item>
         <item quantity="other">Queden %d segons</item>
     </plurals>
     <string name="t_1836fda1b4">Les altres aguantaran soles: %s.</string>
@@ -365,10 +370,12 @@
     <string name="t_b58e2aaad8">Trasplantament</string>
     <plurals name="p_b7eb1930d1">
         <item quantity="one">Trasplantament d’aquí a %d dia</item>
+        <item quantity="many">Trasplantament d’aquí a %d dies</item>
         <item quantity="other">Trasplantament d’aquí a %d dies</item>
     </plurals>
     <plurals name="p_7afd736157">
         <item quantity="one">Trasplantament d’aquí a %d mes</item>
+        <item quantity="many">Trasplantament d’aquí a %d mesos</item>
         <item quantity="other">Trasplantament d’aquí a %d mesos</item>
     </plurals>
     <string name="t_fe489db382">Trasplantament, adob, on li agrada estar…</string>
@@ -394,12 +401,14 @@
     <string name="t_8644256dd5">Adob i trasplantament</string>
     <plurals name="p_e7ba642ee4">
         <item quantity="one">Adob d’aquí a %d dia</item>
+        <item quantity="many">Adob d’aquí a %d dies</item>
         <item quantity="other">Adob d’aquí a %d dies</item>
     </plurals>
     <string name="t_c418f5f725">Consells</string>
     <string name="t_03ed443146">Gira-sol</string>
     <plurals name="p_697f80c3b3">
         <item quantity="one">Viatge: %d dia</item>
+        <item quantity="many">Viatge: %d dies</item>
         <item quantity="other">Viatge: %d dies</item>
     </plurals>
     <string name="t_b9d4cce05d">Si us plau, rega aquestes plantes:</string>
@@ -426,6 +435,7 @@
     <string name="t_4cde956bff">Regada</string>
     <plurals name="p_d0e1f2ab76">
         <item quantity="one">Regada. Propera regada d’aquí a %d dia.</item>
+        <item quantity="many">Regada. Propera regada d’aquí a %d dies.</item>
         <item quantity="other">Regada. Propera regada d’aquí a %d dies.</item>
     </plurals>
     <string name="t_a4806bd7e8">Regada: %s. Humitat al cent per cent.</string>
@@ -481,10 +491,12 @@
     <string name="t_7ed34f32ae">Cada %s dies</string>
     <plurals name="p_c5594e7c4d">
         <item quantity="one">Cada %d dia</item>
+        <item quantity="many">Cada %d dies</item>
         <item quantity="other">Cada %d dies</item>
     </plurals>
     <plurals name="p_1505adac86">
         <item quantity="one">Cada %d mes</item>
+        <item quantity="many">Cada %d mesos</item>
         <item quantity="other">Cada %d mesos</item>
     </plurals>
     <string name="t_9caa86d668">Cada quants dies es rega la planta: més o menys el temps que triga a assecar-se la terra. Es canvia a la configuració de la planta.</string>
@@ -559,6 +571,7 @@
     <string name="t_a41966c98a">Propers regs</string>
     <plurals name="p_849396bc8e">
         <item quantity="one">Propera regada: d’aquí a %d dia</item>
+        <item quantity="many">Propera regada: d’aquí a %d dies</item>
         <item quantity="other">Propera regada: d’aquí a %d dies</item>
     </plurals>
     <string name="t_4a40d86849">Propera regada: demà</string>
@@ -685,14 +698,17 @@
     <string name="t_70f5246d28">cada %s dies</string>
     <plurals name="p_613285a98e">
         <item quantity="one">cada %d dia</item>
+        <item quantity="many">cada %d dies</item>
         <item quantity="other">cada %d dies</item>
     </plurals>
     <plurals name="p_b5f4df3c0f">
         <item quantity="one">cada %d minut</item>
+        <item quantity="many">cada %d minuts</item>
         <item quantity="other">cada %d minuts</item>
     </plurals>
     <plurals name="p_a97dce2bcd">
         <item quantity="one">cada %d hora</item>
+        <item quantity="many">cada %d hores</item>
         <item quantity="other">cada %d hores</item>
     </plurals>
     <string name="t_830856c657">una vegada al dia</string>

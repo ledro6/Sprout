@@ -2,6 +2,7 @@ package com.ledro6.sprout.model
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import java.util.UUID
@@ -39,7 +40,7 @@ class Garden(
     var roster: Int by mutableIntStateOf(0)
         private set
 
-    var since: Long by mutableStateOf(0L)
+    var since: Long by mutableLongStateOf(0L)
         private set
 
     private var lastTick: Long = clock()

@@ -14,14 +14,17 @@
     <string name="t_928d6589ea">%s: nessuna annaffiatura</string>
     <plurals name="p_db3562f0a7">
         <item quantity="one">%d giorno</item>
+        <item quantity="many">%d giorni</item>
         <item quantity="other">%d giorni</item>
     </plurals>
     <plurals name="p_28e529ebd3">
         <item quantity="one">%d annaffiatura</item>
+        <item quantity="many">%d annaffiature</item>
         <item quantity="other">%d annaffiature</item>
     </plurals>
     <plurals name="p_6f35cac0c2">
         <item quantity="one">%d pianta</item>
+        <item quantity="many">%d piante</item>
         <item quantity="other">%d piante</item>
     </plurals>
     <string name="t_197eb092cd">%d%%</string>
@@ -86,6 +89,7 @@
     <string name="t_e1a8755821">Umidità %s</string>
     <plurals name="p_27b0ada25d">
         <item quantity="one">Con lei se ne andrà %d pianta. Non si potrà annullare.</item>
+        <item quantity="many">Con lei se ne andranno %d piante. Non si potrà annullare.</item>
         <item quantity="other">Con lei se ne andranno %d piante. Non si potrà annullare.</item>
     </plurals>
     <string name="t_a69d2c6bbf">In tempo</string>
@@ -335,6 +339,7 @@
     <string name="t_a90b7cbc92">Mantieni</string>
     <plurals name="p_76a9a953b8">
         <item quantity="one">Resta %d secondo</item>
+        <item quantity="many">Restano %d secondi</item>
         <item quantity="other">Restano %d secondi</item>
     </plurals>
     <string name="t_1836fda1b4">Le altre resisteranno da sole: %s.</string>
@@ -365,10 +370,12 @@
     <string name="t_b58e2aaad8">Rinvaso</string>
     <plurals name="p_b7eb1930d1">
         <item quantity="one">Rinvaso tra %d giorno</item>
+        <item quantity="many">Rinvaso tra %d giorni</item>
         <item quantity="other">Rinvaso tra %d giorni</item>
     </plurals>
     <plurals name="p_7afd736157">
         <item quantity="one">Rinvaso tra %d mese</item>
+        <item quantity="many">Rinvaso tra %d mesi</item>
         <item quantity="other">Rinvaso tra %d mesi</item>
     </plurals>
     <string name="t_fe489db382">Rinvaso, concime, dove le piace stare…</string>
@@ -394,12 +401,14 @@
     <string name="t_8644256dd5">Concime e rinvaso</string>
     <plurals name="p_e7ba642ee4">
         <item quantity="one">Concime tra %d giorno</item>
+        <item quantity="many">Concime tra %d giorni</item>
         <item quantity="other">Concime tra %d giorni</item>
     </plurals>
     <string name="t_c418f5f725">Suggerimenti</string>
     <string name="t_03ed443146">Girasole</string>
     <plurals name="p_697f80c3b3">
         <item quantity="one">Viaggio: %d giorno</item>
+        <item quantity="many">Viaggio: %d giorni</item>
         <item quantity="other">Viaggio: %d giorni</item>
     </plurals>
     <string name="t_b9d4cce05d">Per favore, annaffia queste piante:</string>
@@ -426,6 +435,7 @@
     <string name="t_4cde956bff">Annaffiata</string>
     <plurals name="p_d0e1f2ab76">
         <item quantity="one">Annaffiata. Prossima annaffiatura tra %d giorno.</item>
+        <item quantity="many">Annaffiata. Prossima annaffiatura tra %d giorni.</item>
         <item quantity="other">Annaffiata. Prossima annaffiatura tra %d giorni.</item>
     </plurals>
     <string name="t_a4806bd7e8">Annaffiata: %s. Umidità al cento per cento.</string>
@@ -481,10 +491,12 @@
     <string name="t_7ed34f32ae">Ogni %s giorni</string>
     <plurals name="p_c5594e7c4d">
         <item quantity="one">Ogni %d giorno</item>
+        <item quantity="many">Ogni %d giorni</item>
         <item quantity="other">Ogni %d giorni</item>
     </plurals>
     <plurals name="p_1505adac86">
         <item quantity="one">Ogni %d mese</item>
+        <item quantity="many">Ogni %d mesi</item>
         <item quantity="other">Ogni %d mesi</item>
     </plurals>
     <string name="t_9caa86d668">Ogni quanti giorni si annaffia la pianta: più o meno il tempo che la terra impiega ad asciugarsi. Si cambia nelle impostazioni della pianta.</string>
@@ -559,6 +571,7 @@
     <string name="t_a41966c98a">Prossime annaffiature</string>
     <plurals name="p_849396bc8e">
         <item quantity="one">Prossima annaffiatura: tra %d giorno</item>
+        <item quantity="many">Prossima annaffiatura: tra %d giorni</item>
         <item quantity="other">Prossima annaffiatura: tra %d giorni</item>
     </plurals>
     <string name="t_4a40d86849">Prossima annaffiatura: domani</string>
@@ -685,14 +698,17 @@
     <string name="t_70f5246d28">ogni %s giorni</string>
     <plurals name="p_613285a98e">
         <item quantity="one">ogni %d giorno</item>
+        <item quantity="many">ogni %d giorni</item>
         <item quantity="other">ogni %d giorni</item>
     </plurals>
     <plurals name="p_b5f4df3c0f">
         <item quantity="one">ogni %d minuto</item>
+        <item quantity="many">ogni %d minuti</item>
         <item quantity="other">ogni %d minuti</item>
     </plurals>
     <plurals name="p_a97dce2bcd">
         <item quantity="one">ogni %d ora</item>
+        <item quantity="many">ogni %d ore</item>
         <item quantity="other">ogni %d ore</item>
     </plurals>
     <string name="t_830856c657">una volta al giorno</string>

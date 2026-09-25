@@ -15,16 +15,19 @@
     <plurals name="p_db3562f0a7">
         <item quantity="one">%d den</item>
         <item quantity="few">%d dny</item>
+        <item quantity="many">%d dní</item>
         <item quantity="other">%d dní</item>
     </plurals>
     <plurals name="p_28e529ebd3">
         <item quantity="one">%d zalití</item>
         <item quantity="few">%d zalití</item>
+        <item quantity="many">%d zalití</item>
         <item quantity="other">%d zalití</item>
     </plurals>
     <plurals name="p_6f35cac0c2">
         <item quantity="one">%d rostlina</item>
         <item quantity="few">%d rostliny</item>
+        <item quantity="many">%d rostlin</item>
         <item quantity="other">%d rostlin</item>
     </plurals>
     <string name="t_197eb092cd">%d %%</string>
@@ -90,6 +93,7 @@
     <plurals name="p_27b0ada25d">
         <item quantity="one">Spolu s ní zmizí %d rostlina. Nepůjde to vrátit.</item>
         <item quantity="few">Spolu s ní zmizí %d rostliny. Nepůjde to vrátit.</item>
+        <item quantity="many">Spolu s ní zmizí %d rostlin. Nepůjde to vrátit.</item>
         <item quantity="other">Spolu s ní zmizí %d rostlin. Nepůjde to vrátit.</item>
     </plurals>
     <string name="t_a69d2c6bbf">Včas</string>
@@ -340,6 +344,7 @@
     <plurals name="p_76a9a953b8">
         <item quantity="one">Zbývá %d sekunda</item>
         <item quantity="few">Zbývají %d sekundy</item>
+        <item quantity="many">Zbývá %d sekund</item>
         <item quantity="other">Zbývá %d sekund</item>
     </plurals>
     <string name="t_1836fda1b4">Ostatní to zvládnou samy: %s.</string>
@@ -371,11 +376,13 @@
     <plurals name="p_b7eb1930d1">
         <item quantity="one">Přesazení za %d den</item>
         <item quantity="few">Přesazení za %d dny</item>
+        <item quantity="many">Přesazení za %d dní</item>
         <item quantity="other">Přesazení za %d dní</item>
     </plurals>
     <plurals name="p_7afd736157">
         <item quantity="one">Přesazení za %d měsíc</item>
         <item quantity="few">Přesazení za %d měsíce</item>
+        <item quantity="many">Přesazení za %d měsíců</item>
         <item quantity="other">Přesazení za %d měsíců</item>
     </plurals>
     <string name="t_fe489db382">Přesazování, hnojiva, kde ráda stojí…</string>
@@ -402,6 +409,7 @@
     <plurals name="p_e7ba642ee4">
         <item quantity="one">Hnojení za %d den</item>
         <item quantity="few">Hnojení za %d dny</item>
+        <item quantity="many">Hnojení za %d dní</item>
         <item quantity="other">Hnojení za %d dní</item>
     </plurals>
     <string name="t_c418f5f725">Tipy</string>
@@ -409,6 +417,7 @@
     <plurals name="p_697f80c3b3">
         <item quantity="one">Cesta — %d den</item>
         <item quantity="few">Cesta — %d dny</item>
+        <item quantity="many">Cesta — %d dní</item>
         <item quantity="other">Cesta — %d dní</item>
     </plurals>
     <string name="t_b9d4cce05d">Prosím, zalij tyto rostliny:</string>
@@ -436,6 +445,7 @@
     <plurals name="p_d0e1f2ab76">
         <item quantity="one">Zalito. Další zálivka za %d den.</item>
         <item quantity="few">Zalito. Další zálivka za %d dny.</item>
+        <item quantity="many">Zalito. Další zálivka za %d dní.</item>
         <item quantity="other">Zalito. Další zálivka za %d dní.</item>
     </plurals>
     <string name="t_a4806bd7e8">Zalito: %s. Vlhkost je na sto procentech.</string>
@@ -492,11 +502,13 @@
     <plurals name="p_c5594e7c4d">
         <item quantity="one">Každý %d den</item>
         <item quantity="few">Každé %d dny</item>
+        <item quantity="many">Každých %d dní</item>
         <item quantity="other">Každých %d dní</item>
     </plurals>
     <plurals name="p_1505adac86">
         <item quantity="one">Každý %d měsíc</item>
         <item quantity="few">Každé %d měsíce</item>
+        <item quantity="many">Každých %d měsíců</item>
         <item quantity="other">Každých %d měsíců</item>
     </plurals>
     <string name="t_9caa86d668">Jednou za kolik dní se rostlina zalévá – zhruba za tak dlouho zemina vyschne. Mění se v nastavení rostliny.</string>
@@ -572,6 +584,7 @@
     <plurals name="p_849396bc8e">
         <item quantity="one">Další zálivka: za %d den</item>
         <item quantity="few">Další zálivka: za %d dny</item>
+        <item quantity="many">Další zálivka: za %d dní</item>
         <item quantity="other">Další zálivka: za %d dní</item>
     </plurals>
     <string name="t_4a40d86849">Další zálivka: zítra</string>
@@ -699,16 +712,19 @@
     <plurals name="p_613285a98e">
         <item quantity="one">každý %d den</item>
         <item quantity="few">každé %d dny</item>
+        <item quantity="many">každých %d dní</item>
         <item quantity="other">každých %d dní</item>
     </plurals>
     <plurals name="p_b5f4df3c0f">
         <item quantity="one">každou %d minutu</item>
         <item quantity="few">každé %d minuty</item>
+        <item quantity="many">každých %d minut</item>
         <item quantity="other">každých %d minut</item>
     </plurals>
     <plurals name="p_a97dce2bcd">
         <item quantity="one">každou %d hodinu</item>
         <item quantity="few">každé %d hodiny</item>
+        <item quantity="many">každých %d hodin</item>
         <item quantity="other">každých %d hodin</item>
     </plurals>
     <string name="t_830856c657">jednou denně</string>

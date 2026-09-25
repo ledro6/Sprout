@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
 import android.net.Uri
+import androidx.core.graphics.scale
 import androidx.exifinterface.media.ExifInterface
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.label.ImageLabeling
@@ -75,7 +76,7 @@ object Eye {
             val scale = minOf(1f, side.toFloat() / max(image.width, image.height))
             val width = max((image.width * scale).roundToInt(), 16)
             val height = max((image.height * scale).roundToInt(), 16)
-            val small = Bitmap.createScaledBitmap(image, width, height, true).copy(Bitmap.Config.ARGB_8888, false)
+            val small = image.scale(width, height).copy(Bitmap.Config.ARGB_8888, false)
             val pixels = IntArray(width * height)
             small.getPixels(pixels, 0, width, 0, 0, width, height)
             val rgba = ByteArray(width * height * 4)
@@ -95,7 +96,7 @@ object Eye {
         val side = 1024
         val scale = minOf(1f, side.toFloat() / max(image.width, image.height))
         val sized = if (scale < 1f) {
-            Bitmap.createScaledBitmap(image, (image.width * scale).roundToInt(), (image.height * scale).roundToInt(), true)
+            image.scale((image.width * scale).roundToInt(), (image.height * scale).roundToInt())
         } else {
             image
         }

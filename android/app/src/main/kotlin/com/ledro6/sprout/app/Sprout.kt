@@ -16,6 +16,7 @@ import com.ledro6.sprout.model.Pour
 import com.ledro6.sprout.model.Prefs
 import com.ledro6.sprout.model.Recents
 import com.ledro6.sprout.model.Removal
+import com.ledro6.sprout.model.Season
 import com.ledro6.sprout.model.Settings
 import com.ledro6.sprout.model.Shelf
 import com.ledro6.sprout.platform.AndroidPrefs
@@ -30,6 +31,8 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.util.Calendar
+import java.util.Locale
 
 /**
  * Всё приложение в одном месте: сад, настройки, друзья, недавние запросы и
@@ -43,6 +46,9 @@ class Sprout(prefs: Prefs, shelf: Shelf, clock: () -> Long = System::currentTime
     val recents = Recents(prefs)
     val bin = Bin(garden)
 
+    /** Поправка на время года — по сегодняшнему месяцу и стране телефона. */
+    fun settle() = Season.settle(settings.seasons, Calendar.getInstance().get(Calendar.MONTH) + 1, Locale.getDefault().country)
+
     companion object {
         @Volatile
         private var made: Sprout? = null
@@ -53,6 +59,9 @@ class Sprout(prefs: Prefs, shelf: Shelf, clock: () -> Long = System::currentTime
                 Shots.open(app)
                 Sprout(AndroidPrefs(app), FileShelf(app)).also {
                     made = it
+                    // Процесс мог подняться ради виджета, плитки или «Полил» —
+                    // сроки и там с поправкой на время года, как в приложении.
+                    it.settle()
                     Feel.open(app, it.settings)
                     Lock.attach(it.settings)
                     // Записали сад — виджету пора перерисоваться.

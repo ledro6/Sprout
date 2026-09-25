@@ -44,7 +44,6 @@ object Notifier {
 
     /** Каналы — один раз; названия — на языке приложения. */
     fun register(context: Context) {
-        if (Build.VERSION.SDK_INT < 26) return
         val manager = context.getSystemService(NotificationManager::class.java) ?: return
         manager.createNotificationChannel(
             NotificationChannel(WATERING, Lang.text("Полив"), NotificationManager.IMPORTANCE_DEFAULT),
@@ -125,8 +124,10 @@ object Notifier {
             )
             note.addAction(NotificationCompat.Action.Builder(R.drawable.ic_water_drop_fill, Lang.text("Полил"), pour).build())
         }
-        runCatching {
+        // Разрешение проверено выше, но его могут отозвать в любой миг.
+        try {
             NotificationManagerCompat.from(context).notify(if (kind == WATERING) WATER_ID else CARE_ID, note.build())
+        } catch (_: SecurityException) {
         }
     }
 

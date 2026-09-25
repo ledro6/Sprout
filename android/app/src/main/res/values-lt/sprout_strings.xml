@@ -15,16 +15,19 @@
     <plurals name="p_db3562f0a7">
         <item quantity="one">%d diena</item>
         <item quantity="few">%d dienos</item>
+        <item quantity="many">%d dienų</item>
         <item quantity="other">%d dienų</item>
     </plurals>
     <plurals name="p_28e529ebd3">
         <item quantity="one">%d laistymas</item>
         <item quantity="few">%d laistymai</item>
+        <item quantity="many">%d laistymų</item>
         <item quantity="other">%d laistymų</item>
     </plurals>
     <plurals name="p_6f35cac0c2">
         <item quantity="one">%d augalas</item>
         <item quantity="few">%d augalai</item>
+        <item quantity="many">%d augalų</item>
         <item quantity="other">%d augalų</item>
     </plurals>
     <string name="t_197eb092cd">%d %%</string>
@@ -90,6 +93,7 @@
     <plurals name="p_27b0ada25d">
         <item quantity="one">Kartu su juo išnyks %d augalas. Atšaukti nebus galima.</item>
         <item quantity="few">Kartu su juo išnyks %d augalai. Atšaukti nebus galima.</item>
+        <item quantity="many">Kartu su juo išnyks %d augalų. Atšaukti nebus galima.</item>
         <item quantity="other">Kartu su juo išnyks %d augalų. Atšaukti nebus galima.</item>
     </plurals>
     <string name="t_a69d2c6bbf">Laiku</string>
@@ -340,6 +344,7 @@
     <plurals name="p_76a9a953b8">
         <item quantity="one">Liko %d sekundė</item>
         <item quantity="few">Liko %d sekundės</item>
+        <item quantity="many">Liko %d sekundžių</item>
         <item quantity="other">Liko %d sekundžių</item>
     </plurals>
     <string name="t_1836fda1b4">Kiti išsivers patys: %s.</string>
@@ -371,11 +376,13 @@
     <plurals name="p_b7eb1930d1">
         <item quantity="one">Persodinimas po %d dienos</item>
         <item quantity="few">Persodinimas po %d dienų</item>
+        <item quantity="many">Persodinimas po %d dienų</item>
         <item quantity="other">Persodinimas po %d dienų</item>
     </plurals>
     <plurals name="p_7afd736157">
         <item quantity="one">Persodinimas po %d mėnesio</item>
         <item quantity="few">Persodinimas po %d mėnesių</item>
+        <item quantity="many">Persodinimas po %d mėnesių</item>
         <item quantity="other">Persodinimas po %d mėnesių</item>
     </plurals>
     <string name="t_fe489db382">Persodinimas, trąšos, kur mėgsta stovėti…</string>
@@ -402,6 +409,7 @@
     <plurals name="p_e7ba642ee4">
         <item quantity="one">Tręšimas po %d dienos</item>
         <item quantity="few">Tręšimas po %d dienų</item>
+        <item quantity="many">Tręšimas po %d dienų</item>
         <item quantity="other">Tręšimas po %d dienų</item>
     </plurals>
     <string name="t_c418f5f725">Patarimai</string>
@@ -409,6 +417,7 @@
     <plurals name="p_697f80c3b3">
         <item quantity="one">Kelionė – %d diena</item>
         <item quantity="few">Kelionė – %d dienos</item>
+        <item quantity="many">Kelionė – %d dienų</item>
         <item quantity="other">Kelionė – %d dienų</item>
     </plurals>
     <string name="t_b9d4cce05d">Prašau, palaistyk šiuos augalus:</string>
@@ -436,6 +445,7 @@
     <plurals name="p_d0e1f2ab76">
         <item quantity="one">Palaistyta. Kitas laistymas po %d dienos.</item>
         <item quantity="few">Palaistyta. Kitas laistymas po %d dienų.</item>
+        <item quantity="many">Palaistyta. Kitas laistymas po %d dienų.</item>
         <item quantity="other">Palaistyta. Kitas laistymas po %d dienų.</item>
     </plurals>
     <string name="t_a4806bd7e8">Palaistyta: %s. Drėgmė – šimtas procentų.</string>
@@ -492,11 +502,13 @@
     <plurals name="p_c5594e7c4d">
         <item quantity="one">Kas %d dieną</item>
         <item quantity="few">Kas %d dienas</item>
+        <item quantity="many">Kas %d dienų</item>
         <item quantity="other">Kas %d dienų</item>
     </plurals>
     <plurals name="p_1505adac86">
         <item quantity="one">Kas %d mėnesį</item>
         <item quantity="few">Kas %d mėnesius</item>
+        <item quantity="many">Kas %d mėnesių</item>
         <item quantity="other">Kas %d mėnesių</item>
     </plurals>
     <string name="t_9caa86d668">Kas kiek dienų augalas laistomas – maždaug per tiek išdžiūsta žemė. Keičiama augalo nustatymuose.</string>
@@ -572,6 +584,7 @@
     <plurals name="p_849396bc8e">
         <item quantity="one">Kitas laistymas: po %d dienos</item>
         <item quantity="few">Kitas laistymas: po %d dienų</item>
+        <item quantity="many">Kitas laistymas: po %d dienų</item>
         <item quantity="other">Kitas laistymas: po %d dienų</item>
     </plurals>
     <string name="t_4a40d86849">Kitas laistymas: rytoj</string>
@@ -699,16 +712,19 @@
     <plurals name="p_613285a98e">
         <item quantity="one">kas %d dieną</item>
         <item quantity="few">kas %d dienas</item>
+        <item quantity="many">kas %d dienų</item>
         <item quantity="other">kas %d dienų</item>
     </plurals>
     <plurals name="p_b5f4df3c0f">
         <item quantity="one">kas %d minutę</item>
         <item quantity="few">kas %d minutes</item>
+        <item quantity="many">kas %d minučių</item>
         <item quantity="other">kas %d minučių</item>
     </plurals>
     <plurals name="p_a97dce2bcd">
         <item quantity="one">kas %d valandą</item>
         <item quantity="few">kas %d valandas</item>
+        <item quantity="many">kas %d valandų</item>
         <item quantity="other">kas %d valandų</item>
     </plurals>
     <string name="t_830856c657">kartą per dieną</string>

@@ -116,12 +116,12 @@ object Lang {
             val value = values.getOrNull(at)
             val said: String? = when (kind) {
                 '@', 's' -> value?.let { spoken(it) }
-                'd', 'i', 'u' -> value?.let { whole(it)?.toString() ?: spoken(it) }
+                'd', 'i', 'u' -> value?.let { whole(it)?.let(::integer) ?: spoken(it) }
                 'f' -> when (value) {
                     is Double -> fixed(value, precision ?: 6)
                     is Float -> fixed(value.toDouble(), precision ?: 6)
                     null -> null
-                    else -> whole(value)?.toString()
+                    else -> whole(value)?.let(::integer)
                 }
                 else -> null
             }
@@ -134,7 +134,17 @@ object Lang {
     private fun spoken(value: Any): String = when (value) {
         is Double -> decimal(value)
         is Float -> decimal(value.toDouble())
-        else -> value.toString()
+        else -> whole(value)?.let(::integer) ?: value.toString()
+    }
+
+    /**
+     * Целое в подстановке — цифрами языка (арабские — «٢٤»), но без разрядов,
+     * как `localizedStringWithFormat` на iPhone: «из 30», а не «из 3 0».
+     */
+    private fun integer(value: Long): String {
+        val style = NumberFormat.getIntegerInstance(locale)
+        style.isGroupingUsed = false
+        return style.format(value)
     }
 
     private fun fixed(number: Double, places: Int): String {

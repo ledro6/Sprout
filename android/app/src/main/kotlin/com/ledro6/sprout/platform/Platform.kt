@@ -6,6 +6,7 @@ import android.os.Build
 import android.os.LocaleList
 import android.text.format.DateFormat
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.content.edit
 import androidx.core.os.LocaleListCompat
 import com.ledro6.sprout.model.Lang
 import com.ledro6.sprout.model.Skeleton
@@ -43,7 +44,7 @@ object Platform {
     }
 
     fun choose(context: Context, tag: String?) {
-        context.getSharedPreferences("sprout", Context.MODE_PRIVATE).edit().putString(LANGUAGE, tag.orEmpty()).apply()
+        context.getSharedPreferences("sprout", Context.MODE_PRIVATE).edit { putString(LANGUAGE, tag.orEmpty()) }
         AppCompatDelegate.setApplicationLocales(
             if (tag == null) LocaleListCompat.getEmptyLocaleList() else LocaleListCompat.forLanguageTags(tag),
         )

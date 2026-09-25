@@ -3,6 +3,7 @@ package com.ledro6.sprout.platform
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.AtomicFile
+import androidx.core.content.edit
 import com.ledro6.sprout.model.GardenState
 import com.ledro6.sprout.model.Prefs
 import com.ledro6.sprout.model.Shelf
@@ -40,15 +41,15 @@ class AndroidPrefs(context: Context) : Prefs {
     }
 
     override fun put(key: String, value: String?) {
-        store.edit().apply { if (value == null) remove(key) else putString(key, value) }.apply()
+        store.edit { if (value == null) remove(key) else putString(key, value) }
     }
 
-    override fun put(key: String, value: Int) = store.edit().putInt(key, value).apply()
+    override fun put(key: String, value: Int) = store.edit { putInt(key, value) }
 
     override fun put(key: String, value: Double) =
-        store.edit().putLong(key, java.lang.Double.doubleToRawLongBits(value)).apply()
+        store.edit { putLong(key, java.lang.Double.doubleToRawLongBits(value)) }
 
-    override fun put(key: String, value: Boolean) = store.edit().putBoolean(key, value).apply()
+    override fun put(key: String, value: Boolean) = store.edit { putBoolean(key, value) }
 
     override fun put(key: String, value: List<String>) = put(key, JSONArray(value).toString())
 }

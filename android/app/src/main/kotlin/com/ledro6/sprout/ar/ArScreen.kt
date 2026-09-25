@@ -35,6 +35,8 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableDoubleStateOf
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateMapOf
@@ -148,7 +150,7 @@ fun ArScreen(ids: List<String>, close: () -> Unit) {
     var chosen by remember { mutableStateOf(if (shown.size == 1) shown.first().id else null) }
     var watering by remember { mutableStateOf<String?>(null) }
     var failure by remember { mutableStateOf<TrackingFailureReason?>(null) }
-    var facing by remember { mutableStateOf(0f) }
+    var facing by remember { mutableFloatStateOf(0f) }
     val queue = remember { mutableStateListOf<String>() }
     val offsets = remember { mutableStateMapOf<String, Pair<Float, Float>>() }
     val figures = remember { mutableStateMapOf<String, Figure>() }
@@ -158,7 +160,7 @@ fun ArScreen(ids: List<String>, close: () -> Unit) {
     var poured by remember { mutableIntStateOf(0) }
     val start = remember { System.nanoTime() }
     val clock = { (System.nanoTime() - start) / 1e9 }
-    var last by remember { mutableStateOf(0.0) }
+    var last by remember { mutableDoubleStateOf(0.0) }
     val still = remember { !ValueAnimator.areAnimatorsEnabled() }
     val plants by rememberUpdatedState(shown)
 

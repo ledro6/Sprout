@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onRoot
 import androidx.navigation.compose.rememberNavController
@@ -90,10 +89,9 @@ class ScreensTest {
     }
 
     private fun app(dark: Boolean) {
+        // Язык — из ресурсов экрана, как на телефоне.
+        speak()
         compose.setContent {
-            // Язык — из ресурсов экрана, как на телефоне.
-            val context = LocalContext.current
-            remember(context) { Platform.speak(context) }
             CompositionLocalProvider(LocalSprout provides sprout) {
                 SproutTheme(dark = dark) {
                     val nav = rememberNavController()

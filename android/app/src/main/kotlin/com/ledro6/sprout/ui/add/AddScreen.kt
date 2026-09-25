@@ -37,6 +37,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -113,7 +114,7 @@ fun AddScreen(go: Go, outer: PaddingValues) {
     var name by rememberSaveable { mutableStateOf("") }
     var species by rememberSaveable { mutableStateOf("") }
     var room by rememberSaveable { mutableStateOf(garden.rooms.firstOrNull()?.name ?: Lang.text("Дом")) }
-    var period by rememberSaveable { mutableStateOf(7.0) }
+    var period by rememberSaveable { mutableDoubleStateOf(7.0) }
     var naming by remember { mutableStateOf(false) }
     var roomsOpen by remember { mutableStateOf(false) }
     var planted by remember { mutableStateOf<Pair<String, String>?>(null) }

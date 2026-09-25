@@ -195,6 +195,8 @@ private fun reorder(name: String, drift: Float, list: LazyListState, move: (Int,
     return drift - (target.offset - mine.offset)
 }
 
+// `grip` — жест для ручки справа, а не оформление всей строки.
+@Suppress("ModifierParameter")
 @Composable
 private fun RoomRow(room: Room, ask: (Room) -> Unit, grip: Modifier) {
     val garden = LocalSprout.current.garden

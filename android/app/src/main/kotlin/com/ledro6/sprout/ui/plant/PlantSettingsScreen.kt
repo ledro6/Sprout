@@ -26,6 +26,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -70,9 +71,9 @@ fun PlantSettingsScreen(id: String, go: Go) {
     var name by rememberSaveable { mutableStateOf(plant.name) }
     var species by rememberSaveable { mutableStateOf(plant.species) }
     var room by rememberSaveable { mutableStateOf(garden.roomName(id).orEmpty()) }
-    var period by rememberSaveable { mutableStateOf(plant.dryingDays) }
+    var period by rememberSaveable { mutableDoubleStateOf(plant.dryingDays) }
     var feeds by rememberSaveable { mutableStateOf(plant.tending.feedEvery != null) }
-    var feedEvery by rememberSaveable { mutableStateOf(plant.tending.feedEvery ?: 21.0) }
+    var feedEvery by rememberSaveable { mutableDoubleStateOf(plant.tending.feedEvery ?: 21.0) }
     var repotMonths by rememberSaveable { mutableStateOf(plant.tending.repotEvery?.let { Care.months(it) }) }
     var naming by remember { mutableStateOf(false) }
     var roomsOpen by remember { mutableStateOf(false) }

@@ -18,8 +18,18 @@ android {
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
-        // Телефоны — arm; x86_64 — только эмуляторы на компьютере.
-        ndk { abiFilters += listOf("arm64-v8a", "armeabi-v7a", "x86_64") }
+    }
+
+    // APK на каждый процессор и общий на все: arm64 — почти любой телефон
+    // с 2017 года, armeabi-v7a — старые, x86_64 — эмулятор на компьютере.
+    // Отдельный APK вдвое легче общего: нативная графика AR — самое тяжёлое.
+    splits {
+        abi {
+            isEnable = true
+            reset()
+            include("arm64-v8a", "armeabi-v7a", "x86_64")
+            isUniversalApk = true
+        }
     }
 
     buildTypes {
@@ -70,6 +80,18 @@ android {
 
     packaging {
         resources.excludes += listOf("META-INF/AL2.0", "META-INF/LGPL2.1")
+        // 32-битный x86 — только старые эмуляторы; телефонов на нём нет.
+        jniLibs.excludes += "lib/x86/**"
+    }
+
+    bundle {
+        // Язык выбирают в самом приложении — в сборке нужны все переводы.
+        language { enableSplit = false }
+    }
+
+    lint {
+        // Осознанные исключения — с причинами — в lint.xml.
+        lintConfig = file("lint.xml")
     }
 }
 

@@ -23,6 +23,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.ledro6.sprout.app.LocalSprout
 import com.ledro6.sprout.app.Sprout
@@ -30,7 +31,6 @@ import com.ledro6.sprout.ar.ArActivity
 import com.ledro6.sprout.design.Effects
 import com.ledro6.sprout.design.Motion
 import com.ledro6.sprout.design.SproutTheme
-import com.ledro6.sprout.model.Season
 import com.ledro6.sprout.model.Settings
 import com.ledro6.sprout.platform.Feel
 import com.ledro6.sprout.platform.Lock
@@ -43,8 +43,6 @@ import com.ledro6.sprout.ui.onboarding.TourGate
 import com.ledro6.sprout.ui.onboarding.TourScreen
 import com.ledro6.sprout.ui.onboarding.Welcome
 import kotlinx.coroutines.delay
-import java.util.Calendar
-import java.util.Locale
 
 /**
  * Единственный экран-активити: всё приложение — Compose. Здесь — то, что на
@@ -98,12 +96,17 @@ class MainActivity : AppCompatActivity() {
                 sprout.garden.advance()
             }
         }
-        LaunchedEffect(asked) {
+        // Вкладка из ярлыка — когда навигация уже собрана: на холодном старте
+        // эффект успевает раньше, чем `NavHost` задаст граф, и переход упал бы.
+        val entry by nav.currentBackStackEntryAsState()
+        val ready = entry != null
+        LaunchedEffect(asked, ready) {
+            if (!ready) return@LaunchedEffect
             val route = asked ?: return@LaunchedEffect
             Tab.entries.firstOrNull { it.route == route }?.let { go.tab(it) }
             asked = null
         }
-        LaunchedEffect(settings.seasons) { settle(settings) }
+        LaunchedEffect(settings.seasons) { sprout.settle() }
         Box(Modifier.fillMaxSize()) {
             SproutRoot(nav, go)
             AnimatedVisibility(Effects.greeting, exit = fadeOut(tween((Motion.WELCOME_LEAVE * 1000).toInt()))) { Welcome() }
@@ -129,10 +132,6 @@ class MainActivity : AppCompatActivity() {
         // Сад под замком — спрашиваем отпечаток, как только экран виден.
         Lock.unlock(this)
         if (Build.VERSION.SDK_INT >= 33) setRecentsScreenshotEnabled(!Lock.on)
-    }
-
-    private fun settle(settings: Settings) {
-        Season.settle(settings.seasons, Calendar.getInstance().get(Calendar.MONTH) + 1, Locale.getDefault().country)
     }
 
     companion object {

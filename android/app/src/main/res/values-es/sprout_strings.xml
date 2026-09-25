@@ -14,14 +14,17 @@
     <string name="t_928d6589ea">%s: sin riegos</string>
     <plurals name="p_db3562f0a7">
         <item quantity="one">%d día</item>
+        <item quantity="many">%d días</item>
         <item quantity="other">%d días</item>
     </plurals>
     <plurals name="p_28e529ebd3">
         <item quantity="one">%d riego</item>
+        <item quantity="many">%d riegos</item>
         <item quantity="other">%d riegos</item>
     </plurals>
     <plurals name="p_6f35cac0c2">
         <item quantity="one">%d planta</item>
+        <item quantity="many">%d plantas</item>
         <item quantity="other">%d plantas</item>
     </plurals>
     <string name="t_197eb092cd">%d %%</string>
@@ -86,6 +89,7 @@
     <string name="t_e1a8755821">Humedad %s</string>
     <plurals name="p_27b0ada25d">
         <item quantity="one">Con ella se irá %d planta. No se podrá deshacer.</item>
+        <item quantity="many">Con ella se irán %d plantas. No se podrá deshacer.</item>
         <item quantity="other">Con ella se irán %d plantas. No se podrá deshacer.</item>
     </plurals>
     <string name="t_a69d2c6bbf">A tiempo</string>
@@ -335,6 +339,7 @@
     <string name="t_a90b7cbc92">Mantener</string>
     <plurals name="p_76a9a953b8">
         <item quantity="one">Queda %d segundo</item>
+        <item quantity="many">Quedan %d segundos</item>
         <item quantity="other">Quedan %d segundos</item>
     </plurals>
     <string name="t_1836fda1b4">Las demás aguantarán solas: %s.</string>
@@ -365,10 +370,12 @@
     <string name="t_b58e2aaad8">Trasplante</string>
     <plurals name="p_b7eb1930d1">
         <item quantity="one">Trasplante en %d día</item>
+        <item quantity="many">Trasplante en %d días</item>
         <item quantity="other">Trasplante en %d días</item>
     </plurals>
     <plurals name="p_7afd736157">
         <item quantity="one">Trasplante en %d mes</item>
+        <item quantity="many">Trasplante en %d meses</item>
         <item quantity="other">Trasplante en %d meses</item>
     </plurals>
     <string name="t_fe489db382">Trasplante, abono, dónde le gusta estar…</string>
@@ -394,12 +401,14 @@
     <string name="t_8644256dd5">Abono y trasplante</string>
     <plurals name="p_e7ba642ee4">
         <item quantity="one">Abono en %d día</item>
+        <item quantity="many">Abono en %d días</item>
         <item quantity="other">Abono en %d días</item>
     </plurals>
     <string name="t_c418f5f725">Consejos</string>
     <string name="t_03ed443146">Girasol</string>
     <plurals name="p_697f80c3b3">
         <item quantity="one">Viaje: %d día</item>
+        <item quantity="many">Viaje: %d días</item>
         <item quantity="other">Viaje: %d días</item>
     </plurals>
     <string name="t_b9d4cce05d">Por favor, riega estas plantas:</string>
@@ -426,6 +435,7 @@
     <string name="t_4cde956bff">Regada</string>
     <plurals name="p_d0e1f2ab76">
         <item quantity="one">Regada. Próximo riego en %d día.</item>
+        <item quantity="many">Regada. Próximo riego en %d días.</item>
         <item quantity="other">Regada. Próximo riego en %d días.</item>
     </plurals>
     <string name="t_a4806bd7e8">Regada: %s. Humedad al cien por cien.</string>
@@ -481,10 +491,12 @@
     <string name="t_7ed34f32ae">Cada %s días</string>
     <plurals name="p_c5594e7c4d">
         <item quantity="one">Cada %d día</item>
+        <item quantity="many">Cada %d días</item>
         <item quantity="other">Cada %d días</item>
     </plurals>
     <plurals name="p_1505adac86">
         <item quantity="one">Cada %d mes</item>
+        <item quantity="many">Cada %d meses</item>
         <item quantity="other">Cada %d meses</item>
     </plurals>
     <string name="t_9caa86d668">Cada cuántos días se riega la planta: más o menos lo que tarda la tierra en secarse. Se cambia en los ajustes de la planta.</string>
@@ -559,6 +571,7 @@
     <string name="t_a41966c98a">Próximos riegos</string>
     <plurals name="p_849396bc8e">
         <item quantity="one">Próximo riego: en %d día</item>
+        <item quantity="many">Próximo riego: en %d días</item>
         <item quantity="other">Próximo riego: en %d días</item>
     </plurals>
     <string name="t_4a40d86849">Próximo riego: mañana</string>
@@ -685,14 +698,17 @@
     <string name="t_70f5246d28">cada %s días</string>
     <plurals name="p_613285a98e">
         <item quantity="one">cada %d día</item>
+        <item quantity="many">cada %d días</item>
         <item quantity="other">cada %d días</item>
     </plurals>
     <plurals name="p_b5f4df3c0f">
         <item quantity="one">cada %d minuto</item>
+        <item quantity="many">cada %d minutos</item>
         <item quantity="other">cada %d minutos</item>
     </plurals>
     <plurals name="p_a97dce2bcd">
         <item quantity="one">cada %d hora</item>
+        <item quantity="many">cada %d horas</item>
         <item quantity="other">cada %d horas</item>
     </plurals>
     <string name="t_830856c657">una vez al día</string>

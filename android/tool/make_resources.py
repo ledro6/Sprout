@@ -74,6 +74,14 @@ PLURALS = {
 }
 DEFAULT_PLURALS = ["one", "other"]
 
+# Формы, которых нет в таблицах iOS, а Android (ICU) требует: `many` — для
+# дробных (cs, sk, lt) и миллионов (es, fr, it, pt, ca). Счётчики приложения
+# целые и небольшие, так что эти формы звучат как `other`.
+ANDROID_PLURALS = {
+    "cs": ["many"], "sk": ["many"], "lt": ["many"],
+    "es": ["many"], "fr": ["many"], "it": ["many"], "pt": ["many"], "ca": ["many"],
+}
+
 SPEC = re.compile(r"%(?:\d+\$)?(?:\.\d+)?(?:ll|l|h|q)?[@dDiuUxXoOfeEgGcCsSaA]")
 CYR = re.compile(r"[А-Яа-яЁё]")
 CYRILLIC = {"ru", "uk", "bg", "kk"}
@@ -182,10 +190,12 @@ def resources(lang):
             if lang == "ru" and not isinstance(value, dict):
                 raise SystemExit(f"ru: «{key}» без форм числа")
             lines.append(f'    <plurals name="{name(key, "p_")}">')
+            extra = ANDROID_PLURALS.get(lang.split("-")[0], [])
             for form in ["zero", "one", "two", "few", "many", "other"]:
-                if form in forms:
+                text = forms.get(form, forms["other"] if form in extra else None)
+                if text is not None:
                     lines.append(f'        <item quantity="{form}">'
-                                 f"{xml_text(java(forms[form]))}</item>")
+                                 f"{xml_text(java(text))}</item>")
             lines.append("    </plurals>")
         else:
             text = java(value)
