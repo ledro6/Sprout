@@ -14411,6 +14411,293 @@
         }
       }
     },
+    "В Календаре телефона появится календарь «Sprout»: в какой день кого полить и подкормить, на три недели вперёд. План обновляется, когда вы выходите из приложения.": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "سيظهر في تطبيق التقويم تقويم «Sprout»: أي النباتات تُسقى وتُسمَّد في أي يوم، لثلاثة أسابيع قادمة. تتحدّث الخطة عندما تغادر التطبيق."
+          }
+        },
+        "bg": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "В Календар на телефона ще се появи календар „Sprout“: в кой ден кое растение да полеете и подхраните, три седмици напред. Планът се обновява, когато излезете от приложението."
+          }
+        },
+        "bn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ফোনের ক্যালেন্ডারে «Sprout» নামে একটি ক্যালেন্ডার আসবে: কোন দিন কোন গাছে জল ও সার দিতে হবে, তিন সপ্তাহ আগে থেকে। অ্যাপ থেকে বেরোলে পরিকল্পনা হালনাগাদ হয়।"
+          }
+        },
+        "ca": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Al Calendari del telèfon apareixerà un calendari «Sprout»: quin dia cal regar i adobar cada planta, tres setmanes per endavant. El pla s’actualitza quan surts de l’app."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "V Kalendáři telefonu se objeví kalendář „Sprout“: který den kterou rostlinu zalít a přihnojit, tři týdny dopředu. Plán se obnoví, když aplikaci opustíte."
+          }
+        },
+        "da": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "I telefonens Kalender dukker en kalender “Sprout” op: hvilken dag hvilke planter skal vandes og gødes, tre uger frem. Planen opdateres, når du forlader appen."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In der Kalender-App erscheint ein Kalender „Sprout“: an welchem Tag welche Pflanze gegossen und gedüngt wird, drei Wochen im Voraus. Der Plan wird aktualisiert, wenn du die App verlässt."
+          }
+        },
+        "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Στο Ημερολόγιο του τηλεφώνου θα εμφανιστεί ημερολόγιο «Sprout»: ποια μέρα ποιο φυτό θέλει πότισμα και λίπασμα, τρεις εβδομάδες μπροστά. Το πλάνο ενημερώνεται όταν βγαίνετε από την εφαρμογή."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A “Sprout” calendar appears in your phone’s Calendar: which plants to water and feed on which day, three weeks ahead. The plan updates when you leave the app."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "En el Calendario del teléfono aparecerá un calendario “Sprout”: qué día regar y abonar cada planta, con tres semanas de antelación. El plan se actualiza cuando sales de la app."
+          }
+        },
+        "fi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Puhelimen Kalenteriin ilmestyy kalenteri ”Sprout”: minä päivänä mitäkin kasvia kastellaan ja lannoitetaan, kolme viikkoa eteenpäin. Suunnitelma päivittyy, kun poistut sovelluksesta."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Un calendrier « Sprout » apparaît dans Calendrier : quel jour arroser et nourrir chaque plante, trois semaines à l’avance. Le plan se met à jour quand vous quittez l’app."
+          }
+        },
+        "gu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ફોનના કૅલેન્ડરમાં «Sprout» નામનું કૅલેન્ડર દેખાશે: કયા દિવસે કયા છોડને પાણી અને ખાતર આપવું, ત્રણ અઠવાડિયાં આગળ સુધી. ઍપમાંથી બહાર નીકળો ત્યારે યોજના અપડેટ થાય છે."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ביומן של הטלפון יופיע לוח שנה „Sprout”: באיזה יום להשקות ולדשן כל צמח, שלושה שבועות קדימה. התוכנית מתעדכנת כשיוצאים מהאפליקציה."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "फ़ोन के कैलेंडर में «Sprout» नाम का कैलेंडर दिखेगा: किस दिन किस पौधे को पानी और खाद देनी है, तीन हफ़्ते आगे तक। ऐप से बाहर निकलने पर योजना अपडेट हो जाती है।"
+          }
+        },
+        "hr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "U Kalendaru telefona pojavit će se kalendar „Sprout”: koji dan koju biljku zaliti i prihraniti, tri tjedna unaprijed. Plan se osvježava kad izađete iz aplikacije."
+          }
+        },
+        "hu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A telefon Naptárában megjelenik egy „Sprout” naptár: melyik nap melyik növényt kell öntözni és tápoldatozni, három hétre előre. A terv frissül, amikor kilépsz az appból."
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Di Kalender ponsel akan muncul kalender “Sprout”: hari apa tanaman mana disiram dan dipupuk, tiga minggu ke depan. Rencana diperbarui saat Anda keluar dari app."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nel Calendario del telefono comparirà un calendario “Sprout”: quale pianta annaffiare e concimare ogni giorno, tre settimane in anticipo. Il piano si aggiorna quando esci dall’app."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "カレンダーに「Sprout」というカレンダーが追加され、どの日にどの植物に水やりと肥料が必要かが3週間先まで表示されます。予定はアプリを閉じるたびに更新されます。"
+          }
+        },
+        "kk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Телефонның Күнтізбесінде «Sprout» күнтізбесі пайда болады: қай күні қай өсімдікті суарып, тыңайту керек — үш апта алға. Жоспар қолданбадан шыққанда жаңарады."
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ಫೋನ್‌ನ ಕ್ಯಾಲೆಂಡರ್‌ನಲ್ಲಿ «Sprout» ಕ್ಯಾಲೆಂಡರ್ ಕಾಣಿಸುತ್ತದೆ: ಯಾವ ದಿನ ಯಾವ ಗಿಡಕ್ಕೆ ನೀರು ಮತ್ತು ಗೊಬ್ಬರ ಹಾಕಬೇಕು, ಮೂರು ವಾರಗಳ ಮುಂಚಿತವಾಗಿ. ಆ್ಯಪ್‌ನಿಂದ ಹೊರಬಂದಾಗ ಯೋಜನೆ ಅಪ್‌ಡೇಟ್ ಆಗುತ್ತದೆ."
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "기기의 캘린더에 ‘Sprout’ 캘린더가 생겨요. 어떤 날 어떤 식물에 물과 비료를 줄지 3주 앞까지 보여 줘요. 앱에서 나갈 때마다 계획이 새로 고쳐져요."
+          }
+        },
+        "lt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Telefono Kalendoriuje atsiras kalendorius „Sprout“: kurią dieną kurį augalą palaistyti ir patręšti, trims savaitėms į priekį. Planas atnaujinamas, kai išeinate iš programėlės."
+          }
+        },
+        "ml": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ഫോണിലെ കലണ്ടറിൽ «Sprout» എന്നൊരു കലണ്ടർ വരും: ഏത് ദിവസം ഏത് ചെടിക്ക് നനയ്ക്കണം, വളമിടണം എന്ന് മൂന്നാഴ്ച മുന്നേ. ആപ്പിൽ നിന്ന് പുറത്തിറങ്ങുമ്പോൾ പദ്ധതി പുതുക്കും."
+          }
+        },
+        "mr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "फोनच्या कॅलेंडरमध्ये «Sprout» कॅलेंडर दिसेल: कोणत्या दिवशी कोणत्या रोपाला पाणी आणि खत द्यायचे, तीन आठवडे आधीपासून. ॲपमधून बाहेर पडल्यावर योजना अपडेट होते."
+          }
+        },
+        "ms": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kalendar “Sprout” akan muncul dalam Kalendar telefon: hari mana tumbuhan mana perlu disiram dan dibaja, tiga minggu ke hadapan. Rancangan dikemas kini apabila anda keluar dari app."
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "I telefonens Kalender dukker det opp en kalender «Sprout»: hvilken dag hvilke planter skal vannes og gjødsles, tre uker frem. Planen oppdateres når du forlater appen."
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In de Agenda van je telefoon verschijnt een agenda ‘Sprout’: op welke dag welke plant water en voeding nodig heeft, drie weken vooruit. Het plan wordt bijgewerkt als je de app verlaat."
+          }
+        },
+        "or": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ଫୋନ୍‌ର କ୍ୟାଲେଣ୍ଡରରେ «Sprout» କ୍ୟାଲେଣ୍ଡର ଦେଖାଯିବ: କେଉଁ ଦିନ କେଉଁ ଗଛକୁ ପାଣି ଓ ସାର ଦେବାକୁ ହେବ, ତିନି ସପ୍ତାହ ଆଗରୁ। ଆପ୍‌ରୁ ବାହାରିଲେ ଯୋଜନା ଅପଡେଟ୍ ହୁଏ।"
+          }
+        },
+        "pa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ਫ਼ੋਨ ਦੇ ਕੈਲੰਡਰ ਵਿੱਚ «Sprout» ਕੈਲੰਡਰ ਦਿਖੇਗਾ: ਕਿਸ ਦਿਨ ਕਿਸ ਪੌਦੇ ਨੂੰ ਪਾਣੀ ਅਤੇ ਖਾਦ ਦੇਣੀ ਹੈ, ਤਿੰਨ ਹਫ਼ਤੇ ਅੱਗੇ ਤੱਕ। ਐਪ ਤੋਂ ਬਾਹਰ ਨਿਕਲਣ 'ਤੇ ਯੋਜਨਾ ਅੱਪਡੇਟ ਹੁੰਦੀ ਹੈ।"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "W Kalendarzu telefonu pojawi się kalendarz „Sprout”: którego dnia którą roślinę podlać i nawieźć, na trzy tygodnie naprzód. Plan odświeża się, gdy wychodzisz z aplikacji."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No Calendário do celular vai aparecer um calendário “Sprout”: em que dia regar e adubar cada planta, com três semanas de antecedência. O plano é atualizado quando você sai do app."
+          }
+        },
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No Calendário do telemóvel vai aparecer um calendário “Sprout”: em que dia regar e adubar cada planta, com três semanas de antecedência. O plano é atualizado quando sai da app."
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "În Calendarul telefonului va apărea un calendar „Sprout”: în ce zi trebuie udată și fertilizată fiecare plantă, cu trei săptămâni înainte. Planul se actualizează când ieși din aplicație."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "V Kalendári telefónu sa objaví kalendár „Sprout“: ktorý deň ktorú rastlinu poliať a prihnojiť, tri týždne dopredu. Plán sa obnoví, keď aplikáciu opustíte."
+          }
+        },
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "V Koledarju telefona se bo pojavil koledar »Sprout«: kateri dan katero rastlino zaliti in pognojiti, tri tedne vnaprej. Načrt se osveži, ko zapustite aplikacijo."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "I telefonens Kalender dyker kalendern ”Sprout” upp: vilken dag vilka växter ska vattnas och gödslas, tre veckor framåt. Planen uppdateras när du lämnar appen."
+          }
+        },
+        "ta": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ஃபோனின் கேலெண்டரில் «Sprout» என்ற கேலெண்டர் தோன்றும்: எந்த நாள் எந்தச் செடிக்கு நீரும் உரமும் தர வேண்டும் என்று மூன்று வாரங்கள் முன்னதாக. ஆப்பிலிருந்து வெளியேறும்போது திட்டம் புதுப்பிக்கப்படும்."
+          }
+        },
+        "te": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ఫోన్ క్యాలెండర్‌లో «Sprout» అనే క్యాలెండర్ కనిపిస్తుంది: ఏ రోజు ఏ మొక్కకు నీళ్లు, ఎరువు ఇవ్వాలో మూడు వారాల ముందు వరకు. యాప్ నుంచి బయటకు వచ్చినప్పుడు ప్రణాళిక అప్‌డేట్ అవుతుంది."
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ในแอปปฏิทินจะมีปฏิทิน “Sprout” บอกว่าวันไหนต้องรดน้ำและใส่ปุ๋ยต้นไหน ล่วงหน้าสามสัปดาห์ แผนจะอัปเดตเมื่อคุณออกจากแอป"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Telefonun Takvim’inde “Sprout” adlı bir takvim görünür: hangi gün hangi bitkinin sulanıp gübreleneceği, üç hafta öncesinden. Plan, uygulamadan çıktığınızda güncellenir."
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "У Календарі телефона з’явиться календар «Sprout»: якого дня яку рослину полити й підживити, на три тижні наперед. План оновлюється, коли ви виходите з застосунку."
+          }
+        },
+        "ur": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "فون کے کیلنڈر میں «Sprout» کیلنڈر نظر آئے گا: کس دن کس پودے کو پانی اور کھاد دینی ہے، تین ہفتے آگے تک۔ ایپ سے باہر نکلنے پر منصوبہ اپ ڈیٹ ہو جاتا ہے۔"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Trong ứng dụng Lịch sẽ có lịch “Sprout”: ngày nào tưới và bón phân cho cây nào, trước ba tuần. Kế hoạch được cập nhật khi bạn thoát ứng dụng."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "手机“日历”里会出现名为“Sprout”的日历：哪天给哪些植物浇水、施肥，提前三周列出。离开 App 时计划会自动更新。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "手機「行事曆」裡會出現名為「Sprout」的行事曆：哪天要替哪些植物澆水、施肥，提前三週列出。離開 App 時計畫會自動更新。"
+          }
+        }
+      }
+    },
     "В ближайший месяц парадов нет: растения просят воды вразнобой.": {
       "extractionState": "manual",
       "localizations": {
@@ -53172,6 +53459,293 @@
           "stringUnit": {
             "state": "translated",
             "value": "竹芋"
+          }
+        }
+      }
+    },
+    "Календарь закрыт": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "التقويم مغلق"
+          }
+        },
+        "bg": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Календарът е затворен"
+          }
+        },
+        "bn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ক্যালেন্ডার বন্ধ"
+          }
+        },
+        "ca": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Calendari tancat"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kalendář je zavřený"
+          }
+        },
+        "da": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kalenderen er lukket"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kalender ist gesperrt"
+          }
+        },
+        "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Το Ημερολόγιο είναι κλειστό"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Calendar Access Is Off"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Calendario cerrado"
+          }
+        },
+        "fi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kalenteri on suljettu"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Calendrier fermé"
+          }
+        },
+        "gu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "કૅલેન્ડર બંધ છે"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "היומן סגור"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "कैलेंडर बंद है"
+          }
+        },
+        "hr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kalendar je zatvoren"
+          }
+        },
+        "hu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A Naptár zárva"
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kalender ditutup"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Calendario chiuso"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "カレンダーへのアクセスがありません"
+          }
+        },
+        "kk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Күнтізбе жабық"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ಕ್ಯಾಲೆಂಡರ್ ಮುಚ್ಚಿದೆ"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "캘린더가 닫혀 있어요"
+          }
+        },
+        "lt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kalendorius uždarytas"
+          }
+        },
+        "ml": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "കലണ്ടർ അടച്ചിരിക്കുന്നു"
+          }
+        },
+        "mr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "कॅलेंडर बंद आहे"
+          }
+        },
+        "ms": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kalendar ditutup"
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kalenderen er stengt"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Agenda is afgesloten"
+          }
+        },
+        "or": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "କ୍ୟାଲେଣ୍ଡର ବନ୍ଦ ଅଛି"
+          }
+        },
+        "pa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ਕੈਲੰਡਰ ਬੰਦ ਹੈ"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kalendarz zamknięty"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Calendário fechado"
+          }
+        },
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Calendário fechado"
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Calendarul este închis"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kalendár je zatvorený"
+          }
+        },
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Koledar je zaprt"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kalendern är stängd"
+          }
+        },
+        "ta": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "கேலெண்டர் மூடப்பட்டுள்ளது"
+          }
+        },
+        "te": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "క్యాలెండర్ మూసి ఉంది"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ปฏิทินถูกปิดอยู่"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Takvim kapalı"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Календар закритий"
+          }
+        },
+        "ur": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "کیلنڈر بند ہے"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lịch đang bị đóng"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "日历未开放"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "行事曆未開放"
           }
         }
       }
@@ -104896,6 +105470,293 @@
         }
       }
     },
+    "Подкормить: %@": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "سمِّد: %@"
+          }
+        },
+        "bg": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Подхрани: %@"
+          }
+        },
+        "bn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "সার দিন: %@"
+          }
+        },
+        "ca": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Adoba: %@"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Přihnojit: %@"
+          }
+        },
+        "da": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gød: %@"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Düngen: %@"
+          }
+        },
+        "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Λίπανση: %@"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Feed: %@"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Abonar: %@"
+          }
+        },
+        "fi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lannoita: %@"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fertiliser : %@"
+          }
+        },
+        "gu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ખાતર આપો: %@"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "דישון: %@"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "खाद दें: %@"
+          }
+        },
+        "hr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prihrani: %@"
+          }
+        },
+        "hu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tápoldatozás: %@"
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pupuk: %@"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Concima: %@"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "肥料：%@"
+          }
+        },
+        "kk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Тыңайту: %@"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ಗೊಬ್ಬರ ಹಾಕಿ: %@"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "비료: %@"
+          }
+        },
+        "lt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Patręšti: %@"
+          }
+        },
+        "ml": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "വളമിടുക: %@"
+          }
+        },
+        "mr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "खत द्या: %@"
+          }
+        },
+        "ms": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Baja: %@"
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gjødsle: %@"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Voed: %@"
+          }
+        },
+        "or": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ସାର ଦିଅନ୍ତୁ: %@"
+          }
+        },
+        "pa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ਖਾਦ ਪਾਓ: %@"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nawieź: %@"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Adubar: %@"
+          }
+        },
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Adubar: %@"
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fertilizează: %@"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prihnojiť: %@"
+          }
+        },
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pognoji: %@"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gödsla: %@"
+          }
+        },
+        "ta": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "உரம் இடு: %@"
+          }
+        },
+        "te": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ఎరువు వేయండి: %@"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ใส่ปุ๋ย: %@"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gübrele: %@"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Підживити: %@"
+          }
+        },
+        "ur": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "کھاد ڈالیں: %@"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bón phân: %@"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "施肥：%@"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "施肥：%@"
+          }
+        }
+      }
+    },
     "Подкормка": {
       "extractionState": "manual",
       "localizations": {
@@ -117293,6 +118154,293 @@
           "stringUnit": {
             "state": "translated",
             "value": "澆水：%@"
+          }
+        }
+      }
+    },
+    "Полный доступ дают в настройках телефона: Sprout → Календари.": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "امنح الوصول الكامل من إعدادات الهاتف: Sprout ← التقويمات."
+          }
+        },
+        "bg": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Пълен достъп се дава в настройките на телефона: Sprout → Календари."
+          }
+        },
+        "bn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ফোনের সেটিংসে পূর্ণ অ্যাক্সেস দিন: Sprout → ক্যালেন্ডার।"
+          }
+        },
+        "ca": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dona accés complet a la configuració del telèfon: Sprout → Calendaris."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Plný přístup povolíte v Nastavení telefonu: Sprout → Kalendáře."
+          }
+        },
+        "da": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Giv fuld adgang i telefonens Indstillinger: Sprout → Kalendere."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Erlaube vollen Zugriff in den Einstellungen des Telefons: Sprout → Kalender."
+          }
+        },
+        "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Δώστε πλήρη πρόσβαση στις Ρυθμίσεις του τηλεφώνου: Sprout → Ημερολόγια."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Allow full access in the phone’s Settings: Sprout → Calendars."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Da acceso completo en los Ajustes del teléfono: Sprout → Calendarios."
+          }
+        },
+        "fi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Anna täysi pääsy puhelimen asetuksista: Sprout → Kalenterit."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Autorisez l’accès complet dans les Réglages du téléphone : Sprout → Calendriers."
+          }
+        },
+        "gu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ફોનનાં સેટિંગ્સમાં પૂરી ઍક્સેસ આપો: Sprout → કૅલેન્ડર."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "אפשר לתת גישה מלאה בהגדרות הטלפון: Sprout ← לוחות שנה."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "फ़ोन की सेटिंग्ज़ में पूरी पहुँच दें: Sprout → कैलेंडर।"
+          }
+        },
+        "hr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Puni pristup dajete u postavkama telefona: Sprout → Kalendari."
+          }
+        },
+        "hu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Teljes hozzáférést a telefon Beállításaiban adhatsz: Sprout → Naptárak."
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Beri akses penuh di Pengaturan ponsel: Sprout → Kalender."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Concedi l’accesso completo nelle Impostazioni del telefono: Sprout → Calendari."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iPhoneの設定でフルアクセスを許可してください：Sprout → カレンダー。"
+          }
+        },
+        "kk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Толық рұқсатты телефон баптауларында беріңіз: Sprout → Күнтізбелер."
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ಫೋನ್ ಸೆಟ್ಟಿಂಗ್‌ಗಳಲ್ಲಿ ಪೂರ್ಣ ಪ್ರವೇಶ ನೀಡಿ: Sprout → ಕ್ಯಾಲೆಂಡರ್‌ಗಳು."
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "기기 설정에서 전체 접근을 허용하세요: Sprout → 캘린더."
+          }
+        },
+        "lt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Visišką prieigą suteikite telefono nustatymuose: Sprout → Kalendoriai."
+          }
+        },
+        "ml": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ഫോണിന്റെ ക്രമീകരണങ്ങളിൽ പൂർണ്ണ ആക്സസ് നൽകുക: Sprout → കലണ്ടറുകൾ."
+          }
+        },
+        "mr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "फोनच्या सेटिंग्जमध्ये पूर्ण प्रवेश द्या: Sprout → कॅलेंडर."
+          }
+        },
+        "ms": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Beri akses penuh dalam Tetapan telefon: Sprout → Kalendar."
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gi full tilgang i telefonens Innstillinger: Sprout → Kalendere."
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Geef volledige toegang in de Instellingen van de telefoon: Sprout → Agenda’s."
+          }
+        },
+        "or": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ଫୋନ୍ ସେଟିଂସ୍‌ରେ ପୂର୍ଣ୍ଣ ଆକ୍ସେସ୍ ଦିଅନ୍ତୁ: Sprout → କ୍ୟାଲେଣ୍ଡର।"
+          }
+        },
+        "pa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ਫ਼ੋਨ ਦੀਆਂ ਸੈਟਿੰਗਾਂ ਵਿੱਚ ਪੂਰੀ ਪਹੁੰਚ ਦਿਓ: Sprout → ਕੈਲੰਡਰ।"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pełny dostęp włączysz w Ustawieniach telefonu: Sprout → Kalendarze."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dê acesso total nos Ajustes do celular: Sprout → Calendários."
+          }
+        },
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dê acesso total nas Definições do telemóvel: Sprout → Calendários."
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Acordă acces complet din Configurările telefonului: Sprout → Calendare."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Plný prístup povolíte v Nastaveniach telefónu: Sprout → Kalendáre."
+          }
+        },
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Poln dostop omogočite v nastavitvah telefona: Sprout → Koledarji."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ge full åtkomst i telefonens Inställningar: Sprout → Kalendrar."
+          }
+        },
+        "ta": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ஃபோன் அமைப்புகளில் முழு அணுகலை அனுமதிக்கவும்: Sprout → கேலெண்டர்கள்."
+          }
+        },
+        "te": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ఫోన్ సెట్టింగ్‌లలో పూర్తి యాక్సెస్ ఇవ్వండి: Sprout → క్యాలెండర్‌లు."
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "อนุญาตการเข้าถึงทั้งหมดในการตั้งค่าของโทรศัพท์: Sprout → ปฏิทิน"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tam erişimi telefonun Ayarlar’ından verin: Sprout → Takvimler."
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Повний доступ дають у налаштуваннях телефона: Sprout → Календарі."
+          }
+        },
+        "ur": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "فون کی ترتیبات میں مکمل رسائی دیں: Sprout ← کیلنڈرز۔"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hãy cấp toàn quyền truy cập trong Cài đặt của điện thoại: Sprout → Lịch."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "请在手机的设置中允许完全访问：Sprout → 日历。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "請在手機的設定中允許完整取用：Sprout → 行事曆。"
           }
         }
       }
@@ -157820,6 +158968,293 @@
           "stringUnit": {
             "state": "translated",
             "value": "澆水間隔"
+          }
+        }
+      }
+    },
+    "Сроки в Календаре": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "المواعيد في التقويم"
+          }
+        },
+        "bg": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Срокове в Календар"
+          }
+        },
+        "bn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ক্যালেন্ডারে সময়সূচি"
+          }
+        },
+        "ca": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Terminis al Calendari"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Termíny v Kalendáři"
+          }
+        },
+        "da": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Datoer i Kalender"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Termine im Kalender"
+          }
+        },
+        "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Προθεσμίες στο Ημερολόγιο"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Schedule in Calendar"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fechas en Calendario"
+          }
+        },
+        "fi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ajat Kalenterissa"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Échéances dans Calendrier"
+          }
+        },
+        "gu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "કૅલેન્ડરમાં સમયપત્રક"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "מועדים ביומן"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "कैलेंडर में तारीख़ें"
+          }
+        },
+        "hr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rokovi u Kalendaru"
+          }
+        },
+        "hu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Időpontok a Naptárban"
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jadwal di Kalender"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Scadenze in Calendario"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "カレンダーに予定"
+          }
+        },
+        "kk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Мерзімдер Күнтізбеде"
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ಕ್ಯಾಲೆಂಡರ್‌ನಲ್ಲಿ ವೇಳಾಪಟ್ಟಿ"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "캘린더에 일정"
+          }
+        },
+        "lt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Terminai Kalendoriuje"
+          }
+        },
+        "ml": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "കലണ്ടറിൽ സമയക്രമം"
+          }
+        },
+        "mr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "कॅलेंडरमध्ये वेळापत्रक"
+          }
+        },
+        "ms": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jadual dalam Kalendar"
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Datoer i Kalender"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Data in Agenda"
+          }
+        },
+        "or": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "କ୍ୟାଲେଣ୍ଡରରେ ସମୟସୂଚୀ"
+          }
+        },
+        "pa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ਕੈਲੰਡਰ ਵਿੱਚ ਸਮਾਂ-ਸਾਰਣੀ"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Terminy w Kalendarzu"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Datas no Calendário"
+          }
+        },
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Datas no Calendário"
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Termene în Calendar"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Termíny v Kalendári"
+          }
+        },
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Roki v Koledarju"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Datum i Kalender"
+          }
+        },
+        "ta": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "கேலெண்டரில் அட்டவணை"
+          }
+        },
+        "te": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "క్యాలెండర్‌లో షెడ్యూల్"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "กำหนดการในปฏิทิน"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Takvimde tarihler"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Строки в Календарі"
+          }
+        },
+        "ur": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "کیلنڈر میں شیڈول"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lịch chăm cây trong Lịch"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "日历中的日程"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "行事曆中的日程"
           }
         }
       }

@@ -16,7 +16,8 @@
   "_infoplist": {
     "Наклон телефона чуть двигает узор на фоне.": "Wenn du das Telefon neigst, bewegt sich das Hintergrundmuster leicht.",
     "Чтобы открывать запертый сад по лицу.": "Um deinen gesperrten Garten per Gesichtserkennung zu öffnen.",
-    "Чтобы снять растение для сада и поставить его в комнату в дополненной реальности.": "Um Pflanzen für deinen Garten zu fotografieren und sie in Augmented Reality in deinen Raum zu stellen."
+    "Чтобы снять растение для сада и поставить его в комнату в дополненной реальности.": "Um Pflanzen für deinen Garten zu fotografieren und sie in Augmented Reality in deinen Raum zu stellen.",
+    "Чтобы вести в Календаре свой календарь со сроками полива и подкормки.": "Um einen eigenen Kalender mit Gieß- und Düngeterminen zu führen."
   },
   "Монстера": "Monstera",
   "Фикус": "Ficus",
@@ -691,5 +692,10 @@
   "Кошкам и собакам": "Katzen und Hunde",
   "Можно ли ставить растение туда, где до него доберётся питомец. По базе ASPCA, которой пользуются ветеринары. Съел лист ядовитого — сразу к ветеринару.": "Ob die Pflanze dort stehen darf, wo ein Haustier sie erreicht. Nach der Datenbank der ASPCA, mit der Tierärzte arbeiten. Hat es ein Blatt einer giftigen Pflanze gefressen – sofort zum Tierarzt.",
   "Узор по времени года": "Muster nach Jahreszeit",
-  "Зимой в узор вплетаются снежинки, осенью — кленовые листья, а с 20 декабря по 10 января капли горят новогодней гирляндой.": "Im Winter mischen sich Schneeflocken ins Muster, im Herbst Ahornblätter, und vom 20. Dezember bis 10. Januar leuchten die Tropfen wie eine Lichterkette."
+  "Зимой в узор вплетаются снежинки, осенью — кленовые листья, а с 20 декабря по 10 января капли горят новогодней гирляндой.": "Im Winter mischen sich Schneeflocken ins Muster, im Herbst Ahornblätter, und vom 20. Dezember bis 10. Januar leuchten die Tropfen wie eine Lichterkette.",
+  "Полный доступ дают в настройках телефона: Sprout → Календари.": "Erlaube vollen Zugriff in den Einstellungen des Telefons: Sprout → Kalender.",
+  "Сроки в Календаре": "Termine im Kalender",
+  "Календарь закрыт": "Kalender ist gesperrt",
+  "Подкормить: %@": "Düngen: %@",
+  "В Календаре телефона появится календарь «Sprout»: в какой день кого полить и подкормить, на три недели вперёд. План обновляется, когда вы выходите из приложения.": "In der Kalender-App erscheint ein Kalender „Sprout“: an welchem Tag welche Pflanze gegossen und gedüngt wird, drei Wochen im Voraus. Der Plan wird aktualisiert, wenn du die App verlässt."
 }

@@ -14,6 +14,9 @@ struct SettingsView: View {
     /// чинится.
     @State private var denied = false
 
+    /// То же — с Календарём.
+    @State private var closedCalendar = false
+
     private let lock = Lock.shared
 
     /// Знакомство ещё раз — то же, что при первом запуске.
@@ -64,6 +67,12 @@ struct SettingsView: View {
             Button("Отмена", role: .cancel) {}
         } message: {
             Text("Их включают в настройках телефона: Sprout → Уведомления.")
+        }
+        .alert("Календарь закрыт", isPresented: $closedCalendar) {
+            Button("Открыть настройки") { openSystemSettings() }
+            Button("Отмена", role: .cancel) {}
+        } message: {
+            Text("Полный доступ дают в настройках телефона: Sprout → Календари.")
         }
         .fullScreenCover(isPresented: $touring) { TourView() }
     }
@@ -310,8 +319,33 @@ struct SettingsView: View {
                 }
                 .transition(.blurReplace)
             }
+
+            SproutDivider()
+
+            switchRow("Сроки в Календаре", term: .agenda, isOn: Binding(
+                get: { settings.calendar },
+                set: { want(calendar: $0) }))
         }
         .animation(Motion.enter, value: settings.reminders)
+    }
+
+    /// Доступ к Календарю — как и уведомления, когда попросили. Включили —
+    /// план сразу появляется в Календаре; выключили — свой календарь
+    /// уходит целиком.
+    private func want(calendar on: Bool) {
+        guard on else {
+            settings.calendar = false
+            CalendarSync.shared.remove()
+            return
+        }
+        Task { @MainActor in
+            if await CalendarSync.shared.ask() {
+                settings.calendar = true
+                CalendarSync.shared.sync(Garden.shared.rooms)
+            } else {
+                closedCalendar = true
+            }
+        }
     }
 
     /// Разрешение спрашиваем здесь, когда попросили напоминать: спрошенное

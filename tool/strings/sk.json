@@ -16,7 +16,8 @@
   "_infoplist": {
     "Наклон телефона чуть двигает узор на фоне.": "Náklon telefónu mierne posúva vzor na pozadí.",
     "Чтобы открывать запертый сад по лицу.": "Aby ste mohli odomykať zamknutú záhradu tvárou.",
-    "Чтобы снять растение для сада и поставить его в комнату в дополненной реальности.": "Aby ste mohli fotiť rastliny do záhrady a umiestňovať ich do miestnosti v rozšírenej realite."
+    "Чтобы снять растение для сада и поставить его в комнату в дополненной реальности.": "Aby ste mohli fotiť rastliny do záhrady a umiestňovať ich do miestnosti v rozšírenej realite.",
+    "Чтобы вести в Календаре свой календарь со сроками полива и подкормки.": "Aby som v Kalendári viedol vlastný kalendár s termínmi polievania a hnojenia."
   },
   "Монстера": "Monstera",
   "Фикус": "Fikus",
@@ -707,5 +708,10 @@
   "Кошкам и собакам": "Mačky a psy",
   "Можно ли ставить растение туда, где до него доберётся питомец. По базе ASPCA, которой пользуются ветеринары. Съел лист ядовитого — сразу к ветеринару.": "Či môže rastlina stáť tam, kam dosiahne domáce zviera. Podľa databázy ASPCA, ktorú používajú veterinári. Zjedlo list jedovatej rastliny? Hneď k veterinárovi.",
   "Узор по времени года": "Vzor podľa ročného obdobia",
-  "Зимой в узор вплетаются снежинки, осенью — кленовые листья, а с 20 декабря по 10 января капли горят новогодней гирляндой.": "V zime sa do vzoru vpletú snehové vločky, na jeseň javorové listy a od 20. decembra do 10. januára kvapky svietia ako vianočná reťaz."
+  "Зимой в узор вплетаются снежинки, осенью — кленовые листья, а с 20 декабря по 10 января капли горят новогодней гирляндой.": "V zime sa do vzoru vpletú snehové vločky, na jeseň javorové listy a od 20. decembra do 10. januára kvapky svietia ako vianočná reťaz.",
+  "Полный доступ дают в настройках телефона: Sprout → Календари.": "Plný prístup povolíte v Nastaveniach telefónu: Sprout → Kalendáre.",
+  "Сроки в Календаре": "Termíny v Kalendári",
+  "Календарь закрыт": "Kalendár je zatvorený",
+  "Подкормить: %@": "Prihnojiť: %@",
+  "В Календаре телефона появится календарь «Sprout»: в какой день кого полить и подкормить, на три недели вперёд. План обновляется, когда вы выходите из приложения.": "V Kalendári telefónu sa objaví kalendár „Sprout“: ktorý deň ktorú rastlinu poliať a prihnojiť, tri týždne dopredu. Plán sa obnoví, keď aplikáciu opustíte."
 }

@@ -16,7 +16,8 @@
   "_infoplist": {
     "Наклон телефона чуть двигает узор на фоне.": "Pakreipus telefoną, fono raštas šiek tiek pasislenka.",
     "Чтобы открывать запертый сад по лицу.": "Kad galėtumėte atrakinti užrakintą sodą veidu.",
-    "Чтобы снять растение для сада и поставить его в комнату в дополненной реальности.": "Kad galėtumėte fotografuoti augalus sodui ir pastatyti juos kambaryje papildytojoje realybėje."
+    "Чтобы снять растение для сада и поставить его в комнату в дополненной реальности.": "Kad galėtumėte fotografuoti augalus sodui ir pastatyti juos kambaryje papildytojoje realybėje.",
+    "Чтобы вести в Календаре свой календарь со сроками полива и подкормки.": "Kad Kalendoriuje vesčiau savo kalendorių su laistymo ir tręšimo terminais."
   },
   "Монстера": "Monstera",
   "Фикус": "Fikusas",
@@ -707,5 +708,10 @@
   "Кошкам и собакам": "Katės ir šunys",
   "Можно ли ставить растение туда, где до него доберётся питомец. По базе ASPCA, которой пользуются ветеринары. Съел лист ядовитого — сразу к ветеринару.": "Ar augalą galima statyti ten, kur pasieks augintinis. Pagal ASPCA duomenų bazę, kuria naudojasi veterinarai. Suėdė nuodingo augalo lapą — iškart pas veterinarą.",
   "Узор по времени года": "Metų laiko raštas",
-  "Зимой в узор вплетаются снежинки, осенью — кленовые листья, а с 20 декабря по 10 января капли горят новогодней гирляндой.": "Žiemą į raštą įsipina snaigės, rudenį — klevo lapai, o nuo gruodžio 20 iki sausio 10 lašai šviečia kaip šventinė girlianda."
+  "Зимой в узор вплетаются снежинки, осенью — кленовые листья, а с 20 декабря по 10 января капли горят новогодней гирляндой.": "Žiemą į raštą įsipina snaigės, rudenį — klevo lapai, o nuo gruodžio 20 iki sausio 10 lašai šviečia kaip šventinė girlianda.",
+  "Полный доступ дают в настройках телефона: Sprout → Календари.": "Visišką prieigą suteikite telefono nustatymuose: Sprout → Kalendoriai.",
+  "Сроки в Календаре": "Terminai Kalendoriuje",
+  "Календарь закрыт": "Kalendorius uždarytas",
+  "Подкормить: %@": "Patręšti: %@",
+  "В Календаре телефона появится календарь «Sprout»: в какой день кого полить и подкормить, на три недели вперёд. План обновляется, когда вы выходите из приложения.": "Telefono Kalendoriuje atsiras kalendorius „Sprout“: kurią dieną kurį augalą palaistyti ir patręšti, trims savaitėms į priekį. Planas atnaujinamas, kai išeinate iš programėlės."
 }

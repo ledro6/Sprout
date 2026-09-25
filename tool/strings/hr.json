@@ -16,7 +16,8 @@
   "_infoplist": {
     "Наклон телефона чуть двигает узор на фоне.": "Nagib telefona lagano pomiče uzorak u pozadini.",
     "Чтобы открывать запертый сад по лицу.": "Za otključavanje zaključanog vrta licem.",
-    "Чтобы снять растение для сада и поставить его в комнату в дополненной реальности.": "Za fotografiranje biljaka za vrt i postavljanje u sobu u proširenoj stvarnosti."
+    "Чтобы снять растение для сада и поставить его в комнату в дополненной реальности.": "Za fotografiranje biljaka za vrt i postavljanje u sobu u proširenoj stvarnosti.",
+    "Чтобы вести в Календаре свой календарь со сроками полива и подкормки.": "Da u Kalendaru vodim vlastiti kalendar s rokovima zalijevanja i prihrane."
   },
   "Монстера": "Monstera",
   "Фикус": "Fikus",
@@ -707,5 +708,10 @@
   "Кошкам и собакам": "Mačke i psi",
   "Можно ли ставить растение туда, где до него доберётся питомец. По базе ASPCA, которой пользуются ветеринары. Съел лист ядовитого — сразу к ветеринару.": "Smije li biljka stajati ondje gdje do nje može doći ljubimac. Prema bazi podataka ASPCA koju koriste veterinari. Pojede li list otrovne biljke — odmah veterinaru.",
   "Узор по времени года": "Uzorak prema godišnjem dobu",
-  "Зимой в узор вплетаются снежинки, осенью — кленовые листья, а с 20 декабря по 10 января капли горят новогодней гирляндой.": "Zimi se u uzorak upliću pahulje, ujesen javorovo lišće, a od 20. prosinca do 10. siječnja kapi svijetle kao blagdanske lampice."
+  "Зимой в узор вплетаются снежинки, осенью — кленовые листья, а с 20 декабря по 10 января капли горят новогодней гирляндой.": "Zimi se u uzorak upliću pahulje, ujesen javorovo lišće, a od 20. prosinca do 10. siječnja kapi svijetle kao blagdanske lampice.",
+  "Полный доступ дают в настройках телефона: Sprout → Календари.": "Puni pristup dajete u postavkama telefona: Sprout → Kalendari.",
+  "Сроки в Календаре": "Rokovi u Kalendaru",
+  "Календарь закрыт": "Kalendar je zatvoren",
+  "Подкормить: %@": "Prihrani: %@",
+  "В Календаре телефона появится календарь «Sprout»: в какой день кого полить и подкормить, на три недели вперёд. План обновляется, когда вы выходите из приложения.": "U Kalendaru telefona pojavit će se kalendar „Sprout”: koji dan koju biljku zaliti i prihraniti, tri tjedna unaprijed. Plan se osvježava kad izađete iz aplikacije."
 }

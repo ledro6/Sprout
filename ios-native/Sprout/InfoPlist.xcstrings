@@ -1,6 +1,299 @@
 {
   "sourceLanguage": "ru",
   "strings": {
+    "NSCalendarsFullAccessUsageDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "لأحتفظ في التقويم بتقويم خاص بمواعيد السقي والتسميد."
+          }
+        },
+        "bg": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "За да водя в Календар свой календар със сроковете за поливане и торене."
+          }
+        },
+        "bn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ক্যালেন্ডারে জল ও সার দেওয়ার দিনগুলোর জন্য আলাদা একটি ক্যালেন্ডার রাখতে।"
+          }
+        },
+        "ca": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Per mantenir al Calendari un calendari propi amb els dies de reg i d’adob."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Abych v Kalendáři vedl vlastní kalendář s termíny zálivky a hnojení."
+          }
+        },
+        "da": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "For at føre en Sprout-kalender med datoer for vanding og gødning."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Um einen eigenen Kalender mit Gieß- und Düngeterminen zu führen."
+          }
+        },
+        "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Για να κρατώ στο Ημερολόγιο δικό μου ημερολόγιο με τις ημέρες ποτίσματος και λίπανσης."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "To keep a Sprout calendar with watering and feeding dates."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Para llevar en Calendario un calendario propio con las fechas de riego y abono."
+          }
+        },
+        "fi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jotta voin pitää Kalenterissa omaa kalenteria kastelu- ja lannoituspäivistä."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pour tenir dans Calendrier un calendrier Sprout avec les dates d’arrosage et d’engrais."
+          }
+        },
+        "gu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "કૅલેન્ડરમાં પાણી અને ખાતરની તારીખો સાથે પોતાનું કૅલેન્ડર રાખવા."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "כדי לנהל ביומן לוח שנה משלי עם מועדי השקיה ודישון."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "कैलेंडर में पानी और खाद की तारीख़ों वाला अपना कैलेंडर रखने के लिए।"
+          }
+        },
+        "hr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Da u Kalendaru vodim vlastiti kalendar s rokovima zalijevanja i prihrane."
+          }
+        },
+        "hu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hogy a Naptárban saját naptárt vezessek az öntözés és a tápoldatozás időpontjaival."
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Untuk menyimpan kalender Sprout berisi jadwal menyiram dan memupuk di Kalender."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Per tenere in Calendario un calendario Sprout con le date di annaffiatura e concimazione."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "水やりと肥料の予定をまとめたSproutのカレンダーを作るために使います。"
+          }
+        },
+        "kk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Күнтізбеде суару және тыңайту мерзімдері бар өз күнтізбемді жүргізу үшін."
+          }
+        },
+        "kn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ಕ್ಯಾಲೆಂಡರ್‌ನಲ್ಲಿ ನೀರು ಮತ್ತು ಗೊಬ್ಬರದ ದಿನಾಂಕಗಳಿರುವ ಸ್ವಂತ ಕ್ಯಾಲೆಂಡರ್ ಇಡಲು."
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "물주기와 비료 일정을 담은 Sprout 캘린더를 캘린더 앱에 만들기 위해 사용합니다."
+          }
+        },
+        "lt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kad Kalendoriuje vesčiau savo kalendorių su laistymo ir tręšimo terminais."
+          }
+        },
+        "ml": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "നനയും വളവും ഉള്ള തീയതികളോടെ കലണ്ടറിൽ സ്വന്തം കലണ്ടർ സൂക്ഷിക്കാൻ."
+          }
+        },
+        "mr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "कॅलेंडरमध्ये पाणी आणि खताच्या तारखांचे स्वतःचे कॅलेंडर ठेवण्यासाठी."
+          }
+        },
+        "ms": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Untuk menyimpan kalendar Sprout dengan tarikh siraman dan pembajaan dalam Kalendar."
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "For å føre en egen kalender med datoer for vanning og gjødsling."
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Om in Agenda een eigen agenda bij te houden met de data voor water geven en voeden."
+          }
+        },
+        "or": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "କ୍ୟାଲେଣ୍ଡରରେ ପାଣି ଓ ସାର ଦେବା ତାରିଖ ସହ ନିଜ କ୍ୟାଲେଣ୍ଡର ରଖିବା ପାଇଁ।"
+          }
+        },
+        "pa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ਕੈਲੰਡਰ ਵਿੱਚ ਪਾਣੀ ਅਤੇ ਖਾਦ ਦੀਆਂ ਤਾਰੀਖ਼ਾਂ ਵਾਲਾ ਆਪਣਾ ਕੈਲੰਡਰ ਰੱਖਣ ਲਈ।"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aby prowadzić w Kalendarzu własny kalendarz z terminami podlewania i nawożenia."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Para manter no Calendário um calendário Sprout com as datas de rega e adubação."
+          }
+        },
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Para manter no Calendário um calendário Sprout com as datas de rega e adubação."
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pentru a ține în Calendar un calendar propriu cu termenele de udare și fertilizare."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Чтобы вести в Календаре свой календарь со сроками полива и подкормки."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aby som v Kalendári viedol vlastný kalendár s termínmi polievania a hnojenia."
+          }
+        },
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Da v Koledarju vodim svoj koledar z roki zalivanja in gnojenja."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "För att föra en egen kalender med datum för vattning och gödsling."
+          }
+        },
+        "ta": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "நீர் மற்றும் உர நாட்களுடன் கேலெண்டரில் சொந்த கேலெண்டரை வைத்திருக்க."
+          }
+        },
+        "te": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "నీళ్లు, ఎరువు తేదీలతో క్యాలెండర్‌లో సొంత క్యాలెండర్ ఉంచడానికి."
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "เพื่อสร้างปฏิทิน Sprout ที่มีวันรดน้ำและใส่ปุ๋ยในแอปปฏิทิน"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Takvim’de sulama ve gübreleme tarihlerini içeren bir Sprout takvimi tutmak için."
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Щоб вести в Календарі свій календар зі строками поливу й підживлення."
+          }
+        },
+        "ur": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "کیلنڈر میں پانی اور کھاد کی تاریخوں والا اپنا کیلنڈر رکھنے کے لیے۔"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Để tạo trong Lịch một lịch Sprout với ngày tưới cây và bón phân."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "用于在日历中创建一个包含浇水和施肥日期的 Sprout 日历。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "用於在行事曆中建立包含澆水與施肥日期的 Sprout 行事曆。"
+          }
+        }
+      }
+    },
     "NSCameraUsageDescription": {
       "extractionState": "manual",
       "localizations": {

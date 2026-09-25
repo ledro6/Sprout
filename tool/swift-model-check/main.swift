@@ -2757,6 +2757,66 @@ do {
     check("\(festive.motif)", "plain", "выключено — узор обычный круглый год")
 }
 
+print("сроки в календаре:")
+do {
+    var utc = Calendar(identifier: .gregorian)
+    utc.timeZone = TimeZone(identifier: "UTC")!
+    let noon = utc.date(from: DateComponents(year: 2026, month: 5, day: 10,
+                                             hour: 12))!
+    func day(_ number: Int) -> Date {
+        utc.date(from: DateComponents(year: 2026, month: 5, day: number))!
+    }
+    let stretch = Season.stretch, growing = Season.growing
+    Season.stretch = 1
+    Season.growing = true
+    // Шесть дней сада — двое настоящих суток: сад идёт втрое быстрее.
+    var baksik = Plant.new(name: "Баксик", species: "Монстера",
+                           dryingDays: 6, id: "b", on: noon, calendar: utc)
+    baksik.moisture = 0.5
+    baksik.care = Care()
+    var lera = Plant.new(name: "Лера", species: "Фикус", dryingDays: 6,
+                         id: "l", on: noon, calendar: utc)
+    lera.moisture = 0.5
+    lera.care = Care(feedEvery: 30, sinceFed: 27)
+    // Полтора дня сада — двенадцать часов: два полива в сутки.
+    var prickly = Plant.new(name: "Колючка", species: "Кактус",
+                            dryingDays: 1.5, id: "k", on: noon, calendar: utc)
+    prickly.moisture = 0
+    var still = Plant.new(name: "Камень", species: "Литопс", dryingDays: 0,
+                          id: "s", on: noon, calendar: utc)
+    still.moisture = 0.5
+    let rooms = [Room(name: "Гостиная", plants: [baksik, lera]),
+                 Room(name: "Кухня", plants: [prickly, still])]
+    let plan = Agenda.plan(rooms, now: noon, horizon: 7, calendar: utc)
+    let water = plan.filter { $0.chore == .water }
+    let feed = plan.filter { $0.chore == .feed }
+    check("\(water.count)", "7", "полив — событие на каждый день недели")
+    check("\(feed.count)", "1", "подкормка — одна, через сутки")
+    check(water.first?.day == day(10), "сухая колючка — сегодня")
+    check(water.first?.pots.map(\.name) == ["Колючка"],
+          "а больше сегодня никого")
+    let second = water.first { $0.day == day(11) }
+    check(second?.title ?? "—", "Полить: Баксик, Лера, Колючка",
+          "половина из шести дней сада — завтра, в порядке сада")
+    check(second?.notes ?? "—", "Гостиная: Баксик, Лера\nКухня: Колючка",
+          "в заметке — по строке на комнату")
+    check(feed.first?.title ?? "—", "Подкормить: Лера",
+          "подкормка в тот же день отдельным событием")
+    check(water.allSatisfy { entry in
+        Set(entry.pots.map(\.id)).count == entry.pots.count
+    }, "два полива за сутки — одна строка")
+    check(water.filter { $0.pots.contains { $0.name == "Баксик" } }
+        .map(\.day) == [day(11), day(13), day(15)],
+          "дальше — через двое суток, пока не кончится неделя")
+    check(!plan.contains { $0.pots.contains { $0.name == "Камень" } },
+          "без срока в календаре не бывает")
+    Season.growing = false
+    check(!Agenda.plan(rooms, now: noon, horizon: 7, calendar: utc)
+        .contains { $0.chore == .feed }, "зимой подкормки в календаре нет")
+    Season.stretch = stretch
+    Season.growing = growing
+}
+
 print("другие языки:")
 do {
     defer { language = "ru" }

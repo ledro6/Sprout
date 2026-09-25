@@ -16,7 +16,8 @@
   "_infoplist": {
     "Наклон телефона чуть двигает узор на фоне.": "Inclinar o telemóvel move ligeiramente o padrão do fundo.",
     "Чтобы открывать запертый сад по лицу.": "Para abrir o seu jardim bloqueado com o rosto.",
-    "Чтобы снять растение для сада и поставить его в комнату в дополненной реальности.": "Para fotografar plantas para o seu jardim e colocá-las na sua divisão em realidade aumentada."
+    "Чтобы снять растение для сада и поставить его в комнату в дополненной реальности.": "Para fotografar plantas para o seu jardim e colocá-las na sua divisão em realidade aumentada.",
+    "Чтобы вести в Календаре свой календарь со сроками полива и подкормки.": "Para manter no Calendário um calendário Sprout com as datas de rega e adubação."
   },
   "Монстера": "Costela-de-adão",
   "Фикус": "Fícus",
@@ -691,5 +692,10 @@
   "Кошкам и собакам": "Gatos e cães",
   "Можно ли ставить растение туда, где до него доберётся питомец. По базе ASPCA, которой пользуются ветеринары. Съел лист ядовитого — сразу к ветеринару.": "Se a planta pode ficar onde um animal de estimação lhe chegue. Segundo a base de dados da ASPCA, usada pelos veterinários. Se comeu uma folha de uma planta tóxica, vá logo ao veterinário.",
   "Узор по времени года": "Padrão da estação",
-  "Зимой в узор вплетаются снежинки, осенью — кленовые листья, а с 20 декабря по 10 января капли горят новогодней гирляндой.": "No inverno, entram no padrão flocos de neve; no outono, folhas de ácer; e de 20 de dezembro a 10 de janeiro, as gotas acendem-se como luzes de Natal."
+  "Зимой в узор вплетаются снежинки, осенью — кленовые листья, а с 20 декабря по 10 января капли горят новогодней гирляндой.": "No inverno, entram no padrão flocos de neve; no outono, folhas de ácer; e de 20 de dezembro a 10 de janeiro, as gotas acendem-se como luzes de Natal.",
+  "Полный доступ дают в настройках телефона: Sprout → Календари.": "Dê acesso total nas Definições do telemóvel: Sprout → Calendários.",
+  "Сроки в Календаре": "Datas no Calendário",
+  "Календарь закрыт": "Calendário fechado",
+  "Подкормить: %@": "Adubar: %@",
+  "В Календаре телефона появится календарь «Sprout»: в какой день кого полить и подкормить, на три недели вперёд. План обновляется, когда вы выходите из приложения.": "No Calendário do telemóvel vai aparecer um calendário “Sprout”: em que dia regar e adubar cada planta, com três semanas de antecedência. O plano é atualizado quando sai da app."
 }

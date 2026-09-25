@@ -16,7 +16,8 @@
   "_infoplist": {
     "Наклон телефона чуть двигает узор на фоне.": "A telefon döntése kicsit elmozdítja a háttérmintát.",
     "Чтобы открывать запертый сад по лицу.": "Hogy a zárolt kertet az arcoddal nyithasd meg.",
-    "Чтобы снять растение для сада и поставить его в комнату в дополненной реальности.": "Hogy növényeket fotózhass a kertedbe, és kiterjesztett valóságban elhelyezhesd őket a szobádban."
+    "Чтобы снять растение для сада и поставить его в комнату в дополненной реальности.": "Hogy növényeket fotózhass a kertedbe, és kiterjesztett valóságban elhelyezhesd őket a szobádban.",
+    "Чтобы вести в Календаре свой календарь со сроками полива и подкормки.": "Hogy a Naptárban saját naptárt vezessek az öntözés és a tápoldatozás időpontjaival."
   },
   "Монстера": "Könnyező pálma",
   "Фикус": "Fikusz",
@@ -691,5 +692,10 @@
   "Кошкам и собакам": "Macskák és kutyák",
   "Можно ли ставить растение туда, где до него доберётся питомец. По базе ASPCA, которой пользуются ветеринары. Съел лист ядовитого — сразу к ветеринару.": "Tehető-e a növény oda, ahol a háziállat eléri. Az ASPCA adatbázisa alapján, amelyet az állatorvosok használnak. Ha mérgező növény levelét ette meg, azonnal állatorvoshoz.",
   "Узор по времени года": "Évszakhoz illő minta",
-  "Зимой в узор вплетаются снежинки, осенью — кленовые листья, а с 20 декабря по 10 января капли горят новогодней гирляндой.": "Télen hópelyhek kerülnek a mintába, ősszel juharlevelek, december 20. és január 10. között pedig a cseppek ünnepi fényfüzérként világítanak."
+  "Зимой в узор вплетаются снежинки, осенью — кленовые листья, а с 20 декабря по 10 января капли горят новогодней гирляндой.": "Télen hópelyhek kerülnek a mintába, ősszel juharlevelek, december 20. és január 10. között pedig a cseppek ünnepi fényfüzérként világítanak.",
+  "Полный доступ дают в настройках телефона: Sprout → Календари.": "Teljes hozzáférést a telefon Beállításaiban adhatsz: Sprout → Naptárak.",
+  "Сроки в Календаре": "Időpontok a Naptárban",
+  "Календарь закрыт": "A Naptár zárva",
+  "Подкормить: %@": "Tápoldatozás: %@",
+  "В Календаре телефона появится календарь «Sprout»: в какой день кого полить и подкормить, на три недели вперёд. План обновляется, когда вы выходите из приложения.": "A telefon Naptárában megjelenik egy „Sprout” naptár: melyik nap melyik növényt kell öntözni és tápoldatozni, három hétre előre. A terv frissül, amikor kilépsz az appból."
 }

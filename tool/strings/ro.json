@@ -16,7 +16,8 @@
   "_infoplist": {
     "Наклон телефона чуть двигает узор на фоне.": "Înclinarea telefonului mișcă ușor modelul din fundal.",
     "Чтобы открывать запертый сад по лицу.": "Pentru a deschide grădina blocată cu fața.",
-    "Чтобы снять растение для сада и поставить его в комнату в дополненной реальности.": "Pentru a fotografia plante pentru grădină și a le așeza în cameră în realitate augmentată."
+    "Чтобы снять растение для сада и поставить его в комнату в дополненной реальности.": "Pentru a fotografia plante pentru grădină și a le așeza în cameră în realitate augmentată.",
+    "Чтобы вести в Календаре свой календарь со сроками полива и подкормки.": "Pentru a ține în Calendar un calendar propriu cu termenele de udare și fertilizare."
   },
   "Монстера": "Monstera",
   "Фикус": "Ficus",
@@ -707,5 +708,10 @@
   "Кошкам и собакам": "Pisici și câini",
   "Можно ли ставить растение туда, где до него доберётся питомец. По базе ASPCA, которой пользуются ветеринары. Съел лист ядовитого — сразу к ветеринару.": "Dacă planta poate sta acolo unde ajunge un animal de companie. După baza de date ASPCA, folosită de veterinari. Dacă a mâncat o frunză de plantă toxică — imediat la veterinar.",
   "Узор по времени года": "Model după anotimp",
-  "Зимой в узор вплетаются снежинки, осенью — кленовые листья, а с 20 декабря по 10 января капли горят новогодней гирляндой.": "Iarna, în model apar fulgi de zăpadă, toamna — frunze de arțar, iar între 20 decembrie și 10 ianuarie picăturile se aprind ca o ghirlandă de sărbători."
+  "Зимой в узор вплетаются снежинки, осенью — кленовые листья, а с 20 декабря по 10 января капли горят новогодней гирляндой.": "Iarna, în model apar fulgi de zăpadă, toamna — frunze de arțar, iar între 20 decembrie și 10 ianuarie picăturile se aprind ca o ghirlandă de sărbători.",
+  "Полный доступ дают в настройках телефона: Sprout → Календари.": "Acordă acces complet din Configurările telefonului: Sprout → Calendare.",
+  "Сроки в Календаре": "Termene în Calendar",
+  "Календарь закрыт": "Calendarul este închis",
+  "Подкормить: %@": "Fertilizează: %@",
+  "В Календаре телефона появится календарь «Sprout»: в какой день кого полить и подкормить, на три недели вперёд. План обновляется, когда вы выходите из приложения.": "În Calendarul telefonului va apărea un calendar „Sprout”: în ce zi trebuie udată și fertilizată fiecare plantă, cu trei săptămâni înainte. Planul se actualizează când ieși din aplicație."
 }

@@ -109,8 +109,12 @@ struct RootView: View {
                 garden.save()
             }
             // Удалённое уходит насовсем только в фоне: на «неактивно»
-            // попадают шторка, «Пункт управления» и Face ID.
-            if now == .background { Bin.shared.commit() }
+            // попадают шторка, «Пункт управления» и Face ID. Календарь —
+            // тогда же и уже без удалённого: план пишется заново целиком.
+            if now == .background {
+                Bin.shared.commit()
+                if settings.calendar { CalendarSync.shared.sync(garden.rooms) }
+            }
             remind(active: now == .active)
         }
     }

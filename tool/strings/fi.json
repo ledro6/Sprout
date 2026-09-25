@@ -16,7 +16,8 @@
   "_infoplist": {
     "Наклон телефона чуть двигает узор на фоне.": "Puhelimen kallistaminen liikuttaa taustakuviota hieman.",
     "Чтобы открывать запертый сад по лицу.": "Lukitun puutarhan avaamiseksi kasvoilla.",
-    "Чтобы снять растение для сада и поставить его в комнату в дополненной реальности.": "Kasvien kuvaamiseksi puutarhaasi ja niiden sijoittamiseksi huoneeseen lisätyssä todellisuudessa."
+    "Чтобы снять растение для сада и поставить его в комнату в дополненной реальности.": "Kasvien kuvaamiseksi puutarhaasi ja niiden sijoittamiseksi huoneeseen lisätyssä todellisuudessa.",
+    "Чтобы вести в Календаре свой календарь со сроками полива и подкормки.": "Jotta voin pitää Kalenterissa omaa kalenteria kastelu- ja lannoituspäivistä."
   },
   "Монстера": "Monstera",
   "Фикус": "Viikuna",
@@ -691,5 +692,10 @@
   "Кошкам и собакам": "Kissat ja koirat",
   "Можно ли ставить растение туда, где до него доберётся питомец. По базе ASPCA, которой пользуются ветеринары. Съел лист ядовитого — сразу к ветеринару.": "Voiko kasvin sijoittaa paikkaan, johon lemmikki ylettyy. ASPCA:n tietokannan mukaan, jota eläinlääkärit käyttävät. Jos lemmikki söi myrkyllisen kasvin lehden, heti eläinlääkäriin.",
   "Узор по времени года": "Vuodenajan kuvio",
-  "Зимой в узор вплетаются снежинки, осенью — кленовые листья, а с 20 декабря по 10 января капли горят новогодней гирляндой.": "Talvella kuvioon ilmestyy lumihiutaleita, syksyllä vaahteranlehtiä, ja 20. joulukuuta–10. tammikuuta pisarat loistavat kuin jouluvalot."
+  "Зимой в узор вплетаются снежинки, осенью — кленовые листья, а с 20 декабря по 10 января капли горят новогодней гирляндой.": "Talvella kuvioon ilmestyy lumihiutaleita, syksyllä vaahteranlehtiä, ja 20. joulukuuta–10. tammikuuta pisarat loistavat kuin jouluvalot.",
+  "Полный доступ дают в настройках телефона: Sprout → Календари.": "Anna täysi pääsy puhelimen asetuksista: Sprout → Kalenterit.",
+  "Сроки в Календаре": "Ajat Kalenterissa",
+  "Календарь закрыт": "Kalenteri on suljettu",
+  "Подкормить: %@": "Lannoita: %@",
+  "В Календаре телефона появится календарь «Sprout»: в какой день кого полить и подкормить, на три недели вперёд. План обновляется, когда вы выходите из приложения.": "Puhelimen Kalenteriin ilmestyy kalenteri ”Sprout”: minä päivänä mitäkin kasvia kastellaan ja lannoitetaan, kolme viikkoa eteenpäin. Suunnitelma päivittyy, kun poistut sovelluksesta."
 }

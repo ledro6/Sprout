@@ -224,6 +224,12 @@ final class Settings {
         didSet { store.set(reminders, forKey: Key.reminders) }
     }
 
+    /// Сроки в Календаре телефона, см. `Agenda`. Доступ к календарю — так
+    /// же, по переключателю.
+    var calendar: Bool {
+        didSet { store.set(calendar, forKey: Key.calendar) }
+    }
+
     var threshold: Double {
         didSet { store.set(threshold, forKey: Key.threshold) }
     }
@@ -291,6 +297,7 @@ final class Settings {
         static let kinds = "patternKinds"
         static let shapes = "patternShapes"
         static let reminders = "reminders"
+        static let calendar = "calendarSync"
         static let threshold = "remindThreshold"
         static let patternTint = "patternTint"
         static let waveTint = "waveTint"
@@ -356,6 +363,7 @@ final class Settings {
         seasons = !store.bool(forKey: Key.flatYear)
         seasonalPattern = !store.bool(forKey: Key.plainPattern)
         reminders = store.bool(forKey: Key.reminders)
+        calendar = store.bool(forKey: Key.calendar)
         let level = (store.double(forKey: Key.threshold) * 100).rounded()
         threshold = Self.thresholds.contains(Int(level)) ? level / 100
             : Self.defaultThreshold

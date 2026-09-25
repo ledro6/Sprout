@@ -16,7 +16,8 @@
   "_infoplist": {
     "Наклон телефона чуть двигает узор на фоне.": "Memiringkan ponsel sedikit menggeser pola latar.",
     "Чтобы открывать запертый сад по лицу.": "Untuk membuka kebunmu yang terkunci dengan wajah.",
-    "Чтобы снять растение для сада и поставить его в комнату в дополненной реальности.": "Untuk memotret tanaman untuk kebunmu dan meletakkannya di ruangan dalam realitas tertambah."
+    "Чтобы снять растение для сада и поставить его в комнату в дополненной реальности.": "Untuk memotret tanaman untuk kebunmu dan meletakkannya di ruangan dalam realitas tertambah.",
+    "Чтобы вести в Календаре свой календарь со сроками полива и подкормки.": "Untuk menyimpan kalender Sprout berisi jadwal menyiram dan memupuk di Kalender."
   },
   "Монстера": "Monstera",
   "Фикус": "Beringin",
@@ -643,5 +644,10 @@
   "Кошкам и собакам": "Kucing dan anjing",
   "Можно ли ставить растение туда, где до него доберётся питомец. По базе ASPCA, которой пользуются ветеринары. Съел лист ядовитого — сразу к ветеринару.": "Apakah tanaman boleh diletakkan di tempat yang bisa dijangkau hewan peliharaan. Berdasarkan basis data ASPCA yang dipakai dokter hewan. Kalau hewan memakan daun tanaman beracun, segera ke dokter hewan.",
   "Узор по времени года": "Pola musiman",
-  "Зимой в узор вплетаются снежинки, осенью — кленовые листья, а с 20 декабря по 10 января капли горят новогодней гирляндой.": "Saat musim dingin, kepingan salju masuk ke pola; saat musim gugur, daun maple; dan dari 20 Desember sampai 10 Januari, tetesan air menyala seperti lampu hias Tahun Baru."
+  "Зимой в узор вплетаются снежинки, осенью — кленовые листья, а с 20 декабря по 10 января капли горят новогодней гирляндой.": "Saat musim dingin, kepingan salju masuk ke pola; saat musim gugur, daun maple; dan dari 20 Desember sampai 10 Januari, tetesan air menyala seperti lampu hias Tahun Baru.",
+  "Полный доступ дают в настройках телефона: Sprout → Календари.": "Beri akses penuh di Pengaturan ponsel: Sprout → Kalender.",
+  "Сроки в Календаре": "Jadwal di Kalender",
+  "Календарь закрыт": "Kalender ditutup",
+  "Подкормить: %@": "Pupuk: %@",
+  "В Календаре телефона появится календарь «Sprout»: в какой день кого полить и подкормить, на три недели вперёд. План обновляется, когда вы выходите из приложения.": "Di Kalender ponsel akan muncul kalender “Sprout”: hari apa tanaman mana disiram dan dipupuk, tiga minggu ke depan. Rencana diperbarui saat Anda keluar dari app."
 }

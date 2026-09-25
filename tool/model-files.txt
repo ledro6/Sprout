@@ -20,6 +20,7 @@ ios-native/Sprout/Model/Core/Recents.swift
 ios-native/Sprout/Model/Garden/Score.swift
 ios-native/Sprout/Model/Garden/Diary.swift
 ios-native/Sprout/Model/Core/Reminders.swift
+ios-native/Sprout/Model/Core/Agenda.swift
 ios-native/Sprout/Model/Garden/Rival.swift
 ios-native/Sprout/Model/Recognition/Species.swift
 ios-native/Sprout/Model/Garden/Shots.swift

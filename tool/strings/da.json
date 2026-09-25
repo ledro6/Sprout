@@ -16,7 +16,8 @@
   "_infoplist": {
     "Наклон телефона чуть двигает узор на фоне.": "Når du vipper telefonen, flytter baggrundsmønsteret sig en smule.",
     "Чтобы открывать запертый сад по лицу.": "For at låse din låste have op med dit ansigt.",
-    "Чтобы снять растение для сада и поставить его в комнату в дополненной реальности.": "For at fotografere planter til din have og placere dem i dit rum i augmented reality."
+    "Чтобы снять растение для сада и поставить его в комнату в дополненной реальности.": "For at fotografere planter til din have og placere dem i dit rum i augmented reality.",
+    "Чтобы вести в Календаре свой календарь со сроками полива и подкормки.": "For at føre en Sprout-kalender med datoer for vanding og gødning."
   },
   "Монстера": "Monstera",
   "Фикус": "Figen",
@@ -691,5 +692,10 @@
   "Кошкам и собакам": "Katte og hunde",
   "Можно ли ставить растение туда, где до него доберётся питомец. По базе ASPCA, которой пользуются ветеринары. Съел лист ядовитого — сразу к ветеринару.": "Om planten kan stå, hvor et kæledyr kan nå den. Ifølge ASPCA’s database, som dyrlæger bruger. Har dyret spist et blad af en giftig plante, så straks til dyrlægen.",
   "Узор по времени года": "Mønster efter årstiden",
-  "Зимой в узор вплетаются снежинки, осенью — кленовые листья, а с 20 декабря по 10 января капли горят новогодней гирляндой.": "Om vinteren får mønsteret snefnug, om efteråret ahornblade, og fra 20. december til 10. januar lyser dråberne som en julelyskæde."
+  "Зимой в узор вплетаются снежинки, осенью — кленовые листья, а с 20 декабря по 10 января капли горят новогодней гирляндой.": "Om vinteren får mønsteret snefnug, om efteråret ahornblade, og fra 20. december til 10. januar lyser dråberne som en julelyskæde.",
+  "Полный доступ дают в настройках телефона: Sprout → Календари.": "Giv fuld adgang i telefonens Indstillinger: Sprout → Kalendere.",
+  "Сроки в Календаре": "Datoer i Kalender",
+  "Календарь закрыт": "Kalenderen er lukket",
+  "Подкормить: %@": "Gød: %@",
+  "В Календаре телефона появится календарь «Sprout»: в какой день кого полить и подкормить, на три недели вперёд. План обновляется, когда вы выходите из приложения.": "I telefonens Kalender dukker en kalender “Sprout” op: hvilken dag hvilke planter skal vandes og gødes, tre uger frem. Planen opdateres, når du forlader appen."
 }

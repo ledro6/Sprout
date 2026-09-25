@@ -16,7 +16,8 @@
   "_infoplist": {
     "Наклон телефона чуть двигает узор на фоне.": "Kantelen van de telefoon beweegt het achtergrondpatroon een beetje.",
     "Чтобы открывать запертый сад по лицу.": "Om je vergrendelde tuin met je gezicht te openen.",
-    "Чтобы снять растение для сада и поставить его в комнату в дополненной реальности.": "Om planten voor je tuin te fotograferen en ze in augmented reality in je kamer te zetten."
+    "Чтобы снять растение для сада и поставить его в комнату в дополненной реальности.": "Om planten voor je tuin te fotograferen en ze in augmented reality in je kamer te zetten.",
+    "Чтобы вести в Календаре свой календарь со сроками полива и подкормки.": "Om in Agenda een eigen agenda bij te houden met de data voor water geven en voeden."
   },
   "Монстера": "Monstera",
   "Фикус": "Ficus",
@@ -691,5 +692,10 @@
   "Кошкам и собакам": "Katten en honden",
   "Можно ли ставить растение туда, где до него доберётся питомец. По базе ASPCA, которой пользуются ветеринары. Съел лист ядовитого — сразу к ветеринару.": "Of de plant mag staan waar een huisdier erbij kan. Volgens de database van de ASPCA, die dierenartsen gebruiken. Heeft het een blad van een giftige plant gegeten, dan meteen naar de dierenarts.",
   "Узор по времени года": "Patroon per seizoen",
-  "Зимой в узор вплетаются снежинки, осенью — кленовые листья, а с 20 декабря по 10 января капли горят новогодней гирляндой.": "In de winter komen er sneeuwvlokken in het patroon, in de herfst esdoornbladeren, en van 20 december tot 10 januari lichten de druppels op als een feestelijke lichtslinger."
+  "Зимой в узор вплетаются снежинки, осенью — кленовые листья, а с 20 декабря по 10 января капли горят новогодней гирляндой.": "In de winter komen er sneeuwvlokken in het patroon, in de herfst esdoornbladeren, en van 20 december tot 10 januari lichten de druppels op als een feestelijke lichtslinger.",
+  "Полный доступ дают в настройках телефона: Sprout → Календари.": "Geef volledige toegang in de Instellingen van de telefoon: Sprout → Agenda’s.",
+  "Сроки в Календаре": "Data in Agenda",
+  "Календарь закрыт": "Agenda is afgesloten",
+  "Подкормить: %@": "Voed: %@",
+  "В Календаре телефона появится календарь «Sprout»: в какой день кого полить и подкормить, на три недели вперёд. План обновляется, когда вы выходите из приложения.": "In de Agenda van je telefoon verschijnt een agenda ‘Sprout’: op welke dag welke plant water en voeding nodig heeft, drie weken vooruit. Het plan wordt bijgewerkt als je de app verlaat."
 }

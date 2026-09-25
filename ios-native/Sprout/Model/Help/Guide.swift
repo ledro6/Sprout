@@ -5,7 +5,7 @@ import Foundation
 enum Term: String, CaseIterable, Identifiable, Sendable {
     case ar, model, moisture, period, seasons, rhythm, feeding, repotting,
          reminders, parallax, sway, wave, frolic, lock, trip, accuracy,
-         streak, orrery, parade, pets, motif
+         streak, orrery, parade, pets, motif, agenda
 
     var id: String { rawValue }
 
@@ -32,6 +32,7 @@ enum Term: String, CaseIterable, Identifiable, Sendable {
         case .parade: Lang.text("Парад")
         case .pets: Lang.text("Кошкам и собакам")
         case .motif: Lang.text("Узор по времени года")
+        case .agenda: Lang.text("Сроки в Календаре")
         }
     }
 
@@ -147,6 +148,12 @@ enum Term: String, CaseIterable, Identifiable, Sendable {
                 листья, а с 20 декабря по 10 января капли горят \
                 новогодней гирляндой.
                 """)
+        case .agenda:
+            Lang.text("""
+                В Календаре телефона появится календарь «Sprout»: в какой \
+                день кого полить и подкормить, на три недели вперёд. План \
+                обновляется, когда вы выходите из приложения.
+                """)
         }
     }
 
@@ -171,6 +178,7 @@ enum Term: String, CaseIterable, Identifiable, Sendable {
         case .parade: "sparkles.rectangle.stack"
         case .pets: "pawprint"
         case .motif: "snowflake"
+        case .agenda: "calendar.badge.plus"
         case .lock: "lock"
         case .trip: "airplane.departure"
         }

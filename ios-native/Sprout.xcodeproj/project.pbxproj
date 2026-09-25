@@ -363,6 +363,7 @@
 				INFOPLIST_KEY_CADisableMinimumFrameDurationOnPhone = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = Sprout;
 				INFOPLIST_KEY_NSFaceIDUsageDescription = "Чтобы открывать запертый сад по лицу.";
+				INFOPLIST_KEY_NSCalendarsFullAccessUsageDescription = "Чтобы вести в Календаре свой календарь со сроками полива и подкормки.";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Чтобы снять растение для сада и поставить его в комнату в дополненной реальности.";
 				INFOPLIST_KEY_NSMotionUsageDescription = "Наклон телефона чуть двигает узор на фоне.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -396,6 +397,7 @@
 				INFOPLIST_KEY_CADisableMinimumFrameDurationOnPhone = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = Sprout;
 				INFOPLIST_KEY_NSFaceIDUsageDescription = "Чтобы открывать запертый сад по лицу.";
+				INFOPLIST_KEY_NSCalendarsFullAccessUsageDescription = "Чтобы вести в Календаре свой календарь со сроками полива и подкормки.";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Чтобы снять растение для сада и поставить его в комнату в дополненной реальности.";
 				INFOPLIST_KEY_NSMotionUsageDescription = "Наклон телефона чуть двигает узор на фоне.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
