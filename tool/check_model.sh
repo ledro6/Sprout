@@ -18,23 +18,27 @@ fi
 OUT=$(mktemp -d)
 trap 'rm -rf "$OUT"' EXIT
 
-# Виджет собирает только часть модели — файлы из списка в проекте. Тип из
-# файла не из списка Xcode не простит, а здесь это видно и без Mac.
-WIDGET_MODEL=$(python3 - <<'PY'
+# Виджет, часы и циферблат собирают только часть модели — файлы из своих
+# списков в проекте. Тип из файла не из списка Xcode не простит, а здесь
+# это видно и без Mac: каждая цель — отдельной проверкой.
+SUBSETS=$(python3 - <<'PY'
 import re
 src = open("ios-native/Sprout.xcodeproj/project.pbxproj", encoding="utf-8").read()
-block = re.search(r'"Sprout" folder in "SproutWidgetExtension" target \*/ '
-                  r'= \{.*?membershipExceptions = \((.*?)\);', src, re.S)
-# Имя с «+» Xcode пишет в кавычках.
-names = [line.strip().rstrip(",").strip('"')
-         for line in block.group(1).splitlines()]
-print(" ".join("ios-native/Sprout/" + name for name in names
-               if name.startswith("Model/")))
+for target, body in re.findall(
+        r'"Sprout" folder in "(\w+)" target \*/ = \{.*?membershipExceptions = \((.*?)\);',
+        src, re.S):
+    # Имя с «+» Xcode пишет в кавычках.
+    names = [line.strip().rstrip(",").strip('"') for line in body.splitlines()]
+    files = ["ios-native/Sprout/" + name for name in names
+             if name.startswith("Model/")]
+    print(target + ":" + " ".join(files))
 PY
 )
-# shellcheck disable=SC2086
-"$SWIFTC" -typecheck $WIDGET_MODEL
-echo "модель виджета собирается: $(echo "$WIDGET_MODEL" | wc -w) файлов"
+while IFS=: read -r TARGET FILES; do
+  # shellcheck disable=SC2086
+  "$SWIFTC" -typecheck $FILES
+  echo "модель цели $TARGET собирается: $(echo "$FILES" | wc -w) файлов"
+done <<< "$SUBSETS"
 # Список файлов — общий с tool/make_stock.py.
 MODEL=$(grep -v '^#' tool/model-files.txt)
 # shellcheck disable=SC2086

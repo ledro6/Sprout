@@ -5,6 +5,8 @@ ios-native/Sprout/Model/Garden/Season.swift
 ios-native/Sprout/Model/Garden/Care.swift
 ios-native/Sprout/Model/Garden/Trip.swift
 ios-native/Sprout/Model/Garden/Round.swift
+ios-native/Sprout/Model/Garden/Wrist.swift
+ios-native/Sprout/Model/Garden/Wrist+Garden.swift
 ios-native/Sprout/Model/Core/Store.swift
 ios-native/Sprout/Model/Scene/Rig.swift
 ios-native/Sprout/Model/Garden/Plants.swift

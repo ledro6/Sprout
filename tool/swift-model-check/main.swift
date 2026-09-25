@@ -2775,6 +2775,47 @@ do {
     check(back == marked, "остановки обхода переживают упаковку")
 }
 
+print("сад на часах:")
+do {
+    check(Wrist.Level.warnBelow == Thirst.warnBelow
+          && Wrist.Level.alarmBelow == Thirst.alarmBelow,
+          "тень на часах та же, что на карточке")
+    check(Wrist.group == Store.group, "часы ищут ту же группу, что телефон")
+    let rooms = [
+        Room(name: "Кухня", plants: [
+            plantNamed("папоротник", moisture: 0.15, dryingDays: 5),
+            plantNamed("кактус", moisture: 0.9, dryingDays: 30),
+        ]),
+        Room(name: "Спальня", plants: [
+            plantNamed("фикус", moisture: 0.35, dryingDays: 8),
+        ]),
+    ]
+    let start = Date(timeIntervalSince1970: 1_790_000_000)
+    var wrist = Wrist.of(rooms, at: start)
+    check(wrist.pots.map(\.id) == ["папоротник", "фикус", "кактус"],
+          "на часах — от самого сухого")
+    check(wrist.pots[1].room == "Спальня", "у каждого своя комната")
+    check(wrist.thirsty.map(\.id) == ["папоротник", "фикус"],
+          "просят воды двое")
+    let plants = rooms.flatMap(\.plants)
+    check(wrist.pots.allSatisfy { pot in
+        let plant = plants.first { $0.id == pot.id }!
+        return pot.days == plant.daysUntilWatering
+            && pot.label == plant.wateringLabel
+    }, "срок и подпись — как на карточке в приложении")
+    wrist.water("папоротник", at: start.addingTimeInterval(60))
+    check(wrist.pots.last?.id == "папоротник" && wrist.pots.last?.moisture == 1,
+          "полили с часов — полон и ушёл в конец")
+    check(wrist.thirsty.map(\.id) == ["фикус"], "просит воды один")
+    let before = Wrist.of(rooms, at: start.addingTimeInterval(30))
+    check(before.older(than: wrist),
+          "посылка телефона, собранная до полива, его не перетрёт")
+    let after = Wrist.of(rooms, at: start.addingTimeInterval(90))
+    check(!after.older(than: wrist), "а собранная после — примется")
+    let back = wrist.encoded().flatMap(Wrist.decoded)
+    check(back == wrist, "сад на часах переживает упаковку")
+}
+
 print("визуальный интеллект:")
 do {
     func seen(_ pairs: [(String, Double)]) -> [Sighting] {

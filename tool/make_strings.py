@@ -42,6 +42,8 @@ ROOT = Path(__file__).resolve().parent.parent
 NATIVE = ROOT / "ios-native"
 APP = NATIVE / "Sprout"
 WIDGET = NATIVE / "SproutWidget"
+WATCH = NATIVE / "SproutWatch"
+WATCH_WIDGET = NATIVE / "SproutWatchWidget"
 PROJECT = NATIVE / "Sprout.xcodeproj" / "project.pbxproj"
 TABLES = ROOT / "tool" / "strings"
 CATALOG = APP / "Localizable.xcstrings"
@@ -155,7 +157,7 @@ def code_only(line):
 
 
 def sources():
-    for folder in (APP, WIDGET):
+    for folder in (APP, WIDGET, WATCH, WATCH_WIDGET):
         for path in sorted(folder.rglob("*.swift")):
             yield path, path.read_text(encoding="utf-8")
 
