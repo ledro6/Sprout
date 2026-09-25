@@ -17,8 +17,7 @@ BUILD=$(mktemp -d)
 trap 'rm -rf "$BUILD"' EXIT
 # Модель — тем же списком, что у tool/check_model.sh: растение тянет за
 # собой журнал и сад.
-MODEL=$(sed -n 's|^ *\(ios-native/Sprout/Model/[A-Za-z]*\.swift\) \\$|\1|p' \
-  tool/check_model.sh)
+MODEL=$(grep -v '^#' tool/model-files.txt)
 # shellcheck disable=SC2086
 "$SWIFTC" -O $MODEL tool/plant-preview/main.swift -o "$BUILD/preview"
 ALL="monstera ficus sansevieria zamioculcas spathiphyllum orchid aloe cactus

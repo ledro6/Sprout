@@ -101,14 +101,7 @@ struct PlantAR: View {
 
     private var header: some View {
         HStack(alignment: .top, spacing: 12) {
-            Button { dismiss() } label: {
-                Image(systemName: "xmark")
-                    .font(Typography.navTitle)
-                    .frame(width: Metrics.gearBox, height: Metrics.gearBox)
-            }
-            .buttonStyle(.glass)
-            .buttonBorderShape(.circle)
-            .accessibilityLabel("Закрыть")
+            CloseButton { dismiss() }
 
             Spacer(minLength: 0)
 

@@ -249,9 +249,12 @@ def usages():
 # Файл → литералы, которые остаются русскими нарочно: основы для узнавания
 # видов и падежей, имена откликов для проверки.
 ALLOW = {
-    "Sprout/Model/Botany.swift": [r"."],
-    "Sprout/Model/Plants.swift": [r"^[а-яё]+$", r"аяоеиыуюйь"],
-    "Sprout/Model/Pulse.swift": [r"^[а-яё]+$"],
+    "Sprout/Model/Botany/Preset.swift": [r"."],
+    "Sprout/Model/Botany/Grower+Flowers.swift": [r"^[а-яё]+$"],
+    "Sprout/Model/Botany/Grower+Foliage.swift": [r"^[а-яё]+$"],
+    "Sprout/Model/Botany/Grower+Succulents.swift": [r"^[а-яё]+$"],
+    "Sprout/Model/Garden/Plants.swift": [r"^[а-яё]+$", r"аяоеиыуюйь"],
+    "Sprout/Model/Core/Pulse.swift": [r"^[а-яё]+$"],
 }
 
 

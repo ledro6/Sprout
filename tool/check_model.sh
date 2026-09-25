@@ -25,7 +25,9 @@ import re
 src = open("ios-native/Sprout.xcodeproj/project.pbxproj", encoding="utf-8").read()
 block = re.search(r'"Sprout" folder in "SproutWidgetExtension" target \*/ '
                   r'= \{.*?membershipExceptions = \((.*?)\);', src, re.S)
-names = [line.strip().rstrip(",") for line in block.group(1).splitlines()]
+# Имя с «+» Xcode пишет в кавычках.
+names = [line.strip().rstrip(",").strip('"')
+         for line in block.group(1).splitlines()]
 print(" ".join("ios-native/Sprout/" + name for name in names
                if name.startswith("Model/")))
 PY

@@ -1,170 +1,6 @@
 import RealityKit
 import SwiftUI
 
-/// Скан растения. Хозяин обходит растение с телефоном, Object Capture
-/// снимает кадры с глубиной от LiDAR, а PhotogrammetrySession собирает из
-/// них модель USDZ — всё на телефоне, без сети. Модель ложится в `Scans` и
-/// с этой минуты стоит в AR вместо готовой. Кадры после сборки удаляются:
-/// их сотни мегабайт.
-struct ScanView: View {
-    let plantID: Plant.ID
-
-    @Environment(Garden.self) private var garden
-    @Environment(\.dismiss) private var dismiss
-
-    @State private var scanner = Scanner()
-
-    /// Без LiDAR на iPhone Object Capture не работает — кнопка скана спит.
-    static var supported: Bool {
-        ObjectCaptureSession.isSupported && PhotogrammetrySession.isSupported
-    }
-
-    var body: some View {
-        ZStack {
-            if let session = scanner.session {
-                ObjectCaptureView(session: session)
-                    .ignoresSafeArea()
-            } else {
-                SproutBackground()
-                    .ignoresSafeArea()
-                    .environment(\.colorScheme, .dark)
-            }
-        }
-        .overlay(alignment: .top) { header }
-        .overlay(alignment: .bottom) { controls }
-        .animation(Motion.enter, value: scanner.step)
-        .task { scanner.start(plantID) }
-        .onDisappear { scanner.cancel() }
-        .onChange(of: scanner.step) { _, step in
-            guard case .done(let name) = step else { return }
-            garden.scanned(plantID, file: name)
-            Feel.done()
-            dismiss()
-        }
-    }
-
-    // MARK: - Верх и низ
-
-    private var header: some View {
-        HStack(alignment: .top, spacing: 12) {
-            Button { dismiss() } label: {
-                Image(systemName: "xmark")
-                    .font(Typography.navTitle)
-                    .frame(width: Metrics.gearBox, height: Metrics.gearBox)
-            }
-            .buttonStyle(.glass)
-            .buttonBorderShape(.circle)
-            .accessibilityLabel("Закрыть")
-
-            Spacer(minLength: 0)
-
-            VStack(spacing: 4) {
-                Text(hint)
-                    .font(Typography.toastNote)
-                    .foregroundStyle(Palette.ink)
-                    .multilineTextAlignment(.center)
-                    .contentTransition(.numericText())
-                if case .capturing = scanner.step {
-                    Text(Lang.format("Кадров: %lld", scanner.shots))
-                        .font(Typography.toastNote)
-                        .foregroundStyle(.secondary)
-                        .monospacedDigit()
-                        .contentTransition(.numericText())
-                }
-            }
-            .padding(.horizontal, 14)
-            .padding(.vertical, 9)
-            .glassEffect(.regular, in: .rect(cornerRadius: 18))
-            .id(hint)
-            .transition(.blurReplace)
-
-            Spacer(minLength: 0)
-
-            // Противовес крестику — подсказка встаёт ровно посередине.
-            Color.clear
-                .frame(width: 44, height: 44)
-                .accessibilityHidden(true)
-        }
-        .padding(.horizontal, Metrics.contentMargin)
-    }
-
-    private var hint: String {
-        switch scanner.step {
-        case .starting:
-            Lang.text("Включаю камеру…")
-        case .aiming:
-            Lang.text("Поставьте растение на стол или пол и наведите на него камеру")
-        case .detecting:
-            Lang.text("Рамка обнимает растение с горшком? Тогда начинайте")
-        case .capturing where scanner.lapped:
-            Lang.text("Круг пройден. Можно ещё один — пониже или повыше")
-        case .capturing:
-            Lang.text("Медленно обходите растение по кругу")
-        case .finishing:
-            Lang.text("Дописываю кадры…")
-        case .building(let share):
-            Lang.format("Собираю модель: %@", Bench.percent(share))
-        case .done:
-            Lang.text("Готово")
-        case .failed(let reason):
-            reason
-        }
-    }
-
-    @ViewBuilder
-    private var controls: some View {
-        HStack(spacing: 12) {
-            switch scanner.step {
-            case .aiming:
-                tool("Навести", icon: "viewfinder", prominent: true) {
-                    scanner.detect()
-                }
-            case .detecting:
-                tool("Начать съёмку", icon: "camera.aperture",
-                       prominent: true) { scanner.capture() }
-            case .capturing:
-                if scanner.lapped {
-                    tool("Ещё круг", icon: "arrow.triangle.2.circlepath",
-                           prominent: false) { scanner.lap() }
-                }
-                tool("Готово", icon: "checkmark",
-                       prominent: scanner.lapped) { scanner.finish() }
-                    .disabled(scanner.shots < Scanner.fewest)
-            case .building:
-                ProgressView()
-                    .controlSize(.large)
-                    .padding(12)
-                    .glassEffect(.regular, in: .circle)
-            case .failed:
-                tool("Закрыть", icon: "xmark", prominent: false) {
-                    dismiss()
-                }
-            case .starting, .finishing, .done:
-                EmptyView()
-            }
-        }
-        .frame(maxWidth: .infinity)
-        .padding(.bottom, 12)
-    }
-
-    @ViewBuilder
-    private func tool(_ title: LocalizedStringKey, icon: String,
-                        prominent: Bool,
-                        action: @escaping () -> Void) -> some View {
-        let label = Label(title, systemImage: icon)
-            .font(Typography.detail)
-            .padding(.horizontal, 10)
-            .padding(.vertical, 6)
-        if prominent {
-            Button(action: action) { label }
-                .buttonStyle(.glassProminent)
-        } else {
-            Button(action: action) { label }
-                .buttonStyle(.glass)
-        }
-    }
-}
-
 /// Ход скана: сессия съёмки, потом сборка модели. Сессия Object Capture —
 /// одна на экран; кончилась съёмка — камеру отпускаем, иначе сборке не
 /// хватит памяти.
@@ -188,6 +24,11 @@ final class Scanner {
 
     /// Меньше кадров — модель выйдет дырявой.
     static let fewest = 20
+
+    /// Сборка не удалась — что сказать хозяину.
+    private static var broken: String {
+        Lang.text("Модель не собралась. Попробуйте снять ещё раз, при ровном свете.")
+    }
 
     private(set) var step: Step = .starting
     private(set) var shots = 0
@@ -313,7 +154,7 @@ final class Scanner {
                 .modelFile(url: output, detail: .reduced),
             ])
         } catch {
-            step = .failed(Lang.text("Модель не собралась. Попробуйте снять ещё раз, при ровном свете."))
+            step = .failed(Self.broken)
             clear()
             return
         }
@@ -330,14 +171,14 @@ final class Scanner {
                         self.step = .done(name)
                     case .requestError:
                         self.clear()
-                        self.step = .failed(Lang.text("Модель не собралась. Попробуйте снять ещё раз, при ровном свете."))
+                        self.step = .failed(Self.broken)
                     default:
                         break
                     }
                 }
             } catch {
                 self?.clear()
-                self?.step = .failed(Lang.text("Модель не собралась. Попробуйте снять ещё раз, при ровном свете."))
+                self?.step = .failed(Self.broken)
             }
         }
     }
