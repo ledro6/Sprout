@@ -2775,6 +2775,47 @@ do {
     check(back == marked, "остановки обхода переживают упаковку")
 }
 
+print("визуальный интеллект:")
+do {
+    func seen(_ pairs: [(String, Double)]) -> [Sighting] {
+        pairs.map { Sighting(name: $0.0, confidence: $0.1) }
+    }
+    check(Likeness.sight(seen([("Monstera deliciosa", 0.3), ("plant", 0.9)]))
+          == Likeness.Sight(preset: .monstera),
+          "монстера в кадре — вид узнан, хоть «растение» и увереннее")
+    check(Likeness.sight(seen([("houseplant", 0.8)]))
+          == Likeness.Sight(preset: nil),
+          "просто растение — вид не узнан, но это растение")
+    check(Likeness.sight(seen([("dog", 0.9), ("animal", 0.8)])) == nil,
+          "собака — не растение, Баксиком её не назовём")
+    check(Likeness.sight(seen([("cactus", 0.01)])) == nil,
+          "слабый ярлык не в счёт")
+    check(Likeness.sight(seen([("Rosemary", 1)]))
+          == Likeness.Sight(preset: .rosemary),
+          "розмарин не спутан с розой")
+
+    let own = Likeness.Candidate(id: "Баксик", distance: 0.4, kin: true,
+                                 own: true)
+    let twin = Likeness.Candidate(id: "Близнец", distance: 0.7, kin: true,
+                                  own: true)
+    let shop = Likeness.Candidate(id: "Магазинная", distance: 0.5, kin: true,
+                                  own: false)
+    let cactus = Likeness.Candidate(id: "Кеша", distance: 1.3, kin: false,
+                                    own: true)
+    let blind = Likeness.Candidate(id: "Без фото", distance: nil, kin: true,
+                                   own: false)
+    check(Likeness.rank([cactus, twin, own, shop, blind])
+          == ["Баксик", "Магазинная", "Близнец"],
+          "ближе всех — свой снимок; не больше трёх; непохожий не показан")
+    let plain = Likeness.Candidate(id: "Фикус", distance: 0.6, kin: false,
+                                   own: true)
+    let kin = Likeness.Candidate(id: "Монстера", distance: 0.7, kin: true,
+                                 own: true)
+    check(Likeness.rank([plain, kin]) == ["Монстера", "Фикус"],
+          "совпавший вид подтягивает ближе")
+    check(Likeness.rank([cactus]).isEmpty, "далёкое сходство — не ответ")
+}
+
 print("кошкам и собакам:")
 do {
     func harm(_ species: String) -> String {

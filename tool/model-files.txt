@@ -24,6 +24,7 @@ ios-native/Sprout/Model/Core/Reminders.swift
 ios-native/Sprout/Model/Core/Agenda.swift
 ios-native/Sprout/Model/Garden/Rival.swift
 ios-native/Sprout/Model/Recognition/Species.swift
+ios-native/Sprout/Model/Recognition/Likeness.swift
 ios-native/Sprout/Model/Garden/Shots.swift
 ios-native/Sprout/Model/Botany/Sculpt.swift
 ios-native/Sprout/Model/Botany/Canvas.swift

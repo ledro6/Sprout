@@ -18,26 +18,40 @@ struct RootView: View {
 
     @Environment(\.scenePhase) private var phase
 
+    /// Вкладка на экране: просьба извне открыть растение или сад в AR ведёт
+    /// на главную, где бы ни были.
+    @State private var pane = Pane.home
+
+    private enum Pane: Hashable {
+        case home, stats, add, profile, search
+    }
+
     var body: some View {
         // Условия знакомства читаются в самом теле: изнутри привязки
         // SwiftUI мог бы не заметить, что вход доиграл.
         let _ = touring
-        TabView {
-            Tab("Главная", systemImage: "house.fill") {
+        TabView(selection: $pane) {
+            Tab("Главная", systemImage: "house.fill", value: Pane.home) {
                 HomeView().sproutUndo()
             }
-            Tab("Статистика", systemImage: "chart.bar.fill") {
+            Tab("Статистика", systemImage: "chart.bar.fill", value: Pane.stats) {
                 StatsView().sproutUndo()
             }
-            Tab("Добавить", systemImage: "plus.circle.fill") {
+            Tab("Добавить", systemImage: "plus.circle.fill", value: Pane.add) {
                 AddView().sproutUndo()
             }
-            Tab("Профиль", systemImage: "person.fill") {
+            Tab("Профиль", systemImage: "person.fill", value: Pane.profile) {
                 ProfileView().sproutUndo()
             }
-            Tab(role: .search) {
+            Tab(value: Pane.search, role: .search) {
                 SearchView().sproutUndo()
             }
+        }
+        .onChange(of: Summon.shared.plant) { _, asked in
+            if asked != nil { pane = .home }
+        }
+        .onChange(of: Summon.shared.garden) { _, asked in
+            if asked { pane = .home }
         }
         .tabBarMinimizeBehavior(.onScrollDown)
         .tint(Palette.accent)

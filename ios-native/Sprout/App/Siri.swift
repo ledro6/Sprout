@@ -8,7 +8,8 @@ import UIKit
 // поднимает в фоне, и команда говорит с тем же `Garden.shared`, что и
 // экраны. В каждой фразе обязательно имя приложения.
 
-/// Растение для Siri: кличка и комната.
+/// Растение для Siri и визуального интеллекта: кличка, комната, влажность
+/// и картинка.
 struct PlantEntity: AppEntity {
     static let typeDisplayRepresentation: TypeDisplayRepresentation = "Растение"
     static let defaultQuery = PlantQuery()
@@ -16,16 +17,35 @@ struct PlantEntity: AppEntity {
     let id: String
     let name: String
     let room: String
+    /// Подпись: комната, влажность и «Пора поливать», если пора.
+    let status: String
+    /// Миниатюра из общей папки — та же, что у виджета.
+    let thumb: URL?
 
     var displayRepresentation: DisplayRepresentation {
-        // Комната подписью: двух Баксиков Siri различит только по ней.
-        DisplayRepresentation(title: "\(name)", subtitle: "\(room)")
+        // Комната — первой в подписи: двух Баксиков Siri различит только
+        // по ней.
+        DisplayRepresentation(title: "\(name)", subtitle: "\(status)",
+                              image: picture)
+    }
+
+    /// Без общей папки миниатюр нет — тогда листок.
+    private var picture: DisplayRepresentation.Image {
+        if let thumb, FileManager.default.fileExists(atPath: thumb.path) {
+            return .init(url: thumb)
+        }
+        return .init(systemName: "leaf.fill")
     }
 
     init(_ plant: Plant, room: String) {
         id = plant.id
         name = plant.name
         self.room = room
+        let percent = Lang.format("%lld%%", Int((plant.moisture * 100).rounded()))
+        let line = Lang.format("%1$@ · %2$@", room, percent)
+        status = plant.thirst == .calm ? line
+            : Lang.format("%1$@ · %2$@", line, Lang.text("Пора поливать"))
+        thumb = Store.thumb(for: plant)
     }
 }
 
@@ -128,6 +148,8 @@ final class Summon {
     static let shared = Summon()
 
     var garden = false
+    /// Открыть растение — из визуального интеллекта или Spotlight.
+    var plant: Plant.ID?
 }
 
 /// После слова «растение» кличка остаётся в именительном — «Полей растение

@@ -191,6 +191,21 @@ struct HomeView: View {
             guard PlantAR.available, !plants.isEmpty else { return }
             stage()
         }
+        // Визуальный интеллект попросил растение. Приложение могло для этого
+        // и запуститься — тогда после входа.
+        .onChange(of: Summon.shared.plant, initial: true) { _, _ in reach() }
+        .onChange(of: Launch.shared.step) { _, _ in reach() }
+    }
+
+    /// К растению: на его комнату и сразу на его экран.
+    private func reach() {
+        guard let id = Summon.shared.plant, Launch.shared.step >= Launch.last
+        else { return }
+        Summon.shared.plant = nil
+        guard let room = garden.roomName(of: id) else { return }
+        target = .room(room)
+        path = []
+        show(id)
     }
 
     /// Страницы комнат — системное листание (`.paging`): отскок у краёв,
