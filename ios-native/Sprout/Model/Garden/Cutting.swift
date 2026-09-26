@@ -64,7 +64,7 @@ struct Cutting: Codable, Hashable, Sendable {
                                name, species)
         let water = Lang.text("Полив —") + " "
             + Lang.format("раз в %lld дней", Int(days.rounded())) + "."
-        let invite = Lang.text("Посадить: скопируйте это сообщение целиком и нажмите «Вставить черенок» в Sprout → Добавить.")
+        let invite = Lang.text("Посадить: скопируйте это сообщение целиком и нажмите «Вставить» у строки «Черенок от друга» в Sprout → Добавить.")
         return head + " " + water + "\n" + invite + "\n" + code
     }
 

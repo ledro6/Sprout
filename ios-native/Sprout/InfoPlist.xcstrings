@@ -4,10 +4,76 @@
     "NSBluetoothAlwaysUsageDescription": {
       "extractionState": "manual",
       "localizations": {
+        "da": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "For at aflæse fugtsensoren i potten – Flower Care og lignende."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Um den Feuchtigkeitssensor im Topf zu lesen – Flower Care und ähnliche."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "To read the moisture sensor in the pot — Flower Care and similar ones."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Para leer el sensor de humedad de la maceta: Flower Care y similares."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pour lire le capteur d’humidité du pot — Flower Care et similaires."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Per leggere il sensore di umidità nel vaso: Flower Care e simili."
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "For å lese av fuktsensoren i potta – Flower Care og lignende."
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Om de vochtsensor in de pot uit te lezen – Flower Care en vergelijkbare."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Para ler o sensor de umidade do vaso — Flower Care e parecidos."
+          }
+        },
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Para ler o sensor de humidade do vaso — Flower Care e semelhantes."
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
             "value": "Чтобы читать датчик влажности в горшке — Flower Care и похожие."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "För att läsa fuktsensorn i krukan – Flower Care och liknande."
           }
         }
       }
@@ -894,10 +960,76 @@
     "NSHomeKitUsageDescription": {
       "extractionState": "manual",
       "localizations": {
+        "da": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "For at aflæse jordfugtsensorer fra appen Hjem."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Um Bodenfeuchtesensoren aus der Home-App zu lesen."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "To read soil moisture sensors from the Home app."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Para leer los sensores de humedad del suelo de la app Casa."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pour lire les capteurs d’humidité du sol de l’app Maison."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Per leggere i sensori di umidità del terreno dall’app Casa."
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "For å lese av jordfuktsensorer fra Hjem-appen."
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Om bodemvochtsensoren uit de Woning-app uit te lezen."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Para ler os sensores de umidade do solo do app Casa."
+          }
+        },
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Para ler os sensores de humidade do solo da app Casa."
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
             "value": "Чтобы читать датчики влажности почвы из приложения «Дом»."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "För att läsa jordfuktsensorer från appen Hem."
           }
         }
       }
@@ -905,10 +1037,76 @@
     "NSLocationWhenInUseUsageDescription": {
       "extractionState": "manual",
       "localizations": {
+        "da": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "For at hente vejret udenfor: i varme og tør luft tørrer jorden hurtigere. En omtrentlig lokalitet er nok."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Um das Wetter draußen abzurufen: Bei Hitze und trockener Luft trocknet die Erde schneller. Ein ungefährer Standort genügt."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "To check the weather outside: in heat and dry air, soil dries faster. An approximate location is enough."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Para saber el tiempo que hace fuera: con calor y aire seco la tierra se seca más rápido. Basta con una ubicación aproximada."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pour connaître la météo dehors : par chaleur et air sec, la terre sèche plus vite. Une position approximative suffit."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Per conoscere il meteo fuori: con caldo e aria secca la terra si asciuga prima. Basta una posizione approssimativa."
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "For å hente været ute: i varme og tørr luft tørker jorda fortere. En omtrentlig posisjon er nok."
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Om het weer buiten op te halen: bij hitte en droge lucht droogt de grond sneller. Een locatie bij benadering is genoeg."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Para saber o tempo lá fora: com calor e ar seco, a terra seca mais rápido. A localização aproximada basta."
+          }
+        },
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Para saber o tempo lá fora: com calor e ar seco, a terra seca mais depressa. Basta a localização aproximada."
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
             "value": "Чтобы узнать погоду за окном: в жару и сухой воздух земля сохнет быстрее. Хватит примерного места."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "För att hämta vädret ute: i värme och torr luft torkar jorden snabbare. Ungefärlig plats räcker."
           }
         }
       }
