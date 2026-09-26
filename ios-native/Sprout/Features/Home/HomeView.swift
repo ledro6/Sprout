@@ -50,8 +50,7 @@ struct HomeView: View {
     @State private var staged: [Plant.ID] = []
 
     /// Полка качается, как значки «Домой» в правке. Входят в неё, повёв
-    /// карточку из меню, продержав палец дольше меню или пунктом
-    /// «Расставить».
+    /// карточку из меню или продержав палец дольше меню.
     @State private var editing = false
 
     /// Меню по долгому нажатию. Снимается не сразу со входом в правку, а
@@ -160,6 +159,10 @@ struct HomeView: View {
         .task(id: path.isEmpty) {
             guard path.isEmpty, opening != nil else { return }
             await Motion.haloBack { opening = nil }
+        }
+        // Вход спрятался под замком — после ключа карточки всплывут заново.
+        .onChange(of: Launch.shared.step) { _, now in
+            if now == 0 { revealed.removeAll() }
         }
         // Страница держится на той же комнате, а не на том же номере.
         .onChange(of: garden.rooms.map(\.name)) { old, new in
@@ -324,20 +327,22 @@ struct HomeView: View {
     }
 
     /// Отклик листания: на границе комнат — мягкий глубокий толчок, как у
-    /// барабана; к «Новой комнате» тянут — гул растёт вместе с оттяжкой, а
-    /// на ней самой толчок сильнее.
+    /// барабана; к «Новой комнате» тянут — тихий гул растёт вместе с
+    /// оттяжкой, а на ней самой — едва заметный толчок: это не комната, а
+    /// приглашение.
     private func feel(from old: CGFloat, to new: CGFloat) {
         guard old != new else { return }
         let last = leaves.count - 1
         let was = Int(old.rounded())
         let now = Int(new.rounded())
         if was != now, (0 ... last).contains(now) {
-            Feel.turn(now == last && !garden.rooms.isEmpty ? 1 : 0.7)
+            Feel.turn(now == last && !garden.rooms.isEmpty
+                      ? Metrics.freshThud : Metrics.roomThud)
         }
         guard !garden.rooms.isEmpty else { return }
         let pulled = new - CGFloat(last - 1)
         Feel.pull(pulled > 0 && new < CGFloat(last) + 0.3
-                  ? Double(min(pulled, 1)) : 0)
+                  ? Double(min(pulled, 1)) * Metrics.freshHum : 0)
     }
 
     /// Готовые имена — те, которых в саду ещё нет; «кухня» и «Кухня» —
@@ -402,14 +407,16 @@ struct HomeView: View {
         Task { @MainActor in path.append(id) }
     }
 
-    /// Кнопки справа сверху: вид, «Готово» в правке и настройки. Стоят на
-    /// месте и в покое, и на прокрутке: в покое — вровень с заголовком, на
-    /// прокрутке к ним поднимается лента комнат. Стекло системное (`.glass`):
-    /// с ним приходят продавливание, отскок, блик и «Уменьшение
-    /// прозрачности».
+    /// Кнопки справа сверху: порядок, «ещё» и вид, «Готово» в правке и
+    /// настройки. Стоят на месте и в покое, и на прокрутке: в покое — вровень
+    /// с заголовком, на прокрутке к ним поднимается лента комнат. Стекло
+    /// системное (`.glass`): с ним приходят продавливание, отскок, блик,
+    /// меню, вырастающее из кнопки, и «Уменьшение прозрачности».
     private var corner: some View {
         HStack(spacing: Metrics.cornerGap) {
-            viewMenu
+            orderMenu
+            moreMenu
+            lookButton
             doneButton
             SproutGear { settings = true }
         }
@@ -421,61 +428,85 @@ struct HomeView: View {
         .modifier(Enter(step: 3))
     }
 
-    /// Вид и порядок — одним меню, как в «Файлах»; значок — того вида, что на
-    /// экране. Смена вида заново играет волну появления, смена порядка
+    /// Значок угловой кнопки — то, что выбрано сейчас; сменился — меняется
+    /// системным переходом значка.
+    private func cornerIcon(_ name: String) -> some View {
+        Image(systemName: name)
+            .font(.system(size: Metrics.cornerGlyph, weight: .semibold))
+            .foregroundStyle(Palette.ink)
+            .frame(width: Metrics.gearBox, height: Metrics.gearBox)
+            .contentTransition(.symbolEffect(.replace))
+    }
+
+    /// Порядок карточек; на кнопке — значок того, что выбран. Смена порядка
     /// перекладывает карточки пружиной.
-    private var viewMenu: some View {
+    private var orderMenu: some View {
         Menu {
-            Section("Вид") {
-                Picker("Вид", selection: Binding(
-                    get: { look },
-                    set: { chosen in
-                        withAnimation(Motion.arrange) {
-                            revealed.removeAll()
-                            Settings.shared.look = chosen
-                        }
-                    }
-                )) {
-                    ForEach(Settings.Look.allCases) { item in
-                        Label(item.title, systemImage: item.icon).tag(item)
-                    }
-                }
-            }
-            Section("Порядок") {
-                Picker("Порядок", selection: Binding(
-                    get: { Settings.shared.order },
-                    set: { sort($0) }
-                )) {
-                    ForEach(Settings.Order.allCases) { item in
-                        Label(item.title, systemImage: item.icon).tag(item)
-                    }
-                }
-            }
-            Section {
-                if PlantAR.available, !plants.isEmpty {
-                    Button(action: stage) {
-                        Label("Сад в AR", systemImage: "arkit")
-                    }
-                }
-                round
-                Button { tripping = true } label: {
-                    Label("Уезжаю…", systemImage: "airplane.departure")
-                }
-                Button { roomsOpen = true } label: {
-                    Label("Изменить комнаты…", systemImage: "pencil")
+            Picker("Порядок", selection: Binding(
+                get: { Settings.shared.order },
+                set: { sort($0) }
+            )) {
+                ForEach(Settings.Order.allCases) { item in
+                    Label(item.title, systemImage: item.icon).tag(item)
                 }
             }
         } label: {
-            Image(systemName: look.icon)
-                .font(.system(size: Metrics.cornerGlyph, weight: .semibold))
-                .foregroundStyle(Palette.ink)
-                .frame(width: Metrics.gearBox, height: Metrics.gearBox)
-                .contentTransition(.symbolEffect(.replace))
+            cornerIcon(Settings.shared.order.icon)
         }
         .menuStyle(.button)
         .buttonStyle(.glass)
         .buttonBorderShape(.circle)
-        .accessibilityLabel("Вид и порядок")
+        .accessibilityLabel("Порядок")
+        .accessibilityValue(Settings.shared.order.title)
+    }
+
+    /// Всё, что делают с садом целиком: AR, обход, отъезд, комнаты. Идёт
+    /// обход или отсчёт до отъезда — на кнопке его значок, а не точки.
+    private var moreMenu: some View {
+        Menu {
+            if PlantAR.available, !plants.isEmpty {
+                Button(action: stage) {
+                    Label("Сад в AR", systemImage: "arkit")
+                }
+            }
+            round
+            Button { tripping = true } label: {
+                Label("Уезжаю…", systemImage: "airplane.departure")
+            }
+            Button { roomsOpen = true } label: {
+                Label("Изменить комнаты…", systemImage: "pencil")
+            }
+        } label: {
+            cornerIcon(moreIcon)
+        }
+        .menuStyle(.button)
+        .buttonStyle(.glass)
+        .buttonBorderShape(.circle)
+        .accessibilityLabel("Ещё")
+    }
+
+    private var moreIcon: String {
+        if Live.shared.rounding { return "figure.walk" }
+        if Live.shared.counting { return "airplane.departure" }
+        return "ellipsis"
+    }
+
+    /// Плиткой или списком — переключатель: нажатие меняет вид и заново
+    /// играет волну появления. На кнопке — вид, что на экране.
+    private var lookButton: some View {
+        Button {
+            withAnimation(Motion.arrange) {
+                revealed.removeAll()
+                Settings.shared.look = look == .grid ? .list : .grid
+            }
+            Feel.pick()
+        } label: {
+            cornerIcon(look.icon)
+        }
+        .buttonStyle(.glass)
+        .buttonBorderShape(.circle)
+        .accessibilityLabel("Вид")
+        .accessibilityValue(look.title)
     }
 
     /// «Обход сада» — живое действие на экране блокировки: кто просит воды,
@@ -571,8 +602,8 @@ struct HomeView: View {
         }
     }
 
-    /// «Расставить» из меню или палец продержали дольше меню: меню снимаем
-    /// следующим проходом, когда оно уже закрывается.
+    /// Палец продержали дольше меню: меню снимаем следующим проходом, когда
+    /// оно уже закрывается.
     private func arrange() {
         begin()
         Feel.pick()
@@ -617,7 +648,7 @@ struct HomeView: View {
                               drop: land,
                               lift: lift,
                               fly: fly,
-                              arrange: arrange)
+                              waters: true)
                         // Явная личность: без неё ленивая сетка подсовывала
                         // меню чужой узел — см. `PlantTile`.
                         .id(item.element.id)

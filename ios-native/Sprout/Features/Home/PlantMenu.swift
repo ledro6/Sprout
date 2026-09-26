@@ -27,24 +27,24 @@ final class Tenant {
     var id: Plant.ID = ""
 }
 
-/// Меню растения по долгому нажатию — одно на главную и поиск. Удаление без
-/// подтверждения: вернуть можно с плашки, см. `Bin`.
+/// Меню растения по долгому нажатию — одно на главную и поиск: настройки,
+/// AR, переезд и удаление. Полить — каплей на карточке, переименовать — в
+/// настройках растения, расставить — продержав палец дольше меню. Удаление
+/// без подтверждения: вернуть можно с плашки, см. `Bin`.
 struct PlantMenu: ViewModifier {
     let id: Plant.ID
 
+    /// Вид полки: у строки списка и предпросмотр — строкой, а не карточкой
+    /// на попа.
+    var look: Settings.Look = .grid
+
     /// В правке меню нет: долгое нажатие там сразу поднимает карточку.
     var enabled = true
-
-    /// «Расставить» — как «Изменить экран „Домой“» в меню значка.
-    var arrange: (() -> Void)? = nil
 
     @Environment(Garden.self) private var garden
 
     /// Своё гашение накладывается на внешнее, а не отменяет его.
     @Environment(\.sproutHalos) private var halos
-
-    @State private var renaming = false
-    @State private var draft = ""
 
     @State private var moving = false
     @State private var roomDraft = ""
@@ -74,17 +74,6 @@ struct PlantMenu: ViewModifier {
             .onGeometryChange(for: CGRect.self) { $0.frame(in: .global) }
                 action: { keep($0) }
             .environment(\.sproutHalos, halos && !dimmed))
-            .alert("Переименовать", isPresented: $renaming) {
-                TextField("Кличка", text: $draft)
-                Button("Отмена", role: .cancel) {}
-                Button("Сохранить") {
-                    withAnimation(Motion.number) {
-                        garden.rename(tenant.id, to: draft)
-                    }
-                }
-            } message: {
-                Text("Как теперь зовут растение?")
-            }
             .alert("Новая комната", isPresented: $moving) {
                 TextField("Балкон", text: $roomDraft)
                 Button("Отмена", role: .cancel) {}
@@ -119,15 +108,6 @@ struct PlantMenu: ViewModifier {
     private func menu(_ base: some View) -> some View {
         if enabled {
             base.contextMenu {
-                Button { water() } label: {
-                    Label("Полить сейчас", systemImage: "drop.fill")
-                }
-                Button {
-                    draft = garden.plant(id: tenant.id)?.name ?? ""
-                    renaming = true
-                } label: {
-                    Label("Переименовать", systemImage: "pencil")
-                }
                 Button { tuning = tenant.id } label: {
                     Label("Настройки", systemImage: "slider.horizontal.3")
                 }
@@ -144,11 +124,6 @@ struct PlantMenu: ViewModifier {
                              roomDraft = ""
                              moving = true
                          })
-                if let arrange {
-                    Button(action: arrange) {
-                        Label("Расставить", systemImage: "apps.iphone")
-                    }
-                }
                 Button(role: .destructive) { toss() } label: {
                     Label("Удалить", systemImage: "trash")
                 }
@@ -167,17 +142,10 @@ struct PlantMenu: ViewModifier {
         Cards.shared.put(rect, for: tenant.id)
     }
 
-    /// Полив с анимацией, иначе тревожная тень гасла бы щелчком.
-    private func water() {
-        // Номер — у жильца: в замыкании меню может быть номер прежнего
-        // растения ячейки. И растения может уже не быть.
-        let who = tenant.id
-        guard Bin.shared.water(who, in: garden) else { return }
-        // Замера нет — волна из середины экрана: из угла она читается
-        // поломкой.
-        let spot = Cards.shared.rect(who)
-        Cheer.shared.now(from: spot == .zero ? Screen.middle : spot)
-        Feel.water()
+    private var previewWidth: CGFloat {
+        guard look == .list else { return Metrics.previewCard }
+        let wide = Cards.shared.rect(tenant.id).width
+        return wide > 0 ? wide : Screen.width - 2 * Metrics.contentMargin
     }
 
     private func toss() {
@@ -191,14 +159,20 @@ struct PlantMenu: ViewModifier {
     }
 
     /// Свой предпросмотр: системный снимок унёс бы ореол. Он же сообщает, что
-    /// меню закрылось, — тогда ореол возвращается.
+    /// меню закрылось, — тогда ореол возвращается. Вид — как на полке:
+    /// строка списка поднимается строкой, лёжа, а не встаёт карточкой.
     @ViewBuilder
     private var preview: some View {
         if let plant {
-            PlantCard(plant: plant)
+            Group {
+                switch look {
+                case .grid: PlantCard(plant: plant)
+                case .list: PlantRow(plant: plant)
+                }
+            }
                 // Ширина числом: предпросмотру размера не предлагают, и
-                // карточка свернулась бы.
-                .frame(width: Metrics.previewCard)
+                // карточка свернулась бы. Строка — шириной своей строки.
+                .frame(width: previewWidth)
                 .environment(\.sproutHalos, false)
                 .onAppear {
                     previewing = true

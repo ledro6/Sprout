@@ -33,11 +33,15 @@ struct Shelf<Content: View>: View {
     }
 }
 
-/// Строка списка — та же плашка, что карточка, положенная боком.
+/// Строка списка — та же плашка, что карточка, положенная боком. На главной
+/// — с каплей «Полить» в конце; в правке на её месте ручка.
 struct PlantRow: View {
     let plant: Plant
 
     var editing = false
+
+    /// Капля «Полить»; у предпросмотров меню и перетаскивания её нет.
+    var drop = false
 
     var body: some View {
         HStack(spacing: 12) {
@@ -72,6 +76,11 @@ struct PlantRow: View {
                 .contentTransition(.numericText())
                 .animation(Motion.number, value: plant.moisture)
                 .modifier(Sharpen())
+
+            if drop, !editing {
+                WaterDrop(plant: plant)
+                    .transition(.scale.combined(with: .opacity))
+            }
 
             if editing {
                 // Ручка — знак, а не хватка: тащить можно за всю строку.

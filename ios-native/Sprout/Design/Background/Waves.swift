@@ -175,18 +175,18 @@ final class Repaint {
     /// нажатие встаёт в очередь, а не обрывает первое. Пары «откуда — куда»
     /// сцепляются сами.
     @MainActor
-    func begin(base: Tint, wave: Tint, to shape: Tint, toWave: Tint,
+    func begin(base: Hue, wave: Hue, to shape: Hue, toWave: Hue,
                from spot: CGPoint) {
         // Переполнилась очередь — последний ждущий перенимает цель нового:
         // хвост не растёт, конец верный.
         if waiting.count >= Motion.queued, var last = waiting.popLast() {
-            last.to = Shade(shape)
-            last.toWave = Shade(toWave)
+            last.to = shape.shade
+            last.toWave = toWave.shade
             last.front = .point(spot)
             waiting.append(last)
         } else {
-            waiting.append(Recolour(from: Shade(base), fromWave: Shade(wave),
-                                    to: Shade(shape), toWave: Shade(toWave),
+            waiting.append(Recolour(from: base.shade, fromWave: wave.shade,
+                                    to: shape.shade, toWave: toWave.shade,
                                     front: .point(spot), step: 0))
         }
         guard run == nil else { return }

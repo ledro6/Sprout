@@ -1,8 +1,12 @@
 import SwiftUI
 
-/// Карточка растения: фото, кличка, влажность и срок полива.
+/// Карточка растения: фото, кличка, влажность и срок полива. На главной — с
+/// каплей «Полить» в углу фото: подпись под фото и так занимает всю ширину.
 struct PlantCard: View {
     let plant: Plant
+
+    /// Капля «Полить»; у предпросмотров меню и перетаскивания её нет.
+    var drop = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -12,6 +16,13 @@ struct PlantCard: View {
                 .overlay(alignment: .topTrailing) {
                     ModelBadge(plant: plant)
                         .padding(Metrics.modelBadgeInset)
+                }
+                .overlay(alignment: .bottomTrailing) {
+                    if drop {
+                        WaterDrop(plant: plant)
+                            .padding(Metrics.dropInset)
+                            .transition(.scale.combined(with: .opacity))
+                    }
                 }
 
             HStack {

@@ -48,6 +48,9 @@ struct SettingsView: View {
                 }
                 .background { SproutBackground() }
                 .walk(.settings, scroll: reader)
+                // Свои цвета — новые подсказки: один раз и тем, кто уже
+                // знаком с настройками.
+                .walk(.hues, scroll: reader)
             }
             .navigationTitle("Настройки")
             .navigationBarTitleDisplayMode(.large)
@@ -98,33 +101,59 @@ struct SettingsView: View {
             SproutDivider()
 
             SproutBlock("Цвет узора") {
-                SproutTints(current: settings.patternTint,
-                            spots: patternSpots) { tint, spot in
-                    // Прежний цвет берём до смены настройки: перекраска идёт
-                    // из кружка, по которому попал палец.
-                    Feel.pick()
-                    Repaint.shared.begin(base: settings.patternTint,
-                                         wave: settings.waveTint,
-                                         to: tint, toWave: settings.waveTint,
-                                         from: CGPoint(x: spot.midX,
-                                                       y: spot.midY))
-                    settings.patternTint = tint
-                }
+                HueRow(current: settings.patternHue, spots: patternSpots,
+                       pick: { hue, spot in
+                           // Прежний цвет берём до смены настройки:
+                           // перекраска идёт из кружка, по которому попал
+                           // палец.
+                           Feel.pick()
+                           Repaint.shared.begin(base: settings.patternHue,
+                                                wave: settings.waveHue,
+                                                to: hue,
+                                                toWave: settings.waveHue,
+                                                from: CGPoint(x: spot.midX,
+                                                              y: spot.midY))
+                           settings.patternHue = hue
+                       },
+                       remove: removeOwn,
+                       hints: true)
             }
 
             SproutDivider()
 
             SproutBlock("Цвет волны", term: .wave) {
-                SproutTints(current: settings.waveTint,
-                            spots: waveSpots) { tint, spot in
-                    // Цвет волны виден только волной — пускаем её из кружка.
-                    // В очередь: второй кружок дождётся первой волны.
-                    settings.waveTint = tint
-                    Cheer.shared.queue(from: spot)
-                    Feel.pick()
-                }
+                HueRow(current: settings.waveHue, spots: waveSpots,
+                       pick: { hue, spot in
+                           // Цвет волны виден только волной — пускаем её из
+                           // кружка. В очередь: второй кружок дождётся
+                           // первой волны.
+                           settings.waveHue = hue
+                           Cheer.shared.queue(from: spot)
+                           Feel.pick()
+                       },
+                       remove: removeOwn)
             }
         }
+    }
+
+    /// Убрали свой цвет. Был им окрашен узор или волна — они возвращаются к
+    /// цвету по умолчанию, перекраской от убранного кружка.
+    private func removeOwn(_ colour: Channels, at spot: CGRect) {
+        func uses(_ hue: Hue) -> Bool {
+            if case .own(let used) = hue { return Hue.same(used, colour) }
+            return false
+        }
+        let pattern = uses(settings.patternHue) ? Hue.pattern
+            : settings.patternHue
+        let wave = uses(settings.waveHue) ? Hue.wave : settings.waveHue
+        if pattern != settings.patternHue || wave != settings.waveHue {
+            Repaint.shared.begin(base: settings.patternHue,
+                                 wave: settings.waveHue,
+                                 to: pattern, toWave: wave,
+                                 from: CGPoint(x: spot.midX, y: spot.midY))
+        }
+        settings.remove(own: colour)
+        Feel.toss()
     }
 
     // MARK: - Фон
@@ -274,7 +303,7 @@ struct SettingsView: View {
                             : .point(CGPoint(x: spot.midX, y: spot.midY)))
                 } label: {
                     SproutPiece(index: index)
-                        .fill(on ? Palette.swatch(settings.patternTint)
+                        .fill(on ? Palette.swatch(settings.patternHue)
                               : Palette.ink.opacity(Metrics.pieceOff))
                         .frame(height: Metrics.pieceTile)
                         .frame(maxWidth: .infinity)

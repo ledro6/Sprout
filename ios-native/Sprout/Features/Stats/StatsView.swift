@@ -152,7 +152,7 @@ struct StatsView: View {
     }
 
     /// Цвет волны, а не узора: столбики считают поливы.
-    private var colour: Color { Palette.swatch(settings.waveTint) }
+    private var colour: Color { Palette.swatch(settings.waveHue) }
 
     // MARK: - Пусто
 

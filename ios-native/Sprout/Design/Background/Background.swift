@@ -29,8 +29,8 @@ private struct SproutField: View {
         let motif = Festive.shared.motif
         let shapes = motif.dress(Settings.shared.chosen)
         let weave = Launch.shared.weave(for: shapes.count)
-        let baseTint = Settings.shared.patternTint
-        let waveTint = Settings.shared.waveTint
+        let baseShade = Settings.shared.patternHue.shade
+        let waveShade = Settings.shared.waveHue.shade
         let busy = Cheer.shared.start != nil
             || Launch.shared.bloomStart != nil
             || Launch.shared.swapStart != nil
@@ -67,8 +67,8 @@ private struct SproutField: View {
                                           .recolour(at: frame.date),
                                       frolic: Frenzy.shared
                                           .frolic(at: frame.date),
-                                      baseShade: Shade(baseTint),
-                                      waveShade: Shade(waveTint),
+                                      baseShade: baseShade,
+                                      waveShade: waveShade,
                                       lag: Settings.shared.sway
                                           ? Tilt.shared.lag : [],
                                       era: Tilt.shared.era,

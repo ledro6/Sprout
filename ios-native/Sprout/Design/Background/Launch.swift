@@ -3,7 +3,10 @@ import Observation
 import SwiftUI
 
 /// Запуск: заставка и ступени входа — узор, заголовок, комната, сетка, панель
-/// вкладок. Один за жизнь приложения: из фона оно собирается сразу.
+/// вкладок. Заставка — одна за жизнь приложения. Ступени отыгрывают и после
+/// замка: сад заперли — вход прячется под замком, открыли по лицу или
+/// пальцу — узор всходит и всё встаёт на места заново, как после
+/// приветствия.
 @Observable
 final class Launch {
     static let shared = Launch()
@@ -42,19 +45,54 @@ final class Launch {
     /// Новые всходы отменяют прежние.
     @ObservationIgnored private var blooming: Task<Void, Never>?
 
+    /// Ступени, что идут сейчас: запертый посреди входа сад их обрывает.
+    @ObservationIgnored private var entering: Task<Void, Never>?
+
     private init() {}
 
-    /// Второй раз ничего не делает: запуск у приложения один.
+    /// Второй раз ничего не делает: запуск у приложения один. Сад заперт —
+    /// приветствие ждёт ключа: под замком его никто бы не увидел.
     @MainActor
     func run() async {
         guard !ran else { return }
         ran = true
+        while Lock.shared.on, !Lock.shared.open {
+            try? await Task.sleep(for: .milliseconds(100))
+        }
         try? await Task.sleep(for: .seconds(Motion.welcomeHold))
         withAnimation(Motion.welcomeLeave) { greeting = false }
         // Ступени ждут, пока заставка сойдёт: иначе узор и заголовок вставали
         // на места под ней.
         try? await Task.sleep(for: .seconds(Motion.welcomeLeaveSeconds))
-        for _ in 1...Self.last {
+        let steps = Task { @MainActor in await enter() }
+        entering = steps
+        await steps.value
+    }
+
+    /// Сад заперли — вход прячется под замком: так после ключа ему есть что
+    /// играть. Пока идёт приветствие, прятать нечего.
+    @MainActor
+    func hide() {
+        guard !greeting else { return }
+        entering?.cancel()
+        entering = nil
+        blooming?.cancel()
+        bloomStart = nil
+        step = 0
+    }
+
+    /// Открыли по лицу или пальцу — вход заново: всходы и ступени.
+    @MainActor
+    func replay() {
+        guard !greeting, step == 0 else { return }
+        entering?.cancel()
+        entering = Task { @MainActor in await enter() }
+    }
+
+    @MainActor
+    private func enter() async {
+        while step < Self.last {
+            if Task.isCancelled { return }
             withAnimation(Motion.enter) { step += 1 }
             if step == 1 { sprout() }
             try? await Task.sleep(for: .seconds(Motion.enterStep))

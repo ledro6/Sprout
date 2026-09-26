@@ -4,6 +4,7 @@
 
     python3 tool/make_strings.py build    # собрать *.xcstrings из таблиц
     python3 tool/make_strings.py check    # проверить, ничего не пишет
+    python3 tool/make_strings.py prune    # убрать из таблиц ушедшие строки
 
 Исходный язык — русский: ключ строки и есть русский текст, его видно в
 коде. Переводы лежат таблицами по языкам в tool/strings/<язык>.json: ключ →
@@ -50,6 +51,12 @@ CATALOG = APP / "Localizable.xcstrings"
 SHORTCUTS = APP / "AppShortcuts.xcstrings"
 INFOPLIST = APP / "InfoPlist.xcstrings"
 SOURCE = "ru"
+
+# Переводы на паузе: по просьбе автора приложение пока только по-русски.
+# Новые строки в таблицы других языков не пишутся, а проверка не считает
+# их отсутствие ошибкой — система покажет русский текст. Уже переведённое
+# по-прежнему проверяется целиком. Вернуть строгость — True.
+TRANSLATIONS_REQUIRED = False
 
 # Языки интерфейса iPhone. Региональные варианты английского, испанского,
 # французского и китайского (Гонконг) система берёт из основного языка сама;
@@ -390,8 +397,11 @@ def check_values(lang, name, keys, values, problems, counted=()):
                         f"{extra[:5]}{'…' if len(extra) > 5 else ''}")
     lost = [key for key in keys if key not in values]
     if lost and lang != SOURCE:
-        problems.append(f"{lang}{name}: без перевода {len(lost)} из "
-                        f"{len(keys)}, например «{lost[0]}»")
+        if TRANSLATIONS_REQUIRED:
+            problems.append(f"{lang}{name}: без перевода {len(lost)} из "
+                            f"{len(keys)}, например «{lost[0]}»")
+        else:
+            UNTRANSLATED.update(lost)
 
 
 def check_phrases(lang, phrases, spoken, problems):
@@ -414,6 +424,9 @@ def check_phrases(lang, phrases, spoken, problems):
                             f"переведены одинаково")
         seen[folded] = key
 
+
+# Строки без перевода хоть на один язык — для сводки, пока переводы на паузе.
+UNTRANSLATED = set()
 
 WORD = re.compile(r"[^\W\d_]{4,}")
 
@@ -488,13 +501,46 @@ def check():
         return 1
     print(f"строки сходятся: {len(keys)} ключей, фраз Siri {len(phrases)}, "
           f"разрешений {len(texts)}, языков {len(LANGS)}")
+    if UNTRANSLATED:
+        print(f"переводы на паузе: {len(UNTRANSLATED)} строк пока только "
+              f"по-русски")
+    return 0
+
+
+def prune():
+    """Переводы строк, которых в коде больше нет, — вон из таблиц: текст
+    поменяли, и старый перевод уже ни к чему. Разделы фраз Siri и
+    разрешений не трогаются."""
+    keys, _, _ = extract()
+    gone = 0
+    for lang in LANGS:
+        path = TABLES / f"{lang}.json"
+        if not path.exists():
+            continue
+        data = json.loads(path.read_text(encoding="utf-8"))
+        stale = [key for key in data
+                 if not key.startswith("_") and key not in keys]
+        for key in stale:
+            del data[key]
+        # Русские строки без форм числа — тот же список, чистится так же.
+        neutral = data.get("_neutral")
+        if isinstance(neutral, list):
+            kept = [key for key in neutral if key in keys]
+            stale += neutral[len(kept):] if len(kept) != len(neutral) else []
+            data["_neutral"] = kept
+        if stale:
+            gone += len(stale)
+            path.write_text(json.dumps(data, ensure_ascii=False, indent=2)
+                            + "\n", encoding="utf-8")
+    print(f"убрано переводов ушедших строк: {gone}")
     return 0
 
 
 def main():
-    if len(sys.argv) != 2 or sys.argv[1] not in ("build", "check"):
+    commands = {"build": build, "check": check, "prune": prune}
+    if len(sys.argv) != 2 or sys.argv[1] not in commands:
         sys.exit(__doc__)
-    return build() if sys.argv[1] == "build" else check()
+    return commands[sys.argv[1]]()
 
 
 if __name__ == "__main__":

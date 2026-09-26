@@ -18,11 +18,14 @@ final class Coach {
     private init() {}
 
     /// Сами — только в первый запуск приложения, при первом заходе на экран
-    /// и после знакомства: оно важнее. Со второго запуска — только по «?».
+    /// и после знакомства: оно важнее. Со второго запуска — только по «?»;
+    /// кроме нового на знакомом экране (`Walk.news`): оно показывается один
+    /// раз, но после подсказок самого экрана.
     func offer(_ walk: Walk) {
         let settings = Settings.shared
-        guard self.walk == nil, settings.toured, settings.firstRun,
-              !settings.seen(walk)
+        guard self.walk == nil, settings.toured,
+              settings.firstRun || walk.news, !settings.seen(walk),
+              walk.after.map(settings.seen) ?? true
         else { return }
         start(walk)
     }

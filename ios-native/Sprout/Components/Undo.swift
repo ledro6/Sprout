@@ -140,13 +140,20 @@ final class Bin {
 /// устарел.
 enum Screen {
     static var middle: CGRect {
-        let bounds = UIApplication.shared.connectedScenes
+        let bounds = window
+        return CGRect(x: bounds.midX - 1, y: bounds.midY - 1,
+                      width: 2, height: 2)
+    }
+
+    /// Ширина окна — для предпросмотров, которым размера не предлагают.
+    static var width: CGFloat { window.width > 0 ? window.width : 390 }
+
+    private static var window: CGRect {
+        UIApplication.shared.connectedScenes
             .compactMap { $0 as? UIWindowScene }
             .flatMap(\.windows)
             .first { $0.isKeyWindow }?
             .bounds ?? .zero
-        return CGRect(x: bounds.midX - 1, y: bounds.midY - 1,
-                      width: 2, height: 2)
     }
 }
 

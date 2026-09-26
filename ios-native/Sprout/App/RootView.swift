@@ -104,6 +104,10 @@ struct RootView: View {
             set: { if !$0, !locked { settings.toured = true } })) {
             TourView()
         }
+        // Заперли — вход прячется под замком; открыли — отыгрывает заново.
+        .onChange(of: lock.open) { _, open in
+            if open { Launch.shared.replay() } else { Launch.shared.hide() }
+        }
         // Наблюдатель касаний — тоже на окно, см. `Finger`.
         .onAppear {
             notch = Self.topInset()
@@ -216,9 +220,10 @@ struct RootView: View {
         }
     }
 
+    /// Под замком заставки нет: она появится и сыграет после ключа.
     @ViewBuilder
     private var welcome: some View {
-        if Launch.shared.greeting {
+        if Launch.shared.greeting, !locked {
             // Нажатия забирает себе, иначе сквозь заставку можно ткнуть в
             // карточку.
             Splash(owner: garden.owner)

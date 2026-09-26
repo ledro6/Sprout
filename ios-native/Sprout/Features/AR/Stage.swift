@@ -63,7 +63,7 @@ final class Stage {
     @ObservationIgnored private var kits: [Plant.ID: Kit] = [:]
     @ObservationIgnored private var beds: [Bed] = []
     @ObservationIgnored private var target: Bed?
-    @ObservationIgnored private var tint = Tint.defaultWave.vivid
+    @ObservationIgnored private var tint = Hue.wave.vivid
 
     @ObservationIgnored private var reticle: Entity?
     @ObservationIgnored private var aim: SIMD3<Float>?
@@ -95,7 +95,7 @@ final class Stage {
         total = shown.count
         loaded = 0
         chosen = shown.count == 1 ? shown.first?.id : nil
-        tint = Settings.shared.waveTint.vivid
+        tint = Settings.shared.waveHue.vivid
         // Пока камера ищет пол, модели достаются из приложения, свои — с
         // диска, сканы — из своих файлов.
         Task { @MainActor [weak self] in

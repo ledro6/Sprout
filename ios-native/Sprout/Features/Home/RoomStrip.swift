@@ -72,13 +72,14 @@ final class Glide {
     }
 }
 
-/// Лента комнат над полкой — барабан, а не список. Имена стоят на нём одно
-/// за другим: текущее — к нам лицом, следующее — сразу за ним, повёрнутое
-/// прочь, размытое и бледное, а за последней комнатой — «Новая комната».
-/// Листают — барабан проворачивается: выглядывающее имя разворачивается к
-/// нам и встаёт на место текущего, текущее уходит поворотом влево. Путь
-/// короткий — ширина одного имени, а не экрана. `at` — положение листания
-/// страниц, дробное посреди жеста.
+/// Лента комнат над полкой — барабан, а не список. Имена написаны на нём
+/// одно за другим: текущее — на плоской грани, прямое, следующее — сразу за
+/// ним, на скруглении: буквы уходят по дуге, сжимаются и мельчают с
+/// глубиной (`Drum`), а за последней комнатой — «Новая комната». Листают —
+/// барабан проворачивается: выглядывающее имя выезжает на грань и
+/// распрямляется, текущее загибается влево и тает. Путь короткий — ширина
+/// одного имени, а не экрана. `at` — положение листания страниц, дробное
+/// посреди жеста.
 ///
 /// Пальца лента не берёт: листают страницы под ней, и смахнуть можно прямо
 /// по названию. Нажатие на выглядывающее имя листает к нему.
@@ -122,7 +123,12 @@ struct RoomStrip: View {
         }
         let turned = spot(starts, at)
         let step = spot(widths.map { $0 + Metrics.roomGap }, at)
-        // Внутри ленты — слева направо, а зеркалим сами: сдвиги, повороты и
+        // Плоская грань — под текущее имя, посреди жеста — между двумя.
+        // Скругление за ней — на всё свободное место до кнопок: соседнее имя
+        // целиком помещается на дугу и прячется за край у конца ленты.
+        let flat = spot(widths, at)
+        let ahead = max(span - Metrics.contentMargin - flat, size * 2.5)
+        // Внутри ленты — слева направо, а зеркалим сами: сдвиги, изгиб и
         // края считаются числами, и справа налево они идут от правого края.
         ZStack(alignment: .leading) {
             ForEach(0 ..< count, id: \.self) { index in
@@ -130,14 +136,12 @@ struct RoomStrip: View {
                 let away = along / max(step, 1)
                 // Дальше соседей не рисуем: их всё равно не видно.
                 if away > -1, away < 2 {
-                    title(index)
+                    title(index, bend: Drum(
+                        along: along, flat: flat, ahead: ahead,
+                        behind: size * Metrics.roomCurl,
+                        width: widths[index], flipped: flipped))
                         .frame(width: widths[index], alignment: .leading)
                         .environment(\.layoutDirection, direction)
-                        .rotation3DEffect(turn(away), axis: (x: 0, y: 1, z: 0),
-                                          anchor: hinge(away),
-                                          perspective: 0.8)
-                        .scaleEffect(1 - 0.06 * min(abs(away), 1),
-                                     anchor: hinge(away))
                         .blur(radius: haze(away))
                         .opacity(fade(away))
                         .offset(x: left(along, widths[index]))
@@ -188,19 +192,6 @@ struct RoomStrip: View {
         return flipped ? span - from - wide : from
     }
 
-    /// Поворот на барабане: следующее отвёрнуто вправо, уходящее — влево.
-    private func turn(_ away: CGFloat) -> Angle {
-        let degrees = away >= 0
-            ? Metrics.roomTurn * Double(min(away, 1.7))
-            : -Metrics.roomTurn * 1.2 * Double(min(-away, 1))
-        return .degrees(flipped ? -degrees : degrees)
-    }
-
-    /// Ось поворота — у ближнего к нам края имени.
-    private func hinge(_ away: CGFloat) -> UnitPoint {
-        (away >= 0) != flipped ? .leading : .trailing
-    }
-
     /// Ширина имени по шрифту, а не по вёрстке: вёрстку каждый кадр жеста
     /// ждать нельзя.
     private func measure(_ index: Int) -> CGFloat {
@@ -215,13 +206,21 @@ struct RoomStrip: View {
         index < names.count ? names[index] : Lang.text("Новая комната")
     }
 
+    /// Изгиб — у самого текста: плюс «Новой комнаты» стоит у ближнего края,
+    /// там дуга едва начинается, и ему гнуться незачем.
     @ViewBuilder
-    private func title(_ index: Int) -> some View {
+    private func title(_ index: Int, bend: Drum) -> some View {
         Group {
             if index < names.count {
                 Text(names[index])
+                    .textRenderer(bend)
             } else {
-                Label("Новая комната", systemImage: "plus")
+                Label {
+                    Text("Новая комната")
+                        .textRenderer(bend.led(by: size * 1.4))
+                } icon: {
+                    Image(systemName: "plus")
+                }
             }
         }
         .font(.system(size: size, weight: .semibold))
@@ -281,5 +280,83 @@ struct RoomStrip: View {
             .offset(x: left(starts[index] - turned, max(wide, 1)))
             .accessibilityHidden(true)
         }
+    }
+}
+
+/// Имя на барабане ленты комнат. Плоская грань — там, где стоит текущая
+/// комната: на ней буквы прямые. За гранью барабан скругляется, и буква
+/// уходит по дуге: чем дальше, тем круче повёрнута к нам боком — уже, мельче
+/// с глубиной и бледнее, а за четверть оборота прячется совсем. Листают —
+/// имя переезжает с дуги на грань и распрямляется. Сдвигается и сжимается
+/// каждая буква своя, поэтому слово гнётся, а не поворачивается дощечкой.
+struct Drum: TextRenderer {
+    /// Начало подписи на развёртке барабана — от начала грани.
+    var along: CGFloat
+    /// Ширина грани.
+    var flat: CGFloat
+    /// Радиус скругления за гранью и перед ней.
+    var ahead: CGFloat
+    var behind: CGFloat
+    /// Ширина подписи: справа налево развёртка идёт от её правого края.
+    var width: CGFloat = 0
+    var flipped = false
+    /// Сколько от начала подписи до текста: у «Новой комнаты» впереди плюс.
+    var lead: CGFloat = 0
+
+    /// Глаз далеко от барабана — во столько радиусов: мельчают буквы
+    /// мягко, а не проваливаются.
+    static let eye: CGFloat = 2.5
+
+    func led(by lead: CGFloat) -> Drum {
+        var copy = self
+        copy.lead = lead
+        copy.width -= lead
+        return copy
+    }
+
+    func draw(layout: Text.Layout, in context: inout GraphicsContext) {
+        for line in layout {
+            for run in line {
+                for slice in run {
+                    let box = slice.typographicBounds.rect
+                    let local = flipped ? width - box.midX : box.midX
+                    let at = along + lead + local
+                    guard let spot = place(at) else { continue }
+                    var glyph = context
+                    glyph.opacity = Double(spot.near * spot.near)
+                    let shift = (spot.x - at) * (flipped ? -1 : 1)
+                    glyph.translateBy(x: box.midX + shift, y: box.midY)
+                    glyph.scaleBy(x: spot.squeeze * spot.near, y: spot.near)
+                    glyph.translateBy(x: -box.midX, y: -box.midY)
+                    glyph.draw(slice)
+                }
+            }
+        }
+    }
+
+    /// Где буква на экране по ленте, насколько сжата поперёк и насколько
+    /// близко (1 — на грани). За четвертью оборота её не видно.
+    func place(_ at: CGFloat) -> (x: CGFloat, squeeze: CGFloat, near: CGFloat)? {
+        if at > flat {
+            guard let bent = Self.arc(at - flat, radius: ahead) else {
+                return nil
+            }
+            return (flat + bent.x, bent.squeeze, bent.near)
+        }
+        if at < 0 {
+            guard let bent = Self.arc(-at, radius: behind) else { return nil }
+            return (-bent.x, bent.squeeze, bent.near)
+        }
+        return (at, 1, 1)
+    }
+
+    /// Путь по дуге — в сдвиг на экране, сжатие и близость.
+    static func arc(_ run: CGFloat, radius: CGFloat)
+        -> (x: CGFloat, squeeze: CGFloat, near: CGFloat)? {
+        let angle = run / max(radius, 1)
+        guard angle < .pi / 2 else { return nil }
+        let depth = 1 - cos(angle)
+        let near = 1 / (1 + depth / eye)
+        return (radius * sin(angle) * near, cos(angle), near)
     }
 }

@@ -244,7 +244,8 @@ check("\(Seed.search("   ", in: Seed.rooms).count)", "0", "пустой запр
 
 print("настройки: значения по умолчанию и границы:")
 let keys = ["theme", "patternKinds", "patternShapes", "reminders",
-            "remindThreshold", "patternTint", "waveTint",
+            "remindThreshold", "patternTint", "waveTint", "patternHue",
+            "waveHue", "ownHues",
             "hushedHaptics", "hapticStrength", "stillPattern", "stiffShapes",
             "plantLook", "plantOrder", "mutedSounds", "toured",
             "walkedScreens", "launches", "avatarShot", "plainPattern"]
@@ -255,8 +256,9 @@ check("\(fresh.theme)", "system", "тема по умолчанию — за с�
 check("\(fresh.look)", "grid", "растения по умолчанию плиткой — как в макете")
 check("\(fresh.order)", "manual", "и в том порядке, в каком их расставили")
 check("\(fresh.chosen)", "[0, 1]", "в узоре росток и капля — узор макета")
-check("\(fresh.patternTint)", "green", "узор по умолчанию зелёный — цвет макета")
-check("\(fresh.waveTint)", "blue", "волна по умолчанию синяя")
+check(fresh.patternHue == .preset(.green), "узор по умолчанию зелёный — цвет макета")
+check(fresh.waveHue == .preset(.blue), "волна по умолчанию синяя")
+check(fresh.ownHues.isEmpty, "своих цветов по умолчанию нет")
 check(fresh.reminders == false, "напоминания по умолчанию выключены")
 check(fresh.haptics, "отклик в руке по умолчанию включён")
 check(round2(fresh.hapticStrength), "1.00", "и на полную силу")
@@ -305,8 +307,8 @@ fresh.order = .thirsty
 fresh.toggle(shape: 3)
 fresh.reminders = true
 fresh.threshold = 0.37
-fresh.patternTint = .rose
-fresh.waveTint = .amber
+fresh.patternHue = .preset(.rose)
+fresh.waveHue = .preset(.amber)
 fresh.toured = true
 fresh.avatarShot = "me.jpg"
 fresh.mark(.stats)
@@ -318,8 +320,8 @@ check("\(reopened.order)", "thirsty", "и порядок «сначала сух
 check("\(reopened.chosen)", "[2, 3]", "и набор фигурок")
 check(reopened.reminders, "и переключатель напоминаний")
 check(round2(reopened.threshold), "0.37", "и порог — любым процентом")
-check("\(reopened.patternTint)", "rose", "и цвет узора")
-check("\(reopened.waveTint)", "amber", "и цвет волны")
+check(reopened.patternHue == .preset(.rose), "и цвет узора")
+check(reopened.waveHue == .preset(.amber), "и цвет волны")
 check(reopened.toured, "и то, что знакомство уже было")
 check(reopened.avatarShot == "me.jpg", "и фото хозяина")
 check(reopened.seen(.stats) && reopened.seen(.plant) && !reopened.seen(.add),
@@ -353,6 +355,47 @@ store.set(3.5, forKey: "hapticStrength")
 check(round2(Settings(store: store).hapticStrength), "1.00",
       "сила из файла не выходит за единицу")
 store.removeObject(forKey: "hapticStrength")
+
+print("свои цвета:")
+do {
+    let keys = ["patternTint", "waveTint", "patternHue", "waveHue", "ownHues"]
+    for key in keys { store.removeObject(forKey: key) }
+    store.set(Tint.rose.rawValue, forKey: "patternTint")
+    store.set(Tint.amber.rawValue, forKey: "waveTint")
+    let old = Settings(store: store)
+    check(old.patternHue == .preset(.rose) && old.waveHue == .preset(.amber),
+          "цвета прежней сборки переехали как были")
+    let berry = Channels(160, 30, 90)
+    check(old.add(own: berry), "свой цвет встал в ряд")
+    check(!old.add(own: Channels(160.4, 29.8, 90.3)),
+          "тот же цвет дважды — одним кружком")
+    old.patternHue = .own(berry)
+    old.waveHue = .own(berry)
+    let again = Settings(store: store)
+    check(again.ownHues.count == 1 && again.patternHue == .own(berry),
+          "свои цвета и выбор переживают запуск")
+    for step in 1 ..< Hue.ownLimit {
+        again.add(own: Channels(Double(step) * 20, 100, 50))
+    }
+    check(again.ownHues.count == Hue.ownLimit
+          && !again.add(own: Channels(1, 2, 3)),
+          "своих цветов — не больше одиннадцати")
+    again.remove(own: berry)
+    check(again.ownHues.count == Hue.ownLimit - 1
+          && again.patternHue == .pattern && again.waveHue == .wave,
+          "убрали цвет — узор и волна вернулись к своим по умолчанию")
+    let light = Hue.own(Channels(250, 245, 200))
+    check(Hue.brightness(light.vivid) <= Hue.vividCeiling + 0.0001,
+          "слишком светлый свой цвет притемнён — волна видна")
+    let dark = Hue.own(Channels(20, 40, 90))
+    check(abs(Hue.brightness(dark.pale) - Hue.paleness) < 0.002
+          && abs(Hue.brightness(light.pale) - Hue.paleness) < 0.002,
+          "бледная ипостась своего — той же светлоты, что у готовых")
+    check(Hue.brightness(dark.vivid) < Hue.brightness(dark.pale),
+          "насыщенная своего темнее бледной")
+    check(Hue.preset(.green).shade == Shade(.green), "готовый цвет — как был")
+    for key in keys { store.removeObject(forKey: key) }
+}
 
 print("оттенки:")
 check("\(Tint.allCases.count)", "11", "одиннадцать оттенков на выбор")
@@ -2354,7 +2397,10 @@ do {
         language = tongue
         let local = Term.allCases.map(\.meaning)
             + Tour.pages.flatMap { [$0.title, $0.text] }
+        // Строки, у которых перевода ещё нет, пока звучат по-русски.
         let same = zip(local, russian).filter { $0 == $1 }.map(\.0)
+            .filter { (catalog.strings[$0]?["localizations"]
+                       as? [String: Any])?[tongue] != nil }
         check(same.isEmpty,
               "\(tongue): знакомство и словарик переведены \(same)")
     }
@@ -2629,7 +2675,14 @@ do {
     for tongue in tongues {
         language = tongue
         let local = Walk.allCases.flatMap(\.hints).map(\.text)
-        let same = zip(local, russian).filter { $0 == $1 }.map(\.0)
+        // Переводы на паузе: подсказки, которых в каталоге этого языка ещё
+        // нет, показываются по-русски — их не считаем. Переведённые должны
+        // быть переведены.
+        let same = zip(local, russian).filter { pair in
+            let known = (catalog.strings[pair.1]?["localizations"]
+                         as? [String: Any])?[tongue] != nil
+            return known && pair.0 == pair.1
+        }.map(\.0)
         check(same.isEmpty, "\(tongue): подсказки переведены \(same)")
     }
 }

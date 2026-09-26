@@ -3,7 +3,7 @@ import Foundation
 /// Оттенок узора или волны. У каждого две ипостаси — бледная для покоя и
 /// насыщенная для волны; доли и тему решает `Palette`. Живёт в модели, чтобы
 /// числа проверялись без `Color`.
-enum Tint: Int, CaseIterable, Identifiable, Sendable {
+enum Tint: Int, CaseIterable, Identifiable, Codable, Sendable {
     case green, blue, violet, amber, rose, teal, sky, indigo, fuchsia, coral,
          lemon
 

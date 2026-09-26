@@ -36,8 +36,9 @@ struct PlantTile: View {
     var lift: (Plant.ID) -> Void = { _ in }
     /// Карточку повели — полка начинает качаться.
     var fly: () -> Void = {}
-    /// Пункт меню «Расставить».
-    var arrange: () -> Void = {}
+    /// Капля «Полить» — на главной; в правке её нет, как нет кнопок у
+    /// качающихся значков.
+    var waters = false
 
     var body: some View {
         // В правке нажатие ничего не открывает, как значок на «Домой».
@@ -45,8 +46,7 @@ struct PlantTile: View {
             label
         }
         .buttonStyle(.plain)
-        .modifier(PlantMenu(id: plant.id, enabled: menus,
-                            arrange: arranges ? arrange : nil))
+        .modifier(PlantMenu(id: plant.id, look: look, enabled: menus))
         // Снаружи меню: меню в правке снимается, и качание внутри него
         // начиналось бы заново. Строка не качается — у неё ручка, как в
         // списках iOS. Место тащимой карточки стоит: это метка, куда она
@@ -71,8 +71,11 @@ struct PlantTile: View {
     @ViewBuilder
     private var label: some View {
         switch look {
-        case .grid: PlantCard(plant: plant)
-        case .list: PlantRow(plant: plant, editing: editing)
+        case .grid:
+            PlantCard(plant: plant, drop: waters && !editing)
+                .animation(Motion.arrange, value: editing)
+        case .list:
+            PlantRow(plant: plant, editing: editing, drop: waters)
         }
     }
 }

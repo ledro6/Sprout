@@ -82,7 +82,8 @@ final class Settings {
         var icon: String {
             switch self {
             case .manual: "hand.draw"
-            case .thirsty: "drop"
+            // Не просто капля: капля на карточке — это «Полить».
+            case .thirsty: "drop.halffull"
             case .name: "textformat"
             case .newest: "calendar"
             }
@@ -135,13 +136,41 @@ final class Settings {
     static let defaultShapes: Set<Int> = [0, 1]
 
     /// Узор и волна — двумя настройками: узор — фон, волна — событие, и
-    /// различаться они должны и цветом.
-    var patternTint: Tint {
-        didSet { store.set(patternTint.rawValue, forKey: Key.patternTint) }
+    /// различаться они должны и цветом. Цвет — готовый или свой.
+    var patternHue: Hue {
+        didSet { Self.put(patternHue, Key.patternHue, in: store) }
     }
 
-    var waveTint: Tint {
-        didSet { store.set(waveTint.rawValue, forKey: Key.waveTint) }
+    var waveHue: Hue {
+        didSet { Self.put(waveHue, Key.waveHue, in: store) }
+    }
+
+    /// Свои цвета — общие у узора и волны, по порядку добавления, до
+    /// `Hue.ownLimit`.
+    private(set) var ownHues: [Channels] {
+        didSet { Self.put(ownHues, Key.ownHues, in: store) }
+    }
+
+    /// Новый свой цвет — в конец ряда. Такой уже есть или ряд полон — нет.
+    @discardableResult
+    func add(own colour: Channels) -> Bool {
+        guard ownHues.count < Hue.ownLimit,
+              !ownHues.contains(where: { Hue.same($0, colour) })
+        else { return false }
+        ownHues.append(colour)
+        return true
+    }
+
+    /// Убрали свой цвет — узор или волна, если были им окрашены, возвращаются
+    /// к цвету по умолчанию.
+    func remove(own colour: Channels) {
+        ownHues.removeAll { Hue.same($0, colour) }
+        if case .own(let used) = patternHue, Hue.same(used, colour) {
+            patternHue = .pattern
+        }
+        if case .own(let used) = waveHue, Hue.same(used, colour) {
+            waveHue = .wave
+        }
     }
 
     /// Своей настройкой: кружок — про человека, а не про фон.
@@ -299,8 +328,13 @@ final class Settings {
         static let reminders = "reminders"
         static let calendar = "calendarSync"
         static let threshold = "remindThreshold"
+        /// Прежние ключи — номером готового цвета; читаются ради тех, у кого
+        /// они сохранены.
         static let patternTint = "patternTint"
         static let waveTint = "waveTint"
+        static let patternHue = "patternHue"
+        static let waveHue = "waveHue"
+        static let ownHues = "ownHues"
         static let avatarTint = "avatarTint"
         static let avatarShot = "avatarShot"
         /// Прежний переключатель, наоборот — «без отклика». Читается, пока
@@ -329,6 +363,20 @@ final class Settings {
         return Tint(rawValue: store.integer(forKey: key))
     }
 
+    /// Цвет и свои цвета — упакованными: у своего цвета три канала.
+    private static func put<Value: Encodable>(_ value: Value, _ key: String,
+                                              in store: UserDefaults) {
+        store.set(try? JSONEncoder().encode(value), forKey: key)
+    }
+
+    private static func take<Value: Decodable>(_ type: Value.Type,
+                                               _ key: String,
+                                               from store: UserDefaults)
+        -> Value? {
+        guard let data = store.data(forKey: key) else { return nil }
+        return try? JSONDecoder().decode(type, from: data)
+    }
+
     /// Хранилище снаружи — ради проверок.
     init(store: UserDefaults = .standard) {
         self.store = store
@@ -348,8 +396,13 @@ final class Settings {
             shapes = (1 ... Self.shapeCount).contains(count)
                 ? Set(0 ..< count) : Self.defaultShapes
         }
-        patternTint = Self.tint(store, Key.patternTint) ?? Tint.defaultPattern
-        waveTint = Self.tint(store, Key.waveTint) ?? Tint.defaultWave
+        // Цвет прежней сборки — номером готового — переезжает как был.
+        patternHue = Self.take(Hue.self, Key.patternHue, from: store)
+            ?? Self.tint(store, Key.patternTint).map(Hue.preset) ?? .pattern
+        waveHue = Self.take(Hue.self, Key.waveHue, from: store)
+            ?? Self.tint(store, Key.waveTint).map(Hue.preset) ?? .wave
+        ownHues = Array((Self.take([Channels].self, Key.ownHues, from: store)
+                         ?? []).prefix(Hue.ownLimit))
         avatarTint = Self.tint(store, Key.avatarTint) ?? Tint.defaultAvatar
         avatarShot = store.string(forKey: Key.avatarShot)
         if store.object(forKey: Key.strength) != nil {

@@ -61,6 +61,9 @@ struct Hint: Identifiable, Hashable, Sendable {
         case tripActions = "trip.actions"
 
         case roomsList = "rooms.list"
+
+        case huesAdd = "hues.add"
+        case huesRemove = "hues.remove"
     }
 
     let target: Target
@@ -74,9 +77,16 @@ struct Hint: Identifiable, Hashable, Sendable {
 /// заходе, — дальше по «?» или после «Показать подсказки снова».
 enum Walk: String, CaseIterable, Identifiable, Sendable {
     case stats, orrery, book, plant, add, profile, search, settings, tuning,
-         ar, trip, rooms
+         ar, trip, rooms, hues
 
     var id: String { rawValue }
+
+    /// Новое на знакомом экране: показывается само один раз и после первого
+    /// запуска — тем, кто уже прошёл подсказки экрана.
+    var news: Bool { self == .hues }
+
+    /// Сначала — подсказки самого экрана, новое — после них.
+    var after: Walk? { self == .hues ? .settings : nil }
 
     var hints: [Hint] {
         switch self {
@@ -345,6 +355,20 @@ enum Walk: String, CaseIterable, Identifiable, Sendable {
                      text: Lang.text("""
                          Имя правится прямо в строке, порядок — за ручку \
                          справа, удалить — смахнуть влево.
+                         """)),
+            ]
+        case .hues:
+            [
+                Hint(target: .huesAdd, title: Lang.text("Свой цвет"),
+                     text: Lang.text("""
+                         Нажмите «+» — откроется палитра iOS: спектр, сетка \
+                         и пипетка. Выбранный цвет встанет в ряд и сразу \
+                         окрасит узор или волну.
+                         """)),
+                Hint(target: .huesRemove, title: Lang.text("До одиннадцати"),
+                     text: Lang.text("""
+                         Своих цветов — до одиннадцати, общие у узора и \
+                         волны. Лишний — подержите на нём палец и удалите.
                          """)),
             ]
         }

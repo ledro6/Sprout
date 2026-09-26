@@ -14,6 +14,7 @@ ios-native/Sprout/Model/Garden/Garden.swift
 ios-native/Sprout/Model/Core/Settings.swift
 ios-native/Sprout/Model/Pattern/Weave.swift
 ios-native/Sprout/Model/Pattern/Tint.swift
+ios-native/Sprout/Model/Pattern/Hue.swift
 ios-native/Sprout/Model/Pattern/Front.swift
 ios-native/Sprout/Model/Pattern/Sway.swift
 ios-native/Sprout/Model/Pattern/Frolic.swift
