@@ -274,6 +274,53 @@ final class Garden {
         }
     }
 
+    // MARK: - Датчики
+
+    /// Привязали датчик — или отвязали, пусто.
+    func link(_ id: Plant.ID, probe: Probe?) {
+        guard plant(id: id) != nil else { return }
+        change(id) { $0.probe = probe }
+    }
+
+    /// Метка шкалы датчика по последнему показанию: «сейчас сухо» или
+    /// «только что полили».
+    func mark(_ id: Plant.ID, dry: Bool) {
+        guard var probe = plant(id: id)?.probe,
+              let now = probe.last?.moisture else { return }
+        if dry { probe.dry = now } else { probe.wet = now }
+        change(id) {
+            $0.probe = probe
+            $0.moisture = probe.level(now)
+        }
+    }
+
+    /// Показание пришло: влажность растения — по датчику. Подскочила —
+    /// значит, полили, пока приложение не смотрело: полив сам ложится в
+    /// журнал, если его не записали кнопкой за последние два часа.
+    @discardableResult
+    func sense(_ id: Plant.ID, _ reading: Reading) -> Bool {
+        guard let plant = plant(id: id), var probe = plant.probe else {
+            return false
+        }
+        let before = probe.last?.moisture
+        probe.last = reading
+        var poured = false
+        if let before, probe.poured(from: before, to: reading.moisture),
+           !log.contains(where: {
+               $0.plant == id
+                   && abs($0.when.timeIntervalSince(reading.when)) < 2 * 3_600
+           }) {
+            log.append(Watering(plant: id, when: reading.when,
+                                left: probe.level(before)))
+            poured = true
+        }
+        change(id) {
+            $0.probe = probe
+            $0.moisture = probe.level(reading.moisture)
+        }
+        return poured
+    }
+
     /// Опрыскали, повернули, протёрли: счёт этого дела — заново.
     func did(_ duty: Duty, on id: Plant.ID) {
         guard plant(id: id) != nil else { return }

@@ -1,6 +1,17 @@
 {
   "sourceLanguage": "ru",
   "strings": {
+    "NSBluetoothAlwaysUsageDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Чтобы читать датчик влажности в горшке — Flower Care и похожие."
+          }
+        }
+      }
+    },
     "NSCalendarsFullAccessUsageDescription": {
       "extractionState": "manual",
       "localizations": {
@@ -876,6 +887,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "用來以 Face ID 解鎖已鎖定的花園。"
+          }
+        }
+      }
+    },
+    "NSHomeKitUsageDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Чтобы читать датчики влажности почвы из приложения «Дом»."
           }
         }
       }

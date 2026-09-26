@@ -130,6 +130,8 @@ struct RootView: View {
                 Season.settle(on: settings.seasons)
                 Climate.settle(settings.climate, on: settings.weather)
                 Task { await Weatherman.shared.refresh() }
+                // Датчики в горшках — свежие показания.
+                Sensors.shared.poll()
                 redress()
                 Task { await lock.unlock() }
             } else {

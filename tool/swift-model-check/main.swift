@@ -3439,6 +3439,70 @@ do {
           "каждая награда — в своей группе")
 }
 
+print("датчики влажности:")
+do {
+    let bytes: [UInt8] = [0xEA, 0x00, 0x00, 0xD2, 0x04, 0x00, 0x00, 38,
+                          0xFA, 0x00, 0, 0, 0, 0, 0, 0]
+    let reading = Flora.reading(bytes, battery: 82,
+                                at: Date(timeIntervalSince1970: 0))
+    check(reading?.moisture == 38 && reading?.temperature == 23.4
+          && reading?.light == 1234 && reading?.fertility == 250
+          && reading?.battery == 82,
+          "Flower Care: влажность, градусы, свет, удобрения")
+    let frost: [UInt8] = [0xCE, 0xFF, 0, 0, 0, 0, 0, 12, 0, 0]
+    check(Flora.reading(frost)?.temperature == -5, "мороз — со знаком")
+    check(Flora.reading([0xAA, 0xBB] + [UInt8](repeating: 0, count: 14)) == nil,
+          "не в режиме «сейчас» — показаний нет")
+    check(Flora.reading([1, 2, 3]) == nil, "обрывок не читается")
+    check(Flora.reading([0, 0, 0, 0, 0, 0, 0, 180, 0, 0]) == nil,
+          "влажности больше ста процентов не бывает")
+    check(Flora.battery([82, 0x2B, 0x33]) == 82 && Flora.battery([200]) == nil,
+          "заряд — первым байтом")
+    check(Flora.named("Flower care") && Flora.named("Grow Care Garden")
+          && !Flora.named("Mi Smart Band") && !Flora.named(nil),
+          "датчик узнаётся по имени")
+    var probe = Probe(kind: .flora, id: "a", name: "Flower care")
+    check(round2(probe.level(30)), "0.50", "середина шкалы — половина воды")
+    check(probe.level(5) == 0 && probe.level(70) == 1, "за метками — край")
+    check(probe.poured(from: 16, to: 40) && !probe.poured(from: 30, to: 35),
+          "подскок больше трети шкалы — полили")
+    probe.dry = 30
+    probe.wet = 32
+    check(round2(probe.level(30)), "0.50", "слипшиеся метки — обычная шкала")
+
+    let yard = Garden()
+    var fern = plantNamed("Папоротник", moisture: 1, dryingDays: 7)
+    fern.probe = Probe(kind: .flora, id: "a", name: "Flower care")
+    yard.rooms = [Room(name: "Спальня", plants: [fern])]
+    let base = yard.log.count
+    let early = Date(timeIntervalSince1970: 1_800_000_000)
+    check(!yard.sense("Папоротник", Reading(moisture: 20, when: early)),
+          "первое показание — не полив")
+    check(round2(yard.plant(id: "Папоротник")!.moisture), "0.17",
+          "влажность растения — с датчика")
+    let later = early.addingTimeInterval(5 * 3_600)
+    check(yard.sense("Папоротник", Reading(moisture: 44, when: later))
+          && yard.log.count == base + 1
+          && round2(yard.log.last?.left ?? -1) == "0.17",
+          "подскок — полив сам лёг в журнал, с тем, сколько было воды")
+    _ = yard.water("Папоротник", at: later.addingTimeInterval(3_600 * 20))
+    _ = yard.sense("Папоротник", Reading(moisture: 18,
+                                         when: later.addingTimeInterval(3_600 * 19)))
+    check(!yard.sense("Папоротник", Reading(moisture: 45,
+                                            when: later.addingTimeInterval(3_600 * 21)))
+          && yard.log.count == base + 2,
+          "полили кнопкой — датчик второй раз не записывает")
+    yard.mark("Папоротник", dry: false)
+    check(yard.plant(id: "Папоротник")!.probe?.wet == 45
+          && yard.plant(id: "Папоротник")!.moisture == 1,
+          "«только что полил» — метка шкалы по показанию")
+    let file = try! JSONEncoder().encode(yard.plant(id: "Папоротник")!)
+    let back = try! JSONDecoder().decode(Plant.self, from: file)
+    check(back.probe?.last?.moisture == 45, "датчик ложится в файл сада")
+    yard.link("Папоротник", probe: nil)
+    check(yard.plant(id: "Папоротник")!.probe == nil, "датчик отвязали")
+}
+
 print("погода:")
 do {
     check(round2(Climate.pace(temperature: 22, humidity: 0.5, outdoor: false)),

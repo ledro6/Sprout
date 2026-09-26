@@ -471,6 +471,10 @@ struct PlantView: View {
             fact(Lang.format("Влажность %@", plant.moistureLabel),
                  term: .moisture)
                 .contentTransition(.numericText())
+            if let status = plant.probe?.status {
+                fact(status)
+                    .contentTransition(.numericText())
+            }
             fact(plant.species)
             // Сразу под видом: питомца касается вид, а не кличка.
             if let danger = Toxicity.of(plant.species) {

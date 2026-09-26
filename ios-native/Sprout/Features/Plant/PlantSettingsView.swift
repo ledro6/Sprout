@@ -26,6 +26,8 @@ struct PlantSettingsView: View {
     @State private var naming = false
     @State private var newRoom = ""
 
+    @State private var linking = false
+
     @FocusState private var typing: Bool
 
     private var plant: Plant? { garden.plant(id: plantID) }
@@ -42,6 +44,7 @@ struct PlantSettingsView: View {
                         tending
                             .hintSpot(.tuningTending)
                         errands
+                        sensor
                     }
                     .padding(.horizontal, Metrics.contentMargin)
                     .padding(.top, 4)
@@ -67,6 +70,9 @@ struct PlantSettingsView: View {
         .onAppear(perform: load)
         .onChange(of: plant == nil) { _, gone in
             if gone { dismiss() }
+        }
+        .sheet(isPresented: $linking) {
+            SensorPicker(plantID: plantID).environment(garden)
         }
         .alert("Новая комната", isPresented: $naming) {
             TextField("Балкон", text: $newRoom)
@@ -187,6 +193,97 @@ struct PlantSettingsView: View {
                 }
             }
         }
+    }
+
+    // MARK: - Датчик
+
+    /// Датчик влажности: привязан — чей, что показывает и метки шкалы;
+    /// нет — привязать. Действия ложатся в сад сразу, мимо «Готово»: это
+    /// не черновик, а устройство.
+    private var sensor: some View {
+        SproutGroup("Датчик влажности") {
+            if let probe = plant?.probe {
+                HStack(spacing: 12) {
+                    Image(systemName: probe.kind == .flora ? "sensor.fill"
+                          : "homekit")
+                        .font(Typography.settingRow)
+                        .foregroundStyle(Palette.accent)
+                        .frame(width: 24)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(probe.name)
+                            .font(Typography.settingRow)
+                            .foregroundStyle(Palette.ink)
+                            .lineLimit(1)
+                        Text(probe.status ?? Lang.text("Ждём первых показаний…"))
+                            .font(Typography.settingNote)
+                            .foregroundStyle(.secondary)
+                            .contentTransition(.numericText())
+                    }
+                    Spacer(minLength: 8)
+                    Button {
+                        Sensors.shared.poll(plantID)
+                        Feel.pick()
+                    } label: {
+                        Image(systemName: "arrow.clockwise")
+                    }
+                    .buttonStyle(.glass)
+                    .buttonBorderShape(.circle)
+                    .accessibilityLabel("Опросить датчик")
+                }
+                HStack(spacing: Metrics.actionGap) {
+                    Button {
+                        withAnimation(Motion.number) {
+                            garden.mark(plantID, dry: true)
+                        }
+                        Feel.done()
+                    } label: {
+                        Text("Сейчас сухо")
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.8)
+                            .frame(maxWidth: .infinity)
+                    }
+                    .buttonStyle(.glass)
+                    Button {
+                        withAnimation(Motion.number) {
+                            garden.mark(plantID, dry: false)
+                        }
+                        Feel.done()
+                    } label: {
+                        Text("Только что полил")
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.8)
+                            .frame(maxWidth: .infinity)
+                    }
+                    .buttonStyle(.glass)
+                }
+                .font(Typography.settingNote)
+                .disabled(probe.last == nil)
+                Text("Отметьте, когда земля сухая и когда только что полита, — проценты растения встанут между метками.")
+                    .font(Typography.settingNote)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+                Button(role: .destructive) {
+                    withAnimation(Motion.enter) {
+                        garden.link(plantID, probe: nil)
+                    }
+                    Feel.toss()
+                } label: {
+                    Label("Отвязать датчик", systemImage: "xmark.circle")
+                        .font(Typography.settingRow)
+                }
+            } else {
+                Text("Датчик в горшке покажет настоящую влажность земли: Flower Care по Bluetooth или датчик из приложения «Дом».")
+                    .font(Typography.settingNote)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+                Button { linking = true } label: {
+                    Label("Привязать датчик", systemImage: "sensor")
+                        .font(Typography.settingRow)
+                }
+                .buttonStyle(.glass)
+            }
+        }
+        .animation(Motion.enter, value: plant?.probe)
     }
 
     // MARK: - Мелкий уход

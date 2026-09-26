@@ -7538,6 +7538,9 @@
         }
       }
     },
+    "Bluetooth выключен или запрещён для Sprout.": {
+      "extractionState": "manual"
+    },
     "Sprout не собирает о вас никаких сведений и никуда их не передаёт.": {
       "extractionState": "manual",
       "localizations": {
@@ -14736,6 +14739,9 @@
           }
         }
       }
+    },
+    "В «Доме» пусто. Если датчики там есть — возможно, приложению не включили HomeKit в Xcode.": {
+      "extractionState": "manual"
     },
     "В Календаре телефона появится календарь «Sprout»: в какой день кого полить и подкормить, на три недели вперёд. План обновляется, когда вы выходите из приложения.": {
       "extractionState": "manual",
@@ -33729,6 +33735,15 @@
     "Датчик LiDAR не ответил. Перезапустите приложение и попробуйте снова.": {
       "extractionState": "manual"
     },
+    "Датчик в горшке покажет настоящую влажность земли: Flower Care по Bluetooth или датчик из приложения «Дом».": {
+      "extractionState": "manual"
+    },
+    "Датчик в горшке показывает настоящую влажность земли: проценты растения берутся с него, а полив, замеченный датчиком, сам ложится в журнал.": {
+      "extractionState": "manual"
+    },
+    "Датчик влажности": {
+      "extractionState": "manual"
+    },
     "Датчик движения": {
       "extractionState": "manual",
       "localizations": {
@@ -34015,6 +34030,18 @@
           }
         }
       }
+    },
+    "Датчик: %1$@ · батарейка %2$@": {
+      "extractionState": "manual"
+    },
+    "Датчик: %@": {
+      "extractionState": "manual"
+    },
+    "Датчиков Flower Care не видно. Поднесите телефон ближе и поищите снова.": {
+      "extractionState": "manual"
+    },
+    "Датчиков влажности в «Доме» нет.": {
+      "extractionState": "manual"
     },
     "Даты": {
       "extractionState": "manual",
@@ -41221,6 +41248,9 @@
         }
       }
     },
+    "Доступ к «Дому» запрещён — разрешите его в Настройках → Sprout.": {
+      "extractionState": "manual"
+    },
     "Драцена": {
       "extractionState": "manual",
       "localizations": {
@@ -43809,6 +43839,9 @@
           }
         }
       }
+    },
+    "Ждём первых показаний…": {
+      "extractionState": "manual"
     },
     "За период": {
       "extractionState": "manual",
@@ -52148,6 +52181,9 @@
         }
       }
     },
+    "Из приложения «Дом»": {
+      "extractionState": "manual"
+    },
     "Изменить": {
       "extractionState": "manual",
       "localizations": {
@@ -54444,6 +54480,9 @@
         }
       }
     },
+    "Искать снова": {
+      "extractionState": "manual"
+    },
     "История": {
       "extractionState": "manual",
       "localizations": {
@@ -56455,6 +56494,9 @@
           }
         }
       }
+    },
+    "Ищу… Поднесите телефон к горшку.": {
+      "extractionState": "manual"
     },
     "Кабинет": {
       "extractionState": "manual",
@@ -99276,6 +99318,9 @@
         }
       }
     },
+    "Опросить датчик": {
+      "extractionState": "manual"
+    },
     "Опрыскал": {
       "extractionState": "manual"
     },
@@ -101926,6 +101971,9 @@
         }
       }
     },
+    "Отвязать датчик": {
+      "extractionState": "manual"
+    },
     "Откроется растение: большая кнопка «Полить сейчас», история поливов, заметки и настройки.": {
       "extractionState": "manual",
       "localizations": {
@@ -104221,6 +104269,9 @@
           }
         }
       }
+    },
+    "Отметьте, когда земля сухая и когда только что полита, — проценты растения встанут между метками.": {
+      "extractionState": "manual"
     },
     "Отмечает полив: влажность встаёт на сто процентов, а полив попадает в журнал.": {
       "extractionState": "manual",
@@ -144636,6 +144687,9 @@
         }
       }
     },
+    "Привязать датчик": {
+      "extractionState": "manual"
+    },
     "Придумайте имя. По виду подставится обычный срок полива.": {
       "extractionState": "manual",
       "localizations": {
@@ -158813,6 +158867,9 @@
         }
       }
     },
+    "Рядом по Bluetooth": {
+      "extractionState": "manual"
+    },
     "С Новым годом": {
       "extractionState": "manual",
       "localizations": {
@@ -166574,6 +166631,9 @@
         }
       }
     },
+    "Сейчас сухо": {
+      "extractionState": "manual"
+    },
     "Серебро": {
       "extractionState": "manual"
     },
@@ -166863,6 +166923,9 @@
           }
         }
       }
+    },
+    "Сигнал %lld дБм": {
+      "extractionState": "manual"
     },
     "Сила вибрации": {
       "extractionState": "manual",
@@ -186432,6 +186495,9 @@
           }
         }
       }
+    },
+    "Только что полил": {
+      "extractionState": "manual"
     },
     "Точная объёмная копия — из скана.": {
       "extractionState": "manual",

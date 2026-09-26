@@ -90,6 +90,7 @@
 				Model/Garden/Climate.swift,
 				Model/Garden/Garden.swift,
 				Model/Garden/Plants.swift,
+				Model/Garden/Probe.swift,
 				Model/Garden/Round.swift,
 				Model/Garden/Score.swift,
 				Model/Garden/Season.swift,
@@ -528,6 +529,8 @@
 				INFOPLIST_KEY_CADisableMinimumFrameDurationOnPhone = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = Sprout;
 				INFOPLIST_KEY_NSFaceIDUsageDescription = "Чтобы открывать запертый сад по лицу.";
+				INFOPLIST_KEY_NSHomeKitUsageDescription = "Чтобы читать датчики влажности почвы из приложения «Дом».";
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Чтобы читать датчик влажности в горшке — Flower Care и похожие.";
 				INFOPLIST_KEY_NSCalendarsFullAccessUsageDescription = "Чтобы вести в Календаре свой календарь со сроками полива и подкормки.";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Чтобы снять растение для сада и поставить его в комнату в дополненной реальности.";
 				INFOPLIST_KEY_NSLocationDefaultAccuracyReduced = YES;
@@ -565,6 +568,8 @@
 				INFOPLIST_KEY_CADisableMinimumFrameDurationOnPhone = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = Sprout;
 				INFOPLIST_KEY_NSFaceIDUsageDescription = "Чтобы открывать запертый сад по лицу.";
+				INFOPLIST_KEY_NSHomeKitUsageDescription = "Чтобы читать датчики влажности почвы из приложения «Дом».";
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Чтобы читать датчик влажности в горшке — Flower Care и похожие.";
 				INFOPLIST_KEY_NSCalendarsFullAccessUsageDescription = "Чтобы вести в Календаре свой календарь со сроками полива и подкормки.";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Чтобы снять растение для сада и поставить его в комнату в дополненной реальности.";
 				INFOPLIST_KEY_NSLocationDefaultAccuracyReduced = YES;
