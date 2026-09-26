@@ -3,8 +3,10 @@ import SwiftUI
 /// Карточка дня — сверху комнаты: приветствие по времени суток, кто здесь
 /// ждёт воды и две живые мелочи — череда дней с поливом и сколько осталось
 /// до ближайшей медали. Ждут воды — «Обойти по очереди» запускает обход
-/// сада на экране блокировки. Значок времени суток дышит; сменились сутки —
-/// карточка сама перерисуется, часы — поминутные.
+/// сада на экране блокировки. Внизу — оранжерея садовника: уровень, титул
+/// и задания недели; нажатие открывает всё о садовнике. Значок времени
+/// суток дышит; сменились сутки — карточка сама перерисуется, часы —
+/// поминутные.
 struct DayCard: View {
     let room: Room
 
@@ -15,6 +17,9 @@ struct DayCard: View {
 
     @State private var trophies = Trophies()
     @State private var streak = 0
+    @State private var me = Gardener(experience: 0)
+    @State private var week: Week?
+    @State private var growing = false
 
     private let cabinet = Cabinet.shared
 
@@ -23,6 +28,17 @@ struct DayCard: View {
             card(Daypart.of(context.date))
         }
         .task(id: garden.log.count) { recount() }
+        .sheet(isPresented: $growing) {
+            NavigationStack {
+                GardenerView()
+                    .toolbar {
+                        ToolbarItem(placement: .topBarTrailing) {
+                            Button("Готово") { growing = false }
+                        }
+                    }
+            }
+            .environment(garden)
+        }
     }
 
     private func card(_ part: Daypart) -> some View {
@@ -65,6 +81,8 @@ struct DayCard: View {
                 .buttonStyle(.glass)
                 .transition(.blurReplace)
             }
+            SproutDivider()
+            gardener
         }
         .padding(Metrics.groupPadding)
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -138,9 +156,46 @@ struct DayCard: View {
         .glassEffect(.regular, in: .capsule)
     }
 
+    /// Оранжерея, уровень и задания недели — одной строкой.
+    private var gardener: some View {
+        Button { growing = true } label: {
+            HStack(spacing: 12) {
+                GlasshouseView(house: me.glasshouse)
+                    .frame(width: 74)
+                VStack(alignment: .leading, spacing: 5) {
+                    Text(Lang.format("%1$@ · уровень %2$lld", me.title,
+                                     me.level))
+                        .font(Typography.settingNote.weight(.semibold))
+                        .foregroundStyle(Palette.ink)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.8)
+                    ProgressView(value: me.progress)
+                        .tint(Palette.green)
+                    if let week, !week.challenges.isEmpty {
+                        Text(Lang.format("Задания недели: %1$lld из %2$lld",
+                                         week.done, week.challenges.count))
+                            .font(Typography.settingNote)
+                            .foregroundStyle(.secondary)
+                            .monospacedDigit()
+                            .contentTransition(.numericText())
+                    }
+                }
+                Image(systemName: "chevron.right")
+                    .font(Typography.settingNote)
+                    .foregroundStyle(.tertiary)
+            }
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .animation(Motion.number, value: me)
+    }
+
     private func recount() {
         trophies = Trophies.of(garden.log, rooms: garden.rooms,
                                since: garden.since)
         streak = garden.score().streak
+        me = Gardener.of(log: garden.log, quests: QuestBook.shared.done,
+                         medals: Cabinet.shared.total)
+        week = Week.of(Date(), log: garden.log, rooms: garden.rooms)
     }
 }

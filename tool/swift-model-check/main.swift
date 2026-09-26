@@ -3727,6 +3727,181 @@ do {
     shelf.removePersistentDomain(forName: "sprout-today-check")
 }
 
+print("уровень садовника и задания недели:")
+do {
+    check(Gardener.threshold(1) == 0 && Gardener.threshold(2) == 100
+          && Gardener.threshold(3) == 300 && Gardener.threshold(5) == 1_000,
+          "уровни: 0, 100, 300, 600, 1000 — каждый на сотню длиннее")
+    check(Gardener.level(for: 99) == 1 && Gardener.level(for: 100) == 2
+          && Gardener.level(for: 299) == 2 && Gardener.level(for: 300) == 3,
+          "уровень — по порогу опыта")
+    check(Gardener.title(1) == "Росток" && Gardener.title(12) == "Легенда сада"
+          && Gardener.title(40) == "Легенда сада",
+          "титулы с «Ростка»; после двенадцатого — «Легенда сада»")
+    let three = [Watering(plant: "a", when: Date(), left: 0.3),
+                 Watering(plant: "a", when: Date(), left: 0.5),
+                 Watering(plant: "a", when: Date())]
+    let me = Gardener.of(log: three, quests: 2, medals: 1)
+    check(me.experience == 175,
+          "три полива (один вовремя), два задания и медаль — 175 опыта")
+    check(me.level == 2 && me.into == 75 && me.span == 200 && me.left == 125,
+          "второй уровень: 75 из 200")
+    check(Gardener.of(log: [], quests: 0, medals: 0).glasshouse.pots == 1
+          && Gardener(experience: 100_000).glasshouse.pots == 8,
+          "в оранжерее горшок на уровень, не больше восьми")
+    let grown = Gardener(experience: Gardener.threshold(10))
+    check(grown.glasshouse.blooms && grown.glasshouse.lights
+          && grown.glasshouse.butterflies > 0
+          && !Gardener(experience: 0).glasshouse.blooms,
+          "с уровнем в оранжерее цветы, бабочки и гирлянда")
+
+    let stretch = Season.stretch
+    Season.stretch = 1
+    defer { Season.stretch = stretch }
+    var utc = Calendar(identifier: .gregorian)
+    utc.timeZone = TimeZone(identifier: "UTC")!
+    utc.firstWeekday = 2
+    func at(_ day: Int, _ hour: Int, month: Int = 3) -> Date {
+        utc.date(from: DateComponents(year: 2026, month: month, day: day,
+                                      hour: hour))!
+    }
+    let weekly = Plant.new(name: "Неделька", species: "Фикус", dryingDays: 7,
+                           id: "w")
+    check(abs(Week.need([Room(name: "Зал", plants: [weekly])]) - 3) < 0.001,
+          "недельному растению при тройной скорости нужно три полива в неделю")
+    let ten = (0 ..< 10).map {
+        Plant.new(name: "Р\($0)", species: "Фикус", dryingDays: 7, id: "r\($0)")
+    }
+    let hall = [Room(name: "Зал", plants: ten)]
+    check(Week.goal(.onTime, need: 30) == 12 && Week.goal(.days, need: 30) == 5
+          && Week.goal(.morning, need: 30) == 5,
+          "цели большого сада — с потолком")
+    check(Week.goal(.onTime, need: 0.5) == 1 && Week.goal(.days, need: 3) == 2,
+          "у маленького сада цели маленькие, но не ноль")
+    check((0 ..< 60).allSatisfy { Set(Week.quests(for: $0)).count == 3 }
+          && Week.quests(for: 7) != Week.quests(for: 8)
+          && Week.quests(for: -3).count == 3,
+          "три разных задания, соседние недели не совпадают")
+
+    // Неделя со 2 марта 2026, понедельник.
+    let log = [
+        Watering(plant: "r0", when: at(2, 8), left: 0.3),
+        Watering(plant: "r1", when: at(2, 9), left: 0.25),
+        Watering(plant: "r2", when: at(4, 20), left: 0.35),
+        Watering(plant: "r3", when: at(6, 7), left: 0.1),
+        Watering(plant: "r4", when: at(1, 9), left: 0.3),
+        Watering(plant: "r5", when: at(9, 9), left: 0.3),
+    ]
+    let inside = log.filter { $0.when >= at(2, 0) && $0.when < at(9, 0) }
+    func tally(_ quest: Quest, _ entries: [Watering] = inside,
+               parched: Bool = false) -> Challenge {
+        Week.challenge(quest, need: 30, entries: entries, parched: parched,
+                       calendar: utc)
+    }
+    check(tally(.onTime).count == 3, "вовремя — три полива из четырёх")
+    check(tally(.days).count == 3, "поливы в три разных дня")
+    check(tally(.morning).count == 3, "утренние — в восемь, девять и семь")
+    check(!tally(.noDrought).failed && tally(.noDrought).count == 4,
+          "досуха не поливали — задание идёт")
+    check(tally(.noDrought, parched: true).failed
+          && tally(.noDrought, inside + [Watering(plant: "r6", when: at(5, 12),
+                                                  left: 0)]).failed,
+          "сухое растение или полив досуха — засуха срывает задание")
+    check(tally(.noFlood, inside + [Watering(plant: "r7", when: at(5, 12),
+                                             left: 0.7)]).failed,
+          "полив по мокрой земле срывает задание")
+    let full = Challenge(quest: .days, goal: 3, count: 3)
+    check(full.done && full.progress == 1
+          && !Challenge(quest: .noFlood, goal: 1, count: 5, failed: true).done,
+          "набрано — сделано; сорвано — не сделано")
+    let week = Week.of(at(4, 12), log: log, rooms: hall, now: at(4, 12),
+                       calendar: utc)
+    check(week.start == at(2, 0) && week.end == at(9, 0),
+          "неделя — с понедельника до понедельника")
+    check(week.key == "2026-W10" && week.challenges.count == 3,
+          "десятая неделя, три задания")
+    check(Week.of(at(4, 12), log: log, rooms: [], calendar: utc)
+            .challenges.isEmpty
+          && !Week.of(at(4, 12), log: log, rooms: [], calendar: utc).complete,
+          "пустой сад — заданий нет, и выполненной неделя не считается")
+
+    var north = Calendar(identifier: .gregorian)
+    north.timeZone = TimeZone(identifier: "UTC")!
+    func day(_ year: Int, _ month: Int) -> Date {
+        north.date(from: DateComponents(year: year, month: month, day: 15))!
+    }
+    check(Season.stamp(day(2026, 12), side: .north, calendar: north)
+            == "2027-winter"
+          && Season.stamp(day(2027, 2), side: .north, calendar: north)
+            == "2027-winter"
+          && Season.stamp(day(2026, 4), side: .north, calendar: north)
+            == "2026-spring",
+          "декабрь — зима следующего года, вместе с январём и февралём")
+    check(Season.stamp(day(2026, 7), side: .south, calendar: north)
+            == "2026-winter"
+          && Season.stamp(day(2026, 12), side: .south, calendar: north)
+            == "2027-summer"
+          && Season.stamp(day(2026, 7), side: .tropics, calendar: north)
+            == "2026-summer",
+          "на юге июль — зима, декабрь — лето; у экватора — как на севере")
+
+    // Книга заданий: четыре полные недели весной — медаль весны.
+    let suite = "sprout-quests-check"
+    let shelf = UserDefaults(suiteName: suite)!
+    shelf.removePersistentDomain(forName: suite)
+    defer { shelf.removePersistentDomain(forName: suite) }
+    let cabinet = Cabinet(store: shelf)
+    let book = QuestBook(store: shelf)
+    func done(_ key: String, _ count: Int) -> Week {
+        let goals = Quest.allCases.prefix(3).map {
+            Challenge(quest: $0, goal: 1, count: 1)
+        }
+        let open = goals.enumerated().map { index, challenge in
+            index < count ? challenge
+                : Challenge(quest: challenge.quest, goal: 2, count: 1)
+        }
+        return Week(start: Date(), end: Date(), key: key, challenges: open)
+    }
+    book.review(done("2026-W10", 2), season: "2026-spring", quarter: .spring,
+                cabinet: cabinet)
+    check(book.done == 2 && book.full == 0, "два задания недели из трёх")
+    book.review(done("2026-W10", 1), season: "2026-spring", quarter: .spring,
+                cabinet: cabinet)
+    check(book.done == 2, "отменили полив — сделанное не отнимается")
+    for number in 10 ... 12 {
+        book.review(done("2026-W\(number)", 3), season: "2026-spring",
+                    quarter: .spring, cabinet: cabinet)
+    }
+    book.review(done("2026-W12", 3), season: "2026-spring", quarter: .spring,
+                cabinet: cabinet)
+    check(book.full == 3 && book.seasons["2026-spring"] == 3
+          && cabinet.level(.spring) == 0,
+          "три полные недели — медали весны ещё нет")
+    book.review(done("2026-W13", 3), season: "2026-spring", quarter: .spring,
+                cabinet: cabinet)
+    check(cabinet.level(.spring) == 1
+          && cabinet.fresh.contains(Rank(.spring, 1)),
+          "четвёртая полная неделя весны — медаль «Весенний садовник»")
+    check(QuestBook(store: shelf).done == 12,
+          "книга заданий переживает перезапуск")
+    check(cabinet.next(Trophies()).map { !$0.rank.award.seasonal } ?? true,
+          "медаль сезона не зовётся «ближайшей» — до неё год")
+    book.review(level: 3)
+    check(book.fresh == nil && book.celebrated == 3,
+          "первый раз уровень запоминается молча")
+    book.review(level: 3)
+    book.review(level: 4)
+    check(book.fresh == 4, "вырос — праздник")
+    book.shown()
+    check(book.fresh == nil, "показан — больше не ждёт")
+    check(Lang.format("Полейте вовремя %lld раз", 3) == "Полейте вовремя 3 раза"
+          && Lang.format("Поливайте %lld дней за неделю", 5)
+            == "Поливайте 5 дней за неделю"
+          && Lang.format("%lld поливов — и ни одного досуха", 1)
+            == "1 полив — и ни одного досуха",
+          "задания — с формами числа")
+}
+
 print("итоги года:")
 do {
     var utc = Calendar(identifier: .gregorian)

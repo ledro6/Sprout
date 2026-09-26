@@ -575,6 +575,9 @@
         }
       }
     },
+    "%1$@ · уровень %2$lld": {
+      "extractionState": "manual"
+    },
     "%1$@ · уровень %2$lld из %3$lld": {
       "extractionState": "manual"
     },
@@ -4929,6 +4932,76 @@
         }
       }
     },
+    "%lld поливов — и ни одного досуха": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "variations": {
+            "plural": {
+              "few": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld полива — и ни одного досуха"
+                }
+              },
+              "many": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld поливов — и ни одного досуха"
+                }
+              },
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld полив — и ни одного досуха"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld полива — и ни одного досуха"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "%lld поливов — и ни одного по мокрой земле": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "variations": {
+            "plural": {
+              "few": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld полива — и ни одного по мокрой земле"
+                }
+              },
+              "many": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld поливов — и ни одного по мокрой земле"
+                }
+              },
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld полив — и ни одного по мокрой земле"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld полива — и ни одного по мокрой земле"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "%lld растений": {
       "extractionState": "manual",
       "localizations": {
@@ -6098,6 +6171,9 @@
       }
     },
     "%lld°": {
+      "extractionState": "manual"
+    },
+    "+%lld": {
       "extractionState": "manual"
     },
     "+%lld°": {
@@ -15610,6 +15686,9 @@
         }
       }
     },
+    "В оранжерее прибавилось жизни.": {
+      "extractionState": "manual"
+    },
     "В последний момент": {
       "extractionState": "manual",
       "localizations": {
@@ -21927,6 +22006,9 @@
         }
       }
     },
+    "Весенний садовник": {
+      "extractionState": "manual"
+    },
     "Весь дом спит, а у растений — ужин.": {
       "extractionState": "manual",
       "localizations": {
@@ -25393,6 +25475,9 @@
           }
         }
       }
+    },
+    "Вовремя — когда в земле осталось 20–40% воды.": {
+      "extractionState": "manual"
     },
     "Вода в земле": {
       "extractionState": "manual",
@@ -29711,6 +29796,45 @@
     "Выглядит здоровым": {
       "extractionState": "manual"
     },
+    "Выполните все задания четырёх недель за одно время года — и на полке появится медаль сезона.": {
+      "extractionState": "manual"
+    },
+    "Выполнить все задания четырёх недель за два лета.": {
+      "extractionState": "manual"
+    },
+    "Выполнить все задания четырёх недель за две весны.": {
+      "extractionState": "manual"
+    },
+    "Выполнить все задания четырёх недель за две зимы.": {
+      "extractionState": "manual"
+    },
+    "Выполнить все задания четырёх недель за две осени.": {
+      "extractionState": "manual"
+    },
+    "Выполнить все задания четырёх недель за одно лето.": {
+      "extractionState": "manual"
+    },
+    "Выполнить все задания четырёх недель за одну весну.": {
+      "extractionState": "manual"
+    },
+    "Выполнить все задания четырёх недель за одну зиму.": {
+      "extractionState": "manual"
+    },
+    "Выполнить все задания четырёх недель за одну осень.": {
+      "extractionState": "manual"
+    },
+    "Выполнить все задания четырёх недель за три весны.": {
+      "extractionState": "manual"
+    },
+    "Выполнить все задания четырёх недель за три зимы.": {
+      "extractionState": "manual"
+    },
+    "Выполнить все задания четырёх недель за три лета.": {
+      "extractionState": "manual"
+    },
+    "Выполнить все задания четырёх недель за три осени.": {
+      "extractionState": "manual"
+    },
     "Вырастить двадцать разных видов.": {
       "extractionState": "manual"
     },
@@ -30580,6 +30704,9 @@
           }
         }
       }
+    },
+    "Главный садовник": {
+      "extractionState": "manual"
     },
     "Год": {
       "extractionState": "manual",
@@ -34342,10 +34469,22 @@
         }
       }
     },
+    "Два лета": {
+      "extractionState": "manual"
+    },
     "Двадцать подкормок": {
       "extractionState": "manual"
     },
     "Двадцать пять поливов подряд вовремя.": {
+      "extractionState": "manual"
+    },
+    "Две весны": {
+      "extractionState": "manual"
+    },
+    "Две зимы": {
+      "extractionState": "manual"
+    },
+    "Две осени": {
       "extractionState": "manual"
     },
     "Двумя пальцами — повернуть, щипком — размер": {
@@ -39236,6 +39375,9 @@
         }
       }
     },
+    "До следующего уровня: %lld": {
+      "extractionState": "manual"
+    },
     "Добавить": {
       "extractionState": "manual",
       "localizations": {
@@ -41549,6 +41691,9 @@
           }
         }
       }
+    },
+    "Друг папоротников": {
+      "extractionState": "manual"
     },
     "Друзья": {
       "extractionState": "manual",
@@ -45866,6 +46011,15 @@
           }
         }
       }
+    },
+    "Задание недели": {
+      "extractionState": "manual"
+    },
+    "Задания недели": {
+      "extractionState": "manual"
+    },
+    "Задания недели: %1$lld из %2$lld": {
+      "extractionState": "manual"
     },
     "Закончить обход": {
       "extractionState": "manual",
@@ -51042,6 +51196,9 @@
         }
       }
     },
+    "Зимний садовник": {
+      "extractionState": "manual"
+    },
     "Зимой в узор вплетаются снежинки, осенью — кленовые листья, а с 20 декабря по 10 января капли горят новогодней гирляндой.": {
       "extractionState": "manual",
       "localizations": {
@@ -51904,6 +52061,9 @@
       }
     },
     "Знаток": {
+      "extractionState": "manual"
+    },
+    "Знаток земли": {
       "extractionState": "manual"
     },
     "Золото": {
@@ -72890,6 +73050,9 @@
         }
       }
     },
+    "Легенда сада": {
+      "extractionState": "manual"
+    },
     "Лежит в приложении — AR открывается сразу.": {
       "extractionState": "manual",
       "localizations": {
@@ -73463,6 +73626,9 @@
           }
         }
       }
+    },
+    "Летний садовник": {
+      "extractionState": "manual"
     },
     "Лето: земля сохнет быстрее, поливать чаще": {
       "extractionState": "manual",
@@ -76064,6 +76230,9 @@
           }
         }
       }
+    },
+    "Мастер лейки": {
+      "extractionState": "manual"
     },
     "Мастер полива": {
       "extractionState": "manual"
@@ -81246,6 +81415,9 @@
         }
       }
     },
+    "Мокрая земля — больше 60% воды. Корням нужен воздух.": {
+      "extractionState": "manual"
+    },
     "Монстера": {
       "extractionState": "manual",
       "localizations": {
@@ -81819,6 +81991,9 @@
           }
         }
       }
+    },
+    "Мудрец джунглей": {
+      "extractionState": "manual"
     },
     "Музыка сфер": {
       "extractionState": "manual",
@@ -96490,6 +96665,12 @@
         }
       }
     },
+    "Новые задания — %@": {
+      "extractionState": "manual"
+    },
+    "Новый уровень": {
+      "extractionState": "manual"
+    },
     "Новых растений": {
       "extractionState": "manual",
       "localizations": {
@@ -99989,6 +100170,9 @@
           }
         }
       }
+    },
+    "Осенний садовник": {
+      "extractionState": "manual"
     },
     "Особые дни": {
       "extractionState": "manual",
@@ -103743,6 +103927,9 @@
           }
         }
       }
+    },
+    "Откуда опыт": {
+      "extractionState": "manual"
     },
     "Отлично": {
       "extractionState": "manual",
@@ -113263,6 +113450,9 @@
           }
         }
       }
+    },
+    "Пересохнет хоть один горшок — задание сорвётся до следующей недели.": {
+      "extractionState": "manual"
     },
     "Пересохший ком земли поливайте погружением: горшок — в таз с водой на полчаса.": {
       "extractionState": "manual"
@@ -125160,6 +125350,41 @@
         }
       }
     },
+    "Полейте вовремя %lld раз": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "variations": {
+            "plural": {
+              "few": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Полейте вовремя %lld раза"
+                }
+              },
+              "many": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Полейте вовремя %lld раз"
+                }
+              },
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Полейте вовремя %lld раз"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Полейте вовремя %lld раза"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "Полейте всех разом и отправьте соседу памятку.": {
       "extractionState": "manual",
       "localizations": {
@@ -125443,6 +125668,41 @@
           "stringUnit": {
             "state": "translated",
             "value": "一次替所有植物澆水，再傳一張便條給鄰居。"
+          }
+        }
+      }
+    },
+    "Полейте до десяти утра %lld раз": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "variations": {
+            "plural": {
+              "few": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Полейте до десяти утра %lld раза"
+                }
+              },
+              "many": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Полейте до десяти утра %lld раз"
+                }
+              },
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Полейте до десяти утра %lld раз"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Полейте до десяти утра %lld раза"
+                }
+              }
+            }
           }
         }
       }
@@ -126020,6 +126280,9 @@
           }
         }
       }
+    },
+    "Полив вовремя — сверху": {
+      "extractionState": "manual"
     },
     "Поливаем по очереди…": {
       "extractionState": "manual",
@@ -127452,6 +127715,41 @@
           "stringUnit": {
             "state": "translated",
             "value": "你總是提早澆水：植物們絕不會乾透。"
+          }
+        }
+      }
+    },
+    "Поливайте %lld дней за неделю": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "variations": {
+            "plural": {
+              "few": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Поливайте %lld дня за неделю"
+                }
+              },
+              "many": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Поливайте %lld дней за неделю"
+                }
+              },
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Поливайте %lld день за неделю"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Поливайте %lld дня за неделю"
+                }
+              }
+            }
           }
         }
       }
@@ -139864,6 +140162,9 @@
           }
         }
       }
+    },
+    "Посадите первое растение — и появятся задания.": {
+      "extractionState": "manual"
     },
     "Посадить": {
       "extractionState": "manual",
@@ -159241,6 +159542,9 @@
         }
       }
     },
+    "С пяти до десяти утра: за день вода уйдёт в корни, а не простоит в земле всю ночь.": {
+      "extractionState": "manual"
+    },
     "Сад": {
       "extractionState": "manual",
       "localizations": {
@@ -162117,6 +162421,9 @@
     "Садик": {
       "extractionState": "manual"
     },
+    "Садовник": {
+      "extractionState": "manual"
+    },
     "Садовод": {
       "extractionState": "manual",
       "localizations": {
@@ -164709,6 +165016,9 @@
     "Свой цвет": {
       "extractionState": "manual"
     },
+    "Сделано": {
+      "extractionState": "manual"
+    },
     "Сегодня": {
       "extractionState": "manual",
       "localizations": {
@@ -166431,6 +166741,9 @@
         }
       }
     },
+    "Сезоны": {
+      "extractionState": "manual"
+    },
     "Сейчас": {
       "extractionState": "manual",
       "localizations": {
@@ -167010,6 +167323,9 @@
           }
         }
       }
+    },
+    "Сеянец": {
+      "extractionState": "manual"
     },
     "Сигнал %lld дБм": {
       "extractionState": "manual"
@@ -178541,6 +178857,9 @@
         }
       }
     },
+    "Сорвано на этой неделе": {
+      "extractionState": "manual"
+    },
     "Соседу — %1$@, первый раз %2$@": {
       "extractionState": "manual",
       "localizations": {
@@ -182855,6 +183174,9 @@
     "Сто поливов подряд вовремя.": {
       "extractionState": "manual"
     },
+    "Ступень медали": {
+      "extractionState": "manual"
+    },
     "Суккулент": {
       "extractionState": "manual",
       "localizations": {
@@ -186311,6 +186633,9 @@
         }
       }
     },
+    "Титулы": {
+      "extractionState": "manual"
+    },
     "Толстянка": {
       "extractionState": "manual",
       "localizations": {
@@ -187465,10 +187790,22 @@
     "Три Новых года": {
       "extractionState": "manual"
     },
+    "Три весны": {
+      "extractionState": "manual"
+    },
     "Три дня подряд": {
       "extractionState": "manual"
     },
+    "Три зимы": {
+      "extractionState": "manual"
+    },
+    "Три лета": {
+      "extractionState": "manual"
+    },
     "Три месяца без засухи": {
+      "extractionState": "manual"
+    },
+    "Три осени": {
       "extractionState": "manual"
     },
     "Тридцать дней ни одно растение не пересохло.": {
@@ -194392,6 +194729,9 @@
     "Уровень %1$lld из %2$lld": {
       "extractionState": "manual"
     },
+    "Уровень %lld": {
+      "extractionState": "manual"
+    },
     "Уровни": {
       "extractionState": "manual"
     },
@@ -198703,6 +199043,9 @@
         }
       }
     },
+    "Хозяин оранжереи": {
+      "extractionState": "manual"
+    },
     "Хойя": {
       "extractionState": "manual",
       "localizations": {
@@ -199564,6 +199907,9 @@
         }
       }
     },
+    "Хотя бы один полив в день, дни — не обязательно подряд.": {
+      "extractionState": "manual"
+    },
     "Хотя бы одна остаётся.": {
       "extractionState": "manual",
       "localizations": {
@@ -199852,6 +200198,9 @@
       }
     },
     "Хранитель ночи": {
+      "extractionState": "manual"
+    },
+    "Хранитель подоконника": {
       "extractionState": "manual"
     },
     "Хризантема": {
@@ -207901,6 +208250,9 @@
           }
         }
       }
+    },
+    "Юный садовод": {
+      "extractionState": "manual"
     },
     "Ядовито для кошек и собак": {
       "extractionState": "manual",

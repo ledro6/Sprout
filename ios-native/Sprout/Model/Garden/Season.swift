@@ -57,6 +57,32 @@ enum Season {
         }
     }
 
+    /// Время года — для медалей сезонов, см. `QuestBook`.
+    enum Quarter: String, CaseIterable, Sendable {
+        case spring, summer, autumn, winter
+    }
+
+    /// Время года месяца по эту сторону экватора. У экватора — как на
+    /// севере: медали сезонов нужны и там.
+    static func quarter(month: Int, side: Side) -> Quarter {
+        switch northern(month, side) {
+        case 3 ... 5: .spring
+        case 6 ... 8: .summer
+        case 9 ... 11: .autumn
+        default: .winter
+        }
+    }
+
+    /// «2027-winter»: декабрь — в году января и февраля, иначе одна зима
+    /// (а на юге одно лето) разошлась бы на два года.
+    static func stamp(_ date: Date, side: Side,
+                      calendar: Calendar = .current) -> String {
+        let parts = calendar.dateComponents([.year, .month], from: date)
+        let month = parts.month ?? 1
+        let year = (parts.year ?? 0) + (month == 12 ? 1 : 0)
+        return "\(year)-\(quarter(month: month, side: side).rawValue)"
+    }
+
     /// Март—сентябрь на севере: растут и едят. Зимой удобрение только жжёт
     /// корни.
     static func growing(month: Int, side: Side) -> Bool {

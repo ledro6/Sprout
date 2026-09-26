@@ -84,7 +84,7 @@ extension Cabinet {
     func next(_ trophies: Trophies) -> (rank: Rank, left: Int)? {
         let near = Award.allCases.compactMap { award -> (Rank, Int, Double)? in
             let level = level(award)
-            guard level < award.levels else { return nil }
+            guard level < award.levels, !award.seasonal else { return nil }
             let rank = Rank(award, level + 1)
             let count = count(award, in: trophies)
             let left = rank.goal - count

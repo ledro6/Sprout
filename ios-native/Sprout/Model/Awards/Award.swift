@@ -12,11 +12,12 @@ enum Award: String, CaseIterable, Identifiable, Sendable {
     case feeder, traveler
     case jungle, botanist
     case earlyBird, nightOwl, newYear
+    case spring, summer, autumn, winter
 
     var id: String { rawValue }
 
     enum Group: Int, CaseIterable, Identifiable, Sendable {
-        case waterings, streaks, care, garden, moments
+        case waterings, streaks, care, garden, moments, seasons
 
         var id: Int { rawValue }
 
@@ -27,6 +28,7 @@ enum Award: String, CaseIterable, Identifiable, Sendable {
             case .care: Lang.text("Забота")
             case .garden: Lang.text("Сад")
             case .moments: Lang.text("Особые дни")
+            case .seasons: Lang.text("Сезоны")
             }
         }
 
@@ -40,6 +42,7 @@ enum Award: String, CaseIterable, Identifiable, Sendable {
         case .feeder, .traveler: .care
         case .jungle, .botanist: .garden
         case .earlyBird, .nightOwl, .newYear: .moments
+        case .spring, .summer, .autumn, .winter: .seasons
         }
     }
 
@@ -56,6 +59,7 @@ enum Award: String, CaseIterable, Identifiable, Sendable {
         case .botanist: [5, 10, 20, 30]
         case .earlyBird, .nightOwl: [1, 10, 50]
         case .newYear: [1, 3, 5]
+        case .spring, .summer, .autumn, .winter: [1, 2, 3]
         }
     }
 
@@ -97,6 +101,14 @@ enum Award: String, CaseIterable, Identifiable, Sendable {
         case .newYear: [Lang.text("С Новым годом"),
                         Lang.text("Три Новых года"),
                         Lang.text("Пять Новых лет")]
+        case .spring: [Lang.text("Весенний садовник"), Lang.text("Две весны"),
+                       Lang.text("Три весны")]
+        case .summer: [Lang.text("Летний садовник"), Lang.text("Два лета"),
+                       Lang.text("Три лета")]
+        case .autumn: [Lang.text("Осенний садовник"), Lang.text("Две осени"),
+                       Lang.text("Три осени")]
+        case .winter: [Lang.text("Зимний садовник"), Lang.text("Две зимы"),
+                       Lang.text("Три зимы")]
         }
         return names[min(max(level, 1), levels) - 1]
     }
@@ -167,6 +179,26 @@ enum Award: String, CaseIterable, Identifiable, Sendable {
             Lang.text("Поливать под Новый год три года."),
             Lang.text("Поливать под Новый год пять лет."),
         ]
+        case .spring: [
+            Lang.text("Выполнить все задания четырёх недель за одну весну."),
+            Lang.text("Выполнить все задания четырёх недель за две весны."),
+            Lang.text("Выполнить все задания четырёх недель за три весны."),
+        ]
+        case .summer: [
+            Lang.text("Выполнить все задания четырёх недель за одно лето."),
+            Lang.text("Выполнить все задания четырёх недель за два лета."),
+            Lang.text("Выполнить все задания четырёх недель за три лета."),
+        ]
+        case .autumn: [
+            Lang.text("Выполнить все задания четырёх недель за одну осень."),
+            Lang.text("Выполнить все задания четырёх недель за две осени."),
+            Lang.text("Выполнить все задания четырёх недель за три осени."),
+        ]
+        case .winter: [
+            Lang.text("Выполнить все задания четырёх недель за одну зиму."),
+            Lang.text("Выполнить все задания четырёх недель за две зимы."),
+            Lang.text("Выполнить все задания четырёх недель за три зимы."),
+        ]
         }
         return lines[min(max(level, 1), levels) - 1]
     }
@@ -186,12 +218,34 @@ enum Award: String, CaseIterable, Identifiable, Sendable {
         case .earlyBird: .tulip
         case .nightOwl: .dracaena
         case .newYear: .jade
+        case .spring: .violet
+        case .summer: .rose
+        case .autumn: .chrysanthemum
+        case .winter: .orchid
         }
     }
 
     /// Разовые дела, а не журнал: подкормку и отъезд журнал не помнит —
-    /// их считает сама полка.
-    var deed: Bool { self == .feeder || self == .traveler }
+    /// их считает сама полка; времена года считает книга заданий.
+    var deed: Bool {
+        switch self {
+        case .feeder, .traveler, .spring, .summer, .autumn, .winter: true
+        default: false
+        }
+    }
+
+    /// Медаль времени года — до следующей ступени не дни, а год: в
+    /// «ближайшую» не годится.
+    var seasonal: Bool { group == .seasons }
+
+    static func of(_ quarter: Season.Quarter) -> Award {
+        switch quarter {
+        case .spring: .spring
+        case .summer: .summer
+        case .autumn: .autumn
+        case .winter: .winter
+        }
+    }
 
     /// Уровни всех наград вместе — «получено 7 из 38».
     static var total: Int { allCases.map(\.levels).reduce(0, +) }

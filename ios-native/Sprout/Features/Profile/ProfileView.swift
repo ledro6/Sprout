@@ -14,6 +14,8 @@ struct ProfileView: View {
     /// Итог по поливам — не в теле: сад сушится раз в секунду.
     @State private var score = Score()
 
+    @State private var grower = Gardener(experience: 0)
+
     @State private var renaming = false
     @State private var draft = ""
 
@@ -48,6 +50,7 @@ struct ProfileView: View {
                         VStack(alignment: .leading, spacing: Metrics.groupGap) {
                             person
                                 .hintSpot(.profilePerson)
+                            gardener
                             plot
                                 .hintSpot(.profilePlot)
                             awards
@@ -95,7 +98,11 @@ struct ProfileView: View {
         }
     }
 
-    private func recount() { score = garden.score() }
+    private func recount() {
+        score = garden.score()
+        grower = Gardener.of(log: garden.log, quests: QuestBook.shared.done,
+                             medals: Cabinet.shared.total)
+    }
 
     // MARK: - Хозяин
 
@@ -232,6 +239,38 @@ struct ProfileView: View {
     private var letter: String {
         String(garden.owner.trimmingCharacters(in: .whitespaces)
             .prefix(1)).uppercased(with: Locale.current)
+    }
+
+    // MARK: - Садовник
+
+    /// Титул и уровень с оранжереей; подробности — на своём экране.
+    private var gardener: some View {
+        SproutGroup("Садовник") {
+            NavigationLink { GardenerView() } label: {
+                HStack(spacing: 12) {
+                    GlasshouseView(house: grower.glasshouse)
+                        .frame(width: 70)
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(grower.title)
+                            .font(Typography.settingRow.weight(.semibold))
+                            .foregroundStyle(Palette.ink)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.8)
+                        Text(Lang.format("Уровень %lld", grower.level))
+                            .font(Typography.settingNote)
+                            .foregroundStyle(.secondary)
+                        ProgressView(value: grower.progress)
+                            .tint(Palette.green)
+                    }
+                    Image(systemName: "chevron.right")
+                        .font(Typography.settingNote)
+                        .foregroundStyle(.tertiary)
+                }
+                .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+        }
+        .sproutRide()
     }
 
     // MARK: - Сад

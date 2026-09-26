@@ -44,6 +44,8 @@ ios-native/Sprout/Model/Help/Guide.swift
 ios-native/Sprout/Model/Garden/Almanac.swift
 ios-native/Sprout/Model/Awards/Award.swift
 ios-native/Sprout/Model/Awards/Emboss.swift
+ios-native/Sprout/Model/Awards/Gardener.swift
+ios-native/Sprout/Model/Awards/Quests.swift
 ios-native/Sprout/Model/Garden/Recap.swift
 ios-native/Sprout/Model/Orrery/Orrery.swift
 ios-native/Sprout/Model/Help/Walk.swift

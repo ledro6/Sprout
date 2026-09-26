@@ -156,19 +156,45 @@ struct RootView: View {
     private func review() {
         Cabinet.shared.review(Trophies.of(garden.log, rooms: garden.rooms,
                                           since: garden.since))
+        // Задания этой и прошлой недели: поливы из виджета и уведомлений
+        // могли закрыть прошлую, пока приложение спало.
+        let now = Date()
+        let side = Season.side(region: Locale.current.region?.identifier)
+        for moment in [now, now.addingTimeInterval(-7 * 86_400)] {
+            let week = Week.of(moment, log: garden.log, rooms: garden.rooms,
+                               now: now)
+            let middle = week.start.addingTimeInterval(
+                week.end.timeIntervalSince(week.start) / 2)
+            let month = Calendar.current.component(.month, from: middle)
+            QuestBook.shared.review(week,
+                                    season: Season.stamp(middle, side: side),
+                                    quarter: Season.quarter(month: month,
+                                                            side: side))
+        }
+        QuestBook.shared.review(level: Gardener.of(
+            log: garden.log, quests: QuestBook.shared.done,
+            medals: Cabinet.shared.total).level)
     }
 
     /// По одной: следующая — после «Отлично». Не под заставкой и не поверх
     /// знакомства.
     @ViewBuilder
     private var celebration: some View {
-        if let rank = Cabinet.shared.fresh.first,
-           Launch.shared.step >= Launch.last, settings.toured {
-            Celebration(rank: rank) {
-                withAnimation(Motion.leave) { Cabinet.shared.shown(rank) }
+        if Launch.shared.step >= Launch.last, settings.toured {
+            if let rank = Cabinet.shared.fresh.first {
+                Celebration(rank: rank) {
+                    withAnimation(Motion.leave) { Cabinet.shared.shown(rank) }
+                }
+                .id(rank)
+                .transition(.opacity)
+            } else if let level = QuestBook.shared.fresh {
+                // Новый уровень — после медалей: они и дали часть опыта.
+                LevelUp(level: level) {
+                    withAnimation(Motion.leave) { QuestBook.shared.shown() }
+                }
+                .id(level)
+                .transition(.opacity)
             }
-            .id(rank)
-            .transition(.opacity)
         }
     }
 

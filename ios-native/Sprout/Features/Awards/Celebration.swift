@@ -70,7 +70,8 @@ struct Celebration: View {
 
 /// Блёстки — квадратики металла медали и белые искры: падают, кружатся и
 /// гаснут за три секунды. Холстом, по кадрам: сотня вью была бы дороже.
-private struct Glitter: View {
+/// Ими же празднуется новый уровень садовника, см. `LevelUp`.
+struct Glitter: View {
     let alloy: Alloy
 
     @State private var start = Date()
