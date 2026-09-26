@@ -245,7 +245,7 @@ check("\(Seed.search("   ", in: Seed.rooms).count)", "0", "пустой запр
 print("настройки: значения по умолчанию и границы:")
 let keys = ["theme", "patternKinds", "patternShapes", "reminders",
             "remindThreshold", "patternTint", "waveTint", "patternHue",
-            "waveHue", "ownHues", "statsOrder", "statsHidden",
+            "waveHue", "ownHues", "statsOrder", "statsHidden", "weather", "climate",
             "hushedHaptics", "hapticStrength", "stillPattern", "stiffShapes",
             "plantLook", "plantOrder", "mutedSounds", "toured",
             "walkedScreens", "launches", "avatarShot", "plainPattern"]
@@ -394,6 +394,23 @@ do {
     check(Hue.brightness(dark.vivid) < Hue.brightness(dark.pale),
           "насыщенная своего темнее бледной")
     check(Hue.preset(.green).shade == Shade(.green), "готовый цвет — как был")
+    for key in keys { store.removeObject(forKey: key) }
+}
+
+print("погода в настройках:")
+do {
+    let keys = ["weather", "climate"]
+    for key in keys { store.removeObject(forKey: key) }
+    let fresh = Settings(store: store)
+    check(!fresh.weather && fresh.climate == nil,
+          "погода по умолчанию выключена — место без спроса не берём")
+    fresh.weather = true
+    fresh.climate = Climate(temperature: 27.5, humidity: 0.4,
+                            symbol: "sun.max", taken: Date(timeIntervalSince1970: 1))
+    let again = Settings(store: store)
+    check(again.weather && again.climate?.temperature == 27.5
+          && again.climate?.symbol == "sun.max",
+          "погода и её снимок переживают запуск")
     for key in keys { store.removeObject(forKey: key) }
 }
 
@@ -1063,10 +1080,20 @@ check(Reminder.text(for: chore), "«Кактус» просится в горш�
       "строка уведомления о пересадке")
 Season.growing = false
 potted.care?.repotEvery = nil
+fed.care?.duties = [.turn: 0]
+potted.care?.duties = [.turn: 0]
 check(Reminder.chore(in: [Room(name: "Кухня", plants: [fed, potted])])
       .map { $0.plant.name } == "Фиалка"
       && Reminder.chore(in: [Room(name: "Кухня", plants: [fed, potted])])!.repot,
       "зимой о подкормке не напоминают — только о пересадке")
+fed.care?.duties = [.turn: 14]
+fed.care?.dutiesSince = [.turn: 13]
+let turn = Reminder.chore(in: [Room(name: "Кухня", plants: [fed, potted])])
+check(turn?.kind == .duty(.turn) && turn.map(Reminder.title(for:)) == "Пора повернуть к свету",
+      "поворот к свету через день — ближе пересадки")
+check(turn.map(Reminder.text(for:)) ?? "",
+      "«Фиалка» клонится к окну — поверните другим боком",
+      "строка уведомления о повороте")
 Season.growing = true
 
 print("склонение растений в уведомлении:")
@@ -2195,6 +2222,46 @@ do {
     let back = try! JSONDecoder().decode(GardenState.self, from: file)
     check(back.rooms[0].plants[0].care == yard.plant(id: id)!.care,
           "уход ложится в файл сада")
+
+    // Мелкий уход: опрыскать, повернуть, протереть.
+    check(Duty.mist.usual(for: .calathea) == 3
+          && Duty.mist.usual(for: .violet) == nil
+          && Duty.mist.usual(for: .begonia) == nil,
+          "калатею опрыскивают, фиалку и бегонию — нет: опушённые листья гниют")
+    check(Duty.turn.usual(for: .orchid) == nil && Duty.turn.usual(for: .ficus) == 14
+          && Duty.turn.usual(for: .cactus) == 21,
+          "орхидею не вертят, фикус — раз в две недели, кактус — в три")
+    check(Duty.wipe.usual(for: .monstera) == 30 && Duty.wipe.usual(for: .violet) == nil,
+          "крупные гладкие листья протирают раз в месяц")
+    let legacy = try! JSONDecoder().decode(Care.self, from: Data(
+        #"{"feedEvery":14,"sinceFed":3,"sinceRepot":0}"#.utf8))
+    check(legacy.duties == nil && legacy.feedEvery == 14,
+          "уход прежней сборки читается — без мелкого")
+    var violet = Plant.new(name: "Фиолетта", species: "Фиалка", dryingDays: 5,
+                           id: "v")
+    violet.care = legacy
+    check(violet.tending.every(.turn) == 14 && violet.tending.every(.mist) == nil,
+          "мелкий уход прежнего сада — по виду")
+    var mist = Care(duties: [.mist: 3, .turn: 0])
+    check(mist.every(.mist) == 3 && mist.every(.turn) == nil
+          && mist.every(.wipe) == nil, "ноль и пусто — не напоминать")
+    mist.pass(days: 2, growing: false)
+    check(round2(mist.left(.mist)!) == "1.00" && !mist.due(.mist),
+          "мелкий уход идёт и зимой")
+    check(mist.label(.mist) ?? "—", "Опрыскать через 1 день", "подпись со сроком")
+    mist.pass(days: 1, growing: true)
+    check(mist.due(.mist) && mist.label(.mist) == "Пора опрыскать", "пора опрыскать")
+    mist.did(.mist)
+    check(mist.since(.mist) == 0 && !mist.due(.mist), "опрыскали — счёт заново")
+    check(mist.errands == [.mist], "ждут только включённые дела")
+    yard.tend(id, feedEvery: nil, repotEvery: nil,
+              duties: [.mist: 5, .wipe: nil])
+    let tuned = yard.plant(id: id)!.tending
+    check(tuned.every(.mist) == 5 && tuned.every(.wipe) == nil,
+          "сроки мелкого ухода — из настроек")
+    yard.advance(to: Date().addingTimeInterval(60 * 86_400 / Garden.speed))
+    yard.did(.mist, on: id)
+    check(yard.plant(id: id)!.tending.since(.mist) == 0, "опрыскали из сада")
 }
 
 print("сад в общей папке:")
@@ -3128,6 +3195,15 @@ do {
     Season.growing = false
     check(!Agenda.plan(rooms, now: noon, horizon: 7, calendar: utc)
         .contains { $0.chore == .feed }, "зимой подкормки в календаре нет")
+    var misty = baksik
+    misty.care = Care(duties: [.mist: 3, .turn: 0, .wipe: 0],
+                      dutiesSince: [.mist: 2])
+    let dew = Agenda.plan([Room(name: "Спальня", plants: [misty])], now: noon,
+                          horizon: 7, calendar: utc)
+        .filter { $0.chore == .mist }
+    check(dew.map(\.day) == (10 ... 16).map { day($0) },
+          "опрыскивание — в Календаре: раз в три дня сада, то есть каждые сутки")
+    check(dew.first?.title ?? "—", "Опрыскать: Баксик", "событие опрыскивания")
     Season.stretch = stretch
     Season.growing = growing
 }
@@ -3361,6 +3437,61 @@ do {
           "в студии светлый купол и тёмный пол")
     check(Award.Group.allCases.flatMap(\.awards).count == Award.allCases.count,
           "каждая награда — в своей группе")
+}
+
+print("погода:")
+do {
+    check(round2(Climate.pace(temperature: 22, humidity: 0.5, outdoor: false)),
+          "1.00", "комнатная погода — срок как записан")
+    check(round2(Climate.pace(temperature: 32, humidity: 0.5, outdoor: true)),
+          "1.20", "на балконе в +32 сохнет на пятую часть быстрее")
+    check(round2(Climate.pace(temperature: 32, humidity: 0.5, outdoor: false)),
+          "1.10", "в квартире — вполовину")
+    check(round2(Climate.pace(temperature: 32, humidity: 0.2, outdoor: false)),
+          "1.16", "сухой воздух торопит ещё")
+    check(round2(Climate.pace(temperature: -5, humidity: 0.95, outdoor: true)),
+          "0.65", "мороз и сырость — не медленнее чем на треть")
+    let now = Date()
+    let hot = Climate(temperature: 33, humidity: 0.3, symbol: "sun.max.fill",
+                      taken: now)
+    let cold = Climate(temperature: 8, humidity: 0.85, symbol: "cloud.rain",
+                       taken: now)
+    check(hot.line() ?? "—", "Жарко: земля сохнет быстрее", "жара — строкой")
+    check(cold.line(outdoor: true) ?? "—",
+          "Прохладно за окном: земля сохнет медленнее",
+          "холод — строкой")
+    check(Climate(temperature: 23, humidity: 0.5, symbol: "", taken: now)
+            .line() == nil, "обычная погода молчит")
+    check(hot.degrees == "+33°" && cold.degrees == "+8°"
+          && Climate(temperature: -3.4, humidity: 0.5, symbol: "", taken: now)
+            .degrees == "-3°", "градусы со знаком")
+    check(Climate.outdoor("Балкон") && Climate.outdoor("Застеклённая лоджия")
+          && !Climate.outdoor("Спальня") && !Climate.outdoor("Кухня"),
+          "балкон и лоджия — под открытым небом, спальня — нет")
+    var stale = hot
+    stale.taken = now.addingTimeInterval(-7 * 3_600)
+    Climate.settle(stale, on: true, now: now)
+    check(Climate.stretch == 1 && Climate.boost == 1,
+          "погода старше шести часов не учитывается")
+    Climate.settle(hot, on: false, now: now)
+    check(Climate.stretch == 1, "выключенная погода не учитывается")
+    Climate.settle(hot, on: true, now: now)
+    check(Climate.stretch < 1 && Climate.boost > 1,
+          "жара — срок короче, на балконе ещё короче")
+    let stretch = Season.stretch
+    Season.stretch = 1
+    let fern = plantNamed("Папоротник", moisture: 1, dryingDays: 10)
+    check(round2(fern.period), round2(10 / hot.pace()),
+          "срок с погодой — через `period`")
+    let yard = Garden()
+    yard.rooms = [Room(name: "Балкон", plants: [fern]),
+                  Room(name: "Спальня", plants: [fern])]
+    yard.advance(to: Date().addingTimeInterval(86_400 / Garden.speed))
+    check(yard.rooms[0].plants[0].moisture < yard.rooms[1].plants[0].moisture,
+          "на балконе в жару сохнет быстрее, чем в спальне")
+    Climate.settle(nil, on: true, now: now)
+    check(Climate.stretch == 1 && Climate.boost == 1, "без погоды — как было")
+    Season.stretch = stretch
 }
 
 print("сегодня на главной:")

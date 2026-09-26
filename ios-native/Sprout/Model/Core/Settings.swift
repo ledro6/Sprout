@@ -161,6 +161,17 @@ final class Settings {
         return true
     }
 
+    /// Сроки полива подстраиваются под погоду за окном, см. `Climate`.
+    var weather: Bool {
+        didSet { store.set(weather, forKey: Key.weather) }
+    }
+
+    /// Последняя снятая погода — чтобы сроки учитывали её и до нового
+    /// запроса.
+    var climate: Climate? {
+        didSet { Self.put(climate, Key.climate, in: store) }
+    }
+
     /// Блоки статистики по порядку — все, и убранные тоже: вернутый встаёт
     /// в конец.
     private(set) var statsOrder: [StatsBlock] {
@@ -365,6 +376,8 @@ final class Settings {
         static let waveHue = "waveHue"
         static let ownHues = "ownHues"
         static let statsOrder = "statsOrder"
+        static let weather = "weather"
+        static let climate = "climate"
         static let statsHidden = "statsHidden"
         static let avatarTint = "avatarTint"
         static let avatarShot = "avatarShot"
@@ -434,6 +447,8 @@ final class Settings {
             ?? Self.tint(store, Key.waveTint).map(Hue.preset) ?? .wave
         ownHues = Array((Self.take([Channels].self, Key.ownHues, from: store)
                          ?? []).prefix(Hue.ownLimit))
+        weather = store.bool(forKey: Key.weather)
+        climate = Self.take(Climate.self, Key.climate, from: store)
         statsOrder = StatsBlock.order(
             Self.take([StatsBlock].self, Key.statsOrder, from: store) ?? [])
         statsHidden = Self.take(Set<StatsBlock>.self, Key.statsHidden,

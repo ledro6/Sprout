@@ -124,7 +124,7 @@ struct HueRow: View {
         drafted = nil
         let spot = spots.rect(Self.plusKey)
         withAnimation(Motion.arrange) {
-            settings.add(own: colour)
+            _ = settings.add(own: colour)
         }
         pick(.own(colour), spot)
     }

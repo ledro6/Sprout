@@ -53,10 +53,19 @@ struct Plant: Identifiable, Hashable, Codable {
     /// Отклонённое предложение срока — чтобы не повторять его, см. `Rhythm`.
     var quiet: Double?
 
-    var tending: Care { care ?? .usual(for: blueprint.preset) }
+    /// Уход со сроками вида там, где своих нет: мелкого ухода в садах
+    /// прежних сборок не было.
+    var tending: Care {
+        var tending = care ?? .usual(for: blueprint.preset)
+        if tending.duties == nil {
+            tending.duties = Care.duties(for: blueprint.preset)
+        }
+        return tending
+    }
 
-    /// Срок с поправкой на время года — им сохнет земля и считаются подписи.
-    var period: Double { dryingDays * Season.stretch }
+    /// Срок с поправкой на время года и погоду — им сохнет земля и
+    /// считаются подписи.
+    var period: Double { dryingDays * Season.stretch * Climate.stretch }
 
     /// Из влажности, а не хранится: два числа рано или поздно разошлись бы.
     var daysUntilWatering: Int {

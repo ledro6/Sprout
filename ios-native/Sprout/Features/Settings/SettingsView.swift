@@ -334,6 +334,17 @@ struct SettingsView: View {
 
             SproutDivider()
 
+            switchRow("Учитывать погоду", term: .weather, isOn: Binding(
+                get: { settings.weather },
+                set: { want(weather: $0) }))
+
+            if settings.weather {
+                WeatherLine()
+                    .transition(.blurReplace)
+            }
+
+            SproutDivider()
+
             switchRow("Напоминать о поливе", term: .reminders, isOn: Binding(
                 get: { settings.reminders },
                 set: { want(reminders: $0) }))
@@ -356,6 +367,18 @@ struct SettingsView: View {
                 set: { want(calendar: $0) }))
         }
         .animation(Motion.enter, value: settings.reminders)
+        .animation(Motion.enter, value: settings.weather)
+    }
+
+    /// Погода — место спрашивается при включении, не раньше: спрошенное
+    /// без повода чаще получает отказ.
+    private func want(weather on: Bool) {
+        settings.weather = on
+        guard on else {
+            Climate.settle(nil, on: false)
+            return
+        }
+        Task { await Weatherman.shared.refresh(force: true) }
     }
 
     /// Доступ к Календарю — как и уведомления, когда попросили. Включили —

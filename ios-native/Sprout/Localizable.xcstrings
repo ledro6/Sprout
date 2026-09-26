@@ -865,6 +865,9 @@
         }
       }
     },
+    "%1$@ за окном. %2$@": {
+      "extractionState": "manual"
+    },
     "%1$@ и %2$@": {
       "extractionState": "manual",
       "localizations": {
@@ -6094,6 +6097,12 @@
         }
       }
     },
+    "%lld°": {
+      "extractionState": "manual"
+    },
+    "+%lld°": {
+      "extractionState": "manual"
+    },
     "20–40% воды": {
       "extractionState": "manual",
       "localizations": {
@@ -8677,6 +8686,12 @@
         }
       }
     },
+    "«%@» запылился — листьям нечем дышать": {
+      "extractionState": "manual"
+    },
+    "«%@» клонится к окну — поверните другим боком": {
+      "extractionState": "manual"
+    },
     "«%@» просит воды": {
       "extractionState": "manual",
       "localizations": {
@@ -8963,6 +8978,9 @@
           }
         }
       }
+    },
+    "«%@» просит свежей росы": {
+      "extractionState": "manual"
     },
     "«%@» просится в горшок побольше": {
       "extractionState": "manual",
@@ -43499,6 +43517,12 @@
         }
       }
     },
+    "Жара и сухой воздух торопят землю, прохлада и сырость — придерживают. В квартире погода чувствуется вполовину, на балконе — целиком. Погоду даёт Apple Weather по примерному месту.": {
+      "extractionState": "manual"
+    },
+    "Жарко: земля сохнет быстрее": {
+      "extractionState": "manual"
+    },
     "Ждут воды": {
       "extractionState": "manual",
       "localizations": {
@@ -54706,6 +54730,9 @@
           }
         }
       }
+    },
+    "Источники погоды": {
+      "extractionState": "manual"
     },
     "Исходный код на GitHub": {
       "extractionState": "manual",
@@ -77111,6 +77138,9 @@
         }
       }
     },
+    "Мелкий уход": {
+      "extractionState": "manual"
+    },
     "Меркурий сада — %1$@: пьёт %2$@.": {
       "extractionState": "manual"
     },
@@ -82569,6 +82599,9 @@
           }
         }
       }
+    },
+    "На сроки почти не влияет.": {
+      "extractionState": "manual"
     },
     "На телефоне нет ни Face ID, ни код-пароля.": {
       "extractionState": "manual",
@@ -95503,6 +95536,9 @@
     "Нет доступа к камере. Разрешите его в Настройках → Sprout.": {
       "extractionState": "manual"
     },
+    "Нет доступа к месту — разрешите его в Настройках → Sprout → Геопозиция. Хватит примерного.": {
+      "extractionState": "manual"
+    },
     "Нефрит": {
       "extractionState": "manual"
     },
@@ -99239,6 +99275,50 @@
           }
         }
       }
+    },
+    "Опрыскал": {
+      "extractionState": "manual"
+    },
+    "Опрыскать через %lld дней": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "variations": {
+            "plural": {
+              "few": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Опрыскать через %lld дня"
+                }
+              },
+              "many": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Опрыскать через %lld дней"
+                }
+              },
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Опрыскать через %lld день"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Опрыскать через %lld дня"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "Опрыскать: %@": {
+      "extractionState": "manual"
+    },
+    "Опрыскивание": {
+      "extractionState": "manual"
     },
     "Опунция": {
       "extractionState": "manual",
@@ -117395,6 +117475,56 @@
           }
         }
       }
+    },
+    "Повернул": {
+      "extractionState": "manual"
+    },
+    "Повернуть к свету: %@": {
+      "extractionState": "manual"
+    },
+    "Повернуть через %lld дней": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "variations": {
+            "plural": {
+              "few": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Повернуть через %lld дня"
+                }
+              },
+              "many": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Повернуть через %lld дней"
+                }
+              },
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Повернуть через %lld день"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Повернуть через %lld дня"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "Поворот к свету": {
+      "extractionState": "manual"
+    },
+    "Погода": {
+      "extractionState": "manual"
+    },
+    "Погода не пришла. Если приложение собрано из Xcode, добавьте ему возможность WeatherKit и включите службу WeatherKit у App ID.": {
+      "extractionState": "manual"
     },
     "Подготовить сад к отъезду в «Уезжаю».": {
       "extractionState": "manual",
@@ -138464,6 +138594,9 @@
         }
       }
     },
+    "Пора опрыскать": {
+      "extractionState": "manual"
+    },
     "Пора пересадить": {
       "extractionState": "manual",
       "localizations": {
@@ -138750,6 +138883,9 @@
           }
         }
       }
+    },
+    "Пора повернуть к свету": {
+      "extractionState": "manual"
     },
     "Пора подкормить": {
       "extractionState": "manual",
@@ -139324,6 +139460,9 @@
           }
         }
       }
+    },
+    "Пора протереть листья": {
+      "extractionState": "manual"
     },
     "Порядок": {
       "extractionState": "manual",
@@ -147941,7 +148080,51 @@
         }
       }
     },
+    "Протереть листья через %lld дней": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "variations": {
+            "plural": {
+              "few": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Протереть листья через %lld дня"
+                }
+              },
+              "many": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Протереть листья через %lld дней"
+                }
+              },
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Протереть листья через %lld день"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Протереть листья через %lld дня"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "Протереть листья: %@": {
+      "extractionState": "manual"
+    },
     "Противостояние: %1$@ и %2$@ — по разные стороны солнца.": {
+      "extractionState": "manual"
+    },
+    "Протирка листьев": {
+      "extractionState": "manual"
+    },
+    "Протёр": {
       "extractionState": "manual"
     },
     "Профессор": {
@@ -148233,6 +148416,9 @@
           }
         }
       }
+    },
+    "Прохладно за окном: земля сохнет медленнее": {
+      "extractionState": "manual"
     },
     "Прохладно: земля сохнет чуть медленнее": {
       "extractionState": "manual",
@@ -183081,6 +183267,9 @@
         }
       }
     },
+    "Сухой воздух: земля сохнет быстрее": {
+      "extractionState": "manual"
+    },
     "Суше всех": {
       "extractionState": "manual",
       "localizations": {
@@ -184228,6 +184417,9 @@
           }
         }
       }
+    },
+    "Сыро: земля сохнет медленнее": {
+      "extractionState": "manual"
     },
     "Тапок": {
       "extractionState": "manual",
@@ -192860,6 +193052,9 @@
         }
       }
     },
+    "Узнаю погоду…": {
+      "extractionState": "manual"
+    },
     "Узор за наклоном": {
       "extractionState": "manual",
       "localizations": {
@@ -194587,6 +194782,9 @@
           }
         }
       }
+    },
+    "Учитывать погоду": {
+      "extractionState": "manual"
     },
     "Файл сада попадает в резервную копию iPhone — туда же, куда и остальные ваши данные, по правилам Apple.": {
       "extractionState": "manual",
@@ -213882,6 +214080,12 @@
           }
         }
       }
+    },
+    "сохнут быстрее": {
+      "extractionState": "manual"
+    },
+    "сохнут медленнее": {
+      "extractionState": "manual"
     },
     "счёт от %@": {
       "extractionState": "manual",

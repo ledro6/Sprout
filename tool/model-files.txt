@@ -25,6 +25,7 @@ ios-native/Sprout/Model/Core/Recents.swift
 ios-native/Sprout/Model/Garden/Score.swift
 ios-native/Sprout/Model/Garden/Diary.swift
 ios-native/Sprout/Model/Garden/Today.swift
+ios-native/Sprout/Model/Garden/Climate.swift
 ios-native/Sprout/Model/Core/Reminders.swift
 ios-native/Sprout/Model/Core/Agenda.swift
 ios-native/Sprout/Model/Garden/Rival.swift

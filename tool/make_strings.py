@@ -265,6 +265,7 @@ ALLOW = {
     "Sprout/Model/Botany/Grower+Succulents.swift": [r"^[а-яё]+$"],
     "Sprout/Model/Garden/Plants.swift": [r"^[а-яё]+$", r"аяоеиыуюйь"],
     "Sprout/Model/Core/Pulse.swift": [r"^[а-яё]+$"],
+    "Sprout/Model/Garden/Climate.swift": [r"^[а-яё]+$"],
 }
 
 

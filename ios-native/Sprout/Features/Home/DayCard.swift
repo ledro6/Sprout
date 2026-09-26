@@ -84,6 +84,11 @@ struct DayCard: View {
 
     @ViewBuilder
     private var chipList: some View {
+        if Settings.shared.weather, let climate = Settings.shared.climate,
+           climate.fresh() {
+            chip(weatherLine(climate), icon: climate.symbol,
+                 tint: Palette.warn, multicolor: true)
+        }
         if streak > 0 {
             chip(Lang.format("череда %lld", streak), icon: "flame.fill",
                  tint: Palette.warn)
@@ -98,14 +103,33 @@ struct DayCard: View {
         }
     }
 
-    private func chip(_ text: String, icon: String, tint: Color) -> some View {
+    /// «+31° · сохнут быстрее»; погода почти не влияет — только градусы.
+    private func weatherLine(_ climate: Climate) -> String {
+        let pace = climate.pace(outdoor: Climate.outdoor(room.name))
+        if pace >= 1.08 {
+            return Lang.format("%1$@ · %2$@", climate.degrees,
+                               Lang.text("сохнут быстрее"))
+        }
+        if pace <= 0.92 {
+            return Lang.format("%1$@ · %2$@", climate.degrees,
+                               Lang.text("сохнут медленнее"))
+        }
+        return climate.degrees
+    }
+
+    private func chip(_ text: String, icon: String, tint: Color,
+                      multicolor: Bool = false) -> some View {
         Label {
             Text(text)
                 .lineLimit(1)
                 .minimumScaleFactor(0.85)
                 .contentTransition(.numericText())
         } icon: {
-            Image(systemName: icon).foregroundStyle(tint)
+            if multicolor {
+                Image(systemName: icon).symbolRenderingMode(.multicolor)
+            } else {
+                Image(systemName: icon).foregroundStyle(tint)
+            }
         }
         .font(Typography.settingNote)
         .foregroundStyle(Palette.ink)

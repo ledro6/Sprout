@@ -880,6 +880,17 @@
         }
       }
     },
+    "NSLocationWhenInUseUsageDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Чтобы узнать погоду за окном: в жару и сухой воздух земля сохнет быстрее. Хватит примерного места."
+          }
+        }
+      }
+    },
     "NSMotionUsageDescription": {
       "extractionState": "manual",
       "localizations": {

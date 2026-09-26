@@ -396,12 +396,14 @@ struct PlantView: View {
         Feel.done()
     }
 
-    /// Подкормка и пересадка: сколько осталось и кнопка «сделал». Обе
-    /// выключены в настройках растения — плашки нет.
+    /// Подкормка, пересадка и мелкий уход: сколько осталось и кнопка
+    /// «сделал». Всё выключено в настройках растения — плашки нет.
     @ViewBuilder
     private func care(_ plant: Plant) -> some View {
         let tending = plant.tending
-        if tending.feedEvery != nil || tending.repotEvery != nil {
+        let errands = tending.errands
+        if tending.feedEvery != nil || tending.repotEvery != nil
+            || !errands.isEmpty {
             VStack(alignment: .leading, spacing: 14) {
                 Text("Уход")
                     .font(Typography.groupTitle)
@@ -419,6 +421,15 @@ struct PlantView: View {
                         garden.repot(plantID)
                     }
                 }
+                ForEach(errands) { duty in
+                    if let line = tending.label(duty) {
+                        chore(line, due: tending.due(duty),
+                              done: LocalizedStringKey(duty.done),
+                              icon: duty.icon) {
+                            garden.did(duty, on: plantID)
+                        }
+                    }
+                }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.horizontal, 25)
@@ -430,15 +441,16 @@ struct PlantView: View {
 
     /// Срок — переходом цифр; пора — синим, как всё, что ждёт действия.
     private func chore(_ line: String, due: Bool, done: LocalizedStringKey,
-                       icon: String, term: Term,
+                       icon: String, term: Term? = nil,
                        action: @escaping () -> Void) -> some View {
         HStack(spacing: 12) {
             HStack(spacing: 6) {
                 Text(line)
                     .font(Typography.detail)
                     .foregroundStyle(due ? Palette.accent : Palette.ink)
+                    .fixedSize(horizontal: false, vertical: true)
                     .contentTransition(.numericText())
-                TermHint(term)
+                if let term { TermHint(term) }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             Button {
@@ -448,6 +460,7 @@ struct PlantView: View {
                 Label(done, systemImage: icon)
                     .font(Typography.settingNote)
                     .lineLimit(1)
+                    .fixedSize()
             }
             .buttonStyle(.glass)
         }
@@ -471,6 +484,12 @@ struct PlantView: View {
             }
             if let season = Season.line(stretch: Season.stretch) {
                 fact(season)
+            }
+            if Settings.shared.weather, let climate = Settings.shared.climate,
+               climate.fresh(),
+               let line = climate.line(outdoor: Climate.outdoor(
+                   garden.roomName(of: plant.id) ?? "")) {
+                fact(line, term: .weather)
             }
             fact(plant.addedLabel)
         }

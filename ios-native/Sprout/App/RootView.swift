@@ -82,6 +82,11 @@ struct RootView: View {
         .onChange(of: settings.seasons, initial: true) { _, on in
             Season.settle(on: on)
         }
+        // Погода — последняя снятая сразу, свежая — когда придёт.
+        .task {
+            Climate.settle(settings.climate, on: settings.weather)
+            await Weatherman.shared.refresh()
+        }
         // Узор времени года — до первого кадра, чтобы всходы шли уже им.
         // Переключатель в настройках ставит его сам, с волной.
         .onAppear { Festive.shared.settle(on: settings.seasonalPattern) }
@@ -123,6 +128,8 @@ struct RootView: View {
                 garden.reload()
                 Task { await Live.shared.sync() }
                 Season.settle(on: settings.seasons)
+                Climate.settle(settings.climate, on: settings.weather)
+                Task { await Weatherman.shared.refresh() }
                 redress()
                 Task { await lock.unlock() }
             } else {

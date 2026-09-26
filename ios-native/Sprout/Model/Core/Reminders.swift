@@ -12,12 +12,19 @@ enum Reminder {
         var ids: [Plant.ID] = []
     }
 
-    /// Подкормка или пересадка — отдельным уведомлением: у полива своя
-    /// кнопка, а у ухода её нет.
+    /// Подкормка, пересадка или мелкий уход — отдельным уведомлением: у
+    /// полива своя кнопка, а у ухода её нет.
     struct Chore {
+        enum Kind: Equatable {
+            case feed, repot
+            case duty(Duty)
+        }
+
         var plant: Plant
-        var repot: Bool
+        var kind: Kind
         var after: TimeInterval
+
+        var repot: Bool { kind == .repot }
     }
 
     /// Раньше уведомление бессмысленно: сухие растения набираются за минуты,
@@ -74,30 +81,42 @@ enum Reminder {
     /// Ближайший уход по всей квартире. Подкормка — только в пору роста:
     /// зимой её счёт стоит.
     static func chore(in rooms: [Room]) -> Chore? {
-        var best: (plant: Plant, repot: Bool, days: Double)?
+        var best: (plant: Plant, kind: Chore.Kind, days: Double)?
         for plant in rooms.flatMap(\.plants) {
             let tending = plant.tending
-            var options: [(Bool, Double)] = []
+            var options: [(Chore.Kind, Double)] = []
             if Season.growing, let left = tending.feedIn {
-                options.append((false, left))
+                options.append((.feed, left))
             }
-            if let left = tending.repotIn { options.append((true, left)) }
-            for (repot, days) in options where best == nil || days < best!.days {
-                best = (plant, repot, days)
+            if let left = tending.repotIn { options.append((.repot, left)) }
+            for duty in Duty.allCases {
+                if let left = tending.left(duty) {
+                    options.append((.duty(duty), left))
+                }
+            }
+            for (kind, days) in options where best == nil || days < best!.days {
+                best = (plant, kind, days)
             }
         }
         guard let best else { return nil }
-        return Chore(plant: best.plant, repot: best.repot,
+        return Chore(plant: best.plant, kind: best.kind,
                      after: max(best.days * 86_400 / Garden.speed, soonest))
     }
 
     static func title(for chore: Chore) -> String {
-        chore.repot ? Lang.text("Пора пересадить") : Lang.text("Пора подкормить")
+        switch chore.kind {
+        case .feed: Lang.text("Пора подкормить")
+        case .repot: Lang.text("Пора пересадить")
+        case .duty(let duty): duty.now
+        }
     }
 
     static func text(for chore: Chore) -> String {
-        chore.repot
-            ? Lang.format("«%@» просится в горшок побольше", chore.plant.name)
-            : Lang.format("«%@» ждёт подкормки", chore.plant.name)
+        switch chore.kind {
+        case .feed: Lang.format("«%@» ждёт подкормки", chore.plant.name)
+        case .repot:
+            Lang.format("«%@» просится в горшок побольше", chore.plant.name)
+        case .duty(let duty): duty.nudge(chore.plant.name)
+        }
     }
 }

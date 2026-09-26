@@ -20,6 +20,9 @@ struct PlantSettingsView: View {
     @State private var feedEvery: Double = 21
     @State private var repotMonths: Int?
 
+    /// Мелкий уход: раз в сколько дней; ноль — не напоминать.
+    @State private var duties: [Duty: Int] = [:]
+
     @State private var naming = false
     @State private var newRoom = ""
 
@@ -38,6 +41,7 @@ struct PlantSettingsView: View {
                             .hintSpot(.tuningHabits)
                         tending
                             .hintSpot(.tuningTending)
+                        errands
                     }
                     .padding(.horizontal, Metrics.contentMargin)
                     .padding(.top, 4)
@@ -185,6 +189,59 @@ struct PlantSettingsView: View {
         }
     }
 
+    // MARK: - Мелкий уход
+
+    /// Опрыскивание, поворот к свету, протирка листьев — сроки выбором, как
+    /// у пересадки. Срок вида, которого нет в списке, в список встаёт.
+    private var errands: some View {
+        SproutGroup("Мелкий уход") {
+            ForEach(Array(Duty.allCases.enumerated()), id: \.element) { item in
+                if item.offset > 0 { SproutDivider() }
+                errand(item.element)
+            }
+        }
+    }
+
+    private func errand(_ duty: Duty) -> some View {
+        let every = duties[duty] ?? 0
+        let choices = Array(Set(duty.choices + (every > 0 ? [every] : [])))
+            .sorted()
+        return HStack(spacing: 12) {
+            Label {
+                Text(duty.title)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.85)
+            } icon: {
+                Image(systemName: duty.icon)
+                    .foregroundStyle(Palette.accent)
+            }
+            .font(Typography.settingRow)
+            .foregroundStyle(Palette.ink)
+            Spacer(minLength: 8)
+            Menu {
+                Picker(duty.title, selection: Binding(
+                    get: { duties[duty] ?? 0 },
+                    set: { duties[duty] = $0 })) {
+                    Text("Не напоминать").tag(0)
+                    ForEach(choices, id: \.self) { days in
+                        Text(Lang.format("Раз в %lld дней", days)).tag(days)
+                    }
+                }
+            } label: {
+                HStack(spacing: 6) {
+                    Text(every > 0 ? Lang.format("Раз в %lld дней", every)
+                         : Lang.text("Не напоминать"))
+                        .font(Typography.settingRow)
+                        .lineLimit(1)
+                    Image(systemName: "chevron.up.chevron.down")
+                        .font(Typography.settingNote)
+                }
+                .foregroundStyle(Palette.accent)
+                .fixedSize()
+            }
+        }
+    }
+
     private func field(_ text: String) -> some View {
         HStack(spacing: 6) {
             Text(text)
@@ -238,9 +295,27 @@ struct PlantSettingsView: View {
             || room != (garden.roomName(of: plantID) ?? "")
             || feedDraft != plant.tending.feedEvery
             || repotDraft != plant.tending.repotEvery
+            || Duty.allCases.contains { duty in
+                Double(duties[duty] ?? 0) != (plant.tending.every(duty) ?? 0)
+            }
     }
 
     private var feedDraft: Double? { feeds ? feedEvery : nil }
+
+    /// Срок вида вроде «раз в 4 дня» не трогали — остаётся дробным, как был.
+    private var dutyDrafts: [Duty: Double?] {
+        var out: [Duty: Double?] = [:]
+        for duty in Duty.allCases {
+            let picked = duties[duty] ?? 0
+            let old = plant?.tending.every(duty)
+            if let old, Int(old.rounded()) == picked {
+                out[duty] = old
+            } else {
+                out[duty] = picked > 0 ? Double(picked) : nil
+            }
+        }
+        return out
+    }
 
     /// Прежний срок в днях остаётся как был, если месяцы не трогали: иначе
     /// округление до месяцев считалось бы правкой.
@@ -262,6 +337,9 @@ struct PlantSettingsView: View {
         feeds = tending.feedEvery != nil
         feedEvery = tending.feedEvery ?? 21
         repotMonths = tending.repotEvery.map { Care.months(days: $0) }
+        for duty in Duty.allCases {
+            duties[duty] = Int((tending.every(duty) ?? 0).rounded())
+        }
     }
 
     private func save() {
@@ -271,7 +349,8 @@ struct PlantSettingsView: View {
         withAnimation(Motion.number) {
             garden.tune(plantID, name: name, species: species,
                         dryingDays: period)
-            garden.tend(plantID, feedEvery: feedDraft, repotEvery: repotDraft)
+            garden.tend(plantID, feedEvery: feedDraft, repotEvery: repotDraft,
+                        duties: dutyDrafts)
             garden.relocate(plantID, to: room)
         }
         // Сменился вид — у своей модели по снимку сменился и чертёж:

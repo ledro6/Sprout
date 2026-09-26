@@ -5,9 +5,20 @@ import Foundation
 /// `Garden.speed`, как у напоминаний: иначе в Календаре полив стоял бы
 /// через неделю, а карточка уже просила воды.
 enum Agenda {
-    enum Chore: String, Sendable {
+    enum Chore: String, CaseIterable, Sendable {
         case water
         case feed
+        case mist
+        case turn
+        case wipe
+
+        init(_ duty: Duty) {
+            switch duty {
+            case .mist: self = .mist
+            case .turn: self = .turn
+            case .wipe: self = .wipe
+            }
+        }
     }
 
     /// Растение в событии — с комнатой: в заметке события растения
@@ -31,6 +42,9 @@ enum Agenda {
             return switch chore {
             case .water: Lang.format("Полить: %@", names)
             case .feed: Lang.format("Подкормить: %@", names)
+            case .mist: Lang.format("Опрыскать: %@", names)
+            case .turn: Lang.format("Повернуть к свету: %@", names)
+            case .wipe: Lang.format("Протереть листья: %@", names)
             }
         }
 
@@ -87,10 +101,15 @@ enum Agenda {
                    let every = care.feedEvery {
                     mark(pot, .feed, first: left, every: every)
                 }
+                for duty in Duty.allCases {
+                    if let left = care.left(duty), let every = care.every(duty) {
+                        mark(pot, Chore(duty), first: left, every: every)
+                    }
+                }
             }
         }
         return days.keys.sorted().flatMap { day in
-            [Chore.water, .feed].compactMap { chore in
+            Chore.allCases.compactMap { chore in
                 days[day]?[chore].map { Entry(day: day, chore: chore, pots: $0) }
             }
         }

@@ -77,8 +77,11 @@ final class Garden {
         guard elapsed > 0 else { return }
         let days = elapsed * Self.speed / 86_400
         for room in rooms.indices {
+            // Под открытым небом погода чувствуется целиком, а не вполовину.
+            let open = Climate.boost != 1 && Climate.outdoor(rooms[room].name)
             for plant in rooms[room].plants.indices {
-                rooms[room].plants[plant].dry(days: days)
+                rooms[room].plants[plant].dry(
+                    days: open ? days * Climate.boost : days)
             }
         }
     }
@@ -271,12 +274,27 @@ final class Garden {
         }
     }
 
-    /// Сроки ухода из настроек растения; прошедшие дни сохраняются.
-    func tend(_ id: Plant.ID, feedEvery: Double?, repotEvery: Double?) {
+    /// Опрыскали, повернули, протёрли: счёт этого дела — заново.
+    func did(_ duty: Duty, on id: Plant.ID) {
+        guard plant(id: id) != nil else { return }
+        change(id) {
+            var tended = $0.tending
+            tended.did(duty)
+            $0.care = tended
+        }
+    }
+
+    /// Сроки ухода из настроек растения; прошедшие дни сохраняются. Мелкий
+    /// уход не передали — остаётся, как был.
+    func tend(_ id: Plant.ID, feedEvery: Double?, repotEvery: Double?,
+              duties: [Duty: Double?]? = nil) {
         guard let old = plant(id: id) else { return }
         var tended = old.tending
         tended.feedEvery = feedEvery
         tended.repotEvery = repotEvery
+        for (duty, every) in duties ?? [:] {
+            tended.set(duty, every: every)
+        }
         guard tended != old.care else { return }
         change(id) { $0.care = tended }
     }
