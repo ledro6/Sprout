@@ -42,6 +42,12 @@ struct HomeView: View {
 
     @State private var tripping = false
 
+    /// Полка наград — из карточки дня.
+    @State private var awardsOpen = false
+
+    /// Полили последнего, кто ждал воды, — листопад «Все политы!».
+    @State private var cheering = false
+
     /// Сад комнаты в дополненной реальности — из меню или кнопкой действия
     /// на корпусе, см. `OpenGardenAR`.
     @State private var staging = false
@@ -141,7 +147,16 @@ struct HomeView: View {
                     if bottom > 0 { floor = bottom }
                 }
                 .ignoresSafeArea(.container, edges: .bottom)
-                .background { SproutBackground() }
+                .background {
+                    SproutBackground()
+                        .overlay { DaySky() }
+                }
+                .overlay {
+                    if cheering {
+                        LeafFall { cheering = false }
+                            .transition(.opacity)
+                    }
+                }
                 .toolbar(.hidden, for: .navigationBar)
                 // Панель вкладок — последняя ступень входа. Её видимость
                 // задаёт содержимое вкладки, а не корень.
@@ -183,6 +198,20 @@ struct HomeView: View {
         // окружения полагаться незачем.
         .sheet(isPresented: $roomsOpen) { RoomsView().environment(garden) }
         .sheet(isPresented: $tripping) { TripView().environment(garden) }
+        .sheet(isPresented: $awardsOpen) {
+            NavigationStack { AwardsView() }.environment(garden)
+        }
+        // Ждали воды, и полили последнего — праздник. Высохли новые —
+        // просто счёт растёт.
+        .onChange(of: Seed.due(in: garden.rooms).count) { old, now in
+            // Только после полива: убрали последнего сухого — не праздник.
+            guard old > 0, now == 0, Launch.shared.step >= Launch.last,
+                  path.isEmpty,
+                  let poured = garden.log.map(\.when).max(),
+                  Date().timeIntervalSince(poured) < 5 else { return }
+            withAnimation(Motion.appear) { cheering = true }
+            Feel.done()
+        }
         .fullScreenCover(isPresented: $staging) {
             PlantAR(ids: staged).environment(garden)
         }
@@ -281,7 +310,19 @@ struct HomeView: View {
         case .room(let name):
             scroller(leaf) {
                 if Launch.shared.step >= 4 {
-                    shelf(garden.rooms.first { $0.name == name }, index: index)
+                    let room = garden.rooms.first { $0.name == name }
+                    VStack(spacing: Metrics.gutterV) {
+                        if let room, !room.plants.isEmpty {
+                            let key = "day:" + room.name
+                            DayCard(room: room) { awardsOpen = true }
+                                .modifier(CardAppear(
+                                    index: 0, room: index,
+                                    animates: !revealed.contains(key),
+                                    onShown: { revealed.insert(key) }))
+                                .padding(.horizontal, Metrics.contentMargin)
+                        }
+                        shelf(room, index: index)
+                    }
                 }
             }
         case .fresh:

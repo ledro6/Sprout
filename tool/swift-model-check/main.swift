@@ -3363,6 +3363,45 @@ do {
           "каждая награда — в своей группе")
 }
 
+print("сегодня на главной:")
+do {
+    check(Daypart.of(hour: 6) == .morning && Daypart.of(hour: 13) == .day
+          && Daypart.of(hour: 18) == .evening && Daypart.of(hour: 23) == .night
+          && Daypart.of(hour: 3) == .night,
+          "утро с пяти, день с полудня, вечер с пяти, ночь с одиннадцати")
+    check(Daypart.morning.greeting("Лера"), "Доброе утро, Лера",
+          "приветствие по имени")
+    check(Daypart.night.greeting("  "), "Доброй ночи",
+          "не назвался — просто приветствие")
+    check(Sky.sun(at: 13.5) == 0.5 && Sky.sun(at: 22) == nil
+          && Sky.sun(at: 5.9) == nil,
+          "солнце — с шести до девяти вечера, в полвторого — посередине")
+    check(round2(Sky.height(0.5)), "1.00", "в середине дня — выше всего")
+    let warm = Sky.glow(at: 6.5)
+    let noon = Sky.glow(at: 13.5)
+    check(warm.blue < noon.blue && Sky.glow(at: 23).blue > Sky.glow(at: 23).red,
+          "утром свет тёплый, в полдень светлее, ночью синий")
+
+    var utc = Calendar(identifier: .gregorian)
+    utc.timeZone = TimeZone(identifier: "UTC")!
+    func at(_ day: Int) -> Date {
+        utc.date(from: DateComponents(year: 2026, month: 3, day: day, hour: 12))!
+    }
+    let shelf = UserDefaults(suiteName: "sprout-today-check")!
+    shelf.removePersistentDomain(forName: "sprout-today-check")
+    let cabinet = Cabinet(store: shelf)
+    let log = (1 ... 7).map { Watering(plant: "a", when: at($0), left: 0.3) }
+    let trophies = Trophies.of(log, rooms: [], since: at(1), now: at(8),
+                               calendar: utc)
+    cabinet.review(trophies)
+    let next = cabinet.next(trophies)
+    check(next?.rank == Rank(.drops, 2) && next?.left == 3,
+          "ближайшая медаль — «Десять поливов», осталось три")
+    check(Cabinet(store: shelf).next(Trophies())?.rank == Rank(.feeder, 1),
+          "ничего не набрано — та, где осталось меньше всего")
+    shelf.removePersistentDomain(forName: "sprout-today-check")
+}
+
 print("итоги года:")
 do {
     var utc = Calendar(identifier: .gregorian)

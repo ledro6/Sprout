@@ -28234,6 +28234,9 @@
         }
       }
     },
+    "Все политы!": {
+      "extractionState": "manual"
+    },
     "Всего": {
       "extractionState": "manual",
       "localizations": {
@@ -38596,6 +38599,9 @@
         }
       }
     },
+    "До «%1$@» осталось %2$lld": {
+      "extractionState": "manual"
+    },
     "До встречи в %lld": {
       "extractionState": "manual",
       "localizations": {
@@ -40323,6 +40329,18 @@
           }
         }
       }
+    },
+    "Доброе утро": {
+      "extractionState": "manual"
+    },
+    "Доброй ночи": {
+      "extractionState": "manual"
+    },
+    "Добрый вечер": {
+      "extractionState": "manual"
+    },
+    "Добрый день": {
+      "extractionState": "manual"
     },
     "Довольны": {
       "extractionState": "manual",
@@ -49226,6 +49244,9 @@
           }
         }
       }
+    },
+    "Здесь все довольны — можно выдохнуть.": {
+      "extractionState": "manual"
     },
     "Здесь всегда написан следующий шаг: навести камеру, поставить растение, выбрать его.": {
       "extractionState": "manual",
@@ -97493,6 +97514,9 @@
           }
         }
       }
+    },
+    "Обойти по очереди": {
+      "extractionState": "manual"
     },
     "Обход сада": {
       "extractionState": "manual",
