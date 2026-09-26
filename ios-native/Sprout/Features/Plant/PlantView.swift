@@ -21,6 +21,8 @@ struct PlantView: View {
 
     @State private var modelling = false
 
+    @State private var diagnosing = false
+
     /// Заметка правится на месте и ложится в сад, когда поле отпускают.
     @State private var noteDraft = ""
     @FocusState private var writing: Bool
@@ -127,6 +129,9 @@ struct PlantView: View {
         }
         .sheet(isPresented: $modelling) {
             ModelSheet(plantID: plantID).environment(garden)
+        }
+        .sheet(isPresented: $diagnosing) {
+            DiagnosisSheet(plantID: plantID).environment(garden)
         }
         // Растение удалили — экран закрывается сам; вернуть можно с плашки
         // внизу.
@@ -310,6 +315,7 @@ struct PlantView: View {
                 }
                 tool("Модель", icon: "cube.transparent") { modelling = true }
             }
+            tool("Что с ним?", icon: "stethoscope") { diagnosing = true }
             tool("Настройки", icon: "slider.horizontal.3") { tuning = true }
         }
         .sproutRide()

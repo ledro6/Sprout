@@ -43,6 +43,39 @@ extension Eye {
         }.value
     }
 
+    /// Что видно на листьях — для диагностики, см. `Finding`. Та же маска
+    /// растения, что и для своей модели.
+    static func examine(_ image: UIImage) async -> Symptoms {
+        guard let frame = upright(image) else { return Symptoms() }
+        return await Task.detached(priority: .userInitiated) {
+            guard let small = shrink(frame) else { return Symptoms() }
+            let mask = subject(frame, width: small.width, height: small.height)
+            return Symptoms.read(rgba: small.pixels, mask: mask,
+                                 width: small.width, height: small.height)
+        }.value
+    }
+
+    /// Снимок стоймя: у снимка с камеры `cgImage` лежит на боку, а
+    /// диагностике важно, где верх растения, а где горшок. Заодно не больше
+    /// двух сторон разбора — Vision хватает.
+    private static func upright(_ image: UIImage) -> CGImage? {
+        let longest = max(image.size.width, image.size.height)
+        guard longest > 0 else { return nil }
+        let limit = CGFloat(side * 2)
+        if image.imageOrientation == .up, longest <= limit {
+            return image.cgImage
+        }
+        let scale = min(1, limit / longest)
+        let size = CGSize(width: (image.size.width * scale).rounded(),
+                          height: (image.size.height * scale).rounded())
+        let format = UIGraphicsImageRendererFormat()
+        format.scale = 1
+        format.opaque = true
+        return UIGraphicsImageRenderer(size: size, format: format)
+            .image { _ in image.draw(in: CGRect(origin: .zero, size: size)) }
+            .cgImage
+    }
+
     /// Снимок в RGBA нужного размера.
     private static func shrink(_ frame: CGImage)
         -> (pixels: [UInt8], width: Int, height: Int)? {

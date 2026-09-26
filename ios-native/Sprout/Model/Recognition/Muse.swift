@@ -44,6 +44,21 @@ enum Muse {
         return String(word)
     }
 
+    /// Два-три дружеских предложения о том, что делать, — по находкам
+    /// диагностики. Нет модели — нет и абзаца: находки говорят сами.
+    static func advise(_ findings: [Finding], plant: Plant) async -> String? {
+        let facts = findings.map { "\($0.title): \($0.detail)" }
+            .joined(separator: "\n")
+        return await say("""
+        A houseplant "\(plant.name)" (\(plant.species)) was checked from a \
+        photo. Findings:
+        \(facts)
+        Write two or three short, warm sentences in \(language) telling the \
+        owner what to do first. Do not repeat the findings word for word, \
+        do not use lists or headings.
+        """)
+    }
+
     /// Сеанс на каждый вопрос: общая память сбивала бы ответы. Без
     /// наставления модель отвечает то по-английски, то абзацами с
     /// заголовками.

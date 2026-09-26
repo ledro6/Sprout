@@ -3439,6 +3439,85 @@ do {
           "каждая награда — в своей группе")
 }
 
+print("диагностика по фото:")
+do {
+    let side = 40
+    /// Снимок: верх и низ растения своими цветами, всё в маске.
+    func picture(_ top: (UInt8, UInt8, UInt8), _ bottom: (UInt8, UInt8, UInt8),
+                 split: Double = 0.66) -> [UInt8] {
+        var out = [UInt8]()
+        for y in 0 ..< side {
+            let tone = Double(y) < Double(side) * split ? top : bottom
+            for _ in 0 ..< side { out += [tone.0, tone.1, tone.2, 255] }
+        }
+        return out
+    }
+    let full = [UInt8](repeating: 255, count: side * side)
+    let hue = Symptoms.hsv(0, 255, 0)
+    check(hue.0 == 120 && hue.1 == 1 && hue.2 == 1, "зелёный — 120°")
+    check(Symptoms.hsv(255, 0, 0).0 == 0, "красный — 0°")
+    let green = Symptoms.read(rgba: picture((60, 160, 60), (60, 160, 60)),
+                              mask: full, width: side, height: side)
+    check(green.green > 0.95 && green.covered >= Symptoms.enough,
+          "зелёное растение — зелень")
+    let potted = Symptoms.read(rgba: picture((60, 160, 60), (150, 80, 40)),
+                               mask: full, width: side, height: side)
+    check(potted.brown < 0.05, "терракотовый горшок внизу не считается сухими листьями")
+    let fern = plantNamed("Папоротник", moisture: 0.5, dryingDays: 5)
+    check(Finding.diagnose(green, plant: fern, log: []).map(\.kind) == [.healthy],
+          "здоровое — так и сказано")
+    check(Finding.diagnose(Symptoms(green: 1, covered: 10), plant: fern,
+                           log: []).map(\.kind) == [.unclear],
+          "растения почти не видно — просим переснять")
+    let yellow = Symptoms.read(rgba: picture((220, 200, 40), (60, 160, 60),
+                                             split: 0.3),
+                               mask: full, width: side, height: side)
+    check(yellow.yellow > 0.3, "жёлтое — пожелтение")
+    let early = (0 ..< 6).map {
+        Watering(plant: "Папоротник", when: Date(timeIntervalSince1970: Double($0)),
+                 left: 0.7)
+    }
+    check(Finding.diagnose(yellow, plant: fern, log: early).first?.kind
+            == .overwatered,
+          "желтеет, а поливают по мокрой земле — перелив")
+    let parched = (0 ..< 6).map {
+        Watering(plant: "Папоротник", when: Date(timeIntervalSince1970: Double($0)),
+                 left: 0)
+    }
+    check(Finding.diagnose(yellow, plant: fern, log: parched).first?.kind
+            == .underwatered,
+          "желтеет, а земля пересыхает — недолив")
+    var hungry = fern
+    hungry.care = Care(feedEvery: 14, sinceFed: 40)
+    check(Finding.diagnose(yellow, plant: hungry, log: []).first?.kind == .hungry,
+          "желтеет, а подкормка давно просрочена — голодает")
+    let brown = Symptoms.read(rgba: picture((140, 80, 30), (60, 160, 60),
+                                            split: 0.4),
+                              mask: full, width: side, height: side)
+    let crisp = Finding.diagnose(brown, plant: fern, log: [],
+                                 climate: Climate(temperature: 24, humidity: 0.2,
+                                                  symbol: "", taken: Date()))
+    check(crisp.first?.kind == .crispy && !crisp.first!.tips.isEmpty,
+          "бурые края в сухом воздухе — с советами")
+    let white = Symptoms(green: 0.6, white: 0.15, covered: 1_000)
+    let lily = Plant.new(name: "Белла", species: "Спатифиллум", dryingDays: 5,
+                         id: "l")
+    // У «fern» выше вид «x» — по нему модель не узнать, и он сошёл бы за
+    // спатифиллум; нужен настоящий папоротник.
+    let frond = Plant.new(name: "Нефрон", species: "Папоротник", dryingDays: 5,
+                          id: "n")
+    check(Finding.diagnose(white, plant: frond, log: []).contains { $0.kind == .powder }
+          && !Finding.diagnose(white, plant: lily, log: []).contains { $0.kind == .powder },
+          "белое у спатифиллума — скорее цветки, а не налёт")
+    check(Finding.diagnose(Symptoms(green: 0.2, pale: 0.6, covered: 1_000),
+                           plant: fern, log: []).first?.kind == .pale,
+          "бледная зелень — мало света")
+    let middle = Symptoms.read(rgba: picture((60, 160, 60), (60, 160, 60)),
+                               mask: nil, width: side, height: side)
+    check(middle.covered > 0 && middle.green > 0.9,
+          "без маски — середина кадра")
+}
+
 print("датчики влажности:")
 do {
     let bytes: [UInt8] = [0xEA, 0x00, 0x00, 0xD2, 0x04, 0x00, 0x00, 38,
