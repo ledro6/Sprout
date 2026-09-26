@@ -1,0 +1,102 @@
+# Сборка iOS-приложения без Mac у автора правок: Xcode на машине GitHub
+# собирает приложение с виджетом и приложение для часов, а на Linux
+# прогоняется модель и сверяются строки, проект и имена. Подпись не нужна —
+# проверяется компиляция, а не выпуск.
+name: iOS
+
+on:
+  push:
+    paths:
+      - "ios-native/**"
+      - "tool/**"
+      - ".github/workflows/ios.yml"
+  pull_request:
+    paths:
+      - "ios-native/**"
+      - "tool/**"
+  workflow_dispatch:
+
+# Новый пуш отменяет недоигравшую сборку той же ветки: минуты на Mac дорогие.
+concurrency:
+  group: ios-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  model:
+    name: Модель, строки и проект
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: swift-actions/setup-swift@v2
+        with:
+          swift-version: "6.2"
+      - name: Строки
+        run: python3 tool/make_strings.py check
+      - name: Проект
+        run: python3 tool/check_pbxproj.py ios-native/Sprout.xcodeproj/project.pbxproj
+      - name: Имена
+        run: python3 tool/check_tokens.py ios-native
+      - name: Модель
+        run: bash tool/check_model.sh
+
+  xcode:
+    name: Xcode
+    runs-on: macos-26
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Самый свежий Xcode
+        run: |
+          latest=$(ls -d /Applications/Xcode_*.app | sort -V | tail -1)
+          echo "Xcode: $latest"
+          sudo xcode-select -s "$latest"
+          xcodebuild -version
+          xcodebuild -showsdks
+      - name: Приложение и виджет
+        run: |
+          set -o pipefail
+          xcodebuild build \
+            -project ios-native/Sprout.xcodeproj \
+            -scheme Sprout \
+            -configuration Debug \
+            -destination 'generic/platform=iOS' \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY="" \
+            2>&1 | tee ios.log | grep -E "error:|warning: unre|BUILD (SUCCEEDED|FAILED)" || true
+          grep -q "BUILD SUCCEEDED" ios.log
+      - name: Часы
+        if: always()
+        run: |
+          set -o pipefail
+          if ! xcodebuild -showsdks | grep -q watchos; then
+            xcodebuild -downloadPlatform watchOS
+          fi
+          xcodebuild build \
+            -project ios-native/Sprout.xcodeproj \
+            -scheme SproutWatch \
+            -configuration Debug \
+            -destination 'generic/platform=watchOS' \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY="" \
+            2>&1 | tee watch.log | grep -E "error:|BUILD (SUCCEEDED|FAILED)" || true
+          grep -q "BUILD SUCCEEDED" watch.log
+      - name: Ошибки коротко
+        if: failure()
+        run: |
+          for log in ios.log watch.log; do
+            [ -f "$log" ] || continue
+            echo "== $log"
+            grep -E "^/.*: error:" "$log" | sed "s#$GITHUB_WORKSPACE/##" | sort -u | head -150
+          done
+      - name: Журналы сборки
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: xcode-logs
+          path: |
+            ios.log
+            watch.log
+          retention-days: 7
