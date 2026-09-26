@@ -1157,6 +1157,112 @@ check(table.rivals.map(\.name).joined(separator: ", "), "Святослав, Б�
       "убранный соперник уходит из таблицы")
 box.removePersistentDomain(forName: "check.rivals")
 
+print("друзья: сравнение садов, черенок и челлендж:")
+do {
+    var utc = Calendar(identifier: .gregorian)
+    utc.timeZone = TimeZone(identifier: "UTC")!
+    func at(_ day: Int, _ hour: Int) -> Date {
+        utc.date(from: DateComponents(year: 2026, month: 3, day: day,
+                                      hour: hour))!
+    }
+    // Сад целиком едет в коде соперника.
+    let whole = Rival(name: "Лера", total: 120, streak: 4, best: 9, plants: 12,
+                      day: 20_500, level: 5, medals: 14, kinds: 7, aim: 64,
+                      weeks: 3, race: Race.Score(id: "abcdef", count: 6))
+    let got = Rival.read(whole.code)
+    check(got?.level == 5 && got?.medals == 14 && got?.kinds == 7
+          && got?.aim == 64 && got?.weeks == 3 && got?.race?.count == 6,
+          "уровень, медали, виды, меткость, недели и челлендж — в коде")
+    check(Rival.read(mine.code)?.level == nil && Rival.read(mine.code) != nil,
+          "код прежней сборки читается — без уровня")
+    check(whole.card.contains("Уровень 5 — Хранитель подоконника."),
+          "в сообщении — уровень и титул")
+    check(Rival.aim([Watering(plant: "a", when: Date(), left: 0.3),
+                     Watering(plant: "a", when: Date(), left: 0.5),
+                     Watering(plant: "a", when: Date(), left: 0.25),
+                     Watering(plant: "a", when: Date())]) == 67
+          && Rival.aim([]) == nil,
+          "меткость — доля поливов вовремя среди известных")
+
+    // Черенок.
+    var baksik = Plant.new(name: "Баксик", species: "Монстера", dryingDays: 9,
+                           id: "b")
+    var care = baksik.tending
+    care.feedEvery = 21
+    care.set(.mist, every: 5)
+    care.set(.turn, every: nil)
+    baksik.care = care
+    let cutting = Cutting(plant: baksik, from: "Лера")
+    let planted = Cutting.read(cutting.card)
+    check(planted?.name == "Баксик" && planted?.species == "Монстера"
+          && planted?.days == 9 && planted?.feed == 21 && planted?.from == "Лера",
+          "черенок: кличка, вид, срок, подкормка и от кого")
+    check(planted?.chores[.mist] == 5 && planted?.chores[.turn] == 0,
+          "мелкий уход едет с черенком: опрыскивать раз в пять, не вертеть")
+    check(cutting.card.contains("Лера передаёт черенок: «Баксик», Монстера.")
+          && cutting.card.contains("раз в 9 дней"),
+          "в сообщении — что это и как поливать")
+    check(Cutting.read(whole.card) == nil && Rival.read(cutting.card) == nil
+          && Race.read(cutting.card) == nil,
+          "коды не путаются между собой")
+    check(Cutting.read(Codeword.encode(Cutting(name: "Х", species: "", days: 0,
+                                               from: "Я"),
+                                       mark: Cutting.mark)) == nil,
+          "черенок без срока не сажается")
+
+    // Челлендж.
+    let race = Race.new(.onTime, host: "Лера", on: at(4, 15), id: "Zq-81xYwUv")
+    check(race.id == "zqxywu" && race.start == Rival.day(of: at(4, 15)) + 1
+          && race.days == 7,
+          "челлендж — с завтрашнего дня на неделю, код шесть букв")
+    let span = race.span(calendar: utc)
+    check(span.start == at(5, 0) && span.end == at(12, 0),
+          "неделя — с пятого по одиннадцатое марта")
+    let log = [
+        Watering(plant: "a", when: at(4, 20), left: 0.3),
+        Watering(plant: "a", when: at(5, 9), left: 0.3),
+        Watering(plant: "b", when: at(8, 9), left: 0.5),
+        Watering(plant: "c", when: at(11, 22), left: 0.25),
+        Watering(plant: "a", when: at(12, 9), left: 0.3),
+    ]
+    check(race.count(log, calendar: utc) == 2,
+          "вовремя в челлендже — два полива: до и после недели не в счёт")
+    let back = Race.read(race.card(calendar: utc))
+    check(back == race, "челлендж возвращается из сообщения целым")
+    check(race.card(calendar: utc).contains("Лера зовёт в челлендж Sprout: «Кто больше польёт вовремя»"),
+          "в сообщении — кто зовёт и во что")
+    var odd = race
+    odd.quest = .noFlood
+    check(Race.read(odd.code) == nil, "в челлендж годится не всякое задание")
+
+    let suite = "sprout-races-check"
+    let box = UserDefaults(suiteName: suite)!
+    box.removePersistentDomain(forName: suite)
+    defer { box.removePersistentDomain(forName: suite) }
+    let friends = Friends(store: box)
+    check(friends.current(at: at(6, 12), calendar: utc) == nil, "челленджа нет")
+    friends.join(race)
+    friends.join(race)
+    check(friends.races.count == 1
+          && friends.current(at: at(6, 12), calendar: utc) == race,
+          "тот же челлендж — один; идёт — показывается")
+    check(friends.current(at: at(15, 12), calendar: utc) == race
+          && friends.current(at: at(20, 12), calendar: utc) == nil,
+          "закончился — неделю висит с итогом, потом уходит")
+    check(Friends(store: box).races == [race], "челлендж переживает перезапуск")
+    friends.add(Rival(name: "Боря", total: 1, streak: 1, best: 1, plants: 1,
+                      day: 20_500, race: Race.Score(id: race.id, count: 5)))
+    friends.add(Rival(name: "Аня", total: 1, streak: 1, best: 1, plants: 1,
+                      day: 20_500, race: Race.Score(id: "другой", count: 9)))
+    let me = Rival(name: "Лера", total: 1, streak: 1, best: 1, plants: 1,
+                   day: 20_500, race: race.score(log, calendar: utc))
+    let places = friends.standings(race, mine: me)
+    check(places.map(\.name) == ["Боря", "Лера"] && places.first?.count == 5,
+          "места: чужие — из их кодов, кто в другом челлендже — не в таблице")
+    friends.leave(race.id)
+    check(friends.races.isEmpty, "из челленджа можно выйти")
+}
+
 print("что разглядел телефон:")
 func guessed(_ seen: [(String, Double)]) -> String {
     Species.read(seen.map { Sighting(name: $0.0, confidence: $0.1) })?

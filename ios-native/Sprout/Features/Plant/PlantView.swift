@@ -184,6 +184,12 @@ struct PlantView: View {
             Button { tuning = true } label: {
                 Label("Настройки", systemImage: "slider.horizontal.3")
             }
+            // Черенок — кодом в переписку: друг посадит его со всем уходом.
+            if let plant {
+                ShareLink(item: Cutting(plant: plant, from: garden.signed).card) {
+                    Label("Передать черенок", systemImage: "scissors")
+                }
+            }
             Button { Coach.shared.start(.plant) } label: {
                 Label("Подсказки", systemImage: "questionmark.circle")
             }

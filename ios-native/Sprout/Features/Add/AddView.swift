@@ -39,6 +39,10 @@ struct AddView: View {
     /// растение.
     @State private var planted: Planted?
 
+    /// Вставленный черенок: с ним — срок и уход, как у друга.
+    @State private var cutting: Cutting?
+    @State private var trouble: String?
+
     private struct Planted {
         var name: String
         var note: String
@@ -110,6 +114,14 @@ struct AddView: View {
             Button("Хорошо", role: .cancel) {}
         } message: {
             Text(planted?.note ?? "")
+        }
+        .alert("Не вышло", isPresented: Binding(
+            get: { trouble != nil },
+            set: { if !$0 { trouble = nil } }
+        )) {
+            Button("Понятно", role: .cancel) {}
+        } message: {
+            Text(trouble ?? "")
         }
     }
 
@@ -223,6 +235,10 @@ struct AddView: View {
 
     private var about: some View {
         SproutGroup("Растение") {
+            graft
+
+            SproutDivider()
+
             SproutBlock("Кличка") {
                 HStack(spacing: 10) {
                     TextField("Баксик", text: $name)
@@ -255,6 +271,70 @@ struct AddView: View {
             }
         }
         .sproutRide()
+    }
+
+    /// Черенок от друга: вставили — кличка, вид и срок встают сами, уход —
+    /// при посадке.
+    @ViewBuilder
+    private var graft: some View {
+        if let cutting {
+            HStack(spacing: 10) {
+                Image(systemName: "scissors")
+                    .foregroundStyle(Palette.green)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(Lang.format("Черенок · %@", cutting.from))
+                        .font(Typography.settingRow)
+                        .foregroundStyle(Palette.ink)
+                        .lineLimit(1)
+                    Text("Посадится со сроками ухода, как у друга.")
+                        .font(Typography.settingNote)
+                        .foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                Spacer(minLength: 8)
+                Button {
+                    withAnimation(Motion.appear) { self.cutting = nil }
+                } label: {
+                    Image(systemName: "xmark.circle.fill")
+                        .font(Typography.navTitle)
+                        .foregroundStyle(.tertiary)
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel("Убрать черенок")
+            }
+            .transition(.blurReplace)
+        } else {
+            HStack(spacing: 10) {
+                Label("Черенок от друга", systemImage: "scissors")
+                    .font(Typography.settingNote)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.85)
+                Spacer(minLength: 8)
+                PasteButton(payloadType: String.self) { items in
+                    guard let text = items.first else { return }
+                    Task { @MainActor in accept(text) }
+                }
+                .buttonBorderShape(.capsule)
+                .fixedSize()
+            }
+        }
+    }
+
+    @MainActor
+    private func accept(_ text: String) {
+        guard let found = Cutting.read(text) else {
+            trouble = Lang.text("В скопированном нет черенка Sprout. Скопируйте сообщение друга целиком — код лежит в нём последней строкой.")
+            Feel.wrong()
+            return
+        }
+        withAnimation(Motion.appear) {
+            cutting = found
+            name = found.name
+            species = found.species
+            period = max(found.days.rounded(), 1)
+        }
+        Feel.done()
     }
 
     // MARK: - Уход
@@ -394,6 +474,10 @@ struct AddView: View {
         let seedling = Plant.new(name: nickname, species: kind,
                                  dryingDays: period, shot: saved)
         withAnimation(Motion.appear) { garden.add(seedling, to: place) }
+        if let cutting {
+            garden.tend(seedling.id, feedEvery: cutting.feed,
+                        repotEvery: cutting.repot, duties: cutting.chores)
+        }
         Cheer.shared.now(from: button.rect)
         Feel.planted()
         typing = false
@@ -416,6 +500,7 @@ struct AddView: View {
             item = nil
             guess = nil
             period = 7
+            cutting = nil
         }
     }
 }

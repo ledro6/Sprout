@@ -3,7 +3,7 @@ import Observation
 
 /// Задание недели. Всё считается по журналу поливов: отменили полив —
 /// задание снова не выполнено, пока неделя не кончилась.
-enum Quest: String, CaseIterable, Identifiable, Sendable {
+enum Quest: String, CaseIterable, Codable, Identifiable, Sendable {
     /// Полить вовремя — когда в земле 20–40% воды.
     case onTime
     /// Поливать в разные дни.

@@ -871,6 +871,9 @@
     "%1$@ за окном. %2$@": {
       "extractionState": "manual"
     },
+    "%1$@ зовёт в челлендж Sprout: «%2$@», %3$@.": {
+      "extractionState": "manual"
+    },
     "%1$@ и %2$@": {
       "extractionState": "manual",
       "localizations": {
@@ -1444,6 +1447,9 @@
           }
         }
       }
+    },
+    "%1$@ передаёт черенок: «%2$@», %3$@.": {
+      "extractionState": "manual"
     },
     "%1$@ — %2$@": {
       "extractionState": "manual",
@@ -17411,6 +17417,9 @@
         }
       }
     },
+    "В скопированном нет черенка Sprout. Скопируйте сообщение друга целиком — код лежит в нём последней строкой.": {
+      "extractionState": "manual"
+    },
     "В среднем": {
       "extractionState": "manual",
       "localizations": {
@@ -23444,6 +23453,9 @@
         }
       }
     },
+    "Виды": {
+      "extractionState": "manual"
+    },
     "Включаю камеру…": {
       "extractionState": "manual",
       "localizations": {
@@ -25477,6 +25489,9 @@
       }
     },
     "Вовремя — когда в земле осталось 20–40% воды.": {
+      "extractionState": "manual"
+    },
+    "Вовремя, %": {
       "extractionState": "manual"
     },
     "Вода в земле": {
@@ -29219,6 +29234,9 @@
         }
       }
     },
+    "Вы в челлендже от %@. Свой счёт отправляйте кнопкой «Отправить счёт».": {
+      "extractionState": "manual"
+    },
     "Вы с землёй на одной волне: поливаете, когда пора.": {
       "extractionState": "manual",
       "localizations": {
@@ -29794,6 +29812,9 @@
       }
     },
     "Выглядит здоровым": {
+      "extractionState": "manual"
+    },
+    "Выйти": {
       "extractionState": "manual"
     },
     "Выполните все задания четырёх недель за одно время года — и на полке появится медаль сезона.": {
@@ -46021,6 +46042,12 @@
     "Задания недели: %1$lld из %2$lld": {
       "extractionState": "manual"
     },
+    "Закончился": {
+      "extractionState": "manual"
+    },
+    "Закончился. Первое место — %@": {
+      "extractionState": "manual"
+    },
     "Закончить обход": {
       "extractionState": "manual",
       "localizations": {
@@ -52067,6 +52094,9 @@
       "extractionState": "manual"
     },
     "Золото": {
+      "extractionState": "manual"
+    },
+    "Идёт до %@": {
       "extractionState": "manual"
     },
     "Из галереи": {
@@ -71615,6 +71645,15 @@
         }
       }
     },
+    "Кто больше дней польёт": {
+      "extractionState": "manual"
+    },
+    "Кто больше польёт вовремя": {
+      "extractionState": "manual"
+    },
+    "Кто больше польёт до десяти утра": {
+      "extractionState": "manual"
+    },
     "Кто хочет пить": {
       "extractionState": "manual",
       "localizations": {
@@ -75081,6 +75120,9 @@
       "extractionState": "manual"
     },
     "Листья зелёные, тревожных пятен не видно. Так держать.": {
+      "extractionState": "manual"
+    },
+    "Лучшая череда": {
       "extractionState": "manual"
     },
     "Любимчик года": {
@@ -92913,6 +92955,9 @@
         }
       }
     },
+    "Начнётся %@": {
+      "extractionState": "manual"
+    },
     "Не вижу растения — наведите камеру на него": {
       "extractionState": "manual"
     },
@@ -105085,6 +105130,9 @@
         }
       }
     },
+    "Отправить счёт": {
+      "extractionState": "manual"
+    },
     "Отсканировать": {
       "extractionState": "manual",
       "localizations": {
@@ -109679,6 +109727,9 @@
           }
         }
       }
+    },
+    "Передать черенок": {
+      "extractionState": "manual"
     },
     "Переезд в горшок побольше со свежей землёй. Обычно раз в год-два, весной.": {
       "extractionState": "manual",
@@ -123909,6 +123960,9 @@
         }
       }
     },
+    "Пока в таблице только вы: друзья появятся, когда пришлют свой код.": {
+      "extractionState": "manual"
+    },
     "Покажите друзьям, как рос ваш сад.": {
       "extractionState": "manual",
       "localizations": {
@@ -126282,6 +126336,9 @@
       }
     },
     "Полив вовремя — сверху": {
+      "extractionState": "manual"
+    },
+    "Полив —": {
       "extractionState": "manual"
     },
     "Поливаем по очереди…": {
@@ -137281,6 +137338,9 @@
         }
       }
     },
+    "Полные недели заданий": {
+      "extractionState": "manual"
+    },
     "Полный доступ дают в настройках телефона: Sprout → Календари.": {
       "extractionState": "manual",
       "localizations": {
@@ -140166,6 +140226,9 @@
     "Посадите первое растение — и появятся задания.": {
       "extractionState": "manual"
     },
+    "Посадится со сроками ухода, как у друга.": {
+      "extractionState": "manual"
+    },
     "Посадить": {
       "extractionState": "manual",
       "localizations": {
@@ -140452,6 +140515,9 @@
           }
         }
       }
+    },
+    "Посадить: скопируйте это сообщение целиком и нажмите «Вставить черенок» в Sprout → Добавить.": {
+      "extractionState": "manual"
     },
     "После полива по узору бежит цветная волна — так видно, что полив засчитан.": {
       "extractionState": "manual",
@@ -160119,6 +160185,9 @@
         }
       }
     },
+    "Сад друга — на %@. Обновится, когда друг пришлёт код снова.": {
+      "extractionState": "manual"
+    },
     "Сад заперт": {
       "extractionState": "manual",
       "localizations": {
@@ -162710,6 +162779,9 @@
           }
         }
       }
+    },
+    "Сады рядом": {
+      "extractionState": "manual"
     },
     "Самая длинная череда": {
       "extractionState": "manual",
@@ -180872,6 +180944,9 @@
     "Сравните с историей полива: земля не пересыхала и не стояла мокрой?": {
       "extractionState": "manual"
     },
+    "Сравнить сады": {
+      "extractionState": "manual"
+    },
     "Средняя влажность — %@.": {
       "extractionState": "manual",
       "localizations": {
@@ -183172,6 +183247,9 @@
       }
     },
     "Сто поливов подряд вовремя.": {
+      "extractionState": "manual"
+    },
+    "Ступени медалей": {
       "extractionState": "manual"
     },
     "Ступень медали": {
@@ -190412,6 +190490,9 @@
         }
       }
     },
+    "Убрать черенок": {
+      "extractionState": "manual"
+    },
     "Уведомление на телефон, когда земля у растения подсохла ниже выбранного порога.": {
       "extractionState": "manual",
       "localizations": {
@@ -194726,7 +194807,13 @@
         }
       }
     },
+    "Уровень": {
+      "extractionState": "manual"
+    },
     "Уровень %1$lld из %2$lld": {
+      "extractionState": "manual"
+    },
+    "Уровень %1$lld — %2$@.": {
       "extractionState": "manual"
     },
     "Уровень %lld": {
@@ -203076,6 +203163,9 @@
         }
       }
     },
+    "Челлендж": {
+      "extractionState": "manual"
+    },
     "Чем выше ступень, тем чаще лейка.": {
       "extractionState": "manual",
       "localizations": {
@@ -204510,6 +204600,12 @@
           }
         }
       }
+    },
+    "Черенок · %@": {
+      "extractionState": "manual"
+    },
+    "Черенок от друга": {
+      "extractionState": "manual"
     },
     "Чеснок": {
       "extractionState": "manual",
@@ -205952,6 +206048,9 @@
         }
       }
     },
+    "Чтобы участвовать, скопируйте это сообщение целиком и нажмите «Вставить» в Sprout → Профиль → Друзья. Счёт присылайте своим кодом — кнопкой «Позвать».": {
+      "extractionState": "manual"
+    },
     "Шнурок": {
       "extractionState": "manual",
       "localizations": {
@@ -207388,6 +207487,9 @@
       }
     },
     "Это подсказка по снимку, а не приговор: тень, блик или белые цветки телефон может принять за беду.": {
+      "extractionState": "manual"
+    },
+    "Это черенок, а не код друга. Посадите его на вкладке «Добавить» — кнопкой «Вставить» у черенка.": {
       "extractionState": "manual"
     },
     "Этот iPhone не умеет сканировать: нужен LiDAR.": {
@@ -209401,6 +209503,9 @@
           }
         }
       }
+    },
+    "и": {
+      "extractionState": "manual"
     },
     "и ещё %@": {
       "extractionState": "manual",

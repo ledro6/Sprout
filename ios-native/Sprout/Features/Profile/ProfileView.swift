@@ -16,6 +16,15 @@ struct ProfileView: View {
 
     @State private var grower = Gardener(experience: 0)
 
+    /// Остальное о саде для кода и сравнения — тоже не в теле.
+    @State private var kinds = 0
+    @State private var aim: Int?
+
+    /// Сад друга рядом со своим.
+    @State private var comparing: Rival?
+    /// Вставили челлендж — сказать, во что вступили.
+    @State private var joined: Race?
+
     @State private var renaming = false
     @State private var draft = ""
 
@@ -36,7 +45,10 @@ struct ProfileView: View {
         // Подписью, а не именем: неназвавшийся тоже должен попасть в таблицу
         // и в код.
         Rival.mine(owner: garden.signed, score: score,
-                   plants: garden.plantCount)
+                   plants: garden.plantCount, level: grower.level,
+                   medals: Cabinet.shared.total, kinds: kinds, aim: aim,
+                   weeks: QuestBook.shared.full,
+                   race: friends.current().map { $0.score(garden.log) })
     }
 
     private var named: Bool { !garden.owner.isEmpty }
@@ -102,6 +114,10 @@ struct ProfileView: View {
         score = garden.score()
         grower = Gardener.of(log: garden.log, quests: QuestBook.shared.done,
                              medals: Cabinet.shared.total)
+        kinds = Set(garden.rooms.flatMap(\.plants).compactMap {
+            Preset.known($0.species)
+        }).count
+        aim = Rival.aim(garden.log)
     }
 
     // MARK: - Хозяин
@@ -345,11 +361,31 @@ struct ProfileView: View {
         SproutGroup("Друзья") {
             table
 
+            if let race = friends.current() {
+                SproutDivider()
+                RaceCard(race: race, places: friends.standings(race, mine: me),
+                         mine: me.card) {
+                    withAnimation(Motion.pill) { friends.leave(race.id) }
+                    Feel.toss()
+                }
+                .transition(.blurReplace)
+            }
+
             SproutDivider()
 
             HStack(spacing: 10) {
                 ShareLink(item: me.card) {
                     Label("Позвать", systemImage: "square.and.arrow.up")
+                }
+                .buttonStyle(.glass)
+
+                Menu {
+                    ForEach(Race.kinds) { quest in
+                        Button(Race.title(quest)) { challenge(quest) }
+                    }
+                } label: {
+                    Label("Челлендж", systemImage: "flag.checkered")
+                        .lineLimit(1)
                 }
                 .buttonStyle(.glass)
 
@@ -385,6 +421,26 @@ struct ProfileView: View {
             Text(Lang.format("Счёт от %@. Обновится, когда друг пришлёт код снова.",
                              stamp(welcomed)))
         }
+        .alert(joined?.title ?? "", isPresented: Binding(
+            get: { joined != nil },
+            set: { if !$0 { joined = nil } }
+        )) {
+            Button("Хорошо", role: .cancel) {}
+        } message: {
+            Text(Lang.format("Вы в челлендже от %@. Свой счёт отправляйте кнопкой «Отправить счёт».",
+                             joined?.host ?? ""))
+        }
+        .sheet(item: $comparing) { friend in
+            GardenCompare(me: me, friend: friend)
+        }
+        .animation(Motion.pill, value: friends.races)
+    }
+
+    /// Новый челлендж — сразу с собой; друзей зовёт кнопка в карточке.
+    private func challenge(_ quest: Quest) {
+        let race = Race.new(quest, host: garden.signed)
+        withAnimation(Motion.pill) { friends.join(race) }
+        Feel.done()
     }
 
     private func stamp(_ rival: Rival?) -> String {
@@ -401,18 +457,21 @@ struct ProfileView: View {
                         .transition(.blurReplace)
                 } else {
                     // Меню только на чужой строке: пустое на своей всё равно
-                    // открывалось бы.
-                    row(item.offset + 1, item.element)
-                        .contextMenu {
-                            Button(role: .destructive) {
-                                withAnimation(Motion.pill) {
-                                    friends.remove(item.element.id)
-                                }
-                            } label: {
-                                Label("Убрать из таблицы",
-                                      systemImage: "person.slash")
+                    // открывалось бы. Нажатие — сады рядом.
+                    Button { comparing = item.element } label: {
+                        row(item.offset + 1, item.element)
+                    }
+                    .buttonStyle(.plain)
+                    .contextMenu {
+                        Button(role: .destructive) {
+                            withAnimation(Motion.pill) {
+                                friends.remove(item.element.id)
                             }
+                        } label: {
+                            Label("Убрать из таблицы",
+                                  systemImage: "person.slash")
                         }
+                    }
                         .transition(.blurReplace)
                 }
             }
@@ -467,8 +526,23 @@ struct ProfileView: View {
             .dateTime.day().month(.abbreviated)))
     }
 
-    /// Удалось — от кнопки вставки идёт волна.
+    /// Удалось — от кнопки вставки идёт волна. Вставить можно и
+    /// челлендж; черенок сажается на вкладке «Добавить».
     private func invite(_ text: String) {
+        if let race = Race.read(text) {
+            withAnimation(Motion.pill) {
+                friends.join(race)
+                joined = race
+            }
+            Cheer.shared.now(from: paste.rect)
+            Feel.done()
+            return
+        }
+        if Cutting.read(text) != nil {
+            trouble = Lang.text("Это черенок, а не код друга. Посадите его на вкладке «Добавить» — кнопкой «Вставить» у черенка.")
+            Feel.wrong()
+            return
+        }
         guard let rival = friends.take(text, mine: garden.owner) else {
             trouble = Rival.read(text) == nil
                 ? Lang.text("""
