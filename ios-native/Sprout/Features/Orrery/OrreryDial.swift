@@ -142,7 +142,17 @@ struct OrreryDial: View {
                 let r = diameter(of: planet) / 2
                 let disc = Path(ellipseIn: CGRect(x: at.x - r, y: at.y - r,
                                                   width: r * 2, height: r * 2))
-                context.fill(disc, with: .color(Palette.level(planet.moisture)))
+                // Шар, а не кружок: светлая сторона смотрит на солнце, по
+                // другой — ночь.
+                let tone = Palette.level(planet.moisture)
+                let away = CGVector(dx: middle.x - at.x, dy: middle.y - at.y)
+                let length = max(hypot(away.dx, away.dy), 1)
+                let lit = CGPoint(x: at.x + away.dx / length * r * 0.45,
+                                  y: at.y + away.dy / length * r * 0.45)
+                context.fill(disc, with: .radialGradient(
+                    Gradient(colors: [tone.mix(with: .white, by: 0.5), tone,
+                                      tone.mix(with: .black, by: 0.55)]),
+                    center: lit, startRadius: 0, endRadius: r * 1.7))
                 if planet.id == picked {
                     context.stroke(disc, with: .color(.white), lineWidth: 2)
                     let name = context.resolve(

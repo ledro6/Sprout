@@ -134,6 +134,60 @@ enum Orrery {
         return out.sorted { ($0.day, $0.rank) < ($1.day, $1.rank) }
     }
 
+    /// Приметы неба — «гороскоп» сада: кто быстрее всех ходит по кругу, кто
+    /// медленнее, кто сойдётся у луча в один день и кто сейчас на разных
+    /// концах неба. Только то, что правда: одинокой планете не с кем
+    /// сходиться.
+    enum Omen: Hashable, Sendable {
+        /// Меркурий сада — самая ближняя орбита.
+        case swift(name: String, period: Int)
+        /// Нептун сада — самая дальняя.
+        case patient(name: String, period: Int)
+        /// Ближе всех к лучу — следующая на полив; сухая уже ждёт.
+        case zenith(name: String, waiting: Bool)
+        /// Двое и больше попросят воды в один день.
+        case conjunction(names: [String], day: Int)
+        /// Сейчас по разные стороны солнца.
+        case opposition(String, String)
+    }
+
+    /// Насколько «напротив» — допуск к прямой через солнце.
+    static let facing = 20.0 * .pi / 180
+
+    static func omens(_ orbits: [Orbit], drift: Double = 0) -> [Omen] {
+        guard let first = orbits.first else { return [] }
+        var out: [Omen] = []
+        let planets = sky(orbits, ahead: 0, drift: drift)
+        if let next = planets.max(by: { ($0.angle, $1.name) < ($1.angle, $0.name) }) {
+            out.append(.zenith(name: next.name, waiting: next.moisture <= 0))
+        }
+        if orbits.count > 1, let last = orbits.last,
+           Int(first.period.rounded()) != Int(last.period.rounded()) {
+            out.append(.swift(name: first.name,
+                              period: max(Int(first.period.rounded()), 1)))
+            out.append(.patient(name: last.name,
+                                period: max(Int(last.period.rounded()), 1)))
+        }
+        if let meeting = parades(orbits, least: 2)
+            .min(by: { ($0.day, -$0.ids.count) < ($1.day, -$1.ids.count) }) {
+            out.append(.conjunction(names: meeting.names, day: meeting.day))
+        }
+        var best: (Planet, Planet, Double)?
+        for (index, one) in planets.enumerated() {
+            for other in planets[(index + 1)...] {
+                var gap = abs(one.angle - other.angle)
+                    .truncatingRemainder(dividingBy: 2 * .pi)
+                gap = min(gap, 2 * .pi - gap)
+                let miss = abs(.pi - gap)
+                if miss <= facing, miss < best?.2 ?? .infinity {
+                    best = (one, other, miss)
+                }
+            }
+        }
+        if let best { out.append(.opposition(best.0.name, best.1.name)) }
+        return out
+    }
+
     /// Самые большие парады — сначала многолюдные, из равных — ближние.
     /// День — тем же округлением, что «Следующий полив» на карточке.
     static func parades(_ orbits: [Orbit], within days: Double = reach,
@@ -174,6 +228,11 @@ enum Spheres {
 
     /// Сколько звучит нота.
     static let ring = 2.4
+
+    /// На столько секунд картинка идёт впереди звука. Звук ставится точно,
+    /// с задержкой вывода, а кадр доходит до глаз на несколько кадров позже —
+    /// и нота звучала раньше, чем планета касалась луча.
+    static let lead = 0.12
 
     struct Note: Hashable, Sendable {
         var at: Double

@@ -1,9 +1,10 @@
 import SwiftUI
 
-/// Новая награда: затемнение, медаль влетает вращением, сверху сыплются
-/// блёстки её металла. Одна за раз; следующая — после «Отлично».
+/// Новая ступень награды: затемнение, медаль вырастает на месте, позади
+/// неё вспыхивают искры, сверху сыплются блёстки её металла. Одна за раз;
+/// следующая — после «Отлично».
 struct Celebration: View {
-    let award: Award
+    let rank: Rank
     let done: () -> Void
 
     @State private var shown = false
@@ -13,7 +14,7 @@ struct Celebration: View {
             Rectangle()
                 .fill(.black.opacity(shown ? 0.62 : 0))
                 .ignoresSafeArea()
-            Glitter(alloy: award.alloy)
+            Glitter(alloy: rank.alloy)
                 .ignoresSafeArea()
                 .allowsHitTesting(false)
             VStack(spacing: 14) {
@@ -21,13 +22,21 @@ struct Celebration: View {
                     .font(Typography.groupTitle)
                     .foregroundStyle(.white.opacity(0.75))
                     .textCase(.uppercase)
-                MedalStage(award: award, earned: true, spinIn: true)
+                MedalStage(rank: rank, earned: true,
+                           date: Cabinet.shared.date(rank))
                     .frame(height: 300)
-                Text(award.title)
+                    .environment(\.colorScheme, .dark)
+                Text(rank.title)
                     .font(Typography.welcome)
                     .foregroundStyle(.white)
                     .multilineTextAlignment(.center)
-                Text(award.detail)
+                Text(Lang.format("%1$@ · уровень %2$lld из %3$lld",
+                                 rank.alloy.title, rank.level,
+                                 rank.award.levels))
+                    .font(Typography.settingNote)
+                    .foregroundStyle(.white.opacity(0.7))
+                    .monospacedDigit()
+                Text(rank.detail)
                     .font(Typography.settingRow)
                     .foregroundStyle(.white.opacity(0.78))
                     .multilineTextAlignment(.center)

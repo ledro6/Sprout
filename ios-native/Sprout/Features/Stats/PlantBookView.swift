@@ -153,46 +153,18 @@ struct PlantBookView: View {
 
     // MARK: - История
 
-    /// Точки — поливы периода; выше — больше воды оставалось. Черты зон —
-    /// те же цвета, что у тени карточки.
+    /// Как сохла земля — линией: полив поднимает к ста процентам, дальше
+    /// она ползёт вниз по сроку, пока не польют снова. Полосы — те же цвета,
+    /// что у тени карточки.
     private var history: some View {
-        let points = book.recent.compactMap { entry in
-            entry.left.map { (when: entry.when, left: $0) }
-        }
+        let points = plant.map { Diary.curve(garden.log, plant: $0) } ?? []
         return SproutGroup("История") {
             if points.isEmpty {
-                Text("За этот период поливов не было.")
+                Text("Поливов ещё не было.")
                     .font(Typography.settingNote)
                     .foregroundStyle(.secondary)
             } else {
-                Chart {
-                    RuleMark(y: .value(Self.levelAxis, 20.0))
-                        .foregroundStyle(Palette.alarm.opacity(0.6))
-                        .lineStyle(StrokeStyle(lineWidth: 1, dash: [4, 4]))
-                    RuleMark(y: .value(Self.levelAxis, 40.0))
-                        .foregroundStyle(Palette.warn.opacity(0.6))
-                        .lineStyle(StrokeStyle(lineWidth: 1, dash: [4, 4]))
-                    ForEach(Array(points.enumerated()), id: \.offset) { item in
-                        PointMark(x: .value(Self.timeAxis, item.element.when),
-                                  y: .value(Self.levelAxis,
-                                            item.element.left * 100))
-                            .foregroundStyle(Palette.zone(
-                                Almanac.Aim.zone(item.element.left)))
-                            .symbolSize(70)
-                    }
-                }
-                .chartYScale(domain: 0.0 ... 100.0)
-                .chartYAxis {
-                    AxisMarks(position: .leading,
-                              values: [0.0, 20.0, 40.0, 100.0]) { value in
-                        AxisGridLine().foregroundStyle(Palette.ink.opacity(0.08))
-                        AxisValueLabel {
-                            Text(Stats.percent((value.as(Double.self) ?? 0)
-                                               / 100))
-                        }
-                    }
-                }
-                .frame(height: Metrics.chartHeight)
+                DryingChart(points: points)
             }
         }
         .sproutRide()

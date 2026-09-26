@@ -233,6 +233,8 @@ struct AddView: View {
                     if Muse.ready {
                         Button { Task { await invent() } } label: {
                             Label("Придумать", systemImage: "sparkles")
+                                .lineLimit(1)
+                                .fixedSize()
                         }
                         .buttonStyle(.glass)
                         .font(Typography.settingNote)

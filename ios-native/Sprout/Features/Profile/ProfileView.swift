@@ -60,7 +60,12 @@ struct ProfileView: View {
                         .padding(.top, 8)
                         .padding(.bottom, 28)
                     }
+                    // Ровно в ширину экрана: системная кнопка вставки
+                    // просила места больше, чем есть, и весь экран ездил
+                    // вбок.
+                    .containerRelativeFrame(.horizontal)
                 }
+                .scrollBounceBehavior(.basedOnSize, axes: .horizontal)
                 .background { SproutBackground() }
                 .sproutNotchCover()
                 .toolbar(.hidden, for: .navigationBar)
@@ -262,21 +267,20 @@ struct ProfileView: View {
             NavigationLink { AwardsView() } label: {
                 HStack(spacing: 10) {
                     if latest.isEmpty {
-                        MedalBadge(award: .firstDrop, earned: false)
+                        MedalBadge(rank: Rank(.drops, 1), earned: false)
                             .frame(width: 44, height: 44)
                         Text("Первая — за первый полив")
                             .font(Typography.settingNote)
                             .foregroundStyle(.secondary)
                     } else {
-                        ForEach(latest) { award in
-                            MedalBadge(award: award, earned: true)
+                        ForEach(latest) { rank in
+                            MedalBadge(rank: rank, earned: true)
                                 .frame(width: 44, height: 44)
                         }
                     }
                     Spacer(minLength: 8)
                     Text(Lang.format("%1$lld из %2$lld",
-                                     Cabinet.shared.earned.count,
-                                     Award.allCases.count))
+                                     Cabinet.shared.total, Award.total))
                         .font(Typography.settingNote)
                         .foregroundStyle(.secondary)
                         .monospacedDigit()
@@ -292,9 +296,8 @@ struct ProfileView: View {
     }
 
     /// Четыре последние — больше в строку не встанет.
-    private var latest: [Award] {
-        Cabinet.shared.earned.sorted { $0.value > $1.value }
-            .prefix(4).map(\.key)
+    private var latest: [Rank] {
+        Array(Cabinet.shared.latest.prefix(4))
     }
 
     // MARK: - Друзья
@@ -319,6 +322,7 @@ struct ProfileView: View {
                     Task { @MainActor in invite(text) }
                 }
                 .buttonBorderShape(.capsule)
+                .fixedSize()
                 .onGeometryChange(for: CGRect.self) { $0.frame(in: .global) }
                     action: { paste.rect = $0 }
             }
@@ -389,7 +393,9 @@ struct ProfileView: View {
                 .font(Typography.figureCaption)
                 .foregroundStyle(.tertiary)
                 .contentTransition(.numericText())
-                .frame(width: 16, alignment: .trailing)
+                .lineLimit(1)
+                .fixedSize()
+                .frame(minWidth: 16, alignment: .trailing)
             VStack(alignment: .leading, spacing: 1) {
                 Text(rival.name)
                     .font(Typography.settingRow)

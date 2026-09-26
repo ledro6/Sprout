@@ -277,18 +277,18 @@ struct RecapPage: View {
             let columns = [GridItem(.adaptive(minimum: 70), spacing: 12)]
             LazyVGrid(columns: columns, spacing: 12) {
                 ForEach(Array(recap.awards.enumerated()), id: \.element) {
-                    index, award in
-                    MedalBadge(award: award, earned: true)
+                    index, rank in
+                    // Медаль вырастает на месте, как карточка растения.
+                    MedalBadge(rank: rank, earned: true)
                         .frame(width: 70, height: 70)
-                        .rotation3DEffect(.degrees(shown ? 0 : 180),
-                                          axis: (x: 0, y: 1, z: 0))
+                        .scaleEffect(shown ? 1 : Motion.medalScale)
                         .opacity(shown ? 1 : 0)
-                        .animation(.spring(duration: 0.8, bounce: 0.3)
+                        .animation(Motion.medal
                             .delay(0.6 + Double(index) * 0.12), value: shown)
                 }
             }
             line(Lang.format("Получено %1$lld из %2$lld",
-                             Cabinet.shared.earned.count, Award.allCases.count),
+                             Cabinet.shared.total, Award.total),
                  delay: 1.6)
         }
     }

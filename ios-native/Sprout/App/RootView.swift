@@ -153,12 +153,12 @@ struct RootView: View {
     /// знакомства.
     @ViewBuilder
     private var celebration: some View {
-        if let award = Cabinet.shared.fresh.first,
+        if let rank = Cabinet.shared.fresh.first,
            Launch.shared.step >= Launch.last, settings.toured {
-            Celebration(award: award) {
-                withAnimation(Motion.leave) { Cabinet.shared.shown(award) }
+            Celebration(rank: rank) {
+                withAnimation(Motion.leave) { Cabinet.shared.shown(rank) }
             }
-            .id(award)
+            .id(rank)
             .transition(.opacity)
         }
     }

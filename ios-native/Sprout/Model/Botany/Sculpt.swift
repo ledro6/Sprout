@@ -205,9 +205,12 @@ enum Sculpt {
     /// Нормаль смотрит вправо от хода профиля: вверх по внешней стенке —
     /// наружу, вниз по внутренней — внутрь. Рёбра — как у кактуса: радиус
     /// гуляет по кругу. Шов текстуры — лишний столбец, а нормали на шве
-    /// сведены: иначе по горшку шла бы складка.
+    /// сведены: иначе по горшку шла бы складка. `ribFrom` — рёбра только
+    /// там, где профиль не ближе к оси: насечка по гурту медали, а не по
+    /// всему диску.
     static func lathe(_ profile: [SIMD2<Float>], segments: Int,
-                      ribs: Int = 0, ribDepth: Float = 0) -> Mesh3D {
+                      ribs: Int = 0, ribDepth: Float = 0,
+                      ribFrom: Float = 0) -> Mesh3D {
         var mesh = Mesh3D()
         var lengths: [Float] = [0]
         for index in 1 ..< max(profile.count, 1) {
@@ -220,7 +223,8 @@ enum Sculpt {
         for (ring, point) in profile.enumerated() {
             for step in 0 ... segments {
                 let angle = 2 * Float.pi * Float(step) / Float(segments)
-                let rib = 1 + ribDepth * cos(Float(ribs) * angle)
+                let rib = point.x >= ribFrom
+                    ? 1 + ribDepth * cos(Float(ribs) * angle) : 1
                 let radius = point.x * rib
                 mesh.positions.append(Vec3(radius * cos(angle), point.y,
                                            radius * sin(angle)))

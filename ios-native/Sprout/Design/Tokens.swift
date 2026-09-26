@@ -137,6 +137,9 @@ enum Typography {
 
     static let navTitle = Font.system(.title3, weight: .semibold)
 
+    /// Знак круглых кнопок в панели экрана растения — крупнее заголовка.
+    static let navButton = Font.system(.title2, weight: .semibold)
+
     static let detail = Font.system(.body, weight: .semibold)
 
     /// Единственный шрифт в пунктах: плашка — знак с капсулой известной
@@ -288,6 +291,10 @@ enum Metrics {
     /// Коробка задаёт размер кнопки, шестерёнка крупнее коробки и выходит за
     /// неё.
     static let gearBox: CGFloat = 24
+
+    /// Кнопки «назад» и «ещё» на экране растения: до них тянуться через
+    /// весь экран — коробка больше, чем у шестерёнки главной.
+    static let navBox: CGFloat = 32
     static let gearGlyph: CGFloat = 24
 
     /// Мельче шестерёнки: клетки и полоски плотнее и читались бы жирнее.

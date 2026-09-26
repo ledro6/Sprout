@@ -30,6 +30,10 @@ struct PlantView: View {
 
     @State private var chrome = false
 
+    /// Список записей под графиком — свёрнут: он нужен, чтобы удалить
+    /// ошибочную.
+    @State private var listing = false
+
     private var plant: Plant? { garden.plant(id: plantID) }
 
     var body: some View {
@@ -136,13 +140,13 @@ struct PlantView: View {
         .onDisappear { keepNote() }
     }
 
-    /// Круг — размера системной кнопки «назад», знак прежний. Коробка та же,
-    /// что у кнопок в углу главной.
+    /// Круг крупнее системной кнопки «назад»: до неё тянуться через весь
+    /// экран, и маленькая промахивалась.
     private var back: some View {
         Button { close() } label: {
             Image(systemName: "chevron.backward")
-                .font(Typography.navTitle)
-                .frame(width: Metrics.gearBox, height: Metrics.gearBox)
+                .font(Typography.navButton)
+                .frame(width: Metrics.navBox, height: Metrics.navBox)
         }
         .buttonStyle(.glass)
         .buttonBorderShape(.circle)
@@ -190,8 +194,8 @@ struct PlantView: View {
             }
         } label: {
             Image(systemName: "ellipsis")
-                .font(Typography.navTitle)
-                .frame(width: Metrics.gearBox, height: Metrics.gearBox)
+                .font(Typography.navButton)
+                .frame(width: Metrics.navBox, height: Metrics.navBox)
         }
         .menuStyle(.button)
         .buttonStyle(.glass)
@@ -358,13 +362,19 @@ struct PlantView: View {
                 .fixedSize(horizontal: false, vertical: true)
             HStack(spacing: Metrics.actionGap) {
                 Button { adopt(days) } label: {
-                    Text("Поменять срок").frame(maxWidth: .infinity)
+                    Text("Поменять срок")
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.8)
+                        .frame(maxWidth: .infinity)
                 }
                 .buttonStyle(.glassProminent)
                 Button {
                     withAnimation(Motion.enter) { garden.quiet(plantID, days) }
                 } label: {
-                    Text("Оставить").frame(maxWidth: .infinity)
+                    Text("Оставить")
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.8)
+                        .frame(maxWidth: .infinity)
                 }
                 .buttonStyle(.glass)
             }
@@ -472,8 +482,9 @@ struct PlantView: View {
         .sproutRide()
     }
 
-    /// История поливов. Новая строка приходит `blurReplace`, числа —
-    /// переходом цифр; вытесненная строка уходит тем же размытием.
+    /// История поливов: сколько и как часто, график высыхания и, под
+    /// раскрывашкой, сами записи. Новое приходит `blurReplace`, числа —
+    /// переходом цифр.
     private func diary(_ plant: Plant) -> some View {
         let diary = Diary.of(garden.log, plant: plant.id)
         return VStack(alignment: .leading, spacing: Metrics.diaryGap) {
@@ -489,16 +500,29 @@ struct PlantView: View {
             } else {
                 tally(diary)
                     .transition(.blurReplace)
-                ForEach(Array(diary.entries.prefix(Diary.shown)),
-                        id: \.self) { moment in
-                    entry(moment)
-                        .transition(.blurReplace)
-                }
-                Text("Ошибочную запись удалит долгое нажатие.")
-                    .font(Typography.settingNote)
-                    .foregroundStyle(.secondary)
-                    .padding(.top, 4)
+                DryingChart(points: Diary.curve(garden.log, plant: plant))
                     .transition(.blurReplace)
+                DisclosureGroup(isExpanded: $listing.animation(Motion.pill)) {
+                    VStack(alignment: .leading, spacing: Metrics.diaryGap) {
+                        ForEach(Array(diary.entries.prefix(Diary.shown)),
+                                id: \.self) { moment in
+                            entry(moment)
+                                .transition(.blurReplace)
+                        }
+                        Text("Ошибочную запись удалит долгое нажатие.")
+                            .font(Typography.settingNote)
+                            .foregroundStyle(.secondary)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .padding(.top, 4)
+                    }
+                    .padding(.top, 8)
+                } label: {
+                    Text("Записи")
+                        .font(Typography.settingRow)
+                        .foregroundStyle(Palette.ink)
+                }
+                .tint(Palette.accent)
+                .transition(.blurReplace)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)

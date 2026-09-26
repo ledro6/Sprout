@@ -6,6 +6,11 @@ import SwiftUI
 enum Motion {
     static let appear = Animation.spring(duration: 0.45, bounce: 0.28)
 
+    /// Медаль появляется как карточка растения — растёт на месте, не
+    /// отворачиваясь, только издалека: она одна на экране.
+    static let medal = Animation.spring(duration: 0.6, bounce: 0.32)
+    static let medalScale: CGFloat = 0.25
+
     /// Шаг волны появления: восемь карточек укладываются в полсекунды.
     static let stagger = 0.055
 

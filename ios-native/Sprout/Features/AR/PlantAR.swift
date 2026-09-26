@@ -174,6 +174,7 @@ struct PlantAR: View {
                         }
                     }
                     .font(Typography.detail)
+                    .lineLimit(1)
                     .padding(.horizontal, 10)
                     .padding(.vertical, 6)
                 }
@@ -182,6 +183,8 @@ struct PlantAR: View {
                 Button { stage.replace() } label: {
                     Label("Переставить", systemImage: "move.3d")
                         .font(Typography.detail)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.75)
                         .padding(.vertical, 6)
                 }
                 .buttonStyle(.glass)
@@ -189,6 +192,8 @@ struct PlantAR: View {
                     Button { stage.waterThirsty() } label: {
                         Label("Полить сухих", systemImage: "drop.triangle")
                             .font(Typography.detail)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.75)
                             .padding(.vertical, 6)
                     }
                     .buttonStyle(.glass)

@@ -1,9 +1,11 @@
 import SwiftUI
 
 /// Планетарий сада. Живой: планеты плывут, пока сад сохнет, сухие ждут у
-/// ворот. Ползунок уносит на дни вперёд — как будет, если поливать вовремя;
-/// «Проиграть месяц» пролетает их за двадцать секунд, и каждый полив
-/// звучит нотой. Небо тёмное в обеих темах.
+/// ворот. Машина времени уносит на дни вперёд — как будет, если поливать
+/// вовремя: пальцем по партитуре месяца или ползунком. «Проиграть месяц»
+/// пролетает их за двадцать секунд, и каждый полив звучит нотой. Под
+/// циферблатом — приметы неба: кто Меркурий сада, кто сойдётся у луча.
+/// Небо тёмное в обеих темах.
 struct OrreryView: View {
     @Environment(Garden.self) private var garden
 
@@ -33,10 +35,11 @@ struct OrreryView: View {
                         .hintSpot(.orreryDial)
                     card(crossings)
                         .hintSpot(.orreryCard)
-                    time(crossings)
+                    time(crossings, count: orbits.count)
                         .hintSpot(.orreryTime)
                     play(orbits, crossings: crossings)
                         .hintSpot(.orreryPlay)
+                    omens(orbits)
                     parades(orbits)
                         .hintSpot(.orreryParades)
                 }
@@ -224,6 +227,7 @@ struct OrreryView: View {
                     Button { water(plant.id) } label: {
                         Label("Полить", systemImage: "drop.fill")
                             .font(Typography.detail)
+                            .lineLimit(1)
                             .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(.glassProminent)
@@ -253,7 +257,8 @@ struct OrreryView: View {
 
     // MARK: - Время
 
-    private func time(_ crossings: [Orrery.Crossing]) -> some View {
+    private func time(_ crossings: [Orrery.Crossing],
+                      count: Int) -> some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack {
                 Label("Машина времени", systemImage: "clock.arrow.2.circlepath")
@@ -265,6 +270,11 @@ struct OrreryView: View {
                     .font(Typography.settingNote)
                     .foregroundStyle(.secondary)
                     .contentTransition(.numericText())
+            }
+            TimelineView(.animation(paused: playing == nil)) { context in
+                OrreryScore(crossings: crossings, count: count,
+                            day: shown(at: context.date),
+                            seek: playing == nil ? { ahead = $0 } : nil)
             }
             Slider(value: $ahead, in: 0 ... Orrery.reach, step: 0.25) {
                 Text("Машина времени")
@@ -307,6 +317,7 @@ struct OrreryView: View {
                             .contentTransition(.symbolEffect(.replace))
                     }
                     Text(playing == nil ? "Проиграть месяц" : "Остановить")
+                        .lineLimit(1)
                 }
                 .font(Typography.detail)
                 .frame(maxWidth: .infinity)
@@ -341,11 +352,12 @@ struct OrreryView: View {
         Task { @MainActor in
             await player.prepare(notes)
             preparing = false
-            // Картинка трогается, когда звук дойдёт до ушей: нота — ровно
-            // когда планета на луче.
+            // Картинка трогается, когда звук дойдёт до ушей, и чуть
+            // раньше — на путь кадра до глаз: нота — ровно когда планета на
+            // луче.
             let delay = player.start()
             withAnimation(Motion.pill) {
-                playing = Date().addingTimeInterval(delay)
+                playing = Date().addingTimeInterval(delay - Spheres.lead)
             }
         }
     }
@@ -364,6 +376,67 @@ struct OrreryView: View {
         withAnimation(Motion.pill) {
             playing = nil
             ahead = Orrery.reach
+        }
+    }
+
+    // MARK: - Приметы
+
+    /// Небо сада — приметы строками: кто у луча, кто быстрее всех, кто с
+    /// кем сойдётся и кто напротив кого.
+    @ViewBuilder
+    private func omens(_ orbits: [Orrery.Orbit]) -> some View {
+        let drift = Date().timeIntervalSince(garden.ticked) * Garden.speed
+            / 86_400
+        let omens = Orrery.omens(orbits, drift: drift)
+        if !omens.isEmpty {
+            VStack(alignment: .leading, spacing: Metrics.rowGap) {
+                Label("Небо сада", systemImage: "sparkles")
+                    .font(Typography.detail)
+                    .foregroundStyle(Palette.ink)
+                ForEach(omens, id: \.self) { omen in
+                    let line = Self.line(omen)
+                    HStack(alignment: .firstTextBaseline, spacing: 10) {
+                        Image(systemName: line.icon)
+                            .foregroundStyle(Palette.water)
+                            .frame(width: 22)
+                        Text(line.text)
+                            .font(Typography.settingNote)
+                            .foregroundStyle(.secondary)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                    .transition(.blurReplace)
+                }
+            }
+            .padding(Metrics.groupPadding)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .sproutPlate(in: RoundedRectangle(cornerRadius: Metrics.cardRadius,
+                                              style: .continuous))
+            .animation(Motion.pill, value: omens)
+        }
+    }
+
+    static func line(_ omen: Orrery.Omen) -> (icon: String, text: String) {
+        switch omen {
+        case .zenith(let name, let waiting):
+            ("arrow.up.circle",
+             waiting ? Lang.format("%@ ждёт у луча — пора полить.", name)
+                : Lang.format("Ближе всех к лучу — %@: попросит воды первым.",
+                              name))
+        case .swift(let name, let period):
+            ("hare", Lang.format("Меркурий сада — %1$@: пьёт %2$@.", name,
+                                 Lang.format("раз в %lld дней", period)))
+        case .patient(let name, let period):
+            ("tortoise", Lang.format("Нептун сада — %1$@: пьёт %2$@.", name,
+                                     Lang.format("раз в %lld дней", period)))
+        case .conjunction(let names, let day):
+            ("circle.circle",
+             Lang.format("Соединение: %1$@ попросят воды вместе — %2$@.",
+                         Stats.names(names),
+                         Stats.day(day).lowercased(with: Lang.locale)))
+        case .opposition(let first, let second):
+            ("arrow.left.and.right.circle",
+             Lang.format("Противостояние: %1$@ и %2$@ — по разные стороны солнца.",
+                         first, second))
         }
     }
 

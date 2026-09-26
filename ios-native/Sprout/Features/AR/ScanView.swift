@@ -33,7 +33,7 @@ struct ScanView: View {
         .overlay(alignment: .top) { header }
         .overlay(alignment: .bottom) { controls }
         .animation(Motion.enter, value: scanner.step)
-        .task { scanner.start(plantID) }
+        .task { await scanner.start(plantID) }
         .onDisappear { scanner.cancel() }
         .onChange(of: scanner.step) { _, step in
             guard case .done(let name) = step else { return }
@@ -52,10 +52,12 @@ struct ScanView: View {
             Spacer(minLength: 0)
 
             VStack(spacing: 4) {
-                Text(hint)
+                Text(scanner.trouble ?? hint)
                     .font(Typography.toastNote)
-                    .foregroundStyle(Palette.ink)
+                    .foregroundStyle(scanner.trouble == nil ? Palette.ink
+                                     : Palette.warn)
                     .multilineTextAlignment(.center)
+                    .fixedSize(horizontal: false, vertical: true)
                     .contentTransition(.numericText())
                 if case .capturing = scanner.step {
                     Text(Lang.format("Кадров: %lld", scanner.shots))
@@ -68,8 +70,10 @@ struct ScanView: View {
             .padding(.horizontal, 14)
             .padding(.vertical, 9)
             .glassEffect(.regular, in: .rect(cornerRadius: 18))
-            .id(hint)
+            .id(scanner.trouble ?? hint)
             .transition(.blurReplace)
+            // Поверх — подсказка ARKit, как вернуть опору; своя ей мешала бы.
+            .opacity(scanner.coaching ? 0 : 1)
 
             Spacer(minLength: 0)
 
@@ -86,9 +90,9 @@ struct ScanView: View {
         case .starting:
             Lang.text("Включаю камеру…")
         case .aiming:
-            Lang.text("Поставьте растение на стол или пол и наведите на него камеру")
+            Lang.text("Поставьте растение на стол или пол и наведите камеру так, чтобы была видна и опора")
         case .detecting:
-            Lang.text("Рамка обнимает растение с горшком? Тогда начинайте")
+            Lang.text("Рамка обнимает растение с горшком? Тогда начинайте. Края рамки тянутся пальцем")
         case .capturing where scanner.lapped:
             Lang.text("Круг пройден. Можно ещё один — пониже или повыше")
         case .capturing:
@@ -109,10 +113,14 @@ struct ScanView: View {
         HStack(spacing: 12) {
             switch scanner.step {
             case .aiming:
-                tool("Навести", icon: "viewfinder", prominent: true) {
-                    scanner.detect()
-                }
+                // Рамка встанет сама, как только камера найдёт опору.
+                ProgressView()
+                    .controlSize(.large)
+                    .padding(12)
+                    .glassEffect(.regular, in: .circle)
             case .detecting:
+                tool("Заново", icon: "arrow.counterclockwise",
+                       prominent: false) { scanner.redetect() }
                 tool("Начать съёмку", icon: "camera.aperture",
                        prominent: true) { scanner.capture() }
             case .capturing:
@@ -146,6 +154,8 @@ struct ScanView: View {
                         action: @escaping () -> Void) -> some View {
         let label = Label(title, systemImage: icon)
             .font(Typography.detail)
+            .lineLimit(1)
+            .minimumScaleFactor(0.8)
             .padding(.horizontal, 10)
             .padding(.vertical, 6)
         if prominent {

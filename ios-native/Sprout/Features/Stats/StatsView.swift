@@ -36,6 +36,9 @@ struct StatsView: View {
     /// «Итоги года» открыты — во весь экран, поверх вкладок.
     @State private var recapping = false
 
+    /// «Выбрать»: блоки качаются, их можно перетаскивать и убирать.
+    @State private var choosing = false
+
     /// Список растений: кого поливают чаще, кого реже, кто суше всех.
     enum Board: String, CaseIterable, Identifiable {
         case most, least, driest
@@ -67,38 +70,42 @@ struct StatsView: View {
             ScrollViewReader { reader in
                 ScrollView {
                     VStack(alignment: .leading, spacing: 0) {
-                        SproutHead("Статистика", walk: .stats)
+                        SproutHead("Статистика", walk: .stats,
+                                   choosing: blank ? nil : $choosing)
                         VStack(alignment: .leading,
                                spacing: Metrics.groupGap) {
-                            if book.plants.isEmpty && book.total == 0 {
-                                blank
+                            if blank {
+                                self.blankGroup
                             } else {
                                 picker.hintSpot(.statsPeriod)
-                                now.hintSpot(.statsNow)
-                                Button { recapping = true } label: {
-                                    RecapTeaser(year: year)
+                                if choosing {
+                                    Text("Перетащите блок, чтобы поменять местами, «−» — убрать.")
+                                        .font(Typography.settingNote)
+                                        .foregroundStyle(.secondary)
+                                        .fixedSize(horizontal: false, vertical: true)
+                                        .padding(.leading, 6)
+                                        .transition(.blurReplace)
                                 }
-                                .buttonStyle(.plain)
-                                .sproutRide()
-                                NavigationLink(value: StatsRoute.orrery) {
-                                    OrreryTeaser()
+                                let shown = settings.statsShown
+                                ForEach(Array(shown.enumerated()),
+                                        id: \.element) { item in
+                                    tile(item.element, index: item.offset)
                                 }
-                                .buttonStyle(.plain)
-                                .sproutRide()
-                                .hintSpot(.statsOrrery)
-                                summary.hintSpot(.statsSum)
-                                waterings
-                                aim.hintSpot(.statsAim)
-                                habits
-                                calendarGroup.hintSpot(.statsCalendar)
-                                if book.records.total > 0 { recordsGroup }
-                                forecast.hintSpot(.statsAhead)
-                                if !rooms.isEmpty { roomsGroup }
-                                if !book.plants.isEmpty {
-                                    plantsGroup.hintSpot(.statsPlants)
+                                if shown.isEmpty && !choosing {
+                                    Text("Все блоки убраны — нажмите «Выбрать», чтобы вернуть.")
+                                        .font(Typography.settingNote)
+                                        .foregroundStyle(.secondary)
+                                        .fixedSize(horizontal: false, vertical: true)
+                                        .padding(.leading, 6)
+                                }
+                                if choosing && !settings.statsHidden.isEmpty {
+                                    hiddenGroup
+                                        .transition(.blurReplace)
                                 }
                             }
                         }
+                        .animation(Motion.arrange, value: settings.statsShown)
+                        .animation(Motion.pill, value: choosing)
                         .padding(.horizontal, Metrics.contentMargin)
                         .padding(.top, 8)
                         .padding(.bottom, 28)
@@ -121,7 +128,7 @@ struct StatsView: View {
         .onAppear { recount() }
         .fullScreenCover(isPresented: $recapping) {
             RecapView(recap: Recap.of(garden.log, rooms: garden.rooms,
-                                      awards: Cabinet.shared.earned,
+                                      awards: Cabinet.shared.dated,
                                       year: year))
         }
         .onChange(of: garden.log.count) {
@@ -156,7 +163,133 @@ struct StatsView: View {
 
     // MARK: - Пусто
 
-    private var blank: some View {
+    /// Пустой сад — показывать нечего и выбирать тоже.
+    private var blank: Bool { book.plants.isEmpty && book.total == 0 }
+
+    // MARK: - Выбор блоков
+
+    /// Блок на своём месте. В выборе — качается, «−» убирает, перетаскивание
+    /// ставит перед тем, на который бросили; нажатия внутрь не проходят.
+    @ViewBuilder
+    private func tile(_ block: StatsBlock, index: Int) -> some View {
+        let plate = content(block)
+            .overlay {
+                if choosing {
+                    Color.clear.contentShape(Rectangle())
+                }
+            }
+            .overlay(alignment: .topLeading) {
+                if choosing {
+                    Button {
+                        withAnimation(Motion.arrange) { settings.hide(block) }
+                        Feel.toss()
+                    } label: {
+                        Image(systemName: "minus")
+                            .font(.system(size: 13, weight: .bold))
+                            .foregroundStyle(.white)
+                            .frame(width: 26, height: 26)
+                            .background(Circle().fill(Palette.alarm))
+                    }
+                    .buttonStyle(.plain)
+                    .offset(x: -8, y: -8)
+                    .accessibilityLabel(Lang.format("Убрать «%@»", block.title))
+                    .transition(.scale.combined(with: .opacity))
+                }
+            }
+            .modifier(Jiggle(on: choosing,
+                             phase: (Double(index) * 0.37)
+                                .truncatingRemainder(dividingBy: 1)))
+        if choosing {
+            plate
+                .draggable(block.rawValue) {
+                    Label(block.title, systemImage: block.icon)
+                        .font(Typography.detail)
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 10)
+                        .glassEffect(.regular, in: .capsule)
+                }
+                .dropDestination(for: String.self) { items, _ in
+                    guard let raw = items.first,
+                          let moved = StatsBlock(rawValue: raw),
+                          moved != block else { return false }
+                    withAnimation(Motion.arrange) {
+                        settings.move(moved, before: block)
+                    }
+                    Feel.pick()
+                    return true
+                }
+        } else {
+            plate
+        }
+    }
+
+    /// Блок как он есть. Пустые — без данных — не показываются вовсе.
+    @ViewBuilder
+    private func content(_ block: StatsBlock) -> some View {
+        switch block {
+        case .now:
+            now.hintSpot(.statsNow)
+        case .recap:
+            Button { recapping = true } label: { RecapTeaser(year: year) }
+                .buttonStyle(.plain)
+                .sproutRide()
+        case .orrery:
+            NavigationLink(value: StatsRoute.orrery) { OrreryTeaser() }
+                .buttonStyle(.plain)
+                .sproutRide()
+                .hintSpot(.statsOrrery)
+        case .summary:
+            summary.hintSpot(.statsSum)
+        case .waterings:
+            waterings
+        case .aim:
+            aim.hintSpot(.statsAim)
+        case .habits:
+            habits
+        case .calendar:
+            calendarGroup.hintSpot(.statsCalendar)
+        case .records:
+            if book.records.total > 0 { recordsGroup }
+        case .forecast:
+            forecast.hintSpot(.statsAhead)
+        case .rooms:
+            if !rooms.isEmpty { roomsGroup }
+        case .plants:
+            if !book.plants.isEmpty { plantsGroup.hintSpot(.statsPlants) }
+        }
+    }
+
+    /// Убранные — строками с «+»: вернуть на место, в конец.
+    private var hiddenGroup: some View {
+        SproutGroup("Убранные") {
+            ForEach(StatsBlock.allCases.filter(settings.statsHidden.contains)) {
+                block in
+                Button {
+                    withAnimation(Motion.arrange) { settings.show(block) }
+                    Feel.pick()
+                } label: {
+                    HStack(spacing: 12) {
+                        Image(systemName: block.icon)
+                            .font(Typography.settingRow)
+                            .foregroundStyle(Palette.accent)
+                            .frame(width: 24)
+                        Text(block.title)
+                            .font(Typography.settingRow)
+                            .foregroundStyle(Palette.ink)
+                        Spacer(minLength: 8)
+                        Image(systemName: "plus.circle.fill")
+                            .font(Typography.navTitle)
+                            .foregroundStyle(Palette.accent)
+                    }
+                    .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel(Lang.format("Вернуть «%@»", block.title))
+            }
+        }
+    }
+
+    private var blankGroup: some View {
         VStack(spacing: 14) {
             Image(systemName: "chart.bar.xaxis")
                 .font(.system(size: 30, weight: .regular))

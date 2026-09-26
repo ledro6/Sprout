@@ -1,7 +1,8 @@
 import SwiftUI
 
-/// Все награды — сеткой по группам, как в «Фитнесе»: полученные — своим
-/// металлом и датой, остальные — сталью и тем, сколько набрано.
+/// Все награды — сеткой по группам, как в «Фитнесе»: у каждой — медаль
+/// текущего уровня, её название и точки уровней под ним; не полученные —
+/// сталью и тем, сколько набрано до следующей ступени.
 struct AwardsView: View {
     @Environment(Garden.self) private var garden
 
@@ -32,14 +33,14 @@ struct AwardsView: View {
         .onAppear { recount() }
         .onChange(of: garden.log.count) { _, _ in recount() }
         .sheet(item: $open) { award in
-            AwardSheet(award: award, count: trophies.count(award))
+            AwardSheet(award: award,
+                       count: cabinet.count(award, in: trophies))
         }
     }
 
     private var summary: some View {
-        let got = cabinet.earned.count
-        return Text(Lang.format("Получено %1$lld из %2$lld", got,
-                                Award.allCases.count))
+        Text(Lang.format("Получено %1$lld из %2$lld", cabinet.total,
+                         Award.total))
             .font(Typography.settingNote)
             .foregroundStyle(.secondary)
             .contentTransition(.numericText())
@@ -65,25 +66,42 @@ struct AwardsView: View {
     }
 
     private func cell(_ award: Award) -> some View {
-        let earned = cabinet.earned[award]
+        let level = cabinet.level(award)
+        let rank = Rank(award, max(level, 1))
         return VStack(spacing: 6) {
-            MedalBadge(award: award, earned: earned != nil)
+            MedalBadge(rank: rank, earned: level > 0)
                 .frame(width: 84, height: 84)
-            Text(award.title)
+            Text(rank.title)
                 .font(Typography.cardTitle)
                 .foregroundStyle(Palette.ink)
                 .multilineTextAlignment(.center)
                 .lineLimit(2)
                 .fixedSize(horizontal: false, vertical: true)
-            Text(earned.map(Self.day) ?? Self.left(award, trophies.count(award)))
+            Pips(award: award, level: level)
+            Text(Self.status(award, level: level,
+                             count: cabinet.count(award, in: trophies),
+                             cabinet: cabinet))
                 .font(Typography.cardCaption)
                 .foregroundStyle(.secondary)
                 .monospacedDigit()
+                .lineLimit(1)
+                .minimumScaleFactor(0.8)
         }
         .frame(maxWidth: .infinity)
         .contentShape(Rectangle())
         .accessibilityElement(children: .combine)
         .accessibilityAddTraits(.isButton)
+    }
+
+    /// Под медалью: верхняя ступень — когда получена; иначе — сколько
+    /// набрано до следующей.
+    static func status(_ award: Award, level: Int, count: Int,
+                       cabinet: Cabinet) -> String {
+        if level >= award.levels,
+           let date = cabinet.date(Rank(award, award.levels)) {
+            return day(date)
+        }
+        return left(Rank(award, level + 1), count)
     }
 
     /// «12 мая 2026» — по-местному.
@@ -92,9 +110,10 @@ struct AwardsView: View {
             .locale(Lang.locale))
     }
 
-    /// «3 из 10» у наград со счётом; у разовых — что их ещё ждут.
-    static func left(_ award: Award, _ count: Int) -> String {
-        award.goal > 1 ? Lang.format("%1$lld из %2$lld", count, award.goal)
+    /// «3 из 10» у ступеней со счётом; у разовых — что их ещё ждут.
+    static func left(_ rank: Rank, _ count: Int) -> String {
+        rank.goal > 1 ? Lang.format("%1$lld из %2$lld", min(count, rank.goal),
+                                    rank.goal)
             : Lang.text("Ещё впереди")
     }
 
@@ -104,8 +123,31 @@ struct AwardsView: View {
     }
 }
 
+/// Точки уровней: полученные — металлом своей ступени, остальные — пустые.
+struct Pips: View {
+    let award: Award
+    let level: Int
+
+    var body: some View {
+        HStack(spacing: 4) {
+            ForEach(1 ... award.levels, id: \.self) { step in
+                let tone = Rank(award, step).alloy.body
+                Circle()
+                    .fill(step <= level
+                          ? Color(red: tone.red / 255, green: tone.green / 255,
+                                  blue: tone.blue / 255)
+                          : Palette.ink.opacity(0.12))
+                    .frame(width: 6, height: 6)
+            }
+        }
+        .accessibilityLabel(Lang.format("Уровень %1$lld из %2$lld", level,
+                                        award.levels))
+    }
+}
+
 /// Одна награда: объёмная медаль — её можно крутить пальцем, — за что она
-/// и когда получена, а если ещё нет — сколько набрано.
+/// и лестница уровней. Нажали ступень — медаль сменяется на неё: полученная
+/// своим металлом, будущая — сталью.
 struct AwardSheet: View {
     let award: Award
     let count: Int
@@ -114,44 +156,55 @@ struct AwardSheet: View {
 
     private let cabinet = Cabinet.shared
 
+    @State private var picked: Int?
+
+    private var shown: Rank {
+        Rank(award, picked ?? max(cabinet.level(award), 1))
+    }
+
     var body: some View {
-        let earned = cabinet.earned[award]
+        let rank = shown
+        let earned = cabinet.date(rank)
         NavigationStack {
-            VStack(spacing: 20) {
-                MedalStage(award: award, earned: earned != nil,
-                           spinIn: earned != nil)
-                    .frame(height: 300)
-                VStack(spacing: 8) {
-                    Text(award.title)
-                        .font(Typography.welcome)
-                        .foregroundStyle(Palette.ink)
-                        .multilineTextAlignment(.center)
-                    Text(award.detail)
-                        .font(Typography.settingRow)
-                        .foregroundStyle(.secondary)
-                        .multilineTextAlignment(.center)
-                        .fixedSize(horizontal: false, vertical: true)
-                    if let earned {
-                        Text(Lang.format("Получена %@", AwardsView.day(earned)))
-                            .font(Typography.settingNote)
+            ScrollView {
+                VStack(spacing: 20) {
+                    MedalStage(rank: rank, earned: earned != nil, date: earned)
+                        .id(rank)
+                        .frame(height: 300)
+                    VStack(spacing: 8) {
+                        Text(rank.title)
+                            .font(Typography.welcome)
+                            .foregroundStyle(Palette.ink)
+                            .multilineTextAlignment(.center)
+                        Text(rank.detail)
+                            .font(Typography.settingRow)
                             .foregroundStyle(.secondary)
-                            .padding(.top, 4)
-                    } else if award.goal > 1 {
-                        ProgressView(value: Double(count),
-                                     total: Double(award.goal))
-                            .tint(Palette.accent)
-                            .frame(maxWidth: 220)
-                            .padding(.top, 8)
-                        Text(AwardsView.left(award, count))
-                            .font(Typography.settingNote)
-                            .foregroundStyle(.secondary)
-                            .monospacedDigit()
+                            .multilineTextAlignment(.center)
+                            .fixedSize(horizontal: false, vertical: true)
+                        if let earned {
+                            Text(Lang.format("Получена %@", AwardsView.day(earned)))
+                                .font(Typography.settingNote)
+                                .foregroundStyle(.secondary)
+                                .padding(.top, 4)
+                        } else if rank.goal > 1 {
+                            ProgressView(value: Double(min(count, rank.goal)),
+                                         total: Double(rank.goal))
+                                .tint(Palette.accent)
+                                .frame(maxWidth: 220)
+                                .padding(.top, 8)
+                            Text(AwardsView.left(rank, count))
+                                .font(Typography.settingNote)
+                                .foregroundStyle(.secondary)
+                                .monospacedDigit()
+                        }
                     }
+                    .padding(.horizontal, 28)
+                    .animation(Motion.number, value: rank)
+                    ladder
                 }
-                .padding(.horizontal, 28)
-                Spacer(minLength: 0)
+                .padding(.top, 8)
+                .padding(.bottom, 32)
             }
-            .padding(.top, 8)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Готово") { dismiss() }
@@ -159,5 +212,45 @@ struct AwardSheet: View {
             }
         }
         .presentationDetents([.large])
+    }
+
+    /// Ступени по порядку: медаль, название и дата или сколько осталось.
+    private var ladder: some View {
+        SproutGroup("Уровни") {
+            ForEach(1 ... award.levels, id: \.self) { level in
+                let rank = Rank(award, level)
+                let date = cabinet.date(rank)
+                Button {
+                    withAnimation(Motion.pill) { picked = level }
+                    Feel.pick()
+                } label: {
+                    HStack(spacing: 12) {
+                        MedalBadge(rank: rank, earned: date != nil)
+                            .frame(width: 40, height: 40)
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(rank.title)
+                                .font(Typography.settingRow)
+                                .foregroundStyle(Palette.ink)
+                            Text(date.map(AwardsView.day)
+                                 ?? AwardsView.left(rank, count))
+                                .font(Typography.settingNote)
+                                .foregroundStyle(.secondary)
+                                .monospacedDigit()
+                        }
+                        Spacer(minLength: 8)
+                        if rank == shown {
+                            Image(systemName: "checkmark")
+                                .font(Typography.settingNote.weight(.semibold))
+                                .foregroundStyle(Palette.accent)
+                                .transition(.scale.combined(with: .opacity))
+                        }
+                    }
+                    .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+                .accessibilityAddTraits(rank == shown ? .isSelected : [])
+            }
+        }
+        .padding(.horizontal, Metrics.contentMargin)
     }
 }

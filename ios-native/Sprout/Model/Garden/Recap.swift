@@ -24,7 +24,7 @@ struct Recap: Sendable {
     var plants = 0
     var rooms = 0
     /// Награды, полученные в этом году, — по порядку получения.
-    var awards: [Award] = []
+    var awards: [Rank] = []
     /// Дни года с поливом, от нуля, — для кольца года.
     var lit: Set<Int> = []
     /// Дней в году: кольцу нужно знать, високосный ли он.
@@ -106,7 +106,7 @@ struct Recap: Sendable {
     /// Пустой год — рассказывать нечего, кроме приглашения.
     var empty: Bool { waterings == 0 }
 
-    static func of(_ log: [Watering], rooms: [Room], awards: [Award: Date],
+    static func of(_ log: [Watering], rooms: [Room], awards: [Rank: Date],
                    year: Int, now: Date = Date(),
                    calendar: Calendar = .current) -> Recap {
         var recap = Recap(year: year)
@@ -157,7 +157,8 @@ struct Recap: Sendable {
         recap.rooms = rooms.count
         recap.awards = awards
             .filter { calendar.component(.year, from: $0.value) == year }
-            .sorted { $0.value < $1.value }
+            .sorted { $0.value != $1.value ? $0.value < $1.value
+                : $0.key.id < $1.key.id }
             .map(\.key)
         return recap
     }

@@ -575,6 +575,9 @@
         }
       }
     },
+    "%1$@ · уровень %2$lld из %3$lld": {
+      "extractionState": "manual"
+    },
     "%1$@ в Sprout: %2$@, череда %3$@, лучшая %4$lld.": {
       "extractionState": "manual",
       "localizations": {
@@ -2583,6 +2586,9 @@
           }
         }
       }
+    },
+    "%@ ждёт у луча — пора полить.": {
+      "extractionState": "manual"
     },
     "%@ к прошлому периоду": {
       "extractionState": "manual",
@@ -9819,6 +9825,9 @@
         }
       }
     },
+    "Академик": {
+      "extractionState": "manual"
+    },
     "Алоказия": {
       "extractionState": "manual",
       "localizations": {
@@ -13263,6 +13272,9 @@
         }
       }
     },
+    "Ближе всех к лучу — %@: попросит воды первым.": {
+      "extractionState": "manual"
+    },
     "Больше всего за день": {
       "extractionState": "manual",
       "localizations": {
@@ -14410,6 +14422,15 @@
           }
         }
       }
+    },
+    "Ботанический сад": {
+      "extractionState": "manual"
+    },
+    "Бронза": {
+      "extractionState": "manual"
+    },
+    "Бывалый путник": {
+      "extractionState": "manual"
     },
     "В AR": {
       "extractionState": "manual",
@@ -21012,6 +21033,9 @@
         }
       }
     },
+    "Вернуть «%@»": {
+      "extractionState": "manual"
+    },
     "Вернуть готовую модель": {
       "extractionState": "manual",
       "localizations": {
@@ -27059,6 +27083,9 @@
         }
       }
     },
+    "Все блоки убраны — нажмите «Выбрать», чтобы вернуть.": {
+      "extractionState": "manual"
+    },
     "Все дождутся вас сами": {
       "extractionState": "manual",
       "localizations": {
@@ -28494,6 +28521,9 @@
         }
       }
     },
+    "Встречает рассветы": {
+      "extractionState": "manual"
+    },
     "Всё время": {
       "extractionState": "manual",
       "localizations": {
@@ -29642,6 +29672,12 @@
         }
       }
     },
+    "Вырастить двадцать разных видов.": {
+      "extractionState": "manual"
+    },
+    "Вырастить десять разных видов.": {
+      "extractionState": "manual"
+    },
     "Вырастить пять разных видов.": {
       "extractionState": "manual",
       "localizations": {
@@ -29928,6 +29964,9 @@
           }
         }
       }
+    },
+    "Вырастить тридцать разных видов.": {
+      "extractionState": "manual"
     },
     "Где стоит растение и раз в сколько дней его поливать — барабан крутится пальцем.": {
       "extractionState": "manual",
@@ -30789,6 +30828,12 @@
           }
         }
       }
+    },
+    "Год без засухи": {
+      "extractionState": "manual"
+    },
+    "Год подряд": {
+      "extractionState": "manual"
     },
     "Горшок": {
       "extractionState": "manual",
@@ -33660,6 +33705,9 @@
         }
       }
     },
+    "Датчик LiDAR не ответил. Перезапустите приложение и попробуйте снова.": {
+      "extractionState": "manual"
+    },
     "Датчик движения": {
       "extractionState": "manual",
       "localizations": {
@@ -34234,6 +34282,12 @@
         }
       }
     },
+    "Двадцать подкормок": {
+      "extractionState": "manual"
+    },
+    "Двадцать пять поливов подряд вовремя.": {
+      "extractionState": "manual"
+    },
     "Двумя пальцами — повернуть, щипком — размер": {
       "extractionState": "manual",
       "localizations": {
@@ -34520,6 +34574,9 @@
           }
         }
       }
+    },
+    "Девяносто дней ни одно растение не пересохло.": {
+      "extractionState": "manual"
     },
     "День": {
       "extractionState": "manual",
@@ -47155,6 +47212,9 @@
         }
       }
     },
+    "Заново": {
+      "extractionState": "manual"
+    },
     "Запереть сейчас": {
       "extractionState": "manual",
       "localizations": {
@@ -47728,6 +47788,9 @@
           }
         }
       }
+    },
+    "Записи": {
+      "extractionState": "manual"
     },
     "Заранее": {
       "extractionState": "manual",
@@ -51746,6 +51809,12 @@
           }
         }
       }
+    },
+    "Знаток": {
+      "extractionState": "manual"
+    },
+    "Золото": {
+      "extractionState": "manual"
     },
     "Из галереи": {
       "extractionState": "manual",
@@ -59499,6 +59568,9 @@
         }
       }
     },
+    "Как сохнет земля": {
+      "extractionState": "manual"
+    },
     "Как теперь зовут растение?": {
       "extractionState": "manual",
       "localizations": {
@@ -61794,6 +61866,9 @@
           }
         }
       }
+    },
+    "Камера потеряла растение. Попробуйте ещё раз, при ровном свете и медленнее.": {
+      "extractionState": "manual"
     },
     "Капля": {
       "extractionState": "manual",
@@ -70979,6 +71054,9 @@
         }
       }
     },
+    "Кругосветка": {
+      "extractionState": "manual"
+    },
     "Кто без вас не дождётся и в какие дни его полить. Остальные потерпят.": {
       "extractionState": "manual",
       "localizations": {
@@ -75858,6 +75936,9 @@
         }
       }
     },
+    "Мастер полива": {
+      "extractionState": "manual"
+    },
     "Машина времени": {
       "extractionState": "manual",
       "localizations": {
@@ -76144,6 +76225,9 @@
           }
         }
       }
+    },
+    "Медленнее — кадры смазываются": {
+      "extractionState": "manual"
     },
     "Медленно ведите телефоном над полом или столом": {
       "extractionState": "manual",
@@ -77005,6 +77089,9 @@
           }
         }
       }
+    },
+    "Меркурий сада — %1$@: пьёт %2$@.": {
+      "extractionState": "manual"
     },
     "Месяц": {
       "extractionState": "manual",
@@ -78153,6 +78240,9 @@
           }
         }
       }
+    },
+    "Меткий полив": {
+      "extractionState": "manual"
     },
     "Модель": {
       "extractionState": "manual",
@@ -82742,293 +82832,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "這支手機既沒有 Face ID 也沒有密碼。"
-          }
-        }
-      }
-    },
-    "Навести": {
-      "extractionState": "manual",
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "صوّب"
-          }
-        },
-        "bg": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Насочи"
-          }
-        },
-        "bn": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "তাক করুন"
-          }
-        },
-        "ca": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Apunta"
-          }
-        },
-        "cs": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Zamířit"
-          }
-        },
-        "da": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sigt"
-          }
-        },
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Anvisieren"
-          }
-        },
-        "el": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Στόχευση"
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Aim"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Apuntar"
-          }
-        },
-        "fi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tähtää"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Viser"
-          }
-        },
-        "gu": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "નિશાન લો"
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "לכוון"
-          }
-        },
-        "hi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "निशाना साधें"
-          }
-        },
-        "hr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nacilјaj"
-          }
-        },
-        "hu": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Célzás"
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bidik"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Inquadra"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "狙う"
-          }
-        },
-        "kk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Бағыттау"
-          }
-        },
-        "kn": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ಗುರಿ ಇಡಿ"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "조준"
-          }
-        },
-        "lt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nutaikyti"
-          }
-        },
-        "ml": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ലക്ഷ്യമിടുക"
-          }
-        },
-        "mr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "नेम धरा"
-          }
-        },
-        "ms": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Halakan"
-          }
-        },
-        "nb": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sikt"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Richten"
-          }
-        },
-        "or": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ଲକ୍ଷ୍ୟ କରନ୍ତୁ"
-          }
-        },
-        "pa": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ਨਿਸ਼ਾਨਾ ਲਾਓ"
-          }
-        },
-        "pl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Namierz"
-          }
-        },
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Mirar"
-          }
-        },
-        "pt-PT": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Apontar"
-          }
-        },
-        "ro": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Țintește"
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Zamieriť"
-          }
-        },
-        "sl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nameri"
-          }
-        },
-        "sv": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sikta"
-          }
-        },
-        "ta": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "குறிவை"
-          }
-        },
-        "te": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "గురిపెట్టు"
-          }
-        },
-        "th": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "เล็ง"
-          }
-        },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nişan al"
-          }
-        },
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Навести"
-          }
-        },
-        "ur": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "نشانہ لیں"
-          }
-        },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ngắm"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "对准"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "對準"
           }
         }
       }
@@ -92794,6 +92597,9 @@
         }
       }
     },
+    "Не вижу растения — наведите камеру на него": {
+      "extractionState": "manual"
+    },
     "Не вышло": {
       "extractionState": "manual",
       "localizations": {
@@ -93655,6 +93461,9 @@
         }
       }
     },
+    "Не хватает места на телефоне: кадрам нужно несколько гигабайт.": {
+      "extractionState": "manual"
+    },
     "Небесный": {
       "extractionState": "manual",
       "localizations": {
@@ -93941,6 +93750,9 @@
           }
         }
       }
+    },
+    "Небо сада": {
+      "extractionState": "manual"
     },
     "Недавние запросы": {
       "extractionState": "manual",
@@ -95663,6 +95475,15 @@
           }
         }
       }
+    },
+    "Нептун сада — %1$@: пьёт %2$@.": {
+      "extractionState": "manual"
+    },
+    "Нет доступа к камере. Разрешите его в Настройках → Sprout.": {
+      "extractionState": "manual"
+    },
+    "Нефрит": {
+      "extractionState": "manual"
     },
     "Новая комната": {
       "extractionState": "manual",
@@ -99681,6 +99502,9 @@
           }
         }
       }
+    },
+    "Оранжерея": {
+      "extractionState": "manual"
     },
     "Орхидея": {
       "extractionState": "manual",
@@ -104581,6 +104405,9 @@
         }
       }
     },
+    "Отойдите чуть дальше": {
+      "extractionState": "manual"
+    },
     "Отправить памятку соседу": {
       "extractionState": "manual",
       "localizations": {
@@ -108024,6 +107851,9 @@
           }
         }
       }
+    },
+    "Партитура месяца": {
+      "extractionState": "manual"
     },
     "Пеларгония": {
       "extractionState": "manual",
@@ -113518,6 +113348,9 @@
         }
       }
     },
+    "Перетащите блок, чтобы поменять местами, «−» — убрать.": {
+      "extractionState": "manual"
+    },
     "Период": {
       "extractionState": "manual",
       "localizations": {
@@ -116101,6 +115934,9 @@
         }
       }
     },
+    "Платина": {
+      "extractionState": "manual"
+    },
     "Плиткой": {
       "extractionState": "manual",
       "localizations": {
@@ -117823,6 +117659,12 @@
         }
       }
     },
+    "Подготовить сад к отъезду десять раз.": {
+      "extractionState": "manual"
+    },
+    "Подготовить сад к отъезду трижды.": {
+      "extractionState": "manual"
+    },
     "Поделиться": {
       "extractionState": "manual",
       "localizations": {
@@ -118970,6 +118812,12 @@
           }
         }
       }
+    },
+    "Подкормить растения двадцать раз.": {
+      "extractionState": "manual"
+    },
+    "Подкормить растения пять раз.": {
+      "extractionState": "manual"
     },
     "Подкормить: %@": {
       "extractionState": "manual",
@@ -120712,6 +120560,9 @@
           }
         }
       }
+    },
+    "Подойдите ближе": {
+      "extractionState": "manual"
     },
     "Подсказки": {
       "extractionState": "manual",
@@ -124751,6 +124602,12 @@
         }
       }
     },
+    "Полгода без засухи": {
+      "extractionState": "manual"
+    },
+    "Полгода ни одно растение не пересохло.": {
+      "extractionState": "manual"
+    },
     "Поле поиска — внизу, у панели вкладок. Ищет по кличке, виду и заметкам.": {
       "extractionState": "manual",
       "localizations": {
@@ -127334,6 +127191,27 @@
         }
       }
     },
+    "Поливать до семи утра десять разных дней.": {
+      "extractionState": "manual"
+    },
+    "Поливать до семи утра пятьдесят разных дней.": {
+      "extractionState": "manual"
+    },
+    "Поливать под Новый год пять лет.": {
+      "extractionState": "manual"
+    },
+    "Поливать под Новый год три года.": {
+      "extractionState": "manual"
+    },
+    "Поливать после полуночи десять разных ночей.": {
+      "extractionState": "manual"
+    },
+    "Поливать после полуночи пятьдесят разных ночей.": {
+      "extractionState": "manual"
+    },
+    "Поливать хоть одно растение каждый день целый год.": {
+      "extractionState": "manual"
+    },
     "Поливать хоть одно растение семь дней подряд.": {
       "extractionState": "manual",
       "localizations": {
@@ -127620,6 +127498,12 @@
           }
         }
       }
+    },
+    "Поливать хоть одно растение сто дней подряд.": {
+      "extractionState": "manual"
+    },
+    "Поливать хоть одно растение три дня подряд.": {
+      "extractionState": "manual"
     },
     "Поливать хоть одно растение тридцать дней подряд.": {
       "extractionState": "manual",
@@ -128768,6 +128652,9 @@
           }
         }
       }
+    },
+    "Поливов на графике: %lld": {
+      "extractionState": "manual"
     },
     "Поливов: %lld": {
       "extractionState": "manual",
@@ -135103,6 +134990,9 @@
         }
       }
     },
+    "Полить растения пятьсот раз.": {
+      "extractionState": "manual"
+    },
     "Полить растения сто раз.": {
       "extractionState": "manual",
       "localizations": {
@@ -137111,6 +137001,9 @@
           }
         }
       }
+    },
+    "Полуночник": {
+      "extractionState": "manual"
     },
     "Получена %@": {
       "extractionState": "manual",
@@ -141704,292 +141597,8 @@
         }
       }
     },
-    "Поставьте растение на стол или пол и наведите на него камеру": {
-      "extractionState": "manual",
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ضع النبتة على طاولة أو على الأرض ووجّه الكاميرا نحوها"
-          }
-        },
-        "bg": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Сложете растението на маса или на пода и насочете камерата към него"
-          }
-        },
-        "bn": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "গাছটা টেবিলে বা মেঝেতে রাখুন আর ক্যামেরা তার দিকে ধরুন"
-          }
-        },
-        "ca": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Posa la planta en una taula o a terra i apunta-hi la càmera"
-          }
-        },
-        "cs": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Postavte rostlinu na stůl nebo na zem a namiřte na ni fotoaparát"
-          }
-        },
-        "da": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Stil planten på et bord eller gulvet, og ret kameraet mod den"
-          }
-        },
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Stell die Pflanze auf einen Tisch oder den Boden und richte die Kamera darauf"
-          }
-        },
-        "el": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Βάλτε το φυτό σε τραπέζι ή στο πάτωμα και στρέψτε την κάμερα προς αυτό"
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Put the plant on a table or the floor and point the camera at it"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Pon la planta en una mesa o en el suelo y apunta la cámara hacia ella"
-          }
-        },
-        "fi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Aseta kasvi pöydälle tai lattialle ja osoita sitä kameralla"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Posez la plante sur une table ou au sol et visez-la avec la caméra"
-          }
-        },
-        "gu": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "છોડને ટેબલ કે ફ્લોર પર મૂકો અને કૅમેરા તેની તરફ રાખો"
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "הניחו את הצמח על שולחן או על הרצפה וכוונו אליו את המצלמה"
-          }
-        },
-        "hi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "पौधे को मेज़ या फ़र्श पर रखें और कैमरा उसकी ओर करें"
-          }
-        },
-        "hr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Stavite biljku na stol ili pod i usmjerite kameru prema njoj"
-          }
-        },
-        "hu": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tedd a növényt asztalra vagy a padlóra, és fordítsd felé a kamerát"
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Letakkan tanaman di meja atau lantai lalu arahkan kamera ke sana"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Metti la pianta su un tavolo o sul pavimento e inquadrala"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "植物をテーブルか床に置いて、カメラを向けてください"
-          }
-        },
-        "kk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Өсімдікті үстелге не еденге қойып, камераны соған бағыттаңыз"
-          }
-        },
-        "kn": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ಗಿಡವನ್ನು ಮೇಜು ಅಥವಾ ನೆಲದ ಮೇಲೆ ಇಟ್ಟು ಕ್ಯಾಮೆರಾವನ್ನು ಅದರತ್ತ ತಿರುಗಿಸಿ"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "식물을 탁자나 바닥에 놓고 카메라를 향해 주세요"
-          }
-        },
-        "lt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Pastatykite augalą ant stalo ar grindų ir nukreipkite į jį kamerą"
-          }
-        },
-        "ml": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ചെടി മേശയിലോ തറയിലോ വെച്ച് ക്യാമറ അതിലേക്ക് തിരിക്കുക"
-          }
-        },
-        "mr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "रोप टेबलवर किंवा जमिनीवर ठेवा आणि कॅमेरा त्याकडे वळवा"
-          }
-        },
-        "ms": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Letakkan tumbuhan di atas meja atau lantai dan halakan kamera kepadanya"
-          }
-        },
-        "nb": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sett planten på et bord eller gulvet, og rett kameraet mot den"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Zet de plant op een tafel of de vloer en richt de camera erop"
-          }
-        },
-        "or": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ଗଛଟିକୁ ଟେବୁଲ୍ ବା ଚଟାଣରେ ରଖି କ୍ୟାମେରା ତା’ ଆଡ଼କୁ କରନ୍ତୁ"
-          }
-        },
-        "pa": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ਪੌਦੇ ਨੂੰ ਮੇਜ਼ ਜਾਂ ਫ਼ਰਸ਼ 'ਤੇ ਰੱਖੋ ਅਤੇ ਕੈਮਰਾ ਉਸ ਵੱਲ ਕਰੋ"
-          }
-        },
-        "pl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Postaw roślinę na stole lub podłodze i skieruj na nią aparat"
-          }
-        },
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Coloque a planta numa mesa ou no chão e aponte a câmera para ela"
-          }
-        },
-        "pt-PT": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Pouse a planta numa mesa ou no chão e aponte a câmara para ela"
-          }
-        },
-        "ro": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Pune planta pe o masă sau pe podea și îndreaptă camera spre ea"
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Položte rastlinu na stôl alebo na zem a namierte na ňu fotoaparát"
-          }
-        },
-        "sl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Postavite rastlino na mizo ali tla in nanjo usmerite kamero"
-          }
-        },
-        "sv": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ställ växten på ett bord eller golvet och rikta kameran mot den"
-          }
-        },
-        "ta": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "செடியை மேசையிலோ தரையிலோ வைத்து கேமராவை அதை நோக்கித் திருப்புங்கள்"
-          }
-        },
-        "te": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "మొక్కను టేబుల్ లేదా నేలపై ఉంచి కెమెరాను దాని వైపు తిప్పండి"
-          }
-        },
-        "th": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "วางต้นไม้บนโต๊ะหรือพื้น แล้วหันกล้องไปที่ต้นไม้"
-          }
-        },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bitkiyi bir masaya ya da yere koyun ve kamerayı ona çevirin"
-          }
-        },
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Поставте рослину на стіл або підлогу й наведіть на неї камеру"
-          }
-        },
-        "ur": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "پودے کو میز یا فرش پر رکھیں اور کیمرا اس کی طرف کریں"
-          }
-        },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Đặt cây lên bàn hoặc sàn nhà rồi hướng camera vào cây"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "把植物放在桌上或地上，并将相机对准它"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "把植物放在桌上或地上，並將相機對準它"
-          }
-        }
-      }
+    "Поставьте растение на стол или пол и наведите камеру так, чтобы была видна и опора": {
+      "extractionState": "manual"
     },
     "Потрясите телефон — фигурки узора разлетятся и соберутся снова. Просто для радости.": {
       "extractionState": "manual",
@@ -148308,6 +147917,12 @@
         }
       }
     },
+    "Противостояние: %1$@ и %2$@ — по разные стороны солнца.": {
+      "extractionState": "manual"
+    },
+    "Профессор": {
+      "extractionState": "manual"
+    },
     "Профиль": {
       "extractionState": "manual",
       "localizations": {
@@ -149168,6 +148783,18 @@
           }
         }
       }
+    },
+    "Пять Новых лет": {
+      "extractionState": "manual"
+    },
+    "Пять подкормок": {
+      "extractionState": "manual"
+    },
+    "Пятьдесят поливов подряд вовремя.": {
+      "extractionState": "manual"
+    },
+    "Пятьсот поливов": {
+      "extractionState": "manual"
     },
     "Раз в %@ дня": {
       "extractionState": "manual",
@@ -151505,292 +151132,11 @@
         }
       }
     },
-    "Рамка обнимает растение с горшком? Тогда начинайте": {
-      "extractionState": "manual",
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "هل يحيط الإطار بالنبتة وأصيصها؟ ابدأ إذن"
-          }
-        },
-        "bg": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Рамката обхваща ли растението със саксията? Тогава започвайте"
-          }
-        },
-        "bn": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ফ্রেম কি গাছ আর টব ঘিরে আছে? তাহলে শুরু করুন"
-          }
-        },
-        "ca": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "El requadre envolta la planta i el test? Doncs comença"
-          }
-        },
-        "cs": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Obepíná rámeček rostlinu s květináčem? Tak začněte"
-          }
-        },
-        "da": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Omslutter rammen plante og potte? Så begynd"
-          }
-        },
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Umschließt der Rahmen Pflanze und Topf? Dann los"
-          }
-        },
-        "el": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Το πλαίσιο αγκαλιάζει φυτό και γλάστρα; Τότε ξεκινήστε"
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Does the box fit around the plant and pot? Then start"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "¿El recuadro rodea la planta y la maceta? Entonces empieza"
-          }
-        },
-        "fi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ympäröikö kehys kasvin ja ruukun? Aloita sitten"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Le cadre entoure la plante et son pot ? Alors commencez"
-          }
-        },
-        "gu": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "શું ફ્રેમ છોડ અને કૂંડાને ઘેરે છે? તો શરૂ કરો"
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "המסגרת מקיפה את הצמח והעציץ? אז התחילו"
-          }
-        },
-        "hi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "क्या फ़्रेम पौधे और गमले को घेर रहा है? तो शुरू करें"
-          }
-        },
-        "hr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Obuhvaća li okvir biljku s posudom? Onda počnite"
-          }
-        },
-        "hu": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "A keret körülöleli a növényt és a cserepet? Akkor kezdd"
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bingkainya sudah melingkupi tanaman dan potnya? Kalau begitu mulai"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "La cornice racchiude pianta e vaso? Allora inizia"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "枠が植物と鉢を囲んでいますか？ それなら始めましょう"
-          }
-        },
-        "kk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Жақтау өсімдікті құмырасымен қоса қамти ма? Онда бастаңыз"
-          }
-        },
-        "kn": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ಚೌಕಟ್ಟು ಗಿಡ ಮತ್ತು ಕುಂಡವನ್ನು ಸುತ್ತುವರಿದಿದೆಯೇ? ಹಾಗಾದರೆ ಆರಂಭಿಸಿ"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "틀이 식물과 화분을 감싸나요? 그럼 시작하세요"
-          }
-        },
-        "lt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ar rėmelis apima augalą su vazonu? Tada pradėkite"
-          }
-        },
-        "ml": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ഫ്രെയിം ചെടിയെയും ചട്ടിയെയും ചുറ്റിയിട്ടുണ്ടോ? എങ്കിൽ തുടങ്ങൂ"
-          }
-        },
-        "mr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "चौकट रोप आणि कुंडीला वेढते का? मग सुरू करा"
-          }
-        },
-        "ms": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bingkai sudah meliputi tumbuhan dan pasunya? Jika ya, mulakan"
-          }
-        },
-        "nb": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Omslutter rammen plante og potte? Da kan du begynne"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sluit het kader om plant en pot? Begin dan"
-          }
-        },
-        "or": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ଫ୍ରେମ୍ ଗଛ ଓ ଟବକୁ ଘେରିଛି କି? ତେବେ ଆରମ୍ଭ କରନ୍ତୁ"
-          }
-        },
-        "pa": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ਕੀ ਫ਼ਰੇਮ ਪੌਦੇ ਅਤੇ ਗਮਲੇ ਨੂੰ ਘੇਰਦਾ ਹੈ? ਤਾਂ ਸ਼ੁਰੂ ਕਰੋ"
-          }
-        },
-        "pl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ramka obejmuje roślinę z doniczką? To zaczynaj"
-          }
-        },
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "A moldura envolve a planta e o vaso? Então comece"
-          }
-        },
-        "pt-PT": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "A moldura envolve a planta e o vaso? Então comece"
-          }
-        },
-        "ro": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Rama cuprinde planta cu ghiveci cu tot? Atunci începe"
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Obopína rámček rastlinu s kvetináčom? Tak začnite"
-          }
-        },
-        "sl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Okvir objame rastlino z loncem? Potem začnite"
-          }
-        },
-        "sv": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Omsluter ramen växt och kruka? Börja då"
-          }
-        },
-        "ta": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "சட்டகம் செடியையும் தொட்டியையும் சூழ்ந்துள்ளதா? அப்படியானால் தொடங்குங்கள்"
-          }
-        },
-        "te": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ఫ్రేమ్ మొక్కను, కుండీని చుట్టుముట్టిందా? అయితే మొదలుపెట్టండి"
-          }
-        },
-        "th": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "กรอบครอบต้นไม้กับกระถางแล้วหรือยัง ถ้าแล้วก็เริ่มได้เลย"
-          }
-        },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Çerçeve bitkiyi saksısıyla sarıyor mu? O zaman başlayın"
-          }
-        },
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Рамка обіймає рослину з горщиком? Тоді починайте"
-          }
-        },
-        "ur": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "کیا فریم پودے اور گملے کو گھیرے ہوئے ہے؟ تو شروع کریں"
-          }
-        },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Khung đã bao trọn cây và chậu chưa? Vậy thì bắt đầu"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "框住植物和花盆了吗？那就开始吧"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "框住植物和花盆了嗎？那就開始吧"
-          }
-        }
-      }
+    "Рамка обнимает растение с горшком? Тогда начинайте. Края рамки тянутся пальцем": {
+      "extractionState": "manual"
+    },
+    "Ранняя пташка": {
+      "extractionState": "manual"
     },
     "Растение": {
       "extractionState": "manual",
@@ -153513,6 +152859,9 @@
           }
         }
       }
+    },
+    "Растение ушло из кадра": {
+      "extractionState": "manual"
     },
     "Растений": {
       "extractionState": "manual",
@@ -162411,6 +161760,9 @@
         }
       }
     },
+    "Садик": {
+      "extractionState": "manual"
+    },
     "Садовод": {
       "extractionState": "manual",
       "localizations": {
@@ -167011,6 +166363,9 @@
           }
         }
       }
+    },
+    "Серебро": {
+      "extractionState": "manual"
     },
     "Сеть": {
       "extractionState": "manual",
@@ -173633,6 +172988,9 @@
         }
       }
     },
+    "Слишком темно — включите свет": {
+      "extractionState": "manual"
+    },
     "Словарик": {
       "extractionState": "manual",
       "localizations": {
@@ -174780,6 +174138,9 @@
           }
         }
       }
+    },
+    "Снайпер": {
+      "extractionState": "manual"
     },
     "Сначала новые": {
       "extractionState": "manual",
@@ -177938,6 +177299,9 @@
         }
       }
     },
+    "Собрать сад из двадцати пяти растений.": {
+      "extractionState": "manual"
+    },
     "Собрать сад из десяти растений.": {
       "extractionState": "manual",
       "localizations": {
@@ -178225,6 +177589,12 @@
         }
       }
     },
+    "Собрать сад из пяти растений.": {
+      "extractionState": "manual"
+    },
+    "Собрать сад из пятидесяти растений.": {
+      "extractionState": "manual"
+    },
     "Сова": {
       "extractionState": "manual",
       "localizations": {
@@ -178511,6 +177881,9 @@
           }
         }
       }
+    },
+    "Соединение: %1$@ попросят воды вместе — %2$@.": {
+      "extractionState": "manual"
     },
     "Соня": {
       "extractionState": "manual",
@@ -182817,6 +182190,9 @@
         }
       }
     },
+    "Сто дней подряд": {
+      "extractionState": "manual"
+    },
     "Сто поливов": {
       "extractionState": "manual",
       "localizations": {
@@ -183103,6 +182479,9 @@
           }
         }
       }
+    },
+    "Сто поливов подряд вовремя.": {
+      "extractionState": "manual"
     },
     "Суккулент": {
       "extractionState": "manual",
@@ -186261,6 +185640,9 @@
         }
       }
     },
+    "Темновато — модель выйдет тусклой": {
+      "extractionState": "manual"
+    },
     "Тень вокруг фото": {
       "extractionState": "manual",
       "localizations": {
@@ -187696,6 +187078,15 @@
         }
       }
     },
+    "Три Новых года": {
+      "extractionState": "manual"
+    },
+    "Три дня подряд": {
+      "extractionState": "manual"
+    },
+    "Три месяца без засухи": {
+      "extractionState": "manual"
+    },
     "Тридцать дней ни одно растение не пересохло.": {
       "extractionState": "manual",
       "localizations": {
@@ -189130,6 +188521,12 @@
           }
         }
       }
+    },
+    "Убранные": {
+      "extractionState": "manual"
+    },
+    "Убрать «%@»": {
+      "extractionState": "manual"
     },
     "Убрать из таблицы": {
       "extractionState": "manual",
@@ -194587,6 +193984,12 @@
         }
       }
     },
+    "Уровень %1$lld из %2$lld": {
+      "extractionState": "manual"
+    },
+    "Уровни": {
+      "extractionState": "manual"
+    },
     "Уход": {
       "extractionState": "manual",
       "localizations": {
@@ -200040,6 +199443,9 @@
         }
       }
     },
+    "Хранитель ночи": {
+      "extractionState": "manual"
+    },
     "Хризантема": {
       "extractionState": "manual",
       "localizations": {
@@ -201761,6 +201167,9 @@
           }
         }
       }
+    },
+    "Целый год ни одно растение не пересохло.": {
+      "extractionState": "manual"
     },
     "Цифры": {
       "extractionState": "manual",

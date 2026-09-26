@@ -99,6 +99,8 @@ struct ModelSheet: View {
                 } label: {
                     Label("Вернуть готовую модель", systemImage: "arrow.uturn.backward")
                         .font(Typography.settingRow)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.8)
                 }
             }
         }
@@ -129,21 +131,28 @@ struct ModelSheet: View {
                 .font(Typography.settingNote)
                 .foregroundStyle(.secondary)
                 .fixedSize(horizontal: false, vertical: true)
-            HStack(spacing: Metrics.actionGap) {
-                if let name = plant.shot {
-                    Button {
-                        guard let image = Snapshot.image(name) else { return }
-                        Task { await study(image) }
-                    } label: {
-                        Label("По фото растения", systemImage: "leaf")
-                            .font(Typography.settingNote)
-                            .frame(maxWidth: .infinity)
-                    }
-                    .buttonStyle(.glassProminent)
+            // Три подписи в ряд на узком телефоне рвались по слогам: своё
+            // фото — отдельной строкой, галерея и камера — вдвоём.
+            if let name = plant.shot {
+                Button {
+                    guard let image = Snapshot.image(name) else { return }
+                    Task { await study(image) }
+                } label: {
+                    Label("По фото растения", systemImage: "leaf")
+                        .font(Typography.detail)
+                        .lineLimit(1)
+                        .frame(maxWidth: .infinity)
                 }
+                .buttonStyle(.glassProminent)
+                .controlSize(.large)
+                .disabled(thinking)
+            }
+            HStack(spacing: Metrics.actionGap) {
                 PhotosPicker(selection: $item, matching: .images) {
                     Label("Из галереи", systemImage: "photo")
                         .font(Typography.settingNote)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.8)
                         .frame(maxWidth: .infinity)
                 }
                 .buttonStyle(.glass)
@@ -151,6 +160,8 @@ struct ModelSheet: View {
                     Button { shooting = true } label: {
                         Label("Снять", systemImage: "camera")
                             .font(Typography.settingNote)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.8)
                             .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(.glass)

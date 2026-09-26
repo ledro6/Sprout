@@ -161,6 +161,35 @@ final class Settings {
         return true
     }
 
+    /// Блоки статистики по порядку — все, и убранные тоже: вернутый встаёт
+    /// в конец.
+    private(set) var statsOrder: [StatsBlock] {
+        didSet { Self.put(statsOrder, Key.statsOrder, in: store) }
+    }
+
+    private(set) var statsHidden: Set<StatsBlock> {
+        didSet { Self.put(statsHidden, Key.statsHidden, in: store) }
+    }
+
+    /// Что видно на экране статистики — по порядку.
+    var statsShown: [StatsBlock] {
+        statsOrder.filter { !statsHidden.contains($0) }
+    }
+
+    func hide(_ block: StatsBlock) {
+        statsHidden.insert(block)
+    }
+
+    func show(_ block: StatsBlock) {
+        guard statsHidden.contains(block) else { return }
+        statsOrder = statsOrder.filter { $0 != block } + [block]
+        statsHidden.remove(block)
+    }
+
+    func move(_ block: StatsBlock, before target: StatsBlock) {
+        statsOrder = StatsBlock.move(block, before: target, in: statsOrder)
+    }
+
     /// Убрали свой цвет — узор или волна, если были им окрашены, возвращаются
     /// к цвету по умолчанию.
     func remove(own colour: Channels) {
@@ -335,6 +364,8 @@ final class Settings {
         static let patternHue = "patternHue"
         static let waveHue = "waveHue"
         static let ownHues = "ownHues"
+        static let statsOrder = "statsOrder"
+        static let statsHidden = "statsHidden"
         static let avatarTint = "avatarTint"
         static let avatarShot = "avatarShot"
         /// Прежний переключатель, наоборот — «без отклика». Читается, пока
@@ -403,6 +434,10 @@ final class Settings {
             ?? Self.tint(store, Key.waveTint).map(Hue.preset) ?? .wave
         ownHues = Array((Self.take([Channels].self, Key.ownHues, from: store)
                          ?? []).prefix(Hue.ownLimit))
+        statsOrder = StatsBlock.order(
+            Self.take([StatsBlock].self, Key.statsOrder, from: store) ?? [])
+        statsHidden = Self.take(Set<StatsBlock>.self, Key.statsHidden,
+                                from: store) ?? []
         avatarTint = Self.tint(store, Key.avatarTint) ?? Tint.defaultAvatar
         avatarShot = store.string(forKey: Key.avatarShot)
         if store.object(forKey: Key.strength) != nil {

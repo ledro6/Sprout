@@ -245,7 +245,7 @@ check("\(Seed.search("   ", in: Seed.rooms).count)", "0", "пустой запр
 print("настройки: значения по умолчанию и границы:")
 let keys = ["theme", "patternKinds", "patternShapes", "reminders",
             "remindThreshold", "patternTint", "waveTint", "patternHue",
-            "waveHue", "ownHues",
+            "waveHue", "ownHues", "statsOrder", "statsHidden",
             "hushedHaptics", "hapticStrength", "stillPattern", "stiffShapes",
             "plantLook", "plantOrder", "mutedSounds", "toured",
             "walkedScreens", "launches", "avatarShot", "plainPattern"]
@@ -394,6 +394,40 @@ do {
     check(Hue.brightness(dark.vivid) < Hue.brightness(dark.pale),
           "насыщенная своего темнее бледной")
     check(Hue.preset(.green).shade == Shade(.green), "готовый цвет — как был")
+    for key in keys { store.removeObject(forKey: key) }
+}
+
+print("блоки статистики:")
+do {
+    let keys = ["statsOrder", "statsHidden"]
+    for key in keys { store.removeObject(forKey: key) }
+    let board = Settings(store: store)
+    check(board.statsShown == StatsBlock.allCases,
+          "сначала видно всё — в привычном порядке")
+    board.move(.plants, before: .now)
+    check(board.statsShown.prefix(2) == [.plants, .now],
+          "растения подняли наверх — встали перед «Сейчас»")
+    board.move(.now, before: .aim)
+    let aim = board.statsShown.firstIndex(of: .aim)!
+    check(board.statsShown[aim - 1] == .now || board.statsShown[aim + 1] == .now,
+          "тащили вниз — встал рядом с целью")
+    check(board.statsShown[board.statsShown.firstIndex(of: .now)! - 1] == .aim,
+          "сверху вниз — после цели, как в списках iOS")
+    board.hide(.recap)
+    board.hide(.orrery)
+    check(!board.statsShown.contains(.recap)
+          && board.statsShown.count == StatsBlock.allCases.count - 2,
+          "убранные не видны")
+    let reopened = Settings(store: store)
+    check(reopened.statsHidden == [.recap, .orrery]
+          && reopened.statsShown == board.statsShown,
+          "порядок и убранные переживают запуск")
+    reopened.show(.recap)
+    check(reopened.statsShown.last == .recap && !reopened.statsHidden.contains(.recap),
+          "вернули — встал в конец")
+    check(StatsBlock.order([.rooms, .rooms, .now]).count == StatsBlock.allCases.count
+          && StatsBlock.order([.rooms, .now]).prefix(2) == [.rooms, .now],
+          "сохранённый порядок — без повторов, новые блоки — в конце")
     for key in keys { store.removeObject(forKey: key) }
 }
 
@@ -1365,6 +1399,30 @@ do {
     check(Diary.rhythm(1.2 * 86_400), "раз в день", "день")
     check(Diary.rhythm(1.5 * 86_400), "раз в 2 дня", "полтора дня — уже два")
     check(Diary.rhythm(5 * 86_400), "раз в 5 дней", "дни")
+    // Линия высыхания: срок 6 дней сада — двое суток по-настоящему, окно —
+    // десять суток.
+    let stretch = Season.stretch
+    Season.stretch = 1
+    defer { Season.stretch = stretch }
+    let sprout = plantNamed("x", moisture: 0, dryingDays: 6)
+    let pours = [
+        Watering(plant: "x", when: at(10, 12, 0)),
+        Watering(plant: "x", when: at(15, 12, 0), left: 0),
+        Watering(plant: "x", when: at(16, 12, 0)),
+        Watering(plant: "y", when: at(17, 12, 0)),
+    ]
+    let line = Diary.curve(pours, plant: sprout, now: now)
+    check(line.map { round2($0.level) }
+          == ["0.00", "0.00", "1.00", "0.50", "1.00", "0.00", "0.00"],
+          "пила: с дна — полив, полдня — половина, потом сухо до сих пор")
+    check(line.first?.when == at(13, 15, 30),
+          "начало — ровно десять суток назад, по давнему поливу")
+    check(line.filter(\.poured).map(\.when) == [at(15, 12, 0), at(16, 12, 0)],
+          "капли — на поливах этого растения")
+    check(line[5].when == at(18, 12, 0), "досуха — через двое суток")
+    check(line.last?.when == now, "последняя точка — сейчас")
+    check(Diary.curve([], plant: sprout, now: now).isEmpty,
+          "без поливов линии нет")
 }
 
 print("кого полить сегодня:")
@@ -2608,6 +2666,18 @@ do {
           "с кличками")
     check(Orrery.parades(crowd, within: 30, least: 5).isEmpty,
           "пятерых в один день не бывает")
+    check(Orrery.omens(crowd) == [
+        .zenith(name: "Три", waiting: false),
+        .swift(name: "Раз", period: 5),
+        .patient(name: "Четыре", period: 30),
+        .conjunction(names: ["Раз", "Два", "Три"], day: 2),
+        .opposition("Раз", "Четыре"),
+    ], "приметы: у луча, Меркурий, Нептун, соединение и противостояние")
+    check(Orrery.omens([dry]) == [.zenith(name: "x", waiting: true)],
+          "одинокой планете сходиться не с кем; сухая ждёт у луча")
+    check(Orrery.omens([]).isEmpty, "пустое небо — без примет")
+    check(Spheres.lead > 0 && Spheres.lead < 0.3,
+          "картинка впереди звука — на путь кадра, не больше")
 }
 
 print("музыка сфер:")
@@ -3066,55 +3136,85 @@ print("награды:")
 do {
     var utc = Calendar(identifier: .gregorian)
     utc.timeZone = TimeZone(identifier: "UTC")!
-    func at(_ day: Int, _ hour: Int, month: Int = 3) -> Date {
-        utc.date(from: DateComponents(year: 2026, month: month, day: day,
+    func at(_ day: Int, _ hour: Int, month: Int = 3, year: Int = 2026) -> Date {
+        utc.date(from: DateComponents(year: year, month: month, day: day,
                                       hour: hour))!
     }
     let stretch = Season.stretch
     Season.stretch = 1
     let since = at(1, 0)
+    check(Award.allCases.allSatisfy { award in
+        !award.steps.isEmpty && zip(award.steps, award.steps.dropFirst())
+            .allSatisfy { $0 < $1 }
+    }, "ступени каждой награды растут")
+    check(Award.allCases.allSatisfy { award in
+        (1 ... award.levels).allSatisfy {
+            !award.title($0).isEmpty && !award.detail($0).isEmpty
+        }
+    }, "у каждой ступени есть название и за что")
+    check(Set(Award.allCases.flatMap { award in
+        (1 ... award.levels).map { award.title($0) }
+    }).count == Award.total, "названия ступеней не повторяются")
+    check(Award.botanist.steps.last! <= Preset.allCases.count,
+          "верхний ботаник достижим — видов хватает")
+    check(Rank(.drops, 3).alloy == .gold && Rank(.drops, 5).alloy == .jade
+          && Rank(.feeder, 9).level == 3,
+          "металл — по уровню, уровень — не выше лестницы")
     // Неделя подряд, каждый день в полдень, вовремя — 30% воды.
     var log = (1 ... 7).map { Watering(plant: "a", when: at($0, 12), left: 0.3) }
     var trophies = Trophies.of(log, rooms: [], since: since, now: at(8, 12),
                                calendar: utc)
-    check(trophies.reached[.firstDrop] == at(1, 12), "первая капля — с первым поливом")
-    check(trophies.reached[.week] == at(7, 12), "неделя подряд — на седьмой день")
-    check(trophies.reached[.tenDrops] == nil, "до десяти поливов далеко")
-    check("\(trophies.count(.tenDrops))", "7", "набрано семь из десяти")
+    check(trophies.reached[.drops] == [at(1, 12)],
+          "первая капля — с первым поливом, до десяти далеко")
+    check(trophies.reached[.streak] == [at(3, 12), at(7, 12)],
+          "три дня подряд — на третий, неделя — на седьмой")
+    check("\(trophies.count(.drops))", "7", "набрано семь поливов")
     check("\(trophies.count(.bullseye))", "7", "семь поливов вовремя подряд")
-    check(trophies.reached[.earlyBird] == nil, "в полдень — не жаворонок")
+    check(trophies.level(.earlyBird) == 0, "в полдень — не жаворонок")
     // Пропуск дня рвёт череду, поздний полив — серию вовремя.
     log.append(Watering(plant: "a", when: at(9, 12), left: 0.1))
     log += (10 ... 19).map { Watering(plant: "a", when: at($0, 12), left: 0.25) }
     trophies = Trophies.of(log, rooms: [], since: since, now: at(20, 12),
                            calendar: utc)
-    check(trophies.reached[.tenDrops] == at(11, 12), "десятый полив — одиннадцатого")
-    check(trophies.reached[.bullseye] == at(19, 12),
+    check(trophies.reached[.drops]?.last == at(11, 12),
+          "десятый полив — одиннадцатого")
+    check(trophies.reached[.bullseye] == [at(19, 12)],
           "десять вовремя подряд — считая после позднего полива")
-    check("\(trophies.count(.week))", "7", "череда длиннее цели — полная полоска")
-    check(trophies.reached[.month] == nil, "месяца подряд ещё нет")
-    // Особые дни.
-    let dawn = [Watering(plant: "a", when: at(3, 5), left: 0.5)]
-    check(Trophies.of(dawn, rooms: [], since: since, now: at(4, 12),
-                      calendar: utc).reached[.earlyBird] == at(3, 5),
-          "полив в пять утра — жаворонок")
+    check(trophies.level(.streak) == 2, "месяца подряд ещё нет")
+    check("\(trophies.count(.streak))", "11",
+          "самая длинная череда — после пропуска, одиннадцать дней")
+    // Особые дни — разные дни, а не поливы.
+    let dawn = [Watering(plant: "a", when: at(3, 5), left: 0.5),
+                Watering(plant: "b", when: at(3, 6), left: 0.5)]
+    let early = Trophies.of(dawn, rooms: [], since: since, now: at(4, 12),
+                            calendar: utc)
+    check(early.reached[.earlyBird] == [at(3, 5)] && early.count(.earlyBird) == 1,
+          "два полива одним утром — один день жаворонка")
     let night = [Watering(plant: "a", when: at(3, 2), left: 0.5)]
     check(Trophies.of(night, rooms: [], since: since, now: at(4, 12),
-                      calendar: utc).reached[.nightOwl] == at(3, 2),
+                      calendar: utc).reached[.nightOwl] == [at(3, 2)],
           "полив в два ночи — сова")
-    let eve = [Watering(plant: "a", when: at(31, 23, month: 12), left: 0.5)]
-    check(Trophies.of(eve, rooms: [], since: since,
-                      now: at(31, 23, month: 12),
-                      calendar: utc).reached[.newYear] != nil,
-          "полив 31 декабря — с Новым годом")
+    let eves = [Watering(plant: "a", when: at(31, 23, month: 12, year: 2025),
+                         left: 0.5),
+                Watering(plant: "a", when: at(1, 10, month: 1), left: 0.5),
+                Watering(plant: "a", when: at(31, 20, month: 12), left: 0.5)]
+    let holidays = Trophies.of(eves, rooms: [], since: since,
+                               now: at(31, 23, month: 12), calendar: utc)
+    check(holidays.count(.newYear) == 2 && holidays.level(.newYear) == 1,
+          "31 декабря и 1 января — один праздник, через год — второй")
     // Месяц без засухи: полив досуха 10 марта — отсчёт заново.
     let dry = [Watering(plant: "a", when: at(10, 12), left: 0)]
     let april = at(15, 12, month: 4)
     let clean = Trophies.of(dry, rooms: [], since: since, now: april,
                             calendar: utc)
-    check(clean.reached[.noDrought] == at(9, 12, month: 4),
+    check(clean.reached[.noDrought] == [at(9, 12, month: 4)],
           "тридцать дней после засухи — девятого апреля")
-    check("\(clean.count(.noDrought))", "30", "полоска полная")
+    check("\(clean.count(.noDrought))", "36", "без засухи — тридцать шесть дней")
+    let calm = Trophies.of([], rooms: [], since: since,
+                           now: at(1, 12, month: 12), calendar: utc)
+    check(calm.level(.noDrought) == 3
+          && calm.reached[.noDrought]?[1] == at(30, 0, month: 5),
+          "без засухи с марта — три месяца к концу мая, полгода к осени")
     // Растение сухое сейчас: высохло через срок после последнего полива.
     var parched = Plant.new(name: "Сухарик", species: "Фикус", dryingDays: 3,
                             id: "d", on: since, calendar: utc)
@@ -3122,7 +3222,7 @@ do {
     let water = dry + [Watering(plant: "d", when: at(1, 12, month: 4), left: 0.3)]
     let thirsty = Trophies.of(water, rooms: [Room(name: "Кухня", plants: [parched])],
                               since: since, now: april, calendar: utc)
-    check(thirsty.reached[.noDrought] == nil,
+    check(thirsty.level(.noDrought) == 0,
           "сухое растение сбивает отсчёт — месяца нет")
     check("\(thirsty.count(.noDrought))", "13",
           "высохло второго апреля: тринадцать дней без засухи")
@@ -3134,12 +3234,13 @@ do {
     }
     let garden = Trophies.of([], rooms: [Room(name: "Зал", plants: plants)],
                              since: since, now: april, calendar: utc)
-    check(garden.reached[.jungle] == april, "десять растений — джунгли")
-    check(garden.reached[.botanist] == april, "пять видов — ботаник")
+    check(garden.reached[.jungle] == [april, april],
+          "десять растений — садик и джунгли")
+    check(garden.reached[.botanist] == [april], "пять видов — ботаник")
     let small = Trophies.of([], rooms: [Room(name: "Зал",
                                              plants: Array(plants.prefix(4)))],
                             since: since, now: april, calendar: utc)
-    check(small.reached[.botanist] == nil && small.count(.botanist) == 4,
+    check(small.level(.botanist) == 0 && small.count(.botanist) == 4,
           "четыре вида — ещё не ботаник")
     Season.stretch = stretch
 
@@ -3149,30 +3250,60 @@ do {
     let cabinet = Cabinet(store: shelf)
     cabinet.review(Trophies.of(Array(log.prefix(3)), rooms: [], since: since,
                                now: at(4, 12), calendar: utc))
-    check(cabinet.has(.firstDrop), "первая капля на полке")
+    check(cabinet.level(.drops) == 1 && cabinet.level(.streak) == 1,
+          "первая капля и три дня подряд на полке")
     check(cabinet.fresh.isEmpty, "первая сверка — без праздника")
     cabinet.review(trophies)
-    check(cabinet.fresh.contains(.tenDrops) && cabinet.fresh.contains(.week),
-          "новые награды ждут праздника")
-    check(!cabinet.fresh.contains(.firstDrop), "старая второй раз не празднуется")
+    check(cabinet.fresh.contains(Rank(.drops, 2))
+          && cabinet.fresh.contains(Rank(.streak, 2)),
+          "новые ступени ждут праздника")
+    check(!cabinet.fresh.contains(Rank(.drops, 1)),
+          "старая второй раз не празднуется")
     cabinet.deed(.feeder)
     cabinet.deed(.feeder)
-    check(cabinet.fresh.filter { $0 == .feeder }.count == 1,
-          "подкормка — одна награда, сколько ни подкармливай")
-    cabinet.shown(.tenDrops)
-    check(!cabinet.fresh.contains(.tenDrops), "показанная уходит из очереди")
+    check(cabinet.fresh.filter { $0.award == .feeder }.count == 1
+          && cabinet.level(.feeder) == 1,
+          "две подкормки — одна ступень, до пятой подкормки второй нет")
+    (3 ... 5).forEach { _ in cabinet.deed(.feeder) }
+    check(cabinet.level(.feeder) == 2
+          && cabinet.fresh.filter { $0.award == .feeder } == [Rank(.feeder, 2)],
+          "пятая подкормка — вторая ступень вместо первой в очереди")
+    cabinet.shown(Rank(.drops, 2))
+    check(!cabinet.fresh.contains(Rank(.drops, 2)), "показанная уходит из очереди")
     let reopened = Cabinet(store: shelf)
-    check(reopened.has(.tenDrops) && reopened.has(.feeder),
+    check(reopened.level(.drops) == 2 && reopened.level(.feeder) == 2
+          && reopened.deeds[.feeder] == 5,
           "полка переживает перезапуск")
-    check(reopened.earned[.tenDrops] == at(11, 12),
+    check(reopened.date(Rank(.drops, 2)) == at(11, 12),
           "дата — когда условие выполнилось, а не когда заметили")
+    check("\(reopened.total)", "7",
+          "семь ступеней: две капли, две череды, меткость и две подкормки")
+    check(reopened.latest.first == Rank(.feeder, 2), "свежая — наверху")
     cabinet.review(Trophies.of([], rooms: [], since: since, now: april,
                                calendar: utc))
-    check(cabinet.has(.week), "награды не отбираются")
+    check(cabinet.level(.streak) == 2, "награды не отбираются")
     shelf.removePersistentDomain(forName: "sprout-awards-check")
 
+    // Полка прежней сборки: награда — одна дата.
+    let old = UserDefaults(suiteName: "sprout-awards-old")!
+    old.removePersistentDomain(forName: "sprout-awards-old")
+    old.set(["hundred": at(5, 12).timeIntervalSince1970,
+             "firstDrop": at(1, 12).timeIntervalSince1970,
+             "month": at(20, 12).timeIntervalSince1970,
+             "traveler": at(2, 12).timeIntervalSince1970],
+            forKey: "awards")
+    let moved = Cabinet(store: old)
+    check(moved.earned[.drops] == [at(1, 12), at(5, 12), at(5, 12)],
+          "сто поливов — третья ступень; десятый полив — не позже сотого")
+    check(moved.level(.streak) == 3 && moved.date(Rank(.streak, 1)) == at(20, 12),
+          "месяц подряд — третья ступень череды")
+    check(moved.level(.traveler) == 1 && moved.deeds[.traveler] == 1,
+          "отъезд переехал вместе со счётом")
+    check(Cabinet(store: old).level(.drops) == 3, "переезд сохранён")
+    old.removePersistentDomain(forName: "sprout-awards-old")
+
     // Медаль: барельеф вида, прозрачные углы, металл ярче стали.
-    let size = 64
+    let size = 96
     let kit = Botany.grow(.stock(.cactus), species: "Кактус")
     let relief = Emboss.relief(kit, size: size)
     let covered = relief.filter { $0 > 0 }
@@ -3187,21 +3318,47 @@ do {
     }
     let middle = Double(columns.min()! + columns.max()!) / 2
     check(abs(middle - Double(size) / 2) < 3, "растение по середине медали")
-    let medal = Emboss.medal(relief, size: size, alloy: .gold)
+    let medal = Emboss.medal(relief, size: size, level: 3)
     check(medal.ink(at: 0, 0).w == 0, "угол картинки прозрачный")
     check(medal.ink(at: size / 2, size / 2).w == 1, "середина медали непрозрачная")
-    let steel = Emboss.medal(relief, size: size, alloy: .gold, earned: false)
+    let steel = Emboss.medal(relief, size: size, level: 3, earned: false)
     func warmth(_ picture: Picture) -> Float {
         let ink = picture.ink(at: size / 2, size * 3 / 4)
         return ink.x - ink.z
     }
     check(warmth(medal) > warmth(steel) + 0.1, "золото теплее стали")
+    let radius = Float(size) / 2 - 1
+    func raised(_ level: Int) -> Int {
+        Emboss.ornament(level: level, size: size, radius: radius)
+            .filter { $0 > 0 }.count
+    }
+    check(raised(1) < raised(2) && raised(2) < raised(3) && raised(3) < raised(5),
+          "чем выше уровень, тем больше чеканки: звёзды, венок, ягоды")
+    let top = Emboss.ornament(level: 1, size: size, radius: radius)
+    let star = top[Int(Float(size) / 2 - 0.82 * radius) * size + size / 2]
+    check(star > 0, "звезда — над растением, посередине")
     check(Emboss.flipped(Emboss.flipped(relief, size: size), size: size) == relief,
           "переворот дважды — как было")
-    let normals = Emboss.normals(relief, size: size)
-    let flat = normals.ink(at: 1, 1)
+    let flat = Emboss.normals([Float](repeating: 3, count: size * size),
+                              size: size).ink(at: 5, 5)
     check(abs(flat.x - 0.5) < 0.01 && abs(flat.y - 0.5) < 0.01 && flat.z > 0.99,
-          "поле без барельефа — ровная нормаль")
+          "ровное поле — ровная нормаль")
+    let plate = Emboss.field(relief, size: size, level: 2, radius: radius)
+    let bumps = Emboss.normals(plate.heights, size: size)
+    var tilted = 0
+    for y in 0 ..< size {
+        for x in 0 ..< size where abs(bumps.ink(at: x, y).x - 0.5) > 0.1 {
+            tilted += 1
+        }
+    }
+    check(tilted > size * size / 50, "растение и чеканка видны на карте нормалей")
+    let back = Emboss.back(size: size)
+    check(back[Int(Float(size) / 2 - 0.82 * radius) * size + size / 2] < 3,
+          "на обороте звезды нет")
+    let room = Emboss.studio(width: 64)
+    check(room.width == 64 && room.height == 32, "студия — развёртка два к одному")
+    check(room.ink(at: 32, 1).x > room.ink(at: 32, 30).x + 0.3,
+          "в студии светлый купол и тёмный пол")
     check(Award.Group.allCases.flatMap(\.awards).count == Award.allCases.count,
           "каждая награда — в своей группе")
 }
@@ -3233,8 +3390,8 @@ do {
         Watering(plant: "x", when: at(3, 7, 13)),
     ]
     let recap = Recap.of(log, rooms: rooms,
-                         awards: [.firstDrop: at(1, 10, 8),
-                                  .week: at(12, 31, 8, year: 2025)],
+                         awards: [Rank(.drops, 1): at(1, 10, 8),
+                                  Rank(.streak, 2): at(12, 31, 8, year: 2025)],
                          year: 2026, now: at(9, 25, 12), calendar: utc)
     check("\(recap.waterings)", "10", "поливы года — без прошлогоднего")
     check("\(recap.days)", "10", "десять дней с поливом")
@@ -3250,7 +3407,7 @@ do {
     check("\(recap.bestMonth ?? -1)", "0", "поровну — первый из лучших месяцев")
     check("\(recap.added)", "3", "добавлены в этом году — трое")
     check("\(recap.plants)", "4", "в саду — четверо")
-    check(recap.awards == [.firstDrop], "награды года — без прошлогодних")
+    check(recap.awards == [Rank(.drops, 1)], "награды года — без прошлогодних")
     check(recap.lit.contains(9) && !recap.lit.contains(8),
           "десятое января — десятый день года")
     check("\(recap.length)", "365", "2026 — не високосный")

@@ -90,11 +90,16 @@ struct SproutHead: View {
     let title: LocalizedStringKey
     let walk: Walk?
 
+    /// «Выбрать» — правка блоков экрана; пусто — кнопки нет.
+    var choosing: Binding<Bool>?
+
     @State private var open = false
 
-    init(_ title: LocalizedStringKey, walk: Walk? = nil) {
+    init(_ title: LocalizedStringKey, walk: Walk? = nil,
+         choosing: Binding<Bool>? = nil) {
         self.title = title
         self.walk = walk
+        self.choosing = choosing
     }
 
     var body: some View {
@@ -102,9 +107,26 @@ struct SproutHead: View {
             Text(title)
                 .font(.largeTitle.bold())
                 .foregroundStyle(Palette.ink)
+                .lineLimit(1)
+                .minimumScaleFactor(0.7)
                 .frame(maxWidth: .infinity, alignment: .leading)
-            if let walk { WalkButton(walk: walk) }
-            SproutGear { open = true }
+            if let choosing {
+                Button {
+                    withAnimation(Motion.pill) { choosing.wrappedValue.toggle() }
+                    Feel.pick()
+                } label: {
+                    Text(choosing.wrappedValue ? "Готово" : "Выбрать")
+                        .font(Typography.settingRow.weight(.semibold))
+                        .lineLimit(1)
+                        .contentTransition(.interpolate)
+                }
+                .buttonStyle(.glass)
+                .fixedSize()
+            }
+            if choosing?.wrappedValue != true {
+                if let walk { WalkButton(walk: walk) }
+                SproutGear { open = true }
+            }
         }
         .padding(.horizontal, Metrics.contentMargin)
         .padding(.top, 4)
