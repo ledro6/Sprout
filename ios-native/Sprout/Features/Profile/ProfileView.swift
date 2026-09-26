@@ -1,4 +1,3 @@
-import PhotosUI
 import SwiftUI
 
 /// Профиль: хозяин, сад и соперники. Учётной записи нет, и экран её не
@@ -25,20 +24,16 @@ struct ProfileView: View {
     /// Вставили челлендж — сказать, во что вступили.
     @State private var joined: Race?
 
-    @State private var renaming = false
-    @State private var draft = ""
+    @State private var editing = false
 
     @State private var opening = false
     @State private var erasing = false
 
-    /// Фото хозяина, выбранное в медиатеке.
-    @State private var picking: PhotosPickerItem?
 
     @State private var trouble: String?
 
     @State private var welcomed: Rival?
 
-    @State private var swatches = Spots()
     @State private var paste = Spot()
 
     private var me: Rival {
@@ -82,15 +77,12 @@ struct ProfileView: View {
                 }
                 .scrollBounceBehavior(.basedOnSize, axes: .horizontal)
                 .background { SproutBackground() }
-                .sproutNotchCover()
+                .sproutSoftTop()
                 .toolbar(.hidden, for: .navigationBar)
                 .walk(.profile, scroll: reader)
             }
         }
         .onAppear { recount() }
-        .onChange(of: picking) { _, item in
-            Task { await portrait(item) }
-        }
         .onChange(of: garden.log.count) { _, _ in
             withAnimation(Motion.number) { recount() }
         }
@@ -98,15 +90,9 @@ struct ProfileView: View {
             if now == .active { recount() }
         }
         .sheet(isPresented: $opening) { SettingsView() }
-        .alert("Как вас зовут?", isPresented: $renaming) {
-            TextField("Имя", text: $draft)
-            Button("Отмена", role: .cancel) {}
-            Button("Сохранить") {
-                garden.rename(owner: draft)
-                Feel.done()
-            }
-        } message: {
-            Text("Имя стоит в профиле и уходит вместе со счётом друзьям.")
+        .sheet(isPresented: $editing) {
+            ProfileEditor()
+                .environment(garden)
         }
     }
 
@@ -127,30 +113,11 @@ struct ProfileView: View {
     private var person: some View {
         SproutGroup("Хозяин") {
             HStack(spacing: 14) {
-                PhotosPicker(selection: $picking, matching: .images,
-                             photoLibrary: .shared()) {
-                    avatar
-                        .overlay(alignment: .bottomTrailing) {
-                            Image(systemName: "camera.fill")
-                                .font(.system(size: 11, weight: .semibold))
-                                .foregroundStyle(.white)
-                                .padding(5)
-                                .background(Circle().fill(Palette.accent))
-                                .overlay {
-                                    Circle().strokeBorder(Palette.background,
-                                                          lineWidth: 1.5)
-                                }
-                        }
+                Button { editing = true } label: {
+                    AvatarCircle(size: Metrics.avatar)
                 }
                 .buttonStyle(.plain)
-                .accessibilityLabel("Фото")
-                .contextMenu {
-                    if settings.avatarShot != nil {
-                        Button(role: .destructive) { unportrait() } label: {
-                            Label("Убрать фото", systemImage: "trash")
-                        }
-                    }
-                }
+                .accessibilityLabel("Изменить профиль")
                 VStack(alignment: .leading, spacing: 3) {
                     Text(named ? garden.owner : Lang.text("Имя не задано"))
                         .font(Typography.navTitle)
@@ -164,97 +131,13 @@ struct ProfileView: View {
                         .foregroundStyle(.secondary)
                 }
                 Spacer(minLength: 8)
-                Button(named ? "Изменить" : "Назвать") {
-                    draft = garden.owner
-                    renaming = true
-                }
+                Button(named ? "Изменить" : "Назвать") { editing = true }
                 .buttonStyle(.glass)
                 .font(Typography.settingNote)
-            }
-
-            // Цвет — кружку без фото; с фото выбирать нечего.
-            if settings.avatarShot == nil {
-                SproutDivider()
-
-                SproutBlock("Цвет") {
-                    // Волны отсюда нет нарочно: кружок хозяина не красит ни
-                    // узор, ни всплеск.
-                    SproutTints(current: settings.avatarTint,
-                                spots: swatches) { tint, _ in
-                        settings.avatarTint = tint
-                        Feel.pick()
-                    }
-                }
-                .transition(.blurReplace)
             }
         }
         .animation(Motion.appear, value: settings.avatarShot)
         .sproutRide()
-    }
-
-    /// Фото — кругом во весь кружок; без фото — буква или человечек.
-    @ViewBuilder
-    private var avatar: some View {
-        if let name = settings.avatarShot, let image = Snapshot.image(name) {
-            Image(uiImage: image)
-                .resizable()
-                .scaledToFill()
-                .frame(width: Metrics.avatar, height: Metrics.avatar)
-                .clipShape(Circle())
-                .transition(.blurReplace)
-        } else {
-            Circle()
-                .fill(Palette.swatch(settings.avatarTint))
-                .frame(width: Metrics.avatar, height: Metrics.avatar)
-                .overlay {
-                    // Неназвавшемуся — значок человека: пустой кружок
-                    // читался бы недогрузившейся картинкой.
-                    if named {
-                        Text(letter)
-                            .font(Typography.avatar)
-                            .foregroundStyle(.white)
-                    } else {
-                        Image(systemName: "person.fill")
-                            .font(Typography.avatar)
-                            .foregroundStyle(.white)
-                    }
-                }
-                .transition(.blurReplace)
-        }
-    }
-
-    /// Квадрат из середины снимка, ужатый, — в папку снимков; прежнее фото
-    /// уходит с диска.
-    @MainActor
-    private func portrait(_ item: PhotosPickerItem?) async {
-        guard let item,
-              let data = try? await item.loadTransferable(type: Data.self),
-              let image = UIImage(data: data)
-        else { return }
-        let width = Double(image.size.width)
-        let height = Double(image.size.height)
-        let side = min(width, height)
-        let square = Snapshot.cut(image, to: Crop(x: (width - side) / 2,
-                                                  y: (height - side) / 2,
-                                                  side: side))
-        guard let name = Snapshot.keep(square) else { return }
-        let old = settings.avatarShot
-        settings.avatarShot = name
-        if let old { Shots.drop(old) }
-        picking = nil
-        Feel.done()
-    }
-
-    private func unportrait() {
-        guard let old = settings.avatarShot else { return }
-        settings.avatarShot = nil
-        Shots.drop(old)
-        Feel.toss()
-    }
-
-    private var letter: String {
-        String(garden.owner.trimmingCharacters(in: .whitespaces)
-            .prefix(1)).uppercased(with: Locale.current)
     }
 
     // MARK: - Садовник
@@ -374,10 +257,14 @@ struct ProfileView: View {
             SproutDivider()
 
             HStack(spacing: 10) {
+                // Значком: подписи «Позвать» и «Челлендж» рядом с «Вставить»
+                // в строку не помещались.
                 ShareLink(item: me.card) {
-                    Label("Позвать", systemImage: "square.and.arrow.up")
+                    Label("Поделиться", systemImage: "square.and.arrow.up")
+                        .labelStyle(.iconOnly)
                 }
                 .buttonStyle(.glass)
+                .buttonBorderShape(.circle)
 
                 Menu {
                     ForEach(Race.kinds) { quest in
@@ -388,6 +275,7 @@ struct ProfileView: View {
                         .lineLimit(1)
                 }
                 .buttonStyle(.glass)
+                .fixedSize()
 
                 // Системная кнопка вставки не показывает баннера «вставлено
                 // из…»; своя, читающая буфер сама, дёргала бы предупреждение
@@ -509,7 +397,7 @@ struct ProfileView: View {
                     .font(Typography.settingRow)
                     .foregroundStyle(Palette.ink)
                     .contentTransition(.numericText())
-                Text(Lang.format("череда %lld", rival.streak))
+                Text(Lang.format("дней подряд: %lld", rival.streak))
                     .font(Typography.figureCaption)
                     .foregroundStyle(.secondary)
             }

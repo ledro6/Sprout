@@ -1,23 +1,14 @@
 import Foundation
 import SwiftUI
 
-/// Через окружение: число берётся у окна, а окно видно только из корня.
-private struct NotchKey: EnvironmentKey {
-    static let defaultValue: CGFloat = 0
-}
-
-extension EnvironmentValues {
-    var notch: CGFloat {
-        get { self[NotchKey.self] }
-        set { self[NotchKey.self] = newValue }
-    }
-}
-
-/// Фон: ровный цвет и узор. Рисуется в двух местах — экраном и подложкой под
-/// вырезом — от одного угла окна, поэтому узор в них совпадает.
+/// Фон: ровный цвет и узор — от угла окна, поэтому узор у экрана и листа
+/// поверх него совпадает. Узор можно убрать совсем — останется цвет.
 private struct SproutField: View {
     /// Угол холста в окне: лист настроек висит ниже окна.
     @State private var corner: CGPoint = .zero
+
+    /// Угол сверяется, когда лист встал, — см. `Settle`.
+    @State private var settle = Settle()
 
     /// Просили меньше движения — гирлянда горит, но не бежит.
     @Environment(\.accessibilityReduceMotion) private var still
@@ -46,111 +37,105 @@ private struct SproutField: View {
 
             // Холст шире экрана на размах параллакса, но живёт в наложении на
             // пустой слой и обрезан по нему — иначе ZStack вырос бы.
-            Color.clear
-                .overlay {
-                    // Долю берём у `TimelineView`: он будит ровно к кадру.
-                    // Нет ни волны, ни всходов, ни переходов — расписание на
-                    // паузе; бежит одна гирлянда — будит реже.
-                    TimelineView(.animation(
-                        minimumInterval: busy ? nil : Motion.garlandFrame,
-                        paused: !busy && !running)) { frame in
-                        SproutPattern(wave: Cheer.shared.wave(at: frame.date),
-                                      origin: Cheer.shared.origin,
-                                      canvas: corner,
-                                      bloomFront: Launch.shared.bloomFront,
-                                      bloom: Launch.shared.bloom(at: frame.date),
-                                      shapes: shapes,
-                                      weave: weave,
-                                      swap: Launch.shared.reshape(at: frame.date),
-                                      repaint: Repaint.shared
-                                          .recolour(at: frame.date),
-                                      frolic: Frenzy.shared
-                                          .frolic(at: frame.date),
-                                      baseShade: baseShade,
-                                      waveShade: waveShade,
-                                      lag: Settings.shared.sway
-                                          ? Tilt.shared.lag : [],
-                                      era: Tilt.shared.era,
-                                      ember: Ember.shared
-                                          .smoulder(at: frame.date),
-                                      garland: lit ? (running
-                                          ? frame.date
-                                              .timeIntervalSinceReferenceDate
-                                          : 0) : nil)
+            if Settings.shared.pattern {
+                Color.clear
+                    .overlay {
+                        // Долю берём у `TimelineView`: он будит ровно к кадру.
+                        // Нет ни волны, ни всходов, ни переходов — расписание на
+                        // паузе; бежит одна гирлянда — будит реже.
+                        TimelineView(.animation(
+                            minimumInterval: busy ? nil : Motion.garlandFrame,
+                            paused: !busy && !running)) { frame in
+                            SproutPattern(wave: Cheer.shared.wave(at: frame.date),
+                                          origin: Cheer.shared.origin,
+                                          canvas: corner,
+                                          bloomFront: Launch.shared.bloomFront,
+                                          bloom: Launch.shared.bloom(at: frame.date),
+                                          shapes: shapes,
+                                          weave: weave,
+                                          swap: Launch.shared.reshape(at: frame.date),
+                                          repaint: Repaint.shared
+                                              .recolour(at: frame.date),
+                                          frolic: Frenzy.shared
+                                              .frolic(at: frame.date),
+                                          baseShade: baseShade,
+                                          waveShade: waveShade,
+                                          lag: Settings.shared.sway
+                                              ? Tilt.shared.lag : [],
+                                          era: Tilt.shared.era,
+                                          ember: Ember.shared
+                                              .smoulder(at: frame.date),
+                                          garland: lit ? (running
+                                              ? frame.date
+                                                  .timeIntervalSinceReferenceDate
+                                              : 0) : nil)
+                        }
+                        .padding(-Metrics.parallax)
+                        .offset(x: Tilt.shared.shift.width,
+                                y: Tilt.shared.shift.height)
                     }
-                    .padding(-Metrics.parallax)
-                    .offset(x: Tilt.shared.shift.width,
-                            y: Tilt.shared.shift.height)
-                }
-                .clipped()
+                    .clipped()
+            }
         }
         .onGeometryChange(for: CGPoint.self) { $0.frame(in: .global).origin }
-            action: { corner = $0 }
+            action: { spot in settle.put(spot) { corner = $0 } }
     }
 }
 
-/// Фон экрана: узор и растяжка внизу под панелью вкладок. Равенство не
-/// объявлено нарочно: тема приходит окружением, и по равенству свойств холст
-/// остался бы в старой теме.
-struct SproutBackground: View {
-    var body: some View {
-        ZStack {
-            SproutField()
+/// Угол холста без спешки. Лист едет — пальцем, показом, разворачиванием
+/// карточки — и угол меняется на каждом кадре; ставь его сразу, узор
+/// перерисовывался бы целиком каждый кадр, и лист смахивался рывками.
+/// Пока едет — узор едет вместе с ним; встал — угол сверяется с окном.
+/// Первый замер — сразу, чтобы узор с самого начала стоял как у экрана.
+@MainActor
+private final class Settle {
+    private var job: Task<Void, Never>?
+    private var placed = false
 
-            VStack {
-                // Сверху не гасим: там подложка рисует тот же узор.
-                Spacer(minLength: 0)
-                wash
-            }
+    func put(_ spot: CGPoint, apply: @escaping (CGPoint) -> Void) {
+        job?.cancel()
+        guard placed else {
+            placed = true
+            apply(spot)
+            return
         }
-        .ignoresSafeArea()
-        .onAppear { Tilt.shared.watch() }
-        .onDisappear { Tilt.shared.unwatch() }
-        // `initial` — чтобы выключенный параллакс не ждал первой смены.
-        .onChange(of: Settings.shared.parallax, initial: true) { _, on in
-            Tilt.shared.parallax = on
+        job = Task { @MainActor in
+            try? await Task.sleep(for: .milliseconds(160))
+            guard !Task.isCancelled else { return }
+            apply(spot)
         }
     }
+}
 
-    private var wash: some View {
-        let solid = Palette.background
-        return LinearGradient(
-            stops: [
-                .init(color: solid.opacity(0), location: 0),
-                .init(color: solid, location: 1 - Metrics.washStop),
-                .init(color: solid, location: 1),
-            ],
-            startPoint: .top,
-            endPoint: .bottom
-        )
-        .frame(height: Metrics.washHeight)
+/// Фон экрана — узор во весь экран, без растяжки под панелью вкладок: она
+/// серым мылила узор внизу. Равенство не объявлено нарочно: тема приходит
+/// окружением, и по равенству свойств холст остался бы в старой теме.
+struct SproutBackground: View {
+    var body: some View {
+        SproutField()
+            .ignoresSafeArea()
+            .onAppear { Tilt.shared.watch() }
+            .onDisappear { Tilt.shared.unwatch() }
+            // `initial` — чтобы выключенный параллакс не ждал первой смены.
+            // Без узора наклону двигать нечего.
+            .onChange(of: Settings.shared.parallax && Settings.shared.pattern,
+                      initial: true) { _, on in
+                Tilt.shared.parallax = on
+            }
     }
 }
 
 extension View {
-    /// Подложка под вырезом — экранам, у которых верх ничем не занят. Главной
-    /// не нужна: верх там держит растяжка, и две подложки дали бы черту на
-    /// границе.
-    func sproutNotchCover() -> some View {
-        modifier(SproutNotchCover())
-    }
-}
-
-/// Подложка под вырезом — тот же фон от того же угла окна, обрезанный по
-/// вырезу: узор проходит насквозь без шва, а содержимое под строку состояния
-/// не заезжает.
-private struct SproutNotchCover: ViewModifier {
-    @Environment(\.notch) private var notch
-
-    func body(content: Content) -> some View {
-        content.overlay(alignment: .top) {
-            // Без `clipped`: узор уже обрезан по своему слою, а лишний проход
-            // растеризации стоил бы на каждом кадре волны.
-            SproutField()
-                .frame(height: notch)
-                .frame(maxHeight: .infinity, alignment: .top)
-                .ignoresSafeArea()
+    /// Верх прокрутки — мягкий край, как под панелями iOS: уезжающее под
+    /// строку состояния размывается, а не режется полосой узора. Полоса
+    /// объявлена прокрутке панелью (`safeAreaBar`) — по ней система и
+    /// кладёт край. У главной край свой, под лентой комнат.
+    func sproutSoftTop() -> some View {
+        safeAreaBar(edge: .top, spacing: 0) {
+            Color.clear
+                .frame(height: Metrics.softTop)
                 .allowsHitTesting(false)
         }
+        .scrollEdgeEffectStyle(.soft, for: .top)
     }
 }

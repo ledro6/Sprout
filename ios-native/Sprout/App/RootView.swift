@@ -8,7 +8,6 @@ struct RootView: View {
     /// Сад общий — см. `Garden.shared`: с ним говорит и Siri.
     @State private var garden = Garden.shared
 
-    @State private var notch: CGFloat = 0
 
     /// Не в окружении — см. `Settings`.
     private let settings = Settings.shared
@@ -54,10 +53,12 @@ struct RootView: View {
             if asked { pane = .home }
         }
         .tabBarMinimizeBehavior(.onScrollDown)
+        // Край прокрутки везде — плавным градиентом размытия, как в iOS, а
+        // не полосой с чертой под панелью.
+        .scrollEdgeEffectStyle(.soft, for: .all)
         .tint(Palette.accent)
         .environment(garden)
         // Глубину выреза знает только корень: окно видно только отсюда.
-        .environment(\.notch, notch)
         .task { await runClock() }
         .task { await Launch.shared.run() }
         .task { Chime.warm() }
@@ -116,13 +117,11 @@ struct RootView: View {
         }
         // Наблюдатель касаний — тоже на окно, см. `Finger`.
         .onAppear {
-            notch = Self.topInset()
             Finger.shared.watch()
         }
         // При первом появлении окна могло ещё не быть.
         .onChange(of: phase) { _, now in
             if now == .active {
-                notch = Self.topInset()
                 Finger.shared.watch()
                 // Пока спали, сад мог полить виджет или кнопка в
                 // уведомлении — а живые действия могли смахнуть.
@@ -267,17 +266,6 @@ struct RootView: View {
             Splash(owner: garden.owner)
                 .transition(.opacity)
         }
-    }
-
-    /// Глубина выреза — у окна: SwiftUI её не отдаёт (и нулевая рамка, и
-    /// `GeometryReader` отвечали нулём). Приложение только вертикальное, так
-    /// что за сеанс число не меняется.
-    private static func topInset() -> CGFloat {
-        UIApplication.shared.connectedScenes
-            .compactMap { $0 as? UIWindowScene }
-            .flatMap(\.windows)
-            .first { $0.isKeyWindow }?
-            .safeAreaInsets.top ?? 0
     }
 
     /// Плашка с логотипом — общая для всех вкладок, от верха самого экрана,

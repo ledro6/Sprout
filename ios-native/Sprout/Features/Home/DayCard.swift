@@ -2,7 +2,7 @@ import SwiftUI
 
 /// Карточка дня — сверху комнаты: приветствие по времени суток, кто здесь
 /// ждёт воды и две живые мелочи — череда дней с поливом и сколько осталось
-/// до ближайшей медали. Ждут воды — «Обойти по очереди» запускает обход
+/// до ближайшей медали. Ждут воды — «Полить по очереди» запускает обход
 /// сада на экране блокировки. Внизу — оранжерея садовника: уровень, титул
 /// и задания недели; нажатие открывает всё о садовнике. Значок времени
 /// суток дышит; сменились сутки — карточка сама перерисуется, часы —
@@ -20,6 +20,10 @@ struct DayCard: View {
     @State private var me = Gardener(experience: 0)
     @State private var week: Week?
     @State private var growing = false
+    /// Первый пересчёт — без анимации: вью SwiftUI создаёт заново при
+    /// каждом возвращении на экран, и оранжерея с полоской уровня вырастали
+    /// бы из нуля снова. Растут — только перемены при открытом экране.
+    @State private var counted = false
 
     private let cabinet = Cabinet.shared
 
@@ -33,7 +37,7 @@ struct DayCard: View {
                 GardenerView()
                     .toolbar {
                         ToolbarItem(placement: .topBarTrailing) {
-                            Button("Готово") { growing = false }
+                            SheetClose { growing = false }
                         }
                     }
             }
@@ -74,7 +78,7 @@ struct DayCard: View {
                     Task { await Live.shared.startRound() }
                     Feel.done()
                 } label: {
-                    Label("Обойти по очереди", systemImage: "figure.walk")
+                    Label("Полить по очереди", systemImage: "drop.circle")
                         .font(Typography.settingNote)
                         .lineLimit(1)
                 }
@@ -92,7 +96,7 @@ struct DayCard: View {
         .sproutRide()
     }
 
-    /// Череда и медаль — капсулами в ряд, а не влезают — друг под другом.
+    /// Дни подряд и медаль — капсулами в ряд, а не влезают — друг под другом.
     private var chips: some View {
         ViewThatFits(in: .horizontal) {
             HStack(spacing: 8) { chipList }
@@ -108,7 +112,7 @@ struct DayCard: View {
                  tint: Palette.warn, multicolor: true)
         }
         if streak > 0 {
-            chip(Lang.format("череда %lld", streak), icon: "flame.fill",
+            chip(Lang.format("Дней подряд: %lld", streak), icon: "flame.fill",
                  tint: Palette.warn)
         }
         if let next = cabinet.next(trophies) {
@@ -191,11 +195,16 @@ struct DayCard: View {
     }
 
     private func recount() {
-        trophies = Trophies.of(garden.log, rooms: garden.rooms,
-                               since: garden.since)
-        streak = garden.score().streak
-        me = Gardener.of(log: garden.log, quests: QuestBook.shared.done,
-                         medals: Cabinet.shared.total)
-        week = Week.of(Date(), log: garden.log, rooms: garden.rooms)
+        var quiet = Transaction()
+        quiet.disablesAnimations = !counted
+        withTransaction(quiet) {
+            trophies = Trophies.of(garden.log, rooms: garden.rooms,
+                                   since: garden.since)
+            streak = garden.score().streak
+            me = Gardener.of(log: garden.log, quests: QuestBook.shared.done,
+                             medals: Cabinet.shared.total)
+            week = Week.of(Date(), log: garden.log, rooms: garden.rooms)
+        }
+        counted = true
     }
 }

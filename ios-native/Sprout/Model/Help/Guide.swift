@@ -27,7 +27,7 @@ enum Term: String, CaseIterable, Identifiable, Sendable {
         case .lock: Lang.text("Замок")
         case .trip: Lang.text("Уезжаю")
         case .accuracy: Lang.text("Точность полива")
-        case .streak: Lang.text("Череда")
+        case .streak: Lang.text("Дни подряд")
         case .orrery: Lang.text("Планетарий")
         case .parade: Lang.text("Парад")
         case .pets: Lang.text("Кошкам и собакам")
@@ -238,7 +238,7 @@ enum Tour {
                  title: Lang.text("Кнопки вокруг"),
                  text: Lang.text("""
                      Сверху — комнаты и кнопки: порядок карточек, «ещё» — \
-                     «Сад в AR», обход сада, «Уезжаю…», — вид плиткой или \
+                     «Сад в AR», «Полить по очереди», «Уезжаю…», — вид плиткой или \
                      списком и настройки. Внизу — вкладки: во «Добавить» \
                      сажают новое растение.
                      """)),

@@ -91,7 +91,7 @@ struct Race: Codable, Hashable, Identifiable, Sendable {
                 .formatted(.dateTime.day().month(.wide))
         let head = Lang.format("%1$@ зовёт в челлендж Sprout: «%2$@», %3$@.",
                                host, title, dates)
-        let invite = Lang.text("Чтобы участвовать, скопируйте это сообщение целиком и нажмите «Вставить» в Sprout → Профиль → Друзья. Счёт присылайте своим кодом — кнопкой «Позвать».")
+        let invite = Lang.text("Чтобы участвовать, скопируйте это сообщение целиком и нажмите «Вставить» в Sprout → Профиль → Друзья. Свой счёт присылайте кнопкой «Отправить счёт».")
         return head + "\n" + invite + "\n" + code
     }
 

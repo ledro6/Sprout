@@ -7,6 +7,10 @@ struct GardenerView: View {
 
     @State private var me = Gardener(experience: 0)
     @State private var week: Week?
+    /// Первый пересчёт — без анимации: вью SwiftUI создаёт заново при
+    /// каждом возвращении на экран, и оранжерея с полоской уровня вырастали
+    /// бы из нуля снова. Растут — только перемены при открытом экране.
+    @State private var counted = false
 
     var body: some View {
         ScrollView {
@@ -23,13 +27,19 @@ struct GardenerView: View {
         .background { SproutBackground() }
         .navigationTitle("Садовник")
         .navigationBarTitleDisplayMode(.inline)
+        .scrollEdgeEffectStyle(.soft, for: .top)
         .task(id: garden.log.count) { recount() }
     }
 
     private func recount() {
-        me = Gardener.of(log: garden.log, quests: QuestBook.shared.done,
-                         medals: Cabinet.shared.total)
-        week = Week.of(Date(), log: garden.log, rooms: garden.rooms)
+        var quiet = Transaction()
+        quiet.disablesAnimations = !counted
+        withTransaction(quiet) {
+            me = Gardener.of(log: garden.log, quests: QuestBook.shared.done,
+                             medals: Cabinet.shared.total)
+            week = Week.of(Date(), log: garden.log, rooms: garden.rooms)
+        }
+        counted = true
     }
 
     // MARK: - Оранжерея и уровень
@@ -135,7 +145,7 @@ struct GardenerView: View {
     // MARK: - Опыт
 
     private var sources: some View {
-        SproutGroup("Откуда опыт") {
+        SproutGroup("Как растёт уровень") {
             source(Lang.text("Полив"), Gardener.pour)
             SproutDivider()
             source(Lang.text("Полив вовремя — сверху"), Gardener.aim)
@@ -208,7 +218,7 @@ struct QuestRow: View {
     }
 
     private var status: String {
-        if challenge.done { return Lang.text("Сделано") }
+        if challenge.done { return Lang.text("Выполнено") }
         if challenge.failed { return Lang.text("Сорвано на этой неделе") }
         return Lang.format("%1$lld из %2$lld", challenge.count, challenge.goal)
     }

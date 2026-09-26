@@ -62,6 +62,9 @@ struct Diary: Equatable {
     /// Сколько дней сада видно на графике.
     static let span = 30.0
 
+    /// На столько раньше полива стоит точка «до» — на графике не видно.
+    static let tick: TimeInterval = 0.5
+
     /// Линия высыхания за последние `span` дней сада: полив поднимает к
     /// единице, дальше земля сохнет ровно по сроку растения, а упав до нуля —
     /// лежит на дне, пока не польют. Перед поливом — сколько воды осталось
@@ -83,7 +86,7 @@ struct Diary: Equatable {
             ($0.when, $0.level)
         }
         func slide(to moment: Date, ending: Double?) {
-            guard let start = last else { return }
+            guard let start = last, moment > start.when else { return }
             let fall = moment.timeIntervalSince(start.when) / dry
             let end = ending ?? max(start.level - fall, 0)
             // Высохла раньше — лежит на дне, пока не польют.
@@ -94,7 +97,11 @@ struct Diary: Equatable {
             points.append(Point(when: moment, level: end))
         }
         for pour in inside {
-            slide(to: pour.when, ending: pour.left.map { min(max($0, 0), 1) })
+            // Точка «до» — на миг раньше полива: двух точек с одной отметкой
+            // времени нет, и площадь под линией не собирает их в зубец выше
+            // линии.
+            slide(to: pour.when.addingTimeInterval(-tick),
+                  ending: pour.left.map { min(max($0, 0), 1) })
             points.append(Point(when: pour.when, level: 1, poured: true))
             last = (pour.when, 1)
         }

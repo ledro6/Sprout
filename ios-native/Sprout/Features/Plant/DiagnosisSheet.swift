@@ -67,6 +67,7 @@ struct DiagnosisSheet: View {
             .background { SproutBackground() }
             .navigationTitle("Что с растением?")
             .navigationBarTitleDisplayMode(.inline)
+            .scrollEdgeEffectStyle(.soft, for: .top)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Готово") { dismiss() }

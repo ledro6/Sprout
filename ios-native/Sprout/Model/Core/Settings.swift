@@ -145,19 +145,27 @@ final class Settings {
         didSet { Self.put(waveHue, Key.waveHue, in: store) }
     }
 
-    /// Свои цвета — общие у узора и волны, по порядку добавления, до
-    /// `Hue.ownLimit`.
-    private(set) var ownHues: [Channels] {
-        didSet { Self.put(ownHues, Key.ownHues, in: store) }
+    /// Свои цвета — у узора, волны и кружка хозяина свои: добавленный к
+    /// узору не лезет в ряд волны. По порядку добавления, до `Hue.ownLimit`
+    /// в ряду.
+    private(set) var ownHues: [HueLayer: [Channels]] {
+        didSet {
+            for layer in HueLayer.allCases where ownHues[layer] != oldValue[layer] {
+                Self.put(own(layer), Key.own(layer), in: store)
+            }
+        }
     }
+
+    func own(_ layer: HueLayer) -> [Channels] { ownHues[layer] ?? [] }
 
     /// Новый свой цвет — в конец ряда. Такой уже есть или ряд полон — нет.
     @discardableResult
-    func add(own colour: Channels) -> Bool {
-        guard ownHues.count < Hue.ownLimit,
-              !ownHues.contains(where: { Hue.same($0, colour) })
+    func add(own colour: Channels, to layer: HueLayer) -> Bool {
+        let row = own(layer)
+        guard row.count < Hue.ownLimit,
+              !row.contains(where: { Hue.same($0, colour) })
         else { return false }
-        ownHues.append(colour)
+        ownHues[layer] = row + [colour]
         return true
     }
 
@@ -207,25 +215,38 @@ final class Settings {
         statsOrder = StatsBlock.move(block, before: target, in: statsOrder)
     }
 
-    /// Убрали свой цвет — узор или волна, если были им окрашены, возвращаются
-    /// к цвету по умолчанию.
-    func remove(own colour: Channels) {
-        ownHues.removeAll { Hue.same($0, colour) }
-        if case .own(let used) = patternHue, Hue.same(used, colour) {
-            patternHue = .pattern
+    /// Соседи в списке выбора меняются местами — шаг перетаскивания.
+    /// Скрытые между ними стоят где стояли.
+    func swap(_ block: StatsBlock, with other: StatsBlock) {
+        guard let from = statsOrder.firstIndex(of: block),
+              let to = statsOrder.firstIndex(of: other), from != to
+        else { return }
+        statsOrder.swapAt(from, to)
+    }
+
+    /// Убрали свой цвет из ряда — тот, кого он красил, возвращается к цвету
+    /// по умолчанию; в других рядах цвет остаётся.
+    func remove(own colour: Channels, from layer: HueLayer) {
+        ownHues[layer] = own(layer).filter { !Hue.same($0, colour) }
+        func uses(_ hue: Hue) -> Bool {
+            if case .own(let used) = hue { return Hue.same(used, colour) }
+            return false
         }
-        if case .own(let used) = waveHue, Hue.same(used, colour) {
-            waveHue = .wave
+        switch layer {
+        case .pattern: if uses(patternHue) { patternHue = .pattern }
+        case .wave: if uses(waveHue) { waveHue = .wave }
+        case .avatar: if uses(avatarHue) { avatarHue = .avatar }
         }
     }
 
-    /// Своей настройкой: кружок — про человека, а не про фон.
-    var avatarTint: Tint {
-        didSet { store.set(avatarTint.rawValue, forKey: Key.avatarTint) }
+    /// Своей настройкой: кружок — про человека, а не про фон. Готовый цвет
+    /// или свой, как у узора.
+    var avatarHue: Hue {
+        didSet { Self.put(avatarHue, Key.avatarHue, in: store) }
     }
 
     /// Фото хозяина — имя файла среди снимков, см. `Shots`; нет — кружок
-    /// с буквой цвета `avatarTint`.
+    /// с буквой цвета `avatarHue`.
     var avatarShot: String? {
         didSet { store.set(avatarShot, forKey: Key.avatarShot) }
     }
@@ -292,6 +313,11 @@ final class Settings {
     /// Снежинки, листья и гирлянда в узоре, см. `Motif`.
     var seasonalPattern: Bool {
         didSet { store.set(!seasonalPattern, forKey: Key.plainPattern) }
+    }
+
+    /// Узор на фоне. Выключен — фон ровным цветом: ни фигурок, ни наклона.
+    var pattern: Bool {
+        didSet { store.set(!pattern, forKey: Key.hiddenPattern) }
     }
 
     /// Разрешение спрашивает экран настроек, когда включают переключатель.
@@ -380,13 +406,24 @@ final class Settings {
         static let waveTint = "waveTint"
         static let patternHue = "patternHue"
         static let waveHue = "waveHue"
+        /// Общий ряд прежней сборки — читается, пока у слоя нет своего.
         static let ownHues = "ownHues"
+
+        static func own(_ layer: HueLayer) -> String {
+            switch layer {
+            case .pattern: "ownPatternHues"
+            case .wave: "ownWaveHues"
+            case .avatar: "ownAvatarHues"
+            }
+        }
         static let statsOrder = "statsOrder"
         static let weather = "weather"
         static let climate = "climate"
         static let saver = "batterySaver"
         static let statsHidden = "statsHidden"
+        /// Готовый цвет кружка прежней сборки — номером.
         static let avatarTint = "avatarTint"
+        static let avatarHue = "avatarHue"
         static let avatarShot = "avatarShot"
         /// Прежний переключатель, наоборот — «без отклика». Читается, пока
         /// силы не задали: выключивший отклик не должен почувствовать его
@@ -402,6 +439,7 @@ final class Settings {
         static let flatYear = "ignoreSeasons"
         /// Тоже наоборот: узор по времени года — по умолчанию.
         static let plainPattern = "plainPattern"
+        static let hiddenPattern = "hiddenPattern"
         static let toured = "toured"
         static let walked = "walkedScreens"
         static let launches = "launches"
@@ -452,8 +490,14 @@ final class Settings {
             ?? Self.tint(store, Key.patternTint).map(Hue.preset) ?? .pattern
         waveHue = Self.take(Hue.self, Key.waveHue, from: store)
             ?? Self.tint(store, Key.waveTint).map(Hue.preset) ?? .wave
-        ownHues = Array((Self.take([Channels].self, Key.ownHues, from: store)
-                         ?? []).prefix(Hue.ownLimit))
+        // Свои цвета прежней сборки были общими — достаются и узору, и волне.
+        let shared = Self.take([Channels].self, Key.ownHues, from: store)
+        ownHues = Dictionary(uniqueKeysWithValues: HueLayer.allCases.map {
+            layer in
+            let row = Self.take([Channels].self, Key.own(layer), from: store)
+                ?? (layer == .avatar ? nil : shared) ?? []
+            return (layer, Array(row.prefix(Hue.ownLimit)))
+        })
         weather = store.bool(forKey: Key.weather)
         saver = store.bool(forKey: Key.saver)
         climate = Self.take(Climate.self, Key.climate, from: store)
@@ -461,7 +505,8 @@ final class Settings {
             Self.take([StatsBlock].self, Key.statsOrder, from: store) ?? [])
         statsHidden = Self.take(Set<StatsBlock>.self, Key.statsHidden,
                                 from: store) ?? []
-        avatarTint = Self.tint(store, Key.avatarTint) ?? Tint.defaultAvatar
+        avatarHue = Self.take(Hue.self, Key.avatarHue, from: store)
+            ?? Self.tint(store, Key.avatarTint).map(Hue.preset) ?? .avatar
         avatarShot = store.string(forKey: Key.avatarShot)
         if store.object(forKey: Key.strength) != nil {
             hapticStrength = min(max(store.double(forKey: Key.strength), 0), 1)
@@ -473,6 +518,7 @@ final class Settings {
         sway = !store.bool(forKey: Key.stiffShapes)
         seasons = !store.bool(forKey: Key.flatYear)
         seasonalPattern = !store.bool(forKey: Key.plainPattern)
+        pattern = !store.bool(forKey: Key.hiddenPattern)
         reminders = store.bool(forKey: Key.reminders)
         calendar = store.bool(forKey: Key.calendar)
         let level = (store.double(forKey: Key.threshold) * 100).rounded()

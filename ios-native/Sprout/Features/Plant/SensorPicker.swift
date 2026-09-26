@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// Привязать датчик: Flower Care, что рядом по Bluetooth, и датчики
+/// Подключить датчик: Flower Care, что рядом по Bluetooth, и датчики
 /// влажности из «Дома». Нажали — датчик привязан и сразу опрошен.
 struct SensorPicker: View {
     let plantID: Plant.ID
@@ -36,6 +36,7 @@ struct SensorPicker: View {
             .background { SproutBackground() }
             .navigationTitle("Датчик влажности")
             .navigationBarTitleDisplayMode(.inline)
+            .scrollEdgeEffectStyle(.soft, for: .top)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button("Отмена") { dismiss() }

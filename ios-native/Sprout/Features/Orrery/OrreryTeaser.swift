@@ -8,9 +8,11 @@ struct OrreryTeaser: View {
     var body: some View {
         let orbits = Orrery.orbits(garden.rooms.flatMap(\.plants))
         HStack(spacing: 14) {
-            // Бережём заряд — планеты ползут двумя кадрами в секунду.
+            // Плавно — с частотой экрана, до 120 Гц: тридцать кадров на
+            // ProMotion читались рывками. Бережём заряд — планеты ползут
+            // двумя кадрами в секунду.
             TimelineView(.animation(minimumInterval: Power.shared.calm
-                                    ? 0.5 : 1.0 / 30)) { context in
+                                    ? 0.5 : nil)) { context in
                 let drift = context.date.timeIntervalSince(garden.ticked)
                     * Garden.speed / 86_400
                 OrreryDial(planets: Orrery.sky(orbits, ahead: 0, drift: drift),

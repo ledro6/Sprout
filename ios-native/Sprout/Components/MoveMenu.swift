@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// Подменю «Переехать» — одно на меню карточки и экрана растения.
+/// Подменю «В другую комнату» — одно на меню карточки и экрана растения.
 struct MoveMenu: View {
     let current: String?
     let rooms: [String]
@@ -19,7 +19,7 @@ struct MoveMenu: View {
                 Label("Новая комната…", systemImage: "plus")
             }
         } label: {
-            Label("Переехать", systemImage: "door.left.hand.open")
+            Label("В другую комнату", systemImage: "door.left.hand.open")
         }
     }
 }

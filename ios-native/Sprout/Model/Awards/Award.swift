@@ -24,7 +24,7 @@ enum Award: String, CaseIterable, Identifiable, Sendable {
         var title: String {
             switch self {
             case .waterings: Lang.text("Поливы")
-            case .streaks: Lang.text("Череда")
+            case .streaks: Lang.text("Дни подряд")
             case .care: Lang.text("Забота")
             case .garden: Lang.text("Сад")
             case .moments: Lang.text("Особые дни")

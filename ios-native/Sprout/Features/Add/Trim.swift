@@ -37,6 +37,7 @@ struct Trim: View {
             .background { SproutBackground() }
             .navigationTitle("Кадр")
             .navigationBarTitleDisplayMode(.inline)
+            .scrollEdgeEffectStyle(.soft, for: .top)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button("Отмена") { dismiss() }

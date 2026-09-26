@@ -39,6 +39,16 @@ struct StatsView: View {
     /// «Выбрать»: блоки качаются, их можно перетаскивать и убирать.
     @State private var choosing = false
 
+    /// Строку списка тянут: какую, насколько от её места и через сколько
+    /// мест она уже прошла, — см. `carry`.
+    @State private var lifted: StatsBlock?
+    @State private var travel: CGFloat = 0
+    @State private var hops = 0
+
+    /// Блок и его строка в списке выбора — одно целое: карточка
+    /// складывается в строку и разворачивается обратно.
+    @Namespace private var fold
+
     /// Список растений: кого поливают чаще, кого реже, кто суше всех.
     enum Board: String, CaseIterable, Identifiable {
         case most, least, driest
@@ -79,7 +89,7 @@ struct StatsView: View {
                             } else {
                                 picker.hintSpot(.statsPeriod)
                                 if choosing {
-                                    Text("Перетащите блок, чтобы поменять местами, «−» — убрать.")
+                                    Text("Тяните за полоски справа, чтобы поменять порядок, «−» — убрать.")
                                         .font(Typography.settingNote)
                                         .foregroundStyle(.secondary)
                                         .fixedSize(horizontal: false, vertical: true)
@@ -87,9 +97,22 @@ struct StatsView: View {
                                         .transition(.blurReplace)
                                 }
                                 let shown = settings.statsShown
-                                ForEach(Array(shown.enumerated()),
-                                        id: \.element) { item in
-                                    tile(item.element, index: item.offset)
+                                // В выборе блоки складываются в список: так
+                                // их видно все разом, и таскать легко.
+                                if choosing {
+                                    VStack(spacing: Metrics.statRowGap) {
+                                        ForEach(shown, id: \.self) { block in
+                                            row(block)
+                                                .matchedGeometryEffect(
+                                                    id: block, in: fold)
+                                        }
+                                    }
+                                } else {
+                                    ForEach(shown, id: \.self) { block in
+                                        content(block)
+                                            .matchedGeometryEffect(
+                                                id: block, in: fold)
+                                    }
                                 }
                                 if shown.isEmpty && !choosing {
                                     Text("Все блоки убраны — нажмите «Выбрать», чтобы вернуть.")
@@ -105,14 +128,14 @@ struct StatsView: View {
                             }
                         }
                         .animation(Motion.arrange, value: settings.statsShown)
-                        .animation(Motion.pill, value: choosing)
+                        .animation(Motion.fold, value: choosing)
                         .padding(.horizontal, Metrics.contentMargin)
                         .padding(.top, 8)
                         .padding(.bottom, 28)
                     }
                 }
                 .background { SproutBackground() }
-                .sproutNotchCover()
+                .sproutSoftTop()
                 .toolbar(.hidden, for: .navigationBar)
                 .walk(.stats, scroll: reader)
                 .navigationDestination(for: StatsRoute.self) { route in
@@ -143,12 +166,14 @@ struct StatsView: View {
         .onChange(of: phase) { _, now in
             if now == .active { recount() }
         }
-        // Сад сохнет — «сейчас» и прогноз живые, но не ежесекундно.
+        // Сад сохнет — «сейчас» и прогноз живые, но не ежесекундно. По
+        // таймеру — только живое и только если сдвинулось: полный пересчёт
+        // перерисовывал все графики и дёргал экран.
         .task {
             while !Task.isCancelled {
                 try? await Task.sleep(for: .seconds(3))
                 guard !Task.isCancelled else { return }
-                recount()
+                refresh()
             }
         }
     }
@@ -156,6 +181,13 @@ struct StatsView: View {
     private func recount() {
         book = Almanac.of(garden.log, rooms: garden.rooms, period: period,
                           since: garden.since)
+    }
+
+    private func refresh() {
+        let fresh = book.live(garden.rooms)
+        if fresh.now != book.now { book.now = fresh.now }
+        if fresh.ahead != book.ahead { book.ahead = fresh.ahead }
+        if fresh.plants != book.plants { book.plants = fresh.plants }
     }
 
     /// Цвет волны, а не узора: столбики считают поливы.
@@ -168,58 +200,105 @@ struct StatsView: View {
 
     // MARK: - Выбор блоков
 
-    /// Блок на своём месте. В выборе — качается, «−» убирает, перетаскивание
-    /// ставит перед тем, на который бросили; нажатия внутрь не проходят.
-    @ViewBuilder
-    private func tile(_ block: StatsBlock, index: Int) -> some View {
-        let plate = content(block)
-            .overlay {
-                if choosing {
-                    Color.clear.contentShape(Rectangle())
-                }
+    /// Блок в выборе — строкой: «−» убирает, за полоски справа тянут.
+    private func row(_ block: StatsBlock) -> some View {
+        HStack(spacing: 12) {
+            Button {
+                withAnimation(Motion.arrange) { settings.hide(block) }
+                Feel.toss()
+            } label: {
+                Image(systemName: "minus.circle.fill")
+                    .font(Typography.navTitle)
+                    .symbolRenderingMode(.palette)
+                    .foregroundStyle(.white, Palette.alarm)
             }
-            .overlay(alignment: .topLeading) {
-                if choosing {
-                    Button {
-                        withAnimation(Motion.arrange) { settings.hide(block) }
-                        Feel.toss()
-                    } label: {
-                        Image(systemName: "minus")
-                            .font(.system(size: 13, weight: .bold))
-                            .foregroundStyle(.white)
-                            .frame(width: 26, height: 26)
-                            .background(Circle().fill(Palette.alarm))
-                    }
-                    .buttonStyle(.plain)
-                    .offset(x: -8, y: -8)
-                    .accessibilityLabel(Lang.format("Убрать «%@»", block.title))
-                    .transition(.scale.combined(with: .opacity))
-                }
-            }
-            .modifier(Jiggle(on: choosing,
-                             phase: (Double(index) * 0.37)
-                                .truncatingRemainder(dividingBy: 1)))
-        if choosing {
-            plate
-                .draggable(block.rawValue) {
-                    Label(block.title, systemImage: block.icon)
-                        .font(Typography.detail)
-                        .padding(.horizontal, 16)
-                        .padding(.vertical, 10)
-                        .glassEffect(.regular, in: .capsule)
-                }
-                .dropDestination(for: String.self) { items, _ in
-                    guard let raw = items.first,
-                          let moved = StatsBlock(rawValue: raw),
-                          moved != block else { return false }
-                    withAnimation(Motion.arrange) {
-                        settings.move(moved, before: block)
-                    }
+            .buttonStyle(.plain)
+            .accessibilityLabel(Lang.format("Убрать «%@»", block.title))
+            Image(systemName: block.icon)
+                .font(Typography.settingRow)
+                .foregroundStyle(Palette.accent)
+                .frame(width: 24)
+            Text(block.title)
+                .font(Typography.settingRow)
+                .foregroundStyle(Palette.ink)
+                .lineLimit(1)
+            Spacer(minLength: 8)
+            Image(systemName: "line.3.horizontal")
+                .font(Typography.settingRow)
+                .foregroundStyle(.secondary)
+                .frame(width: 48, height: Metrics.statRow)
+                .contentShape(Rectangle())
+                .gesture(carry(block))
+                .accessibilityHidden(true)
+        }
+        .padding(.leading, 14)
+        .frame(height: Metrics.statRow)
+        .sproutPlate(in: RoundedRectangle(cornerRadius: Metrics.statRowRadius,
+                                          style: .continuous))
+        .scaleEffect(lifted == block ? 1.03 : 1)
+        .shadow(color: .black.opacity(lifted == block ? 0.16 : 0),
+                radius: 12, y: 5)
+        .offset(y: lifted == block ? travel : 0)
+        .zIndex(lifted == block ? 1 : 0)
+        // Тащимая строка встаёт на новое место без анимации: смещение
+        // сдвигается на то же место обратно, и под пальцем она стоит; соседи
+        // расступаются плавно.
+        .transaction { change in
+            if lifted == block { change.animation = nil }
+        }
+        .accessibilityElement(children: .contain)
+        .accessibilityAction(named: Text("Выше")) { step(block, by: -1) }
+        .accessibilityAction(named: Text("Ниже")) { step(block, by: 1) }
+    }
+
+    /// Тянут строку за полоски — она едет под пальцем и меняется местами с
+    /// соседом, как только минует его середину, как в списках iOS.
+    private func carry(_ block: StatsBlock) -> some Gesture {
+        DragGesture(minimumDistance: 0, coordinateSpace: .global)
+            .onChanged { value in
+                if lifted != block {
+                    withAnimation(Motion.pill) { lifted = block }
+                    hops = 0
                     Feel.pick()
-                    return true
                 }
-        } else {
-            plate
+                let pitch = Metrics.statRow + Metrics.statRowGap
+                var shift = value.translation.height - CGFloat(hops) * pitch
+                let shown = settings.statsShown
+                if let at = shown.firstIndex(of: block) {
+                    if shift > pitch / 2, at + 1 < shown.count {
+                        withAnimation(Motion.arrange) {
+                            settings.swap(block, with: shown[at + 1])
+                        }
+                        hops += 1
+                        shift -= pitch
+                        Feel.pick()
+                    } else if shift < -pitch / 2, at > 0 {
+                        withAnimation(Motion.arrange) {
+                            settings.swap(block, with: shown[at - 1])
+                        }
+                        hops -= 1
+                        shift += pitch
+                        Feel.pick()
+                    }
+                }
+                travel = shift
+            }
+            .onEnded { _ in
+                withAnimation(Motion.arrange) {
+                    lifted = nil
+                    travel = 0
+                }
+                hops = 0
+            }
+    }
+
+    /// Для VoiceOver — на место выше или ниже.
+    private func step(_ block: StatsBlock, by offset: Int) {
+        let shown = settings.statsShown
+        guard let at = shown.firstIndex(of: block),
+              shown.indices.contains(at + offset) else { return }
+        withAnimation(Motion.arrange) {
+            settings.swap(block, with: shown[at + offset])
         }
     }
 
@@ -259,9 +338,9 @@ struct StatsView: View {
         }
     }
 
-    /// Убранные — строками с «+»: вернуть на место, в конец.
+    /// Скрытые — строками с «+»: вернуть на место, в конец.
     private var hiddenGroup: some View {
-        SproutGroup("Убранные") {
+        SproutGroup("Скрытые") {
             ForEach(StatsBlock.allCases.filter(settings.statsHidden.contains)) {
                 block in
                 Button {
@@ -407,9 +486,9 @@ struct StatsView: View {
                 }
                 GridRow {
                     StatTile(value: book.streak.formatted(),
-                             caption: "Череда, дней",
+                             caption: "Дней подряд",
                              note: book.best > 0
-                                 ? Lang.format("лучшая — %lld", book.best)
+                                 ? Lang.format("рекорд — %lld", book.best)
                                  : nil)
                     StatTile(value: book.aim.known > 0
                                  ? Stats.percent(book.aim.share(.onTime))
@@ -682,7 +761,7 @@ struct StatsView: View {
                                      .year())
                              })
                     StatTile(value: Lang.format("%lld дней", records.longest),
-                             caption: "Самая длинная череда")
+                             caption: "Рекорд дней подряд")
                 }
                 GridRow {
                     StatTile(value: records.earliest.map { Stats.time($0) }

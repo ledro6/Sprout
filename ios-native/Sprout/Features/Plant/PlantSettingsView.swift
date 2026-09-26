@@ -56,6 +56,7 @@ struct PlantSettingsView: View {
             }
             .navigationTitle("Настройки растения")
             .navigationBarTitleDisplayMode(.inline)
+            .scrollEdgeEffectStyle(.soft, for: .top)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button("Отмена") { dismiss() }
@@ -228,7 +229,7 @@ struct PlantSettingsView: View {
                     }
                     .buttonStyle(.glass)
                     .buttonBorderShape(.circle)
-                    .accessibilityLabel("Опросить датчик")
+                    .accessibilityLabel("Обновить показания")
                 }
                 HStack(spacing: Metrics.actionGap) {
                     Button {
@@ -268,7 +269,7 @@ struct PlantSettingsView: View {
                     }
                     Feel.toss()
                 } label: {
-                    Label("Отвязать датчик", systemImage: "xmark.circle")
+                    Label("Отключить датчик", systemImage: "xmark.circle")
                         .font(Typography.settingRow)
                 }
             } else {
@@ -277,7 +278,7 @@ struct PlantSettingsView: View {
                     .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
                 Button { linking = true } label: {
-                    Label("Привязать датчик", systemImage: "sensor")
+                    Label("Подключить датчик", systemImage: "sensor")
                         .font(Typography.settingRow)
                 }
                 .buttonStyle(.glass)
@@ -291,7 +292,7 @@ struct PlantSettingsView: View {
     /// Опрыскивание, поворот к свету, протирка листьев — сроки выбором, как
     /// у пересадки. Срок вида, которого нет в списке, в список встаёт.
     private var errands: some View {
-        SproutGroup("Мелкий уход") {
+        SproutGroup("Дополнительный уход") {
             ForEach(Array(Duty.allCases.enumerated()), id: \.element) { item in
                 if item.offset > 0 { SproutDivider() }
                 errand(item.element)

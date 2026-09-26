@@ -77,9 +77,11 @@ final class Glide {
 /// ним, на скруглении: буквы уходят по дуге, сжимаются и мельчают с
 /// глубиной (`Drum`), а за последней комнатой — «Новая комната». Листают —
 /// барабан проворачивается: выглядывающее имя выезжает на грань и
-/// распрямляется, текущее загибается влево и тает. Путь короткий — ширина
-/// одного имени, а не экрана. `at` — положение листания страниц, дробное
-/// посреди жеста.
+/// распрямляется, текущее загибается влево и бледнеет, но не пропадает: с
+/// какой бы комнаты ни смотреть, кроме первой, за левым полем виден загнутый
+/// край прошлой — слева тоже есть комната. Путь короткий — ширина одного
+/// имени, а не экрана. `at` — положение листания страниц, дробное посреди
+/// жеста.
 ///
 /// Пальца лента не берёт: листают страницы под ней, и смахнуть можно прямо
 /// по названию. Нажатие на выглядывающее имя листает к нему.
@@ -111,11 +113,16 @@ struct RoomStrip: View {
 
     /// Шире — ужимается: имя целиком помещается в ленту.
     private var widest: CGFloat {
-        max(span - Metrics.contentMargin - Metrics.roomTail, 40)
+        max(span - Metrics.contentMargin - Metrics.roomPeek - Metrics.roomTail,
+            40)
     }
 
     var body: some View {
         let widths = (0 ..< count).map { min(measure($0), widest) }
+        // Грань — от поля страницы; со второй комнаты — чуть правее: слева
+        // остаётся место под загнутый край прошлой.
+        let lead = Metrics.contentMargin
+            + Metrics.roomPeek * min(max(at, 0), 1)
         // Где на развёртке барабана начинается каждое имя и докуда он
         // провёрнут сейчас: между страницами — пропорционально жесту.
         let starts = widths.indices.map { index in
@@ -124,27 +131,31 @@ struct RoomStrip: View {
         let turned = spot(starts, at)
         let step = spot(widths.map { $0 + Metrics.roomGap }, at)
         // Плоская грань — под текущее имя, посреди жеста — между двумя.
-        // Скругление за ней — на всё свободное место до кнопок: соседнее имя
-        // целиком помещается на дугу и прячется за край у конца ленты.
+        // Скругление за ней — круче свободного места до кнопок: буквы
+        // соседнего имени заворачиваются одна за другой, как на барабане, и
+        // прячутся за край у конца ленты.
         let flat = spot(widths, at)
-        let ahead = max(span - Metrics.contentMargin - flat, size * 2.5)
+        let ahead = max((span - lead - flat) * Metrics.roomBend, size * 2)
         // Внутри ленты — слева направо, а зеркалим сами: сдвиги, изгиб и
         // края считаются числами, и справа налево они идут от правого края.
         ZStack(alignment: .leading) {
             ForEach(0 ..< count, id: \.self) { index in
                 let along = starts[index] - turned
-                let away = along / max(step, 1)
+                // Впереди — в шагах текущего имени, позади — в страницах:
+                // длинное прошлое имя в шагах ушло бы «дальше», чем есть.
+                let forward = along / max(step, 1)
+                let away = forward >= 0 ? forward : CGFloat(index) - at
                 // Дальше соседей не рисуем: их всё равно не видно.
-                if away > -1, away < 2 {
+                if away > -2, away < 2 {
                     title(index, bend: Drum(
                         along: along, flat: flat, ahead: ahead,
-                        behind: size * Metrics.roomCurl,
+                        behind: max(size * Metrics.roomCurl, lead * 1.1),
                         width: widths[index], flipped: flipped))
                         .frame(width: widths[index], alignment: .leading)
                         .environment(\.layoutDirection, direction)
                         .blur(radius: haze(away))
                         .opacity(fade(away))
-                        .offset(x: left(along, widths[index]))
+                        .offset(x: left(along, widths[index], lead: lead))
                 }
             }
         }
@@ -153,8 +164,9 @@ struct RoomStrip: View {
         .mask { edges }
         .allowsHitTesting(false)
         .overlay(alignment: .leading) {
-            next(widths: widths, starts: starts, turned: turned)
+            next(widths: widths, starts: starts, turned: turned, lead: lead)
         }
+        .overlay(alignment: .leading) { previous(lead: lead) }
         .environment(\.layoutDirection, .leftToRight)
         .frame(maxWidth: .infinity, alignment: .leading)
         .onGeometryChange(for: CGFloat.self) { $0.size.width }
@@ -187,8 +199,9 @@ struct RoomStrip: View {
     }
 
     /// Левый край имени в ленте. Справа налево — то же от правого края.
-    private func left(_ along: CGFloat, _ wide: CGFloat) -> CGFloat {
-        let from = Metrics.contentMargin + along
+    private func left(_ along: CGFloat, _ wide: CGFloat,
+                      lead: CGFloat) -> CGFloat {
+        let from = lead + along
         return flipped ? span - from - wide : from
     }
 
@@ -235,21 +248,24 @@ struct RoomStrip: View {
         size * Metrics.roomBlur * min(abs(away), 1.3)
     }
 
-    /// Следующее — вполсилы, дальше — гаснет; уходящее гаснет быстрее, чем
-    /// уезжает.
+    /// Следующее — вполсилы, дальше — гаснет. Уходящее бледнеет быстрее,
+    /// чем уезжает, но не до конца: загнутое за левое поле, оно говорит, что
+    /// слева есть комната; дальше него — гаснет.
     private func fade(_ away: CGFloat) -> Double {
         guard away >= 0 else {
-            return Double(max(1 + away * Metrics.roomLeave, 0))
+            let gone = min(-away * Metrics.roomLeave, 1)
+            let kept = 1 - (1 - Metrics.roomBehind) * gone
+            return Double(kept * min(max(2 + away, 0), 1))
         }
         let near = 1 - Metrics.roomDim * min(away, 1)
         let far = min(max((1.9 - away) / 0.7, 0), 1)
         return Double(near * far)
     }
 
-    /// Края: у начала уходящее имя тает в поле, у конца длинное следующее
-    /// гаснет к краю экрана, а не обрывается.
+    /// Края: у начала загнутое прошлое имя гаснет к краю экрана, у конца
+    /// длинное следующее — тоже, а не обрывается.
     private var edges: some View {
-        let enter = min(Metrics.contentMargin / span, 0.5)
+        let enter = min(Metrics.contentMargin * 0.4 / span, 0.5)
         let leave = max(1 - Metrics.roomTail / span, enter)
         return LinearGradient(
             stops: [
@@ -265,10 +281,10 @@ struct RoomStrip: View {
     /// Выглядывающее имя нажимается — листаем к нему.
     @ViewBuilder
     private func next(widths: [CGFloat], starts: [CGFloat],
-                      turned: CGFloat) -> some View {
+                      turned: CGFloat, lead: CGFloat) -> some View {
         let index = current + 1
         if index < count {
-            let wide = min(widths[index], max(span - Metrics.contentMargin
+            let wide = min(widths[index], max(span - lead
                                               - (starts[index] - turned), 0))
             Button { go(index) } label: {
                 Color.clear
@@ -277,7 +293,23 @@ struct RoomStrip: View {
                     .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
-            .offset(x: left(starts[index] - turned, max(wide, 1)))
+            .offset(x: left(starts[index] - turned, max(wide, 1), lead: lead))
+            .accessibilityHidden(true)
+        }
+    }
+
+    /// Загнутый край прошлой комнаты тоже нажимается — листаем к ней.
+    @ViewBuilder
+    private func previous(lead: CGFloat) -> some View {
+        if current > 0 {
+            Button { go(current - 1) } label: {
+                Color.clear
+                    .frame(width: lead)
+                    .frame(maxHeight: .infinity)
+                    .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .offset(x: flipped ? span - lead : 0)
             .accessibilityHidden(true)
         }
     }
@@ -303,9 +335,9 @@ struct Drum: TextRenderer {
     /// Сколько от начала подписи до текста: у «Новой комнаты» впереди плюс.
     var lead: CGFloat = 0
 
-    /// Глаз далеко от барабана — во столько радиусов: мельчают буквы
-    /// мягко, а не проваливаются.
-    static let eye: CGFloat = 2.5
+    /// Глаз от барабана — во столько радиусов: буквы заметно мельчают,
+    /// уходя вглубь, но не проваливаются.
+    static let eye: CGFloat = 1.8
 
     func led(by lead: CGFloat) -> Drum {
         var copy = self

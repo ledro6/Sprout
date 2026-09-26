@@ -54,6 +54,7 @@ struct SettingsView: View {
             }
             .navigationTitle("Настройки")
             .navigationBarTitleDisplayMode(.large)
+            .scrollEdgeEffectStyle(.soft, for: .top)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     WalkButton(walk: .settings, bare: true)
@@ -101,7 +102,8 @@ struct SettingsView: View {
             SproutDivider()
 
             SproutBlock("Цвет узора") {
-                HueRow(current: settings.patternHue, spots: patternSpots,
+                HueRow(current: settings.patternHue, layer: .pattern,
+                       spots: patternSpots,
                        pick: { hue, spot in
                            // Прежний цвет берём до смены настройки:
                            // перекраска идёт из кружка, по которому попал
@@ -115,14 +117,16 @@ struct SettingsView: View {
                                                               y: spot.midY))
                            settings.patternHue = hue
                        },
-                       remove: removeOwn,
+                       remove: { removeOwn($0, at: $1, from: .pattern) },
                        hints: true)
             }
+            .disabled(!settings.pattern)
 
             SproutDivider()
 
             SproutBlock("Цвет волны", term: .wave) {
-                HueRow(current: settings.waveHue, spots: waveSpots,
+                HueRow(current: settings.waveHue, layer: .wave,
+                       spots: waveSpots,
                        pick: { hue, spot in
                            // Цвет волны виден только волной — пускаем её из
                            // кружка. В очередь: второй кружок дождётся
@@ -131,28 +135,31 @@ struct SettingsView: View {
                            Cheer.shared.queue(from: spot)
                            Feel.pick()
                        },
-                       remove: removeOwn)
+                       remove: { removeOwn($0, at: $1, from: .wave) })
             }
         }
     }
 
-    /// Убрали свой цвет. Был им окрашен узор или волна — они возвращаются к
-    /// цвету по умолчанию, перекраской от убранного кружка.
-    private func removeOwn(_ colour: Channels, at spot: CGRect) {
+    /// Убрали свой цвет из ряда узора или волны. Был им окрашен тот, чей это
+    /// ряд, — он возвращается к цвету по умолчанию, перекраской от убранного
+    /// кружка.
+    private func removeOwn(_ colour: Channels, at spot: CGRect,
+                           from layer: HueLayer) {
         func uses(_ hue: Hue) -> Bool {
             if case .own(let used) = hue { return Hue.same(used, colour) }
             return false
         }
-        let pattern = uses(settings.patternHue) ? Hue.pattern
-            : settings.patternHue
-        let wave = uses(settings.waveHue) ? Hue.wave : settings.waveHue
+        let pattern = layer == .pattern && uses(settings.patternHue)
+            ? Hue.pattern : settings.patternHue
+        let wave = layer == .wave && uses(settings.waveHue)
+            ? Hue.wave : settings.waveHue
         if pattern != settings.patternHue || wave != settings.waveHue {
             Repaint.shared.begin(base: settings.patternHue,
                                  wave: settings.waveHue,
                                  to: pattern, toWave: wave,
                                  from: CGPoint(x: spot.midX, y: spot.midY))
         }
-        settings.remove(own: colour)
+        settings.remove(own: colour, from: layer)
         Feel.toss()
     }
 
@@ -160,21 +167,37 @@ struct SettingsView: View {
 
     private var backdrop: some View {
         SproutGroup("Фон") {
+            // Узор можно убрать совсем — всё, что про узор, ниже гаснет.
+            switchRow("Узор на фоне", note: "Без узора фон — ровный цвет.",
+                      isOn: Binding(
+                          get: { settings.pattern },
+                          set: { on in
+                              withAnimation(Motion.appear) {
+                                  settings.pattern = on
+                              }
+                              Feel.pick()
+                          }))
+
+            SproutDivider()
+
             SproutBlock("Фигурки", note: "Хотя бы одна остаётся.") {
                 pieces
             }
+            .disabled(!settings.pattern)
 
             SproutDivider()
 
             switchRow("Узор по времени года", term: .motif, isOn: Binding(
                 get: { settings.seasonalPattern },
                 set: { dress($0) }))
+                .disabled(!settings.pattern)
 
             SproutDivider()
 
             switchRow("Узор за наклоном", term: .parallax, isOn: Binding(
                 get: { settings.parallax },
                 set: { settings.parallax = $0 }))
+                .disabled(!settings.pattern)
 
             SproutDivider()
 
@@ -182,11 +205,11 @@ struct SettingsView: View {
             switchRow("Фигурки плывут порознь", term: .sway, isOn: Binding(
                 get: { settings.sway },
                 set: { settings.sway = $0 }))
-                .disabled(!settings.parallax)
+                .disabled(!settings.parallax || !settings.pattern)
 
             SproutDivider()
 
-            switchRow("Бережно к заряду",
+            switchRow("Экономить заряд",
                       hint: saverNote,
                       isOn: Binding(
                           get: { settings.saver },

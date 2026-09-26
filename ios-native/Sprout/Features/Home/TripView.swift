@@ -44,6 +44,7 @@ struct TripView: View {
             }
             .navigationTitle("Уезжаю")
             .navigationBarTitleDisplayMode(.inline)
+            .scrollEdgeEffectStyle(.soft, for: .top)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Готово") { dismiss() }

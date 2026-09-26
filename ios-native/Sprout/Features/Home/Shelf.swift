@@ -316,6 +316,8 @@ struct Jiggle: ViewModifier {
                 time: context.date.timeIntervalSinceReferenceDate,
                 phase: phase))
         }
+        // Плашка на время качания — без стекла, см. `PlateGlass`.
+        .environment(\.sproutJiggling, active)
         .onChange(of: active, initial: true) { _, now in
             withAnimation(now ? Motion.jiggleIn : Motion.jiggleOut) {
                 swing = now ? 1 : 0

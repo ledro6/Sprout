@@ -77,6 +77,7 @@ struct PlantView: View {
         }
         .navigationTitle(plant?.name ?? "")
         .navigationBarTitleDisplayMode(.inline)
+        .scrollEdgeEffectStyle(.soft, for: .top)
         // Своя кнопка «назад»: системную не размыть. Жест свайпа от края при
         // этом пропадает, возврат потягиванием вниз остаётся.
         .navigationBarBackButtonHidden(true)
@@ -117,7 +118,7 @@ struct PlantView: View {
         .alert("Новая комната", isPresented: $moving) {
             TextField("Балкон", text: $roomDraft)
             Button("Отмена", role: .cancel) {}
-            Button("Переехать") { relocate(to: roomDraft) }
+            Button("Переместить") { relocate(to: roomDraft) }
         } message: {
             Text("Растение переедет туда, и комната появится в списке.")
         }
@@ -150,11 +151,9 @@ struct PlantView: View {
     private var back: some View {
         Button { close() } label: {
             Image(systemName: "chevron.backward")
-                .font(Typography.navButton)
-                .frame(width: Metrics.navBox, height: Metrics.navBox)
+                .modifier(NavCircle())
         }
-        .buttonStyle(.glass)
-        .buttonBorderShape(.circle)
+        .buttonStyle(.plain)
         .accessibilityLabel("Назад")
         .modifier(Chrome(shown: chrome))
         .sproutRide()
@@ -187,7 +186,7 @@ struct PlantView: View {
             // Черенок — кодом в переписку: друг посадит его со всем уходом.
             if let plant {
                 ShareLink(item: Cutting(plant: plant, from: garden.signed).card) {
-                    Label("Передать черенок", systemImage: "scissors")
+                    Label("Поделиться", systemImage: "square.and.arrow.up")
                 }
             }
             Button { Coach.shared.start(.plant) } label: {
@@ -205,12 +204,10 @@ struct PlantView: View {
             }
         } label: {
             Image(systemName: "ellipsis")
-                .font(Typography.navButton)
-                .frame(width: Metrics.navBox, height: Metrics.navBox)
+                .modifier(NavCircle())
         }
         .menuStyle(.button)
-        .buttonStyle(.glass)
-        .buttonBorderShape(.circle)
+        .buttonStyle(.plain)
         .modifier(Chrome(shown: chrome))
         .sproutRide()
     }
@@ -310,9 +307,10 @@ struct PlantView: View {
         .sproutRide()
     }
 
-    /// Остальные действия — стеклом пониже, значком над подписью, как
-    /// кнопки в карточке контакта: длинная подпись в ряд бы не влезла. Без
-    /// дополненной реальности настройки встают во всю ширину.
+    /// Остальные действия — квадратными плитками стекла: значок и под ним
+    /// подпись до двух строк, без ужатия — в широком прямоугольнике она
+    /// мельчала и не читалась. Без дополненной реальности плиток две, того
+    /// же размера, у левого края.
     private func tools(_ plant: Plant) -> some View {
         HStack(spacing: Metrics.actionGap) {
             if PlantAR.available {
@@ -324,6 +322,7 @@ struct PlantView: View {
             tool("Что с ним?", icon: "stethoscope") { diagnosing = true }
             tool("Настройки", icon: "slider.horizontal.3") { tuning = true }
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
         .sproutRide()
     }
 
@@ -336,23 +335,29 @@ struct PlantView: View {
     /// крутилка сменяют друг друга, не толкая кнопку.
     private func tool(_ title: LocalizedStringKey, action: @escaping () -> Void,
                       @ViewBuilder mark: () -> some View) -> some View {
+        // Стекло — своё, а не стилем кнопки: у стиля поля шире, и подписи
+        // в квадрате не хватало места.
         Button(action: action) {
-            VStack(spacing: 4) {
+            VStack(spacing: 6) {
                 Text(Bench.percent(1))
                     .hidden()
                     .overlay { mark() }
                     .font(Typography.navTitle)
                 Text(title)
-                    .font(Typography.settingNote)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.8)
+                    .font(Typography.settingNote.weight(.medium))
+                    .multilineTextAlignment(.center)
+                    .lineLimit(2)
+                    .fixedSize(horizontal: false, vertical: true)
             }
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, 4)
+            .foregroundStyle(Palette.ink)
+            .padding(6)
+            .frame(maxWidth: .infinity, minHeight: Metrics.toolTile)
+            .glassEffect(.regular.interactive(),
+                         in: .rect(cornerRadius: Metrics.toolRadius))
+            .contentShape(.rect(cornerRadius: Metrics.toolRadius))
         }
-        .buttonStyle(.glass)
-        .buttonBorderShape(.roundedRectangle(radius: Metrics.toolRadius))
-        .controlSize(.large)
+        .buttonStyle(.plain)
+        .frame(maxWidth: Metrics.toolTile)
     }
 
     /// Поливают раньше срока — предложение сократить его. Отказ запоминается:
@@ -673,5 +678,18 @@ private struct ModelMark: View {
             }
         }
         .animation(Motion.number, value: share)
+    }
+}
+
+/// Кнопка панели — стеклянный круг одного размера у «назад» и у меню:
+/// стиль `.glass` у меню добавлял свои поля, и круг выходил больше.
+private struct NavCircle: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .font(Typography.navButton)
+            .foregroundStyle(Palette.ink)
+            .frame(width: Metrics.navCircle, height: Metrics.navCircle)
+            .glassEffect(.regular.interactive(), in: .circle)
+            .contentShape(.circle)
     }
 }

@@ -53,6 +53,7 @@ struct OrreryView: View {
         .environment(\.colorScheme, .dark)
         .navigationTitle("Планетарий")
         .navigationBarTitleDisplayMode(.inline)
+        .scrollEdgeEffectStyle(.soft, for: .top)
         .toolbar(.visible, for: .navigationBar)
         .toolbar(.hidden, for: .tabBar)
         .toolbar {

@@ -1,5 +1,10 @@
 import Foundation
 
+/// Чей ряд своих цветов: у узора, волны и кружка хозяина — у каждого свой.
+enum HueLayer: CaseIterable, Sendable {
+    case pattern, wave, avatar
+}
+
 /// Цвет узора или волны: готовый (`Tint`) или свой — выбранный в палитре
 /// iOS. Своему бледная ипостась подбирается той же светлоты, что у готовых:
 /// узор не станет заметнее или бледнее от смены цвета. Слишком светлый свой
@@ -10,6 +15,7 @@ enum Hue: Hashable, Codable, Sendable {
 
     static let pattern = Hue.preset(Tint.defaultPattern)
     static let wave = Hue.preset(Tint.defaultWave)
+    static let avatar = Hue.preset(Tint.defaultAvatar)
 
     /// Своих цветов — не больше, чем готовых: ряд и так в две строки.
     static let ownLimit = 11

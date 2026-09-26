@@ -13,12 +13,12 @@ struct GardenCompare: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: Metrics.groupGap) {
                     header
-                    SproutGroup("Сады рядом") {
+                    SproutGroup("Сравнение садов") {
                         row(Lang.text("Поливы"), me.total, friend.total)
                         SproutDivider()
-                        row(Lang.text("Череда"), me.streak, friend.streak)
+                        row(Lang.text("Дней подряд"), me.streak, friend.streak)
                         SproutDivider()
-                        row(Lang.text("Лучшая череда"), me.best, friend.best)
+                        row(Lang.text("Рекорд дней подряд"), me.best, friend.best)
                         SproutDivider()
                         row(Lang.text("Растения"), me.plants, friend.plants)
                         SproutDivider()
@@ -49,6 +49,7 @@ struct GardenCompare: View {
             .background { SproutBackground() }
             .navigationTitle("Сравнить сады")
             .navigationBarTitleDisplayMode(.inline)
+            .scrollEdgeEffectStyle(.soft, for: .top)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Готово") { dismiss() }

@@ -239,6 +239,7 @@ struct SproutPage<Content: View>: View {
         .background { SproutBackground() }
         .navigationTitle(title)
         .navigationBarTitleDisplayMode(.inline)
+        .scrollEdgeEffectStyle(.soft, for: .top)
     }
 }
 

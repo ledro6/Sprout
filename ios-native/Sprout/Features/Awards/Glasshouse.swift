@@ -8,6 +8,15 @@ struct GlasshouseView: View {
     let house: Gardener.Glasshouse
     var animated = false
 
+    /// Когда оранжерею открыли: растения вырастают из горшков по очереди,
+    /// слева направо, — см. `growth`.
+    @State private var opened = Date().timeIntervalSinceReferenceDate
+
+    /// Шаг очереди и рост одного растения, секунд: восемь горшков — меньше
+    /// секунды.
+    private static let stagger = 0.07
+    private static let rise = 0.45
+
     @Environment(\.accessibilityReduceMotion) private var still
     @Environment(\.colorScheme) private var scheme
 
@@ -17,7 +26,8 @@ struct GlasshouseView: View {
     var body: some View {
         // Бережём заряд — оранжерея стоит, как на карточке. См. `Power`.
         let moving = animated && !still && !Power.shared.calm
-        TimelineView(.animation(minimumInterval: 1.0 / 30,
+        // С частотой экрана: тридцать кадров на ProMotion читались рывками.
+        TimelineView(.animation(minimumInterval: nil,
                                 paused: !moving)) { frame in
             let time = moving ? frame.date.timeIntervalSinceReferenceDate : 0
             Canvas { context, size in
@@ -90,10 +100,17 @@ struct GlasshouseView: View {
         let leaf = max(pot, width * 0.075)
         for index in 0 ..< house.pots {
             let x = start + slot * CGFloat(index)
+            let rise = growth(index, time: time)
+            guard rise > 0.001 else { continue }
+            // Растёт от донца горшка: и горшок, и растение — вместе.
+            var pod = context
+            pod.translateBy(x: x, y: floor)
+            pod.scaleBy(x: rise, y: rise)
+            pod.translateBy(x: -x, y: -floor)
             // Вверх — до ската крыши над горшком, с зазором.
             plant(index, at: x, floor: floor, pot: pot,
                   room: floor - pot * 0.8 - roof(x) - height * 0.07,
-                  leaf: leaf, time: time, into: &context)
+                  leaf: leaf, time: time, into: &pod)
         }
 
         // Рамы — поверх растений, как стекло.
@@ -116,6 +133,18 @@ struct GlasshouseView: View {
             butterfly(index, width: width, height: height, time: time,
                       into: &context)
         }
+    }
+
+    /// Доля роста растения: на открытии оранжереи — по очереди, коротко и
+    /// с лёгким перелётом, как пружина; стоящей — сразу целиком.
+    private func growth(_ index: Int, time: Double) -> CGFloat {
+        guard time > 0 else { return 1 }
+        let local = (time - opened - Double(index) * Self.stagger) / Self.rise
+        guard local < 1 else { return 1 }
+        guard local > 0 else { return 0 }
+        let back = 1.4
+        let t = local - 1
+        return CGFloat(1 + (back + 1) * t * t * t + back * t * t)
     }
 
     private func plant(_ index: Int, at x: CGFloat, floor: CGFloat,

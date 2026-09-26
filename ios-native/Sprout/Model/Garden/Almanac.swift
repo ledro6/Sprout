@@ -316,6 +316,25 @@ struct Almanac: Sendable {
         return book
     }
 
+    /// Живое — «сейчас», прогноз и влажность в строках растений — по саду в
+    /// эту минуту; история стоит до нового полива. Дёшево, для таймера:
+    /// полный пересчёт раз в несколько секунд дёргал экран статистики.
+    func live(_ rooms: [Room]) -> Almanac {
+        var book = self
+        book.now = Self.now(rooms)
+        book.ahead = Self.ahead(rooms)
+        var current: [Plant.ID: Plant] = [:]
+        for plant in rooms.flatMap(\.plants) { current[plant.id] = plant }
+        book.plants = plants.map { line in
+            guard let plant = current[line.id] else { return line }
+            var line = line
+            line.moisture = plant.moisture
+            line.due = plant.daysUntilWatering
+            return line
+        }
+        return book
+    }
+
     /// Дни от начала недели шестнадцать недель назад и до сегодня: столбцы
     /// календаря — целые недели, как в календаре телефона.
     static func cells(_ log: [Watering], today: Date,

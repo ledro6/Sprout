@@ -2,7 +2,7 @@ import ActivityKit
 import AppIntents
 import Foundation
 
-// Живые действия Sprout — «Обход сада» и отсчёт до отъезда — на экране
+// Живые действия Sprout — «Полить по очереди» и отсчёт до отъезда — на экране
 // блокировки и в Dynamic Island. Файл общий для приложения и виджета: виджет
 // рисует их по этим типам, а кнопки в них — команды, которые система
 // выполняет в процессе приложения. Само дело знает только приложение (см.
@@ -47,7 +47,7 @@ enum LiveHook {
 }
 
 struct WaterInRound: LiveActivityIntent {
-    static let title: LocalizedStringResource = "Полить в обходе"
+    static let title: LocalizedStringResource = "Полить и к следующему"
     static let isDiscoverable = false
 
     @Parameter(title: "Растение")
@@ -67,7 +67,7 @@ struct WaterInRound: LiveActivityIntent {
 }
 
 struct SkipInRound: LiveActivityIntent {
-    static let title: LocalizedStringResource = "Пропустить в обходе"
+    static let title: LocalizedStringResource = "Пропустить и к следующему"
     static let isDiscoverable = false
 
     @Parameter(title: "Растение")

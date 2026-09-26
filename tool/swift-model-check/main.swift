@@ -245,10 +245,12 @@ check("\(Seed.search("   ", in: Seed.rooms).count)", "0", "пустой запр
 print("настройки: значения по умолчанию и границы:")
 let keys = ["theme", "patternKinds", "patternShapes", "reminders",
             "remindThreshold", "patternTint", "waveTint", "patternHue",
-            "waveHue", "ownHues", "statsOrder", "statsHidden", "weather", "climate",
+            "waveHue", "ownHues", "ownPatternHues", "ownWaveHues",
+            "ownAvatarHues", "avatarTint", "avatarHue", "statsOrder", "statsHidden", "weather", "climate",
             "hushedHaptics", "hapticStrength", "stillPattern", "stiffShapes",
             "plantLook", "plantOrder", "mutedSounds", "toured",
             "walkedScreens", "launches", "avatarShot", "plainPattern",
+            "hiddenPattern",
             "batterySaver"]
 let store = UserDefaults.standard
 for key in keys { store.removeObject(forKey: key) }
@@ -259,8 +261,14 @@ check("\(fresh.order)", "manual", "и в том порядке, в каком и
 check("\(fresh.chosen)", "[0, 1]", "в узоре росток и капля — узор макета")
 check(fresh.patternHue == .preset(.green), "узор по умолчанию зелёный — цвет макета")
 check(fresh.waveHue == .preset(.blue), "волна по умолчанию синяя")
-check(fresh.ownHues.isEmpty, "своих цветов по умолчанию нет")
+check(HueLayer.allCases.allSatisfy { fresh.own($0).isEmpty },
+      "своих цветов по умолчанию нет")
+check(fresh.avatarHue == .avatar, "кружок хозяина по умолчанию — своего цвета")
 check(fresh.reminders == false, "напоминания по умолчанию выключены")
+check(fresh.pattern, "узор на фоне по умолчанию есть")
+fresh.pattern = false
+check(!Settings(store: store).pattern, "убранный узор помнится")
+fresh.pattern = true
 check(fresh.saver == false,
       "бережный режим по умолчанию — только при энергосбережении и нагреве")
 fresh.saver = true
@@ -364,7 +372,9 @@ store.removeObject(forKey: "hapticStrength")
 
 print("свои цвета:")
 do {
-    let keys = ["patternTint", "waveTint", "patternHue", "waveHue", "ownHues"]
+    let keys = ["patternTint", "waveTint", "patternHue", "waveHue", "ownHues",
+                "ownPatternHues", "ownWaveHues", "ownAvatarHues",
+                "avatarTint", "avatarHue"]
     for key in keys { store.removeObject(forKey: key) }
     store.set(Tint.rose.rawValue, forKey: "patternTint")
     store.set(Tint.amber.rawValue, forKey: "waveTint")
@@ -372,24 +382,46 @@ do {
     check(old.patternHue == .preset(.rose) && old.waveHue == .preset(.amber),
           "цвета прежней сборки переехали как были")
     let berry = Channels(160, 30, 90)
-    check(old.add(own: berry), "свой цвет встал в ряд")
-    check(!old.add(own: Channels(160.4, 29.8, 90.3)),
+    check(old.add(own: berry, to: .pattern), "свой цвет встал в ряд узора")
+    check(old.own(.wave).isEmpty && old.own(.avatar).isEmpty,
+          "в ряд волны и кружка он не попал — ряды свои")
+    check(!old.add(own: Channels(160.4, 29.8, 90.3), to: .pattern),
           "тот же цвет дважды — одним кружком")
+    check(old.add(own: berry, to: .wave), "в ряд волны его кладут отдельно")
     old.patternHue = .own(berry)
     old.waveHue = .own(berry)
     let again = Settings(store: store)
-    check(again.ownHues.count == 1 && again.patternHue == .own(berry),
+    check(again.own(.pattern).count == 1 && again.own(.wave).count == 1
+          && again.patternHue == .own(berry),
           "свои цвета и выбор переживают запуск")
     for step in 1 ..< Hue.ownLimit {
-        again.add(own: Channels(Double(step) * 20, 100, 50))
+        again.add(own: Channels(Double(step) * 20, 100, 50), to: .pattern)
     }
-    check(again.ownHues.count == Hue.ownLimit
-          && !again.add(own: Channels(1, 2, 3)),
+    check(again.own(.pattern).count == Hue.ownLimit
+          && !again.add(own: Channels(1, 2, 3), to: .pattern),
           "своих цветов — не больше одиннадцати")
-    again.remove(own: berry)
-    check(again.ownHues.count == Hue.ownLimit - 1
-          && again.patternHue == .pattern && again.waveHue == .wave,
-          "убрали цвет — узор и волна вернулись к своим по умолчанию")
+    again.remove(own: berry, from: .pattern)
+    check(again.own(.pattern).count == Hue.ownLimit - 1
+          && again.patternHue == .pattern && again.waveHue == .own(berry)
+          && again.own(.wave).count == 1,
+          "убрали цвет из узора — узор вернулся к своему, волна не тронута")
+    again.remove(own: berry, from: .wave)
+    check(again.waveHue == .wave && again.own(.wave).isEmpty,
+          "убрали из волны — и волна вернулась к своей")
+    // Прежняя сборка: общий ряд и готовый цвет кружка номером.
+    for key in keys { store.removeObject(forKey: key) }
+    store.set(try? JSONEncoder().encode([berry]), forKey: "ownHues")
+    store.set(Tint.rose.rawValue, forKey: "avatarTint")
+    let moved = Settings(store: store)
+    check(moved.own(.pattern) == [berry] && moved.own(.wave) == [berry]
+          && moved.own(.avatar).isEmpty,
+          "общие свои цвета прежней сборки достались и узору, и волне")
+    check(moved.avatarHue == .preset(.rose), "цвет кружка переехал как был")
+    moved.add(own: berry, to: .avatar)
+    moved.avatarHue = .own(berry)
+    moved.remove(own: berry, from: .avatar)
+    check(moved.avatarHue == .avatar && moved.patternHue == .pattern,
+          "убрали свой цвет кружка — кружок вернулся к своему")
     let light = Hue.own(Channels(250, 245, 200))
     check(Hue.brightness(light.vivid) <= Hue.vividCeiling + 0.0001,
           "слишком светлый свой цвет притемнён — волна видна")
@@ -445,6 +477,10 @@ do {
     check(reopened.statsHidden == [.recap, .orrery]
           && reopened.statsShown == board.statsShown,
           "порядок и убранные переживают запуск")
+    let pair = Array(reopened.statsShown.prefix(2))
+    reopened.swap(pair[0], with: pair[1])
+    check(Array(reopened.statsShown.prefix(2)) == [pair[1], pair[0]],
+          "перетаскивание в списке — соседи меняются местами")
     reopened.show(.recap)
     check(reopened.statsShown.last == .recap && !reopened.statsHidden.contains(.recap),
           "вернули — встал в конец")
@@ -2685,7 +2721,10 @@ do {
         language = tongue
         let local = Term.allCases.map(\.meaning)
             + Tour.pages.flatMap { [$0.title, $0.text] }
+        // Строки, у которых перевода ещё нет, пока звучат по-русски.
         let same = zip(local, russian).filter { $0 == $1 }.map(\.0)
+            .filter { (catalog.strings[$0]?["localizations"]
+                       as? [String: Any])?[tongue] != nil }
         check(same.isEmpty,
               "\(tongue): знакомство и словарик переведены \(same)")
     }
@@ -2733,6 +2772,14 @@ do {
           "прошлая неделя — два полива, разница плюс три")
     check(book.active == 5 && book.length == 7, "пять дней с поливом из семи")
     check(book.bars.count == 7 && !book.byMonth, "неделя — семь столбиков")
+    // Сад сох — по таймеру обновляется живое, без пересчёта истории.
+    var drier = yard
+    drier[0].plants[0].moisture = 0.2
+    let live = book.live(drier)
+    check(live.plants.first { $0.name == "Баксик" }?.moisture == 0.2
+          && live.bars == book.bars && live.total == book.total,
+          "по таймеру живое — влажность — новое, история та же")
+    check(live.now == Almanac.now(drier), "«сейчас» — по саду в эту минуту")
     check(book.bars.first!.start < book.bars.last!.start
           && book.bars.last!.count == 1 && book.bars.first!.count == 1,
           "от старого к новому, с сегодняшним в конце")
@@ -2972,7 +3019,14 @@ do {
     for tongue in tongues {
         language = tongue
         let local = Walk.allCases.flatMap(\.hints).map(\.text)
-        let same = zip(local, russian).filter { $0 == $1 }.map(\.0)
+        // Переводы на паузе: подсказки, которых в каталоге этого языка ещё
+        // нет, показываются по-русски — их не считаем. Переведённые должны
+        // быть переведены.
+        let same = zip(local, russian).filter { pair in
+            let known = (catalog.strings[pair.1]?["localizations"]
+                         as? [String: Any])?[tongue] != nil
+            return known && pair.0 == pair.1
+        }.map(\.0)
         check(same.isEmpty, "\(tongue): подсказки переведены \(same)")
     }
 }

@@ -4,7 +4,7 @@ import SwiftUI
 import UIKit
 import WidgetKit
 
-// Живые действия: «Обход сада» и отсчёт до отъезда — на экране блокировки,
+// Живые действия: «Полить по очереди» и отсчёт до отъезда — на экране блокировки,
 // в Dynamic Island и в стопке на Apple Watch. Кнопки в них — команды из
 // `LiveGarden.swift`: система выполняет их в приложении.
 
@@ -19,7 +19,7 @@ private enum Night {
     static let done = Color(red: 0.42, green: 0.86, blue: 0.5)
 }
 
-// MARK: - Обход сада
+// MARK: - Полив по очереди
 
 struct RoundLive: Widget {
     var body: some WidgetConfiguration {
@@ -133,7 +133,7 @@ struct RoundBanner: View {
                     }
                     .frame(width: 54, height: 54)
                     VStack(alignment: .leading, spacing: 1) {
-                        Text("Обход сада")
+                        Text("Полив по очереди")
                             .font(.caption.weight(.semibold))
                             .foregroundStyle(.white.opacity(0.65))
                         Text(next.name)

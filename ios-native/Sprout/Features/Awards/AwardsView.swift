@@ -30,6 +30,7 @@ struct AwardsView: View {
         .background { SproutBackground() }
         .navigationTitle("Награды")
         .navigationBarTitleDisplayMode(.inline)
+        .scrollEdgeEffectStyle(.soft, for: .top)
         .onAppear { recount() }
         .onChange(of: garden.log.count) { _, _ in recount() }
         .sheet(item: $open) { award in

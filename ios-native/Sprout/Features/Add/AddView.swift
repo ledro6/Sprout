@@ -30,6 +30,11 @@ struct AddView: View {
     @State private var room = ""
     @State private var period: Double = 7
 
+    /// Уход, от которого отказались при посадке. Вид предлагает, а делать
+    /// ли — решает хозяин: отказанного нет ни в напоминаниях, ни на экране
+    /// растения. Как и комната, остаётся для следующей посадки.
+    @State private var skipped: Set<ExtraCare> = []
+
     @State private var naming = false
     @State private var newRoom = ""
 
@@ -78,7 +83,7 @@ struct AddView: View {
                 // Иначе до кнопки «Посадить» из последнего поля не добраться.
                 .scrollDismissesKeyboard(.interactively)
                 .background { SproutBackground() }
-                .sproutNotchCover()
+                .sproutSoftTop()
                 .toolbar(.hidden, for: .navigationBar)
                 .walk(.add, scroll: reader)
             }
@@ -358,8 +363,56 @@ struct AddView: View {
             SproutBlock("Полив", term: .period) {
                 PeriodWheel(days: $period)
             }
+
+            if !offered.isEmpty {
+                SproutDivider()
+
+                SproutBlock("Что ещё делать",
+                            note: "Выключенное не будет напоминать. Вернуть можно в настройках растения.") {
+                    VStack(spacing: 12) {
+                        ForEach(offered, id: \.self) { chore in
+                            choreRow(chore)
+                        }
+                    }
+                }
+                .transition(.blurReplace)
+            }
         }
+        .animation(Motion.appear, value: offered)
         .sproutRide()
+    }
+
+    /// Что вид просит сверх полива: подкормку, пересадку, мелкий уход.
+    private var offered: [ExtraCare] {
+        let usual = Care.usual(for: Preset.of(wanted))
+        var out: [ExtraCare] = []
+        if usual.feedEvery != nil { out.append(.feed) }
+        if usual.repotEvery != nil { out.append(.repot) }
+        out += Duty.allCases.filter { usual.every($0) != nil }.map(ExtraCare.duty)
+        return out
+    }
+
+    private func choreRow(_ chore: ExtraCare) -> some View {
+        HStack(spacing: 12) {
+            Label {
+                Text(chore.title)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.85)
+            } icon: {
+                Image(systemName: chore.icon)
+                    .foregroundStyle(Palette.accent)
+            }
+            .font(Typography.settingRow)
+            .foregroundStyle(Palette.ink)
+            Spacer(minLength: 8)
+            Toggle(chore.title, isOn: Binding(
+                get: { !skipped.contains(chore) },
+                set: { on in
+                    if on { skipped.remove(chore) } else { skipped.insert(chore) }
+                    Feel.pick()
+                }))
+                .labelsHidden()
+        }
     }
 
     private func field(_ text: String) -> some View {
@@ -478,6 +531,17 @@ struct AddView: View {
             garden.tend(seedling.id, feedEvery: cutting.feed,
                         repotEvery: cutting.repot, duties: cutting.chores)
         }
+        // Отказанный уход — выключен: сроки ноль, «не напоминать».
+        if !skipped.isEmpty, let care = garden.plant(id: seedling.id)?.tending {
+            var duties: [Duty: Double?] = [:]
+            for duty in Duty.allCases where skipped.contains(.duty(duty)) {
+                duties[duty] = 0
+            }
+            garden.tend(seedling.id,
+                        feedEvery: skipped.contains(.feed) ? nil : care.feedEvery,
+                        repotEvery: skipped.contains(.repot) ? nil : care.repotEvery,
+                        duties: duties)
+        }
         Cheer.shared.now(from: button.rect)
         Feel.planted()
         typing = false
@@ -501,6 +565,28 @@ struct AddView: View {
             guess = nil
             period = 7
             cutting = nil
+        }
+    }
+}
+
+/// Дело ухода сверх полива, от которого можно отказаться при посадке.
+private enum ExtraCare: Hashable {
+    case feed, repot
+    case duty(Duty)
+
+    var title: String {
+        switch self {
+        case .feed: Lang.text("Подкормка")
+        case .repot: Lang.text("Пересадка")
+        case .duty(let duty): duty.title
+        }
+    }
+
+    var icon: String {
+        switch self {
+        case .feed: "sparkles"
+        case .repot: "arrow.up.bin"
+        case .duty(let duty): duty.icon
         }
     }
 }

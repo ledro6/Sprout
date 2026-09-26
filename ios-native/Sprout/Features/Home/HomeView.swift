@@ -199,7 +199,15 @@ struct HomeView: View {
         .sheet(isPresented: $roomsOpen) { RoomsView().environment(garden) }
         .sheet(isPresented: $tripping) { TripView().environment(garden) }
         .sheet(isPresented: $awardsOpen) {
-            NavigationStack { AwardsView() }.environment(garden)
+            NavigationStack {
+                AwardsView()
+                    .toolbar {
+                        ToolbarItem(placement: .topBarTrailing) {
+                            SheetClose { awardsOpen = false }
+                        }
+                    }
+            }
+            .environment(garden)
         }
         // Ждали воды, и полили последнего — праздник. Высохли новые —
         // просто счёт растёт.
@@ -274,22 +282,25 @@ struct HomeView: View {
     }
 
     /// Страница: своя прокрутка под общей шапкой. Сверху — место под
-    /// заголовок и ленту. Полоса, где лента встаёт, прокрутке объявлена
-    /// панелью (`safeAreaBar`): уезжающие под неё карточки система размывает
-    /// сама, мягким краем, как под панелями iOS.
+    /// заголовок и ленту. Полоса, где лента встаёт, и чуть ниже подписи
+    /// прокрутке объявлена панелью (`safeAreaBar`): уезжающие под неё
+    /// карточки система размывает сама, плавным градиентом, как под
+    /// панелями iOS. Градиент гаснет на `headTail` ниже подписи — под
+    /// названием комнаты карточки уже размыты и не мешают его читать.
     private func scroller<Content: View>(
         _ leaf: HomeLeaf, @ViewBuilder content: () -> Content
     ) -> some View {
         ScrollView(.vertical) {
             content()
         }
-        .contentMargins(.top, titleHeight + row + Metrics.shelfDrop - grownRow,
+        .contentMargins(.top, max(titleHeight + row + Metrics.shelfDrop
+                                  - grownRow - Metrics.headTail, 0),
                         for: .scrollContent)
         .contentMargins(.bottom, floor + Metrics.shelfTail, for: .scrollContent)
         .contentMargins(.bottom, floor, for: .scrollIndicators)
         .safeAreaBar(edge: .top, spacing: 0) {
             Color.clear
-                .frame(height: grownRow)
+                .frame(height: grownRow + Metrics.headTail)
                 .allowsHitTesting(false)
         }
         .scrollEdgeEffectStyle(.soft, for: .top)
@@ -550,9 +561,10 @@ struct HomeView: View {
         .accessibilityValue(look.title)
     }
 
-    /// «Обход сада» — живое действие на экране блокировки: кто просит воды,
-    /// по одному, с кнопкой «Полил». Идёт — его можно закончить; просить
-    /// воды некому — и начинать нечего.
+    /// «Полить по очереди» — живое действие на экране блокировки: кто
+    /// просит воды, по одному, с кнопкой «Полил». Подзаголовок говорит, что
+    /// это, — по одному названию было непонятно. Идёт — его можно закончить;
+    /// просить воды некому — и начинать нечего.
     @ViewBuilder
     private var round: some View {
         let live = Live.shared
@@ -561,7 +573,7 @@ struct HomeView: View {
                 Button {
                     Task { await live.endRound() }
                 } label: {
-                    Label("Закончить обход", systemImage: "stop.circle")
+                    Label("Закончить полив по очереди", systemImage: "stop.circle")
                 }
             } else if garden.rooms.contains(where: {
                 $0.plants.contains { $0.thirst != .calm }
@@ -570,7 +582,8 @@ struct HomeView: View {
                     Task { await live.startRound() }
                     Feel.done()
                 } label: {
-                    Label("Обход сада", systemImage: "figure.walk")
+                    Label("Полить по очереди", systemImage: "drop.circle")
+                    Text("Кто следующий — на экране блокировки")
                 }
             }
         }

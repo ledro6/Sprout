@@ -16,3 +16,16 @@ struct CloseButton: View {
         .accessibilityLabel("Закрыть")
     }
 }
+
+/// Крестик листа — в панели навигации: стекло кладёт сама панель, своего у
+/// кнопки нет. Лист и так смахивается вниз, крестик — для тех, кто не знает.
+struct SheetClose: View {
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            Image(systemName: "xmark")
+        }
+        .accessibilityLabel("Закрыть")
+    }
+}

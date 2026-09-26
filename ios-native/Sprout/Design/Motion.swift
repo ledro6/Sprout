@@ -128,6 +128,10 @@ enum Motion {
     /// Перестановка карточек, правка и смена вида.
     static let arrange = Animation.spring(duration: 0.32, bounce: 0.16)
 
+    /// Блоки статистики складываются в список и обратно — быстро и без
+    /// отскока: это перестройка экрана, а не брошенный предмет.
+    static let fold = Animation.snappy(duration: 0.3)
+
     /// Соседи расступаются перед тащимой карточкой плавно, без отскока:
     /// отскок поверх качания читался дрожью.
     static let reflow = Animation.smooth(duration: 0.35)

@@ -77,7 +77,7 @@ struct PlantMenu: ViewModifier {
             .alert("Новая комната", isPresented: $moving) {
                 TextField("Балкон", text: $roomDraft)
                 Button("Отмена", role: .cancel) {}
-                Button("Переехать") { relocate(to: roomDraft) }
+                Button("Переместить") { relocate(to: roomDraft) }
             } message: {
                 Text("Растение переедет туда, и комната появится в списке.")
             }

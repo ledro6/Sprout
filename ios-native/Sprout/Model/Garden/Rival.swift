@@ -71,14 +71,14 @@ struct Rival: Codable, Identifiable, Hashable, Sendable {
 
     /// Сперва человеческая часть, потом код: сообщение читает человек.
     var card: String {
-        var score = Lang.format("%1$@ в Sprout: %2$@, череда %3$@, лучшая %4$lld.",
+        var score = Lang.format("%1$@ в Sprout: %2$@, %3$@ подряд, рекорд — %4$lld.",
                                 name, Lang.format("%lld поливов", total),
                                 Lang.format("%lld дней", streak), best)
         if let level {
             score += " " + Lang.format("Уровень %1$lld — %2$@.", level,
                                        Gardener.title(level))
         }
-        let invite = Lang.text("Позвать меня в соперники: скопируйте это сообщение целиком и нажмите «Вставить» в Sprout → Профиль → Друзья.")
+        let invite = Lang.text("Добавьте меня в соперники: скопируйте это сообщение целиком и нажмите «Вставить» в Sprout → Профиль → Друзья.")
         return score + "\n" + invite + "\n" + code
     }
 

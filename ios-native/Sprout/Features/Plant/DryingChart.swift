@@ -26,8 +26,12 @@ struct DryingChart: View {
                     .foregroundStyle(Palette.warn.opacity(0.06))
             }
             ForEach(points) { point in
+                // Без стопки: площадь по умолчанию складывает значения с
+                // одной отметкой времени, и у полива заливка вылезала зубцом
+                // выше линии.
                 AreaMark(x: .value(Self.timeAxis, point.when),
-                         y: .value(Self.levelAxis, point.level))
+                         y: .value(Self.levelAxis, point.level),
+                         stacking: .unstacked)
                     .interpolationMethod(.linear)
                     .foregroundStyle(LinearGradient(
                         colors: [Palette.water.opacity(0.32),

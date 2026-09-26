@@ -40,15 +40,15 @@ struct SearchView: View {
                 }
             }
             .background { SproutBackground() }
-            // Строки комнаты здесь нет — верх держит подложка под вырезом.
-            .sproutNotchCover()
+            .sproutSoftTop()
             .walk(.search)
             .navigationDestination(for: Plant.ID.self) { id in
                 PlantView(plantID: id)
                     .navigationTransition(.zoom(sourceID: id, in: cardZoom))
             }
+            // Строкой над панелью вкладок, а не свёрнутой лупой сверху: на
+            // вкладке поиска поле и есть весь экран.
             .searchable(text: $query, prompt: "Найти растение")
-            .searchToolbarBehavior(.minimize)
             // Подстановку запроса делает `searchCompletion`.
             .searchSuggestions {
                 ForEach(recents.queries, id: \.self) { past in

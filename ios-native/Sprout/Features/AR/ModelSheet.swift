@@ -43,6 +43,7 @@ struct ModelSheet: View {
             .background { SproutBackground() }
             .navigationTitle("Модель для AR")
             .navigationBarTitleDisplayMode(.inline)
+            .scrollEdgeEffectStyle(.soft, for: .top)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Готово") { dismiss() }

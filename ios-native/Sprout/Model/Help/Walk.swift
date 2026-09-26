@@ -257,9 +257,9 @@ enum Walk: String, CaseIterable, Identifiable, Sendable {
                          """)),
                 Hint(target: .profileRivals, title: Lang.text("Друзья"),
                      text: Lang.text("""
-                         «Позвать» отправит другу ваш счёт. Его ответ \
-                         вставьте кнопкой «Вставить» — и он встанет в \
-                         таблицу.
+                         Кнопка «Поделиться» отправит другу ваш счёт. Его \
+                         ответ вставьте кнопкой «Вставить» — и друг встанет \
+                         в таблицу.
                          """)),
                 Hint(target: .profileMore, title: Lang.text("Ещё"),
                      text: Lang.text("""

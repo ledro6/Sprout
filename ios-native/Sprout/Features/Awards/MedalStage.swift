@@ -63,7 +63,7 @@ final class MedalRig {
 
     private var angle: Float = 0
     private var start: Float?
-    private var motion: Task<Void, Never>?
+    private let clock = FrameClock()
 
     /// Радиан в секунду, сглаженно; и когда медаль в последний раз двигалась.
     private var speed: Double = 0
@@ -74,19 +74,20 @@ final class MedalRig {
     private static let reach: Float = 90
 
     func turn(by width: CGFloat) {
-        motion?.cancel()
+        clock.stop()
         if start == nil { start = angle }
         angle = (start ?? 0) + Float(width) / Self.reach
         apply()
     }
 
-    /// Разгон добавляет оборотов; встаёт медаль всегда лицом.
+    /// Разгон добавляет оборотов — щедро, как монете, пущенной пальцем;
+    /// встаёт медаль всегда лицом.
     func release(speed: CGFloat) {
         start = nil
-        let fling = Float(speed) / Self.reach * 0.3
+        let fling = Float(speed) / Self.reach * 0.55
         let turn = 2 * Float.pi
         let target = ((angle + fling) / turn).rounded() * turn
-        glide(to: target, seconds: 0.9 + Double(min(abs(fling), 12)) * 0.05)
+        glide(to: target, seconds: 1 + Double(min(abs(fling), 24)) * 0.06)
         Feel.pick()
     }
 
@@ -95,20 +96,18 @@ final class MedalRig {
         speed * exp(-max(date.timeIntervalSince(moved), 0) * 6)
     }
 
+    /// Докручивается по кадрам экрана — до 120 в секунду на ProMotion.
+    /// Разгон сразу, торможение долгое: четвёртая степень.
     private func glide(to target: Float, seconds: Double) {
-        motion?.cancel()
         let from = angle
-        motion = Task { @MainActor in
-            let clock = ContinuousClock()
-            let begin = clock.now
-            while !Task.isCancelled {
-                let t = min((clock.now - begin) / .seconds(seconds), 1)
-                let eased = 1 - pow(1 - t, 3)
-                angle = from + (target - from) * Float(eased)
-                apply()
-                if t >= 1 { break }
-                try? await Task.sleep(for: .milliseconds(16))
-            }
+        let begin = CACurrentMediaTime()
+        clock.run { [weak self] now in
+            guard let self else { return false }
+            let t = min((now - begin) / seconds, 1)
+            let eased = 1 - pow(1 - t, 4)
+            self.angle = from + (target - from) * Float(eased)
+            self.apply()
+            return t < 1
         }
     }
 
@@ -124,6 +123,35 @@ final class MedalRig {
         previous = angle
         moved = now
         medal?.orientation = simd_quatf(angle: angle, axis: SIMD3(0, 1, 0))
+    }
+}
+
+/// Часы кадров экрана: `CADisplayLink` будит ровно к кадру, на ProMotion —
+/// до 120 раз в секунду; сон задачи на 16 мс давал рваные шестьдесят. Шаг
+/// отвечает, нужен ли следующий; не нужен — часы встают.
+@MainActor
+final class FrameClock: NSObject {
+    private var link: CADisplayLink?
+    private var tick: (CFTimeInterval) -> Bool = { _ in false }
+
+    func run(_ tick: @escaping (CFTimeInterval) -> Bool) {
+        stop()
+        self.tick = tick
+        let link = CADisplayLink(target: self, selector: #selector(step))
+        link.preferredFrameRateRange = CAFrameRateRange(minimum: 60,
+                                                        maximum: 120,
+                                                        preferred: 120)
+        link.add(to: .main, forMode: .common)
+        self.link = link
+    }
+
+    func stop() {
+        link?.invalidate()
+        link = nil
+    }
+
+    @objc private func step(_ link: CADisplayLink) {
+        if !tick(link.targetTimestamp) { stop() }
     }
 }
 
