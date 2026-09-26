@@ -43,6 +43,22 @@ final class Tilt {
         }
     }
 
+    /// Бережём заряд, см. `Power`: узор не ездит за наклоном, а датчик
+    /// слушает только тряску — вчетверо реже.
+    var saving = false {
+        didSet {
+            guard saving != oldValue else { return }
+            motion.deviceMotionUpdateInterval = interval
+            guard saving else { return }
+            shift = .zero
+            lag = []
+            places = []
+            calm = 0
+        }
+    }
+
+    private var interval: TimeInterval { saving ? 1.0 / 15 : 1.0 / 60 }
+
     /// Полный размах — примерно за 17°.
     private static let gain = Metrics.parallax / 0.3
 
@@ -79,7 +95,7 @@ final class Tilt {
         else { return }
 
         base = nil
-        motion.deviceMotionUpdateInterval = 1.0 / 60
+        motion.deviceMotionUpdateInterval = interval
         shaken = 0
         lastSample = nil
         motion.startDeviceMotionUpdates(to: .main) { [weak self] data, _ in
@@ -112,7 +128,7 @@ final class Tilt {
         base = (seen.x + (x - seen.x) * Self.baseEase,
                 seen.z + (z - seen.z) * Self.baseEase)
 
-        guard parallax else { return }
+        guard parallax, !saving else { return }
 
         // Против наклона — так узор читается лежащим за экраном.
         let target = CGSize(width: limit(-(x - seen.x) * Self.gain),

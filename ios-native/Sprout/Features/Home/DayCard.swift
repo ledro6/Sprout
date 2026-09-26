@@ -48,7 +48,7 @@ struct DayCard: View {
                 Image(systemName: part.icon)
                     .symbolRenderingMode(.multicolor)
                     .font(.system(size: 30))
-                    .symbolEffect(.breathe)
+                    .symbolEffect(.breathe, isActive: !Power.shared.calm)
                     .contentTransition(.symbolEffect(.replace))
                     .frame(width: 40)
                     .accessibilityHidden(true)

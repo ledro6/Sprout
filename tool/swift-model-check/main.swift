@@ -248,7 +248,8 @@ let keys = ["theme", "patternKinds", "patternShapes", "reminders",
             "waveHue", "ownHues", "statsOrder", "statsHidden", "weather", "climate",
             "hushedHaptics", "hapticStrength", "stillPattern", "stiffShapes",
             "plantLook", "plantOrder", "mutedSounds", "toured",
-            "walkedScreens", "launches", "avatarShot", "plainPattern"]
+            "walkedScreens", "launches", "avatarShot", "plainPattern",
+            "batterySaver"]
 let store = UserDefaults.standard
 for key in keys { store.removeObject(forKey: key) }
 let fresh = Settings(store: store)
@@ -260,6 +261,11 @@ check(fresh.patternHue == .preset(.green), "узор по умолчанию з�
 check(fresh.waveHue == .preset(.blue), "волна по умолчанию синяя")
 check(fresh.ownHues.isEmpty, "своих цветов по умолчанию нет")
 check(fresh.reminders == false, "напоминания по умолчанию выключены")
+check(fresh.saver == false,
+      "бережный режим по умолчанию — только при энергосбережении и нагреве")
+fresh.saver = true
+check(Settings(store: store).saver, "бережный режим запоминается")
+fresh.saver = false
 check(fresh.haptics, "отклик в руке по умолчанию включён")
 check(round2(fresh.hapticStrength), "1.00", "и на полную силу")
 check(fresh.sounds, "звуки по умолчанию включены")

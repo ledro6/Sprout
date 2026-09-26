@@ -16,7 +16,8 @@ struct StarField: View {
     }()
 
     var body: some View {
-        TimelineView(.animation(minimumInterval: 1.0 / 20)) { context in
+        TimelineView(.animation(minimumInterval: Power.shared.calm
+                                ? 1.0 / 5 : 1.0 / 20)) { context in
             let time = context.date.timeIntervalSinceReferenceDate
             Canvas { canvas, size in
                 canvas.fill(Path(CGRect(origin: .zero, size: size)),

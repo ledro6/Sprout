@@ -12,7 +12,10 @@ struct DaySky: View {
     private static let stars = 26
 
     var body: some View {
-        TimelineView(.animation(minimumInterval: 1.0 / 15, paused: still)) {
+        // Бережём заряд — небо стоит: солнце и луна на месте, звёзды не
+        // мерцают. См. `Power`.
+        TimelineView(.animation(minimumInterval: 1.0 / 15,
+                                paused: still || Power.shared.calm)) {
             context in
             Canvas { canvas, size in
                 let hour = Sky.hour(context.date)

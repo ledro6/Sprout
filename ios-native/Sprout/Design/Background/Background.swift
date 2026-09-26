@@ -38,10 +38,9 @@ private struct SproutField: View {
             || Repaint.shared.start != nil
             || Frenzy.shared.start != nil
         let lit = motif == .garland
-        // В режиме энергосбережения огонь тоже стоит: фон рисуется на каждом
-        // экране, и бегущая гирлянда — это холст десять раз в секунду.
-        let running = lit && !still
-            && !ProcessInfo.processInfo.isLowPowerModeEnabled
+        // Бережём заряд — огонь тоже стоит: фон рисуется на каждом экране, и
+        // бегущая гирлянда — это холст десять раз в секунду. См. `Power`.
+        let running = lit && !still && !Power.shared.calm
         return ZStack {
             Palette.background
 

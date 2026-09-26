@@ -15,10 +15,11 @@ struct GlasshouseView: View {
     static let aspect = 1.4
 
     var body: some View {
+        // Бережём заряд — оранжерея стоит, как на карточке. См. `Power`.
+        let moving = animated && !still && !Power.shared.calm
         TimelineView(.animation(minimumInterval: 1.0 / 30,
-                                paused: !animated || still)) { frame in
-            let time = animated && !still
-                ? frame.date.timeIntervalSinceReferenceDate : 0
+                                paused: !moving)) { frame in
+            let time = moving ? frame.date.timeIntervalSinceReferenceDate : 0
             Canvas { context, size in
                 draw(into: &context, size: size, time: time)
             }

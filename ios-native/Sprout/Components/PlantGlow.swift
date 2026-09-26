@@ -57,9 +57,11 @@ private struct Breath: ViewModifier {
     }
 
     func body(content: Content) -> some View {
-        content
-            .opacity(active && dim ? Motion.pulseLow : 1)
-            .onChange(of: active, initial: true) { _, on in
+        // Бережём заряд — тень горит ровно, см. `Power`.
+        let breathing = active && !Power.shared.calm
+        return content
+            .opacity(breathing && dim ? Motion.pulseLow : 1)
+            .onChange(of: breathing, initial: true) { _, on in
                 guard on, !reduceMotion else {
                     dim = false
                     return

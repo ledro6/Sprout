@@ -329,7 +329,8 @@ struct MedalSparks: View {
     @Environment(\.accessibilityReduceMotion) private var still
 
     var body: some View {
-        TimelineView(.animation(paused: still)) { frame in
+        TimelineView(.animation(minimumInterval: Power.shared.calm
+                                ? 1.0 / 30 : nil, paused: still)) { frame in
             Canvas { context, size in
                 let spin = rig.spin(at: frame.date)
                 let energy = min(abs(spin) / 8, 1.6)

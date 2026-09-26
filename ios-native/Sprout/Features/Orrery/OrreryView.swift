@@ -83,7 +83,10 @@ struct OrreryView: View {
 
     private func dial(_ orbits: [Orrery.Orbit],
                       crossings: [Orrery.Crossing]) -> some View {
-        TimelineView(.animation(minimumInterval: 1.0 / 60)) { context in
+        // Бережём заряд — вдвое реже: звук идёт по своим часам и не
+        // сбивается. См. `Power`.
+        TimelineView(.animation(minimumInterval: Power.shared.calm
+                                ? 1.0 / 30 : 1.0 / 60)) { context in
             let moment = context.date
             let day = shown(at: moment)
             let planets = sky(orbits, day: day, at: moment)

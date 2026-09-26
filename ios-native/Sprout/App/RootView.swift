@@ -61,6 +61,7 @@ struct RootView: View {
         .task { await runClock() }
         .task { await Launch.shared.run() }
         .task { Chime.warm() }
+        .task { Power.shared.refresh() }
         // Состав сада сменился — пересказываем Siri клички.
         .onChange(of: garden.roster, initial: true) { _, _ in
             SproutShortcuts.updateAppShortcutParameters()
@@ -132,6 +133,8 @@ struct RootView: View {
                 Task { await Weatherman.shared.refresh() }
                 // Датчики в горшках — свежие показания.
                 Sensors.shared.poll()
+                // Пока спали, могли включить энергосбережение.
+                Power.shared.refresh()
                 redress()
                 Task { await lock.unlock() }
             } else {

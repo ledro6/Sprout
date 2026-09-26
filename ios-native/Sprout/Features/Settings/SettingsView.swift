@@ -183,7 +183,30 @@ struct SettingsView: View {
                 get: { settings.sway },
                 set: { settings.sway = $0 }))
                 .disabled(!settings.parallax)
+
+            SproutDivider()
+
+            switchRow("Бережно к заряду",
+                      hint: saverNote,
+                      isOn: Binding(
+                          get: { settings.saver },
+                          set: {
+                              settings.saver = $0
+                              Power.shared.refresh()
+                          }))
         }
+    }
+
+    /// Сам по себе режим включается при энергосбережении и нагреве — так и
+    /// пишем, чтобы замерший узор не казался поломкой.
+    private var saverNote: String {
+        if !settings.saver, Power.shared.lowPower {
+            return Lang.text("Сейчас включён сам: телефон в режиме энергосбережения.")
+        }
+        if !settings.saver, Power.shared.hot {
+            return Lang.text("Сейчас включён сам: телефон нагрелся.")
+        }
+        return Lang.text("Узор не ездит за наклоном, небо и ореолы замирают. При энергосбережении и нагреве — само.")
     }
 
     /// Снежинки, листья или гирлянда приходят и уходят той же волной, что
@@ -249,9 +272,11 @@ struct SettingsView: View {
 
     /// Строка с переключателем. Подпись спрятана у самого переключателя, но
     /// нужна VoiceOver. Непонятное слово — со своим «?».
+    /// `hint` — пояснение, собранное на ходу, а не строкой каталога.
     private func switchRow(_ title: LocalizedStringKey,
                            term: Term? = nil,
                            note: LocalizedStringKey? = nil,
+                           hint: String? = nil,
                            isOn: Binding<Bool>) -> some View {
         HStack(alignment: .center, spacing: 12) {
             VStack(alignment: .leading, spacing: 3) {
@@ -266,6 +291,13 @@ struct SettingsView: View {
                         .font(Typography.settingNote)
                         .foregroundStyle(.secondary)
                         .fixedSize(horizontal: false, vertical: true)
+                }
+                if let hint {
+                    Text(hint)
+                        .font(Typography.settingNote)
+                        .foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .contentTransition(.opacity)
                 }
             }
             Spacer(minLength: 0)

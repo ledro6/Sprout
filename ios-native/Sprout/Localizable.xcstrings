@@ -13091,6 +13091,9 @@
     "Белый налёт": {
       "extractionState": "manual"
     },
+    "Бережно к заряду": {
+      "extractionState": "manual"
+    },
     "Бирюзовый": {
       "extractionState": "manual",
       "localizations": {
@@ -167103,6 +167106,12 @@
         }
       }
     },
+    "Сейчас включён сам: телефон в режиме энергосбережения.": {
+      "extractionState": "manual"
+    },
+    "Сейчас включён сам: телефон нагрелся.": {
+      "extractionState": "manual"
+    },
     "Сейчас сухо": {
       "extractionState": "manual"
     },
@@ -194232,6 +194241,9 @@
           }
         }
       }
+    },
+    "Узор не ездит за наклоном, небо и ореолы замирают. При энергосбережении и нагреве — само.": {
+      "extractionState": "manual"
     },
     "Узор по времени года": {
       "extractionState": "manual",

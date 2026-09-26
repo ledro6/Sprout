@@ -166,6 +166,12 @@ final class Settings {
         didSet { store.set(weather, forKey: Key.weather) }
     }
 
+    /// Беречь заряд всегда, а не только в режиме энергосбережения и при
+    /// нагреве: узор не ездит за наклоном, небо и ореолы замирают.
+    var saver: Bool {
+        didSet { store.set(saver, forKey: Key.saver) }
+    }
+
     /// Последняя снятая погода — чтобы сроки учитывали её и до нового
     /// запроса.
     var climate: Climate? {
@@ -378,6 +384,7 @@ final class Settings {
         static let statsOrder = "statsOrder"
         static let weather = "weather"
         static let climate = "climate"
+        static let saver = "batterySaver"
         static let statsHidden = "statsHidden"
         static let avatarTint = "avatarTint"
         static let avatarShot = "avatarShot"
@@ -448,6 +455,7 @@ final class Settings {
         ownHues = Array((Self.take([Channels].self, Key.ownHues, from: store)
                          ?? []).prefix(Hue.ownLimit))
         weather = store.bool(forKey: Key.weather)
+        saver = store.bool(forKey: Key.saver)
         climate = Self.take(Climate.self, Key.climate, from: store)
         statsOrder = StatsBlock.order(
             Self.take([StatsBlock].self, Key.statsOrder, from: store) ?? [])

@@ -15,7 +15,8 @@ struct WaterDrop: View {
             // Пересыхает — капля дышит: зовёт полить.
             Image(systemName: "drop.fill")
                 .font(.system(size: Metrics.dropGlyph, weight: .semibold))
-                .symbolEffect(.breathe, isActive: plant.thirst == .alarm)
+                .symbolEffect(.breathe, isActive: plant.thirst == .alarm
+                              && !Power.shared.calm)
                 .frame(width: Metrics.dropBox, height: Metrics.dropBox)
         }
         .buttonStyle(.glassProminent)
