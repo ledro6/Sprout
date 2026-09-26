@@ -132,6 +132,11 @@ enum Motion {
     /// отскока: это перестройка экрана, а не брошенный предмет.
     static let fold = Animation.snappy(duration: 0.3)
 
+    /// Вход во вкладку — плавное проявление, как в «Музыке», и откуда оно
+    /// подрастает.
+    static let tab = Animation.smooth(duration: 0.35)
+    static let tabScale: CGFloat = 0.985
+
     /// Соседи расступаются перед тащимой карточкой плавно, без отскока:
     /// отскок поверх качания читался дрожью.
     static let reflow = Animation.smooth(duration: 0.35)

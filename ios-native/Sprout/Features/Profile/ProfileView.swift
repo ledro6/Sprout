@@ -76,6 +76,8 @@ struct ProfileView: View {
                     .containerRelativeFrame(.horizontal)
                 }
                 .scrollBounceBehavior(.basedOnSize, axes: .horizontal)
+                // Вход во вкладку — плавно; фон стоит.
+                .modifier(TabEntrance())
                 .background { SproutBackground() }
                 .sproutSoftTop()
                 .toolbar(.hidden, for: .navigationBar)

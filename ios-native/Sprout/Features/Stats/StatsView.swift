@@ -134,6 +134,8 @@ struct StatsView: View {
                         .padding(.bottom, 28)
                     }
                 }
+                // Вход во вкладку — плавно; фон стоит.
+                .modifier(TabEntrance())
                 .background { SproutBackground() }
                 .sproutSoftTop()
                 .toolbar(.hidden, for: .navigationBar)

@@ -32,18 +32,23 @@ struct RootView: View {
         TabView(selection: $pane) {
             Tab("Главная", systemImage: "house.fill", value: Pane.home) {
                 HomeView().sproutUndo()
+                    .environment(\.tabShown, pane == .home)
             }
             Tab("Статистика", systemImage: "chart.bar.fill", value: Pane.stats) {
                 StatsView().sproutUndo()
+                    .environment(\.tabShown, pane == .stats)
             }
             Tab("Добавить", systemImage: "plus.circle.fill", value: Pane.add) {
                 AddView().sproutUndo()
+                    .environment(\.tabShown, pane == .add)
             }
             Tab("Профиль", systemImage: "person.fill", value: Pane.profile) {
                 ProfileView().sproutUndo()
+                    .environment(\.tabShown, pane == .profile)
             }
             Tab(value: Pane.search, role: .search) {
                 SearchView().sproutUndo()
+                    .environment(\.tabShown, pane == .search)
             }
         }
         .onChange(of: Summon.shared.plant) { _, asked in

@@ -82,6 +82,8 @@ struct AddView: View {
                 }
                 // Иначе до кнопки «Посадить» из последнего поля не добраться.
                 .scrollDismissesKeyboard(.interactively)
+                // Вход во вкладку — плавно; фон стоит.
+                .modifier(TabEntrance())
                 .background { SproutBackground() }
                 .sproutSoftTop()
                 .toolbar(.hidden, for: .navigationBar)

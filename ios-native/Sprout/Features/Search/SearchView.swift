@@ -39,6 +39,8 @@ struct SearchView: View {
                     .hintSpot(.searchBoard)
                 }
             }
+            // Вход во вкладку — плавно; фон стоит.
+            .modifier(TabEntrance())
             .background { SproutBackground() }
             .sproutSoftTop()
             .walk(.search)

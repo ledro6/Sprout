@@ -147,6 +147,8 @@ struct HomeView: View {
                     if bottom > 0 { floor = bottom }
                 }
                 .ignoresSafeArea(.container, edges: .bottom)
+                // Вход во вкладку — плавно; фон и небо стоят.
+                .modifier(TabEntrance())
                 .background {
                     SproutBackground()
                         .overlay { DaySky() }
