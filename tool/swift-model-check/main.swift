@@ -2685,10 +2685,7 @@ do {
         language = tongue
         let local = Term.allCases.map(\.meaning)
             + Tour.pages.flatMap { [$0.title, $0.text] }
-        // Строки, у которых перевода ещё нет, пока звучат по-русски.
         let same = zip(local, russian).filter { $0 == $1 }.map(\.0)
-            .filter { (catalog.strings[$0]?["localizations"]
-                       as? [String: Any])?[tongue] != nil }
         check(same.isEmpty,
               "\(tongue): знакомство и словарик переведены \(same)")
     }
@@ -2975,14 +2972,7 @@ do {
     for tongue in tongues {
         language = tongue
         let local = Walk.allCases.flatMap(\.hints).map(\.text)
-        // Переводы на паузе: подсказки, которых в каталоге этого языка ещё
-        // нет, показываются по-русски — их не считаем. Переведённые должны
-        // быть переведены.
-        let same = zip(local, russian).filter { pair in
-            let known = (catalog.strings[pair.1]?["localizations"]
-                         as? [String: Any])?[tongue] != nil
-            return known && pair.0 == pair.1
-        }.map(\.0)
+        let same = zip(local, russian).filter { $0 == $1 }.map(\.0)
         check(same.isEmpty, "\(tongue): подсказки переведены \(same)")
     }
 }

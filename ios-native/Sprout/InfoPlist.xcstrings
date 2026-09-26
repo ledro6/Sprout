@@ -16,6 +16,12 @@
             "value": "За да чете датчика за влажност в саксията — Flower Care и подобни."
           }
         },
+        "bn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "টবের আর্দ্রতা সেন্সর পড়তে — Flower Care ও এ ধরনের সেন্সর।"
+          }
+        },
         "ca": {
           "stringUnit": {
             "state": "translated",
@@ -70,10 +76,22 @@
             "value": "Pour lire le capteur d’humidité du pot — Flower Care et similaires."
           }
         },
+        "gu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "કૂંડાનો ભેજ સેન્સર વાંચવા — Flower Care અને તેના જેવા."
+          }
+        },
         "he": {
           "stringUnit": {
             "state": "translated",
             "value": "כדי לקרוא את חיישן הלחות בעציץ — Flower Care ודומים לו."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "गमले का नमी सेंसर पढ़ने के लिए — Flower Care और इसी तरह के सेंसर।"
           }
         },
         "hr": {
@@ -88,10 +106,22 @@
             "value": "A cserépben lévő nedvességérzékelő olvasásához – Flower Care és hasonlók."
           }
         },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Untuk membaca sensor kelembapan di pot — Flower Care dan sejenisnya."
+          }
+        },
         "it": {
           "stringUnit": {
             "state": "translated",
             "value": "Per leggere il sensore di umidità nel vaso: Flower Care e simili."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "鉢の水分センサー（Flower Careなど）を読み取るため。"
           }
         },
         "kk": {
@@ -100,10 +130,40 @@
             "value": "Құмырадағы ылғалдылық датчигін оқу үшін — Flower Care және ұқсастары."
           }
         },
+        "kn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ಕುಂಡದ ತೇವಾಂಶ ಸೆನ್ಸರ್ ಓದಲು — Flower Care ಮತ್ತು ಅಂತಹವು."
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "화분의 습도 센서를 읽기 위해 — Flower Care 등."
+          }
+        },
         "lt": {
           "stringUnit": {
             "state": "translated",
             "value": "Kad galėtume skaityti drėgmės jutiklį vazone — Flower Care ir panašius."
+          }
+        },
+        "ml": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ചട്ടിയിലെ ഈർപ്പ സെൻസർ വായിക്കാൻ — Flower Care പോലുള്ളവ."
+          }
+        },
+        "mr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "कुंडीतील ओलावा सेन्सर वाचण्यासाठी — Flower Care आणि तत्सम."
+          }
+        },
+        "ms": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Untuk membaca penderia kelembapan dalam pasu — Flower Care dan seumpamanya."
           }
         },
         "nb": {
@@ -116,6 +176,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "Om de vochtsensor in de pot uit te lezen – Flower Care en vergelijkbare."
+          }
+        },
+        "or": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ଟବର ଆର୍ଦ୍ରତା ସେନ୍ସର ପଢ଼ିବାକୁ — Flower Care ଓ ସେହିପରି।"
+          }
+        },
+        "pa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ਗਮਲੇ ਦਾ ਨਮੀ ਸੈਂਸਰ ਪੜ੍ਹਨ ਲਈ — Flower Care ਅਤੇ ਇਸ ਵਰਗੇ।"
           }
         },
         "pl": {
@@ -166,6 +238,24 @@
             "value": "För att läsa fuktsensorn i krukan – Flower Care och liknande."
           }
         },
+        "ta": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "தொட்டியிலுள்ள ஈரப்பதச் சென்சாரைப் படிக்க — Flower Care போன்றவை."
+          }
+        },
+        "te": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "కుండీలోని తేమ సెన్సార్‌ను చదవడానికి — Flower Care వంటివి."
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "เพื่ออ่านค่าเซ็นเซอร์ความชื้นในกระถาง — Flower Care และอื่น ๆ ที่คล้ายกัน"
+          }
+        },
         "tr": {
           "stringUnit": {
             "state": "translated",
@@ -176,6 +266,30 @@
           "stringUnit": {
             "state": "translated",
             "value": "Щоб читати датчик вологості в горщику — Flower Care та схожі."
+          }
+        },
+        "ur": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "گملے کا نمی کا سینسر پڑھنے کے لیے — Flower Care اور اس جیسے۔"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Để đọc cảm biến độ ẩm trong chậu — Flower Care và tương tự."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "用于读取花盆中的湿度传感器——如 Flower Care 等。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "用於讀取花盆中的濕度感測器——如 Flower Care 等。"
           }
         }
       }
@@ -1074,6 +1188,12 @@
             "value": "За да чете датчиците за влажност на почвата от приложението „Дом“."
           }
         },
+        "bn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "হোম অ্যাপ থেকে মাটির আর্দ্রতা সেন্সর পড়তে।"
+          }
+        },
         "ca": {
           "stringUnit": {
             "state": "translated",
@@ -1128,10 +1248,22 @@
             "value": "Pour lire les capteurs d’humidité du sol de l’app Maison."
           }
         },
+        "gu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "હોમ ઍપમાંથી માટીના ભેજ સેન્સર વાંચવા."
+          }
+        },
         "he": {
           "stringUnit": {
             "state": "translated",
             "value": "כדי לקרוא את חיישני לחות הקרקע מהיישום “בית”."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "होम ऐप से मिट्टी की नमी के सेंसर पढ़ने के लिए।"
           }
         },
         "hr": {
@@ -1146,10 +1278,22 @@
             "value": "A talajnedvesség-érzékelők olvasásához az Otthon appból."
           }
         },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Untuk membaca sensor kelembapan tanah dari app “Rumah”."
+          }
+        },
         "it": {
           "stringUnit": {
             "state": "translated",
             "value": "Per leggere i sensori di umidità del terreno dall’app Casa."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "「ホーム」アプリの土壌水分センサーを読み取るため。"
           }
         },
         "kk": {
@@ -1158,10 +1302,40 @@
             "value": "«Үй» қолданбасындағы топырақ ылғалдылығы датчиктерін оқу үшін."
           }
         },
+        "kn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ಹೋಮ್ ಆ್ಯಪ್‌ನಿಂದ ಮಣ್ಣಿನ ತೇವಾಂಶ ಸೆನ್ಸರ್‌ಗಳನ್ನು ಓದಲು."
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "‘홈’ 앱에서 흙 습도 센서를 읽기 위해."
+          }
+        },
         "lt": {
           "stringUnit": {
             "state": "translated",
             "value": "Kad galėtume skaityti dirvožemio drėgmės jutiklius iš programos „Namai“."
+          }
+        },
+        "ml": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ഹോം ആപ്പിലെ മണ്ണിന്റെ ഈർപ്പ സെൻസറുകൾ വായിക്കാൻ."
+          }
+        },
+        "mr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "होम ॲपमधील मातीच्या ओलाव्याचे सेन्सर वाचण्यासाठी."
+          }
+        },
+        "ms": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Untuk membaca penderia kelembapan tanah daripada apl “Rumah”."
           }
         },
         "nb": {
@@ -1174,6 +1348,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "Om bodemvochtsensoren uit de Woning-app uit te lezen."
+          }
+        },
+        "or": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ହୋମ୍ ଆପ୍‌ରୁ ମାଟିର ଆର୍ଦ୍ରତା ସେନ୍ସର ପଢ଼ିବାକୁ।"
+          }
+        },
+        "pa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ਹੋਮ ਐਪ ਤੋਂ ਮਿੱਟੀ ਦੀ ਨਮੀ ਦੇ ਸੈਂਸਰ ਪੜ੍ਹਨ ਲਈ।"
           }
         },
         "pl": {
@@ -1224,6 +1410,24 @@
             "value": "För att läsa jordfuktsensorer från appen Hem."
           }
         },
+        "ta": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ஹோம் ஆப்பிலிருந்து மண் ஈரப்பதச் சென்சார்களைப் படிக்க."
+          }
+        },
+        "te": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "హోమ్ యాప్ నుంచి మట్టి తేమ సెన్సార్లను చదవడానికి."
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "เพื่ออ่านค่าเซ็นเซอร์ความชื้นในดินจากแอป “บ้าน”"
+          }
+        },
         "tr": {
           "stringUnit": {
             "state": "translated",
@@ -1234,6 +1438,30 @@
           "stringUnit": {
             "state": "translated",
             "value": "Щоб читати датчики вологості ґрунту із застосунку «Дім»."
+          }
+        },
+        "ur": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ہوم ایپ سے مٹی کی نمی کے سینسر پڑھنے کے لیے۔"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Để đọc cảm biến độ ẩm đất từ ứng dụng “Nhà”."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "用于从“家庭”App 读取土壤湿度传感器。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "用於從「家庭」App 讀取土壤濕度感測器。"
           }
         }
       }
@@ -1251,6 +1479,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "За да разбере времето навън: в жега и сух въздух пръстта съхне по-бързо. Стига и приблизително местоположение."
+          }
+        },
+        "bn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "বাইরের আবহাওয়া জানতে: গরম আর শুকনো বাতাসে মাটি তাড়াতাড়ি শুকোয়। আনুমানিক লোকেশনই যথেষ্ট।"
           }
         },
         "ca": {
@@ -1307,10 +1541,22 @@
             "value": "Pour connaître la météo dehors : par chaleur et air sec, la terre sèche plus vite. Une position approximative suffit."
           }
         },
+        "gu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "બહારનું હવામાન જાણવા: ગરમી અને સૂકી હવામાં માટી ઝડપથી સુકાય છે. અંદાજિત સ્થાન પૂરતું છે."
+          }
+        },
         "he": {
           "stringUnit": {
             "state": "translated",
             "value": "כדי לדעת מה מזג האוויר בחוץ: בחום ובאוויר יבש האדמה מתייבשת מהר יותר. מיקום משוער מספיק."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "बाहर का मौसम जानने के लिए: गर्मी और सूखी हवा में मिट्टी जल्दी सूखती है। अनुमानित लोकेशन काफ़ी है।"
           }
         },
         "hr": {
@@ -1325,10 +1571,22 @@
             "value": "A kinti időjárás lekéréséhez: hőségben és száraz levegőben a föld gyorsabban szárad. Elég a hozzávetőleges hely."
           }
         },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Untuk mengetahui cuaca di luar: saat panas dan udara kering, tanah mengering lebih cepat. Lokasi perkiraan sudah cukup."
+          }
+        },
         "it": {
           "stringUnit": {
             "state": "translated",
             "value": "Per conoscere il meteo fuori: con caldo e aria secca la terra si asciuga prima. Basta una posizione approssimativa."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "外の天気を知るため：暑くて空気が乾いていると、土が早く乾きます。おおよその位置で十分です。"
           }
         },
         "kk": {
@@ -1337,10 +1595,40 @@
             "value": "Сырттағы ауа райын білу үшін: ыстықта және құрғақ ауада топырақ тезірек кебеді. Шамамен алынған орын жетеді."
           }
         },
+        "kn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ಹೊರಗಿನ ಹವಾಮಾನ ತಿಳಿಯಲು: ಬಿಸಿ ಮತ್ತು ಒಣ ಗಾಳಿಯಲ್ಲಿ ಮಣ್ಣು ಬೇಗ ಒಣಗುತ್ತದೆ. ಅಂದಾಜು ಸ್ಥಳ ಸಾಕು."
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "바깥 날씨를 알기 위해: 덥고 건조하면 흙이 더 빨리 말라요. 대략적인 위치면 충분해요."
+          }
+        },
         "lt": {
           "stringUnit": {
             "state": "translated",
             "value": "Kad sužinotume orus lauke: per karštį ir sausą orą žemė džiūsta greičiau. Užtenka apytikslės vietos."
+          }
+        },
+        "ml": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "പുറത്തെ കാലാവസ്ഥ അറിയാൻ: ചൂടിലും വരണ്ട വായുവിലും മണ്ണ് വേഗം ഉണങ്ങും. ഏകദേശ ലൊക്കേഷൻ മതി."
+          }
+        },
+        "mr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "बाहेरचे हवामान जाणून घेण्यासाठी: उष्णतेत आणि कोरड्या हवेत माती लवकर सुकते. अंदाजे स्थान पुरेसे आहे."
+          }
+        },
+        "ms": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Untuk mengetahui cuaca di luar: dalam panas dan udara kering, tanah kering lebih cepat. Lokasi anggaran sudah memadai."
           }
         },
         "nb": {
@@ -1353,6 +1641,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "Om het weer buiten op te halen: bij hitte en droge lucht droogt de grond sneller. Een locatie bij benadering is genoeg."
+          }
+        },
+        "or": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ବାହାରର ପାଣିପାଗ ଜାଣିବାକୁ: ଗରମ ଓ ଶୁଖିଲା ପବନରେ ମାଟି ଶୀଘ୍ର ଶୁଖେ। ଆନୁମାନିକ ଅବସ୍ଥାନ ଯଥେଷ୍ଟ।"
+          }
+        },
+        "pa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ਬਾਹਰ ਦਾ ਮੌਸਮ ਜਾਣਨ ਲਈ: ਗਰਮੀ ਅਤੇ ਖੁਸ਼ਕ ਹਵਾ ਵਿੱਚ ਮਿੱਟੀ ਜਲਦੀ ਸੁੱਕਦੀ ਹੈ। ਅੰਦਾਜ਼ਨ ਟਿਕਾਣਾ ਕਾਫ਼ੀ ਹੈ।"
           }
         },
         "pl": {
@@ -1403,6 +1703,24 @@
             "value": "För att hämta vädret ute: i värme och torr luft torkar jorden snabbare. Ungefärlig plats räcker."
           }
         },
+        "ta": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "வெளியே உள்ள வானிலையை அறிய: வெப்பத்திலும் வறண்ட காற்றிலும் மண் வேகமாக உலரும். தோராயமான இருப்பிடம் போதும்."
+          }
+        },
+        "te": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "బయటి వాతావరణం తెలుసుకోవడానికి: వేడిలో, పొడి గాలిలో మట్టి త్వరగా ఆరుతుంది. సుమారు లొకేషన్ చాలు."
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "เพื่อทราบสภาพอากาศข้างนอก: เมื่ออากาศร้อนและแห้ง ดินจะแห้งเร็วขึ้น ตำแหน่งโดยประมาณก็เพียงพอ"
+          }
+        },
         "tr": {
           "stringUnit": {
             "state": "translated",
@@ -1413,6 +1731,30 @@
           "stringUnit": {
             "state": "translated",
             "value": "Щоб дізнатися погоду за вікном: у спеку й сухе повітря земля сохне швидше. Вистачить приблизного місця."
+          }
+        },
+        "ur": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "باہر کا موسم جاننے کے لیے: گرمی اور خشک ہوا میں مٹی جلدی سوکھتی ہے۔ تخمینی مقام کافی ہے۔"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Để biết thời tiết ngoài trời: khi nóng và không khí khô, đất khô nhanh hơn. Vị trí gần đúng là đủ."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "用于了解窗外天气：炎热、干燥时土干得更快。大致位置就够了。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "用於了解窗外天氣：炎熱、乾燥時土乾得更快。大致位置就夠了。"
           }
         }
       }
