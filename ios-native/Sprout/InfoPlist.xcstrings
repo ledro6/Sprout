@@ -4,6 +4,18 @@
     "NSBluetoothAlwaysUsageDescription": {
       "extractionState": "manual",
       "localizations": {
+        "ca": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Per llegir el sensor d’humitat del test: Flower Care i similars."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ke čtení čidla vlhkosti v květináči – Flower Care a podobných."
+          }
+        },
         "da": {
           "stringUnit": {
             "state": "translated",
@@ -28,16 +40,40 @@
             "value": "Para leer el sensor de humedad de la maceta: Flower Care y similares."
           }
         },
+        "fi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ruukun kosteusanturin lukemiseen – Flower Care ja vastaavat."
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
             "value": "Pour lire le capteur d’humidité du pot — Flower Care et similaires."
           }
         },
+        "hr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Za očitavanje senzora vlage u loncu — Flower Care i sličnih."
+          }
+        },
+        "hu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A cserépben lévő nedvességérzékelő olvasásához – Flower Care és hasonlók."
+          }
+        },
         "it": {
           "stringUnit": {
             "state": "translated",
             "value": "Per leggere il sensore di umidità nel vaso: Flower Care e simili."
+          }
+        },
+        "lt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kad galėtume skaityti drėgmės jutiklį vazone — Flower Care ir panašius."
           }
         },
         "nb": {
@@ -52,6 +88,12 @@
             "value": "Om de vochtsensor in de pot uit te lezen – Flower Care en vergelijkbare."
           }
         },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aby odczytywać czujnik wilgotności w doniczce — Flower Care i podobne."
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -64,10 +106,28 @@
             "value": "Para ler o sensor de humidade do vaso — Flower Care e semelhantes."
           }
         },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pentru a citi senzorul de umiditate din ghiveci — Flower Care și altele similare."
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
             "value": "Чтобы читать датчик влажности в горшке — Flower Care и похожие."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Na čítanie senzora vlhkosti v kvetináči – Flower Care a podobných."
+          }
+        },
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Za branje senzorja vlage v loncu — Flower Care in podobnih."
           }
         },
         "sv": {
@@ -960,6 +1020,18 @@
     "NSHomeKitUsageDescription": {
       "extractionState": "manual",
       "localizations": {
+        "ca": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Per llegir els sensors d’humitat del sòl de l’app Casa."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ke čtení čidel vlhkosti půdy z aplikace Domácnost."
+          }
+        },
         "da": {
           "stringUnit": {
             "state": "translated",
@@ -984,16 +1056,40 @@
             "value": "Para leer los sensores de humedad del suelo de la app Casa."
           }
         },
+        "fi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Maaperän kosteusantureiden lukemiseen Koti-apista."
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
             "value": "Pour lire les capteurs d’humidité du sol de l’app Maison."
           }
         },
+        "hr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Za očitavanje senzora vlage tla iz aplikacije Dom."
+          }
+        },
+        "hu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A talajnedvesség-érzékelők olvasásához az Otthon appból."
+          }
+        },
         "it": {
           "stringUnit": {
             "state": "translated",
             "value": "Per leggere i sensori di umidità del terreno dall’app Casa."
+          }
+        },
+        "lt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kad galėtume skaityti dirvožemio drėgmės jutiklius iš programos „Namai“."
           }
         },
         "nb": {
@@ -1008,6 +1104,12 @@
             "value": "Om bodemvochtsensoren uit de Woning-app uit te lezen."
           }
         },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aby odczytywać czujniki wilgotności gleby z aplikacji Dom."
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -1020,10 +1122,28 @@
             "value": "Para ler os sensores de humidade do solo da app Casa."
           }
         },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pentru a citi senzorii de umiditate a solului din aplicația Locuință."
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
             "value": "Чтобы читать датчики влажности почвы из приложения «Дом»."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Na čítanie senzorov vlhkosti pôdy z aplikácie Domácnosť."
+          }
+        },
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Za branje senzorjev vlage prsti iz aplikacije Dom."
           }
         },
         "sv": {
@@ -1037,6 +1157,18 @@
     "NSLocationWhenInUseUsageDescription": {
       "extractionState": "manual",
       "localizations": {
+        "ca": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Per saber el temps que fa a fora: amb calor i aire sec la terra s’asseca més de pressa. N’hi ha prou amb la ubicació aproximada."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aby šlo zjistit počasí venku: v horku a suchém vzduchu schne hlína rychleji. Stačí přibližná poloha."
+          }
+        },
         "da": {
           "stringUnit": {
             "state": "translated",
@@ -1061,16 +1193,40 @@
             "value": "Para saber el tiempo que hace fuera: con calor y aire seco la tierra se seca más rápido. Basta con una ubicación aproximada."
           }
         },
+        "fi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jotta ulkosää voidaan hakea: helteellä ja kuivassa ilmassa multa kuivuu nopeammin. Likimääräinen sijainti riittää."
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
             "value": "Pour connaître la météo dehors : par chaleur et air sec, la terre sèche plus vite. Une position approximative suffit."
           }
         },
+        "hr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Za podatke o vremenu vani: po vrućini i suhom zraku zemlja se brže suši. Dovoljna je približna lokacija."
+          }
+        },
+        "hu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A kinti időjárás lekéréséhez: hőségben és száraz levegőben a föld gyorsabban szárad. Elég a hozzávetőleges hely."
+          }
+        },
         "it": {
           "stringUnit": {
             "state": "translated",
             "value": "Per conoscere il meteo fuori: con caldo e aria secca la terra si asciuga prima. Basta una posizione approssimativa."
+          }
+        },
+        "lt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kad sužinotume orus lauke: per karštį ir sausą orą žemė džiūsta greičiau. Užtenka apytikslės vietos."
           }
         },
         "nb": {
@@ -1085,6 +1241,12 @@
             "value": "Om het weer buiten op te halen: bij hitte en droge lucht droogt de grond sneller. Een locatie bij benadering is genoeg."
           }
         },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aby sprawdzić pogodę za oknem: w upale i suchym powietrzu ziemia schnie szybciej. Wystarczy przybliżona lokalizacja."
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -1097,10 +1259,28 @@
             "value": "Para saber o tempo lá fora: com calor e ar seco, a terra seca mais depressa. Basta a localização aproximada."
           }
         },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pentru a afla vremea de afară: la căldură și aer uscat pământul se usucă mai repede. E suficient locul aproximativ."
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
             "value": "Чтобы узнать погоду за окном: в жару и сухой воздух земля сохнет быстрее. Хватит примерного места."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aby sa dalo zistiť počasie vonku: v horúčave a suchom vzduchu schne zemina rýchlejšie. Stačí približná poloha."
+          }
+        },
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Za vreme zunaj: v vročini in suhem zraku se zemlja suši hitreje. Dovolj je približna lokacija."
           }
         },
         "sv": {
