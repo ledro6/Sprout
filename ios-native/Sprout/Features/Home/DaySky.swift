@@ -11,20 +11,24 @@ struct DaySky: View {
 
     var body: some View {
         // Бережём заряд — небо стоит: солнце и луна на месте. См. `Power`.
-        // Ночью двигаться нечему — будим раз в минуту, чтобы не проспать
-        // рассвет.
-        let night = Sky.sun(at: Sky.hour(Date())) == nil
-        TimelineView(.animation(minimumInterval: night ? 60 : 1.0 / 15,
-                                paused: still || Power.shared.calm)) {
-            context in
-            Canvas { canvas, size in
-                let hour = Sky.hour(context.date)
-                let time = context.date.timeIntervalSinceReferenceDate
-                if let along = Sky.sun(at: hour) {
-                    sun(&canvas, size: size, along: along, hour: hour,
-                        time: still ? 0 : time)
-                } else {
-                    night(&canvas, size: size)
+        let calm = still || Power.shared.calm
+        // Ночью двигаться нечему — луна стоит, хватит кадра в минуту. Время
+        // суток сверяем тоже раз в минуту: сверь его раз при показе — и на
+        // рассвете солнце шло бы рывками, а вечером стоящая луна рисовалась
+        // бы пятнадцать раз в секунду.
+        TimelineView(.everyMinute) { minute in
+            let asleep = Sky.sun(at: Sky.hour(minute.date)) == nil
+            TimelineView(.animation(minimumInterval: asleep ? 60 : 1.0 / 15,
+                                    paused: calm)) { context in
+                Canvas { canvas, size in
+                    let hour = Sky.hour(context.date)
+                    let time = context.date.timeIntervalSinceReferenceDate
+                    if let along = Sky.sun(at: hour) {
+                        sun(&canvas, size: size, along: along, hour: hour,
+                            time: still ? 0 : time)
+                    } else {
+                        night(&canvas, size: size)
+                    }
                 }
             }
         }
