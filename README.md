@@ -259,6 +259,7 @@ Swift, без Mac: список таких файлов — `tool/model-files.tx
 | `tool/check_pbxproj.py` | сверяет файл проекта, написанный руками |
 | `tool/check_model.sh`, `tool/swift-model-check/`, `tool/model-files.txt` | собирает и прогоняет модель без Mac |
 | `tool/make_strings.py`, `tool/strings/` | переводы по языкам и сборка каталогов строк |
+| `tool/gate.sh` | все проверки перед коммитом одним прогоном |
 
 ## Живой сад
 
@@ -3069,6 +3070,7 @@ macOS и Xcode нужны, чтобы собрать приложение, — �
 поймать часть ошибок:
 
 ```bash
+tool/gate.sh                                       # всё, кроме make_stock, одним прогоном
 swiftc -parse $(find ios-native -name '*.swift')   # синтаксис приложения и виджета
 python3 tool/check_tokens.py ios-native            # имена токенов
 tool/check_model.sh                                # модель собрать и прогнать
