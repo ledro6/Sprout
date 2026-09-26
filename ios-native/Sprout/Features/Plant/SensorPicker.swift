@@ -60,7 +60,7 @@ struct SensorPicker: View {
         .animation(Motion.number, value: sensors.found)
     }
 
-    private func group(_ kind: Probe.Kind, title: LocalizedStringKey,
+    private func group(_ kind: Sensor.Kind, title: LocalizedStringKey,
                        empty: String) -> some View {
         let found = sensors.found.filter { $0.kind == kind }
         return SproutGroup(title) {
@@ -104,7 +104,7 @@ struct SensorPicker: View {
     }
 
     private func link(_ found: Sensors.Found) {
-        garden.link(plantID, probe: Probe(kind: found.kind, id: found.id,
+        garden.link(plantID, sensor: Sensor(kind: found.kind, id: found.id,
                                           name: found.name))
         sensors.stop()
         sensors.poll(plantID)

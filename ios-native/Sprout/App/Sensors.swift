@@ -16,7 +16,7 @@ final class Sensors: NSObject {
 
     /// Датчик, который нашёлся рядом или в «Доме».
     struct Found: Identifiable, Hashable {
-        var kind: Probe.Kind
+        var kind: Sensor.Kind
         var id: String
         var name: String
         /// Комната в «Доме» или сила сигнала.
@@ -80,22 +80,22 @@ final class Sensors: NSObject {
     /// Свежие показания всех привязанных датчиков.
     func poll() {
         let plants = Garden.shared.rooms.flatMap(\.plants)
-            .filter { $0.probe != nil }
+            .filter { $0.sensor != nil }
         guard !plants.isEmpty else { return }
         for plant in plants { poll(plant.id) }
     }
 
     /// Показания одного растения.
     func poll(_ id: Plant.ID) {
-        guard let probe = Garden.shared.plant(id: id)?.probe else { return }
-        switch probe.kind {
-        case .flora: read(flora: probe, for: id)
-        case .home: read(home: probe, for: id)
+        guard let sensor = Garden.shared.plant(id: id)?.sensor else { return }
+        switch sensor.kind {
+        case .flora: read(flora: sensor, for: id)
+        case .home: read(home: sensor, for: id)
         }
     }
 
-    private func read(flora probe: Probe, for plant: Plant.ID) {
-        guard let uuid = UUID(uuidString: probe.id) else { return }
+    private func read(flora sensor: Sensor, for plant: Plant.ID) {
+        guard let uuid = UUID(uuidString: sensor.id) else { return }
         bluetooth { [weak self] central in
             guard let self,
                   let peripheral = central.retrievePeripherals(
@@ -190,14 +190,14 @@ final class Sensors: NSObject {
         return nil
     }
 
-    private func read(home probe: Probe, for plant: Plant.ID) {
+    private func read(home sensor: Sensor, for plant: Plant.ID) {
         guard let homes else {
             // «Дом» ещё не открыт: откроем и прочтём, когда он ответит.
             pendingHome.insert(plant)
             house()
             return
         }
-        guard let characteristic = characteristic(probe.id) else {
+        guard let characteristic = characteristic(sensor.id) else {
             if homes.homes.isEmpty { pendingHome.insert(plant) }
             return
         }

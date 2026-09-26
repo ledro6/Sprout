@@ -277,20 +277,20 @@ final class Garden {
     // MARK: - Датчики
 
     /// Привязали датчик — или отвязали, пусто.
-    func link(_ id: Plant.ID, probe: Probe?) {
+    func link(_ id: Plant.ID, sensor: Sensor?) {
         guard plant(id: id) != nil else { return }
-        change(id) { $0.probe = probe }
+        change(id) { $0.sensor = sensor }
     }
 
     /// Метка шкалы датчика по последнему показанию: «сейчас сухо» или
     /// «только что полили».
     func mark(_ id: Plant.ID, dry: Bool) {
-        guard var probe = plant(id: id)?.probe,
-              let now = probe.last?.moisture else { return }
-        if dry { probe.dry = now } else { probe.wet = now }
+        guard var sensor = plant(id: id)?.sensor,
+              let now = sensor.last?.moisture else { return }
+        if dry { sensor.dry = now } else { sensor.wet = now }
         change(id) {
-            $0.probe = probe
-            $0.moisture = probe.level(now)
+            $0.sensor = sensor
+            $0.moisture = sensor.level(now)
         }
     }
 
@@ -299,24 +299,24 @@ final class Garden {
     /// журнал, если его не записали кнопкой за последние два часа.
     @discardableResult
     func sense(_ id: Plant.ID, _ reading: Reading) -> Bool {
-        guard let plant = plant(id: id), var probe = plant.probe else {
+        guard let plant = plant(id: id), var sensor = plant.sensor else {
             return false
         }
-        let before = probe.last?.moisture
-        probe.last = reading
+        let before = sensor.last?.moisture
+        sensor.last = reading
         var poured = false
-        if let before, probe.poured(from: before, to: reading.moisture),
+        if let before, sensor.poured(from: before, to: reading.moisture),
            !log.contains(where: {
                $0.plant == id
                    && abs($0.when.timeIntervalSince(reading.when)) < 2 * 3_600
            }) {
             log.append(Watering(plant: id, when: reading.when,
-                                left: probe.level(before)))
+                                left: sensor.level(before)))
             poured = true
         }
         change(id) {
-            $0.probe = probe
-            $0.moisture = probe.level(reading.moisture)
+            $0.sensor = sensor
+            $0.moisture = sensor.level(reading.moisture)
         }
         return poured
     }

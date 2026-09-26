@@ -471,7 +471,7 @@ struct PlantView: View {
             fact(Lang.format("Влажность %@", plant.moistureLabel),
                  term: .moisture)
                 .contentTransition(.numericText())
-            if let status = plant.probe?.status {
+            if let status = plant.sensor?.status {
                 fact(status)
                     .contentTransition(.numericText())
             }

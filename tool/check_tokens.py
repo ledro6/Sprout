@@ -97,6 +97,18 @@ def main(root: str) -> int:
     for name, where in sorted(born.items()):
         if len(where) > 1:
             problems.append(f"«{name}» объявлен дважды: " + ", ".join(where))
+    # Два файла с одним именем в одной папке-цели Xcode тоже не соберёт:
+    # по имени файла он различает частные объявления. Цель — верхняя папка
+    # под корнем проекта: Sprout, SproutWidget, SproutWatch.
+    seen: dict[tuple[str, str], list[str]] = {}
+    for path in files:
+        parts = path.relative_to(root).parts
+        target = parts[0] if len(parts) > 1 else ""
+        seen.setdefault((target, path.name), []).append(str(path))
+    for (_, name), where in sorted(seen.items()):
+        if len(where) > 1:
+            problems.append(f"файл «{name}» дважды в одной цели: "
+                            + ", ".join(where))
 
     for path in files:
         for number, line in enumerate(path.read_text(encoding="utf-8")

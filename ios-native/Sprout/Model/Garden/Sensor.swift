@@ -6,7 +6,7 @@ import Foundation
 /// какие из них для этого растения «сухо» и «только что полили», хозяин
 /// отмечает сам — кнопками в настройках растения. Проценты растения — между
 /// этими метками.
-struct Probe: Codable, Hashable, Sendable {
+struct Sensor: Codable, Hashable, Sendable {
     enum Kind: String, Codable, Sendable {
         /// Flower Care и его родня по Bluetooth.
         case flora
@@ -19,8 +19,8 @@ struct Probe: Codable, Hashable, Sendable {
     var id: String
     var name: String
     /// Показания датчика, которые значат «сухо» и «только что полили».
-    var dry: Double = Probe.dryMark
-    var wet: Double = Probe.wetMark
+    var dry: Double = Sensor.dryMark
+    var wet: Double = Sensor.wetMark
     var last: Reading?
 
     /// Обычные метки Flower Care: суккуленты сухи к десяти процентам,
@@ -106,7 +106,7 @@ enum Flora {
     }
 }
 
-extension Probe {
+extension Sensor {
     /// «Датчик: 38% · батарейка 82%».
     var status: String? {
         guard let last else { return nil }

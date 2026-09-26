@@ -202,19 +202,19 @@ struct PlantSettingsView: View {
     /// не черновик, а устройство.
     private var sensor: some View {
         SproutGroup("Датчик влажности") {
-            if let probe = plant?.probe {
+            if let sensor = plant?.sensor {
                 HStack(spacing: 12) {
-                    Image(systemName: probe.kind == .flora ? "sensor.fill"
+                    Image(systemName: sensor.kind == .flora ? "sensor.fill"
                           : "homekit")
                         .font(Typography.settingRow)
                         .foregroundStyle(Palette.accent)
                         .frame(width: 24)
                     VStack(alignment: .leading, spacing: 2) {
-                        Text(probe.name)
+                        Text(sensor.name)
                             .font(Typography.settingRow)
                             .foregroundStyle(Palette.ink)
                             .lineLimit(1)
-                        Text(probe.status ?? Lang.text("Ждём первых показаний…"))
+                        Text(sensor.status ?? Lang.text("Ждём первых показаний…"))
                             .font(Typography.settingNote)
                             .foregroundStyle(.secondary)
                             .contentTransition(.numericText())
@@ -257,14 +257,14 @@ struct PlantSettingsView: View {
                     .buttonStyle(.glass)
                 }
                 .font(Typography.settingNote)
-                .disabled(probe.last == nil)
+                .disabled(sensor.last == nil)
                 Text("Отметьте, когда земля сухая и когда только что полита, — проценты растения встанут между метками.")
                     .font(Typography.settingNote)
                     .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
                 Button(role: .destructive) {
                     withAnimation(Motion.enter) {
-                        garden.link(plantID, probe: nil)
+                        garden.link(plantID, sensor: nil)
                     }
                     Feel.toss()
                 } label: {
@@ -283,7 +283,7 @@ struct PlantSettingsView: View {
                 .buttonStyle(.glass)
             }
         }
-        .animation(Motion.enter, value: plant?.probe)
+        .animation(Motion.enter, value: plant?.sensor)
     }
 
     // MARK: - Мелкий уход

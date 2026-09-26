@@ -3461,18 +3461,18 @@ do {
     check(Flora.named("Flower care") && Flora.named("Grow Care Garden")
           && !Flora.named("Mi Smart Band") && !Flora.named(nil),
           "датчик узнаётся по имени")
-    var probe = Probe(kind: .flora, id: "a", name: "Flower care")
-    check(round2(probe.level(30)), "0.50", "середина шкалы — половина воды")
-    check(probe.level(5) == 0 && probe.level(70) == 1, "за метками — край")
-    check(probe.poured(from: 16, to: 40) && !probe.poured(from: 30, to: 35),
+    var sensor = Sensor(kind: .flora, id: "a", name: "Flower care")
+    check(round2(sensor.level(30)), "0.50", "середина шкалы — половина воды")
+    check(sensor.level(5) == 0 && sensor.level(70) == 1, "за метками — край")
+    check(sensor.poured(from: 16, to: 40) && !sensor.poured(from: 30, to: 35),
           "подскок больше трети шкалы — полили")
-    probe.dry = 30
-    probe.wet = 32
-    check(round2(probe.level(30)), "0.50", "слипшиеся метки — обычная шкала")
+    sensor.dry = 30
+    sensor.wet = 32
+    check(round2(sensor.level(30)), "0.50", "слипшиеся метки — обычная шкала")
 
     let yard = Garden()
     var fern = plantNamed("Папоротник", moisture: 1, dryingDays: 7)
-    fern.probe = Probe(kind: .flora, id: "a", name: "Flower care")
+    fern.sensor = Sensor(kind: .flora, id: "a", name: "Flower care")
     yard.rooms = [Room(name: "Спальня", plants: [fern])]
     let base = yard.log.count
     let early = Date(timeIntervalSince1970: 1_800_000_000)
@@ -3493,14 +3493,14 @@ do {
           && yard.log.count == base + 2,
           "полили кнопкой — датчик второй раз не записывает")
     yard.mark("Папоротник", dry: false)
-    check(yard.plant(id: "Папоротник")!.probe?.wet == 45
+    check(yard.plant(id: "Папоротник")!.sensor?.wet == 45
           && yard.plant(id: "Папоротник")!.moisture == 1,
           "«только что полил» — метка шкалы по показанию")
     let file = try! JSONEncoder().encode(yard.plant(id: "Папоротник")!)
     let back = try! JSONDecoder().decode(Plant.self, from: file)
-    check(back.probe?.last?.moisture == 45, "датчик ложится в файл сада")
-    yard.link("Папоротник", probe: nil)
-    check(yard.plant(id: "Папоротник")!.probe == nil, "датчик отвязали")
+    check(back.sensor?.last?.moisture == 45, "датчик ложится в файл сада")
+    yard.link("Папоротник", sensor: nil)
+    check(yard.plant(id: "Папоротник")!.sensor == nil, "датчик отвязали")
 }
 
 print("погода:")
