@@ -4,15 +4,17 @@ import UIKit
 import WidgetKit
 
 // Виджеты Sprout: «Кого полить» на экран «Домой» — с кнопкой «Полить» у
-// каждого растения — и сводка на экран блокировки. Сад читается из общей
-// папки (`Store`), полив идёт через `WaterFromWidget` — ту же команду знает
-// и приложение. Живые действия — в `LiveViews.swift`.
+// каждого растения, — сводка на экран блокировки и «Сад на тумбочке» для
+// режима ожидания. Сад читается из общей папки (`Store`), полив идёт через
+// `WaterFromWidget` — ту же команду знает и приложение. Живые действия — в
+// `LiveViews.swift`.
 
 @main
 struct SproutWidgets: WidgetBundle {
     var body: some Widget {
         ThirstWidget()
         ThirstGlance()
+        NightstandWidget()
         RoundLive()
         TripLive()
     }
@@ -38,31 +40,44 @@ struct Glance: TimelineEntry {
     let sprigs: [Sprig]
     /// Сад на диске есть — приложение хоть раз открывали.
     let ready: Bool
+    /// Тот же сад в порядке комнат — для грядки на тумбочке: горшки стоят на
+    /// своих местах, а не перебегают, когда один обгонит другого.
+    var garden: [Sprig] = []
 
     var thirsty: [Sprig] { sprigs.filter { $0.thirst != .calm } }
 
-    static func now() -> Glance {
+    static func now() -> Glance { ahead(from: .now, steps: 1)[0] }
+
+    /// Сад сейчас и дальше, шаг за шагом: пока приложение закрыто, земля
+    /// сохнет, и виджет проживает ночь сам — без приложения и без сети.
+    static func ahead(from start: Date, steps: Int,
+                      every step: TimeInterval = 1_800) -> [Glance] {
         guard let state = Store.read() else {
-            return Glance(date: .now, sprigs: [], ready: false)
+            return [Glance(date: start, sprigs: [], ready: false)]
         }
-        // Сроки — с той же поправкой на время года, что в приложении.
+        // Сроки — с теми же поправками на время года и погоду, что в
+        // приложении.
         Season.stretch = state.season ?? 1
-        let sprigs = state.rooms.flatMap { room in
-            room.plants.map { plant in
-                Sprig(id: plant.id, name: plant.name, room: room.name,
-                      moisture: plant.moisture, label: plant.wateringLabel,
-                      thumb: Store.thumb(for: plant))
+        return (0 ..< max(steps, 1)).map { index in
+            let date = start.addingTimeInterval(Double(index) * step)
+            Climate.settle(state.climate, on: true, now: date)
+            let garden = state.rooms(at: date).flatMap { room in
+                room.plants.map { plant in
+                    Sprig(id: plant.id, name: plant.name, room: room.name,
+                          moisture: plant.moisture, label: plant.wateringLabel,
+                          thumb: Store.thumb(for: plant))
+                }
             }
+            return Glance(date: date,
+                          sprigs: garden.sorted { $0.moisture < $1.moisture },
+                          ready: true, garden: garden)
         }
-        return Glance(date: .now,
-                      sprigs: sprigs.sorted { $0.moisture < $1.moisture },
-                      ready: true)
     }
 
     /// Для галереи виджетов: сада ещё может не быть, а показать виджет
     /// надо живым.
     static var sample: Glance {
-        Glance(date: .now, sprigs: [
+        let sprigs = [
             Sprig(id: "a", name: Lang.text("Спатифиллум"), room: "",
                   moisture: 0.08, label: Plant.wateringLabel(days: 0),
                   thumb: nil),
@@ -72,12 +87,21 @@ struct Glance: TimelineEntry {
             Sprig(id: "c", name: Lang.text("Монстера"), room: "",
                   moisture: 0.64, label: Plant.wateringLabel(days: 6),
                   thumb: nil),
-        ], ready: true)
+            Sprig(id: "d", name: Lang.text("Кактус"), room: "",
+                  moisture: 0.9, label: Plant.wateringLabel(days: 40),
+                  thumb: nil),
+            Sprig(id: "e", name: Lang.text("Фикус"), room: "",
+                  moisture: 0.47, label: Plant.wateringLabel(days: 4),
+                  thumb: nil),
+        ]
+        return Glance(date: .now, sprigs: sprigs.sorted { $0.moisture < $1.moisture },
+                      ready: true, garden: sprigs)
     }
 }
 
-/// Сад в памяти не меняется, пока приложение закрыто, — перерисовку зовёт
-/// само приложение, когда пишет сад, и полив из виджета.
+/// Земля сохнет и при закрытом приложении: на двенадцать часов вперёд,
+/// каждые полчаса — свой кадр, потом виджет просит новые. Сад поменялся —
+/// перерисовку зовёт само приложение, когда пишет сад, и полив из виджета.
 struct Provider: TimelineProvider {
     func placeholder(in context: Context) -> Glance { .sample }
 
@@ -89,7 +113,8 @@ struct Provider: TimelineProvider {
 
     func getTimeline(in context: Context,
                      completion: @escaping (Timeline<Glance>) -> Void) {
-        completion(Timeline(entries: [Glance.now()], policy: .never))
+        completion(Timeline(entries: Glance.ahead(from: .now, steps: 24),
+                            policy: .atEnd))
     }
 }
 
@@ -249,7 +274,7 @@ private struct Thumb: View {
     }
 }
 
-private struct Blank: View {
+struct Blank: View {
     let icon: String
     let line: LocalizedStringKey
 
@@ -269,7 +294,7 @@ private struct Blank: View {
 
 /// Фон — светлая зелень сверху, как узор приложения, и системный цвет:
 /// в тёмной теме и на тонированном экране «Домой» он подстраивается сам.
-private struct Leafy: View {
+struct Leafy: View {
     var body: some View {
         ZStack {
             Color(.systemBackground)

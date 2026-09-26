@@ -23,7 +23,10 @@ struct WaterFromWidget: AppIntent {
     @MainActor
     func perform() async throws -> some IntentResult {
         // Сада на диске нет — поливать нечего, и макетный сад не заводим.
-        guard Store.read() != nil else { return .result() }
+        guard let state = Store.read() else { return .result() }
+        // Сроки — с поправками приложения: своих настроек у виджета нет.
+        Season.stretch = state.season ?? 1
+        Climate.settle(state.climate, on: true)
         let garden = Garden.shared
         garden.reload()
         garden.advance()

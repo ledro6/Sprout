@@ -52,8 +52,9 @@ final class Garden {
         log = state.log
         since = state.since
         written = state.stamp
-        // Отсчёт — с запуска: что было до него, саду знать неоткуда.
-        lastTick = Date()
+        // Время шло и пока приложение было выгружено: отсчёт — с записи.
+        // Нового сада на диске нет, и его отсчёт — с запуска.
+        lastTick = min(state.savedAt, Date())
     }
 
     /// Файл поменяли без нас — берём его. Зовётся при возвращении на экран и
@@ -65,7 +66,8 @@ final class Garden {
         log = state.log
         since = state.since
         written = state.stamp
-        lastTick = Date()
+        // Файл записан тогда-то — с того мига и сохнет.
+        lastTick = min(state.savedAt, Date())
         roster += 1
     }
 
@@ -75,7 +77,11 @@ final class Garden {
         let elapsed = now.timeIntervalSince(lastTick)
         lastTick = now
         guard elapsed > 0 else { return }
-        let days = elapsed * Self.speed / 86_400
+        Self.dry(&rooms, days: elapsed * Self.speed / 86_400)
+    }
+
+    /// Все растения теряют свою долю влаги за `days` дней сада.
+    static func dry(_ rooms: inout [Room], days: Double) {
         for room in rooms.indices {
             // Под открытым небом погода чувствуется целиком, а не вполовину.
             let open = Climate.boost != 1 && Climate.outdoor(rooms[room].name)
@@ -520,7 +526,7 @@ final class Garden {
     var state: GardenState {
         GardenState(owner: owner, rooms: rooms, savedAt: Date(),
                     log: log, since: since, stamp: written,
-                    season: Season.stretch)
+                    season: Season.stretch, climate: Climate.current)
     }
 
     /// На действиях хозяина и при уходе в фон, но не на каждом такте часов.

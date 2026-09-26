@@ -87,12 +87,18 @@ struct Climate: Codable, Equatable, Sendable {
     /// досушивает растения комнат под открытым небом, см. `Garden.advance`.
     nonisolated(unsafe) static var boost: Double = 1
 
+    /// Погода, по которой считаются поправки, — сад пишет её в файл, чтобы
+    /// виджет считал сроки так же.
+    nonisolated(unsafe) static var current: Climate?
+
     static func settle(_ climate: Climate?, on: Bool, now: Date = Date()) {
         guard on, let climate, climate.fresh(at: now) else {
             stretch = 1
             boost = 1
+            current = nil
             return
         }
+        current = climate
         let inside = climate.pace(outdoor: false)
         stretch = 1 / inside
         boost = climate.pace(outdoor: true) / inside

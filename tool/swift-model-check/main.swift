@@ -2290,6 +2290,57 @@ do {
     let roster = home.roster
     home.reload()
     check(home.roster == roster, "файл не менялся — перечитывать нечего")
+
+    // Приложение выгрузили на ночь: при запуске сад досчитывает, сколько
+    // прошло с записи, а не начинает отсчёт заново.
+    let night = 8.0 * 3_600
+    var sleeper = Plant.new(name: "Соня", species: "Монстера", dryingDays: 7,
+                            id: "sleeper")
+    sleeper.moisture = 1
+    let asleep = GardenState(owner: "", rooms: [Room(name: "Спальня",
+                                                     plants: [sleeper])],
+                             savedAt: Date().addingTimeInterval(-night))
+    try! JSONEncoder().encode(asleep).write(to: Store.garden!)
+    let woke = Garden()
+    woke.advance()
+    let lost = night * Garden.speed / 86_400 / sleeper.period
+    check(abs((1 - woke.plant(id: "sleeper")!.moisture) - lost) < 0.001,
+          "выгруженное приложение досчитывает ночь: минус "
+              + round2(lost))
+    let ahead = asleep.rooms(at: Date())[0].plants[0].moisture
+    check(abs(ahead - woke.plant(id: "sleeper")!.moisture) < 0.001,
+          "виджет видит ту же влажность, что и сад")
+    check(asleep.rooms(at: asleep.savedAt.addingTimeInterval(-3_600))[0]
+            .plants[0].moisture == 1,
+          "в прошлое сад не сохнет")
+    woke.save()
+    let widget = Garden()
+    widget.advance()
+    _ = widget.water("sleeper")
+    woke.reload()
+    woke.advance(to: Date().addingTimeInterval(night))
+    check(abs((1 - woke.plant(id: "sleeper")!.moisture) - lost) < 0.01,
+          "после полива виджетом — отсчёт от его записи")
+}
+
+print("погода в файле сада:")
+do {
+    let warm = Climate(temperature: 30, humidity: 0.3, symbol: "sun.max",
+                       taken: Date())
+    Climate.settle(warm, on: true)
+    check(Climate.current == warm, "поправки взяты из этой погоды")
+    let state = GardenState(owner: "", rooms: [], savedAt: Date(),
+                            climate: Climate.current)
+    let back = try! JSONDecoder().decode(
+        GardenState.self, from: JSONEncoder().encode(state))
+    check(back.climate == warm, "погода доезжает до виджета через файл")
+    Climate.settle(warm, on: false)
+    check(Climate.current == nil && Climate.stretch == 1,
+          "выключили — погоды в файле нет")
+    let old = #"{"owner":"","rooms":[],"savedAt":0}"#
+    check((try? JSONDecoder().decode(GardenState.self,
+                                     from: Data(old.utf8)))?.climate == nil,
+          "в файле прежней сборки погоды нет — и не надо")
 }
 
 print("сила телефона:")

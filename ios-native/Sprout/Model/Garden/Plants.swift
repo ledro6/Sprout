@@ -190,9 +190,12 @@ struct GardenState: Codable {
     /// он не видит, а сроки должен считать так же.
     var season: Double?
 
+    /// Погода в миг записи — туда же, виджету.
+    var climate: Climate?
+
     init(owner: String, rooms: [Room], savedAt: Date,
          log: [Watering] = [], since: Date = Date(), stamp: String? = nil,
-         season: Double? = nil) {
+         season: Double? = nil, climate: Climate? = nil) {
         self.owner = owner
         self.rooms = rooms
         self.savedAt = savedAt
@@ -200,6 +203,17 @@ struct GardenState: Codable {
         self.since = since
         self.stamp = stamp
         self.season = season
+        self.climate = climate
+    }
+
+    /// Сад в миг `date`, если никто не польёт: приложение закрыто, а земля
+    /// сохнет. Для виджета — и для самого сада после выгрузки. Поправки на
+    /// время года и погоду — уже выставленные.
+    func rooms(at date: Date) -> [Room] {
+        var rooms = rooms
+        let days = date.timeIntervalSince(savedAt) * Garden.speed / 86_400
+        if days > 0 { Garden.dry(&rooms, days: days) }
+        return rooms
     }
 
     /// Журнала и даты в файлах прежних сборок нет, а синтезированный разбор
@@ -213,6 +227,7 @@ struct GardenState: Codable {
         since = try box.decodeIfPresent(Date.self, forKey: .since) ?? savedAt
         stamp = try box.decodeIfPresent(String.self, forKey: .stamp)
         season = try box.decodeIfPresent(Double.self, forKey: .season)
+        climate = try box.decodeIfPresent(Climate.self, forKey: .climate)
     }
 }
 
