@@ -28,6 +28,12 @@ final class Glide {
     /// Прошлое сообщение — чтобы сверить с соседом.
     @ObservationIgnored private var last: (page: Int, x: CGFloat)?
 
+    /// Листание идёт — пальцем или доводкой. Только тогда положение
+    /// считается по страницам: стоящие страницы SwiftUI раскладывает заново,
+    /// когда вкладка возвращается, и лента комнат проезжала бы их от первой,
+    /// с толчком на каждой границе, будто листали.
+    @ObservationIgnored var moving = false
+
     /// Страница сообщает, где стоит относительно ленты. Страницы одной
     /// ширины идут подряд, так что положение целиком знает любая видимая.
     func track(page: Int, frame: CGRect, flipped: Bool) {
@@ -45,6 +51,12 @@ final class Glide {
         let sign = toward ?? (flipped ? -1 : 1)
         let now = CGFloat(page) - sign * frame.minX / width
         if abs(now - at) > 0.0005 { at = now }
+    }
+
+    /// Листание стоит на странице `page`.
+    func rest(at page: Int) {
+        let now = CGFloat(page)
+        if at != now { at = now }
     }
 
     func track(_ leaf: HomeLeaf, lift: CGFloat) {

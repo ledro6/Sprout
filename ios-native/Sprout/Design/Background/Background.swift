@@ -2,8 +2,9 @@ import Foundation
 import SwiftUI
 
 /// Фон: ровный цвет и узор — от угла окна, поэтому узор у экрана и листа
-/// поверх него совпадает. Узор можно убрать совсем — останется цвет.
-private struct SproutField: View {
+/// поверх него совпадает. Узор можно убрать совсем — останется цвет. Он же
+/// — вуаль входа во вкладку, см. `TabEntrance`.
+struct SproutField: View {
     /// Угол холста в окне: лист настроек висит ниже окна.
     @State private var corner: CGPoint = .zero
 

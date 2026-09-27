@@ -1,11 +1,14 @@
 import SwiftUI
 
-/// Один слайд «Итогов года»: живой фон своего цвета, подпись мелко, число
-/// или слово огромным и строка пояснения. Всё проявляется по очереди:
+/// Один слайд «Итогов года»: подпись мелко, число или слово огромным и
+/// строка пояснения — поверх общей сцены. Всё проявляется по очереди:
 /// подпись, потом число набегает от нуля, потом строка и рисунок.
 struct RecapPage: View {
     let slide: Recap.Slide
     let recap: Recap
+    /// Сверху — место под полоски и крестик, снизу — под полоску «Домой».
+    var top: CGFloat = 96
+    var bottom: CGFloat = 56
 
     /// Что делать на последнем слайде: смотреть снова.
     var again: () -> Void = {}
@@ -16,16 +19,12 @@ struct RecapPage: View {
 
     var body: some View {
         ZStack {
-            Backdrop(colors: RecapTheme.colors(slide))
             decoration
-            VStack(alignment: .leading, spacing: 14) {
-                Spacer(minLength: 96)
-                content
-                Spacer(minLength: 0)
-            }
-            .padding(.horizontal, 28)
-            .padding(.bottom, 56)
-            .frame(maxWidth: .infinity, alignment: .leading)
+            // Влезает целиком на любом телефоне и при крупном тексте.
+            RecapFit { content }
+                .padding(.top, top)
+                .padding(.bottom, bottom)
+                .padding(.horizontal, 28)
         }
         .foregroundStyle(.white)
         .task {
@@ -61,6 +60,7 @@ struct RecapPage: View {
         Text(text)
             .font(RecapTheme.caption)
             .textCase(.uppercase)
+            .tracking(1.2)
             .opacity(0.85)
             .revealed(shown)
     }
@@ -145,7 +145,10 @@ struct RecapPage: View {
                     }
                 }
             }
+            // Рост ступеней — внутри своей высоты: слайд не растёт вместе
+            // с ними.
             .frame(maxWidth: .infinity)
+            .frame(height: 300, alignment: .bottom)
             line(Lang.text("Чем выше ступень, тем чаще лейка."), delay: 1.4)
         }
     }
@@ -296,14 +299,16 @@ struct RecapPage: View {
     private var outro: some View {
         VStack(alignment: .leading, spacing: 16) {
             caption(Lang.text("Спасибо, что поливали"))
-            word(Lang.format("До встречи в %lld", recap.year + 1), size: 54)
+            // Год — строкой: числом он получил бы пробел, «2 027».
+            word(Lang.format("До встречи в %@", String(recap.year + 1)),
+                 size: 54)
             line(Lang.text("Покажите друзьям, как рос ваш сад."), delay: 0.9)
             HStack(spacing: 12) {
                 if let poster {
                     ShareLink(item: poster,
                               preview: SharePreview(
-                                  Lang.format("Итоги %lld в Sprout",
-                                              recap.year),
+                                  Lang.format("Итоги %@ в Sprout",
+                                              String(recap.year)),
                                   image: poster)) {
                         Label("Поделиться", systemImage: "square.and.arrow.up")
                             .font(.headline)
@@ -328,11 +333,10 @@ struct RecapPage: View {
 
     @ViewBuilder
     private var decoration: some View {
+        // Фигурки парят на общей сцене; у слайдов про воду — ещё и дождь.
         switch slide {
         case .waterings, .outro:
             DropRain()
-        case .garden, .intro:
-            PieceRise()
         default:
             EmptyView()
         }

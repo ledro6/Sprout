@@ -10,16 +10,16 @@ enum StatsBlock: String, CaseIterable, Codable, Identifiable, Sendable {
 
     var title: String {
         switch self {
-        case .now: Lang.text("Сейчас")
+        case .now: Lang.text("Сад сегодня")
         case .recap: Lang.text("Итоги года")
         case .orrery: Lang.text("Планетарий")
-        case .summary: Lang.text("Итог")
+        case .summary: Lang.text("Главное за период")
         case .waterings: Lang.text("Поливы")
-        case .aim: Lang.text("Точность полива")
-        case .habits: Lang.text("Привычки")
+        case .aim: Lang.text("Полив вовремя")
+        case .habits: Lang.text("Когда вы поливаете")
         case .calendar: Lang.text("Календарь поливов")
         case .records: Lang.text("Рекорды")
-        case .forecast: Lang.text("Прогноз")
+        case .forecast: Lang.text("Ближайшие поливы")
         case .rooms: Lang.text("Комнаты")
         case .plants: Lang.text("Растения")
         }

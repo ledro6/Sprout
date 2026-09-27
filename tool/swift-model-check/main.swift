@@ -1241,7 +1241,7 @@ do {
           "черенок: кличка, вид, срок, подкормка и от кого")
     check(planted?.chores[.mist] == 5 && planted?.chores[.turn] == 0,
           "мелкий уход едет с черенком: опрыскивать раз в пять, не вертеть")
-    check(cutting.card.contains("Лера передаёт черенок: «Баксик», Монстера.")
+    check(cutting.card.contains("Лера делится растением: «Баксик», Монстера.")
           && cutting.card.contains("раз в 9 дней"),
           "в сообщении — что это и как поливать")
     check(Cutting.read(whole.card) == nil && Rival.read(cutting.card) == nil

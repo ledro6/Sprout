@@ -58,12 +58,13 @@ struct RootView: View {
             if asked { pane = .home }
         }
         .tabBarMinimizeBehavior(.onScrollDown)
-        // Край прокрутки везде — плавным градиентом размытия, как в iOS, а
-        // не полосой с чертой под панелью.
-        .scrollEdgeEffectStyle(.soft, for: .all)
+        // Край прокрутки сверху — плавным градиентом размытия, как в iOS, а
+        // не полосой с чертой под панелью. Снизу края нет: размытие под
+        // панелью вкладок дёргалось при смене вкладок.
+        .scrollEdgeEffectStyle(.soft, for: .top)
+        .scrollEdgeEffectHidden(true, for: .bottom)
         .tint(Palette.accent)
         .environment(garden)
-        // Глубину выреза знает только корень: окно видно только отсюда.
         .task { await runClock() }
         .task { await Launch.shared.run() }
         .task { Chime.warm() }

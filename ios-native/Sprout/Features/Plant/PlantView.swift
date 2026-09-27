@@ -78,9 +78,11 @@ struct PlantView: View {
         .navigationTitle(plant?.name ?? "")
         .navigationBarTitleDisplayMode(.inline)
         .scrollEdgeEffectStyle(.soft, for: .top)
-        // Своя кнопка «назад»: системную не размыть. Жест свайпа от края при
-        // этом пропадает, возврат потягиванием вниз остаётся.
+        .sproutSettledEdge()
+        // Своя кнопка «назад»: системную не размыть. Жест свайпа от края
+        // UIKit с ней выключает — возвращаем его сами.
         .navigationBarBackButtonHidden(true)
+        .sproutSwipeBack()
         .toolbar {
             // Без общей подложки панели: она не размывалась — значок
             // проступал, а капсула стояла с первого кадра.

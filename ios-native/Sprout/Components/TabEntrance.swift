@@ -12,32 +12,42 @@ extension EnvironmentValues {
     }
 }
 
-/// Вкладка входит плавно, как в «Музыке»: содержимое проявляется и чуть
-/// подрастает. Фон остаётся на месте — вешается на содержимое, а не на фон,
-/// иначе между вкладками мелькал бы пустой цвет. Ушла вкладка — сбрасывается
-/// без анимации, чтобы в следующий раз войти снова. На входе в приложение
-/// появление ведёт заставка, а при «Уменьшении движения» — сразу.
+/// Вкладка входит плавно, как в «Музыке»: содержимое проявляется. Не
+/// прозрачностью самого содержимого: стекло карточек и мягкий край под
+/// шапкой у полупрозрачного предка рисуются неверно и вспыхивали в конце —
+/// элементы появлялись неровно. Поверх содержимого на миг ложится тот же
+/// фон, что под ним, и растворяется: всё проявляется разом, одним слоем.
+/// Ушла вкладка — вуаль ложится снова, без анимации. На входе в
+/// приложение появление ведёт заставка, при «Уменьшении движения» — сразу.
 struct TabEntrance: ViewModifier {
+    /// Небо главной — часть её фона: вуаль повторяет и его.
+    var sky = false
+
     @Environment(\.tabShown) private var shown
     @Environment(\.accessibilityReduceMotion) private var still
 
-    @State private var entered = false
+    @State private var veiled = true
 
     func body(content: Content) -> some View {
         content
-            .opacity(entered ? 1 : 0)
-            .scaleEffect(entered ? 1 : Motion.tabScale)
+            .overlay {
+                if veiled {
+                    ZStack {
+                        SproutField()
+                        if sky { DaySky() }
+                    }
+                    .ignoresSafeArea()
+                    .allowsHitTesting(false)
+                    .transition(.opacity)
+                }
+            }
             .onChange(of: shown, initial: true) { _, now in
-                guard now else {
+                if now, !still, Launch.shared.step >= Launch.last {
+                    withAnimation(Motion.tab) { veiled = false }
+                } else {
                     var quiet = Transaction()
                     quiet.disablesAnimations = true
-                    withTransaction(quiet) { entered = false }
-                    return
-                }
-                if still || Launch.shared.step < Launch.last {
-                    entered = true
-                } else {
-                    withAnimation(Motion.tab) { entered = true }
+                    withTransaction(quiet) { veiled = !now }
                 }
             }
     }

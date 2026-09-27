@@ -18,9 +18,6 @@ enum Palette {
 
     static let background = dual(.white, rgb(43, 46, 44))
 
-    /// Плашка без стекла — пока качается: тон стекла на фоне.
-    static let plateSolid = dual(rgb(244, 246, 244), rgb(60, 63, 61))
-
     /// В тёмной теме не чистый белый: на сером он звенит.
     static let ink = dual(.black, rgb(238, 241, 237))
 

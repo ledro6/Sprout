@@ -50,6 +50,7 @@ struct PlantBookView: View {
         .navigationTitle(plant?.name ?? "")
         .navigationBarTitleDisplayMode(.inline)
         .scrollEdgeEffectStyle(.soft, for: .top)
+        .sproutSettledEdge()
         .toolbar(.visible, for: .navigationBar)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {

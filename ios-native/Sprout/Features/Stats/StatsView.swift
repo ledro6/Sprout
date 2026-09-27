@@ -405,7 +405,7 @@ struct StatsView: View {
 
     private var now: some View {
         let state = book.now
-        return SproutGroup("Сейчас") {
+        return SproutGroup("Сад сегодня") {
             HStack(spacing: 18) {
                 ThirstRing(state) {
                     VStack(spacing: 0) {
@@ -474,7 +474,7 @@ struct StatsView: View {
     /// Сеткой, а не в строку: в строке из четырёх длинный ярлык ломается уже
     /// при обычном размере текста.
     private var summary: some View {
-        SproutGroup("Итог") {
+        SproutGroup("Главное за период") {
             Grid(alignment: .leading, horizontalSpacing: 12,
                  verticalSpacing: 18) {
                 GridRow {
@@ -634,7 +634,7 @@ struct StatsView: View {
     // MARK: - Точность
 
     private var aim: some View {
-        SproutGroup("Точность полива") {
+        SproutGroup("Полив вовремя") {
             if let typical = book.aim.typical {
                 VStack(alignment: .leading, spacing: 4) {
                     HStack(alignment: .firstTextBaseline, spacing: 6) {
@@ -698,7 +698,7 @@ struct StatsView: View {
     // MARK: - Привычки
 
     private var habits: some View {
-        SproutGroup("Привычки") {
+        SproutGroup("Когда вы поливаете") {
             if book.total == 0 {
                 Text("Когда появятся поливы, здесь будет видно, в какие часы и дни вы поливаете.")
                     .font(Typography.settingNote)
@@ -798,7 +798,7 @@ struct StatsView: View {
     }
 
     private var forecast: some View {
-        SproutGroup("Прогноз") {
+        SproutGroup("Ближайшие поливы") {
             VStack(alignment: .leading, spacing: 12) {
                 Text(aheadCaption)
                     .font(Typography.settingNote)

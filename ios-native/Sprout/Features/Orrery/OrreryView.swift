@@ -54,6 +54,7 @@ struct OrreryView: View {
         .navigationTitle("Планетарий")
         .navigationBarTitleDisplayMode(.inline)
         .scrollEdgeEffectStyle(.soft, for: .top)
+        .sproutSettledEdge()
         .toolbar(.visible, for: .navigationBar)
         .toolbar(.hidden, for: .tabBar)
         .toolbar {
@@ -291,7 +292,7 @@ struct OrreryView: View {
             }
             .disabled(playing != nil)
             if ahead > 0 && playing == nil {
-                Button("Вернуться в сейчас") {
+                Button("Вернуться к сегодня") {
                     withAnimation(Motion.enter) { ahead = 0 }
                 }
                 .font(Typography.settingNote)

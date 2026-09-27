@@ -60,11 +60,11 @@ struct Cutting: Codable, Hashable, Sendable {
 
     /// Сперва человеческая часть: как поливать, видно и без Sprout.
     var card: String {
-        let head = Lang.format("%1$@ передаёт черенок: «%2$@», %3$@.", from,
+        let head = Lang.format("%1$@ делится растением: «%2$@», %3$@.", from,
                                name, species)
         let water = Lang.text("Полив —") + " "
             + Lang.format("раз в %lld дней", Int(days.rounded())) + "."
-        let invite = Lang.text("Посадить: скопируйте это сообщение целиком и нажмите «Вставить» у строки «Черенок от друга» в Sprout → Добавить.")
+        let invite = Lang.text("Чтобы добавить его к себе, скопируйте это сообщение целиком и нажмите «Вставить» в строке «Растение от друга» в Sprout → Добавить.")
         return head + " " + water + "\n" + invite + "\n" + code
     }
 

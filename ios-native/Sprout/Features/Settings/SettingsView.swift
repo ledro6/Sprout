@@ -55,6 +55,7 @@ struct SettingsView: View {
             .navigationTitle("Настройки")
             .navigationBarTitleDisplayMode(.large)
             .scrollEdgeEffectStyle(.soft, for: .top)
+            .sproutSettledEdge()
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     WalkButton(walk: .settings, bare: true)
@@ -194,7 +195,7 @@ struct SettingsView: View {
 
             SproutDivider()
 
-            switchRow("Узор за наклоном", term: .parallax, isOn: Binding(
+            switchRow("Узор движется при наклоне", term: .parallax, isOn: Binding(
                 get: { settings.parallax },
                 set: { settings.parallax = $0 }))
                 .disabled(!settings.pattern)

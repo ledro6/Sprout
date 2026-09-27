@@ -240,6 +240,7 @@ struct SproutPage<Content: View>: View {
         .navigationTitle(title)
         .navigationBarTitleDisplayMode(.inline)
         .scrollEdgeEffectStyle(.soft, for: .top)
+        .sproutSettledEdge()
     }
 }
 

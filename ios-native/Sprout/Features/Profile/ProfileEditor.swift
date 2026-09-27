@@ -60,6 +60,7 @@ struct ProfileEditor: View {
             .navigationTitle("Профиль")
             .navigationBarTitleDisplayMode(.inline)
             .scrollEdgeEffectStyle(.soft, for: .top)
+            .sproutSettledEdge()
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Готово") {

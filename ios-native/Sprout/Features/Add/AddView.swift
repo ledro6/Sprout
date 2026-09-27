@@ -289,7 +289,7 @@ struct AddView: View {
                 Image(systemName: "scissors")
                     .foregroundStyle(Palette.green)
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(Lang.format("Черенок · %@", cutting.from))
+                    Text(Lang.format("От друга: %@", cutting.from))
                         .font(Typography.settingRow)
                         .foregroundStyle(Palette.ink)
                         .lineLimit(1)
@@ -307,12 +307,12 @@ struct AddView: View {
                         .foregroundStyle(.tertiary)
                 }
                 .buttonStyle(.plain)
-                .accessibilityLabel("Убрать черенок")
+                .accessibilityLabel("Убрать растение друга")
             }
             .transition(.blurReplace)
         } else {
             HStack(spacing: 10) {
-                Label("Черенок от друга", systemImage: "scissors")
+                Label("Растение от друга", systemImage: "gift")
                     .font(Typography.settingNote)
                     .foregroundStyle(.secondary)
                     .lineLimit(1)
@@ -331,7 +331,7 @@ struct AddView: View {
     @MainActor
     private func accept(_ text: String) {
         guard let found = Cutting.read(text) else {
-            trouble = Lang.text("В скопированном нет черенка Sprout. Скопируйте сообщение друга целиком — код лежит в нём последней строкой.")
+            trouble = Lang.text("В скопированном нет растения из Sprout. Скопируйте сообщение друга целиком — код лежит в нём последней строкой.")
             Feel.wrong()
             return
         }

@@ -8,6 +8,11 @@ import SwiftUI
 /// светлому: белый текст читается на любом.
 enum RecapTheme {
     static func colors(_ slide: Recap.Slide) -> [Color] {
+        rgb(slide).map { Color(red: $0.x, green: $0.y, blue: $0.z) }
+    }
+
+    /// Те же цвета числами 0…1 — сцена смешивает их при смене слайда.
+    static func rgb(_ slide: Recap.Slide) -> [SIMD3<Double>] {
         switch slide {
         case .intro: mesh(0x06301C, 0x0B6B3A, 0x14A44D, 0x0A4D2E, 0x1FB86A,
                           0x6FE3A5, 0x0E7A45, 0x3CCB7F, 0xB8F5C9)
@@ -34,11 +39,11 @@ enum RecapTheme {
         }
     }
 
-    private static func mesh(_ hex: Int...) -> [Color] {
+    private static func mesh(_ hex: Int...) -> [SIMD3<Double>] {
         hex.map { value in
-            Color(red: Double((value >> 16) & 0xFF) / 255,
-                  green: Double((value >> 8) & 0xFF) / 255,
-                  blue: Double(value & 0xFF) / 255)
+            SIMD3(Double((value >> 16) & 0xFF) / 255,
+                  Double((value >> 8) & 0xFF) / 255,
+                  Double(value & 0xFF) / 255)
         }
     }
 
@@ -60,14 +65,16 @@ struct Backdrop: View {
 
     var body: some View {
         TimelineView(.animation(paused: still)) { frame in
-            MeshGradient(width: 3, height: 3,
-                         points: points(frame.date.timeIntervalSinceReferenceDate),
+            let time = frame.date.timeIntervalSinceReferenceDate
+            MeshGradient(width: 3, height: 3, points: Self.points(time),
                          colors: colors)
         }
         .ignoresSafeArea()
     }
 
-    private func points(_ time: Double) -> [SIMD2<Float>] {
+    /// Внутренние точки сетки медленно плывут — общие у фона карточки и
+    /// сцены итогов.
+    static func points(_ time: Double) -> [SIMD2<Float>] {
         func drift(_ phase: Double, _ reach: Double) -> Float {
             Float(sin(time * 0.45 + phase) * reach)
         }

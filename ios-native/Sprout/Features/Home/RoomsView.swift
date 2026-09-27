@@ -58,6 +58,7 @@ struct RoomsView: View {
             .navigationTitle("Комнаты")
             .navigationBarTitleDisplayMode(.large)
             .scrollEdgeEffectStyle(.soft, for: .top)
+            .sproutSettledEdge()
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button {

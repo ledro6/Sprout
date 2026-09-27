@@ -26,23 +26,12 @@ private struct SproutHalosKey: EnvironmentKey {
     static let defaultValue = true
 }
 
-private struct SproutJigglingKey: EnvironmentKey {
-    static let defaultValue = false
-}
-
 extension EnvironmentValues {
     /// Гаснет на время разворачивания карточки в экран: размытый слой не
     /// перетекает с карточкой, а смазывается хвостом.
     var sproutHalos: Bool {
         get { self[SproutHalosKey.self] }
         set { self[SproutHalosKey.self] = newValue }
-    }
-
-    /// Плашка качается — правка на главной, «Выбрать» в статистике; ставит
-    /// `Jiggle`.
-    var sproutJiggling: Bool {
-        get { self[SproutJigglingKey.self] }
-        set { self[SproutJigglingKey.self] = newValue }
     }
 }
 
@@ -52,31 +41,7 @@ extension View {
     /// фото и не вытягивает читаемость текста.
     func sproutPlate(in shape: some Shape,
                      interactive: Bool = false) -> some View {
-        modifier(PlateGlass(shape: AnyShape(shape), interactive: interactive))
-    }
-}
-
-/// Стекло плашки. Качаясь, стекло пересчитывало бы фон под собой на каждом
-/// кадре и дёргалось; на время качания его сменяет плотная заливка того же
-/// тона — плашка качается ровно, как карточка «Итогов года». Стекло не
-/// снимается, а гаснет (`.identity`): вью остаётся тем же, и состояние
-/// карточки не сбрасывается.
-private struct PlateGlass: ViewModifier {
-    let shape: AnyShape
-    let interactive: Bool
-
-    @Environment(\.sproutJiggling) private var jiggling
-
-    func body(content: Content) -> some View {
-        content
-            .background {
-                shape.fill(Palette.plateSolid)
-                    .opacity(jiggling ? 1 : 0)
-                    .animation(Motion.jiggleIn, value: jiggling)
-            }
-            .glassEffect(jiggling ? .identity
-                         : interactive ? .regular.interactive() : .regular,
-                         in: shape)
+        glassEffect(interactive ? .regular.interactive() : .regular, in: shape)
             // Нажатия ловит рамка вью — очерчиваем, чтобы тап у скруглённого
             // угла не проходил мимо.
             .contentShape(shape)

@@ -2,15 +2,26 @@ import SwiftUI
 
 /// Садовник: оранжерея, уровень и титул, задания недели, лестница титулов
 /// и откуда берётся опыт. Открывается с карточки дня и из профиля.
+///
+/// Счёт — прямо в теле, а не пересчётом после показа: иначе первый кадр
+/// листа шёл с нулевым садовником, и плашка оранжереи на глазах меняла
+/// размер. Так всё стоит на месте с первого кадра, а при открытом экране
+/// перемены растут анимацией.
 struct GardenerView: View {
     @Environment(Garden.self) private var garden
 
-    @State private var me = Gardener(experience: 0)
-    @State private var week: Week?
-    /// Первый пересчёт — без анимации: вью SwiftUI создаёт заново при
-    /// каждом возвращении на экран, и оранжерея с полоской уровня вырастали
-    /// бы из нуля снова. Растут — только перемены при открытом экране.
-    @State private var counted = false
+    var body: some View {
+        GardenerPage(me: Gardener.of(log: garden.log,
+                                     quests: QuestBook.shared.done,
+                                     medals: Cabinet.shared.total),
+                     week: Week.of(Date(), log: garden.log,
+                                   rooms: garden.rooms))
+    }
+}
+
+private struct GardenerPage: View {
+    let me: Gardener
+    let week: Week?
 
     var body: some View {
         ScrollView {
@@ -28,18 +39,7 @@ struct GardenerView: View {
         .navigationTitle("Садовник")
         .navigationBarTitleDisplayMode(.inline)
         .scrollEdgeEffectStyle(.soft, for: .top)
-        .task(id: garden.log.count) { recount() }
-    }
-
-    private func recount() {
-        var quiet = Transaction()
-        quiet.disablesAnimations = !counted
-        withTransaction(quiet) {
-            me = Gardener.of(log: garden.log, quests: QuestBook.shared.done,
-                             medals: Cabinet.shared.total)
-            week = Week.of(Date(), log: garden.log, rooms: garden.rooms)
-        }
-        counted = true
+        .sproutSettledEdge()
     }
 
     // MARK: - Оранжерея и уровень
@@ -148,7 +148,7 @@ struct GardenerView: View {
         SproutGroup("Как растёт уровень") {
             source(Lang.text("Полив"), Gardener.pour)
             SproutDivider()
-            source(Lang.text("Полив вовремя — сверху"), Gardener.aim)
+            source(Lang.text("Бонус за полив вовремя"), Gardener.aim)
             SproutDivider()
             source(Lang.text("Задание недели"), Gardener.quest)
             SproutDivider()
@@ -219,7 +219,7 @@ struct QuestRow: View {
 
     private var status: String {
         if challenge.done { return Lang.text("Выполнено") }
-        if challenge.failed { return Lang.text("Сорвано на этой неделе") }
+        if challenge.failed { return Lang.text("На этой неделе не вышло") }
         return Lang.format("%1$lld из %2$lld", challenge.count, challenge.goal)
     }
 }

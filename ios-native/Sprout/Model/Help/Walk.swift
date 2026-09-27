@@ -97,7 +97,7 @@ enum Walk: String, CaseIterable, Identifiable, Sendable {
                          Неделя, месяц, год или всё время — цифры и графики \
                          ниже пересчитаются.
                          """)),
-                Hint(target: .statsNow, title: Lang.text("Сейчас"),
+                Hint(target: .statsNow, title: Lang.text("Сад сегодня"),
                      text: Lang.text("""
                          Кольцо — сколько растений довольны. Полоска под ним \
                          — влажность каждого, от самого сухого.
@@ -108,12 +108,12 @@ enum Walk: String, CaseIterable, Identifiable, Sendable {
                          орбитам полива. Загляните — там можно послушать \
                          месяц.
                          """)),
-                Hint(target: .statsSum, title: Lang.text("Итог"),
+                Hint(target: .statsSum, title: Lang.text("Главное за период"),
                      text: Lang.text("""
                          Сколько раз поливали, сколько дней подряд и какая \
                          доля поливов пришлась вовремя.
                          """)),
-                Hint(target: .statsAim, title: Lang.text("Точность полива"),
+                Hint(target: .statsAim, title: Lang.text("Полив вовремя"),
                      text: Lang.text("""
                          Сколько воды оставалось в земле, когда вы поливали. \
                          Оранжевая зона — в самый раз.
@@ -125,7 +125,7 @@ enum Walk: String, CaseIterable, Identifiable, Sendable {
                          цвет, тем больше поливов. Нажмите на квадрат — \
                          появится дата.
                          """)),
-                Hint(target: .statsAhead, title: Lang.text("Прогноз"),
+                Hint(target: .statsAhead, title: Lang.text("Ближайшие поливы"),
                      text: Lang.text("""
                          Скольким растениям понадобится вода в ближайшие дни. \
                          Нажмите на столбик — появятся клички.

@@ -17,6 +17,11 @@ struct HomeView: View {
     /// `Glide`.
     @State private var glide = Glide()
 
+    /// Своя прокрутка комнаты — заново, когда из неё ушли: вернувшись,
+    /// попадаешь в начало комнаты, а не туда, где бросил. Номер меняется —
+    /// SwiftUI ставит прокрутку новую, сверху.
+    @State private var fresh: [HomeLeaf: Int] = [:]
+
     /// Карточки, которые уже всплыли. Журнал здесь, а не в карточке: ленивая
     /// сетка выбрасывает карточки вместе с их памятью. Один на все комнаты:
     /// комната, в которую вернулись, не всплывает заново.
@@ -148,7 +153,7 @@ struct HomeView: View {
                 }
                 .ignoresSafeArea(.container, edges: .bottom)
                 // Вход во вкладку — плавно; фон и небо стоят.
-                .modifier(TabEntrance())
+                .modifier(TabEntrance(sky: true))
                 .background {
                     SproutBackground()
                         .overlay { DaySky() }
@@ -184,6 +189,7 @@ struct HomeView: View {
         // Страница держится на той же комнате, а не на том же номере.
         .onChange(of: garden.rooms.map(\.name)) { old, new in
             follow(from: old, to: new)
+            rest()
         }
         // Ушедшее растение уходит и из журнала показанных: вернут — всплывёт,
         // а не появится щелчком.
@@ -193,6 +199,7 @@ struct HomeView: View {
         // Ушли с «Новой комнаты» — клавиатура ей больше не нужна.
         .onChange(of: target) { _, now in
             if now != .fresh { naming = false }
+            rest()
         }
         .onDisappear(perform: finish)
         .sheet(isPresented: $settings) { SettingsView() }
@@ -263,6 +270,7 @@ struct HomeView: View {
                         .onGeometryChange(for: CGRect.self) {
                             $0.frame(in: .scrollView(axis: .horizontal))
                         } action: { frame in
+                            guard glide.moving else { return }
                             let before = glide.at
                             glide.track(page: item.offset, frame: frame,
                                         flipped: direction == .rightToLeft)
@@ -279,6 +287,7 @@ struct HomeView: View {
         .scrollPosition(id: $target, anchor: .center)
         .scrollDismissesKeyboard(.immediately)
         .onScrollPhaseChange { _, phase in
+            glide.moving = phase != .idle
             if phase == .idle { settle() }
         }
     }
@@ -313,6 +322,7 @@ struct HomeView: View {
         } action: { _, lift in
             glide.track(leaf, lift: lift)
         }
+        .id(fresh[leaf, default: 0])
     }
 
     /// До своей ступени входа полки нет вовсе: иначе волна появления
@@ -370,14 +380,33 @@ struct HomeView: View {
     /// Листнуть к странице нажатием — на выглядывающую комнату или из
     /// VoiceOver.
     private func go(_ index: Int) {
-        guard leaves.indices.contains(index) else { return }
+        guard leaves.indices.contains(index), target != leaves[index]
+        else { return }
+        // Доводка — тоже листание: лента едет вместе со страницами.
+        glide.moving = true
         withAnimation(Motion.page) { target = leaves[index] }
     }
 
-    /// Листание встало — гул оттяжки стихает. Клавиатуру «Новая комната»
-    /// сама не поднимает: имя пишут, нажав на поле.
+    /// Листание встало — гул оттяжки стихает, лента встаёт ровно на
+    /// страницу. Комнаты, из которых ушли, прокручиваются в начало.
+    /// Клавиатуру «Новая комната» сама не поднимает: имя пишут, нажав на
+    /// поле.
     private func settle() {
         Feel.pull(0)
+        let here = min(max(Int(glide.at.rounded()), 0), leaves.count - 1)
+        glide.rest(at: here)
+        for (index, leaf) in leaves.enumerated()
+        where index != here && glide.lifts[leaf, default: 0] > 1 {
+            fresh[leaf, default: 0] += 1
+        }
+    }
+
+    /// Страницу сменили не листанием — переход по нажатию, переименование,
+    /// удаление: лента встаёт на неё сразу.
+    private func rest() {
+        guard !glide.moving else { return }
+        let here = target.flatMap { leaves.firstIndex(of: $0) } ?? 0
+        glide.rest(at: here)
     }
 
     /// Отклик листания: на границе комнат — мягкий глубокий толчок, как у

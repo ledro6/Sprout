@@ -50,6 +50,7 @@ struct GardenCompare: View {
             .navigationTitle("Сравнить сады")
             .navigationBarTitleDisplayMode(.inline)
             .scrollEdgeEffectStyle(.soft, for: .top)
+            .sproutSettledEdge()
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Готово") { dismiss() }
@@ -180,7 +181,7 @@ struct RaceCard: View {
     @ViewBuilder
     private var buttons: some View {
         ShareLink(item: race.card()) {
-            Label("Позвать", systemImage: "person.badge.plus")
+            Label("Пригласить", systemImage: "person.badge.plus")
                 .lineLimit(1)
         }
         .buttonStyle(.glass)

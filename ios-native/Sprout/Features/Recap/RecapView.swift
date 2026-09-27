@@ -5,7 +5,8 @@ import SwiftUI
 /// «Итоги года сада» — презентация во весь экран, как годовые итоги
 /// музыкальных сервисов: слайды сменяются сами, полоски сверху показывают,
 /// сколько осталось. Нажатие справа — дальше, слева — назад, удержание —
-/// пауза, смахнуть вниз — закрыть. Под слайдами играет мелодия года.
+/// пауза, смахнуть вниз — закрыть. Под слайдами играет мелодия года. Фон —
+/// одна сцена на все слайды (`RecapStage`): меняется только написанное.
 struct RecapView: View {
     let recap: Recap
 
@@ -24,16 +25,21 @@ struct RecapView: View {
     private var slide: Recap.Slide { deck[min(index, deck.count - 1)] }
 
     var body: some View {
+        // Во весь экран — и под вырезом, и под полоской внизу: вставки экрана
+        // — только отступы у текста и полосок, сцена их не знает.
         GeometryReader { geometry in
+            let safe = geometry.safeAreaInsets
             ZStack(alignment: .top) {
+                RecapStage(slide: slide, step: index)
                 // Жест — на самом слайде: кнопки на нём главнее касания.
-                RecapPage(slide: slide, recap: recap, again: restart)
+                RecapPage(slide: slide, recap: recap,
+                          top: safe.top + 72,
+                          bottom: max(safe.bottom, 12) + 28,
+                          again: restart)
                     .contentShape(Rectangle())
                     .gesture(press(width: geometry.size.width))
                     .id("\(round)-\(index)")
-                    .transition(.asymmetric(
-                        insertion: .opacity.combined(with: .scale(scale: 1.08)),
-                        removal: .opacity.combined(with: .scale(scale: 0.94))))
+                    .transition(.recapDrift)
                 VStack(spacing: 10) {
                     StoryBar(count: deck.count, index: index, clock: clock,
                              seconds: Self.seconds(slide))
@@ -43,9 +49,10 @@ struct RecapView: View {
                     }
                 }
                 .padding(.horizontal, 14)
-                .padding(.top, 6)
+                .padding(.top, safe.top + 6)
             }
         }
+        .ignoresSafeArea()
         .background(Color.black)
         .clipShape(RoundedRectangle(cornerRadius: pull > 0 ? 40 : 0,
                                     style: .continuous))
@@ -99,9 +106,10 @@ struct RecapView: View {
             }
     }
 
+    /// Держат палец — слайд стоит. Музыка играет дальше: пауза на каждое
+    /// касание рвала мелодию.
     private func hold(_ on: Bool) {
         clock.paused = on
-        if on { player.pause() } else { player.resume() }
     }
 
     private func next() {
@@ -215,10 +223,6 @@ final class RecapPlayer {
         player.setVolume(0.9, fadeDuration: 1.5)
         self.player = player
     }
-
-    func pause() { player?.pause() }
-
-    func resume() { player?.play() }
 
     /// Затихает, а не обрывается.
     func stop() {

@@ -17,6 +17,12 @@ struct GlasshouseView: View {
     private static let stagger = 0.07
     private static let rise = 0.45
 
+    /// Вступление по частям: земля, рама рисуется линией, стекло наливается,
+    /// растения встают по очереди, последними — гирлянда и бабочки. Отсчёт —
+    /// чуть позже открытия, пока лист ещё выезжает; растения — с `sprout`.
+    private static let lead = 0.2
+    private static let sprout = 0.45
+
     @Environment(\.accessibilityReduceMotion) private var still
     @Environment(\.colorScheme) private var scheme
 
@@ -64,8 +70,10 @@ struct GlasshouseView: View {
                                               width: right - left + width * 0.08,
                                               height: height * 0.07),
                           cornerRadius: height * 0.035)
-        context.fill(ground, with: .color(Color(red: 0.52, green: 0.36,
-                                                blue: 0.24).opacity(0.85)))
+        var soil = context
+        soil.opacity = step(0, 0.25, time: time)
+        soil.fill(ground, with: .color(Color(red: 0.52, green: 0.36,
+                                             blue: 0.24).opacity(0.85)))
 
         // Стекло: стены и двускатная крыша.
         var glass = Path()
@@ -75,7 +83,9 @@ struct GlasshouseView: View {
         glass.addLine(to: CGPoint(x: right, y: eaves))
         glass.addLine(to: CGPoint(x: right, y: floor))
         glass.closeSubpath()
-        context.fill(glass, with: .linearGradient(
+        var pane = context
+        pane.opacity = step(0.3, 0.3, time: time)
+        pane.fill(glass, with: .linearGradient(
             Gradient(colors: [
                 Color(red: 0.72, green: 0.88, blue: 1).opacity(dark ? 0.16 : 0.42),
                 Color(red: 0.86, green: 0.96, blue: 0.9).opacity(dark ? 0.08 : 0.28),
@@ -83,9 +93,15 @@ struct GlasshouseView: View {
             startPoint: CGPoint(x: width / 2, y: ridge),
             endPoint: CGPoint(x: width / 2, y: floor)))
 
-        if house.lights { garland(into: &context, width: width, left: left,
-                                  right: right, eaves: eaves, ridge: ridge,
-                                  time: time) }
+        // Гирлянда и бабочки — когда растения встали.
+        let late = Self.sprout + Double(house.pots) * Self.stagger
+            + Self.rise * 0.6
+        if house.lights {
+            var lit = context
+            lit.opacity = step(late, 0.3, time: time)
+            garland(into: &lit, width: width, left: left, right: right,
+                    eaves: eaves, ridge: ridge, time: time)
+        }
 
         // Горшки с растениями — от края до края, поровну.
         let inner = (right - left) * 0.86
@@ -115,7 +131,9 @@ struct GlasshouseView: View {
 
         // Рамы — поверх растений, как стекло.
         let frame = Color(white: dark ? 0.78 : 0.5).opacity(0.9)
-        context.stroke(glass, with: .color(frame),
+        context.stroke(glass.trimmedPath(from: 0,
+                                         to: step(0.05, 0.45, time: time)),
+                       with: .color(frame),
                        style: StrokeStyle(lineWidth: line * 1.4,
                                           lineJoin: .round))
         var ribs = Path()
@@ -126,12 +144,15 @@ struct GlasshouseView: View {
         }
         ribs.move(to: CGPoint(x: left, y: eaves))
         ribs.addLine(to: CGPoint(x: right, y: eaves))
-        context.stroke(ribs, with: .color(frame.opacity(0.55)),
-                       lineWidth: line)
+        context.stroke(ribs.trimmedPath(from: 0,
+                                        to: step(0.35, 0.3, time: time)),
+                       with: .color(frame.opacity(0.55)), lineWidth: line)
 
+        var wings = context
+        wings.opacity = step(late + 0.1, 0.4, time: time)
         for index in 0 ..< house.butterflies {
             butterfly(index, width: width, height: height, time: time,
-                      into: &context)
+                      into: &wings)
         }
     }
 
@@ -139,12 +160,22 @@ struct GlasshouseView: View {
     /// с лёгким перелётом, как пружина; стоящей — сразу целиком.
     private func growth(_ index: Int, time: Double) -> CGFloat {
         guard time > 0 else { return 1 }
-        let local = (time - opened - Double(index) * Self.stagger) / Self.rise
+        let local = (time - opened - Self.lead - Self.sprout
+                     - Double(index) * Self.stagger) / Self.rise
         guard local < 1 else { return 1 }
         guard local > 0 else { return 0 }
         let back = 1.4
         let t = local - 1
         return CGFloat(1 + (back + 1) * t * t * t + back * t * t)
+    }
+
+    /// Доля шага вступления, с мягким разгоном и торможением: 0 — шаг не
+    /// начался, 1 — позади. Стоящая оранжерея — сразу целиком.
+    private func step(_ from: Double, _ length: Double,
+                      time: Double) -> CGFloat {
+        guard time > 0 else { return 1 }
+        let local = min(max((time - opened - Self.lead - from) / length, 0), 1)
+        return CGFloat(local * local * (3 - 2 * local))
     }
 
     private func plant(_ index: Int, at x: CGFloat, floor: CGFloat,

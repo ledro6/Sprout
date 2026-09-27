@@ -126,7 +126,7 @@ struct ProfileView: View {
                         .foregroundStyle(named ? Palette.ink : .secondary)
                         .lineLimit(1)
                     Text(named
-                         ? Lang.format("Сад с %@", garden.since.formatted(
+                         ? Lang.format("Садовод с %@", garden.since.formatted(
                              .dateTime.day().month(.wide).year()))
                          : Lang.text("Назовитесь — имя встретит вас при запуске"))
                         .font(Typography.settingNote)
@@ -429,7 +429,7 @@ struct ProfileView: View {
             return
         }
         if Cutting.read(text) != nil {
-            trouble = Lang.text("Это черенок, а не код друга. Посадите его на вкладке «Добавить» — кнопкой «Вставить» у черенка.")
+            trouble = Lang.text("Это растение от друга, а не его счёт. Добавьте растение на вкладке «Добавить» — кнопкой «Вставить» в строке «Растение от друга».")
             Feel.wrong()
             return
         }
