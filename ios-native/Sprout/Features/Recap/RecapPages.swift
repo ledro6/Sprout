@@ -82,11 +82,15 @@ struct RecapPage: View {
             .animation(.easeOut(duration: 1.6).delay(0.35), value: shown)
     }
 
+    /// Одно слово — год, кличка — всегда в одну строку, ужимаясь: с двумя
+    /// строками узкий экран рвал «2026» и «Хлорофитум» посреди слова.
+    /// Несколько слов переносятся между словами.
     private func word(_ text: String, size: CGFloat = 64) -> some View {
-        Text(verbatim: text)
+        let single = !text.contains(" ")
+        return Text(verbatim: text)
             .font(RecapTheme.huge(size))
-            .lineLimit(2)
-            .minimumScaleFactor(0.5)
+            .lineLimit(single ? 1 : 2)
+            .minimumScaleFactor(single ? 0.3 : 0.5)
             .revealed(shown, delay: 0.3, seconds: 1.3)
     }
 

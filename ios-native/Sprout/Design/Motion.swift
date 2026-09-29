@@ -132,6 +132,17 @@ enum Motion {
     /// отскока: это перестройка экрана, а не брошенный предмет.
     static let fold = Animation.snappy(duration: 0.3)
 
+    /// Проявление стекла — ровной кривой, без пружины: пружина перелетала
+    /// единицу, и стекло под полупрозрачным предком мигало в конце.
+    static let fade = Animation.easeOut(duration: 0.3)
+
+    /// Капли заставки лопаются до её ухода — стекло не уходит прозрачностью.
+    static let dropsPart = 0.25
+
+    /// Нажатие на плашку — проседает на пару процентов и отпружинивает.
+    static let pressScale: CGFloat = 0.97
+    static let press = Animation.snappy(duration: 0.22)
+
     /// Вход во вкладку — плавное проявление, как в «Музыке».
     static let tab = Animation.easeOut(duration: 0.3)
 

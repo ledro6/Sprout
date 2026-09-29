@@ -354,11 +354,10 @@ struct PlantView: View {
             .foregroundStyle(Palette.ink)
             .padding(6)
             .frame(maxWidth: .infinity, minHeight: Metrics.toolTile)
-            .glassEffect(.regular.interactive(),
-                         in: .rect(cornerRadius: Metrics.toolRadius))
+            .glassEffect(.regular, in: .rect(cornerRadius: Metrics.toolRadius))
             .contentShape(.rect(cornerRadius: Metrics.toolRadius))
         }
-        .buttonStyle(.plain)
+        .buttonStyle(SproutPress())
         .frame(maxWidth: Metrics.toolTile)
     }
 

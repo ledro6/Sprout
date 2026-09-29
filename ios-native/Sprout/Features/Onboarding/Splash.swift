@@ -23,7 +23,7 @@ struct Splash: View {
                 .ignoresSafeArea()
                 .opacity(hello ? 1 : 0)
 
-            Droplets(shown: drops)
+            Droplets(shown: drops && !Launch.shared.parting)
                 .ignoresSafeArea()
                 .allowsHitTesting(false)
 
@@ -115,10 +115,20 @@ private struct Droplets: View {
                     Color.clear
                         .frame(width: drop.side, height: drop.side)
                         .glassEffect(.regular, in: .circle)
-                        .scaleEffect(shown ? 1 : 0.2)
+                        // Растёт из точки и в точку лопается — без
+                        // прозрачности: стекло под ней мигало.
+                        .scaleEffect(shown ? 1 : 0.01)
+                        .animation(shown
+                            ? .spring(duration: 0.7, bounce: 0.35)
+                                .delay(Double(index) * 0.07)
+                            : .easeIn(duration: Motion.dropsPart * 0.8),
+                            value: shown)
+                        // Точкой стекло не висит: гаснет мгновенно, когда
+                        // капля ещё или уже с булавочную головку.
                         .opacity(shown ? 1 : 0)
-                        .animation(.spring(duration: 0.7, bounce: 0.35)
-                            .delay(Double(index) * 0.07), value: shown)
+                        .animation(.linear(duration: 0.05).delay(shown
+                            ? Double(index) * 0.07
+                            : Motion.dropsPart * 0.8), value: shown)
                         .position(x: proxy.size.width * CGFloat(drop.x) + sway,
                                   y: proxy.size.height * CGFloat(drop.y) + rise)
                 }

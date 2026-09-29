@@ -9,6 +9,14 @@ extension View {
         background(Passage(swipeBack: true).frame(width: 0, height: 0))
     }
 
+    /// Экран встал (`true`) или тронулся с места (`false`) — по UIKit:
+    /// SwiftUI сообщает только конец перехода, а свайп назад — это его
+    /// начало.
+    func sproutPassage(_ perform: @escaping (Bool) -> Void) -> some View {
+        background(Passage(onlyBack: true, settled: perform)
+            .frame(width: 0, height: 0))
+    }
+
     /// Мягкий край сверху — только у экрана, который стоит. Въезжая и
     /// уезжая, экран нёс свой край поверх края соседа, и размытия ложились
     /// друг на друга рваной полосой. На ходу край гаснет — остаётся один, у
@@ -44,6 +52,8 @@ private struct SettledEdge: ViewModifier {
 /// возврата, если своя кнопка «назад» его выключила.
 private struct Passage: UIViewControllerRepresentable {
     var swipeBack = false
+    /// «Тронулся» — только уходя назад, а не уступая место экрану вперёд.
+    var onlyBack = false
     var settled: (Bool) -> Void = { _ in }
 
     func makeUIViewController(context: Context) -> PassageKeeper {
@@ -52,6 +62,7 @@ private struct Passage: UIViewControllerRepresentable {
 
     func updateUIViewController(_ keeper: PassageKeeper, context: Context) {
         keeper.swipeBack = swipeBack
+        keeper.onlyBack = onlyBack
         keeper.settled = settled
     }
 
@@ -60,6 +71,7 @@ private struct Passage: UIViewControllerRepresentable {
     /// по-системному.
     final class PassageKeeper: UIViewController, UIGestureRecognizerDelegate {
         var swipeBack = false
+        var onlyBack = false
         var settled: (Bool) -> Void = { _ in }
 
         private weak var stack: UINavigationController?
@@ -79,10 +91,21 @@ private struct Passage: UIViewControllerRepresentable {
 
         override func viewWillDisappear(_ animated: Bool) {
             super.viewWillDisappear(animated)
-            settled(false)
+            if !onlyBack || leavingBack { settled(false) }
             guard let swipe = stack?.interactivePopGestureRecognizer,
                   swipe.delegate === self else { return }
             swipe.delegate = owner
+        }
+
+        /// Экран уходит из стека — назад, а не под следующий. Спрашиваем
+        /// экран, который лежит прямо в стеке: сами мы вложены в него.
+        private var leavingBack: Bool {
+            var screen: UIViewController? = self
+            while let current = screen,
+                  !(current.parent is UINavigationController) {
+                screen = current.parent
+            }
+            return screen?.isMovingFromParent ?? true
         }
 
         /// На корне жест не нужен — там он подвешивал бы стек; посреди

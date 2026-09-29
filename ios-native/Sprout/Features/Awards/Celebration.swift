@@ -101,10 +101,7 @@ struct Glitter: View {
     /// мигал бы.
     private func draw(_ index: Int, at time: Double, in size: CGSize,
                       into context: inout GraphicsContext) {
-        func unit(_ salt: Int) -> Double {
-            let mixed = (index &* 2_654_435_761 &+ salt &* 40_503) & 0xFFFF
-            return Double(mixed) / Double(0xFFFF)
-        }
+        func unit(_ salt: Int) -> Double { Scatter.unit(index, salt) }
         let delay = unit(1) * 0.8
         let t = time - delay
         guard t > 0 else { return }

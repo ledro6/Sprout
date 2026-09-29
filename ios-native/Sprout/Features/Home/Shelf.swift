@@ -74,7 +74,7 @@ struct PlantRow: View {
                 .font(Typography.cardTitle)
                 .foregroundStyle(Palette.ink)
                 .contentTransition(.numericText())
-                .animation(Motion.number, value: plant.moisture)
+                .animation(Motion.number, value: plant.moistureLabel)
                 .modifier(Sharpen())
 
             if drop, !editing {
@@ -93,7 +93,7 @@ struct PlantRow: View {
         }
         .padding([.leading, .vertical], Metrics.rowPadding)
         .padding(.trailing, Metrics.rowTrail)
-        .sproutPlate(in: shape, interactive: true)
+        .sproutPlate(in: shape)
         .modifier(PlantGlow(plant: plant, shape: shape))
     }
 

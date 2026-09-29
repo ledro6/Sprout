@@ -63,10 +63,7 @@ struct LeafFall: View {
                       leaf: GraphicsContext.ResolvedSymbol?,
                       into context: inout GraphicsContext) {
         guard let leaf else { return }
-        func unit(_ salt: Int) -> Double {
-            let mixed = (index &* 2_654_435_761 &+ salt &* 40_503) & 0xFFFF
-            return Double(mixed) / Double(0xFFFF)
-        }
+        func unit(_ salt: Int) -> Double { Scatter.unit(index, salt) }
         let delay = unit(1) * 0.9
         let t = time - delay
         guard t > 0 else { return }

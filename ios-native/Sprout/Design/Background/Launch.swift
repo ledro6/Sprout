@@ -15,6 +15,10 @@ final class Launch {
 
     private(set) var greeting = true
 
+    /// Заставка вот-вот уйдёт: её стеклянные капли лопаются заранее, а не
+    /// уходят прозрачностью вместе с ней.
+    private(set) var parting = false
+
     /// Всходы — полосой в случайную сторону, своей на каждый запуск.
     @ObservationIgnored private(set) var bloomFront =
         Front.sweep(Double.random(in: 0 ..< 2 * Double.pi))
@@ -59,7 +63,9 @@ final class Launch {
         while Lock.shared.on, !Lock.shared.open {
             try? await Task.sleep(for: .milliseconds(100))
         }
-        try? await Task.sleep(for: .seconds(Motion.welcomeHold))
+        try? await Task.sleep(for: .seconds(Motion.welcomeHold - Motion.dropsPart))
+        parting = true
+        try? await Task.sleep(for: .seconds(Motion.dropsPart))
         withAnimation(Motion.welcomeLeave) { greeting = false }
         // Ступени ждут, пока заставка сойдёт: иначе узор и заголовок вставали
         // на места под ней.
@@ -180,16 +186,22 @@ struct Enter: ViewModifier {
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
-    init(step: Int, rise: CGFloat = Motion.enterRise) {
+    /// Стекло — без размытия: размытый предок рисует стекло неверно.
+    let glass: Bool
+
+    init(step: Int, rise: CGFloat = Motion.enterRise, glass: Bool = false) {
         self.step = step
         self.rise = rise
+        self.glass = glass
         _shown = State(initialValue: Launch.shared.step >= step)
     }
 
     func body(content: Content) -> some View {
         content
             .opacity(shown ? 1 : 0)
-            .blur(radius: shown || reduceMotion ? 0 : Metrics.textBlur)
+            // Прозрачность — ровной кривой: пружина перелетала единицу.
+            .animation(Motion.fade, value: shown)
+            .blur(radius: shown || glass || reduceMotion ? 0 : Metrics.textBlur)
             .offset(y: shown ? 0 : rise)
             .onChange(of: Launch.shared.step >= step) { _, open in
                 withAnimation(Motion.enter) { shown = open }

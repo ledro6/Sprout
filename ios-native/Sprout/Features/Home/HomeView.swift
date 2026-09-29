@@ -304,6 +304,10 @@ struct HomeView: View {
         ScrollView(.vertical) {
             content()
         }
+        // Полки встают на ступени входа без общего проявления: иначе вся
+        // страница со стеклом вставлялась бы прозрачностью поверх своей
+        // волны карточек.
+        .transaction(value: Launch.shared.step >= 4) { $0.animation = nil }
         .contentMargins(.top, max(titleHeight + row + Metrics.shelfDrop
                                   - grownRow - Metrics.headTail, 0),
                         for: .scrollContent)
@@ -508,7 +512,7 @@ struct HomeView: View {
         .padding(.trailing, Metrics.contentMargin)
         .onGeometryChange(for: CGFloat.self) { $0.size.width }
             action: { cornerWidth = $0 }
-        .modifier(Enter(step: 3))
+        .modifier(Enter(step: 3, glass: true))
     }
 
     /// Значок угловой кнопки — то, что выбрано сейчас; сменился — меняется
@@ -826,6 +830,7 @@ private struct HomeHead: View {
             RoomStrip(names: names,
                       at: glide.at,
                       size: size + (grownSize - size) * grown,
+                      face: max(size, grownSize),
                       // Ужимается с опережением: поднимаясь, лента не
                       // заезжает под кнопки.
                       trail: (corner + Metrics.roomGap) * min(grown * 1.5, 1),

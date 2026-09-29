@@ -38,7 +38,9 @@ struct PlantCard: View {
             }
             .font(Typography.cardTitle)
             .foregroundStyle(Palette.ink)
-            .animation(Motion.number, value: plant.moisture)
+            // По подписи, а не по доле: доля меняется каждую секунду, и
+            // анимация запускалась на каждой карточке без видимой перемены.
+            .animation(Motion.number, value: plant.moistureLabel)
             .modifier(Sharpen())
 
             Text(plant.wateringLabel)
@@ -55,7 +57,7 @@ struct PlantCard: View {
         }
         .padding(.horizontal, Metrics.cardPadding)
         .padding(.vertical, 10)
-        .sproutPlate(in: shape, interactive: true)
+        .sproutPlate(in: shape)
         .modifier(PlantGlow(plant: plant, shape: shape))
     }
 

@@ -45,7 +45,7 @@ struct PlantTile: View {
         Button { if !editing { open(plant.id) } } label: {
             label
         }
-        .buttonStyle(.plain)
+        .buttonStyle(SproutPress())
         .modifier(PlantMenu(id: plant.id, look: look, enabled: menus))
         .modifier(Arrange(id: plant.id, look: look, on: arranges,
                           held: held, dragged: dragged, move: move,

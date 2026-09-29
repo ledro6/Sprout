@@ -23,7 +23,7 @@ struct SproutField: View {
         let weave = Launch.shared.weave(for: shapes.count)
         let baseShade = Settings.shared.patternHue.shade
         let waveShade = Settings.shared.waveHue.shade
-        let busy = Cheer.shared.start != nil
+        let busy = !Cheer.shared.rings.isEmpty
             || Launch.shared.bloomStart != nil
             || Launch.shared.swapStart != nil
             || Ember.shared.start != nil
@@ -47,8 +47,8 @@ struct SproutField: View {
                         TimelineView(.animation(
                             minimumInterval: busy ? nil : Motion.garlandFrame,
                             paused: !busy && !running)) { frame in
-                            SproutPattern(wave: Cheer.shared.wave(at: frame.date),
-                                          origin: Cheer.shared.origin,
+                            SproutPattern(waves: Cheer.shared
+                                              .waves(at: frame.date),
                                           canvas: corner,
                                           bloomFront: Launch.shared.bloomFront,
                                           bloom: Launch.shared.bloom(at: frame.date),

@@ -38,13 +38,26 @@ extension EnvironmentValues {
 extension View {
     /// Материал плашек — системное стекло `.regular`, и ничего сверх него:
     /// вуаль и тень материал кладёт сам. Не `.clear` — он для панелей поверх
-    /// фото и не вытягивает читаемость текста.
-    func sproutPlate(in shape: some Shape,
-                     interactive: Bool = false) -> some View {
-        glassEffect(interactive ? .regular.interactive() : .regular, in: shape)
+    /// фото и не вытягивает читаемость текста. Не `.interactive()`: такое
+    /// стекло откликается уже на касание, с которого начинается прокрутка,
+    /// и плашка тянулась за пальцем и дёргалась. Нажатие показывает
+    /// `SproutPress`.
+    func sproutPlate(in shape: some Shape) -> some View {
+        glassEffect(.regular, in: shape)
             // Нажатия ловит рамка вью — очерчиваем, чтобы тап у скруглённого
             // угла не проходил мимо.
             .contentShape(shape)
+    }
+}
+
+/// Нажатие на плашку — лёгкое проседание. Кнопка в прокрутке узнаёт
+/// нажатие, только когда ясно, что палец не листает, — на прокрутке плашка
+/// стоит твёрдо, как приклеенная.
+struct SproutPress: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .scaleEffect(configuration.isPressed ? Motion.pressScale : 1)
+            .animation(Motion.press, value: configuration.isPressed)
     }
 }
 
@@ -59,7 +72,8 @@ private struct Ride: ViewModifier {
     /// в миг полива.
     @State private var spot = Spot()
 
-    /// Новый прыжок отменяет недождавшийся.
+    /// Номер последнего прыжка: опускает плашку только последний — прыжки
+    /// разных волн не обрывают друг друга.
     @State private var hop = Hop()
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
@@ -70,35 +84,38 @@ private struct Ride: ViewModifier {
             .onGeometryChange(for: CGRect.self) { $0.frame(in: .global) }
                 action: { spot.rect = $0 }
             .offset(y: lift)
-            .onChange(of: Cheer.shared.start) { _, now in
-                guard let now, !reduceMotion else { return }
-                ride(from: now)
+            // Каждый новый круг — свой прыжок; ушедшие круги прыжков не
+            // дают.
+            .onChange(of: Cheer.shared.rings) { old, now in
+                guard !reduceMotion else { return }
+                for ring in now where !old.contains(ring) { ride(on: ring) }
             }
     }
 
-    private func ride(from start: Date) {
+    private func ride(on ring: WaterRing) {
         let middle = CGPoint(x: spot.rect.midX, y: spot.rect.midY)
-        let far = hypot(middle.x - Cheer.shared.origin.x,
-                        middle.y - Cheer.shared.origin.y)
+        let far = hypot(middle.x - ring.origin.x, middle.y - ring.origin.y)
         let turn = Double(min(far / Metrics.waveReach, 1))
             * (1 - Metrics.popSpan)
-        let wait = turn * Motion.cheerSeconds - Date().timeIntervalSince(start)
+        let wait = turn * Motion.cheerSeconds
+            - Date().timeIntervalSince(ring.start)
 
-        hop.run?.cancel()
-        hop.run = Task { @MainActor in
+        Task { @MainActor in
             if wait > 0 { try? await Task.sleep(for: .seconds(wait)) }
-            guard !Task.isCancelled else { return }
+            hop.serial &+= 1
+            let mine = hop.serial
             withAnimation(Motion.rideUp) { lift = -Metrics.ride }
             try? await Task.sleep(for: .seconds(Motion.rideUpSeconds))
-            guard !Task.isCancelled else { return }
+            // Следующий гребень уже поднял плашку — опустит он.
+            guard hop.serial == mine else { return }
             withAnimation(Motion.rideDown) { lift = 0 }
         }
     }
 }
 
-/// Задача прыжка вне состояния — по той же причине, что и замер.
+/// Счёт прыжков вне состояния — по той же причине, что и замер.
 private final class Hop {
-    var run: Task<Void, Never>?
+    var serial = 0
 }
 
 extension View {

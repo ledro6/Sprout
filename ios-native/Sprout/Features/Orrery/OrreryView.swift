@@ -11,6 +11,8 @@ struct OrreryView: View {
 
     /// Дней сада вперёд; ноль — сейчас.
     @State private var ahead: Double = 0
+    /// Панель вкладок спрятана, пока экран стоит, — см. `sproutPassage`.
+    @State private var barHidden = true
     @State private var picked: Plant.ID?
 
     /// Когда началось проигрывание; пусто — не играет.
@@ -56,7 +58,13 @@ struct OrreryView: View {
         .scrollEdgeEffectStyle(.soft, for: .top)
         .sproutSettledEdge()
         .toolbar(.visible, for: .navigationBar)
-        .toolbar(.hidden, for: .tabBar)
+        // Панель вкладок прячется на входе и возвращается с первым движением
+        // свайпа назад, как в Telegram, а не после того, как экран ушёл.
+        // Свайп бросили — прячется снова.
+        .toolbar(barHidden ? .hidden : .visible, for: .tabBar)
+        .sproutPassage { settled in
+            withAnimation(Motion.edge) { barHidden = settled }
+        }
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 WalkButton(walk: .orrery, bare: true)

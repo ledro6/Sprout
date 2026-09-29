@@ -102,7 +102,14 @@ struct RoomStrip: View {
 
     let at: CGFloat
 
+    /// Кегль на экране — растёт вместе с прокруткой.
     let size: CGFloat
+
+    /// Кегль вёрстки — постоянный, самый крупный. Имена свёрстаны в нём раз
+    /// и навсегда, а до `size` ужимаются масштабом: с кеглем, менявшимся на
+    /// каждом кадре прокрутки, текст каждый кадр перевёрстывался, буквы
+    /// прыгали по пикселям, а ширины — ступеньками по пункту.
+    var face: CGFloat = 0
 
     /// Сколько с конца занято кнопками: поднявшись к ним, лента ужимается.
     var trail: CGFloat = 0
@@ -129,8 +136,15 @@ struct RoomStrip: View {
             40)
     }
 
+    /// Кегль вёрстки: не меньше экранного.
+    private var typeSize: CGFloat { max(face, size) }
+
     var body: some View {
-        let widths = (0 ..< count).map { min(measure($0), widest) }
+        // Ширины в кегле вёрстки не меняются на прокрутке; на экране —
+        // масштабом, и не шире ленты.
+        let natural = (0 ..< count).map(measure)
+        let zoom = size / typeSize
+        let widths = natural.map { min($0 * zoom, widest) }
         // Грань — от поля страницы; со второй комнаты — чуть правее: слева
         // остаётся место под загнутый край прошлой.
         let lead = Metrics.contentMargin
@@ -159,12 +173,22 @@ struct RoomStrip: View {
                 let away = forward >= 0 ? forward : CGFloat(index) - at
                 // Дальше соседей не рисуем: их всё равно не видно.
                 if away > -2, away < 2 {
+                    let scale = widths[index] / max(natural[index], 1)
                     title(index, bend: Drum(
                         along: along, flat: flat, ahead: ahead,
                         behind: max(size * Metrics.roomCurl, lead * 1.1),
-                        width: widths[index], flipped: flipped))
-                        .frame(width: widths[index], alignment: .leading)
+                        width: natural[index], flipped: flipped,
+                        zoom: scale))
+                        .frame(width: natural[index], alignment: .leading)
+                        // Строка ленты ниже кегля вёрстки — без этого
+                        // текст ужался бы по высоте, а потом ещё масштабом.
+                        .fixedSize()
                         .environment(\.layoutDirection, direction)
+                        // Дальше лента — слева направо, край — сами.
+                        .scaleEffect(scale,
+                                     anchor: flipped ? .trailing : .leading)
+                        .frame(width: widths[index],
+                               alignment: flipped ? .trailing : .leading)
                         .blur(radius: haze(away))
                         .opacity(fade(away))
                         .offset(x: left(along, widths[index], lead: lead))
@@ -217,14 +241,14 @@ struct RoomStrip: View {
         return flipped ? span - from - wide : from
     }
 
-    /// Ширина имени по шрифту, а не по вёрстке: вёрстку каждый кадр жеста
-    /// ждать нельзя.
+    /// Ширина имени в кегле вёрстки — по шрифту, а не по вёрстке: вёрстку
+    /// каждый кадр жеста ждать нельзя.
     private func measure(_ index: Int) -> CGFloat {
-        let font = UIFont.systemFont(ofSize: size, weight: .semibold)
+        let font = UIFont.systemFont(ofSize: typeSize, weight: .semibold)
         let text = name(index) as NSString
         let wide = text.size(withAttributes: [.font: font]).width
         // У «Новой комнаты» впереди плюс.
-        return ceil(index < names.count ? wide : wide + size * 1.4)
+        return ceil(index < names.count ? wide : wide + typeSize * 1.4)
     }
 
     private func name(_ index: Int) -> String {
@@ -242,13 +266,13 @@ struct RoomStrip: View {
             } else {
                 Label {
                     Text("Новая комната")
-                        .textRenderer(bend.led(by: size * 1.4))
+                        .textRenderer(bend.led(by: typeSize * 1.4))
                 } icon: {
                     Image(systemName: "plus")
                 }
             }
         }
-        .font(.system(size: size, weight: .semibold))
+        .font(.system(size: typeSize, weight: .semibold))
         .foregroundStyle(Palette.accent)
         .lineLimit(1)
         .minimumScaleFactor(0.6)
@@ -346,6 +370,9 @@ struct Drum: TextRenderer {
     var flipped = false
     /// Сколько от начала подписи до текста: у «Новой комнаты» впереди плюс.
     var lead: CGFloat = 0
+    /// Во сколько раз подпись ужата масштабом: барабан — в пунктах экрана,
+    /// ширина и отступ — в пунктах вёрстки.
+    var zoom: CGFloat = 1
 
     /// Глаз от барабана — во столько радиусов: буквы заметно мельчают,
     /// уходя вглубь, но не проваливаются.
@@ -364,11 +391,12 @@ struct Drum: TextRenderer {
                 for slice in run {
                     let box = slice.typographicBounds.rect
                     let local = flipped ? width - box.midX : box.midX
-                    let at = along + lead + local
+                    let at = along + (lead + local) * zoom
                     guard let spot = place(at) else { continue }
                     var glyph = context
                     glyph.opacity = Double(spot.near * spot.near)
-                    let shift = (spot.x - at) * (flipped ? -1 : 1)
+                    let shift = (spot.x - at) / max(zoom, 0.01)
+                        * (flipped ? -1 : 1)
                     glyph.translateBy(x: box.midX + shift, y: box.midY)
                     glyph.scaleBy(x: spot.squeeze * spot.near, y: spot.near)
                     glyph.translateBy(x: -box.midX, y: -box.midY)

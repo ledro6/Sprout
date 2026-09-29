@@ -5,11 +5,9 @@ import SwiftUI
 /// и холст не перерисовывается, а только съезжает. Тему читает явно — иначе
 /// смена темы не перерисовала бы холст.
 struct SproutPattern: View {
-    /// Где волна всплесков, 0…1. Пока она идёт, узор пересобирается каждый
-    /// кадр.
-    var wave: Double?
-
-    var origin: CGPoint
+    /// Идущие волны полива — где каждая, 0…1, и откуда. Пока идёт хоть
+    /// одна, узор пересобирается каждый кадр.
+    var waves: [WaveFront] = []
 
     /// Угол холста в координатах окна — чтобы перевести в холст замеры с
     /// экрана. Лист настроек висит ниже окна, и без пересчёта волна шла бы
@@ -146,8 +144,6 @@ struct SproutPattern: View {
         case .sweep: front
         }
     }
-
-    private var source: CGPoint { local(origin) }
 
     /// Весь узор — одним контуром на цвет: сотни отдельных заливок на кадр
     /// стоили бы в двести раз больше команд.
@@ -366,12 +362,19 @@ struct SproutPattern: View {
     /// длительность, разное время прихода, поэтому видно кольцо. Ямка —
     /// гребень — ямка; окно широкое, и волна идёт полосами, а не перебором
     /// рядов.
+    /// Волн несколько — всплески перемножаются: сумма двух ямок вывернула бы
+    /// фигурку наизнанку, а выбор сильнейшей прыгал бы, когда волны меняются
+    /// местами. Одна волна — как прежде.
     private func pop(at middle: CGPoint) -> CGFloat {
-        guard let wave else { return 1 }
-        let far = hypot(middle.x - source.x, middle.y - source.y)
-        let start = Double(min(far / Metrics.waveReach, 1))
-            * (1 - Metrics.popSpan)
-        return Self.bounce((wave - start) / Metrics.popSpan)
+        var grow: CGFloat = 1
+        for wave in waves {
+            let source = local(wave.origin)
+            let far = hypot(middle.x - source.x, middle.y - source.y)
+            let start = Double(min(far / Metrics.waveReach, 1))
+                * (1 - Metrics.popSpan)
+            grow *= Self.bounce((wave.step - start) / Metrics.popSpan)
+        }
+        return grow
     }
 
     /// Всплеск за своё окно 0…1; вне окна фигурка в своём размере. Общий у

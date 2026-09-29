@@ -28,6 +28,12 @@ final class Tilt {
 
     @ObservationIgnored private var places: [CGSize] = []
 
+    /// Сглаженный сдвиг — точный, но в стороне: наружу (`shift`) уходит
+    /// огрублённым до трети пункта и только когда изменился. Иначе
+    /// `@Observable` будил фон и стекло всех плашек шестьдесят раз в секунду,
+    /// даже когда телефон лежит.
+    @ObservationIgnored private var smooth: CGSize = .zero
+
     @ObservationIgnored private var calm = 0.0
 
     /// Настройку кладёт фон: датчик не знает про хранилище. Выключенный
@@ -37,6 +43,7 @@ final class Tilt {
         didSet {
             guard parallax != oldValue, !parallax else { return }
             shift = .zero
+            smooth = .zero
             lag = []
             places = []
             calm = 0
@@ -51,6 +58,7 @@ final class Tilt {
             motion.deviceMotionUpdateInterval = interval
             guard saving else { return }
             shift = .zero
+            smooth = .zero
             lag = []
             places = []
             calm = 0
@@ -113,6 +121,7 @@ final class Tilt {
         shaken = 0
         lastSample = nil
         shift = .zero
+        smooth = .zero
         lag = []
         places = []
         calm = 0
@@ -133,13 +142,15 @@ final class Tilt {
         // Против наклона — так узор читается лежащим за экраном.
         let target = CGSize(width: limit(-(x - seen.x) * Self.gain),
                             height: limit(-(z - seen.z) * Self.gain))
-        shift = CGSize(
-            width: shift.width + (target.width - shift.width) * Self.ease,
-            height: shift.height + (target.height - shift.height) * Self.ease)
+        smooth = CGSize(
+            width: smooth.width + (target.width - smooth.width) * Self.ease,
+            height: smooth.height + (target.height - smooth.height) * Self.ease)
+        let pixel = Self.pixel(smooth)
+        if pixel != shift { shift = pixel }
 
-        if places.count != Sway.eases.count { places = Sway.rest(at: shift) }
+        if places.count != Sway.eases.count { places = Sway.rest(at: smooth) }
         places = Sway.settle(places, toward: target)
-        let fresh = Sway.lag(places, behind: shift).map(Self.rough)
+        let fresh = Sway.lag(places, behind: smooth).map(Self.rough)
         if fresh != lag { lag = fresh }
 
         if fresh.allSatisfy({ $0.width == 0 && $0.height == 0 }) {
@@ -151,6 +162,13 @@ final class Tilt {
         } else {
             calm = 0
         }
+    }
+
+    /// До трети пункта — пиксель на экранах @3x: глазу сдвиг непрерывный.
+    private static func pixel(_ size: CGSize) -> CGSize {
+        let px: CGFloat = 1.0 / 3
+        return CGSize(width: (size.width / px).rounded() * px,
+                      height: (size.height / px).rounded() * px)
     }
 
     private static func rough(_ size: CGSize) -> CGSize {

@@ -2,19 +2,41 @@ import Foundation
 import Observation
 import SwiftUI
 
-/// Волна полива. Одна на приложение: фон рисуется в двух местах, и свои волны
-/// разошлись бы швом. Хранится начало, а долю на каждый кадр спрашивает
-/// `TimelineView` — свой цикл со сном дёргался.
+/// Круг волны полива: откуда пошёл и когда. Начало — с форой, см.
+/// `Cheer.now`.
+struct WaterRing: Equatable, Sendable {
+    let id: Int
+    let origin: CGPoint
+    let start: Date
+
+    /// Где круг, 0…1; отыгравший — `nil`.
+    func step(at moment: Date) -> Double? {
+        let step = moment.timeIntervalSince(start) / Motion.cheerSeconds
+        return step < 1 ? step : nil
+    }
+}
+
+/// Круг волны в миг кадра — узору.
+struct WaveFront: Sendable {
+    let origin: CGPoint
+    let step: Double
+}
+
+/// Волны полива. Одни на приложение: фон рисуется в двух местах, и свои
+/// волны разошлись бы швом. Полили несколько растений подряд — у каждого
+/// полива свой круг, и новый не обрывает идущий. Хранятся начала, а долю на
+/// каждый кадр спрашивает `TimelineView` — свой цикл со сном дёргался.
 @Observable
 final class Cheer {
     static let shared = Cheer()
 
-    private(set) var start: Date?
+    /// Идущие круги, от старого к новому.
+    private(set) var rings: [WaterRing] = []
 
-    private(set) var origin: CGPoint = .zero
+    /// Кругов разом — не больше: узор считает каждый в каждой клетке.
+    private static let most = 6
 
-    /// Новая волна отменяет старую.
-    @ObservationIgnored private var run: Task<Void, Never>?
+    @ObservationIgnored private var serial = 0
 
     private init() {}
 
@@ -25,7 +47,7 @@ final class Cheer {
     /// не делает: он откликается сразу.
     @MainActor
     func queue(from plate: CGRect) {
-        guard start != nil else { return now(from: plate) }
+        guard !rings.isEmpty else { return now(from: plate) }
         // Очередь — отклик на нажатия, а не архив: переполненная теряет самую
         // позднюю.
         if waiting.count >= Motion.queued { waiting.removeLast() }
@@ -33,7 +55,7 @@ final class Cheer {
         guard queueRun == nil else { return }
         queueRun = Task { @MainActor in
             while !waiting.isEmpty {
-                if let step = wave(at: Date()) {
+                if let step = latest(at: Date()) {
                     try? await Task.sleep(for: .seconds(
                         (1 - step) * Motion.cheerSeconds + Motion.changeGap))
                 }
@@ -46,16 +68,18 @@ final class Cheer {
 
     /// Полили вот здесь (плашка в координатах окна). Волна стартует с форой
     /// на путь от середины плашки до края — под плашкой узора не видно, а без
-    /// форы фон трогался позже тени.
+    /// форы фон трогался позже тени. Идущие круги доигрывают своё.
     func now(from plate: CGRect) {
-        run?.cancel()
-        origin = CGPoint(x: plate.midX, y: plate.midY)
         let lead = Self.lead(across: plate)
-        start = Date().addingTimeInterval(-lead)
-        run = Task { @MainActor in
+        serial &+= 1
+        let ring = WaterRing(id: serial,
+                             origin: CGPoint(x: plate.midX, y: plate.midY),
+                             start: Date().addingTimeInterval(-lead))
+        if rings.count >= Self.most { rings.removeFirst() }
+        rings.append(ring)
+        Task { @MainActor in
             try? await Task.sleep(for: .seconds(Motion.cheerSeconds - lead))
-            guard !Task.isCancelled else { return }
-            start = nil
+            rings.removeAll { $0.id == ring.id }
         }
     }
 
@@ -66,10 +90,16 @@ final class Cheer {
             * (1 - Metrics.popSpan) * Motion.cheerSeconds
     }
 
-    func wave(at moment: Date) -> Double? {
-        guard let start else { return nil }
-        let step = moment.timeIntervalSince(start) / Motion.cheerSeconds
-        return step < 1 ? step : nil
+    /// Круги в миг кадра.
+    func waves(at moment: Date) -> [WaveFront] {
+        rings.compactMap { ring in
+            ring.step(at: moment).map { WaveFront(origin: ring.origin, step: $0) }
+        }
+    }
+
+    /// Где самый свежий круг — очередь ждёт, пока он отыграет.
+    private func latest(at moment: Date) -> Double? {
+        rings.compactMap { $0.step(at: moment) }.min()
     }
 }
 

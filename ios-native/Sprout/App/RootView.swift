@@ -251,6 +251,9 @@ struct RootView: View {
     private func runClock() async {
         while !Task.isCancelled {
             try? await Task.sleep(for: .seconds(1))
+            // На входе сад не сдвигаем: пересчёт главной раз в секунду толкал
+            // волну карточек. Время не теряется — следующий тик досчитает.
+            guard Launch.shared.step >= Launch.last else { continue }
             garden.advance()
         }
     }

@@ -125,9 +125,7 @@ struct RecapStage: View {
     private func piece(_ index: Int, time: Double, lift: Double,
                        blown: Double, in size: CGSize,
                        into context: inout GraphicsContext) {
-        func unit(_ salt: Int) -> Double {
-            Double((index &* 2_246_822_519 &+ salt &* 31_337) & 0xFFFF) / 65_535
-        }
+        func unit(_ salt: Int) -> Double { Scatter.unit(index, salt) }
         let pieces = SproutShapes.pieces
         let shape = pieces[index % pieces.count]
         let height = Double(size.height)

@@ -35,6 +35,10 @@ struct CardAppear: ViewModifier {
     func body(content: Content) -> some View {
         content
             .opacity(shown ? 1 : 0)
+            // Прозрачность — ровной кривой, пружина — только росту и
+            // подъёму: перелетая единицу, она мигала стеклом карточки.
+            .animation(shown ? Motion.fade.delay(Double(index) * Motion.stagger)
+                             : nil, value: shown)
             .scaleEffect(shown ? 1 : Motion.scale, anchor: .top)
             .offset(y: shown ? 0 : Motion.rise)
             // Через окружение, а не размытием всей карточки: размываем только
