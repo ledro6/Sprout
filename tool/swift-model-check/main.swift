@@ -3725,6 +3725,56 @@ do {
           "без маски — середина кадра")
 }
 
+print("портреты растений:")
+do {
+    let yard = Garden()
+    yard.rooms = Seed.rooms
+    let id = yard.rooms[0].plants[0].id
+    check(yard.plant(id: id)!.cover == nil,
+          "у макетного растения обложки нет — рисунок вида")
+    let roster = yard.roster
+    yard.portray(id, file: "portrait-a.jpg")
+    check(yard.plant(id: id)!.cover ?? "", "portrait-a.jpg",
+          "портрет встаёт обложкой")
+    check(yard.roster > roster, "виджет пересоберёт картинки")
+    var shot = yard.plant(id: id)!
+    shot.shot = "shot.jpg"
+    check(shot.cover ?? "", "portrait-a.jpg", "портрет важнее своего фото")
+    check(shot.files == ["shot.jpg", "portrait-a.jpg"],
+          "с растением уходят и фото, и портрет")
+    yard.portray(id, file: "portrait-b.jpg")
+    check(yard.plant(id: id)!.portrait ?? "", "portrait-b.jpg",
+          "новый портрет сменяет прежний")
+    yard.unportray(id)
+    check(yard.plant(id: id)!.portrait == nil
+          && yard.plant(id: id)!.cover == nil,
+          "«Вернуть фото» — снова своё фото или рисунок")
+    yard.portray("gone", file: "portrait-c.jpg")
+    check(yard.plant(id: "gone") == nil, "ушедшему растению портрет не нужен")
+    let old = try! JSONEncoder().encode(Seed.rooms[0].plants[0])
+    check(try! JSONDecoder().decode(Plant.self, from: old).portrait == nil,
+          "сад прежней сборки читается без портрета")
+    var drawn = Seed.rooms[0].plants[0]
+    drawn.portrait = "p.jpg"
+    let back = try! JSONDecoder().decode(
+        Plant.self, from: JSONEncoder().encode(drawn))
+    check(back.portrait ?? "", "p.jpg", "портрет переживает запуск")
+    func concepts(_ species: String) -> [String] {
+        Portrait.concepts(for: Plant.new(name: "Укроп", species: species,
+                                         dryingDays: 7))
+    }
+    check(concepts("Монстера") == ["monstera"], "вид — по-английски")
+    check(concepts("Толстянка") == ["jade plant"], "толстянка — не камень")
+    check(concepts("Шмыгля") == ["Шмыгля"], "незнакомый вид — как вписан")
+    check(concepts(" ") == ["houseplant"], "без вида — просто растение")
+    check(Portrait.concepts(owner: " Лера ", photo: false)
+          == ["Лера", "gardener"], "хозяин без фото — по имени")
+    check(Portrait.concepts(owner: "", photo: false) == ["gardener"],
+          "безымянный — садовод")
+    check(Portrait.concepts(owner: "Лера", photo: true).isEmpty,
+          "с фото — портрет по снимку")
+}
+
 print("датчики влажности:")
 do {
     let bytes: [UInt8] = [0xEA, 0x00, 0x00, 0xD2, 0x04, 0x00, 0x00, 38,

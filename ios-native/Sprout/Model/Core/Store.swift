@@ -50,10 +50,10 @@ enum Store {
         shared?.appendingPathComponent("thumbs", isDirectory: true)
     }
 
-    /// Картинка растения для виджета. Имя — от растения и его снимка: новый
-    /// снимок — новый файл, и виджет не покажет старый.
+    /// Картинка растения для виджета. Имя — от растения и его обложки: новый
+    /// снимок или портрет — новый файл, и виджет не покажет старый.
     static func thumb(for plant: Plant) -> URL? {
-        let key = Seeded.hash(plant.id + "|" + (plant.shot ?? plant.photo))
+        let key = Seeded.hash(plant.id + "|" + (plant.cover ?? plant.photo))
         return thumbs?.appendingPathComponent(String(key, radix: 16) + ".jpg")
     }
 

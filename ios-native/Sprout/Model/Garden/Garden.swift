@@ -182,8 +182,8 @@ final class Garden {
 
     /// Имя хозяина и день начала сада остаются: стирают сад, а не себя.
     func erase() {
-        for shot in rooms.flatMap(\.plants).compactMap(\.shot) {
-            Shots.drop(shot)
+        for file in rooms.flatMap(\.plants).flatMap(\.files) {
+            Shots.drop(file)
         }
         rooms = []
         log = []
@@ -246,6 +246,27 @@ final class Garden {
             $0.scan = file
             $0.plan = nil
         }
+    }
+
+    /// Портрет — обложка растения вместо снимка; файл уже лежит в `Shots`.
+    /// Прежний портрет уходит с диска: в силе последний. Счётчик состава —
+    /// ради виджета: его картинки пересобираются тем же поводом.
+    func portray(_ id: Plant.ID, file: String) {
+        guard let old = plant(id: id) else {
+            Shots.drop(file)
+            return
+        }
+        change(id) { $0.portrait = file }
+        roster += 1
+        if let gone = old.portrait, gone != file { Shots.drop(gone) }
+    }
+
+    /// «Вернуть фото»: портрет уходит и с карточки, и с диска.
+    func unportray(_ id: Plant.ID) {
+        guard let gone = plant(id: id)?.portrait else { return }
+        change(id) { $0.portrait = nil }
+        roster += 1
+        Shots.drop(gone)
     }
 
     /// Назад к готовой модели вида.
@@ -499,7 +520,7 @@ final class Garden {
         let gone = rooms.remove(at: index)
         roster += 1
         save()
-        for shot in gone.plants.compactMap(\.shot) { Shots.drop(shot) }
+        for file in gone.plants.flatMap(\.files) { Shots.drop(file) }
     }
 
     /// В конец новой комнаты: номер места там ничего не значит, а новосёла

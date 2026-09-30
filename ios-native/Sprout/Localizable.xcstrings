@@ -28822,6 +28822,9 @@
         }
       }
     },
+    "Вернуть фото": {
+      "extractionState": "manual"
+    },
     "Вернуться к сегодня": {
       "extractionState": "manual"
     },
@@ -133959,6 +133962,9 @@
         }
       }
     },
+    "Новый портрет": {
+      "extractionState": "manual"
+    },
     "Новый уровень": {
       "extractionState": "manual",
       "localizations": {
@@ -193614,6 +193620,9 @@
           }
         }
       }
+    },
+    "Портрет": {
+      "extractionState": "manual"
     },
     "Порядок": {
       "extractionState": "manual",

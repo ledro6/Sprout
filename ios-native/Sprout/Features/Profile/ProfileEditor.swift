@@ -1,3 +1,4 @@
+import ImagePlayground
 import PhotosUI
 import SwiftUI
 
@@ -16,6 +17,11 @@ struct ProfileEditor: View {
     @State private var picking: PhotosPickerItem?
 
     @State private var swatches = Spots()
+
+    /// «Портрет» — только там, где есть Image Playground.
+    @Environment(\.supportsImagePlayground) private var playground
+
+    @State private var portraying = false
 
     var body: some View {
         NavigationStack {
@@ -75,9 +81,28 @@ struct ProfileEditor: View {
         .onChange(of: picking) { _, item in
             Task { await portrait(item) }
         }
+        // Готовая картинка встаёт в кружок, как выбранное фото.
+        .imagePlaygroundSheet(isPresented: $portraying, concepts: concepts,
+                              sourceImage: likeness) { file in
+            guard let image = UIImage(contentsOfFile: file.path) else { return }
+            try? FileManager.default.removeItem(at: file)
+            wear(image)
+        }
     }
 
-    /// Крупный кружок и кнопки фото под ним.
+    /// С фото — портрет по нему; без фото — по имени, см. `Portrait`.
+    private var concepts: [ImagePlaygroundConcept] {
+        Portrait.concepts(owner: name, photo: settings.avatarShot != nil)
+            .map { ImagePlaygroundConcept.text($0) }
+    }
+
+    private var likeness: Image? {
+        settings.avatarShot.flatMap { Snapshot.image($0) }
+            .map { Image(uiImage: $0) }
+    }
+
+    /// Крупный кружок, кнопки фото под ним и «Портрет» отдельным рядом: в
+    /// один ряд три кнопки не влезали.
     private var face: some View {
         VStack(spacing: 14) {
             AvatarCircle(size: Metrics.avatar * 1.6)
@@ -100,6 +125,14 @@ struct ProfileEditor: View {
                 }
             }
             .font(Typography.settingNote)
+            if playground {
+                Button { portraying = true } label: {
+                    Label("Портрет", systemImage: "apple.image.playground")
+                        .lineLimit(1)
+                }
+                .buttonStyle(.glass)
+                .font(Typography.settingNote)
+            }
         }
         .frame(maxWidth: .infinity)
     }
@@ -112,14 +145,19 @@ struct ProfileEditor: View {
         Feel.done()
     }
 
-    /// Квадрат из середины снимка, ужатый, — в папку снимков; прежнее фото
-    /// уходит с диска.
     @MainActor
     private func portrait(_ item: PhotosPickerItem?) async {
         guard let item,
               let data = try? await item.loadTransferable(type: Data.self),
               let image = UIImage(data: data)
         else { return }
+        wear(image)
+        picking = nil
+    }
+
+    /// Квадрат из середины снимка, ужатый, — в папку снимков; прежнее фото
+    /// уходит с диска.
+    private func wear(_ image: UIImage) {
         let width = Double(image.size.width)
         let height = Double(image.size.height)
         let side = min(width, height)
@@ -130,7 +168,6 @@ struct ProfileEditor: View {
         let old = settings.avatarShot
         settings.avatarShot = name
         if let old { Shots.drop(old) }
-        picking = nil
         Feel.done()
     }
 

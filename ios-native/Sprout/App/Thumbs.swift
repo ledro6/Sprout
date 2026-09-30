@@ -18,8 +18,7 @@ enum Thumbs {
             keep.insert(file.lastPathComponent)
             guard !files.fileExists(atPath: file.path) else { continue }
             let picture = await MainActor.run {
-                plant.shot.flatMap { Snapshot.image($0) }
-                    ?? UIImage(named: plant.photo)
+                Snapshot.cover(plant) ?? UIImage(named: plant.photo)
             }
             guard let picture,
                   let data = shrink(picture).jpegData(compressionQuality: 0.82)

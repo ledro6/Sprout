@@ -35,6 +35,18 @@ struct Plant: Identifiable, Hashable, Codable {
     /// Необязательное — так сады прежних сборок читаются как были.
     var shot: String?
 
+    /// Портрет из Image Playground — имя файла там же, в `Shots`. Есть —
+    /// он обложка растения вместо снимка, см. `cover`; снимок остаётся для
+    /// диагностики и модели в AR.
+    var portrait: String?
+
+    /// Что показывать на карточке и экране растения: портрет, иначе снимок
+    /// хозяина; пусто — рисунок вида (`photo`).
+    var cover: String? { portrait ?? shot }
+
+    /// Файлы растения на диске — уходят вместе с ним.
+    var files: [String] { [shot, portrait].compactMap { $0 } }
+
     /// Заметка хозяина. Необязательная по той же причине, что и `shot`.
     var note: String?
 

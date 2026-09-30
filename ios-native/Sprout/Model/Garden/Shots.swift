@@ -11,6 +11,8 @@ enum Shots {
         guard let folder else { return nil }
         let name = UUID().uuidString + ".jpg"
         do {
+            try FileManager.default.createDirectory(
+                at: folder, withIntermediateDirectories: true)
             try data.write(to: folder.appendingPathComponent(name),
                            options: .atomic)
         } catch {
@@ -28,14 +30,10 @@ enum Shots {
         try? FileManager.default.removeItem(at: file)
     }
 
-    private static let folder: URL? = {
-        guard let documents = FileManager.default
-            .urls(for: .documentDirectory, in: .userDomainMask).first
-        else { return nil }
-        let shots = documents.appendingPathComponent("Shots",
-                                                     isDirectory: true)
-        try? FileManager.default.createDirectory(
-            at: shots, withIntermediateDirectories: true)
-        return shots
-    }()
+    /// Папка заводится, только когда в неё кладут: чтение и удаление её не
+    /// создают — прогон модели на Linux, где Documents — настоящая домашняя
+    /// папка, не оставит её там, и сад в ней не запишется.
+    private static let folder: URL? = FileManager.default
+        .urls(for: .documentDirectory, in: .userDomainMask).first?
+        .appendingPathComponent("Shots", isDirectory: true)
 }

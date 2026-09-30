@@ -1,3 +1,4 @@
+import ImagePlayground
 import SwiftUI
 
 /// Экран растения сверху вниз: фото, «Полить сейчас», действия, сведения,
@@ -8,6 +9,10 @@ struct PlantView: View {
 
     @Environment(Garden.self) private var garden
     @Environment(\.dismiss) private var dismiss
+
+    /// Нет Image Playground — нет и «Портрета»: неработающей кнопки не
+    /// показываем.
+    @Environment(\.supportsImagePlayground) private var playground
 
     @State private var renaming = false
     @State private var draft = ""
@@ -22,6 +27,8 @@ struct PlantView: View {
     @State private var modelling = false
 
     @State private var diagnosing = false
+
+    @State private var portraying = false
 
     /// Заметка правится на месте и ложится в сад, когда поле отпускают.
     @State private var noteDraft = ""
@@ -136,6 +143,11 @@ struct PlantView: View {
         .sheet(isPresented: $diagnosing) {
             DiagnosisSheet(plantID: plantID).environment(garden)
         }
+        // Стиль выбирают в самом листе; готовый портрет встаёт обложкой.
+        .imagePlaygroundSheet(isPresented: $portraying, concepts: concepts,
+                              sourceImage: likeness) { file in
+            portray(file)
+        }
         // Растение удалили — экран закрывается сам; вернуть можно с плашки
         // внизу.
         .onChange(of: plant == nil) { _, gone in
@@ -184,6 +196,17 @@ struct PlantView: View {
             }
             Button { tuning = true } label: {
                 Label("Настройки", systemImage: "slider.horizontal.3")
+            }
+            if playground {
+                Button { portraying = true } label: {
+                    Label(portrayed ? "Новый портрет" : "Портрет",
+                          systemImage: "apple.image.playground")
+                }
+                if portrayed {
+                    Button(action: unportray) {
+                        Label("Вернуть фото", systemImage: "photo")
+                    }
+                }
             }
             // Черенок — кодом в переписку: друг посадит его со всем уходом.
             if let plant {
@@ -241,6 +264,37 @@ struct PlantView: View {
 
     private func relocate(to room: String) {
         withAnimation(Motion.number) { garden.relocate(plantID, to: room) }
+    }
+
+    private var portrayed: Bool { plant?.portrait != nil }
+
+    /// Понятие для листа — вид растения, см. `Portrait`.
+    private var concepts: [ImagePlaygroundConcept] {
+        guard let plant else { return [] }
+        return Portrait.concepts(for: plant)
+            .map { ImagePlaygroundConcept.text($0) }
+    }
+
+    /// Затравка портрета — своё фото, а нет его — рисунок вида. Прежний
+    /// портрет затравкой не берём: новый рисуется с натуры.
+    private var likeness: Image? {
+        guard let plant else { return nil }
+        if let shot = plant.shot, let image = Snapshot.image(shot) {
+            return Image(uiImage: image)
+        }
+        return Image(plant.photo)
+    }
+
+    private func portray(_ file: URL) {
+        guard let name = Snapshot.keep(contentsOf: file) else { return }
+        withAnimation(Motion.appear) { garden.portray(plantID, file: name) }
+        Feel.done()
+    }
+
+    /// «Вернуть фото»: портрет уходит, обложкой снова снимок.
+    private func unportray() {
+        withAnimation(Motion.appear) { garden.unportray(plantID) }
+        Feel.toss()
     }
 
     /// Звук — только если заметка правда изменилась: отпустить поле ещё не

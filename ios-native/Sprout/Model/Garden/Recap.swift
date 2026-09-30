@@ -152,7 +152,7 @@ struct Recap: Sendable {
             guard let count = counts[plant.id] else { return nil }
             return Star(id: plant.id, name: plant.name,
                         species: plant.species, photo: plant.photo,
-                        shot: plant.shot, count: count)
+                        shot: plant.cover, count: count)
         }
         .enumerated()
         .sorted { $0.element.count != $1.element.count

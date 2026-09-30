@@ -127,8 +127,8 @@ final class Bin {
     func commit() {
         guard let slip = pending else { return }
         run?.cancel()
-        if case .removal(let gone) = slip, let shot = gone.plant.shot {
-            Shots.drop(shot)
+        if case .removal(let gone) = slip {
+            for file in gone.plant.files { Shots.drop(file) }
         }
         pending = nil
         since = nil

@@ -1,15 +1,16 @@
 import SwiftUI
 import UIKit
 
-/// Картинка растения: снимок хозяина или рисунок из макета. Один тип на
-/// карточку и экран растения, чтобы правила кадрирования не разошлись.
+/// Картинка растения: портрет, снимок хозяина или рисунок из макета. Один
+/// тип на карточку и экран растения, чтобы правила кадрирования не
+/// разошлись.
 struct PlantPhoto: View {
     let plant: Plant
 
     var radius: CGFloat = 16
 
     var body: some View {
-        if let shot = plant.shot, let image = Snapshot.image(shot) {
+        if let image = Snapshot.cover(plant) {
             // Снимок — наложением на пустой цвет: `scaledToFill` сообщает
             // размер больше предложенного и расталкивал бы сетку.
             Color.clear
@@ -62,6 +63,20 @@ enum Snapshot {
         guard let data = shrink(image).jpegData(compressionQuality: 0.85)
         else { return nil }
         return Shots.keep(data)
+    }
+
+    /// Картинка из листа Image Playground: он отдаёт файл во временной
+    /// папке — к снимкам его, ужатым, как фото, а оттуда долой.
+    static func keep(contentsOf file: URL) -> String? {
+        guard let image = UIImage(contentsOfFile: file.path) else { return nil }
+        try? FileManager.default.removeItem(at: file)
+        return keep(image)
+    }
+
+    /// Обложка растения: портрет, а пропал его файл — своё фото. Нет и
+    /// его — пусто, и рисуют вид.
+    static func cover(_ plant: Plant) -> UIImage? {
+        plant.portrait.flatMap { image($0) } ?? plant.shot.flatMap { image($0) }
     }
 
     /// Кэш обязателен: снимок спрашивают из тела карточки, а сад сушится раз
