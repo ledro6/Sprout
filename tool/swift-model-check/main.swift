@@ -4106,6 +4106,11 @@ do {
     check(recap.lit.contains(9) && !recap.lit.contains(8),
           "десятое января — десятый день года")
     check("\(recap.length)", "365", "2026 — не високосный")
+    check("\(recap.passed)", "268",
+          "по 25 сентября прошло 268 дней года — остальные впереди")
+    let lastYear = Recap.of([], rooms: rooms, awards: [:], year: 2025,
+                            now: at(9, 25, 12), calendar: utc)
+    check("\(lastYear.passed)", "365", "прошлый год прошёл целиком")
     check(recap.deck == [.intro, .waterings, .favorite, .podium, .streak,
                          .rhythm, .aim, .months, .garden, .awards, .outro],
           "все слайды, когда есть о чём рассказать")

@@ -183,17 +183,20 @@ struct DropRain: View {
 }
 
 /// Год кольцом: точка на день, дни с поливом горят. Точки зажигаются по
-/// ходу года, пока `progress` идёт от нуля к единице.
+/// ходу года, пока `progress` идёт от нуля к единице, — до сегодняшнего
+/// дня: дни впереди остаются бледными, а не пропущенными.
 struct YearRing: View {
     let lit: Set<Int>
     let days: Int
+    /// Дней года, что уже прошли, см. `Recap.passed`.
+    let passed: Int
     var progress: Double
 
     var body: some View {
         Canvas { context, size in
             let middle = CGPoint(x: size.width / 2, y: size.height / 2)
             let radius = min(size.width, size.height) / 2 - 8
-            let shown = Int(Double(days) * progress)
+            let shown = Int(Double(min(passed, days)) * progress)
             for day in 0 ..< days {
                 let angle = CGFloat(day) / CGFloat(days) * 2 * .pi - .pi / 2
                 let on = lit.contains(day) && day < shown

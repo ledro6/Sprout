@@ -139,14 +139,17 @@ struct ZoneBar: View {
 
     var body: some View {
         GeometryReader { geometry in
+            // Зазоры между долями вычитаются из ширины раз, а не у каждой
+            // доли: иначе полоса не доходила до конца дорожки на зазор.
+            let shown = Almanac.Aim.Zone.allCases.filter { aim.share($0) > 0 }
+            let room = geometry.size.width - 2 * CGFloat(max(shown.count - 1, 0))
             HStack(spacing: 2) {
                 ForEach(Almanac.Aim.Zone.allCases) { zone in
                     let share = aim.share(zone)
                     if share > 0 {
                         Rectangle()
                             .fill(Palette.zone(zone))
-                            .frame(width: max(geometry.size.width
-                                              * CGFloat(share) - 2, 3))
+                            .frame(width: max(room * CGFloat(share), 3))
                     }
                 }
             }

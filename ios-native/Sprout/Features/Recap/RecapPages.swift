@@ -185,7 +185,8 @@ struct RecapPage: View {
         VStack(alignment: .leading, spacing: 14) {
             caption(Lang.text("Дней подряд без перерыва"))
             number(recap.streak)
-            YearRing(lit: recap.lit, days: recap.length, progress: grow)
+            YearRing(lit: recap.lit, days: recap.length, passed: recap.passed,
+                     progress: grow)
                 .frame(width: 250, height: 250)
                 .frame(maxWidth: .infinity)
             line(Lang.text("Кольцо — ваш год: каждая яркая точка — день с поливом."),

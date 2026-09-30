@@ -77,7 +77,10 @@ struct RoomsView: View {
         .alert("Новая комната", isPresented: $naming) {
             TextField("Балкон", text: $draft)
             Button("Отмена", role: .cancel) {}
+            // Без имени — неактивна, как на странице «Новая комната».
             Button("Завести") { add() }
+                .disabled(draft.trimmingCharacters(in: .whitespacesAndNewlines)
+                    .isEmpty)
         } message: {
             Text("Растения в неё можно будет посадить или перевезти.")
         }

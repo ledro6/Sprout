@@ -180,15 +180,16 @@ enum Walk: String, CaseIterable, Identifiable, Sendable {
                          Сколько раз его поливали за период и всего и когда \
                          в последний раз.
                          """)),
-                Hint(target: .bookAim, title: Lang.text("Когда поливаете"),
+                Hint(target: .bookAim, title: Lang.text("Полив вовремя"),
                      text: Lang.text("""
                          При скольких процентах воды в земле вы обычно \
                          берётесь за лейку.
                          """)),
                 Hint(target: .bookHistory, title: Lang.text("История"),
                      text: Lang.text("""
-                         Каждая точка — полив. Чем выше точка, тем больше \
-                         воды ещё было в земле.
+                         Как сохла земля: полив поднимает линию до ста \
+                         процентов, потом она ползёт вниз. Зубцы до самого \
+                         дна — растение пересыхало.
                          """)),
             ]
         case .plant:
@@ -248,7 +249,7 @@ enum Walk: String, CaseIterable, Identifiable, Sendable {
                 Hint(target: .profilePerson, title: Lang.text("Хозяин"),
                      text: Lang.text("""
                          Назовитесь — приложение будет здороваться по имени. \
-                         Нажмите на кружок, чтобы поставить фото.
+                         Нажмите на кружок, чтобы сменить фото, имя или цвет.
                          """)),
                 Hint(target: .profilePlot, title: Lang.text("Сад"),
                      text: Lang.text("""
@@ -257,7 +258,7 @@ enum Walk: String, CaseIterable, Identifiable, Sendable {
                          """)),
                 Hint(target: .profileRivals, title: Lang.text("Друзья"),
                      text: Lang.text("""
-                         Кнопка «Поделиться» отправит другу ваш счёт. Его \
+                         Значок со стрелкой отправит другу ваш счёт. Его \
                          ответ вставьте кнопкой «Вставить» — и друг встанет \
                          в таблицу.
                          """)),

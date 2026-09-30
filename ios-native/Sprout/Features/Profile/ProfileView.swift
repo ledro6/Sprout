@@ -111,7 +111,8 @@ struct ProfileView: View {
     // MARK: - Хозяин
 
     /// Кружок с фото хозяина — или с буквой, пока фото нет. Нажатие на
-    /// кружок открывает медиатеку.
+    /// кружок, как и «Изменить», открывает лист `ProfileEditor`: фото, имя
+    /// и цвет кружка.
     private var person: some View {
         SproutGroup("Хозяин") {
             HStack(spacing: 14) {

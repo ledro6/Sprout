@@ -29,6 +29,8 @@ final class Sensors: NSObject {
     private(set) var blind = false
     /// «Дом» не отвечает — почему.
     private(set) var homeless: String?
+    /// «Дом» спросили и ждём: список его датчиков ещё не пришёл.
+    private(set) var asking = false
 
     @ObservationIgnored private var central: CBCentralManager?
     @ObservationIgnored private var homes: HMHomeManager?
@@ -56,6 +58,7 @@ final class Sensors: NSObject {
         found = []
         homeless = nil
         scanning = true
+        asking = true
         bluetooth {
             $0.scanForPeripherals(withServices: nil, options: [
                 CBCentralManagerScanOptionAllowDuplicatesKey: false,
@@ -155,6 +158,7 @@ final class Sensors: NSObject {
 
     /// Все датчики влажности «Дома».
     private func gather(_ manager: HMHomeManager) {
+        asking = false
         if manager.authorizationStatus.contains(.restricted) {
             homeless = Lang.text("Доступ к «Дому» запрещён — разрешите его в Настройках → Sprout.")
             return

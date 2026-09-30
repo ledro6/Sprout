@@ -20,9 +20,13 @@ struct SensorPicker: View {
                             : sensors.scanning
                                 ? Lang.text("Ищу… Поднесите телефон к горшку.")
                                 : Lang.text("Датчиков Flower Care не видно. Поднесите телефон ближе и поищите снова."))
+                    // Пока «Дом» не ответил, «нет» было бы неправдой: ищем,
+                    // как по Bluetooth.
                     group(.home, title: "Из приложения «Дом»",
                           empty: sensors.homeless
-                            ?? Lang.text("Датчиков влажности в «Доме» нет."))
+                            ?? (sensors.asking && sensors.scanning
+                                ? Lang.text("Ищу…")
+                                : Lang.text("Датчиков влажности в «Доме» нет.")))
                     Text("Датчик в горшке показывает настоящую влажность земли: проценты растения берутся с него, а полив, замеченный датчиком, сам ложится в журнал.")
                         .font(Typography.settingNote)
                         .foregroundStyle(.secondary)

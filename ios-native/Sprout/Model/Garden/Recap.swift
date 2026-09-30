@@ -29,6 +29,9 @@ struct Recap: Sendable {
     var lit: Set<Int> = []
     /// Дней в году: кольцу нужно знать, високосный ли он.
     var length = 365
+    /// Сколько дней года уже прошло, по сегодня: дни дальше ещё впереди, и
+    /// кольцо не рисует их пропущенными.
+    var passed = 365
 
     /// Слайды презентации — по порядку. Про что рассказать нечего, того
     /// слайда нет: пустой пьедестал хуже никакого.
@@ -129,6 +132,10 @@ struct Recap: Sendable {
            let days = calendar.range(of: .day, in: .year, for: january) {
             recap.length = days.count
         }
+        let current = calendar.component(.year, from: now)
+        recap.passed = year < current ? recap.length
+            : year > current ? 0
+            : calendar.ordinality(of: .day, in: .year, for: now) ?? recap.length
         if let most = recap.hours.max(), most > 0 {
             recap.peakHour = recap.hours.firstIndex(of: most)
         }

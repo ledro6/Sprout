@@ -1,8 +1,7 @@
-import Charts
 import SwiftUI
 
 /// Одно растение в статистике: его цифры, при скольких процентах его
-/// поливают, поливы периода точками и ближайшие поливы. Экран растения —
+/// поливают, как сохла земля — линией, и ближайшие поливы. Экран растения —
 /// кнопкой внизу.
 struct PlantBookView: View {
     let plantID: Plant.ID
@@ -11,9 +10,6 @@ struct PlantBookView: View {
     @Environment(Garden.self) private var garden
 
     @State private var book = PlantBook()
-
-    private static let timeAxis = LocalizedStringKey(Lang.key("Когда"))
-    private static let levelAxis = LocalizedStringKey(Lang.key("Вода в земле"))
 
     private var plant: Plant? { garden.plant(id: plantID) }
 
@@ -125,7 +121,7 @@ struct PlantBookView: View {
     // MARK: - Точность
 
     private var aim: some View {
-        SproutGroup("Когда поливаете") {
+        SproutGroup("Полив вовремя") {
             if let typical = book.aim.typical {
                 HStack(alignment: .firstTextBaseline, spacing: 6) {
                     Text(Lang.format("Обычно — при %@ воды в земле",
