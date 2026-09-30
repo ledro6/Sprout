@@ -165,6 +165,10 @@ struct Room: Identifiable, Hashable, Codable {
     var id: String { name }
     var name: String
     var plants: [Plant]
+
+    /// Комната на даче, см. `Dacha`. Необязательное, как `Plant.shot`: сады
+    /// прежних сборок читаются как были.
+    var dacha: Bool?
 }
 
 /// Что убрали из сада и откуда. Номер комнаты — на случай, если за отсчёт её
