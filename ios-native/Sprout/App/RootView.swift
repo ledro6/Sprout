@@ -98,9 +98,10 @@ struct RootView: View {
         // Узор времени года — до первого кадра, чтобы всходы шли уже им.
         // Переключатель в настройках ставит его сам, с волной.
         .onAppear { Festive.shared.settle(on: settings.seasonalPattern) }
-        // Тема — в корне: она должна достать и до листа настроек, и до
-        // заставки. Пусто — за системой.
-        .preferredColorScheme(scheme)
+        // Тема — окну, а не `preferredColorScheme`: окно достаёт и до листа
+        // настроек, и до заставки, а строку состояния оставляет экранам —
+        // см. `WindowTheme`. Смена в настройках встаёт сразу.
+        .onChange(of: settings.theme, initial: true) { WindowTheme.apply() }
         // Сперва заставка, плашка поверх неё: в макете плашка есть и на
         // приветственном экране.
         .overlay { welcome }
@@ -211,14 +212,6 @@ struct RootView: View {
     }
 
     private var locked: Bool { lock.on && !lock.open }
-
-    private var scheme: ColorScheme? {
-        switch settings.theme {
-        case .system: nil
-        case .light: .light
-        case .dark: .dark
-        }
-    }
 
     /// Пока спали, мог наступить декабрь или Новый год: узор меняется
     /// волной сверху вниз, как в настройках.
