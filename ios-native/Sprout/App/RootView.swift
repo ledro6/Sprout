@@ -94,6 +94,8 @@ struct RootView: View {
         .task {
             Climate.settle(settings.climate, on: settings.weather)
             await Weatherman.shared.refresh()
+            // И дождь на даче — там своя погода, см. `Dachnik`.
+            await Dachnik.shared.refresh()
         }
         // Узор времени года — до первого кадра, чтобы всходы шли уже им.
         // Переключатель в настройках ставит его сам, с волной.
@@ -137,6 +139,7 @@ struct RootView: View {
                 Season.settle(on: settings.seasons)
                 Climate.settle(settings.climate, on: settings.weather)
                 Task { await Weatherman.shared.refresh() }
+                Task { await Dachnik.shared.refresh() }
                 // Датчики в горшках — свежие показания.
                 Sensors.shared.poll()
                 // Пока спали, могли включить энергосбережение.
@@ -230,11 +233,16 @@ struct RootView: View {
     /// пока на сад смотрят, оно было бы шумом. Слепок комнат снимается здесь,
     /// на главной очереди.
     private func remind(active: Bool) {
+        // Дача — своим уведомлением, по приезде: оно не снимается, пока на
+        // сад смотрят, и ставится заново, только если поменялось.
+        let whole = garden.rooms
+        Task { await Dachnik.shared.post(whole) }
         guard settings.reminders, !active else {
             Notifier.clear()
             return
         }
-        let rooms = garden.rooms
+        // Без дачных, если о них напоминают только на даче.
+        let rooms = Dachnik.shared.reminded(garden.rooms)
         let threshold = settings.threshold
         Task { await Notifier.schedule(in: rooms, threshold: threshold) }
     }

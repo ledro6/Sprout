@@ -1148,6 +1148,146 @@ check(many(1), "«Х» и ещё 1 растение просят воды", "1 �
 check(many(2), "«Х» и ещё 2 растения просят воды", "2 растения")
 check(many(5), "«Х» и ещё 5 растений просят воды", "5 растений")
 
+print("дача:")
+do {
+    var beds = Room(name: "Грядки", plants: [
+        plantNamed("Томат", moisture: 0.3, dryingDays: 3),
+        plantNamed("Огурец", moisture: 0.9, dryingDays: 2),
+        plantNamed("Пугало", moisture: 1, dryingDays: 0),
+    ])
+    beds.dacha = true
+    var porch = Room(name: "Веранда", plants: [
+        plantNamed("Герань", moisture: 0.5, dryingDays: 6),
+    ])
+    porch.dacha = true
+    let flat = Room(name: "Кухня", plants: [
+        plantNamed("Базилик", moisture: 0.5, dryingDays: 4),
+    ])
+    let all = [flat, beds, porch]
+    check(Dacha.rooms(all).map(\.name) == ["Грядки", "Веранда"],
+          "дачные комнаты — отмеченные")
+    check(Dacha.home(all).map(\.name) == ["Кухня"],
+          "обычным напоминаниям — остальные")
+    check(Dacha.open(all).map(\.name) == ["Грядки"],
+          "дождь — только без крыши: веранда под навесом")
+    check(Climate.open("Огород") && Climate.open("Палисадник")
+          && !Climate.open("Рассада") && !Climate.open("Балкон")
+          && !Climate.open("Теплица") && !Climate.open("Дом"),
+          "без крыши — огород и палисадник, но не рассада, балкон и теплица")
+    check(Climate.outdoor("Огород") && Climate.outdoor("Грядки")
+          && Climate.outdoor("Балкон") && !Climate.outdoor("Теплица"),
+          "огород и грядки чувствуют погоду целиком, как балкон")
+
+    let arrival = Dacha.arrival(in: all)!
+    check(arrival.ids == ["Томат", "Огурец", "Герань"],
+          "по приезде — все дачные, что сохнут, а пугало не поливают")
+    check(Dacha.text(for: arrival), "Вы на даче — полить: 3 растения",
+          "строка уведомления по приезде")
+    check(Dacha.text(for: Dacha.Arrival(ids: ["Томат"])),
+          "Вы на даче — полить: 1 растение", "одно растение")
+    check(Dacha.arrival(in: [flat]) == nil, "без дачи уведомления нет")
+    check(Dacha.arrival(in: [Room(name: "Сарай", plants: [], dacha: true)])
+            == nil, "пустая дача — тоже")
+
+    check(Dacha.gain(1.5) == 0, "морось землю не промочит")
+    check(round2(Dacha.gain(7)), "0.50",
+          "пять миллиметров сверх мороси — полполива")
+    check(Dacha.gain(40) == 1, "ливень — как полный полив, не больше")
+
+    var clock = Calendar(identifier: .gregorian)
+    clock.timeZone = TimeZone(identifier: "Europe/Moscow")!
+    let noon = clock.date(from: DateComponents(year: 2026, month: 7, day: 10,
+                                               hour: 12))!
+    func at(_ hours: Double) -> Date { noon.addingTimeInterval(hours * 3_600) }
+    let past = [
+        Dacha.Hour(start: at(-5), millimeters: 4, chance: 1),
+        Dacha.Hour(start: at(-4), millimeters: 3, chance: 1),
+        Dacha.Hour(start: at(-1), millimeters: 1, chance: 1),
+        Dacha.Hour(start: at(0), millimeters: 9, chance: 1),
+    ]
+    let fell = Dacha.fallen(past, from: at(-4.5), to: at(0.5))
+    check(round2(fell.millimeters), "4.00",
+          "в счёт — целые часы после отсчёта; идущий — в следующий раз")
+    check(fell.until == noon, "учтено до конца последнего целого часа")
+    let again = Dacha.fallen(past, from: fell.until!, to: at(1.5))
+    check(round2(again.millimeters), "9.00", "в следующий раз — только новое")
+    check(Dacha.fallen(past, from: at(1), to: at(1.5)).until == nil,
+          "нового не выпало — отсчёт стоит")
+
+    let tomorrow = clock.date(byAdding: .day, value: 1,
+                              to: clock.startOfDay(for: noon))!
+    let wet = [
+        Dacha.Hour(start: tomorrow.addingTimeInterval(9 * 3_600),
+                   millimeters: 2, chance: 0.7),
+        Dacha.Hour(start: tomorrow.addingTimeInterval(10 * 3_600),
+                   millimeters: 1.5, chance: 0.4),
+    ]
+    check(Dacha.promised(wet, now: noon, calendar: clock) == tomorrow,
+          "завтра дождь — можно не поливать")
+    let unsure = wet.map { hour -> Dacha.Hour in
+        var hour = hour
+        hour.chance = 0.3
+        return hour
+    }
+    check(Dacha.promised(unsure, now: noon, calendar: clock) == nil,
+          "дождь маловероятен — молчим")
+    check(Dacha.promised([wet[0]], now: noon, calendar: clock) == nil,
+          "пара миллиметров завтра — не повод")
+    check(Dacha.promised([Dacha.Hour(start: at(2), millimeters: 8,
+                                      chance: 0.9)],
+                         now: noon, calendar: clock) == nil,
+          "дождь сегодня — не завтра")
+
+    var rain = Dacha.Rainfall(counted: noon, checked: noon, promised: tomorrow)
+    check(Dacha.tomorrow(rain, now: noon, calendar: clock),
+          "подсказка — пока обещанное и правда завтра")
+    check(!Dacha.tomorrow(rain, now: tomorrow.addingTimeInterval(3_600),
+                          calendar: clock),
+          "обещанный день наступил — подсказка уходит")
+    check(!Dacha.lately(rain, now: noon), "дождя не было — и строки нет")
+    rain.soaked = noon
+    check(Dacha.lately(rain, now: at(20)) && !Dacha.lately(rain, now: at(25)),
+          "«Прошёл дождь» — сутки")
+    check(!Dacha.lately(nil) && !Dacha.tomorrow(nil),
+          "погоды на даче нет — дождевая часть молчит")
+
+    let folder = FileManager.default.temporaryDirectory
+        .appendingPathComponent("sprout-dacha-\(UUID().uuidString)")
+    try! FileManager.default.createDirectory(at: folder,
+                                             withIntermediateDirectories: true)
+    Store.testing = folder
+    defer {
+        Store.testing = nil
+        try? FileManager.default.removeItem(at: folder)
+    }
+    var probed = plantNamed("Перец", moisture: 0.2, dryingDays: 4)
+    probed.sensor = Sensor(kind: .flora, id: "a", name: "Flower care")
+    beds.plants.append(probed)
+    let yard = Garden()
+    yard.rooms = [flat, beds, porch]
+    let log = yard.log.count
+    yard.settle("Кухня", dacha: true)
+    check(yard.rooms[0].atDacha, "кухня уехала на дачу")
+    yard.settle("Кухня", dacha: false)
+    check(yard.rooms[0].dacha == nil, "вернулась — отметки нет вовсе")
+    yard.soak(Set(Dacha.open(yard.rooms).map(\.name)), by: 0.5)
+    let soaked = yard.rooms[1].plants.map { round2($0.moisture) }
+    check(soaked == ["0.80", "1.00", "1.00", "0.20"],
+          "дождь намочил грядки до края, а у перца с датчиком влажность своя")
+    check(yard.rooms[2].plants[0].moisture == 0.5
+          && yard.rooms[0].plants[0].moisture == 0.5,
+          "веранду и кухню дождь не тронул")
+    check(yard.log.count == log, "дождь — не полив хозяина: журнал тот же")
+    let file = try! JSONEncoder().encode(yard.state)
+    let read = try! JSONDecoder().decode(GardenState.self, from: file)
+    check(read.rooms.map(\.atDacha) == [false, true, true],
+          "отметка дачи переживает запись в файл")
+    let before = #"{"name":"Кухня","plants":[]}"#
+    check((try? JSONDecoder().decode(Room.self, from: Data(before.utf8)))?
+            .atDacha == false,
+          "комната прежней сборки читается и не на даче")
+}
+
 print("код соперника:")
 let mine = Rival(name: "Святослав", total: 142, streak: 5, best: 9,
                  plants: 27, day: 20_350)

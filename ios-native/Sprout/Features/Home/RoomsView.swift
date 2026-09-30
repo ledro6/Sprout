@@ -39,6 +39,9 @@ struct RoomsView: View {
                             .padding(.horizontal, Metrics.contentMargin)
                     }
                 }
+                if !garden.rooms.isEmpty {
+                    DachaGroup()
+                }
             }
             .listStyle(.plain)
             .scrollContentBackground(.hidden)
@@ -152,6 +155,12 @@ private struct RoomRow: View {
                 .focused($focused)
                 .submitLabel(.done)
                 .onSubmit { commit() }
+            if room.atDacha {
+                Image(systemName: "house.lodge.fill")
+                    .font(Typography.settingNote)
+                    .foregroundStyle(Palette.green)
+                    .accessibilityLabel("На даче")
+            }
             Text(count)
                 .font(Typography.settingNote)
                 .foregroundStyle(.secondary)

@@ -68,12 +68,27 @@ struct Climate: Codable, Equatable, Sendable {
     }
 
     /// Комната под открытым небом — по названию: балкон, лоджия, терраса,
-    /// веранда, сад, двор, дача, улица, крыльцо.
+    /// веранда, сад, двор, дача, улица, крыльцо, огород, грядки, клумба,
+    /// участок.
     static func outdoor(_ room: String) -> Bool {
         let name = room.lowercased()
         return ["балкон", "лоджи", "террас", "веранд", "сад", "двор", "дач",
-                "улиц", "крыльц", "balcony", "terrace", "patio", "porch",
-                "garden", "yard", "veranda", "outdoor"]
+                "улиц", "крыльц", "огород", "грядк", "клумб", "цветник",
+                "участ", "balcony", "terrace", "patio", "porch",
+                "garden", "yard", "veranda", "outdoor", "allotment",
+                "flowerbed", "lawn"]
+            .contains { name.contains($0) }
+    }
+
+    /// Совсем без крыши — туда падает дождь, см. `Dacha`. Балкон, лоджия,
+    /// веранда, терраса и крыльцо жару чувствуют, но дождь их не польёт; а
+    /// рассада растёт в доме, хоть в её имени и есть «сад».
+    static func open(_ room: String) -> Bool {
+        let name = room.lowercased()
+        guard !name.contains("рассад") else { return false }
+        return ["сад", "двор", "дач", "улиц", "огород", "грядк", "клумб",
+                "цветник", "участ", "garden", "yard", "outdoor", "allotment",
+                "flowerbed", "lawn"]
             .contains { name.contains($0) }
     }
 

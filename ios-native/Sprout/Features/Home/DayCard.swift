@@ -106,6 +106,24 @@ struct DayCard: View {
 
     @ViewBuilder
     private var chipList: some View {
+        // Дача — первой: это про саму комнату. Дождь — только там, куда он
+        // падает, и только когда погода на даче пришла, см. `Dachnik`.
+        if room.atDacha {
+            chip(Lang.text("На даче"), icon: "house.lodge.fill",
+                 tint: Palette.green)
+            if Settings.shared.weather, Climate.open(room.name) {
+                let rain = Dachnik.shared.rain
+                if Dacha.lately(rain) {
+                    chip(Lang.text("Прошёл дождь — полив отложен"),
+                         icon: "cloud.rain.fill", tint: Palette.water,
+                         multicolor: true)
+                }
+                if Dacha.tomorrow(rain) {
+                    chip(Lang.text("Завтра дождь — можно не поливать"),
+                         icon: "umbrella.fill", tint: Palette.accent)
+                }
+            }
+        }
         if Settings.shared.weather, let climate = Settings.shared.climate,
            climate.fresh() {
             chip(weatherLine(climate), icon: climate.symbol,
