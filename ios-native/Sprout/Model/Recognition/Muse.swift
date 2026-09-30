@@ -16,8 +16,9 @@ enum Muse {
         return model.supportsLocale(Lang.locale)
     }()
 
-    /// Язык ответа по-английски: «Russian», «Japanese».
-    private static var language: String {
+    /// Язык ответа по-английски: «Russian», «Japanese». Им же отвечает
+    /// «Спросить сад», см. `Talk`.
+    static var language: String {
         let code = Lang.locale.language.languageCode?.identifier ?? "en"
         return Locale(identifier: "en").localizedString(forLanguageCode: code)
             ?? "English"

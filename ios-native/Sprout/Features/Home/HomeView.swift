@@ -47,6 +47,9 @@ struct HomeView: View {
 
     @State private var tripping = false
 
+    /// «Спросить сад» — из «ещё».
+    @State private var asking = false
+
     /// Полка наград — из карточки дня.
     @State private var awardsOpen = false
 
@@ -207,6 +210,7 @@ struct HomeView: View {
         // окружения полагаться незачем.
         .sheet(isPresented: $roomsOpen) { RoomsView().environment(garden) }
         .sheet(isPresented: $tripping) { TripView().environment(garden) }
+        .sheet(isPresented: $asking) { AskView().environment(garden) }
         .sheet(isPresented: $awardsOpen) {
             NavigationStack {
                 AwardsView()
@@ -555,8 +559,9 @@ struct HomeView: View {
         .accessibilityValue(Settings.shared.order.title)
     }
 
-    /// Всё, что делают с садом целиком: AR, обход, отъезд, комнаты. Идёт
-    /// обход или отсчёт до отъезда — на кнопке его значок, а не точки.
+    /// Всё, что делают с садом целиком: AR, обход, вопрос модели, отъезд,
+    /// комнаты. Идёт обход или отсчёт до отъезда — на кнопке его значок, а не
+    /// точки.
     private var moreMenu: some View {
         Menu {
             if PlantAR.available, !plants.isEmpty {
@@ -565,6 +570,12 @@ struct HomeView: View {
                 }
             }
             round
+            if Muse.ready {
+                Button { asking = true } label: {
+                    Label("Спросить сад",
+                          systemImage: "bubble.left.and.text.bubble.right")
+                }
+            }
             Button { tripping = true } label: {
                 Label("Уезжаю…", systemImage: "airplane.departure")
             }

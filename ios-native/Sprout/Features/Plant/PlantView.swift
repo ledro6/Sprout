@@ -30,6 +30,8 @@ struct PlantView: View {
 
     @State private var portraying = false
 
+    @State private var asking = false
+
     /// Заметка правится на месте и ложится в сад, когда поле отпускают.
     @State private var noteDraft = ""
     @FocusState private var writing: Bool
@@ -143,6 +145,9 @@ struct PlantView: View {
         .sheet(isPresented: $diagnosing) {
             DiagnosisSheet(plantID: plantID).environment(garden)
         }
+        .sheet(isPresented: $asking) {
+            AskView(focus: plantID).environment(garden)
+        }
         // Стиль выбирают в самом листе; готовый портрет встаёт обложкой.
         .imagePlaygroundSheet(isPresented: $portraying, concepts: concepts,
                               sourceImage: likeness) { file in
@@ -206,6 +211,12 @@ struct PlantView: View {
                     Button(action: unportray) {
                         Label("Вернуть фото", systemImage: "photo")
                     }
+                }
+            }
+            if Muse.ready {
+                Button { asking = true } label: {
+                    Label("Спросить о растении",
+                          systemImage: "bubble.left.and.text.bubble.right")
                 }
             }
             // Черенок — кодом в переписку: друг посадит его со всем уходом.

@@ -35,6 +35,7 @@ ios-native/Sprout/Model/Garden/Race.swift
 ios-native/Sprout/Model/Garden/Cutting.swift
 ios-native/Sprout/Model/Recognition/Species.swift
 ios-native/Sprout/Model/Recognition/Likeness.swift
+ios-native/Sprout/Model/Recognition/Sage.swift
 ios-native/Sprout/Model/Garden/Shots.swift
 ios-native/Sprout/Model/Garden/Portrait.swift
 ios-native/Sprout/Model/Botany/Sculpt.swift

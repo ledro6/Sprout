@@ -3775,6 +3775,108 @@ do {
           "с фото — портрет по снимку")
 }
 
+print("спросить сад:")
+do {
+    let kept = (Season.stretch, Climate.stretch, Season.growing)
+    Season.stretch = 1
+    Climate.stretch = 1
+    Season.growing = true
+    defer {
+        Season.stretch = kept.0
+        Climate.stretch = kept.1
+        Season.growing = kept.2
+    }
+    var utc = Calendar(identifier: .gregorian)
+    utc.timeZone = TimeZone(identifier: "UTC")!
+    let now = utc.date(from: DateComponents(year: 2026, month: 9, day: 30,
+                                            hour: 12))!
+    var baksik = plantNamed("Баксик", moisture: 0, dryingDays: 9)
+    baksik.species = "Монстера"
+    var pr = plantNamed("Пр", moisture: 0.14, dryingDays: 7)
+    pr.species = "Фикус"
+    pr.care = Care(feedEvery: 14, sinceFed: 14)
+    var tapok = plantNamed("Тапок", moisture: 1, dryingDays: 9)
+    tapok.species = "Хлорофитум"
+    tapok.note = "Любит север"
+    let twin = Plant(id: "twin", name: "Баксик", species: "Кактус",
+                     moisture: 0.5, dryingDays: 20,
+                     addedOn: DateComponents(year: 2024, month: 1, day: 1))
+    let rooms = [Room(name: "Спальня", plants: [baksik, pr]),
+                 Room(name: "Кухня", plants: [tapok, twin])]
+
+    let overview = Sage.overview(rooms, now: now, calendar: utc)
+    check(overview.contains("4 plants in 2 rooms"),
+          "обзор: сколько растений и комнат")
+    check(overview.contains("Needs water today: \"Баксик\" (Спальня)."),
+          "обзор: кого полить сегодня — с комнатой")
+    check(overview.contains("Needs water tomorrow: \"Пр\" (Спальня)."),
+          "обзор: и кого завтра")
+    check(overview.contains("Care due now: \"Пр\" — feeding"),
+          "обзор: подошедший уход")
+    check(overview.contains(
+        "Кухня: \"Тапок\" Хлорофитум, 100% moisture, water in 9 days"),
+          "обзор: строка растения — сроки как на карточке")
+    check(Sage.overview([], now: now, calendar: utc).contains("empty"),
+          "пустой сад — так и сказано")
+    let crowd = [Room(name: "Спальня", plants: (0 ... Sage.listed).map {
+        plantNamed("П\($0)", moisture: 1, dryingDays: 7)
+    })]
+    check(!Sage.overview(crowd, now: now, calendar: utc).contains("moisture"),
+          "большой сад — в комнатах одни клички: окно модели маленькое")
+
+    let log = [Watering(plant: "Пр", when: now.addingTimeInterval(-86_400)),
+               Watering(plant: "Пр", when: now.addingTimeInterval(-4 * 86_400))]
+    let card = Sage.details("Пра", in: rooms, log: log, now: now,
+                            calendar: utc)
+    check(card.hasPrefix("\"Пр\": species Фикус, room Спальня"),
+          "подробности: кличка в падеже находится")
+    check(card.contains("next watering tomorrow"),
+          "подробности: следующий полив")
+    check(card.contains("Last watered: yesterday; waterings recorded: 2."),
+          "подробности: последний полив и сколько всего")
+    check(card.contains("Feeding: every 14 days; due now."),
+          "подробности: подкормка подошла")
+    let quiet = Sage.details("«тапок»", in: rooms, log: log, now: now,
+                             calendar: utc)
+    check(quiet.contains("Last watered: not recorded"),
+          "поливов не было — так и сказано")
+    check(quiet.contains("The owner's note: \"Любит север\""),
+          "подробности: заметка хозяина")
+    check(Sage.details("Баксик", in: rooms, log: [], now: now, calendar: utc)
+            .hasPrefix("There are 2 plants"), "тёзки — оба")
+    check(Sage.find("Баксик", in: rooms, focus: "twin").map(\.id) == ["twin"],
+          "среди тёзок — растение, с которого открыт лист")
+    check(Sage.find(" ", in: rooms, focus: "Тапок").map(\.id) == ["Тапок"],
+          "без клички — растение листа")
+    check(Sage.find("монстеру", in: rooms).map(\.id) == ["Баксик"],
+          "вид вместо клички находит монстер сада")
+    check(Sage.details("Кузя", in: rooms, log: [], now: now, calendar: utc)
+            .contains("There is no plant \"Кузя\""),
+          "нет такого — так и сказано, с кличками сада")
+
+    check(Sage.prompts(about: nil) == ["Кого полить сегодня?"],
+          "подсказка без растения — общая")
+    check(Sage.prompts(about: tapok) == [
+        "Кого полить сегодня?",
+        "Почему желтеют листья у растения «Тапок»?",
+        "Как пересадить растение «Тапок»?",
+    ], "подсказки о растении — кличка в кавычках, без склонения")
+    check(Sage.example(in: rooms)?.id == "Баксик",
+          "с главной подсказки — о самом сухом")
+    check(Sage.question("  Когда поливать?\n") == "Когда поливать?",
+          "вопрос — без пробелов по краям")
+    check(Sage.question(" \n ") == nil, "пустой — не вопрос")
+    check(Sage.question(String(repeating: "а", count: 900))?.count
+          == Sage.longest, "длинный вопрос обрезается")
+    let told = Sage.instructions(language: "Russian", focus: tapok)
+    check(told.contains("Always answer in Russian")
+          && told.contains("\"Тапок\" (Хлорофитум)")
+          && told.contains("\"Что с ним?\" button"),
+          "наставление: язык, растение листа и «Что с ним?»")
+    check(!Sage.instructions(language: "Russian", focus: nil)
+            .contains("opened this chat"), "с главной — без растения")
+}
+
 print("датчики влажности:")
 do {
     let bytes: [UInt8] = [0xEA, 0x00, 0x00, 0xD2, 0x04, 0x00, 0x00, 38,

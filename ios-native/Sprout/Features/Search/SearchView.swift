@@ -14,6 +14,9 @@ struct SearchView: View {
     @State private var path: [Plant.ID] = []
     @State private var opening: Plant.ID?
 
+    /// Ничего не нашлось — запрос можно задать саду вопросом.
+    @State private var asking = false
+
     private var asked: String {
         query.trimmingCharacters(in: .whitespacesAndNewlines)
     }
@@ -59,6 +62,9 @@ struct SearchView: View {
                 }
             }
             .onSubmit(of: .search) { recents.remember(asked) }
+        }
+        .sheet(isPresented: $asking) {
+            AskView(draft: asked).environment(garden)
         }
         // Ореол вернувшейся карточки — с выдержкой, как на главной.
         .task(id: path.isEmpty) {
@@ -112,9 +118,22 @@ struct SearchView: View {
         }
     }
 
+    /// Есть языковая модель — под пустым поиском «Спросить сад»: набранное,
+    /// может, и не кличка, а вопрос.
     private var nothing: some View {
-        hint(Lang.format("По запросу «%@» в квартире ничего не растёт.", asked),
-             icon: "leaf")
+        VStack(spacing: 18) {
+            hint(Lang.format("По запросу «%@» в квартире ничего не растёт.",
+                             asked),
+                 icon: "leaf")
+            if Muse.ready {
+                Button { asking = true } label: {
+                    Label("Спросить сад",
+                          systemImage: "bubble.left.and.text.bubble.right")
+                }
+                .buttonStyle(.glass)
+                .font(Typography.settingNote)
+            }
+        }
     }
 
     private func hint(_ text: String, icon: String) -> some View {
