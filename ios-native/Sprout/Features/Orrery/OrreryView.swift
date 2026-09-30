@@ -5,9 +5,10 @@ import SwiftUI
 /// вовремя: пальцем по партитуре месяца или ползунком. «Проиграть месяц»
 /// пролетает их за двадцать секунд, и каждый полив звучит нотой. Под
 /// циферблатом — приметы неба: кто Меркурий сада, кто сойдётся у луча.
-/// Небо тёмное в обеих темах.
+/// Небо тёмное в обеих темах — вместе с шапкой и строкой состояния.
 struct OrreryView: View {
     @Environment(Garden.self) private var garden
+    @Environment(\.dismiss) private var dismiss
 
     /// Дней сада вперёд; ноль — сейчас.
     @State private var ahead: Double = 0
@@ -52,23 +53,30 @@ struct OrreryView: View {
             .background { StarField() }
             .walk(.orrery, scroll: reader)
         }
+        // Панелью, а не поверх: прокрутка уходит под шапку мягким краем, как
+        // под системную, и подсказки обходят её, как обходили ту.
+        .safeAreaBar(edge: .top, spacing: 0) { header }
         .environment(\.colorScheme, .dark)
         .navigationTitle("Планетарий")
-        .navigationBarTitleDisplayMode(.inline)
         .scrollEdgeEffectStyle(.soft, for: .top)
         .sproutSettledEdge()
-        .toolbar(.visible, for: .navigationBar)
+        // Системная панель общая для стека и берёт его тему: в светлой
+        // «назад», заголовок и «?» темнели на ночном небе. Тёмной её
+        // `toolbarColorScheme` делает лишь с видимым фоном — полосой поверх
+        // звёзд, а перекрашивать её саму пришлось бы посреди переходов, на
+        // глазах у статистики и экрана растения. Поэтому панели здесь нет,
+        // как и на статистике под нами, а шапка своя, в тёмном окружении;
+        // жест назад возвращает `sproutSwipeBack`, строку состояния
+        // светлит `sproutNight`.
+        .toolbar(.hidden, for: .navigationBar)
+        .sproutSwipeBack()
+        .sproutNight()
         // Панель вкладок прячется на входе и возвращается с первым движением
         // свайпа назад, как в Telegram, а не после того, как экран ушёл.
         // Свайп бросили — прячется снова.
         .toolbar(barHidden ? .hidden : .visible, for: .tabBar)
         .sproutPassage { settled in
             withAnimation(Motion.edge) { barHidden = settled }
-        }
-        .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                WalkButton(walk: .orrery, bare: true)
-            }
         }
         .onChange(of: ahead) { old, new in
             // Ведут ползунок — щелчок на каждом поливе, который проехали.
@@ -87,6 +95,39 @@ struct OrreryView: View {
             finish()
         }
         .onDisappear { stop() }
+    }
+
+    // MARK: - Шапка
+
+    /// Как системная строка панели: круги по 44 pt — те же, что на экране
+    /// растения, — и заголовок посередине. В тёмном окружении стекло кругов
+    /// тёмное, знаки и заголовок светлые.
+    private var header: some View {
+        HStack(spacing: 8) {
+            Button { dismiss() } label: {
+                Image(systemName: "chevron.backward")
+                    .modifier(NavCircle())
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel("Назад")
+            Text("Планетарий")
+                .font(Typography.navTitle)
+                .foregroundStyle(Palette.ink)
+                .lineLimit(1)
+                .minimumScaleFactor(0.7)
+                .frame(maxWidth: .infinity)
+                .accessibilityAddTraits(.isHeader)
+            Button { Coach.shared.start(.orrery) } label: {
+                Image(systemName: "questionmark")
+                    .modifier(NavCircle())
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel("Подсказки")
+        }
+        .padding(.horizontal, Metrics.contentMargin)
+        // Пустое место шапки держит касания, как системная панель: под ним
+        // размытая прокрутка, и нажатие не должно уходить к ней.
+        .contentShape(Rectangle())
     }
 
     // MARK: - Циферблат

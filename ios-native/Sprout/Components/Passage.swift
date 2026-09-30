@@ -17,6 +17,20 @@ extension View {
             .frame(width: 0, height: 0))
     }
 
+    /// Ночной экран в обеих темах — и там, куда тёмное окружение SwiftUI не
+    /// достаёт: тёмным становится контроллер самого экрана в стеке, и
+    /// строка состояния стиля `.default` над ним светлеет — она берёт тему
+    /// у контроллера, который её ведёт, а при спрятанной панели навигации
+    /// стек отдаёт её экрану наверху. `preferredColorScheme` перекрасил бы
+    /// всё окно — и панель вкладок, и экран под этим. Тема живёт и уходит
+    /// вместе со своим экраном: возвращать нечего, и брошенный свайп назад
+    /// ничего не сбивает. Исключение — тема «Светлая» из настроек: с
+    /// заданной `preferredColorScheme` строку состояния SwiftUI ведёт из
+    /// корня, для всего окна, и экрану её не перекрасить.
+    func sproutNight() -> some View {
+        background(Passage(night: true).frame(width: 0, height: 0))
+    }
+
     /// Мягкий край сверху — только у экрана, который стоит. Въезжая и
     /// уезжая, экран нёс свой край поверх края соседа, и размытия ложились
     /// друг на друга рваной полосой. На ходу край гаснет — остаётся один, у
@@ -48,12 +62,14 @@ private struct SettledEdge: ViewModifier {
     }
 }
 
-/// Мост к UIKit: когда экран встал и когда тронулся с места — и жест
-/// возврата, если своя кнопка «назад» его выключила.
+/// Мост к UIKit: когда экран встал и когда тронулся с места, жест возврата,
+/// если своя кнопка «назад» его выключила, и ночная тема экрана.
 private struct Passage: UIViewControllerRepresentable {
     var swipeBack = false
     /// «Тронулся» — только уходя назад, а не уступая место экрану вперёд.
     var onlyBack = false
+    /// Экран тёмный в обеих темах — см. `sproutNight`.
+    var night = false
     var settled: (Bool) -> Void = { _ in }
 
     func makeUIViewController(context: Context) -> PassageKeeper {
@@ -63,6 +79,7 @@ private struct Passage: UIViewControllerRepresentable {
     func updateUIViewController(_ keeper: PassageKeeper, context: Context) {
         keeper.swipeBack = swipeBack
         keeper.onlyBack = onlyBack
+        keeper.night = night
         keeper.settled = settled
     }
 
@@ -72,14 +89,23 @@ private struct Passage: UIViewControllerRepresentable {
     final class PassageKeeper: UIViewController, UIGestureRecognizerDelegate {
         var swipeBack = false
         var onlyBack = false
+        var night = false
         var settled: (Bool) -> Void = { _ in }
 
         private weak var stack: UINavigationController?
         private weak var owner: UIGestureRecognizerDelegate?
 
+        /// До первого кадра въезда: экран входит в стек уже тёмным.
+        override func viewWillAppear(_ animated: Bool) {
+            super.viewWillAppear(animated)
+            if night { darken() }
+        }
+
         override func viewDidAppear(_ animated: Bool) {
             super.viewDidAppear(animated)
             settled(true)
+            // Ещё раз, если на въезде стека над нами ещё не было.
+            if night { darken() }
             guard swipeBack, let stack = navigationController,
                   let swipe = stack.interactivePopGestureRecognizer,
                   swipe.delegate !== self else { return }
@@ -97,15 +123,33 @@ private struct Passage: UIViewControllerRepresentable {
             swipe.delegate = owner
         }
 
-        /// Экран уходит из стека — назад, а не под следующий. Спрашиваем
-        /// экран, который лежит прямо в стеке: сами мы вложены в него.
-        private var leavingBack: Bool {
-            var screen: UIViewController? = self
-            while let current = screen,
+        /// Экран, который лежит прямо в стеке: сами мы вложены в него. Вне
+        /// стека — пусто.
+        private var screen: UIViewController? {
+            var step: UIViewController? = self
+            while let current = step,
                   !(current.parent is UINavigationController) {
-                screen = current.parent
+                step = current.parent
             }
-            return screen?.isMovingFromParent ?? true
+            return step
+        }
+
+        /// Экран уходит из стека — назад, а не под следующий.
+        private var leavingBack: Bool {
+            screen?.isMovingFromParent ?? true
+        }
+
+        /// Тёмным — только свой экран, не окно и не стек: соседи и панель
+        /// вкладок остаются в теме приложения. Строку состояния
+        /// пересчитывает корень — он раздаёт её по цепочке.
+        private func darken() {
+            guard let screen else { return }
+            if screen.overrideUserInterfaceStyle != .dark {
+                screen.overrideUserInterfaceStyle = .dark
+            }
+            var root = screen
+            while let up = root.parent { root = up }
+            root.setNeedsStatusBarAppearanceUpdate()
         }
 
         /// На корне жест не нужен — там он подвешивал бы стек; посреди

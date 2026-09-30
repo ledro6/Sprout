@@ -683,8 +683,9 @@ private struct ModelMark: View {
 }
 
 /// Кнопка панели — стеклянный круг одного размера у «назад» и у меню:
-/// стиль `.glass` у меню добавлял свои поля, и круг выходил больше.
-private struct NavCircle: ViewModifier {
+/// стиль `.glass` у меню добавлял свои поля, и круг выходил больше. Те же
+/// круги — в шапке планетария.
+struct NavCircle: ViewModifier {
     func body(content: Content) -> some View {
         content
             .font(Typography.navButton)
