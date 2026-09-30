@@ -25,7 +25,7 @@ struct PlantTile: View {
 
     /// Перестановка; на поиске её нет.
     var arranges = false
-    /// Полка качается.
+    /// Идёт правка: нажатие ничего не открывает.
     var editing = false
     var menus = true
     var held: Binding<Plant.ID?> = .constant(nil)
@@ -34,10 +34,10 @@ struct PlantTile: View {
     var drop: () -> Void = {}
     /// Карточку подняли — открылось меню, см. `Arrange`.
     var lift: (Plant.ID) -> Void = { _ in }
-    /// Карточку повели — полка начинает качаться.
+    /// Карточку повели — начинается правка.
     var fly: () -> Void = {}
     /// Капля «Полить» — на главной; в правке её нет, как нет кнопок у
-    /// качающихся значков.
+    /// значков «Домой», пока их переставляют.
     var waters = false
 
     var body: some View {

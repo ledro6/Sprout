@@ -20,6 +20,9 @@ design/
 .env.*
 *.local
 
+# Граф кода от graphify — строится заново командой /graphify.
+graphify-out/
+
 # Прочее
 .DS_Store
 .idea/
