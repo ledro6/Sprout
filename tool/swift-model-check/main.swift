@@ -1288,6 +1288,380 @@ do {
           "комната прежней сборки читается и не на даче")
 }
 
+print("общий сад:")
+do {
+    let stretch = (Season.stretch, Climate.stretch, Climate.boost)
+    Season.stretch = 1
+    Climate.stretch = 1
+    Climate.boost = 1
+    defer {
+        (Season.stretch, Climate.stretch, Climate.boost) = stretch
+    }
+    var clock = Calendar(identifier: .gregorian)
+    clock.timeZone = TimeZone(identifier: "Europe/Moscow")!
+    let noon = clock.date(from: DateComponents(year: 2026, month: 7, day: 10,
+                                               hour: 12))!
+    func at(_ seconds: Double) -> Date { noon.addingTimeInterval(seconds) }
+    typealias Mark = Family.Mark
+
+    check(Family.name(.plant, "baksik"), "plant-baksik", "имя записи растения")
+    check(Family.kind(of: "pour-x-1") == .pour && Family.kind(of: "x") == nil,
+          "вид записи — по началу имени")
+    check(Family.id(of: "photo-A1.jpg"), "A1.jpg",
+          "у снимка в имени записи — имя файла")
+    let odd = Family.name(.plant, "Кактус 2")
+    check(odd.hasPrefix("plant-h") && Family.safe(Family.id(of: odd)),
+          "кириллица в номере — отпечатком латиницей")
+    check(Family.roomKey("Кухня") == Family.roomKey(" кухня "),
+          "ключ комнаты — от имени, без регистра и пробелов")
+    check(!Family.safe(file: "../garden.json") && !Family.safe(file: ".x")
+          && Family.safe(file: "A-1.jpg"),
+          "имя файла из чужой записи — только простое")
+
+    func places(_ ranks: [Double?]) -> String {
+        Family.rank(ranks).map { String(format: "%g", $0) }
+            .joined(separator: " ")
+    }
+    check(places([1, 2, 3]), "1 2 3", "порядок не нарушен — места те же")
+    check(places([nil, nil]), "1 2", "без мест — по порядку")
+    check(places([3, nil, nil]), "3 4 5", "новые — в хвост")
+    check(places([1, nil, 2]), "1 1.5 2", "вставленное — между соседями")
+    check(places([nil, 7]), "6 7", "в голову — перед первым")
+    check(places([2, 1, 3]), "2 2.5 3",
+          "передвинутому — одно новое место, остальные стоят")
+    check(places([5, 5]), "5 6", "два одинаковых места — второму новое")
+
+    let folder = FileManager.default.temporaryDirectory
+        .appendingPathComponent("sprout-family-\(UUID().uuidString)")
+    try! FileManager.default.createDirectory(at: folder,
+                                             withIntermediateDirectories: true)
+    Store.testing = folder
+    defer {
+        Store.testing = nil
+        try? FileManager.default.removeItem(at: folder)
+    }
+    let yard = Garden()
+    yard.rooms = [Room(name: "Кухня", plants: [
+        plantNamed("Баксик", moisture: 0.5, dryingDays: 6),
+    ])]
+    yard.rename("Баксик", to: "Бакс")
+    let renamed = yard.rooms[0].plants[0]
+    check(renamed.edited != nil && renamed.wet == nil && renamed.tended == nil,
+          "новая кличка — правка, влажность и уход не тронуты")
+    yard.water("Баксик")
+    check(yard.rooms[0].plants[0].wet != nil, "полив — событие влажности")
+    yard.feed("Баксик")
+    check(yard.rooms[0].plants[0].tended != nil, "подкормка — событие ухода")
+    let stamped = yard.rooms[0].plants[0]
+    yard.advance(to: Date().addingTimeInterval(86_400))
+    let dried = yard.rooms[0].plants[0]
+    check(dried.moisture < stamped.moisture && dried.edited == stamped.edited
+          && dried.wet == stamped.wet && dried.tended == stamped.tended,
+          "высыхание — не правка: отметки те же")
+
+    let me = Family.Hand(id: "me", name: "Миша", she: false)
+    var rooms = [
+        Room(name: "Кухня", plants: [
+            plantNamed("А", moisture: 0.5, dryingDays: 6),
+            plantNamed("Б", moisture: 0.5, dryingDays: 6),
+        ]),
+        Room(name: "Балкон", plants: []),
+    ]
+    var log = [Watering(plant: "А", when: noon)]
+    var book = Family.Book()
+    check(Family.settle(&rooms, &log, book: book, hand: me, now: noon),
+          "первый разбор: ключи, места, подписи")
+    check(rooms[0].key == Family.roomKey("Кухня")
+          && rooms.map(\.rank) == [1, 2]
+          && rooms[0].plants.map(\.rank) == [1, 2],
+          "ключ — от имени, места — по порядку")
+    check(log[0].id == Family.pourID(Watering(plant: "А", when: noon))
+          && log[0].by == "Миша" && log[0].hand == "me" && log[0].she == false,
+          "свой полив — с номером и подписью")
+    check(!Family.settle(&rooms, &log, book: book, hand: me, now: noon),
+          "второй разбор ничего не меняет")
+    check(rooms[0].plants.allSatisfy { $0.edited == nil },
+          "новое правкой не отмечено: на сервере его ещё нет")
+    var plan = Family.outgoing(rooms, log, book: book, has: { _ in true })
+    check(plan.saves.count == 5 && plan.deletes.isEmpty,
+          "новый сад уходит целиком: комнаты, растения, полив")
+
+    func acknowledge(_ rooms: [Room], _ log: [Watering],
+                     _ book: inout Family.Book) {
+        for room in rooms {
+            book.known[Family.name(.room, room.key!)] =
+                Family.mark(of: Family.body(room), tag: nil)
+            for plant in room.plants {
+                book.known[Family.name(.plant, plant.id)] = Family.mark(
+                    of: Family.body(plant, in: room, at: noon), tag: nil)
+            }
+        }
+        for entry in log where entry.id != nil {
+            book.known[Family.name(.pour, entry.id!)] = Mark()
+        }
+        book.shown = Family.photos(rooms)
+    }
+    acknowledge(rooms, log, &book)
+    check(Family.outgoing(rooms, log, book: book, has: { _ in true }).isEmpty,
+          "всё ушло — отправлять нечего")
+
+    rooms[0].plants.swapAt(0, 1)
+    Family.settle(&rooms, &log, book: book, hand: me, now: at(60))
+    plan = Family.outgoing(rooms, log, book: book, has: { _ in true })
+    check(plan.saves == [Family.name(.plant, "А")]
+          && rooms[0].plants[1].edited == at(60),
+          "передвинули — уходит одно растение, с отметкой правки")
+    rooms[0].name = "Кухонька"
+    Family.settle(&rooms, &log, book: book, hand: me, now: at(61))
+    check(rooms[0].edited == at(61)
+          && Family.outgoing(rooms, log, book: book, has: { _ in true }).saves
+              .contains(Family.name(.room, rooms[0].key!)),
+          "комнату переименовали — уходит и она")
+    acknowledge(rooms, log, &book)
+
+    // Маша переименовала А, а мы тем временем его полили.
+    let kitchen = rooms[0]
+    var theirs = kitchen.plants.first { $0.id == "А" }!
+    theirs.name = "Алоэ"
+    theirs.edited = at(120)
+    var arrival = Family.Arrival()
+    arrival.plants = [Family.body(theirs, in: kitchen, at: at(120))]
+    var mine = rooms
+    var mineLog = log
+    if let index = mine[0].plants.firstIndex(where: { $0.id == "А" }) {
+        mine[0].plants[index].moisture = 1
+        mine[0].plants[index].wet = at(150)
+    }
+    var outcome = Family.apply(arrival, to: &mine, log: &mineLog, book: &book,
+                               me: "me", now: at(180))
+    var merged = mine[0].plants.first { $0.id == "А" }!
+    check(merged.name == "Алоэ", "кличка — с сервера: своей правки клички нет")
+    check(merged.moisture == 1 && merged.wet == at(150),
+          "свой полив остался: влажность — по своей отметке")
+    check(outcome.wet.isEmpty && outcome.recast,
+          "чужой влажности не пришло, а кличка сменилась — Siri и виджету")
+    check(Family.outgoing(mine, mineLog, book: book, has: { _ in true }).saves
+              == [Family.name(.plant, "А")],
+          "свой полив уйдёт на сервер")
+
+    // Обе правки клички: побеждает поздняя.
+    if let index = mine[0].plants.firstIndex(where: { $0.id == "А" }) {
+        mine[0].plants[index].name = "Агава"
+        mine[0].plants[index].edited = at(200)
+    }
+    theirs.name = "Алоэ вера"
+    theirs.edited = at(190)
+    arrival.plants = [Family.body(theirs, in: kitchen, at: at(190))]
+    _ = Family.apply(arrival, to: &mine, log: &mineLog, book: &book, me: "me",
+                     now: at(220))
+    check(mine[0].plants.first { $0.id == "А" }!.name == "Агава",
+          "своя правка новее — остаётся")
+    theirs.edited = at(210)
+    arrival.plants = [Family.body(theirs, in: kitchen, at: at(210))]
+    _ = Family.apply(arrival, to: &mine, log: &mineLog, book: &book, me: "me",
+                     now: at(220))
+    check(mine[0].plants.first { $0.id == "А" }!.name == "Алоэ вера",
+          "чужая новее — побеждает она")
+    theirs.name = "Алоэ древовидное"
+    theirs.edited = at(10)
+    arrival.plants = [Family.body(theirs, in: kitchen, at: at(230))]
+    _ = Family.apply(arrival, to: &mine, log: &mineLog, book: &book, me: "me",
+                     now: at(230))
+    check(mine[0].plants.first { $0.id == "А" }!.name == "Алоэ древовидное",
+          "своей правки нет — верх у сервера, даже со старой отметкой")
+
+    // Чужой полив пришёл: влажность досохла по дороге, датчик остался свой.
+    if let index = mine[0].plants.firstIndex(where: { $0.id == "Б" }) {
+        mine[0].plants[index].sensor = Sensor(kind: .flora, id: "s",
+                                              name: "Flower care")
+    }
+    var poured = mine[0].plants.first { $0.id == "Б" }!
+    poured.moisture = 1
+    poured.wet = at(300)
+    poured.sensor = nil
+    arrival.plants = [Family.body(poured, in: kitchen, at: at(300))]
+    outcome = Family.apply(arrival, to: &mine, log: &mineLog, book: &book,
+                           me: "me", now: at(300 + 86_400))
+    merged = mine[0].plants.first { $0.id == "Б" }!
+    check(round2(merged.moisture), "0.50",
+          "чужой полив за сутки в пути досох: три дня сада из шести")
+    check(merged.sensor?.id == "s" && outcome.wet == ["Б"],
+          "датчик — свой, влажность — пришедшая")
+
+    // Растение из комнаты, которой ещё нет, и сама комната следом.
+    var newcomer = plantNamed("В", moisture: 1, dryingDays: 3)
+    newcomer.rank = 1
+    arrival = Family.Arrival()
+    arrival.plants = [Family.PlantBody(plant: newcomer, room: "nbeds",
+                                       roomName: "Грядки", at: at(400))]
+    outcome = Family.apply(arrival, to: &mine, log: &mineLog, book: &book,
+                           me: "me", now: at(400))
+    check(mine.last?.name == "Грядки" && mine.last?.key == "nbeds"
+          && mine.last?.plants.map(\.id) == ["В"] && outcome.recast,
+          "растение пришло раньше комнаты — комната заводится по имени")
+    arrival = Family.Arrival()
+    arrival.rooms = [Family.RoomBody(key: "nbeds", name: "Огород",
+                                     dacha: true, rank: 3, edited: at(390))]
+    _ = Family.apply(arrival, to: &mine, log: &mineLog, book: &book, me: "me",
+                     now: at(410))
+    check(mine.last?.name == "Огород" && mine.last?.atDacha == true,
+          "пришла комната — имя и дача с сервера")
+
+    // Поливы сливаются по номеру; подпись — у чужих.
+    let masha = Watering(plant: "А", when: at(300), left: 0.4, id: "m1",
+                         by: "Маша", hand: "masha", she: true)
+    arrival = Family.Arrival()
+    arrival.pours = [masha, masha]
+    let count = mineLog.count
+    outcome = Family.apply(arrival, to: &mine, log: &mineLog, book: &book,
+                           me: "me", now: at(420))
+    check(mineLog.count == count + 1 && outcome.news == [masha],
+          "чужой полив ложится в журнал один раз и просится в уведомление")
+    outcome = Family.apply(arrival, to: &mine, log: &mineLog, book: &book,
+                           me: "me", now: at(430))
+    check(mineLog.count == count + 1 && outcome.news.isEmpty,
+          "пришёл снова — уже есть")
+    var echo = Family.Arrival()
+    echo.pours = [mineLog.first { $0.hand == "me" }!]
+    check(Family.apply(echo, to: &mine, log: &mineLog, book: &book, me: "me",
+                       now: at(440)).news.isEmpty,
+          "свой полив вернулся с сервера — не новость")
+    var twin = [Watering(plant: "А", when: noon)]
+    var mirror = Family.Arrival()
+    mirror.pours = [Watering(plant: "А", when: noon,
+                             id: Family.pourID(Watering(plant: "А", when: noon)),
+                             by: "Миша", hand: "me", she: false)]
+    var spare = Family.Book()
+    var none: [Room] = []
+    _ = Family.apply(mirror, to: &none, log: &twin, book: &spare, me: "me",
+                     now: at(450))
+    check(twin.count == 1 && twin[0].id != nil,
+          "та же запись из резервной копии не задваивается")
+
+    check(Family.credit(masha, me: "me", now: at(600), calendar: clock) ?? "—",
+          "Полила Маша, 12:05", "подпись чужого полива сегодня")
+    check(Family.credit(Watering(plant: "А", when: at(-86_400), id: "x",
+                                 by: "Миша", hand: "misha", she: false),
+                        me: "me", now: at(600), calendar: clock) ?? "—",
+          "Полил Миша, вчера", "вчерашний — без времени")
+    check(Family.credit(Watering(plant: "А", when: at(-5 * 86_400), id: "x",
+                                 by: "Маша", hand: "masha", she: true),
+                        me: "me", now: at(600), calendar: clock) ?? "—",
+          "Полила Маша, 5 июля", "раньше — с датой")
+    check(Family.credit(mineLog.first { $0.hand == "me" }!, me: "me",
+                        now: at(600), calendar: clock) == nil
+          && Family.credit(Watering(plant: "А", when: noon), me: "me",
+                           now: at(600), calendar: clock) == nil,
+          "свой полив и полив без подписи — без подписи")
+    check(Family.news(name: "Маша", she: true, plants: ["Баксик"]),
+          "Маша полила: Баксик", "уведомление: одно растение")
+    check(Family.news(name: "Миша", she: false, plants: ["Баксик", "Шуба"]),
+          "Миша полил: Баксик и Шуба", "уведомление: два")
+    check(Family.news(name: "Маша", she: true,
+                      plants: ["А", "Б", "В", "Г", "Д"]),
+          "Маша полила: А, Б и ещё 3 растения", "уведомление: много")
+    check(Family.she("Маша") && Family.she("Анна Петрова") && Family.she("Юля")
+          && !Family.she("Миша") && !Family.she("Никита")
+          && !Family.she("Илья") && !Family.she("Игорь") && !Family.she(""),
+          "полил или полила — догадка по имени")
+
+    // Удаления.
+    if let index = mine[0].plants.firstIndex(where: { $0.id == "А" }) {
+        mine[0].plants[index].shot = "A.jpg"
+    }
+    arrival = Family.Arrival()
+    arrival.gone = [Family.name(.plant, "А")]
+    outcome = Family.apply(arrival, to: &mine, log: &mineLog, book: &book,
+                           me: "me", now: at(700))
+    check(!mine.flatMap(\.plants).contains { $0.id == "А" }
+          && outcome.dropped == ["A.jpg"] && outcome.recast,
+          "растение удалили на другом телефоне — уходит и отсюда, со снимком")
+    check(mineLog.contains { $0.plant == "А" }, "журнал его поливов остаётся")
+    let beds = Family.name(.room, "nbeds")
+    arrival.gone = [beds]
+    _ = Family.apply(arrival, to: &mine, log: &mineLog, book: &book, me: "me",
+                     now: at(710))
+    check(mine.contains { $0.key == "nbeds" } && book.gone.contains(beds)
+          && !Family.outgoing(mine, mineLog, book: book, has: { _ in true })
+              .saves.contains(beds),
+          "удалённая комната с растениями остаётся, но не отправляется заново")
+    arrival.gone = [Family.name(.plant, "В")]
+    _ = Family.apply(arrival, to: &mine, log: &mineLog, book: &book, me: "me",
+                     now: at(720))
+    check(!mine.contains { $0.key == "nbeds" } && book.gone.isEmpty,
+          "опустела — уходит и она")
+    arrival.gone = [Family.name(.pour, "m1")]
+    _ = Family.apply(arrival, to: &mine, log: &mineLog, book: &book, me: "me",
+                     now: at(730))
+    check(!mineLog.contains { $0.id == "m1" }, "удалённый полив уходит")
+
+    // Снимки: с сервера уходит только тот, на который здесь перестали
+    // ссылаться; чужой, пришедший раньше растения, ждёт.
+    var shots = Family.Book()
+    shots.known[Family.name(.photo, "early.jpg")] = Mark()
+    shots.known[Family.name(.photo, "old.jpg")] = Mark()
+    shots.shown = ["old.jpg"]
+    var pot = plantNamed("Г", moisture: 1, dryingDays: 5)
+    pot.shot = "new.jpg"
+    pot.rank = 1
+    let shelf = [Room(name: "Полка", plants: [pot], key: "nshelf", rank: 1)]
+    plan = Family.outgoing(shelf, [], book: shots,
+                           has: { $0 == "new.jpg" })
+    check(plan.deletes == [Family.name(.photo, "old.jpg")]
+          && plan.saves.contains(Family.name(.photo, "new.jpg")),
+          "снимки: новый уходит, брошенный удаляется, чужой ждёт")
+    check(!Family.outgoing(shelf, [], book: shots, has: { _ in false }).saves
+              .contains(Family.name(.photo, "new.jpg")),
+          "файла нет на телефоне — и отправлять нечего")
+
+    // Новый телефон: нетронутый макет не попадает в общий сад.
+    check(Family.pristine(Seed.rooms, []), "новый сад — макетный")
+    check(!Family.pristine(Seed.rooms, [Watering(plant: "pr", when: noon)]),
+          "политый — уже не макет")
+    var fresh = Seed.rooms
+    var cloud = Family.Book()
+    cloud.known[Family.name(.plant, "baksik")] = Mark()
+    check(Family.prune(&fresh, log: [], book: cloud)
+          && fresh.flatMap(\.plants).map(\.id) == ["baksik"]
+          && fresh.count == 1,
+          "из макета остаётся то, что есть в iCloud; пустые комнаты — долой")
+    var used = Seed.rooms
+    Family.prune(&used, log: [Watering(plant: "pr", when: noon)],
+                 book: Family.Book())
+    check(used.flatMap(\.plants).map(\.id) == ["pr"],
+          "политое макетное растение — уже своё, остаётся")
+
+    var twins = [Room(name: "Кухня", plants: [], key: "a"),
+                 Room(name: "кухня", plants: [], key: "b")]
+    Family.dedupe(&twins)
+    check(twins.map(\.name) == ["Кухня", "кухня 2"],
+          "две комнаты с одним именем — вторая с номером")
+
+    let empty = try? JSONDecoder().decode(Family.Ledger.self,
+                                          from: Data("{}".utf8))
+    check(empty?.mode == .off && empty?.own.primed == false,
+          "пустая книга синхронизации читается")
+    var ledger = Family.Ledger()
+    ledger.mode = .guest
+    ledger.book = book
+    let again = try? JSONDecoder().decode(
+        Family.Ledger.self, from: JSONEncoder().encode(ledger))
+    check(again == ledger && again?.guest == book && again?.own.known.isEmpty
+              == true,
+          "книга переживает запись, и книга гостя — своя")
+    let old = #"{"plant":"x","when":0}"#
+    let pour = try? JSONDecoder().decode(Watering.self, from: Data(old.utf8))
+    check(pour != nil && pour?.id == nil && pour?.by == nil,
+          "полив прежней сборки читается — без номера и подписи")
+    let state = GardenState(owner: "", rooms: rooms, savedAt: noon, log: log)
+    let read = try! JSONDecoder().decode(GardenState.self,
+                                         from: JSONEncoder().encode(state))
+    check(read.rooms.map(\.key) == rooms.map(\.key)
+          && read.rooms[0].plants.map(\.rank) == rooms[0].plants.map(\.rank)
+          && read.log == log,
+          "ключи, места и подписи переживают запись в файл")
+}
+
 print("код соперника:")
 let mine = Rival(name: "Святослав", total: 142, streak: 5, best: 9,
                  plants: 27, day: 20_350)

@@ -2303,6 +2303,12 @@
         }
       }
     },
+    "%1$@ полил: %2$@": {
+      "extractionState": "manual"
+    },
+    "%1$@ полила: %2$@": {
+      "extractionState": "manual"
+    },
     "%1$@ — %2$@": {
       "extractionState": "manual",
       "localizations": {
@@ -4313,6 +4319,9 @@
       }
     },
     "%@ — на даче": {
+      "extractionState": "manual"
+    },
+    "%@, вчера": {
       "extractionState": "manual"
     },
     "%lld дней": {
@@ -182772,6 +182781,12 @@
           }
         }
       }
+    },
+    "Полил %@": {
+      "extractionState": "manual"
+    },
+    "Полила %@": {
+      "extractionState": "manual"
     },
     "Политика конфиденциальности": {
       "extractionState": "manual",

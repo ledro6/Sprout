@@ -163,6 +163,8 @@ extension Garden {
     func soak(_ names: Set<String>, by gain: Double) {
         guard gain > 0 else { return }
         var wet = false
+        // Дождь — событие для влажности, как полив: общий сад узнает о нём.
+        let now = Date()
         for room in rooms.indices where names.contains(rooms[room].name) {
             for index in rooms[room].plants.indices {
                 let plant = rooms[room].plants[index]
@@ -171,6 +173,7 @@ extension Garden {
                 else { continue }
                 rooms[room].plants[index].moisture = min(1,
                                                          plant.moisture + gain)
+                rooms[room].plants[index].wet = now
                 wet = true
             }
         }

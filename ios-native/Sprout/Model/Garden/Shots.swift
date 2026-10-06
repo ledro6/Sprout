@@ -30,6 +30,28 @@ enum Shots {
         try? FileManager.default.removeItem(at: file)
     }
 
+    static func has(_ name: String) -> Bool {
+        guard let file = url(name) else { return false }
+        return FileManager.default.fileExists(atPath: file.path)
+    }
+
+    /// Снимок из общего сада — под тем же именем, что у снявшего: оно уже
+    /// записано в растении. Такой уже есть — не трогаем.
+    @discardableResult
+    static func take(_ source: URL, as name: String) -> Bool {
+        guard let folder, let target = url(name) else { return false }
+        let files = FileManager.default
+        if files.fileExists(atPath: target.path) { return true }
+        do {
+            try files.createDirectory(at: folder,
+                                      withIntermediateDirectories: true)
+            try files.copyItem(at: source, to: target)
+        } catch {
+            return false
+        }
+        return true
+    }
+
     /// Папка заводится, только когда в неё кладут: чтение и удаление её не
     /// создают — прогон модели на Linux, где Documents — настоящая домашняя
     /// папка, не оставит её там, и сад в ней не запишется.

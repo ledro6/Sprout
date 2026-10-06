@@ -532,14 +532,27 @@ final class Garden {
         add(gone.plant, to: target)
     }
 
+    /// Правка ставит отметки сама (`Plant.stamp`): общий сад по ним решает,
+    /// чья правка новее, а каждому методу помнить о них не нужно.
     private func change(_ id: Plant.ID, _ edit: (inout Plant) -> Void) {
         for room in rooms.indices {
             if let index = rooms[room].plants.firstIndex(where: { $0.id == id }) {
+                let before = rooms[room].plants[index]
                 edit(&rooms[room].plants[index])
+                rooms[room].plants[index].stamp(since: before)
                 save()
                 return
             }
         }
+    }
+
+    /// Сад из iCloud: семья полила, переименовала, добавила — см. `Family`.
+    /// Сменился состав, клички или обложки — пересказываем Siri и виджету.
+    func adopt(rooms: [Room], log: [Watering], recast: Bool) {
+        self.rooms = rooms
+        self.log = log
+        if recast { roster += 1 }
+        save()
     }
 
     // MARK: - Файл

@@ -69,6 +69,23 @@ struct Plant: Identifiable, Hashable, Codable {
     /// считается по сроку.
     var sensor: Sensor?
 
+    /// Когда хозяин в последний раз правил растение: кличку, вид, срок,
+    /// снимок, заметку, комнату или место в ней. В общем саду (`Family`) из
+    /// двух правок одного растения побеждает поздняя. Пусто в садах прежних
+    /// сборок — такая правка старше любой.
+    var edited: Date?
+
+    /// Когда влажность задало событие, а не высыхание: полив и его отмена,
+    /// дождь, датчик, новый срок. Поливы двоих не спорят с правкой третьего.
+    var wet: Date?
+
+    /// Когда трогали уход: подкормили, пересадили, опрыскали, сменили сроки.
+    var tended: Date?
+
+    /// Место в комнате для общего сада: порядок массива у каждого телефона
+    /// свой, а место числом одно на всех. Ставит `Family.settle`.
+    var rank: Double?
+
     /// Уход со сроками вида там, где своих нет: мелкого ухода в садах
     /// прежних сборок не было.
     var tending: Care {
@@ -116,6 +133,28 @@ struct Plant: Identifiable, Hashable, Codable {
         var tended = tending
         tended.pass(days: days, growing: Season.growing)
         care = tended
+    }
+
+    /// Отметки после правки `old` → `self`: что поменялось, то и отмечено
+    /// мигом `now`. Высыхание сюда не ходит — оно не правка.
+    mutating func stamp(since old: Plant, at now: Date = Date()) {
+        if moisture != old.moisture { wet = now }
+        if care != old.care { tended = now }
+        if Self.plain(self) != Self.plain(old) { edited = now }
+    }
+
+    /// Растение без того, что меняется само или живёт только на этом
+    /// телефоне: влажности, ухода, датчика, скана и отметок.
+    static func plain(_ plant: Plant) -> Plant {
+        var plain = plant
+        plain.moisture = 0
+        plain.care = nil
+        plain.sensor = nil
+        plain.scan = nil
+        plain.edited = nil
+        plain.wet = nil
+        plain.tended = nil
+        return plain
     }
 
     /// Новый срок считается от того же полива: сколько дней земля уже сохла,
@@ -169,6 +208,16 @@ struct Room: Identifiable, Hashable, Codable {
     /// Комната на даче, см. `Dacha`. Необязательное, как `Plant.shot`: сады
     /// прежних сборок читаются как были.
     var dacha: Bool?
+
+    /// Постоянный ключ комнаты в общем саду: имя можно сменить, а комната
+    /// та же. Ставит `Family.settle`; в садах прежних сборок пусто.
+    var key: String?
+
+    /// Когда правили имя, дачу или место комнаты, — см. `Plant.edited`.
+    var edited: Date?
+
+    /// Место в списке комнат — как `Plant.rank`.
+    var rank: Double?
 }
 
 /// Что убрали из сада и откуда. Номер комнаты — на случай, если за отсчёт её
