@@ -142,6 +142,8 @@ struct RootView: View {
                 Task { await Dachnik.shared.refresh() }
                 // Датчики в горшках — свежие показания.
                 Sensors.shared.poll()
+                // Общий сад — что полили и поправили другие.
+                Kinship.shared.wake()
                 // Пока спали, могли включить энергосбережение.
                 Power.shared.refresh()
                 redress()

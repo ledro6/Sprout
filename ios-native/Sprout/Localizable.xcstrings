@@ -11886,6 +11886,12 @@
         }
       }
     },
+    "iCloud на этом телефоне ограничен — сад не синхронизируется.": {
+      "extractionState": "manual"
+    },
+    "iCloud просит подтвердить приглашение: откройте ссылку ещё раз.": {
+      "extractionState": "manual"
+    },
     "iOS 26 и новее": {
       "extractionState": "manual",
       "localizations": {
@@ -17626,6 +17632,9 @@
         }
       }
     },
+    "Без имени": {
+      "extractionState": "manual"
+    },
     "Без узора фон — ровный цвет.": {
       "extractionState": "manual"
     },
@@ -21366,6 +21375,9 @@
         }
       }
     },
+    "В iCloud закончилось место — новые правки туда не уходят.": {
+      "extractionState": "manual"
+    },
     "В «Доме» пусто. Если датчики там есть — возможно, приложению не включили HomeKit в Xcode.": {
       "extractionState": "manual",
       "localizations": {
@@ -23951,6 +23963,9 @@
           }
         }
       }
+    },
+    "В саду уже столько участников, сколько разрешает iCloud.": {
+      "extractionState": "manual"
     },
     "В самый раз: карточка как раз светится оранжевым.": {
       "extractionState": "manual",
@@ -27111,6 +27126,9 @@
           }
         }
       }
+    },
+    "Ваши поливы": {
+      "extractionState": "manual"
     },
     "Ведите ползунок — сад перенесётся на дни вперёд, если поливать вовремя.": {
       "extractionState": "manual",
@@ -38905,6 +38923,12 @@
         }
       }
     },
+    "Вы вышли из iCloud — синхронизация выключена, сад остался на телефоне.": {
+      "extractionState": "manual"
+    },
+    "Вы вышли из общего сада — вернулся ваш прежний сад.": {
+      "extractionState": "manual"
+    },
     "Вы на даче — полить: %@": {
       "extractionState": "manual"
     },
@@ -40058,6 +40082,12 @@
           }
         }
       }
+    },
+    "Выйти из общего сада": {
+      "extractionState": "manual"
+    },
+    "Выйти из общего сада?": {
+      "extractionState": "manual"
     },
     "Выключенное не будет напоминать. Вернуть можно в настройках растения.": {
       "extractionState": "manual"
@@ -64499,6 +64529,9 @@
     "Думаю…": {
       "extractionState": "manual"
     },
+    "Если включить «Сад в iCloud», сад — растения, снимки и журнал поливов — хранится и в вашем iCloud, а те, кого вы пригласили в общий сад, видят его в своём. Это iCloud Apple, а не сервер Sprout. Выключить — в профиле, в группе «Семья».": {
+      "extractionState": "manual"
+    },
     "Если вы поливаете раньше срока, приложение заметит и предложит сделать срок короче.": {
       "extractionState": "manual",
       "localizations": {
@@ -83169,6 +83202,9 @@
         }
       }
     },
+    "Исчезнут все растения и весь журнал поливов — у всех, кто в общем саду. Вернуть их будет нельзя.": {
+      "extractionState": "manual"
+    },
     "Исчезнут все растения и весь журнал поливов. Вернуть их будет нельзя.": {
       "extractionState": "manual",
       "localizations": {
@@ -101560,6 +101596,9 @@
           }
         }
       }
+    },
+    "Кто-то из семьи": {
+      "extractionState": "manual"
     },
     "Кустик": {
       "extractionState": "manual",
@@ -127995,6 +128034,9 @@
         }
       }
     },
+    "Наш сад": {
+      "extractionState": "manual"
+    },
     "Не вижу растения — наведите камеру на него": {
       "extractionState": "manual",
       "localizations": {
@@ -128570,6 +128612,9 @@
       }
     },
     "Не вышло ответить — попробуйте ещё раз.": {
+      "extractionState": "manual"
+    },
+    "Не вышло связаться с iCloud. Попробую ещё раз позже.": {
       "extractionState": "manual"
     },
     "Не напоминать": {
@@ -132016,6 +132061,9 @@
         }
       }
     },
+    "Нет входа в iCloud. Войдите в Настройках — в самом верху.": {
+      "extractionState": "manual"
+    },
     "Нет доступа к камере. Разрешите его в Настройках → Sprout.": {
       "extractionState": "manual",
       "localizations": {
@@ -132589,6 +132637,9 @@
           }
         }
       }
+    },
+    "Нет связи с iCloud. Сад обновится, когда появится интернет.": {
+      "extractionState": "manual"
     },
     "Нефрит": {
       "extractionState": "manual",
@@ -135188,6 +135239,9 @@
     "Обновить показания": {
       "extractionState": "manual"
     },
+    "Обновляю сад…": {
+      "extractionState": "manual"
+    },
     "Обойдите растение с телефоном по кругу — получится его точная объёмная копия. Съёмка займёт пару минут, сборка модели — ещё несколько; всё на телефоне.": {
       "extractionState": "manual",
       "localizations": {
@@ -135474,6 +135528,15 @@
           }
         }
       }
+    },
+    "Общий сад": {
+      "extractionState": "manual"
+    },
+    "Общий сад закрыли — вернулся ваш прежний сад.": {
+      "extractionState": "manual"
+    },
+    "Общий сад исчезнет с этого телефона, а ваш прежний сад вернётся. Ваши поливы останутся в общем саду.": {
+      "extractionState": "manual"
     },
     "Объёмная копия растения для AR. Модели видов уже лежат в приложении, а свою можно придумать по фото или отсканировать — кнопка «Модель» на экране растения.": {
       "extractionState": "manual",
@@ -155385,6 +155448,12 @@
         }
       }
     },
+    "Перестать делиться": {
+      "extractionState": "manual"
+    },
+    "Перестать делиться садом?": {
+      "extractionState": "manual"
+    },
     "Период": {
       "extractionState": "manual",
       "localizations": {
@@ -163730,6 +163799,9 @@
           }
         }
       }
+    },
+    "Подключаюсь к общему саду…": {
+      "extractionState": "manual"
     },
     "Подключить датчик": {
       "extractionState": "manual"
@@ -182785,6 +182857,9 @@
     "Полил %@": {
       "extractionState": "manual"
     },
+    "Полила": {
+      "extractionState": "manual"
+    },
     "Полила %@": {
       "extractionState": "manual"
     },
@@ -200618,6 +200693,12 @@
       }
     },
     "Пригласить": {
+      "extractionState": "manual"
+    },
+    "Пригласить в сад": {
+      "extractionState": "manual"
+    },
+    "Пригласить ещё": {
       "extractionState": "manual"
     },
     "Придумайте имя. По виду подставится обычный срок полива.": {
@@ -221084,6 +221165,9 @@
         }
       }
     },
+    "Сад в iCloud": {
+      "extractionState": "manual"
+    },
     "Сад друга — на %@. Обновится, когда друг пришлёт код снова.": {
       "extractionState": "manual",
       "localizations": {
@@ -223669,6 +223753,9 @@
           }
         }
       }
+    },
+    "Сад удалили из iCloud. Он остался на телефоне; включите «Сад в iCloud», чтобы сохранить его снова.": {
+      "extractionState": "manual"
     },
     "Садик": {
       "extractionState": "manual",
@@ -230276,6 +230363,12 @@
           }
         }
       }
+    },
+    "Семья": {
+      "extractionState": "manual"
+    },
+    "Семья больше не увидит сад и его поливы. У вас всё останется.": {
+      "extractionState": "manual"
     },
     "Серебро": {
       "extractionState": "manual",
@@ -245511,6 +245604,9 @@
         }
       }
     },
+    "Сообщать, когда полили другие": {
+      "extractionState": "manual"
+    },
     "Соседу — %1$@, первый раз %2$@": {
       "extractionState": "manual",
       "localizations": {
@@ -246085,6 +246181,9 @@
         }
       }
     },
+    "Сохранено в iCloud в %@": {
+      "extractionState": "manual"
+    },
     "Сохранить": {
       "extractionState": "manual",
       "localizations": {
@@ -246371,6 +246470,9 @@
           }
         }
       }
+    },
+    "Сохраняется в iCloud": {
+      "extractionState": "manual"
     },
     "Спальня": {
       "extractionState": "manual",
@@ -248972,6 +249074,9 @@
           }
         }
       }
+    },
+    "Ссылкой в Сообщениях или почте. Кто примет, увидит этот сад и сможет поливать, а у растения будет видно, кто полил.": {
+      "extractionState": "manual"
     },
     "Статистика": {
       "extractionState": "manual",
@@ -257009,6 +257114,9 @@
         }
       }
     },
+    "Тот же сад на всех ваших устройствах, а с приглашением — и у семьи.": {
+      "extractionState": "manual"
+    },
     "Точная объёмная копия — из скана.": {
       "extractionState": "manual",
       "localizations": {
@@ -263908,6 +264016,9 @@
           }
         }
       }
+    },
+    "Уведомление вроде „Маша полила: Баксик“.": {
+      "extractionState": "manual"
     },
     "Уведомление на телефон, когда земля у растения подсохла ниже выбранного порога.": {
       "extractionState": "manual",
@@ -275397,6 +275508,12 @@
           }
         }
       }
+    },
+    "Хозяин сада разрешил только смотреть — ваши правки остаются на телефоне.": {
+      "extractionState": "manual"
+    },
+    "Хозяин — %@": {
+      "extractionState": "manual"
     },
     "Хойя": {
       "extractionState": "manual",
@@ -286893,6 +287010,9 @@
         }
       }
     },
+    "в саду": {
+      "extractionState": "manual"
+    },
     "вовремя %@": {
       "extractionState": "manual",
       "localizations": {
@@ -287468,6 +287588,9 @@
       }
     },
     "дней подряд: %lld": {
+      "extractionState": "manual"
+    },
+    "ждёт ответа": {
       "extractionState": "manual"
     },
     "земля сухая": {
@@ -293846,6 +293969,9 @@
           }
         }
       }
+    },
+    "хозяин сада": {
+      "extractionState": "manual"
     },
     "чаще раза в минуту": {
       "extractionState": "manual",

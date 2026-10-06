@@ -1574,9 +1574,17 @@ do {
     outcome = Family.apply(arrival, to: &mine, log: &mineLog, book: &book,
                            me: "me", now: at(700))
     check(!mine.flatMap(\.plants).contains { $0.id == "А" }
-          && outcome.dropped == ["A.jpg"] && outcome.recast,
-          "растение удалили на другом телефоне — уходит и отсюда, со снимком")
+          && outcome.dropped.isEmpty && outcome.recast,
+          "растение удалили на другом телефоне — уходит и отсюда")
     check(mineLog.contains { $0.plant == "А" }, "журнал его поливов остаётся")
+    arrival.gone = [Family.name(.photo, "A.jpg"), Family.name(.photo, "B.jpg")]
+    if let index = mine[0].plants.firstIndex(where: { $0.id == "Б" }) {
+        mine[0].plants[index].portrait = "B.jpg"
+    }
+    outcome = Family.apply(arrival, to: &mine, log: &mineLog, book: &book,
+                           me: "me", now: at(705))
+    check(outcome.dropped == ["A.jpg"],
+          "снимок уходит с диска с его записью — если на него не ссылаются")
     let beds = Family.name(.room, "nbeds")
     arrival.gone = [beds]
     _ = Family.apply(arrival, to: &mine, log: &mineLog, book: &book, me: "me",

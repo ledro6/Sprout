@@ -3,20 +3,28 @@ import UIKit
 
 @main
 struct SproutApp: App {
+    /// Приглашения в общий сад приходят сцене — см. `FamilyDoor`.
+    @UIApplicationDelegateAdaptor(FamilyDoor.self) private var door
+
     /// Кнопка «Полил» в уведомлении должна быть известна системе до того,
     /// как придёт первое.
     init() {
         Settings.shared.launched()
         Notifier.register()
         // Записали сад — виджету пора перерисоваться, живым действиям —
-        // отметить политых, часам — получить новый сад.
+        // отметить политых, часам — получить новый сад, общему саду —
+        // отправить правку.
         Garden.saved = {
             Task { @MainActor in
                 Widgets.nudge()
                 WatchLink.shared.send()
+                Kinship.shared.nudge()
                 await Live.shared.sync()
             }
         }
+        // Общий сад — до первого окна: система могла разбудить приложение
+        // пушем о чужом поливе. Без iCloud в сборке ничего не делает.
+        Kinship.shared.launch()
         // Кнопки в живых действиях система выполняет здесь, в приложении.
         LiveHook.act = { await Live.shared.handle($0) }
         WatchLink.shared.start()

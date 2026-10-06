@@ -60,6 +60,11 @@ struct ProfileView: View {
                             gardener
                             plot
                                 .hintSpot(.profilePlot)
+                            // Общий сад — только когда iCloud в сборке
+                            // включён, см. `Kinship.enabled`.
+                            if Kinship.enabled {
+                                FamilyGroup()
+                            }
                             awards
                             rivals
                                 .hintSpot(.profileRivals)
@@ -480,7 +485,13 @@ struct ProfileView: View {
             Button("Стереть", role: .destructive) { garden.erase() }
             Button("Отмена", role: .cancel) {}
         } message: {
-            Text("Исчезнут все растения и весь журнал поливов. Вернуть их будет нельзя.")
+            // В общем саду стирается сад у всех, кто в нём.
+            if Kinship.enabled,
+               Kinship.shared.mode == .guest || Kinship.shared.sharing {
+                Text("Исчезнут все растения и весь журнал поливов — у всех, кто в общем саду. Вернуть их будет нельзя.")
+            } else {
+                Text("Исчезнут все растения и весь журнал поливов. Вернуть их будет нельзя.")
+            }
         }
     }
 }

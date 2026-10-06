@@ -174,7 +174,9 @@ enum Family {
         var wet: Set<Plant.ID> = []
         /// Сменились состав, клички или обложки — Siri и виджету.
         var recast = false
-        /// Снимки, на которые здесь больше никто не ссылается, — с диска.
+        /// Удалённые снимки, на которые здесь никто не ссылается, — с диска.
+        /// Ушедшее растение снимок не уносит: его вернут «Вернуть» на
+        /// другом телефоне, а запись снимка уходит отдельно.
         var dropped: [String] = []
     }
 
@@ -653,7 +655,6 @@ enum Family {
                     guard let p = rooms[r].plants.firstIndex(where: {
                         name(.plant, $0.id) == record
                     }) else { continue }
-                    candidates += rooms[r].plants[p].files
                     rooms[r].plants.remove(at: p)
                     break
                 }

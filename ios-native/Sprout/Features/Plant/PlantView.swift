@@ -565,6 +565,10 @@ struct PlantView: View {
             }
             fact(plant.wateringLabel, term: .period)
                 .contentTransition(.numericText())
+            if let credit = credit(plant) {
+                fact(credit)
+                    .transition(.blurReplace)
+            }
             if let room = garden.roomName(of: plant.id) {
                 fact(Lang.format("Комната «%@»", room))
                     .contentTransition(.numericText())
@@ -663,15 +667,22 @@ struct PlantView: View {
     }
 
     /// Удалить — долгим нажатием: запись маленькая, смахивание по ней
-    /// спорило бы с прокруткой.
+    /// спорило бы с прокруткой. В общем саду под чужим поливом — кто полил.
     private func entry(_ moment: Date) -> some View {
         HStack(spacing: 10) {
             Image(systemName: "drop.fill")
                 .font(Typography.settingNote)
                 .foregroundStyle(Palette.water)
-            Text(Diary.label(moment))
-                .font(Typography.settingRow)
-                .foregroundStyle(Palette.ink)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(Diary.label(moment))
+                    .font(Typography.settingRow)
+                    .foregroundStyle(Palette.ink)
+                if let who = signature(of: moment) {
+                    Text(who)
+                        .font(Typography.settingNote)
+                        .foregroundStyle(.secondary)
+                }
+            }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .contentShape(.contextMenuPreview,
@@ -685,6 +696,24 @@ struct PlantView: View {
 
     private var plate: RoundedRectangle {
         RoundedRectangle(cornerRadius: Metrics.cardRadius, style: .continuous)
+    }
+
+    /// Последний полив — чужой: «Полила Маша, 9:55». Свой не подписываем.
+    private func credit(_ plant: Plant) -> String? {
+        guard Kinship.enabled,
+              let last = garden.log.last(where: { $0.plant == plant.id })
+        else { return nil }
+        return Kinship.shared.credit(last)
+    }
+
+    /// Кто полил в этот миг, если не хозяин телефона: «Полила Маша».
+    private func signature(of moment: Date) -> String? {
+        guard Kinship.enabled,
+              let entry = garden.log.last(where: {
+                  $0.plant == plantID && $0.when == moment
+              })
+        else { return nil }
+        return Kinship.shared.signature(entry)
     }
 
     private func fact(_ text: String, term: Term? = nil,
