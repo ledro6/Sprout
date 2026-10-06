@@ -234,10 +234,10 @@ struct StatsView: View {
                 .gesture(carry(block))
                 .accessibilityHidden(true)
         }
-        .padding(.leading, 14)
+        .padding(.leading, 18)
         .frame(height: Metrics.statRow)
-        .sproutPlate(in: RoundedRectangle(cornerRadius: Metrics.statRowRadius,
-                                          style: .continuous))
+        // Однострочная плашка — капсулой, как строки «Комнат».
+        .sproutPlate(in: Capsule())
         .scaleEffect(lifted == block ? 1.03 : 1)
         .shadow(color: .black.opacity(lifted == block ? 0.16 : 0),
                 radius: 12, y: 5)

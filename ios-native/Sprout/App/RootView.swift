@@ -108,6 +108,9 @@ struct RootView: View {
         // приветственном экране.
         .overlay { welcome }
         .overlay(alignment: .top) { badge }
+        // Подсказки экрана: панель вкладок под затемнением, как и всё
+        // остальное, и нажатий не принимает. Пробный вариант.
+        .overlay(alignment: .bottom) { hush }
         // Новая награда — поверх экранов, но под замком.
         .overlay { celebration }
         // Замок поверх всего: запертый сад не должен мелькнуть даже под
@@ -258,6 +261,31 @@ struct RootView: View {
             // волну карточек. Время не теряется — следующий тик досчитает.
             guard Launch.shared.step >= Launch.last else { continue }
             garden.advance()
+        }
+    }
+
+    /// Полоса над панелью вкладок, пока идут подсказки экрана над ней: тот же
+    /// чёрный, что у затемнения, и глухая к нажатиям. Сверху — плавным краем:
+    /// экран под ней уже затемнён, ступени быть не должно. Высота та же, что
+    /// у запаса пузыря (`Metrics.coachFloor`), поэтому пузыря она не касается.
+    @ViewBuilder
+    private var hush: some View {
+        if Coach.shared.walk?.beneathBar == true {
+            VStack(spacing: 0) {
+                LinearGradient(
+                    colors: [Color.clear, Color.black.opacity(Coach.dim)],
+                    startPoint: .top, endPoint: .bottom)
+                    .frame(height: 16)
+                    .allowsHitTesting(false)
+                Color.black.opacity(Coach.dim)
+                    .contentShape(Rectangle())
+                    .onTapGesture {}
+            }
+            .frame(height: Metrics.coachFloor)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+            .ignoresSafeArea()
+            .accessibilityHidden(true)
+            .transition(.opacity)
         }
     }
 

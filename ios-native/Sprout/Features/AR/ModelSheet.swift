@@ -150,25 +150,24 @@ struct ModelSheet: View {
                 .disabled(thinking)
             }
             HStack(spacing: Metrics.actionGap) {
+                if Camera.exists {
+                    Button { shooting = true } label: {
+                        Label("Снять", systemImage: "camera")
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.8)
+                            .frame(maxWidth: .infinity)
+                    }
+                    .buttonStyle(.glassProminent)
+                }
                 PhotosPicker(selection: $item, matching: .images) {
                     Label("Из галереи", systemImage: "photo")
-                        .font(Typography.settingNote)
                         .lineLimit(1)
                         .minimumScaleFactor(0.8)
                         .frame(maxWidth: .infinity)
                 }
                 .buttonStyle(.glass)
-                if Camera.exists {
-                    Button { shooting = true } label: {
-                        Label("Снять", systemImage: "camera")
-                            .font(Typography.settingNote)
-                            .lineLimit(1)
-                            .minimumScaleFactor(0.8)
-                            .frame(maxWidth: .infinity)
-                    }
-                    .buttonStyle(.glass)
-                }
             }
+            .font(Typography.settingNote)
             .controlSize(.large)
             .disabled(thinking)
             if thinking {

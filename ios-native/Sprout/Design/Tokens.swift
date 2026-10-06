@@ -222,7 +222,6 @@ enum Metrics {
     /// Строка блока в списке выбора статистики и зазор между строками.
     static let statRow: CGFloat = 52
     static let statRowGap: CGFloat = 8
-    static let statRowRadius: CGFloat = 16
 
     /// Скругление барабана за гранью — доля свободного места до кнопок:
     /// меньше — буквы соседнего имени заворачиваются круче.

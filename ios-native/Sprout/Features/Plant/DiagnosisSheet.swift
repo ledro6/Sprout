@@ -113,6 +113,7 @@ struct DiagnosisSheet: View {
                     Button { shooting = true } label: {
                         Label("Снять", systemImage: "camera")
                             .lineLimit(1)
+                            .minimumScaleFactor(0.8)
                             .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(.glassProminent)

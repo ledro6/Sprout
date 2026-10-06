@@ -11,6 +11,9 @@ final class Coach {
     private(set) var walk: Walk?
     private(set) var step = 0
 
+    /// Густота затемнения — и у экрана, и у панели вкладок под ним.
+    static let dim: Double = 0.55
+
     /// Пусть сперва доиграет вход экрана и разложится вёрстка: окно, открытое
     /// на полпути, поехало бы следом.
     static let settle: Duration = .milliseconds(700)
@@ -57,6 +60,18 @@ final class Coach {
         withAnimation(Motion.chrome) {
             walk = nil
             step = 0
+        }
+    }
+}
+
+extension Walk {
+    /// Экран стоит над панелью вкладок — на вкладке или в её стеке. В листе
+    /// и на ночном небе планетария, где панель спрятана, под затемнение
+    /// нечего убирать.
+    var beneathBar: Bool {
+        switch self {
+        case .stats, .book, .plant, .add, .profile, .search: true
+        case .orrery, .settings, .tuning, .ar, .trip, .rooms, .hues: false
         }
     }
 }
@@ -213,7 +228,7 @@ private struct CoachLayer: View {
     }
 
     private func shade(_ hole: CGRect) -> some View {
-        Color.black.opacity(0.55)
+        Color.black.opacity(Coach.dim)
             .overlay {
                 RoundedRectangle(cornerRadius: radius(hole), style: .continuous)
                     .frame(width: hole.width, height: hole.height)
