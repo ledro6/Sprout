@@ -32,6 +32,9 @@ struct PlantView: View {
 
     @State private var asking = false
 
+    /// Открытка для друзей — см. `PosterSheet`.
+    @State private var posting = false
+
     /// Заметка правится на месте и ложится в сад, когда поле отпускают.
     @State private var noteDraft = ""
     @FocusState private var writing: Bool
@@ -136,6 +139,9 @@ struct PlantView: View {
         .sheet(isPresented: $tuning) {
             PlantSettingsView(plantID: plantID).environment(garden)
         }
+        .sheet(isPresented: $posting) {
+            PosterSheet(poster: .plant(plantID)).environment(garden)
+        }
         .fullScreenCover(isPresented: $staging) {
             PlantAR(plantID: plantID).environment(garden)
         }
@@ -224,6 +230,10 @@ struct PlantView: View {
                 ShareLink(item: Cutting(plant: plant, from: garden.signed).card) {
                     Label("Поделиться", systemImage: "square.and.arrow.up")
                 }
+            }
+            // А это — картинкой, просто показать.
+            Button { posting = true } label: {
+                Label("Поделиться карточкой", systemImage: "photo.on.rectangle")
             }
             if Tags.ready {
                 Button { Tags.shared.write(plantID) } label: {

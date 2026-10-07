@@ -26,6 +26,9 @@ struct ProfileView: View {
 
     @State private var editing = false
 
+    /// Открытка «Моя оранжерея» — см. `PosterSheet`.
+    @State private var posting = false
+
     @State private var opening = false
     @State private var erasing = false
 
@@ -176,8 +179,19 @@ struct ProfileView: View {
                 .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
+
+            SproutDivider()
+
+            Button { posting = true } label: {
+                SproutLink("Моя оранжерея — открыткой",
+                           icon: "photo.on.rectangle")
+            }
+            .buttonStyle(.plain)
         }
         .sproutRide()
+        .sheet(isPresented: $posting) {
+            PosterSheet(poster: .garden).environment(garden)
+        }
     }
 
     // MARK: - Сад

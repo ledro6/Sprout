@@ -3457,6 +3457,9 @@
         }
       }
     },
+    "%@ в Sprout": {
+      "extractionState": "manual"
+    },
     "%@ ждёт у луча — пора полить.": {
       "extractionState": "manual",
       "localizations": {
@@ -23102,6 +23105,9 @@
           }
         }
       }
+    },
+    "В саду": {
+      "extractionState": "manual"
     },
     "В саду пока ничего не растёт. Посадите первое растение во вкладке «Добавить».": {
       "extractionState": "manual",
@@ -90682,6 +90688,9 @@
         }
       }
     },
+    "Карточка": {
+      "extractionState": "manual"
+    },
     "Квадрат — день за последние четыре месяца: чем гуще цвет, тем больше поливов. Нажмите на квадрат — появится дата.": {
       "extractionState": "manual",
       "localizations": {
@@ -115683,6 +115692,15 @@
           }
         }
       }
+    },
+    "Моя оранжерея": {
+      "extractionState": "manual"
+    },
+    "Моя оранжерея в Sprout": {
+      "extractionState": "manual"
+    },
+    "Моя оранжерея — открыткой": {
+      "extractionState": "manual"
     },
     "Мудрец джунглей": {
       "extractionState": "manual",
@@ -150556,6 +150574,9 @@
         }
       }
     },
+    "Первый день": {
+      "extractionState": "manual"
+    },
     "Перед отъездом": {
       "extractionState": "manual",
       "localizations": {
@@ -163542,6 +163563,9 @@
           }
         }
       }
+    },
+    "Поделиться карточкой": {
+      "extractionState": "manual"
     },
     "Подержите палец": {
       "extractionState": "manual",

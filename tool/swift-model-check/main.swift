@@ -4861,6 +4861,31 @@ do {
           "полив из будущего — свежий")
 }
 
+print("открытка растения:")
+do {
+    var utc = Calendar(identifier: .gregorian)
+    utc.timeZone = TimeZone(identifier: "UTC")!
+    let march = utc.date(from: DateComponents(year: 2024, month: 3, day: 1,
+                                              hour: 9))!
+    check(Postcard.days(since: DateComponents(year: 2024, month: 1, day: 1),
+                        to: march, calendar: utc) == 60,
+          "с 1 января по 1 марта високосного — 60 дней")
+    check(Postcard.days(since: DateComponents(year: 2024, month: 3, day: 1),
+                        to: march, calendar: utc) == 0, "добавлен сегодня — ноль")
+    check(Postcard.days(since: DateComponents(year: 2025, month: 1, day: 1),
+                        to: march, calendar: utc) == 0, "дата в будущем — ноль")
+    check(Postcard.days(since: DateComponents(), to: march, calendar: utc) == 0,
+          "без даты — ноль")
+    check(Postcard.age(0), "Первый день", "в первый день")
+    check(Postcard.age(1), "1 день", "один день")
+    check(Postcard.age(3), "3 дня", "три дня")
+    check(Postcard.age(60), "60 дней", "шестьдесят дней")
+    check(Postcard.streak(1) == nil, "один день подряд — не серия")
+    check(Postcard.streak(5) == 5, "пять дней подряд — серия")
+    check(Postcard.width * Postcard.scale == 1080
+          && Postcard.height * Postcard.scale == 1350, "картинка 1080 × 1350")
+}
+
 print("другие языки:")
 do {
     defer { language = "ru" }
