@@ -462,6 +462,13 @@ final class Kinship {
     private func take(_ arrival: Family.Arrival) {
         guard !arrival.isEmpty else { return }
         let garden = Garden.shared
+        // Тихий пуш будит приложение из фона, как кнопка в уведомлении:
+        // сперва правки с диска (виджет), потом прошедшее время. Иначе сад,
+        // не досохший с ухода в фон, записался бы мигом «сейчас», и эти часы
+        // высыхания пропали бы, а пришедшее (`Family.aged`) — к «сейчас» —
+        // встало бы рядом со своим, застывшим раньше.
+        garden.reload()
+        garden.advance()
         var rooms = garden.rooms
         var log = garden.log
         var book = ledger.book
@@ -566,6 +573,7 @@ final class Kinship {
         for id in sent.deletedRecordIDs { book.known[id.recordName] = nil }
         var conflicts = Family.Arrival()
         var lost = false
+        var erased = false
         for failure in sent.failedRecordSaves {
             let name = failure.record.recordID.recordName
             switch failure.error.code {
@@ -586,8 +594,12 @@ final class Kinship {
                 case nil:
                     break
                 }
-            case .zoneNotFound, .userDeletedZone:
+            case .zoneNotFound:
                 lost = true
+            case .userDeletedZone:
+                // Сад удалили из iCloud в Настройках — как в `zones`: зону
+                // заново не заводим и сад обратно не отправляем.
+                erased = true
             case .unknownItem:
                 book.known[name] = nil
             case .permissionFailure:
@@ -621,7 +633,13 @@ final class Kinship {
         }
         ledger.book = book
         persist()
-        if lost {
+        if erased, ledger.mode == .own {
+            turnOff(Self.erased)
+            ledger.own = Family.Book()
+            persist()
+            return
+        }
+        if lost || erased {
             zoneLost()
             return
         }
