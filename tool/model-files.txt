@@ -11,6 +11,7 @@ ios-native/Sprout/Model/Core/Store.swift
 ios-native/Sprout/Model/Scene/Rig.swift
 ios-native/Sprout/Model/Garden/Plants.swift
 ios-native/Sprout/Model/Garden/Garden.swift
+ios-native/Sprout/Model/Garden/PotTag.swift
 ios-native/Sprout/Model/Core/Settings.swift
 ios-native/Sprout/Model/Core/StatsBlock.swift
 ios-native/Sprout/Model/Pattern/Weave.swift

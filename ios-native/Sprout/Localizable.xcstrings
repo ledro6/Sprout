@@ -93265,6 +93265,9 @@
         }
       }
     },
+    "Когда iPhone приложили к метке на горшке.": {
+      "extractionState": "manual"
+    },
     "Когда влажность ниже": {
       "extractionState": "manual",
       "localizations": {
@@ -111648,6 +111651,18 @@
         }
       }
     },
+    "Метка записана": {
+      "extractionState": "manual"
+    },
+    "Метка защищена от записи.": {
+      "extractionState": "manual"
+    },
+    "Метка на горшке": {
+      "extractionState": "manual"
+    },
+    "Метка на горшке «%@». Отметить полив?": {
+      "extractionState": "manual"
+    },
     "Меткий полив": {
       "extractionState": "manual",
       "localizations": {
@@ -117393,6 +117408,12 @@
           }
         }
       }
+    },
+    "На метке не хватает места.": {
+      "extractionState": "manual"
+    },
+    "На метке нет растения Sprout.": {
+      "extractionState": "manual"
     },
     "На сроки почти не влияет.": {
       "extractionState": "manual",
@@ -129190,6 +129211,15 @@
           }
         }
       }
+    },
+    "Не получилось записать метку.": {
+      "extractionState": "manual"
+    },
+    "Не получилось связаться с меткой. Попробуйте ещё раз.": {
+      "extractionState": "manual"
+    },
+    "Не сейчас": {
+      "extractionState": "manual"
     },
     "Не хватает места на телефоне: кадрам нужно несколько гигабайт.": {
       "extractionState": "manual",
@@ -166983,6 +167013,12 @@
         }
       }
     },
+    "Поднесите iPhone к метке для «%@».": {
+      "extractionState": "manual"
+    },
+    "Поднесите iPhone к метке на горшке.": {
+      "extractionState": "manual"
+    },
     "Подойдите ближе": {
       "extractionState": "manual",
       "localizations": {
@@ -174508,7 +174544,13 @@
     "Полив вовремя": {
       "extractionState": "manual"
     },
+    "Полив по метке": {
+      "extractionState": "manual"
+    },
     "Полив по очереди": {
+      "extractionState": "manual"
+    },
+    "Полив уже отмечен в %@ — второй раз не записываю.": {
       "extractionState": "manual"
     },
     "Полив —": {
@@ -189777,6 +189819,9 @@
         }
       }
     },
+    "Полить?": {
+      "extractionState": "manual"
+    },
     "Полные недели заданий": {
       "extractionState": "manual",
       "localizations": {
@@ -200692,6 +200737,9 @@
         }
       }
     },
+    "Привязать метку": {
+      "extractionState": "manual"
+    },
     "Пригласить": {
       "extractionState": "manual"
     },
@@ -202135,6 +202183,9 @@
           }
         }
       }
+    },
+    "Приложить к метке": {
+      "extractionState": "manual"
     },
     "Прихожая": {
       "extractionState": "manual",
@@ -219726,6 +219777,9 @@
           }
         }
       }
+    },
+    "Рядом несколько меток — поднесите к одной.": {
+      "extractionState": "manual"
     },
     "Рядом по Bluetooth": {
       "extractionState": "manual",
@@ -248213,6 +248267,9 @@
           }
         }
       }
+    },
+    "Сразу": {
+      "extractionState": "manual"
     },
     "Средняя влажность — %@.": {
       "extractionState": "manual",
@@ -284424,6 +284481,9 @@
     "Экономить заряд": {
       "extractionState": "manual"
     },
+    "Эта метка не подходит: на неё не записать ссылку.": {
+      "extractionState": "manual"
+    },
     "Это ваш сад": {
       "extractionState": "manual",
       "localizations": {
@@ -285573,6 +285633,9 @@
       }
     },
     "Это растение от друга, а не его счёт. Добавьте растение на вкладке «Добавить» — кнопкой «Вставить» в строке «Растение от друга».": {
+      "extractionState": "manual"
+    },
+    "Этого растения в саду больше нет.": {
       "extractionState": "manual"
     },
     "Этот iPhone не умеет сканировать: нужен LiDAR.": {

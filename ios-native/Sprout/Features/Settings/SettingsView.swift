@@ -421,6 +421,24 @@ struct SettingsView: View {
             switchRow("Сроки в Календаре", term: .agenda, isOn: Binding(
                 get: { settings.calendar },
                 set: { want(calendar: $0) }))
+
+            // Метки на горшках — только когда NFC в сборке включён.
+            if Tags.ready {
+                SproutDivider()
+                SproutBlock("Полив по метке",
+                            note: "Когда iPhone приложили к метке на горшке.") {
+                    Picker("Полив по метке", selection: Binding(
+                        get: { settings.tagPour },
+                        set: { settings.tagPour = $0 })) {
+                        ForEach(PotTag.Pour.allCases) { mode in
+                            Text(mode.title).tag(mode)
+                        }
+                    }
+                    .pickerStyle(.segmented)
+                    .labelsHidden()
+                    .onChange(of: settings.tagPour) { _, _ in Feel.pick() }
+                }
+            }
         }
         .animation(Motion.enter, value: settings.reminders)
         .animation(Motion.enter, value: settings.weather)

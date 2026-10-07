@@ -581,6 +581,14 @@ struct HomeView: View {
                           systemImage: "bubble.left.and.text.bubble.right")
                 }
             }
+            // Метка на горшке — только когда NFC в сборке включён, см.
+            // `Tags.enabled`.
+            if Tags.ready {
+                Button { Tags.shared.read() } label: {
+                    Label("Приложить к метке",
+                          systemImage: "sensor.tag.radiowaves.forward")
+                }
+            }
             Button { tripping = true } label: {
                 Label("Уезжаю…", systemImage: "airplane.departure")
             }

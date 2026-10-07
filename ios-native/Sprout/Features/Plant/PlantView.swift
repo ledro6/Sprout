@@ -225,6 +225,12 @@ struct PlantView: View {
                     Label("Поделиться", systemImage: "square.and.arrow.up")
                 }
             }
+            if Tags.ready {
+                Button { Tags.shared.write(plantID) } label: {
+                    Label("Привязать метку",
+                          systemImage: "sensor.tag.radiowaves.forward")
+                }
+            }
             Button { Coach.shared.start(.plant) } label: {
                 Label("Подсказки", systemImage: "questionmark.circle")
             }

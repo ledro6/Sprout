@@ -23,7 +23,8 @@
   плеча `условие ? "…" : "…"` (или `nil`) в тех же местах;
 - строки App Intents: названия команд, описания, диалоги;
 - фразы Siri из `phrases: [...]`;
-- пояснения к разрешениям — INFOPLIST_KEY_NS…UsageDescription проекта.
+- пояснения к разрешениям — INFOPLIST_KEY_NS…UsageDescription проекта
+  (и NFCReaderUsageDescription — у NFC приставки NS нет).
 
 Многострочный литерал `\"\"\"` читается так же, как его прочтёт Swift: `\\` в
 конце строки склеивает её со следующей.
@@ -115,7 +116,8 @@ BRANCH = r'(?:' + LITERAL + r'|nil)'
 TERNARY_AT = re.compile(r'[^"\n?;{}]*?\?\s*' + BRANCH + r'\s*:\s*' + BRANCH)
 PHRASES = re.compile(r'\bphrases:\s*\[(.*?)\]', re.S)
 MULTI = re.compile(r'"""[ \t]*\n(.*?)\n([ \t]*)"""', re.S)
-USAGE = re.compile(r'INFOPLIST_KEY_(NS\w+UsageDescription)\s*=\s*' + LITERAL
+USAGE = re.compile(r'INFOPLIST_KEY_((?:NS|NFC)\w+UsageDescription)\s*=\s*'
+                   + LITERAL
                    + r';')
 CYR = re.compile(r'[А-Яа-яЁё]')
 SPEC = re.compile(r'%(?:\d+\$)?(?:\.\d+)?(?:ll|l|h|q)?[@dDiuUxXoOfeEgGcCsSaA]')

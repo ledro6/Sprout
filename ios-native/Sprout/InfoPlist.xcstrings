@@ -1,6 +1,17 @@
 {
   "sourceLanguage": "ru",
   "strings": {
+    "NFCReaderUsageDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Чтобы читать и записывать NFC-метки на горшках: приложили iPhone — полив отмечен."
+          }
+        }
+      }
+    },
     "NSBluetoothAlwaysUsageDescription": {
       "extractionState": "manual",
       "localizations": {

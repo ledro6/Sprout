@@ -335,6 +335,13 @@ final class Settings {
         didSet { store.set(threshold, forKey: Key.threshold) }
     }
 
+    /// Приложили iPhone к метке на горшке — полить сразу или спросить, см.
+    /// `PotTag`. По умолчанию сразу: ради этого метку и клеят, а ошибку
+    /// снимает отмена на плашке.
+    var tagPour: PotTag.Pour {
+        didSet { store.set(tagPour.rawValue, forKey: Key.tagPour) }
+    }
+
     /// Знакомство при первом запуске уже показано — см. `Tour`. Повторить
     /// его можно из настроек.
     var toured: Bool {
@@ -400,6 +407,7 @@ final class Settings {
         static let reminders = "reminders"
         static let calendar = "calendarSync"
         static let threshold = "remindThreshold"
+        static let tagPour = "tagPour"
         /// Прежние ключи — номером готового цвета; читаются ради тех, у кого
         /// они сохранены.
         static let patternTint = "patternTint"
@@ -524,6 +532,8 @@ final class Settings {
         let level = (store.double(forKey: Key.threshold) * 100).rounded()
         threshold = Self.thresholds.contains(Int(level)) ? level / 100
             : Self.defaultThreshold
+        tagPour = PotTag.Pour(rawValue: store.string(forKey: Key.tagPour) ?? "")
+            ?? .now
         toured = store.bool(forKey: Key.toured)
         walked = Set(store.stringArray(forKey: Key.walked) ?? [])
         // Счётчика не было, а знакомство уже прошло — сад старый: первым

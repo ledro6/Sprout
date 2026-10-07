@@ -57,6 +57,16 @@ struct RootView: View {
         .onChange(of: Summon.shared.garden) { _, asked in
             if asked { pane = .home }
         }
+        // Ссылка на растение — та же, что на NFC-метке, см. `PotTag`.
+        // Снаружи она приходит, только если схема `sprout` объявлена в
+        // Info.plist (README «NFC-метки на горшках»).
+        .onOpenURL { url in
+            guard let id = PotTag.plant(in: url), garden.plant(id: id) != nil
+            else { return }
+            Summon.shared.plant = id
+        }
+        // «Полить?» и сообщения после метки на горшке.
+        .modifier(TagPrompt())
         .tabBarMinimizeBehavior(.onScrollDown)
         // Край прокрутки сверху — плавным градиентом размытия, как в iOS, а
         // не полосой с чертой под панелью. Снизу края нет: размытие под

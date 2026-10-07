@@ -4810,6 +4810,57 @@ do {
           "длина — такты и хвост зала, стерео")
 }
 
+print("метки на горшках:")
+do {
+    let id = "4F1C2A9E-0B7D-4E21-9C3A-5D6E7F809A1B"
+    let link = PotTag.link(id)
+    check(link?.absoluteString ?? "", "sprout://plant/" + id, "ссылка на растение")
+    check(link.flatMap(PotTag.plant(in:)) == id, "ссылка читается обратно")
+    check(PotTag.link("baksik").flatMap(PotTag.plant(in:)) == "baksik",
+          "номер макета — тоже")
+    check(PotTag.plant(in: URL(string: "SPROUT://Plant/baksik")!) == "baksik",
+          "схема и хост без учёта регистра")
+    check(PotTag.link("") == nil, "пустой номер не пишется")
+    check(PotTag.link("Баксик") == nil, "кириллица в номере не пишется")
+    check(PotTag.link("a/b") == nil, "косая черта в номере не пишется")
+    check(PotTag.link(String(repeating: "a", count: 65)) == nil,
+          "слишком длинный номер не пишется")
+    for foreign in ["https://example.com/plant/baksik", "sprout://room/baksik",
+                    "sprout://plant/", "sprout://plant/a/b",
+                    "sprout://plant/baksik?x=1", "sprout://plant/baksik#top",
+                    "sprout://plant/%D0%91"] {
+        check(PotTag.plant(in: URL(string: foreign)!) == nil,
+              "чужая ссылка: \(foreign)")
+    }
+
+    let now = Date(timeIntervalSince1970: 1_800_000_000)
+    let rooms = [Room(name: "Кухня",
+                      plants: [plantNamed("baksik", moisture: 0.3, dryingDays: 7)])]
+    let url = PotTag.link("baksik")
+    check(PotTag.react(to: url, rooms: rooms, log: [], mode: .now, now: now)
+          == .water("baksik"), "сразу — полить")
+    check(PotTag.react(to: url, rooms: rooms, log: [], mode: .ask, now: now)
+          == .ask("baksik"), "спросить — спросить")
+    check(PotTag.react(to: PotTag.link("boris"), rooms: rooms, log: [],
+                       mode: .now, now: now) == .gone,
+          "растения в саду нет — так и сказать")
+    check(PotTag.react(to: nil, rooms: rooms, log: [], mode: .now, now: now)
+          == .foreign, "пустая метка — чужая")
+    let recent = [Watering(plant: "baksik", when: now.addingTimeInterval(-300))]
+    check(PotTag.react(to: url, rooms: rooms, log: recent, mode: .now, now: now)
+          == .fresh("baksik", now.addingTimeInterval(-300)),
+          "полит пять минут назад — второй раз не поливаем")
+    let older = [Watering(plant: "baksik", when: now.addingTimeInterval(-700))]
+    check(PotTag.react(to: url, rooms: rooms, log: older, mode: .now, now: now)
+          == .water("baksik"), "двенадцать минут назад — уже можно")
+    let other = [Watering(plant: "boris", when: now.addingTimeInterval(-60))]
+    check(PotTag.lately("baksik", log: other, now: now) == nil,
+          "чужой полив не считается")
+    let ahead = [Watering(plant: "baksik", when: now.addingTimeInterval(600))]
+    check(PotTag.lately("baksik", log: ahead, now: now) != nil,
+          "полив из будущего — свежий")
+}
+
 print("другие языки:")
 do {
     defer { language = "ru" }
