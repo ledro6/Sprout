@@ -1717,14 +1717,14 @@ let box = UserDefaults(suiteName: "check.rivals")!
 box.removePersistentDomain(forName: "check.rivals")
 let table = Friends(store: box)
 check("\(table.rivals.count)", "0", "пустая таблица на чистом месте")
-table.add(Rival(name: "Аня", total: 10, streak: 1, best: 1, plants: 2,
-                day: 20_350))
-table.add(Rival(name: "Боря", total: 30, streak: 2, best: 4, plants: 5,
-                day: 20_350))
+table.add(Rival(name: "Аня", total: 30, streak: 1, best: 1, plants: 2,
+                day: 20_350, aim: 40))
+table.add(Rival(name: "Боря", total: 10, streak: 2, best: 4, plants: 5,
+                day: 20_350, aim: 70))
 check(table.rivals.map(\.name).joined(separator: ", "), "Боря, Аня",
-      "порядок — от большего счёта к меньшему")
+      "порядок — по «Вовремя, %», а не по числу поливов")
 table.add(Rival(name: "аня", total: 99, streak: 3, best: 3, plants: 2,
-                day: 20_351))
+                day: 20_351, aim: 90))
 check("\(table.rivals.count)", "2", "тот же друг не заводит второй строки")
 check(table.rivals.first?.name ?? "—", "аня", "новый счёт встал выше")
 check(Friends(store: box).rivals.count == 2, "таблица пережила перезапуск")
@@ -1735,8 +1735,8 @@ check(table.take("тут кода нет", mine: "Аня") == nil,
 check(table.take(mine.card, mine: "Аня")?.name ?? "—", "Святослав",
       "а чужой — берётся")
 table.remove("аня")
-check(table.rivals.map(\.name).joined(separator: ", "), "Святослав, Боря",
-      "убранный соперник уходит из таблицы")
+check(table.rivals.map(\.name).joined(separator: ", "), "Боря, Святослав",
+      "убранный соперник уходит из таблицы; без доли вовремя — в конце")
 box.removePersistentDomain(forName: "check.rivals")
 
 print("друзья: сравнение садов, черенок и челлендж:")
@@ -1811,7 +1811,7 @@ do {
           "вовремя в челлендже — два полива: до и после недели не в счёт")
     let back = Race.read(race.card(calendar: utc))
     check(back == race, "челлендж возвращается из сообщения целым")
-    check(race.card(calendar: utc).contains("Лера зовёт в челлендж Sprout: «Кто больше польёт вовремя»"),
+    check(race.card(calendar: utc).contains("Лера зовёт в испытание Sprout: «Кто больше польёт вовремя»"),
           "в сообщении — кто зовёт и во что")
     var odd = race
     odd.quest = .noFlood

@@ -1445,292 +1445,8 @@
         }
       }
     },
-    "%1$@ зовёт в челлендж Sprout: «%2$@», %3$@.": {
-      "extractionState": "manual",
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "دعوة من %1$@ إلى تحدٍّ في Sprout: «%2$@»، %3$@."
-          }
-        },
-        "bg": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ те кани в предизвикателство в Sprout: „%2$@“, %3$@."
-          }
-        },
-        "bn": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ আপনাকে Sprout চ্যালেঞ্জে ডাকছেন: “%2$@”, %3$@।"
-          }
-        },
-        "ca": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ et convida a un repte de Sprout: «%2$@», %3$@."
-          }
-        },
-        "cs": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ vás zve do výzvy Sprout: „%2$@“, %3$@."
-          }
-        },
-        "da": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ inviterer dig til en Sprout-udfordring: ”%2$@”, %3$@."
-          }
-        },
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ lädt dich zu einer Sprout-Challenge ein: „%2$@“, %3$@."
-          }
-        },
-        "el": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ σε καλεί σε πρόκληση Sprout: «%2$@», %3$@."
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ invites you to a Sprout challenge: “%2$@”, %3$@."
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ te invita a un reto de Sprout: “%2$@”, %3$@."
-          }
-        },
-        "fi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ kutsuu sinut Sprout-haasteeseen: ”%2$@”, %3$@."
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ vous invite à un défi Sprout : « %2$@ », %3$@."
-          }
-        },
-        "gu": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ તમને Sprout ચેલેન્જમાં બોલાવે છે: “%2$@”, %3$@."
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "הזמנה מ־%1$@ לאתגר ב־Sprout: “%2$@”, %3$@."
-          }
-        },
-        "hi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ आपको Sprout चैलेंज में बुला रहे हैं: “%2$@”, %3$@।"
-          }
-        },
-        "hr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ te poziva u Sprout izazov: „%2$@”, %3$@."
-          }
-        },
-        "hu": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ meghív egy Sprout-kihívásra: „%2$@”, %3$@."
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ mengajak Anda ke tantangan Sprout: “%2$@”, %3$@."
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ ti invita a una sfida Sprout: “%2$@”, %3$@."
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@がSproutチャレンジに招待しています：「%2$@」、%3$@。"
-          }
-        },
-        "kk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ сені Sprout челленджіне шақырады: «%2$@», %3$@."
-          }
-        },
-        "kn": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ ನಿಮ್ಮನ್ನು Sprout ಸವಾಲಿಗೆ ಕರೆಯುತ್ತಿದ್ದಾರೆ: “%2$@”, %3$@."
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ 님이 Sprout 챌린지에 초대해요: ‘%2$@’, %3$@."
-          }
-        },
-        "lt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ kviečia į Sprout iššūkį: „%2$@“, %3$@."
-          }
-        },
-        "ml": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ നിങ്ങളെ Sprout ചലഞ്ചിലേക്ക് ക്ഷണിക്കുന്നു: “%2$@”, %3$@."
-          }
-        },
-        "mr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ तुम्हाला Sprout चॅलेंजमध्ये बोलावत आहेत: “%2$@”, %3$@."
-          }
-        },
-        "ms": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ menjemput anda ke cabaran Sprout: “%2$@”, %3$@."
-          }
-        },
-        "nb": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ inviterer deg til en Sprout-utfordring: «%2$@», %3$@."
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ nodigt je uit voor een Sprout-uitdaging: ‘%2$@’, %3$@."
-          }
-        },
-        "or": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ ଆପଣଙ୍କୁ Sprout ଚ୍ୟାଲେଞ୍ଜକୁ ଡାକୁଛନ୍ତି: “%2$@”, %3$@।"
-          }
-        },
-        "pa": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ ਤੁਹਾਨੂੰ Sprout ਚੁਣੌਤੀ ਵਿੱਚ ਬੁਲਾ ਰਹੇ ਹਨ: “%2$@”, %3$@।"
-          }
-        },
-        "pl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ zaprasza cię do wyzwania Sprout: „%2$@”, %3$@."
-          }
-        },
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ convida você para um desafio do Sprout: “%2$@”, %3$@."
-          }
-        },
-        "pt-PT": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ convida-o para um desafio do Sprout: “%2$@”, %3$@."
-          }
-        },
-        "ro": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ te invită la o provocare Sprout: „%2$@”, %3$@."
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ vás pozýva do výzvy Sprout: „%2$@“, %3$@."
-          }
-        },
-        "sl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ vas vabi v izziv Sprout: »%2$@«, %3$@."
-          }
-        },
-        "sv": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ bjuder in dig till en Sprout-utmaning: ”%2$@”, %3$@."
-          }
-        },
-        "ta": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ உங்களை Sprout சவாலுக்கு அழைக்கிறார்: “%2$@”, %3$@."
-          }
-        },
-        "te": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ మిమ్మల్ని Sprout ఛాలెంజ్‌కు పిలుస్తున్నారు: “%2$@”, %3$@."
-          }
-        },
-        "th": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ ชวนคุณร่วมชาเลนจ์ Sprout: “%2$@” %3$@"
-          }
-        },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ seni bir Sprout meydan okumasına çağırıyor: “%2$@”, %3$@."
-          }
-        },
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ кличе в челендж Sprout: «%2$@», %3$@."
-          }
-        },
-        "ur": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ آپ کو Sprout چیلنج میں بلا رہے ہیں: “%2$@”، %3$@۔"
-          }
-        },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ mời bạn tham gia thử thách Sprout: “%2$@”, %3$@."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@邀请你参加 Sprout 挑战：“%2$@”，%3$@。"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@邀請你參加 Sprout 挑戰：「%2$@」，%3$@。"
-          }
-        }
-      }
+    "%1$@ зовёт в испытание Sprout: «%2$@», %3$@.": {
+      "extractionState": "manual"
     },
     "%1$@ и %2$@": {
       "extractionState": "manual",
@@ -4329,6 +4045,44 @@
     },
     "%@, вчера": {
       "extractionState": "manual"
+    },
+    "%@, пришли, пожалуйста, свежий счёт из Sprout: Профиль → Друзья → «Поделиться».": {
+      "extractionState": "manual"
+    },
+    "%lld видов": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "variations": {
+            "plural": {
+              "few": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld вида"
+                }
+              },
+              "many": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld видов"
+                }
+              },
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld вид"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld вида"
+                }
+              }
+            }
+          }
+        }
+      }
     },
     "%lld дней": {
       "extractionState": "manual",
@@ -7854,6 +7608,41 @@
         }
       }
     },
+    "%lld полных недель": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "variations": {
+            "plural": {
+              "few": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld полные недели"
+                }
+              },
+              "many": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld полных недель"
+                }
+              },
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld полная неделя"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld полной недели"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "%lld растений": {
       "extractionState": "manual",
       "localizations": {
@@ -8731,6 +8520,41 @@
           "stringUnit": {
             "state": "translated",
             "value": "%lld株植物"
+          }
+        }
+      }
+    },
+    "%lld ступеней": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "variations": {
+            "plural": {
+              "few": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld ступени"
+                }
+              },
+              "many": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld ступеней"
+                }
+              },
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld ступень"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld ступени"
+                }
+              }
+            }
           }
         }
       }
@@ -38394,292 +38218,8 @@
         }
       }
     },
-    "Вы в челлендже от %@. Свой счёт отправляйте кнопкой «Отправить счёт».": {
-      "extractionState": "manual",
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "أنت في تحدٍّ من %@. أرسل نتيجتك بزر «إرسال النتيجة»."
-          }
-        },
-        "bg": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Участвате в предизвикателство от %@. Изпращайте резултата си с бутона „Изпрати резултат“."
-          }
-        },
-        "bn": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "আপনি %@-এর চ্যালেঞ্জে আছেন। আপনার স্কোর “স্কোর পাঠান” বোতাম দিয়ে পাঠান।"
-          }
-        },
-        "ca": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Participes en el repte de %@. Envia la teva puntuació amb el botó «Envia la puntuació»."
-          }
-        },
-        "cs": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Jste ve výzvě od %@. Své skóre posílejte tlačítkem „Poslat skóre“."
-          }
-        },
-        "da": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Du er med i udfordringen fra %@. Send din score med knappen ”Send score”."
-          }
-        },
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Du bist in der Challenge von %@. Deinen Punktestand schickst du mit „Punktestand senden“."
-          }
-        },
-        "el": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Συμμετέχετε σε πρόκληση από: %@. Στείλτε το σκορ σας με το κουμπί «Αποστολή σκορ»."
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "You’ve joined a challenge from %@. Send your score with the “Send Score” button."
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Estás en el reto de %@. Envía tu marcador con el botón “Enviar marcador”."
-          }
-        },
-        "fi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Olet mukana käyttäjän %@ haasteessa. Lähetä pisteesi painikkeella ”Lähetä pisteet”."
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Vous participez au défi de %@. Envoyez votre score avec le bouton « Envoyer le score »."
-          }
-        },
-        "gu": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "તમે %@ ની ચેલેન્જમાં છો. તમારો સ્કોર “સ્કોર મોકલો” બટનથી મોકલો."
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "אתם באתגר של %@. את הניקוד שלכם שלחו בכפתור “שליחת ניקוד”."
-          }
-        },
-        "hi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "आप %@ के चैलेंज में हैं। अपना स्कोर “स्कोर भेजें” बटन से भेजें।"
-          }
-        },
-        "hr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sudjeluješ u izazovu od %@. Rezultat šalji gumbom „Pošalji rezultat”."
-          }
-        },
-        "hu": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Részt veszel %@ kihívásában. Az eredményedet a „Pontszám küldése” gombbal küldd el."
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Anda ikut tantangan dari %@. Kirim skor Anda dengan tombol “Kirim skor”."
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Partecipi alla sfida di %@. Invia il tuo punteggio con il pulsante “Invia punteggio”."
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@のチャレンジに参加中です。スコアは「スコアを送る」ボタンで送ってください。"
-          }
-        },
-        "kk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Сіз %@ жіберген челленджге қатысып жүрсіз. Ұпайыңызды «Ұпай жіберу» түймесімен жіберіңіз."
-          }
-        },
-        "kn": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ನೀವು %@ ಅವರ ಸವಾಲಿನಲ್ಲಿದ್ದೀರಿ. ನಿಮ್ಮ ಅಂಕವನ್ನು “ಅಂಕ ಕಳುಹಿಸಿ” ಬಟನ್‌ನಿಂದ ಕಳುಹಿಸಿ."
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ 님의 챌린지에 참여 중이에요. ‘점수 보내기’ 버튼으로 점수를 보내세요."
-          }
-        },
-        "lt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Dalyvaujate iššūkyje, kurį atsiuntė %@. Savo rezultatą siųskite mygtuku „Siųsti rezultatą“."
-          }
-        },
-        "ml": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "നിങ്ങൾ %@ അയച്ച ചലഞ്ചിലാണ്. നിങ്ങളുടെ സ്കോർ “സ്കോർ അയയ്ക്കുക” ബട്ടൺ വഴി അയയ്ക്കുക."
-          }
-        },
-        "mr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "तुम्ही %@ यांच्या चॅलेंजमध्ये आहात. तुमचा स्कोअर “स्कोअर पाठवा” बटणाने पाठवा."
-          }
-        },
-        "ms": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Anda dalam cabaran daripada %@. Hantar skor anda dengan butang “Hantar skor”."
-          }
-        },
-        "nb": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Du er med i utfordringen fra %@. Send poengsummen din med knappen «Send poeng»."
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Je doet mee aan de uitdaging van %@. Stuur je score met de knop ‘Stuur score’."
-          }
-        },
-        "or": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ଆପଣ %@ଙ୍କ ଚ୍ୟାଲେଞ୍ଜରେ ଅଛନ୍ତି। ଆପଣଙ୍କ ସ୍କୋର “ସ୍କୋର ପଠାନ୍ତୁ” ବଟନ୍‌ରେ ପଠାନ୍ତୁ।"
-          }
-        },
-        "pa": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ਤੁਸੀਂ %@ ਦੀ ਚੁਣੌਤੀ ਵਿੱਚ ਹੋ। ਆਪਣਾ ਸਕੋਰ “ਸਕੋਰ ਭੇਜੋ” ਬਟਨ ਨਾਲ ਭੇਜੋ।"
-          }
-        },
-        "pl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bierzesz udział w wyzwaniu od %@. Wyślij swój wynik przyciskiem „Wyślij wynik”."
-          }
-        },
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Você está no desafio de %@. Envie sua pontuação com o botão “Enviar pontuação”."
-          }
-        },
-        "pt-PT": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Está no desafio de %@. Envie a sua pontuação com o botão “Enviar pontuação”."
-          }
-        },
-        "ro": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Participi la provocarea de la %@. Trimite-ți scorul cu butonul „Trimite scorul”."
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ste vo výzve od %@. Svoje skóre posielajte tlačidlom „Poslať skóre“."
-          }
-        },
-        "sl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sodelujete v izzivu, ki ga je poslal %@. Svoj rezultat pošljite z gumbom »Pošlji rezultat«."
-          }
-        },
-        "sv": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Du är med i utmaningen från %@. Skicka dina poäng med knappen ”Skicka poäng”."
-          }
-        },
-        "ta": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "நீங்கள் %@ அனுப்பிய சவாலில் உள்ளீர்கள். உங்கள் புள்ளிகளை “புள்ளிகளை அனுப்பு” பொத்தான் மூலம் அனுப்புங்கள்."
-          }
-        },
-        "te": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "మీరు %@ పంపిన ఛాలెంజ్‌లో ఉన్నారు. మీ స్కోరును “స్కోరు పంపు” బటన్‌తో పంపండి."
-          }
-        },
-        "th": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "คุณอยู่ในชาเลนจ์จาก %@ ส่งคะแนนของคุณด้วยปุ่ม “ส่งคะแนน”"
-          }
-        },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ tarafından gönderilen meydan okumadasınız. Puanınızı “Puanı gönder” düğmesiyle gönderin."
-          }
-        },
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ви в челенджі від %@. Свій рахунок надсилайте кнопкою «Надіслати рахунок»."
-          }
-        },
-        "ur": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "آپ %@ کے چیلنج میں ہیں۔ اپنا اسکور “اسکور بھیجیں” بٹن سے بھیجیں۔"
-          }
-        },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bạn đang trong thử thách của %@. Gửi điểm bằng nút “Gửi điểm”."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "你正在参加%@的挑战。用“发送成绩”按钮发送你的成绩。"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "你正在參加%@的挑戰。用「傳送成績」按鈕傳送你的成績。"
-          }
-        }
-      }
+    "Вы в испытании от %@. Свой счёт отправляйте кнопкой «Отправить счёт».": {
+      "extractionState": "manual"
     },
     "Вы вышли из iCloud — синхронизация выключена, сад остался на телефоне.": {
       "extractionState": "manual"
@@ -39843,6 +39383,9 @@
           }
         }
       }
+    },
+    "Выйти из испытания": {
+      "extractionState": "manual"
     },
     "Выйти из общего сада": {
       "extractionState": "manual"
@@ -56825,6 +56368,9 @@
         }
       }
     },
+    "Для справки": {
+      "extractionState": "manual"
+    },
     "Дневной садовник": {
       "extractionState": "manual",
       "localizations": {
@@ -73223,6 +72769,9 @@
         }
       }
     },
+    "Запросить обновление": {
+      "extractionState": "manual"
+    },
     "Защита": {
       "extractionState": "manual",
       "localizations": {
@@ -81841,6 +81390,9 @@
           }
         }
       }
+    },
+    "Испытание": {
+      "extractionState": "manual"
     },
     "История": {
       "extractionState": "manual",
@@ -108006,6 +107558,9 @@
           }
         }
       }
+    },
+    "Медали": {
+      "extractionState": "manual"
     },
     "Медленнее — кадры смазываются": {
       "extractionState": "manual",
@@ -187747,293 +187302,6 @@
     "Полить?": {
       "extractionState": "manual"
     },
-    "Полные недели заданий": {
-      "extractionState": "manual",
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "أسابيع مهام كاملة"
-          }
-        },
-        "bg": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Пълни седмици със задачи"
-          }
-        },
-        "bn": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "পূর্ণ কাজের সপ্তাহ"
-          }
-        },
-        "ca": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Setmanes amb totes les missions"
-          }
-        },
-        "cs": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Celé týdny úkolů"
-          }
-        },
-        "da": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Hele opgaveuger"
-          }
-        },
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Volle Aufgabenwochen"
-          }
-        },
-        "el": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Πλήρεις εβδομάδες αποστολών"
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Full Quest Weeks"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Semanas de misiones completas"
-          }
-        },
-        "fi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Täydet tehtäväviikot"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Semaines de quêtes complètes"
-          }
-        },
-        "gu": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "પૂરાં કાર્યોવાળાં અઠવાડિયાં"
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "שבועות משימות מלאים"
-          }
-        },
-        "hi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "पूरे टास्क वाले हफ़्ते"
-          }
-        },
-        "hr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Potpuno ispunjeni tjedni"
-          }
-        },
-        "hu": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Teljes feladathetek"
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Minggu dengan semua tugas selesai"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Settimane di missioni complete"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "課題を完全達成した週"
-          }
-        },
-        "kk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Толық тапсырма апталары"
-          }
-        },
-        "kn": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ಪೂರ್ಣ ಕಾರ್ಯಗಳ ವಾರಗಳು"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "과제를 모두 마친 주"
-          }
-        },
-        "lt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Pilnos užduočių savaitės"
-          }
-        },
-        "ml": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "പൂർണ്ണ ദൗത്യ ആഴ്ചകൾ"
-          }
-        },
-        "mr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "पूर्ण कामांचे आठवडे"
-          }
-        },
-        "ms": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Minggu tugasan penuh"
-          }
-        },
-        "nb": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Hele oppdragsuker"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Volledige opdrachtweken"
-          }
-        },
-        "or": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ପୂର୍ଣ୍ଣ କାମର ସପ୍ତାହ"
-          }
-        },
-        "pa": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ਪੂਰੇ ਕੰਮਾਂ ਵਾਲੇ ਹਫ਼ਤੇ"
-          }
-        },
-        "pl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Pełne tygodnie zadań"
-          }
-        },
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Semanas de missões completas"
-          }
-        },
-        "pt-PT": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Semanas de missões completas"
-          }
-        },
-        "ro": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Săptămâni de misiuni complete"
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Celé týždne úloh"
-          }
-        },
-        "sl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tedni z vsemi nalogami"
-          }
-        },
-        "sv": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Hela uppdragsveckor"
-          }
-        },
-        "ta": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "முழுப் பணி வாரங்கள்"
-          }
-        },
-        "te": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "పూర్తి పనుల వారాలు"
-          }
-        },
-        "th": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "สัปดาห์ที่ทำภารกิจครบ"
-          }
-        },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tamamlanan görev haftaları"
-          }
-        },
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Повні тижні завдань"
-          }
-        },
-        "ur": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "مکمل ٹاسک والے ہفتے"
-          }
-        },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tuần hoàn thành đủ nhiệm vụ"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "任务全勤周"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "任務全勤週"
-          }
-        }
-      }
-    },
     "Полный доступ дают в настройках телефона: Sprout → Календари.": {
       "extractionState": "manual",
       "localizations": {
@@ -247191,293 +246459,6 @@
         }
       }
     },
-    "Ступени медалей": {
-      "extractionState": "manual",
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "درجات الميداليات"
-          }
-        },
-        "bg": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Степени на медалите"
-          }
-        },
-        "bn": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "পদকের স্তরগুলো"
-          }
-        },
-        "ca": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Graus de les medalles"
-          }
-        },
-        "cs": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Stupně medailí"
-          }
-        },
-        "da": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Medaljeniveauer"
-          }
-        },
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Medaillenstufen"
-          }
-        },
-        "el": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Βαθμίδες μεταλλίων"
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Medal Levels"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Niveles de medallas"
-          }
-        },
-        "fi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Mitalitasot"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Niveaux de médailles"
-          }
-        },
-        "gu": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ચંદ્રકના સ્તર"
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "דרגות מדליות"
-          }
-        },
-        "hi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "पदकों के स्तर"
-          }
-        },
-        "hr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Razine medalja"
-          }
-        },
-        "hu": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Érmeszintek"
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tingkatan medali"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Livelli delle medaglie"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "メダルの段階"
-          }
-        },
-        "kk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Медаль сатылары"
-          }
-        },
-        "kn": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ಪದಕಗಳ ಮಟ್ಟಗಳು"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "메달 등급"
-          }
-        },
-        "lt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Medalių pakopos"
-          }
-        },
-        "ml": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "മെഡലുകളുടെ പടികൾ"
-          }
-        },
-        "mr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "पदकांचे स्तर"
-          }
-        },
-        "ms": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tangga pingat"
-          }
-        },
-        "nb": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Medaljenivåer"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Medailleniveaus"
-          }
-        },
-        "or": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ପଦକର ସ୍ତରଗୁଡ଼ିକ"
-          }
-        },
-        "pa": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ਤਮਗਿਆਂ ਦੇ ਪੱਧਰ"
-          }
-        },
-        "pl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Stopnie medali"
-          }
-        },
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Níveis de medalhas"
-          }
-        },
-        "pt-PT": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Níveis de medalhas"
-          }
-        },
-        "ro": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Niveluri de medalii"
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Stupne medailí"
-          }
-        },
-        "sl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Stopnje medalj"
-          }
-        },
-        "sv": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Medaljnivåer"
-          }
-        },
-        "ta": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "பதக்கப் படிகள்"
-          }
-        },
-        "te": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "పతకాల మెట్లు"
-          }
-        },
-        "th": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ลำดับขั้นของเหรียญ"
-          }
-        },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Madalya kademeleri"
-          }
-        },
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Щаблі медалей"
-          }
-        },
-        "ur": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "تمغوں کے درجے"
-          }
-        },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Các bậc huy chương"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "奖章阶梯"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "獎章階梯"
-          }
-        }
-      }
-    },
     "Ступень медали": {
       "extractionState": "manual",
       "localizations": {
@@ -275939,293 +274920,6 @@
         }
       }
     },
-    "Челлендж": {
-      "extractionState": "manual",
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "تحدٍّ"
-          }
-        },
-        "bg": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Предизвикателство"
-          }
-        },
-        "bn": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "চ্যালেঞ্জ"
-          }
-        },
-        "ca": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Repte"
-          }
-        },
-        "cs": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Výzva"
-          }
-        },
-        "da": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Udfordring"
-          }
-        },
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Challenge"
-          }
-        },
-        "el": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Πρόκληση"
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Challenge"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Reto"
-          }
-        },
-        "fi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Haaste"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Défi"
-          }
-        },
-        "gu": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ચેલેન્જ"
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "אתגר"
-          }
-        },
-        "hi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "चैलेंज"
-          }
-        },
-        "hr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Izazov"
-          }
-        },
-        "hu": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Kihívás"
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tantangan"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sfida"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "チャレンジ"
-          }
-        },
-        "kk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Челлендж"
-          }
-        },
-        "kn": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ಸವಾಲು"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "챌린지"
-          }
-        },
-        "lt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Iššūkis"
-          }
-        },
-        "ml": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ചലഞ്ച്"
-          }
-        },
-        "mr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "चॅलेंज"
-          }
-        },
-        "ms": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Cabaran"
-          }
-        },
-        "nb": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Utfordring"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Uitdaging"
-          }
-        },
-        "or": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ଚ୍ୟାଲେଞ୍ଜ"
-          }
-        },
-        "pa": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ਚੁਣੌਤੀ"
-          }
-        },
-        "pl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Wyzwanie"
-          }
-        },
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Desafio"
-          }
-        },
-        "pt-PT": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Desafio"
-          }
-        },
-        "ro": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Provocare"
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Výzva"
-          }
-        },
-        "sl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Izziv"
-          }
-        },
-        "sv": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Utmaning"
-          }
-        },
-        "ta": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "சவால்"
-          }
-        },
-        "te": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ఛాలెంజ్"
-          }
-        },
-        "th": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ชาเลนจ์"
-          }
-        },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Meydan okuma"
-          }
-        },
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Челендж"
-          }
-        },
-        "ur": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "چیلنج"
-          }
-        },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Thử thách"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "挑战"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "挑戰"
-          }
-        }
-      }
-    },
     "Чем выше ступень, тем чаще лейка.": {
       "extractionState": "manual",
       "localizations": {
@@ -282002,6 +280696,9 @@
         }
       }
     },
+    "вовремя —": {
+      "extractionState": "manual"
+    },
     "вы": {
       "extractionState": "manual",
       "localizations": {
@@ -282288,9 +280985,6 @@
           }
         }
       }
-    },
-    "дней подряд: %lld": {
-      "extractionState": "manual"
     },
     "ждёт ответа": {
       "extractionState": "manual"
