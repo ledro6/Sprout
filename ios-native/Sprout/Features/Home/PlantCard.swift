@@ -58,6 +58,8 @@ struct PlantCard: View {
                 SourceBadge(estimated: plant.estimated)
             }
             .modifier(Sharpen())
+
+            RecentPour(plant: plant)
         }
         .padding(.horizontal, Metrics.cardPadding)
         .padding(.vertical, 10)

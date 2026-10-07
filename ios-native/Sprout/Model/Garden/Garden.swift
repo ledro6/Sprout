@@ -127,8 +127,11 @@ final class Garden {
     func water(_ id: Plant.ID, at moment: Date = Date()) -> Pour? {
         guard let before = plant(id: id) else { return nil }
         // Запись в журнал — до полива: `change` пишет файл, и запись должна в
-        // него попасть.
-        log.append(Watering(plant: id, when: moment, left: before.moisture))
+        // него попасть. Полив в пределах десяти минут от прежнего — датчика
+        // или кого-то из семьи — тот же полив, второй записи нет (`Twin`).
+        if Twin.index(id, at: moment, in: log) == nil {
+            log.append(Watering(plant: id, when: moment, left: before.moisture))
+        }
         // Полили рукой — до нового показания датчика влажность посчитанная.
         change(id) {
             $0.moisture = 1
@@ -202,7 +205,12 @@ final class Garden {
     }
 
     /// Имя хозяина и день начала сада остаются: стирают сад, а не себя.
-    func erase() {
+    /// Гость общего сада стереть его не может — ни с экрана, ни иначе: пункта
+    /// у него нет, а здесь проверка на случай любого другого пути
+    /// (`Family.mayErase`). Отвечает, стёрт ли сад.
+    @discardableResult
+    func erase(guest: Bool) -> Bool {
+        guard !guest else { return false }
         for file in rooms.flatMap(\.plants).flatMap(\.files) {
             Shots.drop(file)
         }
@@ -210,6 +218,7 @@ final class Garden {
         log = []
         roster += 1
         save()
+        return true
     }
 
     func rename(owner name: String) {
@@ -348,7 +357,9 @@ final class Garden {
 
     /// Показание пришло: влажность растения — по датчику. Подскочила —
     /// значит, полили, пока приложение не смотрело: полив сам ложится в
-    /// журнал, если его не записали кнопкой за последние два часа.
+    /// журнал, если его не записали кнопкой за последние два часа. Окно
+    /// шире десяти минут `Twin`: показание читают, когда телефон рядом, и
+    /// подскок замечают с опозданием.
     @discardableResult
     func sense(_ id: Plant.ID, _ reading: Reading) -> Bool {
         guard let plant = plant(id: id), var sensor = plant.sensor else {
@@ -358,10 +369,8 @@ final class Garden {
         sensor.last = reading
         var poured = false
         if let before, sensor.poured(from: before, to: reading.moisture),
-           !log.contains(where: {
-               $0.plant == id
-                   && abs($0.when.timeIntervalSince(reading.when)) < 2 * 3_600
-           }) {
+           Twin.index(id, at: reading.when, in: log,
+                      within: 2 * 3_600) == nil {
             log.append(Watering(plant: id, when: reading.when,
                                 left: sensor.level(before)))
             poured = true

@@ -65,6 +65,7 @@ struct PlantRow: View {
                     .minimumScaleFactor(0.7)
                     .contentTransition(.numericText())
                     .animation(Motion.number, value: plant.daysUntilWatering)
+                RecentPour(plant: plant)
             }
             .foregroundStyle(Palette.ink)
             .frame(maxWidth: .infinity, alignment: .leading)

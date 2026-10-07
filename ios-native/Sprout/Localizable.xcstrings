@@ -2028,6 +2028,12 @@
     "%1$@ полила: %2$@": {
       "extractionState": "manual"
     },
+    "%1$@ уже полил %2$lld мин назад. Всё равно полить?": {
+      "extractionState": "manual"
+    },
+    "%1$@ уже полила %2$lld мин назад. Всё равно полить?": {
+      "extractionState": "manual"
+    },
     "%1$@ — %2$@": {
       "extractionState": "manual",
       "localizations": {
@@ -2601,6 +2607,9 @@
           }
         }
       }
+    },
+    "%1$@, %2$lld мин назад": {
+      "extractionState": "manual"
     },
     "%1$@: %2$@": {
       "extractionState": "manual",
@@ -3753,6 +3762,12 @@
         }
       }
     },
+    "%@ только что полил. Всё равно полить?": {
+      "extractionState": "manual"
+    },
+    "%@ только что полила. Всё равно полить?": {
+      "extractionState": "manual"
+    },
     "%@ — без поливов": {
       "extractionState": "manual",
       "localizations": {
@@ -4047,6 +4062,9 @@
       "extractionState": "manual"
     },
     "%@, пришли, пожалуйста, свежий счёт из Sprout: Профиль → Друзья → «Поделиться».": {
+      "extractionState": "manual"
+    },
+    "%@, только что": {
       "extractionState": "manual"
     },
     "%lld видов": {
@@ -26688,6 +26706,12 @@
     "Ваши поливы": {
       "extractionState": "manual"
     },
+    "Введите %lld, чтобы стереть": {
+      "extractionState": "manual"
+    },
+    "Введите 18, чтобы стереть": {
+      "extractionState": "manual"
+    },
     "Ведите ползунок — сад перенесётся на дни вперёд, если поливать вовремя.": {
       "extractionState": "manual",
       "localizations": {
@@ -39104,6 +39128,9 @@
       }
     },
     "Выйти из испытания": {
+      "extractionState": "manual"
+    },
+    "Выйти из испытания?": {
       "extractionState": "manual"
     },
     "Выйти из общего сада": {
@@ -80253,6 +80280,9 @@
       }
     },
     "Испытание": {
+      "extractionState": "manual"
+    },
+    "Испытание пропадёт с этого телефона. Вернуться можно, вставив приглашение ещё раз.": {
       "extractionState": "manual"
     },
     "История": {

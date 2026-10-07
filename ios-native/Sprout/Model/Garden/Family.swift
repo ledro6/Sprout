@@ -637,6 +637,16 @@ enum Family {
                     log[index] = entry
                     continue
                 }
+                // Тот же полив с другого телефона — двое полили, не зная друг
+                // о друге: остаётся одна запись, ранняя (`Twin.keeps`), у всех
+                // одна и та же. Лишнюю `outgoing` уберёт и с сервера.
+                if let twin = Twin.index(entry.plant, at: entry.when, in: log) {
+                    if Twin.keeps(entry, over: log[twin]) {
+                        log[twin] = entry
+                        added = true
+                    }
+                    continue
+                }
                 log.append(entry)
                 added = true
                 if let hand = entry.hand, hand != me {
@@ -810,6 +820,61 @@ enum Family {
         }
         return Lang.format("%1$@, %2$@", verb, entry.when.formatted(style))
     }
+
+    // MARK: - Только что полили
+
+    /// Сколько чужой полив держит подпись на карточке и приглушает каплю.
+    static let recentSpan: TimeInterval = 3_600
+
+    /// Последний полив растения, если его меньше часа назад сделал кто-то
+    /// другой из семьи. Свой полив и полив без подписи — пусто.
+    static func recent(_ plant: Plant.ID, in log: [Watering], me: String?,
+                       now: Date = Date()) -> Watering? {
+        guard let last = log.last(where: { $0.plant == plant }),
+              let hand = last.hand, hand != me,
+              verb(last.by, she: last.she) != nil else { return nil }
+        let age = now.timeIntervalSince(last.when)
+        guard age > -60, age < recentSpan else { return nil }
+        return last
+    }
+
+    /// Сколько минут назад — не меньше нуля: часы телефонов чуть врут.
+    static func minutes(since entry: Watering, now: Date) -> Int {
+        max(0, Int(now.timeIntervalSince(entry.when) / 60))
+    }
+
+    /// Подпись на карточке и в строке: «Полила Маша, 5 мин назад».
+    static func ago(_ entry: Watering, now: Date = Date()) -> String? {
+        guard let verb = verb(entry.by, she: entry.she) else { return nil }
+        let minutes = minutes(since: entry, now: now)
+        return minutes < 1 ? Lang.format("%@, только что", verb)
+            : Lang.format("%1$@, %2$lld мин назад", verb, minutes)
+    }
+
+    /// Вопрос перед вторым поливом: «Маша уже полила 5 мин назад. Всё равно
+    /// полить?»
+    static func again(_ entry: Watering, now: Date = Date()) -> String {
+        let name = entry.by?.trimmingCharacters(in: .whitespacesAndNewlines)
+            ?? ""
+        let minutes = minutes(since: entry, now: now)
+        let she = entry.she == true
+        if minutes < 1 {
+            return she
+                ? Lang.format("%@ только что полила. Всё равно полить?", name)
+                : Lang.format("%@ только что полил. Всё равно полить?", name)
+        }
+        return she
+            ? Lang.format("%1$@ уже полила %2$lld мин назад. Всё равно полить?",
+                          name, minutes)
+            : Lang.format("%1$@ уже полил %2$lld мин назад. Всё равно полить?",
+                          name, minutes)
+    }
+
+    // MARK: - Роли
+
+    /// Стереть сад может только его хозяин: гость стёр бы растения у всех.
+    /// Гостю — только «Выйти из общего сада».
+    static func mayErase(_ mode: Mode) -> Bool { mode != .guest }
 
     /// «Маша полила: Баксик и Шуба» — одно уведомление на поливавшего.
     /// Клички — после двоеточия: так их не нужно склонять.

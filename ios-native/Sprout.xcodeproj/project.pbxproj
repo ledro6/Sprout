@@ -99,6 +99,7 @@
 				Model/Garden/Shots.swift,
 				"Model/Garden/Status+Plant.swift",
 				Model/Garden/Treatment.swift,
+				Model/Garden/Twin.swift,
 				Model/Pattern/Tint.swift,
 				Model/Recognition/Species.swift,
 				Model/Scene/Greenhouse.swift,

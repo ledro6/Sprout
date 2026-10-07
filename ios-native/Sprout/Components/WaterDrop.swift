@@ -8,10 +8,21 @@ struct WaterDrop: View {
 
     @Environment(Garden.self) private var garden
 
+    /// Чужой полив меньше часа назад, о котором спрашиваем перед своим.
+    @State private var asking: Watering?
+
     private var full: Bool { plant.moisture >= 0.99 }
 
+    /// Только что полил кто-то из семьи — капля приглушена, нажатие сначала
+    /// спрашивает: два полива подряд заливают корни.
+    private var recent: Watering? {
+        Kinship.shared.recent(plant.id, in: garden.log)
+    }
+
     var body: some View {
-        Button(action: pour) {
+        Button {
+            if let recent { asking = recent } else { pour() }
+        } label: {
             // Пересыхает — капля дышит: зовёт полить.
             Image(systemName: "drop.fill")
                 .font(.system(size: Metrics.dropGlyph, weight: .semibold))
@@ -23,8 +34,17 @@ struct WaterDrop: View {
         .buttonBorderShape(.circle)
         .tint(Palette.accentFill)
         .disabled(full)
+        .opacity(recent == nil ? 1 : 0.5)
         .animation(Motion.number, value: full)
         .accessibilityLabel(Lang.format("Полить: %@", plant.name))
+        .confirmationDialog(asking.map { Family.again($0) } ?? "",
+                            isPresented: Binding(
+                                get: { asking != nil },
+                                set: { if !$0 { asking = nil } }),
+                            titleVisibility: .visible) {
+            Button("Полить") { pour() }
+            Button("Отмена", role: .cancel) {}
+        }
     }
 
     private func pour() {

@@ -1526,7 +1526,7 @@ do {
           "пришла комната — имя и дача с сервера")
 
     // Поливы сливаются по номеру; подпись — у чужих.
-    let masha = Watering(plant: "А", when: at(300), left: 0.4, id: "m1",
+    let masha = Watering(plant: "А", when: at(900), left: 0.4, id: "m1",
                          by: "Маша", hand: "masha", she: true)
     arrival = Family.Arrival()
     arrival.pours = [masha, masha]
@@ -1556,8 +1556,8 @@ do {
     check(twin.count == 1 && twin[0].id != nil,
           "та же запись из резервной копии не задваивается")
 
-    check(Family.credit(masha, me: "me", now: at(600), calendar: clock) ?? "—",
-          "Полила Маша, 12:05", "подпись чужого полива сегодня")
+    check(Family.credit(masha, me: "me", now: at(1_200), calendar: clock) ?? "—",
+          "Полила Маша, 12:15", "подпись чужого полива сегодня")
     check(Family.credit(Watering(plant: "А", when: at(-86_400), id: "x",
                                  by: "Миша", hand: "misha", she: false),
                         me: "me", now: at(600), calendar: clock) ?? "—",
@@ -1582,6 +1582,61 @@ do {
           && !Family.she("Миша") && !Family.she("Никита")
           && !Family.she("Илья") && !Family.she("Игорь") && !Family.she(""),
           "полил или полила — догадка по имени")
+
+    // Двое полили одно растение за пять минут, не зная друг о друге: в
+    // журнале одна запись, ранняя, — на обоих телефонах одна и та же.
+    let early = Watering(plant: "Б", when: at(4_700), id: "early", by: "Маша",
+                         hand: "masha", she: true)
+    let late = Watering(plant: "Б", when: at(5_000), id: "late", by: "Миша",
+                        hand: "me", she: false)
+    var mishaLog = [late]
+    var mishaBook = Family.Book()
+    var mishaRooms: [Room] = []
+    var fromMasha = Family.Arrival()
+    fromMasha.pours = [early]
+    outcome = Family.apply(fromMasha, to: &mishaRooms, log: &mishaLog,
+                           book: &mishaBook, me: "me", now: at(5_100))
+    check(mishaLog == [early] && outcome.news.isEmpty,
+          "близнец раньше своего — остаётся он, без уведомления")
+    var mashaLog = [early]
+    var mashaBook = Family.Book()
+    var fromMisha = Family.Arrival()
+    fromMisha.pours = [late]
+    _ = Family.apply(fromMisha, to: &mishaRooms, log: &mashaLog,
+                     book: &mashaBook, me: "masha", now: at(5_100))
+    check(mashaLog == [early], "поздний близнец в журнал не ложится")
+    check(Family.outgoing([], mashaLog, book: mashaBook, has: { _ in true })
+              .deletes == [Family.name(.pour, "late")],
+          "и уходит с сервера: сад сходится к одной записи")
+    var apart = [late]
+    var apartBook = Family.Book()
+    var far = Family.Arrival()
+    far.pours = [Watering(plant: "Б", when: at(5_000 + 11 * 60), id: "far",
+                          by: "Маша", hand: "masha", she: true)]
+    _ = Family.apply(far, to: &mishaRooms, log: &apart, book: &apartBook,
+                     me: "me", now: at(6_000))
+    check(apart.count == 2, "через одиннадцать минут — уже второй полив")
+
+    // «Полила Маша, 5 мин назад» и вопрос перед вторым поливом.
+    check(Family.recent("Б", in: [early], me: "me", now: at(5_000)) == early,
+          "чужой полив пять минут назад — на карточке")
+    check(Family.recent("Б", in: [early], me: "masha", now: at(5_000)) == nil
+          && Family.recent("Б", in: [early], me: "me",
+                           now: at(4_700 + 3_700)) == nil
+          && Family.recent("Б", in: [Watering(plant: "Б", when: at(4_700))],
+                           me: "me", now: at(5_000)) == nil,
+          "свой, старше часа и без подписи — не показываем")
+    check(Family.ago(early, now: at(5_000)) ?? "—", "Полила Маша, 5 мин назад",
+          "подпись на карточке")
+    check(Family.ago(late, now: at(5_020)) ?? "—", "Полил Миша, только что",
+          "меньше минуты — «только что»")
+    check(Family.again(early, now: at(5_000)),
+          "Маша уже полила 5 мин назад. Всё равно полить?",
+          "вопрос перед вторым поливом")
+
+    // Стереть сад может только хозяин.
+    check(!Family.mayErase(.guest) && Family.mayErase(.own)
+          && Family.mayErase(.off), "стереть сад — не гостю")
 
     // Удаления.
     if let index = mine[0].plants.firstIndex(where: { $0.id == "А" }) {
@@ -2302,9 +2357,16 @@ do {
     check(garden.water("нет такого") == nil, "чужой номер не поливается")
     check(garden.log.count == count, "и в журнал не пишется")
 
-    let first = Watering(plant: "pr", when: moment.addingTimeInterval(-60))
+    let first = Watering(plant: "pr", when: moment.addingTimeInterval(-20 * 60))
     garden.water("pr", at: first.when)
     garden.water("pr", at: moment)
+    let twice = garden.log.count
+    garden.water("pr", at: moment.addingTimeInterval(5 * 60))
+    check(garden.log.count == twice,
+          "полили снова через пять минут — та же запись")
+    garden.unwater(Pour(plant: "pr", name: "pr", moisture: 1,
+                        when: moment.addingTimeInterval(5 * 60)))
+    check(garden.log.count == twice, "и её отмена прежнюю не трогает")
     let wet = garden.plant(id: "pr")!.moisture
     garden.forget(first)
     check(Diary.of(garden.log, plant: "pr").entries == [moment],
@@ -4808,6 +4870,21 @@ do {
     let file = try! JSONEncoder().encode(yard.plant(id: "Папоротник")!)
     let back = try! JSONDecoder().decode(Plant.self, from: file)
     check(back.sensor?.last?.moisture == 45, "датчик ложится в файл сада")
+    let sensed = later.addingTimeInterval(3_600 * 40)
+    _ = yard.sense("Папоротник", Reading(moisture: 15, when: sensed))
+    check(yard.sense("Папоротник", Reading(moisture: 44,
+                                           when: sensed.addingTimeInterval(60))),
+          "датчик заметил полив")
+    let sensedCount = yard.log.count
+    yard.water("Папоротник", at: sensed.addingTimeInterval(6 * 60))
+    check(yard.log.count == sensedCount,
+          "датчик записал, через пять минут нажали «Полить» — одна запись")
+    yard.water("Папоротник", at: sensed.addingTimeInterval(12 * 60))
+    check(yard.log.count == sensedCount + 1, "через одиннадцать — вторая")
+
+    // Гость общего сада стереть его не может и в обход экрана.
+    check(!yard.erase(guest: true) && yard.plantCount == 1,
+          "гость сад не стирает")
     yard.link("Папоротник", sensor: nil)
     check(yard.plant(id: "Папоротник")!.sensor == nil, "датчик отвязали")
 }

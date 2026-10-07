@@ -159,6 +159,8 @@ struct RaceCard: View {
     let mine: String
     let leave: () -> Void
 
+    @State private var quitting = false
+
     var body: some View {
         VStack(alignment: .leading, spacing: Metrics.rowGap) {
             HStack(spacing: 10) {
@@ -205,12 +207,20 @@ struct RaceCard: View {
                 HStack(spacing: 8) { buttons }
                 VStack(alignment: .leading, spacing: 8) { buttons }
             }
-            Button(role: .destructive, action: leave) {
+            // Выход — отдельно и не рядом с «Отправить счёт», и с вопросом.
+            Button(role: .destructive) { quitting = true } label: {
                 Label("Выйти из испытания",
                       systemImage: "rectangle.portrait.and.arrow.right")
             }
             .buttonStyle(.borderless)
             .font(Typography.settingNote)
+            .confirmationDialog("Выйти из испытания?", isPresented: $quitting,
+                                titleVisibility: .visible) {
+                Button("Выйти", role: .destructive, action: leave)
+                Button("Отмена", role: .cancel) {}
+            } message: {
+                Text("Испытание пропадёт с этого телефона. Вернуться можно, вставив приглашение ещё раз.")
+            }
         }
     }
 

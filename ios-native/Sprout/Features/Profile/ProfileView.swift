@@ -489,35 +489,49 @@ struct ProfileView: View {
             }
             .buttonStyle(.plain)
 
-            SproutDivider()
+            // Стереть общий сад может только хозяин: у гостя пункта нет вовсе,
+            // ему — «Выйти из общего сада» в группе «Семья».
+            if !kin.guest {
+                SproutDivider()
 
-            Button(role: .destructive) { erasing = true } label: {
-                HStack(spacing: 12) {
-                    Image(systemName: "trash")
-                        .font(Typography.settingRow)
-                        .frame(width: 24)
-                    Text("Стереть сад")
-                        .font(Typography.settingRow)
-                    Spacer(minLength: 8)
-                }
-                .foregroundStyle(.red)
-                .contentShape(Rectangle())
+                eraseRow
             }
-            .buttonStyle(.plain)
         }
         .sproutRide()
-        .confirmationDialog("Стереть сад?", isPresented: $erasing,
-                            titleVisibility: .visible) {
-            Button("Стереть", role: .destructive) { garden.erase() }
-            Button("Отмена", role: .cancel) {}
-        } message: {
-            // В общем саду стирается сад у всех, кто в нём.
-            if Kinship.enabled,
-               Kinship.shared.mode == .guest || Kinship.shared.sharing {
-                Text("Исчезнут все растения и весь журнал поливов — у всех, кто в общем саду. Вернуть их будет нельзя.")
-            } else {
-                Text("Исчезнут все растения и весь журнал поливов. Вернуть их будет нельзя.")
+        .sheet(isPresented: $erasing) {
+            TypedConfirm(
+                title: Lang.text("Стереть сад?"),
+                message: shared
+                    ? Lang.text("Исчезнут все растения и весь журнал поливов — у всех, кто в общем саду. Вернуть их будет нельзя.")
+                    : Lang.text("Исчезнут все растения и весь журнал поливов. Вернуть их будет нельзя."),
+                prompt: Lang.format("Введите %lld, чтобы стереть",
+                                    garden.plantCount),
+                answer: String(garden.plantCount),
+                done: Lang.text("Стереть"),
+                numeric: true) {
+                _ = garden.erase(guest: kin.guest)
             }
         }
+    }
+
+    private var kin: Kinship { Kinship.shared }
+
+    /// В общем саду стирается сад у всех, кто в нём.
+    private var shared: Bool { Kinship.enabled && kin.sharing }
+
+    private var eraseRow: some View {
+        Button(role: .destructive) { erasing = true } label: {
+            HStack(spacing: 12) {
+                Image(systemName: "trash")
+                    .font(Typography.settingRow)
+                    .frame(width: 24)
+                Text("Стереть сад")
+                    .font(Typography.settingRow)
+                Spacer(minLength: 8)
+            }
+            .foregroundStyle(.red)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
     }
 }

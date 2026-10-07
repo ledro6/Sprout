@@ -999,6 +999,20 @@ final class Kinship {
         Family.credit(named(entry), me: ledger.me)
     }
 
+    /// Чужой полив меньше часа назад — для подписи на карточке, приглушённой
+    /// капли и вопроса «Всё равно полить?». Имя — из приглашения, если в
+    /// записи его нет.
+    func recent(_ plant: Plant.ID, in log: [Watering],
+                now: Date = Date()) -> Watering? {
+        guard Self.enabled, mode != .off,
+              let last = log.last(where: { $0.plant == plant })
+        else { return nil }
+        return Family.recent(plant, in: [named(last)], me: ledger.me, now: now)
+    }
+
+    /// Гость общего сада: стереть сад ему нельзя (`Family.mayErase`).
+    var guest: Bool { Self.enabled && !Family.mayErase(mode) }
+
     /// Подпись в записи журнала, где время уже есть: «Полила Маша».
     func signature(_ entry: Watering) -> String? {
         guard let hand = entry.hand, hand != ledger.me else { return nil }
