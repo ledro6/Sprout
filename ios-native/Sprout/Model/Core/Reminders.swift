@@ -31,38 +31,42 @@ enum Reminder {
     /// и оно прилетало бы, пока экран ещё не погас.
     static let soonest: TimeInterval = 15
 
-    /// Через сколько настоящих секунд растение опустится до порога; пусто —
-    /// никогда.
+    /// Через сколько секунд растение попадёт в «полить сегодня»
+    /// (`MoistureStatus.due`); уже там — ноль, пусто — никогда. Порог у
+    /// каждого свой: сухо (меньше 20 %) — или срок дошёл до нуля дней, у
+    /// растений с коротким сроком это раньше.
     ///
-    /// Через `Garden.speed`, а не настоящие сутки: иначе на карточке растение
-    /// сухое, а напоминание — через неделю.
-    static func delay(for plant: Plant, threshold: Double) -> TimeInterval? {
-        guard plant.dryingDays > 0 else { return nil }
-        guard plant.moisture > threshold else { return 0 }
-        let days = (plant.moisture - threshold) * plant.period
+    /// Время сада — настоящее (`Garden.speed`), и напоминание приходит в тот
+    /// день, когда карточка говорит «Полить сегодня».
+    static func delay(for plant: Plant) -> TimeInterval? {
+        guard plant.dryingDays > 0, plant.period > 0 else { return nil }
+        guard !plant.needsWaterToday else { return 0 }
+        // Ноль дней — когда влажность × срок меньше половины дня.
+        let edge = max(MoistureStatus.urgentBelow, 0.5 / plant.period)
+        let days = max(0, plant.moisture - edge) * plant.period
         return days * 86_400 / Garden.speed
     }
 
     /// Одно на всю квартиру, а не по штуке на растение, — но с числом
-    /// соседей, которым станет сухо к тому же мигу.
-    static func next(in rooms: [Room], threshold: Double) -> Due? {
+    /// соседей, которые к тому же мигу попадут в «полить сегодня». Те, кому
+    /// полить уже сегодня, — это ровно `MoistureStatus.needsWater`.
+    static func next(in rooms: [Room]) -> Due? {
         let plants = rooms.flatMap(\.plants)
         var soonest: (plant: Plant, delay: TimeInterval)?
         for plant in plants {
-            guard let delay = delay(for: plant, threshold: threshold) else {
-                continue
-            }
-            if soonest == nil || delay < soonest!.delay {
+            guard let delay = delay(for: plant) else { continue }
+            if soonest == nil || delay < soonest!.delay
+                || (delay == soonest!.delay
+                    && plant.moisture < soonest!.plant.moisture) {
                 soonest = (plant, delay)
             }
         }
         guard let soonest else { return nil }
         let together = plants.filter {
-            guard let delay = delay(for: $0, threshold: threshold) else {
-                return false
-            }
+            guard let delay = delay(for: $0) else { return false }
             return delay <= soonest.delay
         }
+        .sorted { $0.moisture < $1.moisture }
         return Due(plant: soonest.plant, others: together.count - 1,
                    after: max(soonest.delay, Self.soonest),
                    ids: together.map(\.id))

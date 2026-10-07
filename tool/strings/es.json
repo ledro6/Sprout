@@ -81,12 +81,6 @@
   "Полил": "Regada",
   "%lld%%": "%lld %%",
   "Добавлен %@": "Añadida el %@",
-  "Следующий полив: сегодня": "Próximo riego: hoy",
-  "Следующий полив: завтра": "Próximo riego: mañana",
-  "Следующий полив: %lld дней": {
-    "one": "Próximo riego: en %lld día",
-    "other": "Próximo riego: en %lld días"
-  },
   "Садовод": "Jardinero",
   "Добро пожаловать!": "¡Te damos la bienvenida!",
   "Добро пожаловать, %@!": "¡Hola, %@!",
@@ -340,7 +334,6 @@
   "Горшок": "Maceta",
   "Учитывать время года": "Tener en cuenta la estación",
   "Напоминать о поливе": "Recordar el riego",
-  "Когда влажность ниже": "Cuando la humedad baje de",
   "Защита": "Protección",
   "Запирать приложение": "Bloquear la app",
   "На телефоне нет ни Face ID, ни код-пароля.": "Este teléfono no tiene ni Face ID ni código.",
@@ -442,7 +435,6 @@
   "Если вы поливаете раньше срока, приложение заметит и предложит сделать срок короче.": "Si riegas antes de tiempo, la app lo nota y te propone acortar el intervalo.",
   "Удобрение, разведённое в воде для полива. Нужно раз в несколько недель, пока растение растёт.": "Abono disuelto en el agua de riego. Hace falta cada pocas semanas mientras la planta crece.",
   "Переезд в горшок побольше со свежей землёй. Обычно раз в год-два, весной.": "Pasar la planta a una maceta más grande con tierra nueva. Normalmente cada uno o dos años, en primavera.",
-  "Уведомление на телефон, когда земля у растения подсохла ниже выбранного порога.": "Un aviso en el teléfono cuando la tierra de una planta se ha secado por debajo del umbral elegido.",
   "Узор на фоне чуть сдвигается, когда вы наклоняете телефон, — будто лежит глубже экрана.": "El patrón del fondo se desplaza un poco al inclinar el teléfono, como si estuviera más hondo que la pantalla.",
   "При наклоне каждая фигурка узора движется со своей скоростью, будто плывёт в воде.": "Al inclinar el teléfono, cada figura del patrón se mueve a su propio ritmo, como si flotara en el agua.",
   "После полива по узору бежит цветная волна — так видно, что полив засчитан.": "Después de regar, una ola de color recorre el patrón: así sabes que el riego se ha contado.",

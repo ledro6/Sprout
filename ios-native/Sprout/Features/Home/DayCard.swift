@@ -46,7 +46,9 @@ struct DayCard: View {
     }
 
     private func card(_ part: Daypart) -> some View {
-        let due = Seed.due(in: [room])
+        // Обход — по всему саду, и кнопка — пока поливать есть кого во всём
+        // саду; строка — о своей комнате, см. `MoistureStatus.dayLine`.
+        let due = MoistureStatus.needsWater(in: garden.rooms)
         return VStack(alignment: .leading, spacing: 12) {
             HStack(alignment: .top, spacing: 14) {
                 Image(systemName: part.icon)
@@ -62,9 +64,7 @@ struct DayCard: View {
                         .foregroundStyle(Palette.ink)
                         .lineLimit(1)
                         .minimumScaleFactor(0.8)
-                    Text(due.isEmpty
-                         ? Lang.text("Здесь все довольны — можно выдохнуть.")
-                         : Seed.dueLine(due))
+                    Text(MoistureStatus.dayLine(room: room, in: garden.rooms))
                         .font(Typography.settingNote)
                         .foregroundStyle(.secondary)
                         .fixedSize(horizontal: false, vertical: true)

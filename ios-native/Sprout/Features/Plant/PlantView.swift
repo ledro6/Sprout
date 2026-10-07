@@ -574,6 +574,11 @@ struct PlantView: View {
             fact(Lang.format("Влажность %@", plant.moistureLabel),
                  term: .moisture)
                 .contentTransition(.numericText())
+            // Статус — словами и значком общего движка, см. `StatusStyle`.
+            StatusLabel(status: plant.status)
+                .font(Typography.detail)
+                .foregroundStyle(Palette.ink)
+                .animation(Motion.number, value: plant.status)
             if let status = plant.sensor?.status {
                 fact(status)
                     .contentTransition(.numericText())

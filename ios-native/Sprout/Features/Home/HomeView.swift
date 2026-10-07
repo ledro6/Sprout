@@ -224,7 +224,7 @@ struct HomeView: View {
         }
         // Ждали воды, и полили последнего — праздник. Высохли новые —
         // просто счёт растёт.
-        .onChange(of: Seed.due(in: garden.rooms).count) { old, now in
+        .onChange(of: MoistureStatus.needsWater(in: garden.rooms).count) { old, now in
             // Только после полива: убрали последнего сухого — не праздник.
             guard old > 0, now == 0, Launch.shared.step >= Launch.last,
                   path.isEmpty,
@@ -643,7 +643,7 @@ struct HomeView: View {
                     Label("Закончить полив по очереди", systemImage: "stop.circle")
                 }
             } else if garden.rooms.contains(where: {
-                $0.plants.contains { $0.thirst != .calm }
+                $0.plants.contains(where: \.needsWaterToday)
             }) {
                 Button {
                     Task { await live.startRound() }

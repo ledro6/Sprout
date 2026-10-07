@@ -1,6 +1,7 @@
 # Файлы модели, которые собираются без Apple: проверка модели
 # (tool/check_model.sh) и готовые модели видов (tool/make_stock.py).
 ios-native/Sprout/Model/Core/Lang.swift
+ios-native/Sprout/Model/Core/Status.swift
 ios-native/Sprout/Model/Garden/Season.swift
 ios-native/Sprout/Model/Garden/Care.swift
 ios-native/Sprout/Model/Garden/Trip.swift
@@ -11,6 +12,7 @@ ios-native/Sprout/Model/Core/Store.swift
 ios-native/Sprout/Model/Scene/Rig.swift
 ios-native/Sprout/Model/Garden/Treatment.swift
 ios-native/Sprout/Model/Garden/Plants.swift
+ios-native/Sprout/Model/Garden/Status+Plant.swift
 ios-native/Sprout/Model/Garden/Garden.swift
 ios-native/Sprout/Model/Garden/PotTag.swift
 ios-native/Sprout/Model/Garden/Postcard.swift

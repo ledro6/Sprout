@@ -81,12 +81,6 @@
   "Полил": "Suladım",
   "%lld%%": "%%%lld",
   "Добавлен %@": "Eklendi: %@",
-  "Следующий полив: сегодня": "Sonraki sulama: bugün",
-  "Следующий полив: завтра": "Sonraki sulama: yarın",
-  "Следующий полив: %lld дней": {
-    "one": "Sonraki sulama: %lld gün sonra",
-    "other": "Sonraki sulama: %lld gün sonra"
-  },
   "Садовод": "Bahçıvan",
   "Добро пожаловать!": "Hoş geldiniz!",
   "Добро пожаловать, %@!": "Hoş geldiniz, %@!",
@@ -340,7 +334,6 @@
   "Горшок": "Saksı",
   "Учитывать время года": "Mevsimi hesaba kat",
   "Напоминать о поливе": "Sulamayı hatırlat",
-  "Когда влажность ниже": "Nem şunun altına düşünce",
   "Защита": "Koruma",
   "Запирать приложение": "Uygulamayı kilitle",
   "На телефоне нет ни Face ID, ни код-пароля.": "Bu telefonda ne Face ID ne de parola var.",
@@ -442,7 +435,6 @@
   "Если вы поливаете раньше срока, приложение заметит и предложит сделать срок короче.": "Zamanından önce sularsanız uygulama bunu fark eder ve aralığı kısaltmayı önerir.",
   "Удобрение, разведённое в воде для полива. Нужно раз в несколько недель, пока растение растёт.": "Sulama suyunda çözülmüş gübre. Bitki büyürken birkaç haftada bir gerekir.",
   "Переезд в горшок побольше со свежей землёй. Обычно раз в год-два, весной.": "Taze topraklı daha büyük bir saksıya taşınma. Genellikle bir iki yılda bir, ilkbaharda.",
-  "Уведомление на телефон, когда земля у растения подсохла ниже выбранного порога.": "Bir bitkinin toprağı seçtiğiniz eşiğin altına kuruduğunda telefona gelen bildirim.",
   "Узор на фоне чуть сдвигается, когда вы наклоняете телефон, — будто лежит глубже экрана.": "Telefonu eğdiğinizde arka plandaki desen biraz kayar; sanki ekrandan daha derindeymiş gibi.",
   "При наклоне каждая фигурка узора движется со своей скоростью, будто плывёт в воде.": "Telefonu eğince desendeki her şekil kendi hızında hareket eder, suda süzülüyormuş gibi.",
   "После полива по узору бежит цветная волна — так видно, что полив засчитан.": "Sulamadan sonra desenin üzerinden renkli bir dalga geçer; sulamanın sayıldığını böyle anlarsınız.",

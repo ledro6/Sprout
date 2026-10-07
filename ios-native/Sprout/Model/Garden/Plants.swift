@@ -1,14 +1,15 @@
 import Foundation
 
-/// Насколько сухо: ниже 40% тень оранжевая, ниже 20% красная. Силу тени
-/// считает `alarm` — плавно, без ступеней.
+/// Насколько сухо — для тени карточки: ниже 40% тень оранжевая, ниже 20%
+/// красная. Силу тени считает `alarm` — плавно, без ступеней. Пороги — у
+/// статуса (`MoistureStatus`): что значит «сухо», решает он один.
 enum Thirst {
     case calm
     case warn
     case alarm
 
-    static let warnBelow = 0.4
-    static let alarmBelow = 0.2
+    static let warnBelow = MoistureStatus.soonBelow
+    static let alarmBelow = MoistureStatus.urgentBelow
 
     init(moisture: Double) {
         switch moisture {
@@ -110,7 +111,7 @@ struct Plant: Identifiable, Hashable, Codable {
 
     /// Из влажности, а не хранится: два числа рано или поздно разошлись бы.
     var daysUntilWatering: Int {
-        max(0, Int((moisture * period).rounded()))
+        MoistureStatus.days(moisture: moisture, period: period)
     }
 
     var thirst: Thirst { Thirst(moisture: moisture) }
@@ -125,7 +126,8 @@ struct Plant: Identifiable, Hashable, Codable {
         Lang.format("%lld%%", Int((moisture * 100).rounded()))
     }
 
-    var wateringLabel: String { Self.wateringLabel(days: daysUntilWatering) }
+    /// Подпись срока — словами статуса, см. `MoistureStatus.nextWatering`.
+    var wateringLabel: String { nextWateringText }
 
     /// Дата — по-местному: у кого «2.11.2024», у кого «11/2/2024».
     var addedLabel: String {
@@ -181,13 +183,6 @@ struct Plant: Identifiable, Hashable, Codable {
     var pulsePhase: Double {
         let sum = id.unicodeScalars.reduce(0) { $0 &+ Int($1.value) }
         return Double(sum % 97) / 97
-    }
-
-    /// С двоеточием вместо «через»: строка короче и читается сроком.
-    static func wateringLabel(days: Int) -> String {
-        if days <= 0 { return Lang.text("Следующий полив: сегодня") }
-        if days == 1 { return Lang.text("Следующий полив: завтра") }
-        return Lang.format("Следующий полив: %lld дней", days)
     }
 
     /// Номер случайный: кличек бывает две одинаковых.
@@ -415,13 +410,6 @@ enum Seed {
                   addedOn: DateComponents(year: 2024, month: 10, day: 5)),
         ]),
     ]
-
-    /// «Сегодня» — тем же счётом, что подпись на карточке.
-    static func due(in rooms: [Room]) -> [Plant] {
-        rooms.flatMap(\.plants)
-            .filter { $0.daysUntilWatering == 0 }
-            .sorted { $0.moisture < $1.moisture }
-    }
 
     /// Для Siri: больше пяти имён на слух не держатся — остальные числом.
     static func dueLine(_ plants: [Plant]) -> String {

@@ -28,8 +28,9 @@ struct PlantGlow<S: Shape>: ViewModifier {
         .opacity(halos ? 1 : 0)
     }
 
+    /// Цвет — статуса (`StatusStyle`): «сухо» — alarm, «скоро» — warn.
     private var alarmColour: Color {
-        plant.thirst == .alarm ? Palette.alarm : Palette.warn
+        StatusStyle.color(plant.thirst == .alarm ? .alarm : .warn)
     }
 
     private var alarmStrength: Double {

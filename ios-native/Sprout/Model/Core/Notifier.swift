@@ -57,10 +57,10 @@ enum Notifier {
 
     /// Зовётся, когда приложение уходит с экрана: пока на сад смотрят,
     /// напоминание было бы шумом.
-    static func schedule(in rooms: [Room], threshold: Double) async {
+    static func schedule(in rooms: [Room]) async {
         clear()
         guard await allowed() else { return }
-        if let due = Reminder.next(in: rooms, threshold: threshold) {
+        if let due = Reminder.next(in: rooms) {
             let note = UNMutableNotificationContent()
             note.title = Reminder.title
             note.body = Reminder.text(for: due)

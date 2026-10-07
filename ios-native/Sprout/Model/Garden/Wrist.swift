@@ -14,35 +14,28 @@ struct Wrist: Codable, Equatable, Sendable {
         /// За сколько дней высыхает — после полива с часов срок считается
         /// от него.
         var period: Double
+        /// Влажность с датчика, а не посчитана по сроку. Пусто в посылках
+        /// прежних сборок — посчитана.
+        var measured: Bool?
 
-        var level: Level { Level(moisture: moisture) }
+        /// Статус и сроки — тем же движком, что в приложении
+        /// (`MoistureStatus`): своих порогов у часов нет.
+        var status: MoistureStatus { MoistureStatus(moisture: moisture) }
+
+        /// Полить сегодня — как «Ждут воды» на телефоне.
+        var due: Bool { MoistureStatus.due(moisture: moisture, period: period) }
 
         /// Дней до полива — как на карточке в приложении.
-        var days: Int { max(0, Int((moisture * period).rounded())) }
+        var days: Int { MoistureStatus.days(moisture: moisture, period: period) }
 
         var percent: Int { Int((moisture * 100).rounded()) }
 
+        var estimated: Bool { measured != true }
+
         /// Те же слова, что на карточке в приложении, — и те же переводы.
         var label: String {
-            if days <= 0 { return Lang.text("Следующий полив: сегодня") }
-            if days == 1 { return Lang.text("Следующий полив: завтра") }
-            return Lang.format("Следующий полив: %lld дней", days)
-        }
-    }
-
-    /// Та же тень, что на карточке: ниже 40% — пора, ниже 20% — срочно.
-    enum Level: Sendable {
-        case calm, warn, alarm
-
-        static let warnBelow = 0.4
-        static let alarmBelow = 0.2
-
-        init(moisture: Double) {
-            switch moisture {
-            case ..<Self.alarmBelow: self = .alarm
-            case ..<Self.warnBelow: self = .warn
-            default: self = .calm
-            }
+            MoistureStatus.nextWatering(moisture: moisture, period: period,
+                                        estimated: estimated)
         }
     }
 
@@ -50,7 +43,8 @@ struct Wrist: Codable, Equatable, Sendable {
     var pots: [Pot]
     var sent: Date
 
-    var thirsty: [Pot] { pots.filter { $0.level != .calm } }
+    /// Кого полить сегодня — тот же набор, что `MoistureStatus.needsWater`.
+    var thirsty: [Pot] { pots.filter(\.due) }
 
     /// Полили с часов — сразу на часах, не дожидаясь телефона: он догонит.
     /// Слепок помечается мигом полива: посылка телефона, собранная раньше,

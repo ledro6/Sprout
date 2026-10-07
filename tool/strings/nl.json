@@ -81,12 +81,6 @@
   "Полил": "Water gegeven",
   "%lld%%": "%lld%%",
   "Добавлен %@": "Toegevoegd op %@",
-  "Следующий полив: сегодня": "Volgende keer water: vandaag",
-  "Следующий полив: завтра": "Volgende keer water: morgen",
-  "Следующий полив: %lld дней": {
-    "one": "Volgende keer water: over %lld dag",
-    "other": "Volgende keer water: over %lld dagen"
-  },
   "Садовод": "Tuinier",
   "Добро пожаловать!": "Welkom!",
   "Добро пожаловать, %@!": "Welkom, %@!",
@@ -340,7 +334,6 @@
   "Горшок": "Pot",
   "Учитывать время года": "Houd rekening met seizoenen",
   "Напоминать о поливе": "Herinner aan water",
-  "Когда влажность ниже": "Als vochtigheid lager dan",
   "Защита": "Beveiliging",
   "Запирать приложение": "Vergrendel app",
   "На телефоне нет ни Face ID, ни код-пароля.": "Deze telefoon heeft geen Face ID en geen toegangscode.",
@@ -442,7 +435,6 @@
   "Если вы поливаете раньше срока, приложение заметит и предложит сделать срок короче.": "Geef je eerder water dan nodig, dan merkt de app dat en stelt een korter interval voor.",
   "Удобрение, разведённое в воде для полива. Нужно раз в несколько недель, пока растение растёт.": "Plantenvoeding opgelost in het gietwater. Om de paar weken nodig zolang de plant groeit.",
   "Переезд в горшок побольше со свежей землёй. Обычно раз в год-два, весной.": "Verhuizen naar een grotere pot met verse grond. Meestal eens per één à twee jaar, in het voorjaar.",
-  "Уведомление на телефон, когда земля у растения подсохла ниже выбранного порога.": "Een melding op je telefoon als de grond van een plant onder de gekozen grens is opgedroogd.",
   "Узор на фоне чуть сдвигается, когда вы наклоняете телефон, — будто лежит глубже экрана.": "Het patroon op de achtergrond verschuift een beetje als je de telefoon kantelt – alsof het dieper ligt dan het scherm.",
   "При наклоне каждая фигурка узора движется со своей скоростью, будто плывёт в воде.": "Als je de telefoon kantelt, beweegt elk figuurtje van het patroon in zijn eigen tempo, alsof het in water zweeft.",
   "После полива по узору бежит цветная волна — так видно, что полив засчитан.": "Na het water geven loopt er een gekleurde golf over het patroon – zo zie je dat het water geven is geteld.",

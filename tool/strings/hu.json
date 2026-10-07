@@ -81,12 +81,6 @@
   "Полил": "Megöntöztem",
   "%lld%%": "%lld%%",
   "Добавлен %@": "Hozzáadva: %@",
-  "Следующий полив: сегодня": "Következő öntözés: ma",
-  "Следующий полив: завтра": "Következő öntözés: holnap",
-  "Следующий полив: %lld дней": {
-    "one": "Következő öntözés: %lld nap múlva",
-    "other": "Következő öntözés: %lld nap múlva"
-  },
   "Садовод": "Kertész",
   "Добро пожаловать!": "Üdv!",
   "Добро пожаловать, %@!": "Üdv, %@!",
@@ -340,7 +334,6 @@
   "Горшок": "Cserép",
   "Учитывать время года": "Évszak figyelembevétele",
   "Напоминать о поливе": "Öntözési emlékeztető",
-  "Когда влажность ниже": "Ha a nedvesség kevesebb mint",
   "Защита": "Védelem",
   "Запирать приложение": "Alkalmazás zárolása",
   "На телефоне нет ни Face ID, ни код-пароля.": "Ezen a telefonon nincs se Face ID, se jelkód.",
@@ -442,7 +435,6 @@
   "Если вы поливаете раньше срока, приложение заметит и предложит сделать срок короче.": "Ha a határidő előtt öntözöl, az alkalmazás észreveszi, és rövidebb gyakoriságot javasol.",
   "Удобрение, разведённое в воде для полива. Нужно раз в несколько недель, пока растение растёт.": "Az öntözővízben feloldott tápoldat. Néhány hetente kell, amíg a növény növekszik.",
   "Переезд в горшок побольше со свежей землёй. Обычно раз в год-два, весной.": "Költözés nagyobb cserépbe, friss földbe. Általában egy-két évente, tavasszal.",
-  "Уведомление на телефон, когда земля у растения подсохла ниже выбранного порога.": "Értesítés a telefonon, amikor egy növény földje a választott küszöb alá szárad.",
   "Узор на фоне чуть сдвигается, когда вы наклоняете телефон, — будто лежит глубже экрана.": "A háttér mintája kicsit elmozdul, ha megdöntöd a telefont – mintha mélyebben lenne a kijelzőnél.",
   "При наклоне каждая фигурка узора движется со своей скоростью, будто плывёт в воде.": "Döntéskor a minta minden formája a saját tempójában mozog, mintha vízben lebegne.",
   "После полива по узору бежит цветная волна — так видно, что полив засчитан.": "Öntözés után színes hullám fut végig a mintán – így látod, hogy az öntözés beszámított.",

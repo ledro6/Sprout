@@ -262,8 +262,7 @@ struct RootView: View {
         }
         // Без дачных, если о них напоминают только на даче.
         let rooms = Dachnik.shared.reminded(garden.rooms)
-        let threshold = settings.threshold
-        Task { await Notifier.schedule(in: rooms, threshold: threshold) }
+        Task { await Notifier.schedule(in: rooms) }
     }
 
     /// Раз в секунду: даже у самого быстрого растения процент меняется за

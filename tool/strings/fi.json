@@ -81,12 +81,6 @@
   "Полил": "Kasteltu",
   "%lld%%": "%lld %%",
   "Добавлен %@": "Lisätty %@",
-  "Следующий полив: сегодня": "Seuraava kastelu: tänään",
-  "Следующий полив: завтра": "Seuraava kastelu: huomenna",
-  "Следующий полив: %lld дней": {
-    "one": "Seuraava kastelu: %lld päivän päästä",
-    "other": "Seuraava kastelu: %lld päivän päästä"
-  },
   "Садовод": "Puutarhuri",
   "Добро пожаловать!": "Tervetuloa!",
   "Добро пожаловать, %@!": "Tervetuloa, %@!",
@@ -340,7 +334,6 @@
   "Горшок": "Ruukku",
   "Учитывать время года": "Huomioi vuodenaika",
   "Напоминать о поливе": "Muistuta kastelusta",
-  "Когда влажность ниже": "Kun kosteus on alle",
   "Защита": "Suojaus",
   "Запирать приложение": "Lukitse appi",
   "На телефоне нет ни Face ID, ни код-пароля.": "Tässä puhelimessa ei ole Face ID:tä eikä pääsykoodia.",
@@ -442,7 +435,6 @@
   "Если вы поливаете раньше срока, приложение заметит и предложит сделать срок короче.": "Jos kastelet ennen aikaa, appi huomaa sen ja ehdottaa lyhyempää väliä.",
   "Удобрение, разведённое в воде для полива. Нужно раз в несколько недель, пока растение растёт.": "Kasteluveteen liuotettua lannoitetta. Tarvitaan muutaman viikon välein, kun kasvi kasvaa.",
   "Переезд в горшок побольше со свежей землёй. Обычно раз в год-два, весной.": "Muutto isompaan ruukkuun tuoreeseen multaan. Yleensä vuoden tai kahden välein, keväällä.",
-  "Уведомление на телефон, когда земля у растения подсохла ниже выбранного порога.": "Ilmoitus puhelimeen, kun kasvin multa on kuivunut valitun rajan alle.",
   "Узор на фоне чуть сдвигается, когда вы наклоняете телефон, — будто лежит глубже экрана.": "Taustan kuvio siirtyy hieman, kun kallistat puhelinta – kuin se olisi näyttöä syvemmällä.",
   "При наклоне каждая фигурка узора движется со своей скоростью, будто плывёт в воде.": "Kallistaessa jokainen kuvion hahmo liikkuu omaa vauhtiaan, kuin kelluisi vedessä.",
   "После полива по узору бежит цветная волна — так видно, что полив засчитан.": "Kastelun jälkeen kuvion yli kulkee värikäs aalto – siitä näet, että kastelu kirjattiin.",

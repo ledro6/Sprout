@@ -81,12 +81,6 @@
   "Полил": "Vattnad",
   "%lld%%": "%lld %%",
   "Добавлен %@": "Tillagd %@",
-  "Следующий полив: сегодня": "Nästa vattning: i dag",
-  "Следующий полив: завтра": "Nästa vattning: i morgon",
-  "Следующий полив: %lld дней": {
-    "one": "Nästa vattning: om %lld dag",
-    "other": "Nästa vattning: om %lld dagar"
-  },
   "Садовод": "Trädgårdsmästare",
   "Добро пожаловать!": "Välkommen!",
   "Добро пожаловать, %@!": "Välkommen, %@!",
@@ -340,7 +334,6 @@
   "Горшок": "Kruka",
   "Учитывать время года": "Ta hänsyn till årstiden",
   "Напоминать о поливе": "Påminn om vattning",
-  "Когда влажность ниже": "När fukten är under",
   "Защита": "Skydd",
   "Запирать приложение": "Lås appen",
   "На телефоне нет ни Face ID, ни код-пароля.": "Telefonen har varken Face ID eller lösenkod.",
@@ -442,7 +435,6 @@
   "Если вы поливаете раньше срока, приложение заметит и предложит сделать срок короче.": "Vattnar du före tiden märker appen det och föreslår ett kortare intervall.",
   "Удобрение, разведённое в воде для полива. Нужно раз в несколько недель, пока растение растёт.": "Gödning upplöst i vattningsvattnet. Behövs med några veckors mellanrum medan växten växer.",
   "Переезд в горшок побольше со свежей землёй. Обычно раз в год-два, весной.": "Flytt till en större kruka med färsk jord. Oftast varje eller vartannat år, på våren.",
-  "Уведомление на телефон, когда земля у растения подсохла ниже выбранного порога.": "En notis i telefonen när jorden hos en växt har torkat under den gräns du valt.",
   "Узор на фоне чуть сдвигается, когда вы наклоняете телефон, — будто лежит глубже экрана.": "Mönstret i bakgrunden rör sig lite när du lutar telefonen – som om det låg djupare än skärmen.",
   "При наклоне каждая фигурка узора движется со своей скоростью, будто плывёт в воде.": "När du lutar telefonen rör sig varje figur i mönstret i sin egen takt, som om den flöt i vatten.",
   "После полива по узору бежит цветная волна — так видно, что полив засчитан.": "Efter vattning sveper en färgad våg över mönstret – så ser du att vattningen räknats.",

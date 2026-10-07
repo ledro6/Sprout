@@ -173,7 +173,7 @@ struct OrreryDial: View {
     private func diameter(of planet: Orrery.Planet) -> CGFloat {
         let base = planet.id == picked ? Metrics.planetPicked : Metrics.planet
         let scaled = small ? base * 0.62 : base
-        guard Thirst(moisture: planet.moisture) == .alarm else { return scaled }
+        guard MoistureStatus(moisture: planet.moisture) == .urgent else { return scaled }
         return scaled * (1 + 0.3 * CGFloat(beat))
     }
 }

@@ -28,10 +28,12 @@ struct Sprig: Identifiable, Hashable {
     let moisture: Double
     let label: String
     let thumb: URL?
+    /// Полить сегодня — тот же набор, что «Ждут воды» в приложении.
+    var due = false
 
     var percent: String { Lang.format("%lld%%", Int((moisture * 100).rounded())) }
 
-    var thirst: Thirst { Thirst(moisture: moisture) }
+    var status: MoistureStatus { MoistureStatus(moisture: moisture) }
 }
 
 struct Glance: TimelineEntry {
@@ -44,7 +46,8 @@ struct Glance: TimelineEntry {
     /// своих местах, а не перебегают, когда один обгонит другого.
     var garden: [Sprig] = []
 
-    var thirsty: [Sprig] { sprigs.filter { $0.thirst != .calm } }
+    /// Кого полить сегодня — `MoistureStatus.needsWater`.
+    var thirsty: [Sprig] { sprigs.filter(\.due) }
 
     static func now() -> Glance { ahead(from: .now, steps: 1)[0] }
 
@@ -65,7 +68,8 @@ struct Glance: TimelineEntry {
                 room.plants.map { plant in
                     Sprig(id: plant.id, name: plant.name, room: room.name,
                           moisture: plant.moisture, label: plant.wateringLabel,
-                          thumb: Store.thumb(for: plant))
+                          thumb: Store.thumb(for: plant),
+                          due: plant.needsWaterToday)
                 }
             }
             return Glance(date: date,
@@ -79,20 +83,30 @@ struct Glance: TimelineEntry {
     static var sample: Glance {
         let sprigs = [
             Sprig(id: "a", name: Lang.text("Спатифиллум"), room: "",
-                  moisture: 0.08, label: Plant.wateringLabel(days: 0),
-                  thumb: nil),
+                  moisture: 0.08,
+                  label: MoistureStatus.nextWatering(
+                      moisture: 0.08, period: 7, estimated: true),
+                  thumb: nil, due: MoistureStatus.due(moisture: 0.08, period: 7)),
             Sprig(id: "b", name: Lang.text("Фиалка"), room: "",
-                  moisture: 0.21, label: Plant.wateringLabel(days: 1),
-                  thumb: nil),
+                  moisture: 0.21,
+                  label: MoistureStatus.nextWatering(
+                      moisture: 0.21, period: 5, estimated: true),
+                  thumb: nil, due: MoistureStatus.due(moisture: 0.21, period: 5)),
             Sprig(id: "c", name: Lang.text("Монстера"), room: "",
-                  moisture: 0.64, label: Plant.wateringLabel(days: 6),
-                  thumb: nil),
+                  moisture: 0.64,
+                  label: MoistureStatus.nextWatering(
+                      moisture: 0.64, period: 9.4, estimated: true),
+                  thumb: nil, due: MoistureStatus.due(moisture: 0.64, period: 9.4)),
             Sprig(id: "d", name: Lang.text("Кактус"), room: "",
-                  moisture: 0.9, label: Plant.wateringLabel(days: 40),
-                  thumb: nil),
+                  moisture: 0.9,
+                  label: MoistureStatus.nextWatering(
+                      moisture: 0.9, period: 44, estimated: true),
+                  thumb: nil, due: MoistureStatus.due(moisture: 0.9, period: 44)),
             Sprig(id: "e", name: Lang.text("Фикус"), room: "",
-                  moisture: 0.47, label: Plant.wateringLabel(days: 4),
-                  thumb: nil),
+                  moisture: 0.47,
+                  label: MoistureStatus.nextWatering(
+                      moisture: 0.47, period: 8.5, estimated: true),
+                  thumb: nil, due: MoistureStatus.due(moisture: 0.47, period: 8.5)),
         ]
         return Glance(date: .now, sprigs: sprigs.sorted { $0.moisture < $1.moisture },
                       ready: true, garden: sprigs)
@@ -158,7 +172,7 @@ struct ThirstView: View {
                 Spacer(minLength: 4)
                 Text(sprig.percent)
                     .font(.title2.weight(.bold))
-                    .foregroundStyle(Tone.of(sprig.thirst))
+                    .foregroundStyle(Tone.of(sprig.status))
                     .contentTransition(.numericText())
             }
             Spacer(minLength: 2)
@@ -185,7 +199,7 @@ struct ThirstView: View {
                         .lineLimit(1)
                     Text(sprig.percent)
                         .font(.title3.weight(.bold))
-                        .foregroundStyle(Tone.of(sprig.thirst))
+                        .foregroundStyle(Tone.of(sprig.status))
                         .contentTransition(.numericText())
                     PourButton(sprig: sprig, wide: false)
                 }
@@ -214,7 +228,7 @@ struct ThirstView: View {
                     Spacer(minLength: 4)
                     Text(sprig.percent)
                         .font(.headline)
-                        .foregroundStyle(Tone.of(sprig.thirst))
+                        .foregroundStyle(Tone.of(sprig.status))
                         .contentTransition(.numericText())
                     PourButton(sprig: sprig, wide: false)
                 }
@@ -308,13 +322,13 @@ enum Tone {
     static let water = Color(red: 0, green: 0.53, blue: 1)
     static let leaf = Color(red: 0.2, green: 0.62, blue: 0.3)
 
-    /// Те же пороги, что тень на карточке: ниже 40% — оранжевый, ниже 20% —
-    /// красный.
-    static func of(_ thirst: Thirst) -> Color {
-        switch thirst {
-        case .calm: .primary
+    /// Статус — из общего движка (`MoistureStatus`), цвета — свои, виджета:
+    /// «скоро пить» — оранжевый, «сухо» — красный.
+    static func of(_ status: MoistureStatus) -> Color {
+        switch status.tone {
         case .warn: .orange
         case .alarm: .red
+        case .water, .green, .secondary: .primary
         }
     }
 }

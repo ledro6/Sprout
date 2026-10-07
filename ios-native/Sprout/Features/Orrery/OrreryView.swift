@@ -270,9 +270,11 @@ struct OrreryView: View {
                     .foregroundStyle(Palette.level(level))
                     .contentTransition(.numericText())
             }
+            // Вперёд по времени — тем же движком, от влажности того дня.
             Text(live ? plant.wateringLabel
-                 : next.map { Plant.wateringLabel(
-                     days: Int(($0.day - ahead).rounded())) } ?? "")
+                 : next.map { _ in MoistureStatus.nextWatering(
+                     moisture: level, period: plant.period,
+                     estimated: plant.estimated) } ?? "")
                 .font(Typography.settingNote)
                 .foregroundStyle(.secondary)
                 .contentTransition(.numericText())

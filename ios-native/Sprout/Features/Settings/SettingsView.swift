@@ -405,17 +405,6 @@ struct SettingsView: View {
                 get: { settings.reminders },
                 set: { want(reminders: $0) }))
 
-            if settings.reminders {
-                SproutDivider()
-                    .transition(.opacity)
-                SproutBlock("Когда влажность ниже") {
-                    PercentWheel(share: Binding(
-                        get: { settings.threshold },
-                        set: { settings.threshold = $0 }))
-                }
-                .transition(.blurReplace)
-            }
-
             SproutDivider()
 
             switchRow("Сроки в Календаре", term: .agenda, isOn: Binding(

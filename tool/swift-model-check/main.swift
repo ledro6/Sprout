@@ -101,14 +101,19 @@ Lang.locale = Locale(identifier: "ru")
 Lang.resolve = { catalog.resolve($0, $1, lang: language) }
 
 print("склонение дней:")
-func label(_ d: Int) -> String { Plant.wateringLabel(days: d) }
-check(label(0),  "Следующий полив: сегодня", "0 → сегодня")
-check(label(1),  "Следующий полив: завтра",  "1 → завтра")
-check(label(2),  "Следующий полив: 2 дня",   "2 дня")
-check(label(5),  "Следующий полив: 5 дней",  "5 дней")
-check(label(11), "Следующий полив: 11 дней", "11 дней")
-check(label(21), "Следующий полив: 21 день", "21 день")
-check(label(22), "Следующий полив: 22 дня",  "22 дня")
+// Срок у влажного растения: 0.9 × срок — дни; без датчика — «примерно».
+func label(_ d: Int, estimated: Bool = false) -> String {
+    MoistureStatus.nextWatering(moisture: 0.9, period: Double(d) / 0.9,
+                                estimated: estimated)
+}
+check(label(2),  "Полив через 2 дня",   "2 дня")
+check(label(5),  "Полив через 5 дней",  "5 дней")
+check(label(11), "Полив через 11 дней", "11 дней")
+check(label(21), "Полив через 21 день", "21 день")
+check(label(22), "Полив через 22 дня",  "22 дня")
+check(label(1),  "Полив через 1 день",  "1 день")
+check(label(5, estimated: true), "Полив примерно через 5 дней",
+      "посчитано, а не измерено — «примерно»")
 
 print("данные из макета:")
 let bedroom = Seed.rooms[0]
@@ -116,7 +121,7 @@ check(bedroom.name, "Спальня", "первая комната")
 check("\(bedroom.plants.count)", "8", "растений в спальне")
 check(bedroom.plants[0].moistureLabel, "89%", "влажность Баксика")
 check(bedroom.plants[0].addedLabel, "Добавлен 02.11.2024", "дата добавления")
-check(bedroom.plants[0].wateringLabel, "Следующий полив: 8 дней",
+check(bedroom.plants[0].wateringLabel, "Полив примерно через 8 дней",
       "у Баксика 89% при сушке за 9 суток дают 8 дней")
 check("\(Seed.rooms[1].plants.count)", "7", "растений в гостиной")
 check("\(Seed.rooms[2].plants.count)", "11", "растений на кухне")
@@ -181,7 +186,7 @@ print("полив:")
 garden.water("baksik")
 check(round2(garden.plant(id: "baksik")!.moisture), "1.00", "полив наполняет до краёв")
 check("\(garden.plant(id: "baksik")!.thirst)", "calm", "и снимает тревогу")
-check(garden.plant(id: "baksik")!.wateringLabel, "Следующий полив: 9 дней",
+check(garden.plant(id: "baksik")!.wateringLabel, "Полив примерно через 9 дней",
       "срок пересчитался сам")
 
 print("переименование и удаление:")
@@ -279,7 +284,6 @@ check(round2(fresh.hapticStrength), "1.00", "и на полную силу")
 check(fresh.sounds, "звуки по умолчанию включены")
 check(fresh.parallax, "узор по умолчанию едет за наклоном")
 check(fresh.sway, "и фигурки по умолчанию расходятся")
-check(round2(fresh.threshold), "0.20", "порог по умолчанию — двадцать процентов")
 check(fresh.toured == false, "знакомство по умолчанию ещё не показано")
 check(!fresh.seen(.stats), "подсказки экранов по умолчанию не показаны")
 check(fresh.avatarShot == nil, "фото хозяина по умолчанию нет — кружок с буквой")
@@ -320,7 +324,6 @@ fresh.look = .list
 fresh.order = .thirsty
 fresh.toggle(shape: 3)
 fresh.reminders = true
-fresh.threshold = 0.37
 fresh.patternHue = .preset(.rose)
 fresh.waveHue = .preset(.amber)
 fresh.toured = true
@@ -333,7 +336,6 @@ check("\(reopened.look)", "list", "и вид списком")
 check("\(reopened.order)", "thirsty", "и порядок «сначала сухие»")
 check("\(reopened.chosen)", "[2, 3]", "и набор фигурок")
 check(reopened.reminders, "и переключатель напоминаний")
-check(round2(reopened.threshold), "0.37", "и порог — любым процентом")
 check(reopened.patternHue == .preset(.rose), "и цвет узора")
 check(reopened.waveHue == .preset(.amber), "и цвет волны")
 check(reopened.toured, "и то, что знакомство уже было")
@@ -1059,16 +1061,14 @@ check(Rival.read(broken.code) == nil,
       "а с пустым именем — нет, потому подпись и нужна")
 
 print("срок напоминания:")
-func delay(_ moisture: Double, _ dryingDays: Double = 7,
-           _ threshold: Double = 0.2) -> String {
+func delay(_ moisture: Double, _ dryingDays: Double = 7) -> String {
     guard let seconds = Reminder.delay(
-        for: plant(moisture: moisture, dryingDays: dryingDays),
-        threshold: threshold)
+        for: plant(moisture: moisture, dryingDays: dryingDays))
     else { return "никогда" }
     return round2(seconds)
 }
-// Сад втрое быстрее настоящего: 0.3 от семи суток — 2.1 суток сада, то есть
-// 0.7 настоящих суток.
+// Время сада — настоящее: 0.3 от семи суток — 2.1 настоящих суток.
+check(Garden.speed == 1, "сад идёт в настоящем времени, без ускорения")
 func real(days: Double) -> String { round2(days * 86_400 / Garden.speed) }
 check(delay(0.50), real(days: 2.1),
       "с 50% до 20% при недельной сушке — 2.1 суток сада")
@@ -1077,7 +1077,10 @@ check(delay(0.50, 14), real(days: 4.2),
 check(delay(0.20), "0.00", "ровно на пороге — уже пора")
 check(delay(0.05), "0.00", "ниже порога — тем более")
 check(delay(0.50, 0), "никогда", "без скорости сушки срока нет")
-check(delay(0.50, 7, 0.4), real(days: 0.7), "порог выше — ждать меньше")
+// Короткий срок: ноль дней наступает раньше 20 % — при 0.5 / 2 = 25 %.
+check(delay(0.50, 2), real(days: 0.5),
+      "у двухдневного — до нуля дней, а не до 20 %")
+check(delay(0.24, 2), "0.00", "ноль дней при 24 % — уже пора")
 
 print("кого будить первым:")
 let thirsty = [
@@ -1088,7 +1091,7 @@ let thirsty = [
         plantNamed("Кефир", moisture: 0.1, dryingDays: 6),
     ]),
 ]
-let due = Reminder.next(in: thirsty, threshold: 0.2)!
+let due = Reminder.next(in: thirsty)!
 check(due.plant.name, "Сумка", "первой — та, что уже суше всех")
 check("\(due.others)", "1", "и с ней ещё одна такая же")
 check(round2(due.after), "15.00", "срок не раньше, чем через четверть минуты")
@@ -1097,14 +1100,14 @@ check(Reminder.text(for: due), "«Сумка» и ещё 1 растение пр
 
 let single = Reminder.next(in: [Room(name: "Комната", plants: [
     plantNamed("Борис", moisture: 0.5, dryingDays: 5),
-])], threshold: 0.2)!
+])])!
 check(single.plant.name, "Борис", "в одиночку — он один и есть")
 check("\(single.others)", "0", "соседей нет")
 check(round2(single.after), real(days: 1.5),
       "0.3 от пяти суток — полтора дня сада")
 check(Reminder.text(for: single), "«Борис» просит воды", "строка про одного")
 
-check(Reminder.next(in: [], threshold: 0.2) == nil,
+check(Reminder.next(in: []) == nil,
       "в пустой квартире будить некого")
 check(due.ids.count == 2 && due.ids.contains("Сумка") && due.ids.contains("Кефир"),
       "кнопка «Полил» польёт всех, кому к этому мигу сухо")
@@ -1483,8 +1486,8 @@ do {
     outcome = Family.apply(arrival, to: &mine, log: &mineLog, book: &book,
                            me: "me", now: at(300 + 86_400))
     merged = mine[0].plants.first { $0.id == "Б" }!
-    check(round2(merged.moisture), "0.50",
-          "чужой полив за сутки в пути досох: три дня сада из шести")
+    check(round2(merged.moisture), "0.83",
+          "чужой полив за сутки в пути досох: сутки из шести")
     check(merged.sensor?.id == "s" && outcome.wet == ["Б"],
           "датчик — свой, влажность — пришедшая")
 
@@ -2138,12 +2141,11 @@ do {
     check(Diary.rhythm(1.2 * 86_400), "раз в день", "день")
     check(Diary.rhythm(1.5 * 86_400), "раз в 2 дня", "полтора дня — уже два")
     check(Diary.rhythm(5 * 86_400), "раз в 5 дней", "дни")
-    // Линия высыхания: срок 6 дней сада — двое суток по-настоящему, окно —
-    // десять суток.
+    // Линия высыхания: срок двое суток, окно — десять суток.
     let stretch = Season.stretch
     Season.stretch = 1
     defer { Season.stretch = stretch }
-    let sprout = plantNamed("x", moisture: 0, dryingDays: 6)
+    let sprout = plantNamed("x", moisture: 0, dryingDays: 2)
     let pours = [
         Watering(plant: "x", when: at(10, 12, 0)),
         Watering(plant: "x", when: at(15, 12, 0), left: 0),
@@ -2166,10 +2168,16 @@ do {
 
 print("кого полить сегодня:")
 do {
-    let due = Seed.due(in: Seed.rooms)
-    check(due.map(\.id) == ["sumka", "kefir", "boris"],
+    let due = MoistureStatus.needsWater(in: Seed.rooms)
+    check(Array(due.prefix(3)).map(\.id) == ["sumka", "kefir", "boris"],
           "те, у кого на карточке «сегодня», — от самого сухого")
-    check(Seed.dueLine(due), "Сегодня ждут воды Сумка, Кефир и Борис.",
+    check(due.allSatisfy { $0.wateringLabel == "Полить сегодня" }
+          && Seed.rooms.flatMap(\.plants).filter {
+              $0.wateringLabel == "Полить сегодня"
+          }.count == due.count,
+          "«Полить сегодня» на карточке — ровно у этого набора")
+    check(Seed.dueLine(Array(due.prefix(3))),
+          "Сегодня ждут воды Сумка, Кефир и Борис.",
           "три имени")
     check(Seed.dueLine(Array(due.prefix(2))), "Сегодня ждут воды Сумка и Кефир.",
           "два имени")
@@ -3663,13 +3671,13 @@ do {
             plantNamed("кактус", moisture: 0.9, dryingDays: 30),
         ]),
         Room(name: "Спальня", plants: [
-            plantNamed("фикус", moisture: 0.35, dryingDays: 8),
+            plantNamed("фикус", moisture: 0.18, dryingDays: 8),
             plantNamed("фиалка", moisture: 0.05, dryingDays: 4),
         ]),
     ]
     let stops = Round.stops(in: rooms) { "\($0.id).jpg" }
     check(stops.map(\.id) == ["фиалка", "папоротник", "фикус"],
-          "в обходе — кто просит воды, от самого сухого")
+          "в обходе — кого полить сегодня, от самого сухого")
     check(stops.map(\.room) == ["Спальня", "Кухня", "Спальня"],
           "у каждого — своя комната")
     check(stops[0].percent == 5 && stops[0].thumb == "фиалка.jpg",
@@ -3738,9 +3746,9 @@ do {
 
 print("сад на часах:")
 do {
-    check(Wrist.Level.warnBelow == Thirst.warnBelow
-          && Wrist.Level.alarmBelow == Thirst.alarmBelow,
-          "тень на часах та же, что на карточке")
+    check(Thirst.warnBelow == MoistureStatus.soonBelow
+          && Thirst.alarmBelow == MoistureStatus.urgentBelow,
+          "тень на карточке — от порогов статуса")
     check(Wrist.group == Store.group, "часы ищут ту же группу, что телефон")
     let rooms = [
         Room(name: "Кухня", plants: [
@@ -3756,8 +3764,12 @@ do {
     check(wrist.pots.map(\.id) == ["папоротник", "фикус", "кактус"],
           "на часах — от самого сухого")
     check(wrist.pots[1].room == "Спальня", "у каждого своя комната")
-    check(wrist.thirsty.map(\.id) == ["папоротник", "фикус"],
-          "просят воды двое")
+    check(wrist.thirsty.map(\.id) == ["папоротник"]
+          && wrist.thirsty.map(\.id)
+              == MoistureStatus.needsWater(in: rooms).map(\.id),
+          "просит воды тот же, кого полить сегодня на телефоне")
+    check(wrist.pots[1].status == .soon && wrist.pots[0].status == .urgent,
+          "статус на часах — тем же движком")
     let plants = rooms.flatMap(\.plants)
     check(wrist.pots.allSatisfy { pot in
         let plant = plants.first { $0.id == pot.id }!
@@ -3767,7 +3779,7 @@ do {
     wrist.water("папоротник", at: start.addingTimeInterval(60))
     check(wrist.pots.last?.id == "папоротник" && wrist.pots.last?.moisture == 1,
           "полили с часов — полон и ушёл в конец")
-    check(wrist.thirsty.map(\.id) == ["фикус"], "просит воды один")
+    check(wrist.thirsty.isEmpty, "полили — просить некому")
     let before = Wrist.of(rooms, at: start.addingTimeInterval(30))
     check(before.older(than: wrist),
           "посылка телефона, собранная до полива, его не перетрёт")
@@ -3922,18 +3934,18 @@ do {
     let stretch = Season.stretch, growing = Season.growing
     Season.stretch = 1
     Season.growing = true
-    // Шесть дней сада — двое настоящих суток: сад идёт втрое быстрее.
+    // Срок — двое суток: время сада настоящее.
     var baksik = Plant.new(name: "Баксик", species: "Монстера",
-                           dryingDays: 6, id: "b", on: noon, calendar: utc)
+                           dryingDays: 2, id: "b", on: noon, calendar: utc)
     baksik.moisture = 0.5
     baksik.care = Care()
-    var lera = Plant.new(name: "Лера", species: "Фикус", dryingDays: 6,
+    var lera = Plant.new(name: "Лера", species: "Фикус", dryingDays: 2,
                          id: "l", on: noon, calendar: utc)
     lera.moisture = 0.5
-    lera.care = Care(feedEvery: 30, sinceFed: 27)
-    // Полтора дня сада — двенадцать часов: два полива в сутки.
+    lera.care = Care(feedEvery: 30, sinceFed: 29)
+    // Полсуток — два полива в сутки.
     var prickly = Plant.new(name: "Колючка", species: "Кактус",
-                            dryingDays: 1.5, id: "k", on: noon, calendar: utc)
+                            dryingDays: 0.5, id: "k", on: noon, calendar: utc)
     prickly.moisture = 0
     var still = Plant.new(name: "Камень", species: "Литопс", dryingDays: 0,
                           id: "s", on: noon, calendar: utc)
@@ -3950,7 +3962,7 @@ do {
           "а больше сегодня никого")
     let second = water.first { $0.day == day(11) }
     check(second?.title ?? "—", "Полить: Баксик, Лера, Колючка",
-          "половина из шести дней сада — завтра, в порядке сада")
+          "половина из двух суток — завтра, в порядке сада")
     check(second?.notes ?? "—", "Гостиная: Баксик, Лера\nКухня: Колючка",
           "в заметке — по строке на комнату")
     check(feed.first?.title ?? "—", "Подкормить: Лера",
@@ -3967,13 +3979,13 @@ do {
     check(!Agenda.plan(rooms, now: noon, horizon: 7, calendar: utc)
         .contains { $0.chore == .feed }, "зимой подкормки в календаре нет")
     var misty = baksik
-    misty.care = Care(duties: [.mist: 3, .turn: 0, .wipe: 0],
-                      dutiesSince: [.mist: 2])
+    misty.care = Care(duties: [.mist: 1, .turn: 0, .wipe: 0],
+                      dutiesSince: [.mist: 0.75])
     let dew = Agenda.plan([Room(name: "Спальня", plants: [misty])], now: noon,
                           horizon: 7, calendar: utc)
         .filter { $0.chore == .mist }
     check(dew.map(\.day) == (10 ... 16).map { day($0) },
-          "опрыскивание — в Календаре: раз в три дня сада, то есть каждые сутки")
+          "опрыскивание — в Календаре: раз в сутки")
     check(dew.first?.title ?? "—", "Опрыскать: Баксик", "событие опрыскивания")
     Season.stretch = stretch
     Season.growing = growing
@@ -4063,7 +4075,7 @@ do {
           && calm.reached[.noDrought]?[1] == at(30, 0, month: 5),
           "без засухи с марта — три месяца к концу мая, полгода к осени")
     // Растение сухое сейчас: высохло через срок после последнего полива.
-    var parched = Plant.new(name: "Сухарик", species: "Фикус", dryingDays: 3,
+    var parched = Plant.new(name: "Сухарик", species: "Фикус", dryingDays: 1,
                             id: "d", on: since, calendar: utc)
     parched.moisture = 0
     let water = dry + [Watering(plant: "d", when: at(1, 12, month: 4), left: 0.3)]
@@ -4552,15 +4564,19 @@ do {
     let overview = Sage.overview(rooms, now: now, calendar: utc)
     check(overview.contains("4 plants in 2 rooms"),
           "обзор: сколько растений и комнат")
-    check(overview.contains("Needs water today: \"Баксик\" (Спальня)."),
-          "обзор: кого полить сегодня — с комнатой")
-    check(overview.contains("Needs water tomorrow: \"Пр\" (Спальня)."),
-          "обзор: и кого завтра")
+    check(overview.contains(
+        "Needs water today: \"Баксик\" (Спальня), \"Пр\" (Спальня)."),
+          "обзор: кого полить сегодня — с комнатой; Пр с 14 % — сегодня")
+    check(overview.contains("Needs water tomorrow: nobody."),
+          "обзор: сухое растение не попадает в «завтра»")
+    check(!overview.contains("Needs water today: nobody"),
+          "при растении с 14 % «никого» не скажется")
     check(overview.contains("Care due now: \"Пр\" — feeding"),
           "обзор: подошедший уход")
     check(overview.contains(
-        "Кухня: \"Тапок\" Хлорофитум, 100% moisture, water in 9 days"),
-          "обзор: строка растения — сроки как на карточке")
+        "Кухня: \"Тапок\" Хлорофитум, 100% moisture, "
+            + "status \"Влажно — не поливать\", \"Полив примерно через 9 дней\""),
+          "обзор: строка растения — статус и срок словами движка")
     check(Sage.overview([], now: now, calendar: utc).contains("empty"),
           "пустой сад — так и сказано")
     let crowd = [Room(name: "Спальня", plants: (0 ... Sage.listed).map {
@@ -4575,8 +4591,8 @@ do {
                             calendar: utc)
     check(card.hasPrefix("\"Пр\": species Фикус, room Спальня"),
           "подробности: кличка в падеже находится")
-    check(card.contains("next watering tomorrow"),
-          "подробности: следующий полив")
+    check(card.contains("Status: \"Сухо — полить сегодня\"; \"Полить сегодня\"."),
+          "подробности: статус и срок — словами движка, не «завтра»")
     check(card.contains("Last watered: yesterday; waterings recorded: 2."),
           "подробности: последний полив и сколько всего")
     check(card.contains("Feeding: every 14 days; due now."),
@@ -4820,8 +4836,8 @@ do {
     }
     let weekly = Plant.new(name: "Неделька", species: "Фикус", dryingDays: 7,
                            id: "w")
-    check(abs(Week.need([Room(name: "Зал", plants: [weekly])]) - 3) < 0.001,
-          "недельному растению при тройной скорости нужно три полива в неделю")
+    check(abs(Week.need([Room(name: "Зал", plants: [weekly])]) - 1) < 0.001,
+          "недельному растению в настоящем времени нужен один полив в неделю")
     let ten = (0 ..< 10).map {
         Plant.new(name: "Р\($0)", species: "Фикус", dryingDays: 7, id: "r\($0)")
     }
@@ -5115,8 +5131,7 @@ do {
     language = "en"
     check(Lang.format("%lld растений", 1), "1 plant", "английский: одно")
     check(Lang.format("%lld растений", 5), "5 plants", "английский: много")
-    check(Plant.wateringLabel(days: 2), "Next watering: in 2 days",
-          "английский: срок полива")
+    check(Lang.format("%lld дней", 2), "2 days", "английский: дни")
     check(Species.periodLabel(1), "Every 1 day", "английский: барабан")
     check(Bench.preparing(0.5), "Preparing model: 50%",
           "английский: модель готовится")
@@ -5175,6 +5190,113 @@ do {
     check(round2(Double(Swell.width(natural: 105, rest: 22.0 / 34, grown: 1,
                                     fits: fits))), "82.00",
           "лента: доросшее — не шире места у кнопок")
+}
+
+print("единый движок статусов:")
+do {
+    let kept = (Season.stretch, Climate.stretch)
+    Season.stretch = 1
+    Climate.stretch = 1
+    defer {
+        Season.stretch = kept.0
+        Climate.stretch = kept.1
+    }
+    check(MoistureStatus(moisture: 0.14) == .urgent, "14 % — сухо")
+    check(MoistureStatus(moisture: 0.25) == .soon, "25 % — скоро пить")
+    check(MoistureStatus(moisture: 0.45) == .ok, "45 % — норма")
+    check(MoistureStatus(moisture: 0.89) == .wet, "89 % — влажно")
+    check(MoistureStatus(moisture: 0.6) == .wet
+          && MoistureStatus(moisture: 0.59) == .ok
+          && MoistureStatus(moisture: 0.4) == .ok
+          && MoistureStatus(moisture: 0.39) == .soon
+          && MoistureStatus(moisture: 0.2) == .soon
+          && MoistureStatus(moisture: 0.19) == .urgent,
+          "пороги 60 / 40 / 20 — включительно сверху")
+    check(MoistureStatus(moisture: nil) == .unknown, "числа нет — проверьте землю")
+    check(MoistureStatus(moisture: 0.65, wetFrom: 0.7) == .ok,
+          "порог «влажно» у вида может быть свой")
+    let dry = plant(moisture: 0.14, dryingDays: 7)
+    check(dry.nextWateringText, "Полить сегодня", "14 % при недельном — «Полить сегодня»")
+    check(dry.status.word, "Сухо — полить сегодня", "и слово статуса")
+    // 14 % × 7 суток ≈ 1 день — раньше выходило «завтра».
+    check(dry.daysUntilWatering == 1 && dry.needsWaterToday,
+          "срок «1 день», но сухое — в «полить сегодня»")
+    var never = true
+    for step in 0 ..< 200 {
+        let m = Double(step) / 1_000
+        for days in [1.0, 2, 5, 7, 9, 14, 30, 57, 90] {
+            let text = MoistureStatus.nextWatering(moisture: m, period: days,
+                                                   estimated: true)
+            if text.contains("завтра") { never = false }
+        }
+    }
+    check(never, "сухому «завтра» не скажется ни при каком сроке")
+    check(plant(moisture: 0.25, dryingDays: 6).nextWateringText,
+          "Скоро: примерно через 2 дня", "25 % при шестидневном — скоро, примерно")
+    check(plant(moisture: 0.3, dryingDays: 3).nextWateringText,
+          "Скоро: примерно завтра", "скоро и завтра — можно")
+    check(MoistureStatus.nextWatering(moisture: 0.3, period: 10,
+                                      estimated: false),
+          "Скоро: через 3 дня", "по датчику — без «примерно»")
+    check(plant(moisture: 0.45, dryingDays: 12).nextWateringText,
+          "Полив примерно через 5 дней", "норма — «Полив через»")
+    check(plant(moisture: 0.24, dryingDays: 2).needsWaterToday,
+          "у двухдневного 24 % — ноль дней, тоже сегодня")
+    check(plant(moisture: 0.89).wateringGuard == .warn(0.89)
+          && plant(moisture: 0.6).wateringGuard == .warn(0.6)
+          && plant(moisture: 0.59).wateringGuard == .allow
+          && plant(moisture: 0.14).wateringGuard == .allow,
+          "защита от перелива — с порога «влажно»")
+    check(MoistureStatus.wet.symbol == "drop.fill"
+          && MoistureStatus.ok.symbol == "checkmark.circle.fill"
+          && MoistureStatus.soon.symbol == "clock.fill"
+          && MoistureStatus.urgent.symbol == "exclamationmark.triangle.fill"
+          && MoistureStatus.unknown.symbol == "questionmark.circle",
+          "значки статусов")
+    check(MoistureStatus.allCases.map(\.word) == [
+        "Влажно — не поливать", "Норма", "Скоро пить",
+        "Сухо — полить сегодня", "Проверьте землю"], "слова статусов")
+    check(MoistureStatus.allCases.map(\.tone)
+          == [.water, .green, .warn, .alarm, .secondary], "цвета — токенами")
+
+    // Один набор: карточка дня, обход, напоминание, статистика, часы.
+    let rooms = [
+        Room(name: "Спальня", plants: [
+            plantNamed("Сухой", moisture: 0.14, dryingDays: 7),
+            plantNamed("Скоро", moisture: 0.3, dryingDays: 10),
+            plantNamed("Влажный", moisture: 0.89, dryingDays: 9),
+        ]),
+        Room(name: "Кухня", plants: [
+            plantNamed("Короткий", moisture: 0.24, dryingDays: 2),
+            plantNamed("Норма", moisture: 0.5, dryingDays: 8),
+        ]),
+    ]
+    let today = MoistureStatus.needsWater(in: rooms).map(\.id)
+    check(today == ["Сухой", "Короткий"], "полить сегодня — сухой и с нулём дней")
+    check(Round.stops(in: rooms).map(\.id) == today, "обход — тот же набор")
+    let due = Reminder.next(in: rooms)
+    check(due.map { Set($0.ids) } == Set(today) && due?.after == Reminder.soonest,
+          "напоминание будит тот же набор — сразу")
+    check(Almanac.now(rooms).alarm == today.count, "«Ждут воды» в статистике — тот же")
+    check(Wrist.of(rooms).thirsty.map(\.id).sorted() == today.sorted(),
+          "часы — тот же")
+    check(Seed.dueLine(MoistureStatus.needsWater(in: rooms)),
+          "Сегодня ждут воды Сухой и Короткий.", "строка Siri — тот же")
+    let line = MoistureStatus.dayLine(room: rooms[0], in: rooms)
+    check(line == "Сегодня ждёт воды Сухой.", "приветствие называет сухого")
+    let calm = Room(name: "Зал", plants: [
+        plantNamed("Ок", moisture: 0.9, dryingDays: 9),
+    ])
+    let elsewhere = MoistureStatus.dayLine(room: calm, in: rooms + [calm])
+    check(!elsewhere.contains("довольны") && elsewhere.contains("2"),
+          "здесь пить некому, а в саду есть — «все довольны» не скажется")
+    check(MoistureStatus.dayLine(room: calm, in: [calm])
+          == "Здесь все довольны — можно выдохнуть.",
+          "довольны — только когда в саду пить некому")
+    let overview = Sage.overview(rooms)
+    check(!overview.contains("Needs water today: nobody")
+          && overview.contains("\"Сухой\""),
+          "«Спросить сад» с растением на 14 % не скажет «никого»")
 }
 
 if failed > 0 {

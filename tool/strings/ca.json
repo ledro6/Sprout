@@ -81,12 +81,6 @@
   "Полил": "Regada",
   "%lld%%": "%lld %%",
   "Добавлен %@": "Afegida el %@",
-  "Следующий полив: сегодня": "Propera regada: avui",
-  "Следующий полив: завтра": "Propera regada: demà",
-  "Следующий полив: %lld дней": {
-    "one": "Propera regada: d’aquí a %lld dia",
-    "other": "Propera regada: d’aquí a %lld dies"
-  },
   "Садовод": "Jardiner",
   "Добро пожаловать!": "Et donem la benvinguda!",
   "Добро пожаловать, %@!": "Hola, %@!",
@@ -340,7 +334,6 @@
   "Горшок": "Test",
   "Учитывать время года": "Tenir en compte l’estació",
   "Напоминать о поливе": "Recorda regar",
-  "Когда влажность ниже": "Quan la humitat baixi de",
   "Защита": "Protecció",
   "Запирать приложение": "Bloqueja l’app",
   "На телефоне нет ни Face ID, ни код-пароля.": "Aquest telèfon no té Face ID ni codi.",
@@ -442,7 +435,6 @@
   "Если вы поливаете раньше срока, приложение заметит и предложит сделать срок короче.": "Si reges abans d’hora, l’app ho nota i et proposa escurçar l’interval.",
   "Удобрение, разведённое в воде для полива. Нужно раз в несколько недель, пока растение растёт.": "Adob dissolt a l’aigua de reg. Cal cada poques setmanes mentre la planta creix.",
   "Переезд в горшок побольше со свежей землёй. Обычно раз в год-два, весной.": "Passar la planta a un test més gran amb terra nova. Normalment cada un o dos anys, a la primavera.",
-  "Уведомление на телефон, когда земля у растения подсохла ниже выбранного порога.": "Un avís al telèfon quan la terra d’una planta s’ha assecat per sota del llindar triat.",
   "Узор на фоне чуть сдвигается, когда вы наклоняете телефон, — будто лежит глубже экрана.": "El motiu del fons es mou una mica quan inclines el telèfon, com si fos més endins que la pantalla.",
   "При наклоне каждая фигурка узора движется со своей скоростью, будто плывёт в воде.": "Quan inclines el telèfon, cada figura del motiu es mou a la seva velocitat, com si surés a l’aigua.",
   "После полива по узору бежит цветная волна — так видно, что полив засчитан.": "Després de regar, una onada de color recorre el motiu: així saps que el reg s’ha comptat.",

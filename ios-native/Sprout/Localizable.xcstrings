@@ -22529,6 +22529,9 @@
         }
       }
     },
+    "В других комнатах ждут воды: %lld": {
+      "extractionState": "manual"
+    },
     "В другую комнату": {
       "extractionState": "manual"
     },
@@ -31736,6 +31739,9 @@
           }
         }
       }
+    },
+    "Влажно — не поливать": {
+      "extractionState": "manual"
     },
     "Влажность": {
       "extractionState": "manual",
@@ -49613,6 +49619,9 @@
           }
         }
       }
+    },
+    "Датчик": {
+      "extractionState": "manual"
     },
     "Датчик LiDAR не ответил. Перезапустите приложение и попробуйте снова.": {
       "extractionState": "manual",
@@ -93313,293 +93322,6 @@
     "Когда iPhone приложили к метке на горшке.": {
       "extractionState": "manual"
     },
-    "Когда влажность ниже": {
-      "extractionState": "manual",
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "عندما تقل الرطوبة عن"
-          }
-        },
-        "bg": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Когато влажността е под"
-          }
-        },
-        "bn": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "যখন আর্দ্রতা এর নিচে"
-          }
-        },
-        "ca": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Quan la humitat baixi de"
-          }
-        },
-        "cs": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Když vlhkost klesne pod"
-          }
-        },
-        "da": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Når fugten er under"
-          }
-        },
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Wenn die Feuchtigkeit unter"
-          }
-        },
-        "el": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Όταν η υγρασία πέσει κάτω από"
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "When Moisture Drops Below"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Cuando la humedad baje de"
-          }
-        },
-        "fi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Kun kosteus on alle"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Quand l’humidité passe sous"
-          }
-        },
-        "gu": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "જ્યારે ભેજ આનાથી ઓછો થાય"
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "כשהלחות יורדת מתחת ל־"
-          }
-        },
-        "hi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "जब नमी इससे कम हो"
-          }
-        },
-        "hr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Kad vlažnost padne ispod"
-          }
-        },
-        "hu": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ha a nedvesség kevesebb mint"
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Saat kelembapan di bawah"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Quando l’umidità scende sotto"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "湿度がこれより下がったら"
-          }
-        },
-        "kk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ылғал мынадан төмен болса"
-          }
-        },
-        "kn": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ತೇವಾಂಶ ಇದಕ್ಕಿಂತ ಕಡಿಮೆಯಾದಾಗ"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "습도가 다음보다 낮으면"
-          }
-        },
-        "lt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Kai drėgmė mažesnė nei"
-          }
-        },
-        "ml": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ഈർപ്പം ഇതിൽ താഴെയാകുമ്പോൾ"
-          }
-        },
-        "mr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ओलावा यापेक्षा कमी झाल्यावर"
-          }
-        },
-        "ms": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Apabila kelembapan di bawah"
-          }
-        },
-        "nb": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Når fukten er under"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Als vochtigheid lager dan"
-          }
-        },
-        "or": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ଯେତେବେଳେ ଆର୍ଦ୍ରତା ଏହାଠାରୁ କମ୍"
-          }
-        },
-        "pa": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ਜਦੋਂ ਨਮੀ ਇਸ ਤੋਂ ਘੱਟ ਹੋਵੇ"
-          }
-        },
-        "pl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Gdy wilgotność spadnie poniżej"
-          }
-        },
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Quando a umidade ficar abaixo de"
-          }
-        },
-        "pt-PT": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Quando a humidade descer abaixo de"
-          }
-        },
-        "ro": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Când umiditatea scade sub"
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Keď vlhkosť klesne pod"
-          }
-        },
-        "sl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ko vlažnost pade pod"
-          }
-        },
-        "sv": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "När fukten är under"
-          }
-        },
-        "ta": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ஈரப்பதம் இதைவிடக் குறையும்போது"
-          }
-        },
-        "te": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "తేమ దీని కంటే తగ్గినప్పుడు"
-          }
-        },
-        "th": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "เมื่อความชื้นต่ำกว่า"
-          }
-        },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nem şunun altına düşünce"
-          }
-        },
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Коли вологість нижче"
-          }
-        },
-        "ur": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "جب نمی اس سے کم ہو"
-          }
-        },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Khi độ ẩm dưới"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "湿度低于"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "濕度低於"
-          }
-        }
-      }
-    },
     "Когда вы поливаете": {
       "extractionState": "manual"
     },
@@ -134752,6 +134474,9 @@
         }
       }
     },
+    "Норма": {
+      "extractionState": "manual"
+    },
     "Нужен iPhone с датчиком LiDAR — модели Pro, начиная с iPhone 12 Pro.": {
       "extractionState": "manual",
       "localizations": {
@@ -174640,8 +174365,78 @@
     "Полив по очереди": {
       "extractionState": "manual"
     },
+    "Полив примерно через %lld дней": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "variations": {
+            "plural": {
+              "few": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Полив примерно через %lld дня"
+                }
+              },
+              "many": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Полив примерно через %lld дней"
+                }
+              },
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Полив примерно через %lld день"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Полив примерно через %lld дня"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "Полив уже отмечен в %@ — второй раз не записываю.": {
       "extractionState": "manual"
+    },
+    "Полив через %lld дней": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "variations": {
+            "plural": {
+              "few": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Полив через %lld дня"
+                }
+              },
+              "many": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Полив через %lld дней"
+                }
+              },
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Полив через %lld день"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Полив через %lld дня"
+                }
+              }
+            }
+          }
+        }
+      }
     },
     "Полив —": {
       "extractionState": "manual",
@@ -188761,6 +188556,9 @@
         }
       }
     },
+    "Полить сегодня": {
+      "extractionState": "manual"
+    },
     "Полить сейчас": {
       "extractionState": "manual",
       "localizations": {
@@ -202856,6 +202654,9 @@
           }
         }
       }
+    },
+    "Проверьте землю": {
+      "extractionState": "manual"
     },
     "Проверьте, есть ли в горшке дырка и не стоит ли вода в поддоне.": {
       "extractionState": "manual",
@@ -217290,6 +217091,9 @@
           }
         }
       }
+    },
+    "Расчёт": {
+      "extractionState": "manual"
     },
     "Реже всех": {
       "extractionState": "manual",
@@ -236266,6 +236070,82 @@
         }
       }
     },
+    "Скоро: завтра": {
+      "extractionState": "manual"
+    },
+    "Скоро: примерно завтра": {
+      "extractionState": "manual"
+    },
+    "Скоро: примерно через %lld дней": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "variations": {
+            "plural": {
+              "few": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Скоро: примерно через %lld дня"
+                }
+              },
+              "many": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Скоро: примерно через %lld дней"
+                }
+              },
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Скоро: примерно через %lld день"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Скоро: примерно через %lld дня"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "Скоро: через %lld дней": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "variations": {
+            "plural": {
+              "few": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Скоро: через %lld дня"
+                }
+              },
+              "many": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Скоро: через %lld дней"
+                }
+              },
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Скоро: через %lld день"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Скоро: через %lld дня"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "Скрытые": {
       "extractionState": "manual"
     },
@@ -236552,1461 +236432,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "接下來的澆水"
-          }
-        }
-      }
-    },
-    "Следующий полив: %lld дней": {
-      "extractionState": "manual",
-      "localizations": {
-        "ar": {
-          "variations": {
-            "plural": {
-              "few": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "السقي التالي: بعد %lld أيام"
-                }
-              },
-              "many": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "السقي التالي: بعد %lld يومًا"
-                }
-              },
-              "one": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "السقي التالي: بعد %lld يوم"
-                }
-              },
-              "other": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "السقي التالي: بعد %lld يوم"
-                }
-              },
-              "two": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "السقي التالي: بعد %lld يومين"
-                }
-              },
-              "zero": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "السقي التالي: بعد %lld يوم"
-                }
-              }
-            }
-          }
-        },
-        "bg": {
-          "variations": {
-            "plural": {
-              "one": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "Следващо поливане: след %lld ден"
-                }
-              },
-              "other": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "Следващо поливане: след %lld дни"
-                }
-              }
-            }
-          }
-        },
-        "bn": {
-          "variations": {
-            "plural": {
-              "one": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "পরের জল: %lld দিন পর"
-                }
-              },
-              "other": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "পরের জল: %lld দিন পর"
-                }
-              }
-            }
-          }
-        },
-        "ca": {
-          "variations": {
-            "plural": {
-              "one": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "Propera regada: d’aquí a %lld dia"
-                }
-              },
-              "other": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "Propera regada: d’aquí a %lld dies"
-                }
-              }
-            }
-          }
-        },
-        "cs": {
-          "variations": {
-            "plural": {
-              "few": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "Další zálivka: za %lld dny"
-                }
-              },
-              "one": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "Další zálivka: za %lld den"
-                }
-              },
-              "other": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "Další zálivka: za %lld dní"
-                }
-              }
-            }
-          }
-        },
-        "da": {
-          "variations": {
-            "plural": {
-              "one": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "Næste vanding: om %lld dag"
-                }
-              },
-              "other": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "Næste vanding: om %lld dage"
-                }
-              }
-            }
-          }
-        },
-        "de": {
-          "variations": {
-            "plural": {
-              "one": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "Nächstes Gießen: in %lld Tag"
-                }
-              },
-              "other": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "Nächstes Gießen: in %lld Tagen"
-                }
-              }
-            }
-          }
-        },
-        "el": {
-          "variations": {
-            "plural": {
-              "one": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "Επόμενο πότισμα: σε %lld ημέρα"
-                }
-              },
-              "other": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "Επόμενο πότισμα: σε %lld ημέρες"
-                }
-              }
-            }
-          }
-        },
-        "en": {
-          "variations": {
-            "plural": {
-              "one": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "Next watering: in %lld day"
-                }
-              },
-              "other": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "Next watering: in %lld days"
-                }
-              }
-            }
-          }
-        },
-        "es": {
-          "variations": {
-            "plural": {
-              "one": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "Próximo riego: en %lld día"
-                }
-              },
-              "other": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "Próximo riego: en %lld días"
-                }
-              }
-            }
-          }
-        },
-        "fi": {
-          "variations": {
-            "plural": {
-              "one": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "Seuraava kastelu: %lld päivän päästä"
-                }
-              },
-              "other": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "Seuraava kastelu: %lld päivän päästä"
-                }
-              }
-            }
-          }
-        },
-        "fr": {
-          "variations": {
-            "plural": {
-              "one": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "Prochain arrosage : dans %lld jour"
-                }
-              },
-              "other": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "Prochain arrosage : dans %lld jours"
-                }
-              }
-            }
-          }
-        },
-        "gu": {
-          "variations": {
-            "plural": {
-              "one": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "આગળનું પાણી: %lld દિવસ પછી"
-                }
-              },
-              "other": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "આગળનું પાણી: %lld દિવસ પછી"
-                }
-              }
-            }
-          }
-        },
-        "he": {
-          "variations": {
-            "plural": {
-              "one": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "ההשקיה הבאה: בעוד %lld יום"
-                }
-              },
-              "other": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "ההשקיה הבאה: בעוד %lld ימים"
-                }
-              },
-              "two": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "ההשקיה הבאה: בעוד %lld ימים"
-                }
-              }
-            }
-          }
-        },
-        "hi": {
-          "variations": {
-            "plural": {
-              "one": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "अगली सिंचाई: %lld दिन में"
-                }
-              },
-              "other": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "अगली सिंचाई: %lld दिन में"
-                }
-              }
-            }
-          }
-        },
-        "hr": {
-          "variations": {
-            "plural": {
-              "few": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "Sljedeće zalijevanje: za %lld dana"
-                }
-              },
-              "one": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "Sljedeće zalijevanje: za %lld dan"
-                }
-              },
-              "other": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "Sljedeće zalijevanje: za %lld dana"
-                }
-              }
-            }
-          }
-        },
-        "hu": {
-          "variations": {
-            "plural": {
-              "one": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "Következő öntözés: %lld nap múlva"
-                }
-              },
-              "other": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "Következő öntözés: %lld nap múlva"
-                }
-              }
-            }
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Penyiraman berikutnya: %lld hari lagi"
-          }
-        },
-        "it": {
-          "variations": {
-            "plural": {
-              "one": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "Prossima annaffiatura: tra %lld giorno"
-                }
-              },
-              "other": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "Prossima annaffiatura: tra %lld giorni"
-                }
-              }
-            }
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "次の水やり：%lld日後"
-          }
-        },
-        "kk": {
-          "variations": {
-            "plural": {
-              "one": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "Келесі суару: %lld күннен кейін"
-                }
-              },
-              "other": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "Келесі суару: %lld күннен кейін"
-                }
-              }
-            }
-          }
-        },
-        "kn": {
-          "variations": {
-            "plural": {
-              "one": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "ಮುಂದಿನ ನೀರು: %lld ದಿನದಲ್ಲಿ"
-                }
-              },
-              "other": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "ಮುಂದಿನ ನೀರು: %lld ದಿನಗಳಲ್ಲಿ"
-                }
-              }
-            }
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "다음 물주기: %lld일 후"
-          }
-        },
-        "lt": {
-          "variations": {
-            "plural": {
-              "few": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "Kitas laistymas: po %lld dienų"
-                }
-              },
-              "one": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "Kitas laistymas: po %lld dienos"
-                }
-              },
-              "other": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "Kitas laistymas: po %lld dienų"
-                }
-              }
-            }
-          }
-        },
-        "ml": {
-          "variations": {
-            "plural": {
-              "one": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "അടുത്ത നന: %lld ദിവസത്തിനുള്ളിൽ"
-                }
-              },
-              "other": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "അടുത്ത നന: %lld ദിവസത്തിനുള്ളിൽ"
-                }
-              }
-            }
-          }
-        },
-        "mr": {
-          "variations": {
-            "plural": {
-              "one": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "पुढचे पाणी: %lld दिवसांनी"
-                }
-              },
-              "other": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "पुढचे पाणी: %lld दिवसांनी"
-                }
-              }
-            }
-          }
-        },
-        "ms": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Siraman seterusnya: dalam %lld hari"
-          }
-        },
-        "nb": {
-          "variations": {
-            "plural": {
-              "one": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "Neste vanning: om %lld dag"
-                }
-              },
-              "other": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "Neste vanning: om %lld dager"
-                }
-              }
-            }
-          }
-        },
-        "nl": {
-          "variations": {
-            "plural": {
-              "one": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "Volgende keer water: over %lld dag"
-                }
-              },
-              "other": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "Volgende keer water: over %lld dagen"
-                }
-              }
-            }
-          }
-        },
-        "or": {
-          "variations": {
-            "plural": {
-              "one": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "ପରବର୍ତ୍ତୀ ପାଣି: %lld ଦିନ ପରେ"
-                }
-              },
-              "other": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "ପରବର୍ତ୍ତୀ ପାଣି: %lld ଦିନ ପରେ"
-                }
-              }
-            }
-          }
-        },
-        "pa": {
-          "variations": {
-            "plural": {
-              "one": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "ਅਗਲਾ ਪਾਣੀ: %lld ਦਿਨ ਬਾਅਦ"
-                }
-              },
-              "other": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "ਅਗਲਾ ਪਾਣੀ: %lld ਦਿਨਾਂ ਬਾਅਦ"
-                }
-              }
-            }
-          }
-        },
-        "pl": {
-          "variations": {
-            "plural": {
-              "few": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "Następne podlewanie: za %lld dni"
-                }
-              },
-              "many": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "Następne podlewanie: za %lld dni"
-                }
-              },
-              "one": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "Następne podlewanie: za %lld dzień"
-                }
-              },
-              "other": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "Następne podlewanie: za %lld dnia"
-                }
-              }
-            }
-          }
-        },
-        "pt-BR": {
-          "variations": {
-            "plural": {
-              "one": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "Próxima rega: em %lld dia"
-                }
-              },
-              "other": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "Próxima rega: em %lld dias"
-                }
-              }
-            }
-          }
-        },
-        "pt-PT": {
-          "variations": {
-            "plural": {
-              "one": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "Próxima rega: em %lld dia"
-                }
-              },
-              "other": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "Próxima rega: em %lld dias"
-                }
-              }
-            }
-          }
-        },
-        "ro": {
-          "variations": {
-            "plural": {
-              "few": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "Următoarea udare: peste %lld zile"
-                }
-              },
-              "one": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "Următoarea udare: peste %lld zi"
-                }
-              },
-              "other": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "Următoarea udare: peste %lld de zile"
-                }
-              }
-            }
-          }
-        },
-        "ru": {
-          "variations": {
-            "plural": {
-              "few": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "Следующий полив: %lld дня"
-                }
-              },
-              "many": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "Следующий полив: %lld дней"
-                }
-              },
-              "one": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "Следующий полив: %lld день"
-                }
-              },
-              "other": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "Следующий полив: %lld дня"
-                }
-              }
-            }
-          }
-        },
-        "sk": {
-          "variations": {
-            "plural": {
-              "few": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "Ďalšie polievanie: o %lld dni"
-                }
-              },
-              "one": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "Ďalšie polievanie: o %lld deň"
-                }
-              },
-              "other": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "Ďalšie polievanie: o %lld dní"
-                }
-              }
-            }
-          }
-        },
-        "sl": {
-          "variations": {
-            "plural": {
-              "few": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "Naslednje zalivanje: čez %lld dni"
-                }
-              },
-              "one": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "Naslednje zalivanje: čez %lld dan"
-                }
-              },
-              "other": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "Naslednje zalivanje: čez %lld dni"
-                }
-              },
-              "two": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "Naslednje zalivanje: čez %lld dneva"
-                }
-              }
-            }
-          }
-        },
-        "sv": {
-          "variations": {
-            "plural": {
-              "one": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "Nästa vattning: om %lld dag"
-                }
-              },
-              "other": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "Nästa vattning: om %lld dagar"
-                }
-              }
-            }
-          }
-        },
-        "ta": {
-          "variations": {
-            "plural": {
-              "one": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "அடுத்த நீர்ப்பாசனம்: %lld நாளில்"
-                }
-              },
-              "other": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "அடுத்த நீர்ப்பாசனம்: %lld நாட்களில்"
-                }
-              }
-            }
-          }
-        },
-        "te": {
-          "variations": {
-            "plural": {
-              "one": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "తదుపరి నీళ్లు: %lld రోజులో"
-                }
-              },
-              "other": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "తదుపరి నీళ్లు: %lld రోజుల్లో"
-                }
-              }
-            }
-          }
-        },
-        "th": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "รดน้ำครั้งถัดไป: อีก %lld วัน"
-          }
-        },
-        "tr": {
-          "variations": {
-            "plural": {
-              "one": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "Sonraki sulama: %lld gün sonra"
-                }
-              },
-              "other": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "Sonraki sulama: %lld gün sonra"
-                }
-              }
-            }
-          }
-        },
-        "uk": {
-          "variations": {
-            "plural": {
-              "few": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "Наступний полив: через %lld дні"
-                }
-              },
-              "many": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "Наступний полив: через %lld днів"
-                }
-              },
-              "one": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "Наступний полив: через %lld день"
-                }
-              },
-              "other": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "Наступний полив: через %lld дня"
-                }
-              }
-            }
-          }
-        },
-        "ur": {
-          "variations": {
-            "plural": {
-              "one": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "اگلا پانی: %lld دن بعد"
-                }
-              },
-              "other": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "اگلا پانی: %lld دن بعد"
-                }
-              }
-            }
-          }
-        },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Lần tưới tiếp theo: sau %lld ngày"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "下次浇水：%lld天后"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "下次澆水：%lld天後"
-          }
-        }
-      }
-    },
-    "Следующий полив: завтра": {
-      "extractionState": "manual",
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "السقي التالي: غدًا"
-          }
-        },
-        "bg": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Следващо поливане: утре"
-          }
-        },
-        "bn": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "পরের জল: আগামীকাল"
-          }
-        },
-        "ca": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Propera regada: demà"
-          }
-        },
-        "cs": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Další zálivka: zítra"
-          }
-        },
-        "da": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Næste vanding: i morgen"
-          }
-        },
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nächstes Gießen: morgen"
-          }
-        },
-        "el": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Επόμενο πότισμα: αύριο"
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Next watering: tomorrow"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Próximo riego: mañana"
-          }
-        },
-        "fi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Seuraava kastelu: huomenna"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Prochain arrosage : demain"
-          }
-        },
-        "gu": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "આગળનું પાણી: કાલે"
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ההשקיה הבאה: מחר"
-          }
-        },
-        "hi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "अगली सिंचाई: कल"
-          }
-        },
-        "hr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sljedeće zalijevanje: sutra"
-          }
-        },
-        "hu": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Következő öntözés: holnap"
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Penyiraman berikutnya: besok"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Prossima annaffiatura: domani"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "次の水やり：明日"
-          }
-        },
-        "kk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Келесі суару: ертең"
-          }
-        },
-        "kn": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ಮುಂದಿನ ನೀರು: ನಾಳೆ"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "다음 물주기: 내일"
-          }
-        },
-        "lt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Kitas laistymas: rytoj"
-          }
-        },
-        "ml": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "അടുത്ത നന: നാളെ"
-          }
-        },
-        "mr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "पुढचे पाणी: उद्या"
-          }
-        },
-        "ms": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Siraman seterusnya: esok"
-          }
-        },
-        "nb": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Neste vanning: i morgen"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Volgende keer water: morgen"
-          }
-        },
-        "or": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ପରବର୍ତ୍ତୀ ପାଣି: କାଲି"
-          }
-        },
-        "pa": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ਅਗਲਾ ਪਾਣੀ: ਕੱਲ੍ਹ"
-          }
-        },
-        "pl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Następne podlewanie: jutro"
-          }
-        },
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Próxima rega: amanhã"
-          }
-        },
-        "pt-PT": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Próxima rega: amanhã"
-          }
-        },
-        "ro": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Următoarea udare: mâine"
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ďalšie polievanie: zajtra"
-          }
-        },
-        "sl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Naslednje zalivanje: jutri"
-          }
-        },
-        "sv": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nästa vattning: i morgon"
-          }
-        },
-        "ta": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "அடுத்த நீர்ப்பாசனம்: நாளை"
-          }
-        },
-        "te": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "తదుపరి నీళ్లు: రేపు"
-          }
-        },
-        "th": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "รดน้ำครั้งถัดไป: พรุ่งนี้"
-          }
-        },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sonraki sulama: yarın"
-          }
-        },
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Наступний полив: завтра"
-          }
-        },
-        "ur": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "اگلا پانی: کل"
-          }
-        },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Lần tưới tiếp theo: ngày mai"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "下次浇水：明天"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "下次澆水：明天"
-          }
-        }
-      }
-    },
-    "Следующий полив: сегодня": {
-      "extractionState": "manual",
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "السقي التالي: اليوم"
-          }
-        },
-        "bg": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Следващо поливане: днес"
-          }
-        },
-        "bn": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "পরের জল: আজ"
-          }
-        },
-        "ca": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Propera regada: avui"
-          }
-        },
-        "cs": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Další zálivka: dnes"
-          }
-        },
-        "da": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Næste vanding: i dag"
-          }
-        },
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nächstes Gießen: heute"
-          }
-        },
-        "el": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Επόμενο πότισμα: σήμερα"
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Next watering: today"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Próximo riego: hoy"
-          }
-        },
-        "fi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Seuraava kastelu: tänään"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Prochain arrosage : aujourd’hui"
-          }
-        },
-        "gu": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "આગળનું પાણી: આજે"
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ההשקיה הבאה: היום"
-          }
-        },
-        "hi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "अगली सिंचाई: आज"
-          }
-        },
-        "hr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sljedeće zalijevanje: danas"
-          }
-        },
-        "hu": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Következő öntözés: ma"
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Penyiraman berikutnya: hari ini"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Prossima annaffiatura: oggi"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "次の水やり：今日"
-          }
-        },
-        "kk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Келесі суару: бүгін"
-          }
-        },
-        "kn": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ಮುಂದಿನ ನೀರು: ಇಂದು"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "다음 물주기: 오늘"
-          }
-        },
-        "lt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Kitas laistymas: šiandien"
-          }
-        },
-        "ml": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "അടുത്ത നന: ഇന്ന്"
-          }
-        },
-        "mr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "पुढचे पाणी: आज"
-          }
-        },
-        "ms": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Siraman seterusnya: hari ini"
-          }
-        },
-        "nb": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Neste vanning: i dag"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Volgende keer water: vandaag"
-          }
-        },
-        "or": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ପରବର୍ତ୍ତୀ ପାଣି: ଆଜି"
-          }
-        },
-        "pa": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ਅਗਲਾ ਪਾਣੀ: ਅੱਜ"
-          }
-        },
-        "pl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Następne podlewanie: dziś"
-          }
-        },
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Próxima rega: hoje"
-          }
-        },
-        "pt-PT": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Próxima rega: hoje"
-          }
-        },
-        "ro": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Următoarea udare: azi"
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ďalšie polievanie: dnes"
-          }
-        },
-        "sl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Naslednje zalivanje: danes"
-          }
-        },
-        "sv": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nästa vattning: i dag"
-          }
-        },
-        "ta": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "அடுத்த நீர்ப்பாசனம்: இன்று"
-          }
-        },
-        "te": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "తదుపరి నీళ్లు: ఈరోజు"
-          }
-        },
-        "th": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "รดน้ำครั้งถัดไป: วันนี้"
-          }
-        },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sonraki sulama: bugün"
-          }
-        },
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Наступний полив: сьогодні"
-          }
-        },
-        "ur": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "اگلا پانی: آج"
-          }
-        },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Lần tưới tiếp theo: hôm nay"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "下次浇水：今天"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "下次澆水：今天"
           }
         }
       }
@@ -252702,6 +251127,9 @@
         }
       }
     },
+    "Сухо — полить сегодня": {
+      "extractionState": "manual"
+    },
     "Сухой воздух: земля сохнет быстрее": {
       "extractionState": "manual",
       "localizations": {
@@ -264203,292 +262631,8 @@
     "Уведомление вроде „Маша полила: Баксик“.": {
       "extractionState": "manual"
     },
-    "Уведомление на телефон, когда земля у растения подсохла ниже выбранного порога.": {
-      "extractionState": "manual",
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "إشعار على الهاتف عندما تجف تربة النبتة إلى ما دون الحد الذي اخترته."
-          }
-        },
-        "bg": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Известие на телефона, когато почвата на растение изсъхне под избрания праг."
-          }
-        },
-        "bn": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "কোনো গাছের মাটি বেছে নেওয়া সীমার নিচে শুকিয়ে গেলে ফোনে আসা বিজ্ঞপ্তি।"
-          }
-        },
-        "ca": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Un avís al telèfon quan la terra d’una planta s’ha assecat per sota del llindar triat."
-          }
-        },
-        "cs": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Oznámení v telefonu, když zemina u rostliny vyschne pod zvolenou hranici."
-          }
-        },
-        "da": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "En notifikation på telefonen, når jorden hos en plante er tørret under den valgte grænse."
-          }
-        },
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Eine Mitteilung aufs Telefon, wenn die Erde einer Pflanze unter die gewählte Grenze getrocknet ist."
-          }
-        },
-        "el": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Μια ειδοποίηση στο τηλέφωνο όταν το χώμα ενός φυτού στεγνώσει κάτω από το όριο που διαλέξατε."
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "A notification on your phone when a plant’s soil has dried below the level you chose."
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Un aviso en el teléfono cuando la tierra de una planta se ha secado por debajo del umbral elegido."
-          }
-        },
-        "fi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ilmoitus puhelimeen, kun kasvin multa on kuivunut valitun rajan alle."
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Une notification sur le téléphone quand la terre d’une plante a séché sous le seuil choisi."
-          }
-        },
-        "gu": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "જ્યારે કોઈ છોડની માટી પસંદ કરેલી મર્યાદાથી નીચે સુકાઈ જાય ત્યારે ફોન પર સૂચના."
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "התראה בטלפון כשהאדמה של צמח התייבשה מתחת לסף שבחרת."
-          }
-        },
-        "hi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "फ़ोन पर सूचना, जब किसी पौधे की मिट्टी चुनी गई सीमा से नीचे सूख जाए।"
-          }
-        },
-        "hr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Obavijest na telefonu kad se zemlja neke biljke osuši ispod odabranog praga."
-          }
-        },
-        "hu": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Értesítés a telefonon, amikor egy növény földje a választott küszöb alá szárad."
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Notifikasi di ponsel saat tanah tanaman mengering di bawah batas yang kamu pilih."
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Una notifica sul telefono quando la terra di una pianta si è asciugata sotto la soglia scelta."
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "植物の土が選んだ基準より乾いたときに届く通知です。"
-          }
-        },
-        "kk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Өсімдіктің топырағы таңдалған шектен төмен кепкенде телефонға келетін хабарландыру."
-          }
-        },
-        "kn": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ಗಿಡದ ಮಣ್ಣು ನೀವು ಆರಿಸಿದ ಮಟ್ಟಕ್ಕಿಂತ ಕೆಳಗೆ ಒಣಗಿದಾಗ ಫೋನ್‌ಗೆ ಬರುವ ಸೂಚನೆ."
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "식물의 흙이 정한 기준보다 마르면 휴대폰으로 오는 알림이에요."
-          }
-        },
-        "lt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Pranešimas telefone, kai augalo žemė išdžiūsta žemiau pasirinktos ribos."
-          }
-        },
-        "ml": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ഒരു ചെടിയുടെ മണ്ണ് നിങ്ങൾ തിരഞ്ഞെടുത്ത നിലയ്ക്ക് താഴെ ഉണങ്ങുമ്പോൾ ഫോണിൽ വരുന്ന അറിയിപ്പ്."
-          }
-        },
-        "mr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "एखाद्या रोपाची माती तुम्ही निवडलेल्या पातळीखाली सुकल्यावर फोनवर येणारी सूचना."
-          }
-        },
-        "ms": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Pemberitahuan di telefon apabila tanah tumbuhan kering di bawah had yang anda pilih."
-          }
-        },
-        "nb": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Et varsel på telefonen når jorda til en plante har tørket under grensen du valgte."
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Een melding op je telefoon als de grond van een plant onder de gekozen grens is opgedroogd."
-          }
-        },
-        "or": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "କୌଣସି ଗଛର ମାଟି ଆପଣ ବାଛିଥିବା ସୀମା ତଳକୁ ଶୁଖିଗଲେ ଫୋନରେ ଆସୁଥିବା ବିଜ୍ଞପ୍ତି।"
-          }
-        },
-        "pa": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ਫ਼ੋਨ ’ਤੇ ਸੂਚਨਾ, ਜਦੋਂ ਕਿਸੇ ਪੌਦੇ ਦੀ ਮਿੱਟੀ ਚੁਣੀ ਹੱਦ ਤੋਂ ਹੇਠਾਂ ਸੁੱਕ ਜਾਵੇ।"
-          }
-        },
-        "pl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Powiadomienie na telefonie, gdy ziemia rośliny przeschnie poniżej wybranego progu."
-          }
-        },
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Uma notificação no celular quando a terra de uma planta secou abaixo do limite escolhido."
-          }
-        },
-        "pt-PT": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Uma notificação no telemóvel quando a terra de uma planta secou abaixo do limite escolhido."
-          }
-        },
-        "ro": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "O notificare pe telefon când pământul unei plante s-a uscat sub pragul ales."
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Upozornenie v telefóne, keď zemina rastliny vyschne pod zvolenú hranicu."
-          }
-        },
-        "sl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Obvestilo na telefonu, ko se zemlja pri rastlini posuši pod izbrani prag."
-          }
-        },
-        "sv": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "En notis i telefonen när jorden hos en växt har torkat under den gräns du valt."
-          }
-        },
-        "ta": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ஒரு செடியின் மண் நீங்கள் தேர்ந்த அளவுக்குக் கீழே காய்ந்தால் போனில் வரும் அறிவிப்பு."
-          }
-        },
-        "te": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "మొక్క మట్టి మీరు ఎంచుకున్న స్థాయి కంటే కిందకు ఎండినప్పుడు ఫోన్‌కు వచ్చే నోటిఫికేషన్."
-          }
-        },
-        "th": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "การแจ้งเตือนบนโทรศัพท์เมื่อดินของต้นไม้แห้งต่ำกว่าเกณฑ์ที่เลือกไว้"
-          }
-        },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bir bitkinin toprağı seçtiğiniz eşiğin altına kuruduğunda telefona gelen bildirim."
-          }
-        },
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Сповіщення на телефон, коли земля в рослини підсохла нижче обраного порогу."
-          }
-        },
-        "ur": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "فون پر اطلاع جب کسی پودے کی مٹی منتخب حد سے نیچے سوکھ جائے۔"
-          }
-        },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Thông báo trên điện thoại khi đất của cây khô dưới ngưỡng bạn chọn."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "植物的土干到你设定的阈值以下时，手机收到的通知。"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "植物的土乾到你設定的門檻以下時，手機收到的通知。"
-          }
-        }
-      }
+    "Уведомление на телефон в тот день, когда растению пора полить, — для тех же растений, что «Ждут воды» на главной.": {
+      "extractionState": "manual"
     },
     "Уведомления": {
       "extractionState": "manual",
@@ -294785,6 +292929,9 @@
           }
         }
       }
+    },
+    "≈%lld%%": {
+      "extractionState": "manual"
     }
   },
   "version": "1.0"

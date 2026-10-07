@@ -540,8 +540,7 @@ final class Kinship {
         await Dachnik.shared.post(garden.rooms)
         let settings = Settings.shared
         guard settings.reminders else { return }
-        await Notifier.schedule(in: Dachnik.shared.reminded(garden.rooms),
-                                threshold: settings.threshold)
+        await Notifier.schedule(in: Dachnik.shared.reminded(garden.rooms))
     }
 
     /// Ответ сервера на отправку: что принято — то и известно о нём; что

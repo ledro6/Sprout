@@ -81,12 +81,6 @@
   "Полил": "Watered",
   "%lld%%": "%lld%%",
   "Добавлен %@": "Added %@",
-  "Следующий полив: сегодня": "Next watering: today",
-  "Следующий полив: завтра": "Next watering: tomorrow",
-  "Следующий полив: %lld дней": {
-    "one": "Next watering: in %lld day",
-    "other": "Next watering: in %lld days"
-  },
   "Садовод": "Gardener",
   "Добро пожаловать!": "Welcome!",
   "Добро пожаловать, %@!": "Welcome, %@!",
@@ -340,7 +334,6 @@
   "Горшок": "Pot",
   "Учитывать время года": "Account for Seasons",
   "Напоминать о поливе": "Watering Reminders",
-  "Когда влажность ниже": "When Moisture Drops Below",
   "Защита": "Security",
   "Запирать приложение": "Lock the App",
   "На телефоне нет ни Face ID, ни код-пароля.": "This phone has neither Face ID nor a passcode.",
@@ -442,7 +435,6 @@
   "Если вы поливаете раньше срока, приложение заметит и предложит сделать срок короче.": "If you water before it’s due, the app notices and offers to shorten the interval.",
   "Удобрение, разведённое в воде для полива. Нужно раз в несколько недель, пока растение растёт.": "Fertilizer mixed into the watering water. Plants need it every few weeks while they’re growing.",
   "Переезд в горшок побольше со свежей землёй. Обычно раз в год-два, весной.": "Moving the plant to a bigger pot with fresh soil. Usually once every year or two, in spring.",
-  "Уведомление на телефон, когда земля у растения подсохла ниже выбранного порога.": "A notification on your phone when a plant’s soil has dried below the level you chose.",
   "Узор на фоне чуть сдвигается, когда вы наклоняете телефон, — будто лежит глубже экрана.": "The background pattern shifts slightly as you tilt your phone — as if it lay deeper than the screen.",
   "При наклоне каждая фигурка узора движется со своей скоростью, будто плывёт в воде.": "When you tilt the phone, each shape in the pattern moves at its own speed, as if floating in water.",
   "После полива по узору бежит цветная волна — так видно, что полив засчитан.": "After watering, a colored wave runs across the pattern — that’s how you know the watering counted.",

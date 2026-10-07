@@ -54,11 +54,16 @@ enum Sage {
         guard !plants.isEmpty else { return empty }
         let season = Season.growing ? "It is the growing season."
             : "It is the rest season: the app pauses feeding."
-        let tomorrow = plants.filter { $0.daysUntilWatering == 1 }
+        // Сегодня — общим движком (`MoistureStatus.needsWater`): сухое
+        // растение не попадёт в «завтра», а «nobody» не скажется при нём.
+        let today = MoistureStatus.needsWater(in: rooms)
+        let tomorrow = plants.filter {
+            !$0.needsWaterToday && $0.daysUntilWatering == 1
+        }
         var lines = [
             "The garden: \(plants.count) plants in \(rooms.count) rooms. "
                 + "Today is \(day(now, calendar: calendar)). \(season)",
-            "Needs water today: " + roll(Seed.due(in: rooms), rooms: rooms),
+            "Needs water today: " + roll(today, rooms: rooms),
             "Needs water tomorrow: " + roll(tomorrow, rooms: rooms),
         ]
         let chores = plants.compactMap { plant -> String? in
@@ -159,7 +164,8 @@ enum Sage {
     /// Растение строкой обзора: кличка, вид, влажность и полив.
     private static func line(_ plant: Plant) -> String {
         "\(quoted(plant.name)) \(plant.species), \(percent(plant.moisture)) "
-            + "moisture, water \(when(plant.daysUntilWatering))"
+            + "moisture, status \(quoted(plant.status.word)), "
+            + "\(quoted(plant.nextWateringText))"
     }
 
     private static func card(_ plant: Plant, room: String?, log: [Watering],
@@ -176,8 +182,9 @@ enum Sage {
             "\(quoted(plant.name)): species \(plant.species)\(place), "
                 + "in the garden since \(day(added, calendar: calendar)).",
             "Soil moisture \(percent(plant.moisture)), \(measured).",
-            "Watering: every \(number(plant.dryingDays)) days; next watering "
-                + "\(when(plant.daysUntilWatering)).",
+            "Status: \(quoted(plant.status.word)); "
+                + "\(quoted(plant.nextWateringText)).",
+            "Watering: every \(number(plant.dryingDays)) days.",
             "Last watered: \(last); waterings recorded: \(diary.total).",
         ]
         let tending = plant.tending
@@ -252,19 +259,17 @@ enum Sage {
         }
     }
 
-    /// Дни — как на карточке: «сегодня», «завтра», «через 8 дней».
-    private static func when(_ days: Int) -> String {
-        switch days {
-        case ..<1: "today"
-        case 1: "tomorrow"
-        default: "in \(days) days"
-        }
-    }
-
-    /// Срок ухода: до месяца — днями, дальше — месяцами.
+    /// Срок ухода: до месяца — днями, дальше — месяцами. Полив сюда не
+    /// ходит — его срок словами движка, `Plant.nextWateringText`.
     private static func soon(_ days: Double) -> String {
         let whole = Int(days.rounded())
-        guard whole >= 30 else { return when(whole) }
+        guard whole >= 30 else {
+            switch whole {
+            case ..<1: return "today"
+            case 1: return "tomorrow"
+            default: return "in \(whole) days"
+            }
+        }
         return "in \(max(1, Care.months(days: days))) months"
     }
 

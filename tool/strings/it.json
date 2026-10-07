@@ -81,12 +81,6 @@
   "Полил": "Annaffiata",
   "%lld%%": "%lld%%",
   "Добавлен %@": "Aggiunta il %@",
-  "Следующий полив: сегодня": "Prossima annaffiatura: oggi",
-  "Следующий полив: завтра": "Prossima annaffiatura: domani",
-  "Следующий полив: %lld дней": {
-    "one": "Prossima annaffiatura: tra %lld giorno",
-    "other": "Prossima annaffiatura: tra %lld giorni"
-  },
   "Садовод": "Giardiniere",
   "Добро пожаловать!": "Benvenuto!",
   "Добро пожаловать, %@!": "Benvenuto, %@!",
@@ -340,7 +334,6 @@
   "Горшок": "Vaso",
   "Учитывать время года": "Considera la stagione",
   "Напоминать о поливе": "Promemoria annaffiatura",
-  "Когда влажность ниже": "Quando l’umidità scende sotto",
   "Защита": "Protezione",
   "Запирать приложение": "Blocca l’app",
   "На телефоне нет ни Face ID, ни код-пароля.": "Questo telefono non ha né Face ID né codice.",
@@ -442,7 +435,6 @@
   "Если вы поливаете раньше срока, приложение заметит и предложит сделать срок короче.": "Se annaffi prima del tempo, l’app se ne accorge e propone di accorciare l’intervallo.",
   "Удобрение, разведённое в воде для полива. Нужно раз в несколько недель, пока растение растёт.": "Concime sciolto nell’acqua di annaffiatura. Serve ogni poche settimane mentre la pianta cresce.",
   "Переезд в горшок побольше со свежей землёй. Обычно раз в год-два, весной.": "Il trasloco in un vaso più grande con terriccio fresco. Di solito ogni uno o due anni, in primavera.",
-  "Уведомление на телефон, когда земля у растения подсохла ниже выбранного порога.": "Una notifica sul telefono quando la terra di una pianta si è asciugata sotto la soglia scelta.",
   "Узор на фоне чуть сдвигается, когда вы наклоняете телефон, — будто лежит глубже экрана.": "Il motivo dello sfondo si sposta un po’ quando inclini il telefono, come se fosse più in profondità dello schermo.",
   "При наклоне каждая фигурка узора движется со своей скоростью, будто плывёт в воде.": "Quando inclini il telefono, ogni figura del motivo si muove alla sua velocità, come se galleggiasse nell’acqua.",
   "После полива по узору бежит цветная волна — так видно, что полив засчитан.": "Dopo l’annaffiatura un’onda colorata attraversa il motivo: così sai che l’annaffiatura è stata registrata.",

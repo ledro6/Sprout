@@ -81,12 +81,6 @@
   "Полил": "Gegossen",
   "%lld%%": "%lld %%",
   "Добавлен %@": "Hinzugefügt am %@",
-  "Следующий полив: сегодня": "Nächstes Gießen: heute",
-  "Следующий полив: завтра": "Nächstes Gießen: morgen",
-  "Следующий полив: %lld дней": {
-    "one": "Nächstes Gießen: in %lld Tag",
-    "other": "Nächstes Gießen: in %lld Tagen"
-  },
   "Садовод": "Gärtner",
   "Добро пожаловать!": "Willkommen!",
   "Добро пожаловать, %@!": "Willkommen, %@!",
@@ -340,7 +334,6 @@
   "Горшок": "Topf",
   "Учитывать время года": "Jahreszeiten berücksichtigen",
   "Напоминать о поливе": "Ans Gießen erinnern",
-  "Когда влажность ниже": "Wenn die Feuchtigkeit unter",
   "Защита": "Schutz",
   "Запирать приложение": "App sperren",
   "На телефоне нет ни Face ID, ни код-пароля.": "Dieses Telefon hat weder Face ID noch einen Code.",
@@ -442,7 +435,6 @@
   "Если вы поливаете раньше срока, приложение заметит и предложит сделать срок короче.": "Gießt du früher als fällig, merkt die App das und schlägt ein kürzeres Intervall vor.",
   "Удобрение, разведённое в воде для полива. Нужно раз в несколько недель, пока растение растёт.": "Dünger, im Gießwasser aufgelöst. Braucht die Pflanze alle paar Wochen, solange sie wächst.",
   "Переезд в горшок побольше со свежей землёй. Обычно раз в год-два, весной.": "Umzug in einen größeren Topf mit frischer Erde. Meist alle ein bis zwei Jahre, im Frühling.",
-  "Уведомление на телефон, когда земля у растения подсохла ниже выбранного порога.": "Eine Mitteilung aufs Telefon, wenn die Erde einer Pflanze unter die gewählte Grenze getrocknet ist.",
   "Узор на фоне чуть сдвигается, когда вы наклоняете телефон, — будто лежит глубже экрана.": "Das Hintergrundmuster verschiebt sich leicht, wenn du das Telefon neigst – als läge es tiefer als der Bildschirm.",
   "При наклоне каждая фигурка узора движется со своей скоростью, будто плывёт в воде.": "Beim Neigen bewegt sich jede Figur des Musters in ihrem eigenen Tempo, als schwebte sie im Wasser.",
   "После полива по узору бежит цветная волна — так видно, что полив засчитан.": "Nach dem Gießen läuft eine farbige Welle über das Muster – so siehst du, dass das Gießen gezählt hat.",

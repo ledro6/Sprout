@@ -469,11 +469,16 @@ struct Almanac: Sendable {
     static func now(_ rooms: [Room]) -> Now {
         let plants = rooms.flatMap(\.plants)
         var now = Now()
+        // Группы — по статусу (`MoistureStatus`): «Ждут воды» — ровно те,
+        // кого полить сегодня, как на карточке дня; «Скоро пить» — `soon`
+        // без них; остальные довольны. Каждое растение — в одной группе.
         for plant in plants {
-            switch plant.thirst {
-            case .calm: now.calm += 1
-            case .warn: now.warn += 1
-            case .alarm: now.alarm += 1
+            if plant.needsWaterToday {
+                now.alarm += 1
+            } else if plant.status == .soon {
+                now.warn += 1
+            } else {
+                now.calm += 1
             }
         }
         guard !plants.isEmpty else { return now }

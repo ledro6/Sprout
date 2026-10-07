@@ -150,7 +150,7 @@ private struct Dial<Label: View>: View {
     }
 
     var body: some View {
-        let tint = WristTone.of(Wrist.Level(moisture: moisture))
+        let tint = WristTone.of(MoistureStatus(moisture: moisture))
         ZStack {
             Circle()
                 .stroke(tint.opacity(0.22), lineWidth: width)
@@ -169,11 +169,12 @@ enum WristTone {
     static let water = Color(red: 0.25, green: 0.62, blue: 1)
     static let done = Color(red: 0.42, green: 0.86, blue: 0.5)
 
-    static func of(_ level: Wrist.Level) -> Color {
-        switch level {
-        case .calm: water
+    /// Статус — из общего движка (`MoistureStatus`), цвета — свои, часов.
+    static func of(_ status: MoistureStatus) -> Color {
+        switch status.tone {
         case .warn: .orange
         case .alarm: .red
+        case .water, .green, .secondary: water
         }
     }
 }

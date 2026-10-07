@@ -81,12 +81,6 @@
   "Полил": "Arrosé",
   "%lld%%": "%lld %%",
   "Добавлен %@": "Ajouté le %@",
-  "Следующий полив: сегодня": "Prochain arrosage : aujourd’hui",
-  "Следующий полив: завтра": "Prochain arrosage : demain",
-  "Следующий полив: %lld дней": {
-    "one": "Prochain arrosage : dans %lld jour",
-    "other": "Prochain arrosage : dans %lld jours"
-  },
   "Садовод": "Jardinier",
   "Добро пожаловать!": "Bienvenue !",
   "Добро пожаловать, %@!": "Bienvenue, %@ !",
@@ -340,7 +334,6 @@
   "Горшок": "Pot",
   "Учитывать время года": "Tenir compte des saisons",
   "Напоминать о поливе": "Rappels d’arrosage",
-  "Когда влажность ниже": "Quand l’humidité passe sous",
   "Защита": "Protection",
   "Запирать приложение": "Verrouiller l’app",
   "На телефоне нет ни Face ID, ни код-пароля.": "Ce téléphone n’a ni Face ID ni code.",
@@ -442,7 +435,6 @@
   "Если вы поливаете раньше срока, приложение заметит и предложит сделать срок короче.": "Si vous arrosez avant l’échéance, l’app le remarque et propose de raccourcir la fréquence.",
   "Удобрение, разведённое в воде для полива. Нужно раз в несколько недель, пока растение растёт.": "De l’engrais dilué dans l’eau d’arrosage. Nécessaire toutes les quelques semaines pendant la croissance.",
   "Переезд в горшок побольше со свежей землёй. Обычно раз в год-два, весной.": "Le passage dans un pot plus grand avec de la terre neuve. En général tous les un ou deux ans, au printemps.",
-  "Уведомление на телефон, когда земля у растения подсохла ниже выбранного порога.": "Une notification sur le téléphone quand la terre d’une plante a séché sous le seuil choisi.",
   "Узор на фоне чуть сдвигается, когда вы наклоняете телефон, — будто лежит глубже экрана.": "Le motif du fond bouge légèrement quand vous inclinez le téléphone — comme s’il était plus profond que l’écran.",
   "При наклоне каждая фигурка узора движется со своей скоростью, будто плывёт в воде.": "Quand vous inclinez le téléphone, chaque figure du motif bouge à sa propre vitesse, comme si elle flottait dans l’eau.",
   "После полива по узору бежит цветная волна — так видно, что полив засчитан.": "Après l’arrosage, une vague colorée parcourt le motif — c’est le signe que l’arrosage est compté.",

@@ -43,8 +43,9 @@ struct PlantEntity: AppEntity {
         self.room = room
         let percent = Lang.format("%lld%%", Int((plant.moisture * 100).rounded()))
         let line = Lang.format("%1$@ · %2$@", room, percent)
-        status = plant.thirst == .calm ? line
-            : Lang.format("%1$@ · %2$@", line, Lang.text("Пора поливать"))
+        status = plant.needsWaterToday
+            ? Lang.format("%1$@ · %2$@", line, Lang.text("Пора поливать"))
+            : line
         thumb = Store.thumb(for: plant)
     }
 }
@@ -120,7 +121,7 @@ struct WhoNeedsWater: AppIntent {
         let garden = Garden.shared
         garden.reload()
         garden.advance()
-        let line = Seed.dueLine(Seed.due(in: garden.rooms))
+        let line = Seed.dueLine(MoistureStatus.needsWater(in: garden.rooms))
         return .result(dialog: "\(line)")
     }
 }

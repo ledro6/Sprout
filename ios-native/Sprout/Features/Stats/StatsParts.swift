@@ -4,10 +4,10 @@ extension Palette {
     /// Цвет растения по влажности — как его тень на карточке, только
     /// спокойные зелёные: в статистике «всё хорошо» тоже надо показать.
     static func level(_ moisture: Double) -> Color {
-        switch Thirst(moisture: moisture) {
-        case .calm: green
+        switch MoistureStatus(moisture: moisture).tone {
         case .warn: warn
         case .alarm: alarm
+        case .water, .green, .secondary: green
         }
     }
 

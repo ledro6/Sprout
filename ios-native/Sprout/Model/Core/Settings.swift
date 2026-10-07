@@ -251,11 +251,6 @@ final class Settings {
         didSet { store.set(avatarShot, forKey: Key.avatarShot) }
     }
 
-    /// Двадцать процентов по умолчанию — порог, на котором тень краснеет, см.
-    /// `Thirst.alarmBelow`. Выбирается барабаном — любым целым процентом.
-    static let thresholds = 1 ... 99
-    static let defaultThreshold = 0.2
-
     var theme: Theme {
         didSet { store.set(theme.rawValue, forKey: Key.theme) }
     }
@@ -331,10 +326,6 @@ final class Settings {
         didSet { store.set(calendar, forKey: Key.calendar) }
     }
 
-    var threshold: Double {
-        didSet { store.set(threshold, forKey: Key.threshold) }
-    }
-
     /// Приложили iPhone к метке на горшке — полить сразу или спросить, см.
     /// `PotTag`. По умолчанию сразу: ради этого метку и клеят, а ошибку
     /// снимает отмена на плашке.
@@ -406,7 +397,6 @@ final class Settings {
         static let shapes = "patternShapes"
         static let reminders = "reminders"
         static let calendar = "calendarSync"
-        static let threshold = "remindThreshold"
         static let tagPour = "tagPour"
         /// Прежние ключи — номером готового цвета; читаются ради тех, у кого
         /// они сохранены.
@@ -529,9 +519,6 @@ final class Settings {
         pattern = !store.bool(forKey: Key.hiddenPattern)
         reminders = store.bool(forKey: Key.reminders)
         calendar = store.bool(forKey: Key.calendar)
-        let level = (store.double(forKey: Key.threshold) * 100).rounded()
-        threshold = Self.thresholds.contains(Int(level)) ? level / 100
-            : Self.defaultThreshold
         tagPour = PotTag.Pour(rawValue: store.string(forKey: Key.tagPour) ?? "")
             ?? .now
         toured = store.bool(forKey: Key.toured)

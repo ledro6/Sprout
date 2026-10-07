@@ -81,12 +81,6 @@
   "Полил": "Vannet",
   "%lld%%": "%lld %%",
   "Добавлен %@": "Lagt til %@",
-  "Следующий полив: сегодня": "Neste vanning: i dag",
-  "Следующий полив: завтра": "Neste vanning: i morgen",
-  "Следующий полив: %lld дней": {
-    "one": "Neste vanning: om %lld dag",
-    "other": "Neste vanning: om %lld dager"
-  },
   "Садовод": "Gartner",
   "Добро пожаловать!": "Velkommen!",
   "Добро пожаловать, %@!": "Velkommen, %@!",
@@ -340,7 +334,6 @@
   "Горшок": "Potte",
   "Учитывать время года": "Ta hensyn til årstiden",
   "Напоминать о поливе": "Påminn om vanning",
-  "Когда влажность ниже": "Når fukten er under",
   "Защита": "Beskyttelse",
   "Запирать приложение": "Lås appen",
   "На телефоне нет ни Face ID, ни код-пароля.": "Telefonen har verken Face ID eller kode.",
@@ -442,7 +435,6 @@
   "Если вы поливаете раньше срока, приложение заметит и предложит сделать срок короче.": "Vanner du før tiden, merker appen det og foreslår et kortere intervall.",
   "Удобрение, разведённое в воде для полива. Нужно раз в несколько недель, пока растение растёт.": "Gjødsel løst opp i vanningsvannet. Trengs med noen ukers mellomrom mens planten vokser.",
   "Переезд в горшок побольше со свежей землёй. Обычно раз в год-два, весной.": "Flytting til en større potte med fersk jord. Vanligvis hvert år eller annethvert år, om våren.",
-  "Уведомление на телефон, когда земля у растения подсохла ниже выбранного порога.": "Et varsel på telefonen når jorda til en plante har tørket under grensen du valgte.",
   "Узор на фоне чуть сдвигается, когда вы наклоняете телефон, — будто лежит глубже экрана.": "Mønsteret i bakgrunnen flytter seg litt når du vipper telefonen – som om det ligger dypere enn skjermen.",
   "При наклоне каждая фигурка узора движется со своей скоростью, будто плывёт в воде.": "Når du vipper telefonen, beveger hver figur i mønsteret seg i sitt eget tempo, som om den flyter i vann.",
   "После полива по узору бежит цветная волна — так видно, что полив засчитан.": "Etter vanning går en farget bølge over mønsteret – slik ser du at vanningen er registrert.",
