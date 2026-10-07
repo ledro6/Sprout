@@ -67,6 +67,10 @@ struct RootView: View {
         }
         // «Полить?» и сообщения после метки на горшке.
         .modifier(TagPrompt())
+        // «Посадить такое же» из каталога — на вкладку «Добавить».
+        .onChange(of: Sowing.shared.specimen) { _, asked in
+            if asked != nil { pane = .add }
+        }
         .tabBarMinimizeBehavior(.onScrollDown)
         // Край прокрутки сверху — плавным градиентом размытия, как в iOS, а
         // не полосой с чертой под панелью. Снизу края нет: размытие под

@@ -7,6 +7,10 @@ import UIKit
 /// телефоне, и оба поля правятся руками.
 struct AddView: View {
     @Environment(Garden.self) private var garden
+    @Environment(\.tabShown) private var shown
+
+    /// Лист «Каталог видов».
+    @State private var browsing = false
 
     @State private var item: PhotosPickerItem?
     @State private var shooting = false
@@ -93,6 +97,11 @@ struct AddView: View {
         .onAppear {
             if room.isEmpty { room = rooms.first ?? Lang.text("Дом") }
         }
+        // Вид из каталога — с этой вкладки или из поиска: забираем, когда
+        // вкладка на экране.
+        .onChange(of: Sowing.shared.specimen, initial: true) { _, _ in sow() }
+        .onChange(of: shown) { _, _ in sow() }
+        .sheet(isPresented: $browsing) { HerbariumView() }
         // `onDismiss` объявлен до содержимого — вторым замыканием его не
         // переставить.
         .fullScreenCover(isPresented: $shooting, onDismiss: { snapped() }) {
@@ -275,6 +284,13 @@ struct AddView: View {
                     .focused($typing)
                     .submitLabel(.done)
                 PetNote(species: wanted)
+                Button { browsing = true } label: {
+                    Label("Выбрать из каталога", systemImage: "books.vertical")
+                        .lineLimit(1)
+                        .fixedSize()
+                }
+                .buttonStyle(.glass)
+                .font(Typography.settingNote)
             }
         }
         .sproutRide()
@@ -491,6 +507,21 @@ struct AddView: View {
                 period = max(seen.dryingDays.rounded(), 1)
             }
         }
+    }
+
+    /// Вид из каталога: название, срок полива, если он известен, и уход
+    /// вида — переключатели «Что ещё делать» снова все включены. Черенок
+    /// друга уступает: сроки теперь вида.
+    private func sow() {
+        guard shown, let asked = Sowing.shared.specimen else { return }
+        Sowing.shared.specimen = nil
+        withAnimation(Motion.appear) {
+            cutting = nil
+            species = asked.title
+            if let days = asked.watering { period = max(days.rounded(), 1) }
+            skipped = []
+        }
+        Feel.pick()
     }
 
     private func forget() {

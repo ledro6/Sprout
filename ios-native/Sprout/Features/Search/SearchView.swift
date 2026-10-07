@@ -25,6 +25,15 @@ struct SearchView: View {
         Settings.shared.order.arrange(garden.search(query))
     }
 
+    /// Вид из каталога, похожий на запрос, — строкой под растениями.
+    /// Больше трёх — уже не ответ, а список: он в «Добавить».
+    private var kinds: [Specimen] {
+        asked.isEmpty ? [] : Array(Herbarium.search(asked).prefix(3))
+    }
+
+    /// Открытая страница вида.
+    @State private var specimen: Specimen?
+
     var body: some View {
         NavigationStack(path: $path) {
             ScrollView {
@@ -33,10 +42,11 @@ struct SearchView: View {
                     Group {
                         if asked.isEmpty {
                             history
-                        } else if results.isEmpty {
+                        } else if results.isEmpty && kinds.isEmpty {
                             nothing
                         } else {
-                            grid
+                            if !results.isEmpty { grid }
+                            if !kinds.isEmpty { catalog }
                         }
                     }
                     .hintSpot(.searchBoard)
@@ -65,6 +75,19 @@ struct SearchView: View {
         }
         .sheet(isPresented: $asking) {
             AskView(draft: asked).environment(garden)
+        }
+        .sheet(item: $specimen) { chosen in
+            NavigationStack {
+                SpecimenView(specimen: chosen) {
+                    specimen = nil
+                    Sowing.shared.ask(chosen)
+                }
+                .toolbar {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button("Готово") { specimen = nil }
+                    }
+                }
+            }
         }
         // Ореол вернувшейся карточки — с выдержкой, как на главной.
         .task(id: path.isEmpty) {
@@ -162,6 +185,27 @@ struct SearchView: View {
         }
         .padding(.horizontal, Metrics.contentMargin)
         .padding(.top, 14)
+        .padding(.bottom, 28)
+    }
+
+    /// Виды из каталога: в квартире такого может и не быть, а посадить —
+    /// можно.
+    private var catalog: some View {
+        SproutGroup("Каталог видов") {
+            ForEach(Array(kinds.enumerated()), id: \.element.id) { item in
+                if item.offset > 0 { SproutDivider() }
+                Button {
+                    recents.remember(asked)
+                    specimen = item.element
+                } label: {
+                    SpecimenRow(specimen: item.element)
+                }
+                .buttonStyle(.plain)
+            }
+        }
+        .sproutRide()
+        .padding(.horizontal, Metrics.contentMargin)
+        .padding(.top, results.isEmpty ? 14 : 0)
         .padding(.bottom, 28)
     }
 

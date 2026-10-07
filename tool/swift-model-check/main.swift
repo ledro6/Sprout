@@ -1872,6 +1872,48 @@ for (i, entry) in Species.table.enumerated() {
 check(shadowed.isEmpty,
       "до каждого слова доходит очередь: \(shadowed)")
 
+print("каталог видов:")
+do {
+    let all = Herbarium.all
+    let titles = all.map(\.title)
+    check(all.count == Preset.allCases.count + 5,
+          "все готовые модели и пять видов классификатора: \(all.count)")
+    check(Set(titles).count == titles.count, "виды не повторяются")
+    check(titles == titles.sorted { Herbarium.fold($0) < Herbarium.fold($1) },
+          "по алфавиту")
+    check(titles.contains("Филодендрон") && titles.contains("Бамбук")
+          && !titles.contains("Цветок") && !titles.contains("Деревце")
+          && !titles.contains("Бонсай"),
+          "виды классификатора — без общих слов и без вида без модели")
+    check(all.first { $0.title == "Филодендрон" }?.preset == .monstera,
+          "филодендрон — на модели монстеры")
+    check(Herbarium.fold("  Ёжик "), "ежик", "«ё» как «е», без регистра и краёв")
+    func found(_ query: String) -> [String] {
+        Herbarium.search(query).map(\.title)
+    }
+    check(found("").count == all.count, "пустой запрос — весь каталог")
+    check(found("монстера").first ?? "", "Монстера", "точное название — первым")
+    check(found("Роз").first ?? "", "Роза",
+          "начало названия — выше куска внутри")
+    check(found("травы").contains("Пряные травы"), "начало слова в названии")
+    check(found("щучий хвост").joined(separator: " "), "Сансевиерия",
+          "по основе — к готовой модели")
+    check(found("филодендрон").joined(separator: " "), "Филодендрон Монстера",
+          "сам вид, потом его модель")
+    check(found("цветы").isEmpty, "общее слово — не вид")
+    check(found("ёлка").isEmpty && found("zz").isEmpty, "незнакомое — пусто")
+    let ficus = all.first { $0.title == "Фикус" }!
+    check(ficus.watering == 7 && ficus.care.feedEvery == 21
+          && ficus.care.repotEvery == 365 && ficus.toxicity == .toxic,
+          "фикус: полив, подкормка, пересадка, питомцы — из данных")
+    check(ficus.duties.map(\.duty) == [.mist, .turn, .wipe],
+          "фикус: мелкий уход вида")
+    let zz = all.first { $0.preset == .zamioculcas }!
+    check(zz.watering == nil, "срока полива нет в данных — его нет и в каталоге")
+    check(all.first { $0.title == "Лилия" }?.toxicity == .lily,
+          "лилия — смертельно для кошек")
+}
+
 print("фигурки плывут в вязкой среде:")
 
 check(Sway.layer(column: 3, row: 5, slot: 1, era: 2)
