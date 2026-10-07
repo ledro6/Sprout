@@ -352,6 +352,11 @@ struct HomeView: View {
                                     onShown: { revealed.insert(key) }))
                                 .padding(.horizontal, Metrics.contentMargin)
                         }
+                        if editing {
+                            ReorderHint()
+                                .padding(.horizontal, Metrics.contentMargin)
+                                .transition(.blurReplace)
+                        }
                         shelf(room, index: index)
                     }
                 }
@@ -761,7 +766,13 @@ struct HomeView: View {
     @ViewBuilder
     private func shelf(_ room: Room?, index: Int) -> some View {
         let plants = Settings.shared.order.arrange(room?.plants ?? [])
-        if plants.isEmpty {
+        if plants.isEmpty, garden.plantCount == 0 {
+            // Пустой сад — с чего начать, а не «в этой комнате пусто».
+            EmptyGarden(add: { Summon.shared.add = true }, sample: sampler)
+                .padding(.horizontal, 48)
+                .padding(.top, 100)
+                .transition(.blurReplace)
+        } else if plants.isEmpty {
             empty
         } else {
             Shelf(look) {

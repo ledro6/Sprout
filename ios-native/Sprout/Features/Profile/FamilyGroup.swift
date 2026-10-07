@@ -232,10 +232,7 @@ struct FamilyGroup: View {
                 Date.FormatStyle(date: .omitted, time: .shortened)
                     .locale(Lang.locale))))
         case .trouble(let text):
-            Label(text, systemImage: "exclamationmark.triangle")
-                .font(Typography.settingNote)
-                .foregroundStyle(Palette.warn)
-                .fixedSize(horizontal: false, vertical: true)
+            SyncTrouble(detail: text)
         case .note(let text):
             note(text)
         }

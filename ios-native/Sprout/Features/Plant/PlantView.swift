@@ -731,6 +731,9 @@ struct PlantView: View {
                         .font(Typography.settingNote)
                         .foregroundStyle(Palette.secondaryText)
                 }
+                if waiting(moment) {
+                    PendingBadge()
+                }
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -753,6 +756,16 @@ struct PlantView: View {
               let last = garden.log.last(where: { $0.plant == plant.id })
         else { return nil }
         return Kinship.shared.credit(last)
+    }
+
+    /// Полив общего сада, ещё не ушедший в iCloud.
+    private func waiting(_ moment: Date) -> Bool {
+        guard Kinship.enabled,
+              let entry = garden.log.last(where: {
+                  $0.plant == plantID && $0.when == moment
+              })
+        else { return false }
+        return Kinship.shared.waiting(entry)
     }
 
     /// Кто полил в этот миг, если не хозяин телефона: «Полила Маша».

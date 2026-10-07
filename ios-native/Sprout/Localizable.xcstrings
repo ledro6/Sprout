@@ -11166,6 +11166,9 @@
         }
       }
     },
+    "Apple Intelligence выключена или недоступна на этом устройстве. Включите её в Настройках → Apple Intelligence и Siri; если пункта нет, телефон её не поддерживает. Полив и сад работают и без неё.": {
+      "extractionState": "manual"
+    },
     "Bluetooth выключен. Включите его в Пункте управления.": {
       "extractionState": "manual"
     },
@@ -21830,293 +21833,6 @@
     "В саду": {
       "extractionState": "manual"
     },
-    "В саду пока ничего не растёт. Посадите первое растение во вкладке «Добавить».": {
-      "extractionState": "manual",
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "لا شيء ينمو في حديقتك بعد. ازرع أول نبتة من علامة التبويب «إضافة»."
-          }
-        },
-        "bg": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "В градината все още нищо не расте. Засадете първото растение в раздела „Добави“."
-          }
-        },
-        "bn": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "আপনার বাগানে এখনো কিছু বাড়ছে না। “যোগ করুন” ট্যাবে প্রথম গাছটি লাগান।"
-          }
-        },
-        "ca": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Encara no creix res al teu jardí. Planta la primera a la pestanya «Afegeix»."
-          }
-        },
-        "cs": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ve vaší zahradě zatím nic neroste. Zasaďte první rostlinu na kartě „Přidat“."
-          }
-        },
-        "da": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Der vokser endnu intet i din have. Plant den første på fanen ”Tilføj”."
-          }
-        },
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "In deinem Garten wächst noch nichts. Setz die erste Pflanze im Tab „Hinzufügen“ ein."
-          }
-        },
-        "el": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Στον κήπο σας δεν μεγαλώνει ακόμα τίποτα. Φυτέψτε το πρώτο στην καρτέλα «Προσθήκη»."
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nothing is growing in your garden yet. Plant the first one in the “Add” tab."
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Todavía no crece nada en tu jardín. Planta la primera en la pestaña “Añadir”."
-          }
-        },
-        "fi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Puutarhassasi ei vielä kasva mitään. Istuta ensimmäinen välilehdellä ”Lisää”."
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Rien ne pousse encore dans votre jardin. Plantez la première plante dans l’onglet « Ajouter »."
-          }
-        },
-        "gu": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "તમારા બગીચામાં હજી કંઈ ઊગતું નથી. “ઉમેરો” ટૅબમાં પહેલો છોડ વાવો."
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "עדיין לא גדל כלום בגינה. אפשר לשתול את הצמח הראשון בכרטיסייה “הוספה”."
-          }
-        },
-        "hi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "आपके बगीचे में अभी कुछ नहीं उग रहा। “जोड़ें” टैब में पहला पौधा लगाएँ।"
-          }
-        },
-        "hr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "U vašem vrtu još ništa ne raste. Posadite prvu biljku na kartici „Dodaj”."
-          }
-        },
-        "hu": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "A kertedben még semmi sem nő. Ültesd el az elsőt a „Hozzáadás” lapon."
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Belum ada yang tumbuh di kebunmu. Tanam yang pertama di tab “Tambah”."
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nel tuo giardino non cresce ancora niente. Pianta la prima nella scheda “Aggiungi”."
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "庭にはまだ何も育っていません。「追加」タブで最初の植物を植えましょう。"
-          }
-        },
-        "kk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Бақта әзірге ештеңе өспейді. Алғашқы өсімдікті «Қосу» қойындысында отырғызыңыз."
-          }
-        },
-        "kn": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ನಿಮ್ಮ ತೋಟದಲ್ಲಿ ಇನ್ನೂ ಏನೂ ಬೆಳೆಯುತ್ತಿಲ್ಲ. “ಸೇರಿಸಿ” ಟ್ಯಾಬ್‌ನಲ್ಲಿ ಮೊದಲ ಗಿಡವನ್ನು ನೆಡಿ."
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "정원에 아직 아무것도 자라지 않아요. ‘추가’ 탭에서 첫 식물을 심어 보세요."
-          }
-        },
-        "lt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Jūsų sode dar niekas neauga. Pasodinkite pirmąjį augalą skirtuke „Pridėti“."
-          }
-        },
-        "ml": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "നിങ്ങളുടെ തോട്ടത്തിൽ ഇതുവരെ ഒന്നും വളരുന്നില്ല. “ചേർക്കുക” ടാബിൽ ആദ്യ ചെടി നടുക."
-          }
-        },
-        "mr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "तुमच्या बागेत अजून काहीही वाढत नाही. “जोडा” टॅबमध्ये पहिले रोप लावा."
-          }
-        },
-        "ms": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Belum ada yang tumbuh dalam taman anda. Tanam yang pertama dalam tab “Tambah”."
-          }
-        },
-        "nb": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ingenting vokser i hagen din ennå. Plant den første i fanen «Legg til»."
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Er groeit nog niets in je tuin. Plant de eerste in het tabblad ‘Voeg toe’."
-          }
-        },
-        "or": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ଆପଣଙ୍କ ବଗିଚାରେ ଏପର୍ଯ୍ୟନ୍ତ କିଛି ବଢ଼ୁନାହିଁ। “ଯୋଡ଼ନ୍ତୁ” ଟାବ୍‌ରେ ପ୍ରଥମ ଗଛ ଲଗାନ୍ତୁ।"
-          }
-        },
-        "pa": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ਤੁਹਾਡੇ ਬਗੀਚੇ ਵਿੱਚ ਅਜੇ ਕੁਝ ਨਹੀਂ ਉੱਗ ਰਿਹਾ। “ਜੋੜੋ” ਟੈਬ ਵਿੱਚ ਪਹਿਲਾ ਪੌਦਾ ਲਗਾਓ।"
-          }
-        },
-        "pl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "W twoim ogrodzie jeszcze nic nie rośnie. Posadź pierwszą roślinę w karcie „Dodaj”."
-          }
-        },
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ainda não há nada crescendo no seu jardim. Plante a primeira na aba “Adicionar”."
-          }
-        },
-        "pt-PT": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ainda não cresce nada no seu jardim. Plante a primeira no separador “Adicionar”."
-          }
-        },
-        "ro": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "În grădina ta încă nu crește nimic. Plantează prima plantă în fila „Adaugă”."
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Vo vašej záhrade zatiaľ nič nerastie. Zasaďte prvú rastlinu na karte „Pridať“."
-          }
-        },
-        "sl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Na vašem vrtu še nič ne raste. Posadite prvo rastlino na zavihku »Dodaj«."
-          }
-        },
-        "sv": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Inget växer i din trädgård än. Plantera den första på fliken ”Lägg till”."
-          }
-        },
-        "ta": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "உங்கள் தோட்டத்தில் இன்னும் எதுவும் வளரவில்லை. “சேர்” தாவலில் முதல் செடியை நடுங்கள்."
-          }
-        },
-        "te": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "మీ తోటలో ఇంకా ఏమీ పెరగడం లేదు. “జోడించు” ట్యాబ్‌లో మొదటి మొక్కను నాటండి."
-          }
-        },
-        "th": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ยังไม่มีอะไรเติบโตในสวนของคุณ ปลูกต้นแรกในแถบ “เพิ่ม”"
-          }
-        },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bahçenizde henüz bir şey yetişmiyor. İlk bitkiyi “Ekle” sekmesinde dikin."
-          }
-        },
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "У саду поки нічого не росте. Посадіть першу рослину у вкладці «Додати»."
-          }
-        },
-        "ur": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "آپ کے باغ میں ابھی کچھ نہیں اُگ رہا۔ “شامل کریں” ٹیب میں پہلا پودا لگائیں۔"
-          }
-        },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Khu vườn chưa có gì. Hãy trồng cây đầu tiên ở tab “Thêm”."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "花园里还什么都没有。在“添加”标签页种下第一株植物吧。"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "花園裡還什麼都沒有。在「加入」標籤頁種下第一株植物吧。"
-          }
-        }
-      }
-    },
     "В саду пока пусто.": {
       "extractionState": "manual",
       "localizations": {
@@ -22403,6 +22119,9 @@
           }
         }
       }
+    },
+    "В саду пока пусто. Добавьте первое растение.": {
+      "extractionState": "manual"
     },
     "В саду пока пусто. Посадите первое растение во вкладке «Добавить» — и здесь появятся цифры.": {
       "extractionState": "manual",
@@ -25867,6 +25586,9 @@
       "extractionState": "manual"
     },
     "Введите «удалить»": {
+      "extractionState": "manual"
+    },
+    "Ввести код-пароль": {
       "extractionState": "manual"
     },
     "Ведите ползунок — сад перенесётся на дни вперёд, если поливать вовремя.": {
@@ -124986,6 +124708,9 @@
     "Не уверен — может быть, %@. Лучше впишите вид сами.": {
       "extractionState": "manual"
     },
+    "Не удалось распознать.": {
+      "extractionState": "manual"
+    },
     "Не хватает места на телефоне: кадрам нужно несколько гигабайт.": {
       "extractionState": "manual",
       "localizations": {
@@ -130748,6 +130473,9 @@
       "extractionState": "manual"
     },
     "Нужен доступ к «Дому», чтобы найти датчик.": {
+      "extractionState": "manual"
+    },
+    "Нужен доступ к камере, чтобы сфотографировать растение.": {
       "extractionState": "manual"
     },
     "Нужна точная геопозиция": {
@@ -151273,6 +151001,9 @@
     "Перестать делиться садом?": {
       "extractionState": "manual"
     },
+    "Перетащите, чтобы изменить порядок": {
+      "extractionState": "manual"
+    },
     "Период": {
       "extractionState": "manual",
       "localizations": {
@@ -162828,6 +162559,9 @@
           }
         }
       }
+    },
+    "Подробнее": {
+      "extractionState": "manual"
     },
     "Подсказки": {
       "extractionState": "manual",
@@ -216553,6 +216287,9 @@
         }
       }
     },
+    "Сад не синхронизируется. Проверьте iCloud.": {
+      "extractionState": "manual"
+    },
     "Сад открывается только по Face ID или код-паролю телефона — чужие не посмотрят.": {
       "extractionState": "manual",
       "localizations": {
@@ -229596,6 +229333,9 @@
       }
     },
     "Следующий шаг — %@": {
+      "extractionState": "manual"
+    },
+    "Слишком много попыток. Введите код-пароль.": {
       "extractionState": "manual"
     },
     "Слишком темно — включите свет": {
@@ -278283,6 +278023,9 @@
           }
         }
       }
+    },
+    "ожидает отправки": {
+      "extractionState": "manual"
     },
     "пора": {
       "extractionState": "manual"

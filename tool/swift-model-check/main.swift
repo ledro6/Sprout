@@ -1655,6 +1655,14 @@ do {
           "Маша уже полила 5 мин назад. Всё равно полить?",
           "вопрос перед вторым поливом")
 
+    // «Ожидает отправки» — пока сервер не знает запись.
+    var sentBook = Family.Book()
+    check(Family.waiting(Watering(plant: "Б", when: at(1)), book: sentBook)
+          && Family.waiting(early, book: sentBook),
+          "без номера и неизвестная серверу — ожидает отправки")
+    sentBook.known[Family.name(.pour, "early")] = Family.Mark()
+    check(!Family.waiting(early, book: sentBook), "сервер знает — ушла")
+
     // Стереть сад может только хозяин.
     check(!Family.mayErase(.guest) && Family.mayErase(.own)
           && Family.mayErase(.off), "стереть сад — не гостю")

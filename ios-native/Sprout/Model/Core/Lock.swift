@@ -26,6 +26,16 @@ final class Lock {
     /// заново.
     private(set) var asking = false
 
+    /// Почему не открылось — для экрана замка; отмена — не беда, пусто.
+    enum Trouble: Equatable {
+        /// Лицо или палец не узнаны.
+        case missed
+        /// Слишком много попыток — Face ID заблокирован до код-пароля.
+        case lockout
+    }
+
+    private(set) var trouble: Trouble?
+
     @ObservationIgnored private let store: UserDefaults
     private static let mark = "lock"
 
@@ -52,6 +62,7 @@ final class Lock {
     func close() {
         guard on, !asking else { return }
         open = false
+        trouble = nil
     }
 
     /// Отказ оставляет дверь запертой; на экране замка есть кнопка спросить
@@ -63,9 +74,28 @@ final class Lock {
         defer { asking = false }
         let context = LAContext()
         context.localizedCancelTitle = Lang.text("Отмена")
-        let granted = try? await context.evaluatePolicy(
-            .deviceOwnerAuthentication,
-            localizedReason: Lang.text("Чтобы открыть сад"))
-        if granted == true { open = true }
+        context.localizedFallbackTitle = Lang.text("Ввести код-пароль")
+        do {
+            if try await context.evaluatePolicy(
+                .deviceOwnerAuthentication,
+                localizedReason: Lang.text("Чтобы открыть сад")) {
+                trouble = nil
+                open = true
+            }
+        } catch let error as LAError {
+            trouble = Self.trouble(error.code)
+        } catch {
+            trouble = .missed
+        }
+    }
+
+    /// Отмена хозяином или системой — не беда: кнопка «Открыть» на месте.
+    static func trouble(_ code: LAError.Code) -> Trouble? {
+        switch code {
+        case .biometryLockout: .lockout
+        case .authenticationFailed: .missed
+        case .userCancel, .systemCancel, .appCancel, .userFallback: nil
+        default: .missed
+        }
     }
 }

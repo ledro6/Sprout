@@ -22,12 +22,38 @@ struct LockView: View {
                     .font(Typography.welcome)
                     .foregroundStyle(Palette.ink)
 
-                Button("Открыть") {
-                    Task { await lock.unlock() }
+                // Не узнал — повтор и код-пароль; заблокирован — только
+                // код-пароль: системный лист сам предложит его ввести.
+                switch lock.trouble {
+                case .missed?:
+                    note(Lang.text("Не удалось распознать."))
+                    Button("Попробовать ещё раз") {
+                        Task { await lock.unlock() }
+                    }
+                    .buttonStyle(.glass)
+                    .font(Typography.detail)
+                    .disabled(lock.asking)
+                    Button("Ввести код-пароль") {
+                        Task { await lock.unlock() }
+                    }
+                    .font(Typography.settingNote)
+                    .disabled(lock.asking)
+                case .lockout?:
+                    note(Lang.text("Слишком много попыток. Введите код-пароль."))
+                    Button("Ввести код-пароль") {
+                        Task { await lock.unlock() }
+                    }
+                    .buttonStyle(.glass)
+                    .font(Typography.detail)
+                    .disabled(lock.asking)
+                case nil:
+                    Button("Открыть") {
+                        Task { await lock.unlock() }
+                    }
+                    .buttonStyle(.glass)
+                    .font(Typography.detail)
+                    .disabled(lock.asking)
                 }
-                .buttonStyle(.glass)
-                .font(Typography.detail)
-                .disabled(lock.asking)
             }
             .padding(.horizontal, Metrics.contentMargin)
         }
@@ -35,5 +61,14 @@ struct LockView: View {
         .contentShape(Rectangle())
         .onTapGesture {}
         .task { await lock.unlock() }
+        .animation(Motion.enter, value: lock.trouble)
+    }
+
+    private func note(_ text: String) -> some View {
+        Text(text)
+            .font(Typography.settingNote)
+            .foregroundStyle(Palette.secondaryText)
+            .multilineTextAlignment(.center)
+            .fixedSize(horizontal: false, vertical: true)
     }
 }

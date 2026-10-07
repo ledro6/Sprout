@@ -57,6 +57,11 @@ struct RootView: View {
         .onChange(of: Summon.shared.garden) { _, asked in
             if asked { pane = .home }
         }
+        .onChange(of: Summon.shared.add) { _, asked in
+            guard asked else { return }
+            pane = .add
+            Summon.shared.add = false
+        }
         // Ссылка на растение — та же, что на NFC-метке, см. `PotTag`.
         // Снаружи она приходит, только если схема `sprout` объявлена в
         // Info.plist (README «NFC-метки на горшках»).

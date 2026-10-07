@@ -32,10 +32,7 @@ struct NewRoom: View {
     var body: some View {
         VStack(spacing: 16) {
             if bare {
-                Text(Lang.text("""
-                    В саду пока ничего не растёт. Посадите первое растение во \
-                    вкладке «Добавить».
-                    """))
+                Text(Lang.text("В саду пока пусто. Добавьте первое растение."))
                     .font(Typography.settingNote)
                     .foregroundStyle(Palette.secondaryText)
                     .multilineTextAlignment(.center)

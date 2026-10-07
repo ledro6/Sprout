@@ -1,9 +1,11 @@
+import AVFoundation
 import SwiftUI
 import UIKit
 
-/// Системная камера из UIKit: в SwiftUI её нет, `PhotosPicker` умеет только
-/// библиотеку. В симуляторе камеры нет — см. `Camera.exists`.
-struct Camera: UIViewControllerRepresentable {
+/// Камера для снимка растения. Доступ запрещён — вместо чёрного экрана
+/// системы честная строка и «Открыть Настройки». Ещё не спрашивали —
+/// спросит сама системная камера.
+struct Camera: View {
     let onShot: (UIImage) -> Void
 
     @Environment(\.dismiss) private var dismiss
@@ -11,6 +13,35 @@ struct Camera: UIViewControllerRepresentable {
     static var exists: Bool {
         UIImagePickerController.isSourceTypeAvailable(.camera)
     }
+
+    private var denied: Bool {
+        let status = AVCaptureDevice.authorizationStatus(for: .video)
+        return status == .denied || status == .restricted
+    }
+
+    var body: some View {
+        if denied {
+            VStack(spacing: 20) {
+                AccessNote(need: .camera)
+                Button("Закрыть") { dismiss() }
+                    .font(Typography.settingNote)
+            }
+            .padding(Metrics.contentMargin)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background { SproutBackground() }
+        } else {
+            CameraPicker(onShot: onShot)
+                .ignoresSafeArea()
+        }
+    }
+}
+
+/// Системная камера из UIKit: в SwiftUI её нет, `PhotosPicker` умеет только
+/// библиотеку. В симуляторе камеры нет — см. `Camera.exists`.
+struct CameraPicker: UIViewControllerRepresentable {
+    let onShot: (UIImage) -> Void
+
+    @Environment(\.dismiss) private var dismiss
 
     func makeUIViewController(context: Context) -> UIImagePickerController {
         let picker = UIImagePickerController()
@@ -26,9 +57,9 @@ struct Camera: UIViewControllerRepresentable {
 
     final class Shutter: NSObject, UIImagePickerControllerDelegate,
                          UINavigationControllerDelegate {
-        private let camera: Camera
+        private let camera: CameraPicker
 
-        init(_ camera: Camera) { self.camera = camera }
+        init(_ camera: CameraPicker) { self.camera = camera }
 
         func imagePickerController(
             _ picker: UIImagePickerController,

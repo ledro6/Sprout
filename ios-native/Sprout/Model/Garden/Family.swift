@@ -870,6 +870,13 @@ enum Family {
                           name, minutes)
     }
 
+    /// Полив общего сада ещё не ушёл в iCloud: записан на телефоне, номера
+    /// или ответа сервера пока нет. Уйдёт сам, когда появится связь.
+    static func waiting(_ entry: Watering, book: Book) -> Bool {
+        guard let id = entry.id else { return true }
+        return book.known[name(.pour, id)] == nil
+    }
+
     // MARK: - Роли
 
     /// Стереть сад может только его хозяин: гость стёр бы растения у всех.

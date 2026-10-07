@@ -1052,6 +1052,14 @@ final class Kinship {
         return Family.recent(plant, in: [named(last)], me: ledger.me, now: now)
     }
 
+    /// Полив ещё не в iCloud — значок «ожидает отправки» в журнале растения.
+    /// Состояние читается ради наблюдения: ушло — экран перерисуется.
+    func waiting(_ entry: Watering) -> Bool {
+        guard Self.enabled, mode != .off else { return false }
+        _ = status
+        return Family.waiting(entry, book: ledger.book)
+    }
+
     /// Гость общего сада: стереть сад ему нельзя (`Family.mayErase`).
     var guest: Bool { Self.enabled && !Family.mayErase(mode) }
 
