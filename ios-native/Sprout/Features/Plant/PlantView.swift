@@ -275,6 +275,9 @@ struct PlantView: View {
                          roomDraft = ""
                          moving = true
                      })
+            Button { Bin.shared.askRetire(plantID, in: garden) } label: {
+                Label("Растение погибло — в архив", systemImage: "archivebox")
+            }
             Button(role: .destructive) { toss() } label: {
                 Label("Удалить", systemImage: "trash")
             }
@@ -637,7 +640,7 @@ struct PlantView: View {
             if let danger = Toxicity.of(plant.species) {
                 fact(danger.line, term: .pets, tone: tone(of: danger))
             }
-            fact(plant.wateringLabel, term: .period)
+            fact(garden.wateringLabel(plant), term: .period)
                 .contentTransition(.numericText())
             if let credit = credit(plant) {
                 fact(credit)

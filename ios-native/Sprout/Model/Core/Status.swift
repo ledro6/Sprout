@@ -56,6 +56,15 @@ enum MoistureStatus: String, Codable, CaseIterable, Sendable {
             || days(moisture: moisture, period: period) == 0
     }
 
+    /// На сколько полных дней полив просрочен: земля высохла досуха через
+    /// срок после последнего полива (`last`); дальше каждые сутки — день
+    /// просрочки. Полива в журнале нет — судить нечем, ноль.
+    static func overdue(last: Date?, period: Double, now: Date) -> Int {
+        guard let last, period > 0 else { return 0 }
+        let dry = last.addingTimeInterval(period * 86_400)
+        return max(0, Int(now.timeIntervalSince(dry) / 86_400))
+    }
+
     /// Подпись срока: «Полить сегодня», «Скоро: завтра», «Полив через 5
     /// дней». Влажность посчитана, а не измерена, — «примерно». Сухому —
     /// всегда «сегодня», никогда не «завтра».

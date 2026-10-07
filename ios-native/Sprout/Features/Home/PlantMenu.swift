@@ -125,6 +125,10 @@ struct PlantMenu: ViewModifier {
                              roomDraft = ""
                              moving = true
                          })
+                Button { Bin.shared.askRetire(tenant.id, in: garden) } label: {
+                    Label("Растение погибло — в архив",
+                          systemImage: "archivebox")
+                }
                 Button(role: .destructive) { toss() } label: {
                     Label("Удалить", systemImage: "trash")
                 }

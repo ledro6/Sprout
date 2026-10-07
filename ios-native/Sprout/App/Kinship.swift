@@ -227,7 +227,8 @@ final class Kinship {
                 let kind = Family.kind(of: $0)
                 return kind == .room || kind == .plant
             }
-            var rooms = garden.rooms
+            // Сад целиком — с архивом: архивные растения тоже в iCloud.
+            var rooms = garden.whole
             if cloud, Family.prune(&rooms, log: garden.log, book: book) {
                 garden.adopt(rooms: rooms, log: garden.log, recast: true)
             }
@@ -285,7 +286,7 @@ final class Kinship {
     private func pass() {
         guard let engine, ledger.book.primed else { return }
         let garden = Garden.shared
-        var rooms = garden.rooms
+        var rooms = garden.whole
         var log = garden.log
         var book = ledger.book
         if Family.settle(&rooms, &log, book: book, hand: hand, now: Date()) {
@@ -352,7 +353,7 @@ final class Kinship {
         let encoder = JSONEncoder()
         switch kind {
         case .room:
-            guard let room = garden.rooms.first(where: {
+            guard let room = garden.whole.first(where: {
                 $0.key.map { Family.name(.room, $0) } == name
             }), let data = try? encoder.encode(Family.body(room)) else {
                 return nil
@@ -360,7 +361,7 @@ final class Kinship {
             record.encryptedValues[Self.body] = data
         case .plant:
             var found: Data?
-            for room in garden.rooms {
+            for room in garden.whole {
                 guard let plant = room.plants.first(where: {
                     Family.name(.plant, $0.id) == name
                 }) else { continue }
@@ -469,7 +470,7 @@ final class Kinship {
         // встало бы рядом со своим, застывшим раньше.
         garden.reload()
         garden.advance()
-        var rooms = garden.rooms
+        var rooms = garden.whole
         var log = garden.log
         var book = ledger.book
         let primed = book.primed
@@ -1014,7 +1015,9 @@ final class Kinship {
         let garden = Garden.shared
         var back = ledger.before
         if let spare = Self.spare() {
-            garden.adopt(rooms: spare.rooms(at: Date()), log: spare.log,
+            garden.adopt(rooms: Garden.join(spare.rooms(at: Date()),
+                                             spare.archive),
+                         log: spare.log,
                          recast: true)
         } else {
             back = .off

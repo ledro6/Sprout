@@ -291,6 +291,9 @@
     "%1$@ · %2$@ · батарейка %3$@": {
       "extractionState": "manual"
     },
+    "%1$@ · в архиве с %2$@ · поливов: %3$lld": {
+      "extractionState": "manual"
+    },
     "%1$@ · полить: %2$@": {
       "extractionState": "manual",
       "localizations": {
@@ -15093,6 +15096,9 @@
         }
       }
     },
+    "Архив": {
+      "extractionState": "manual"
+    },
     "Базилик": {
       "extractionState": "manual",
       "localizations": {
@@ -20274,6 +20280,9 @@
         }
       }
     },
+    "Бывает. Перенести в архив?": {
+      "extractionState": "manual"
+    },
     "Бывалый путник": {
       "extractionState": "manual",
       "localizations": {
@@ -21137,6 +21146,9 @@
           }
         }
       }
+    },
+    "В архив": {
+      "extractionState": "manual"
     },
     "В ближайший месяц парадов нет: растения просят воды вразнобой.": {
       "extractionState": "manual",
@@ -27490,6 +27502,9 @@
           }
         }
       }
+    },
+    "Вернуть из архива": {
+      "extractionState": "manual"
     },
     "Вернуть фото": {
       "extractionState": "manual"
@@ -64144,6 +64159,9 @@
       "extractionState": "manual"
     },
     "Журнал поливов, JSON": {
+      "extractionState": "manual"
+    },
+    "Журнал сохранится. Вернуть растение можно в «Профиль → Архив».": {
       "extractionState": "manual"
     },
     "За период": {
@@ -196909,6 +196927,9 @@
     "Пропустить и к следующему": {
       "extractionState": "manual"
     },
+    "Просрочено %lld дн · Можно полить сейчас": {
+      "extractionState": "manual"
+    },
     "Просят воды: %lld": {
       "extractionState": "manual",
       "localizations": {
@@ -206176,6 +206197,9 @@
           }
         }
       }
+    },
+    "Растение погибло — в архив": {
+      "extractionState": "manual"
     },
     "Растение снова в строю. Снимки «до» и «после» остаются здесь, пока план не убран.": {
       "extractionState": "manual"
@@ -273659,6 +273683,9 @@
           }
         }
       }
+    },
+    "Это ошибка": {
+      "extractionState": "manual"
     },
     "Это подсказка по снимку, а не приговор: тень, блик или белые цветки телефон может принять за беду. Разбирается на телефоне, ничего не отправляется.": {
       "extractionState": "manual"

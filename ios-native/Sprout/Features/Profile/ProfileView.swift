@@ -69,6 +69,10 @@ struct ProfileView: View {
                                 FamilyGroup()
                             }
                             awards
+                            // Погибшие растения — с «Вернуть из архива».
+                            if !garden.archive.isEmpty {
+                                ArchiveGroup()
+                            }
                             rivals
                                 .hintSpot(.profileRivals)
                             more

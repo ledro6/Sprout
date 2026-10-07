@@ -108,6 +108,13 @@ struct Plant: Identifiable, Hashable, Codable {
     /// (`tended`).
     var treatment: Treatment?
 
+    /// Когда растение ушло в архив: «Растение погибло — в архив». Пусто у
+    /// живых и в садах прежних сборок. Архивные лежат в `Garden.archive`, а
+    /// не в комнатах, поэтому не попадают ни в «что полить», ни в «Сад
+    /// сегодня», ни в серию; в общем саду поле едет в записи растения и
+    /// сливается по `edited`, как кличка.
+    var archived: Date?
+
     /// Уход со сроками вида там, где своих нет: мелкого ухода в садах
     /// прежних сборок не было.
     var tending: Care {
@@ -250,6 +257,14 @@ struct Removal: Equatable {
     var index: Int
 }
 
+/// Растение в архиве и где оно стояло: в эту комнату оно вернётся.
+struct Archived: Codable, Hashable {
+    var plant: Plant
+    var room: String
+    /// Ключ комнаты в общем саду, см. `Room.key`.
+    var key: String?
+}
+
 /// Полив, который ещё можно отменить: влажность до него и запись в журнале.
 struct Pour: Equatable {
     var plant: Plant.ID
@@ -279,9 +294,14 @@ struct GardenState: Codable {
     /// Погода в миг записи — туда же, виджету.
     var climate: Climate?
 
+    /// Архив: погибшие растения с журналом. Отдельно от комнат — виджет,
+    /// часы и напоминания их не видят. В файлах прежних сборок пусто.
+    var archive: [Archived] = []
+
     init(owner: String, rooms: [Room], savedAt: Date,
          log: [Watering] = [], since: Date = Date(), stamp: String? = nil,
-         season: Double? = nil, climate: Climate? = nil) {
+         season: Double? = nil, climate: Climate? = nil,
+         archive: [Archived] = []) {
         self.owner = owner
         self.rooms = rooms
         self.savedAt = savedAt
@@ -290,6 +310,7 @@ struct GardenState: Codable {
         self.stamp = stamp
         self.season = season
         self.climate = climate
+        self.archive = archive
     }
 
     /// Сад в миг `date`, если никто не польёт: приложение закрыто, а земля
@@ -314,6 +335,8 @@ struct GardenState: Codable {
         stamp = try box.decodeIfPresent(String.self, forKey: .stamp)
         season = try box.decodeIfPresent(Double.self, forKey: .season)
         climate = try box.decodeIfPresent(Climate.self, forKey: .climate)
+        archive = try box.decodeIfPresent([Archived].self, forKey: .archive)
+            ?? []
     }
 }
 

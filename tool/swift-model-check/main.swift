@@ -5987,6 +5987,90 @@ do {
     yard.restore(kept)
 }
 
+print("архив и просрочка:")
+do {
+    let yard = Garden(first: Seed.state)
+    let kept = yard.state
+    let now = Date()
+    yard.restore(GardenState(owner: "", rooms: [Room(name: "Т", plants: [
+        plantNamed("Погиб", moisture: 0.05, dryingDays: 7),
+        plantNamed("Живой", moisture: 0.5, dryingDays: 7),
+    ], key: "room-t")], savedAt: now, log: [
+        Watering(plant: "Погиб", when: now.addingTimeInterval(-10 * 86_400)),
+    ]))
+    check(yard.wateringLabel(yard.plant(id: "Погиб")!, now: now)
+          == "Просрочено 3 дн · Можно полить сейчас"
+          && yard.plant(id: "Погиб")!.status == .urgent,
+          "просрочено — днями, тем же статусом «сухо»")
+    check(yard.wateringLabel(yard.plant(id: "Живой")!, now: now)
+          == yard.plant(id: "Живой")!.nextWateringText,
+          "не просрочено — обычная подпись")
+    check(MoistureStatus.overdue(last: nil, period: 7, now: now) == 0,
+          "без полива в журнале просрочку не выдумываем")
+    let before = Score.of(yard.log, rooms: yard.rooms, now: now, fair: now)
+    yard.retire("Погиб", at: now)
+    check(yard.plant(id: "Погиб") == nil && yard.archive.count == 1
+          && yard.archive[0].plant.archived == now && yard.log.count == 1,
+          "в архив — из комнат, журнал сохранился")
+    check(MoistureStatus.needsWater(in: yard.rooms).isEmpty
+          && Almanac.now(yard.rooms).count == 1,
+          "архивный не просит воды и не в «Саду сегодня»")
+    check(Score.of(yard.log, rooms: yard.rooms, now: now, fair: now).streak
+          >= before.streak, "серия из-за архива не обнуляется")
+    // Файл: архив пишется и читается; в старом файле его нет.
+    let data = try! JSONEncoder().encode(yard.state)
+    let read = try! JSONDecoder().decode(GardenState.self, from: data)
+    check(read.archive.map(\.plant.id) == ["Погиб"]
+          && read.archive[0].plant.archived != nil,
+          "архив в файле")
+    var json = try! JSONSerialization.jsonObject(with: data) as! [String: Any]
+    json.removeValue(forKey: "archive")
+    let old = try! JSONDecoder().decode(GardenState.self,
+        from: try! JSONSerialization.data(withJSONObject: json))
+    check(old.archive.isEmpty, "файл прежней сборки — архив пустой")
+    // Общий сад: архивный едет в записи растения с отметкой правки.
+    let whole = yard.whole
+    check(whole.count == 1 && whole[0].plants.count == 2
+          && whole[0].plants.contains { $0.archived != nil },
+          "для iCloud — сад целиком, с архивом")
+    let body = Family.body(whole[0].plants.first { $0.id == "Погиб" }!,
+                           in: whole[0], at: now)
+    let sent = try! JSONDecoder().decode(Family.PlantBody.self,
+                                         from: try! JSONEncoder().encode(body))
+    check(sent.plant.archived != nil && sent.plant.edited == now,
+          "запись растения несёт архив и отметку правки")
+    // Другой телефон: у него растение живое, правка архива новее — архив.
+    var theirs = [Room(name: "Т", plants: [
+        plantNamed("Погиб", moisture: 0.05, dryingDays: 7),
+    ], key: "room-t")]
+    var theirLog: [Watering] = []
+    var book = Family.Book()
+    var arrival = Family.Arrival()
+    arrival.plants = [body]
+    _ = Family.apply(arrival, to: &theirs, log: &theirLog, book: &book,
+                     me: nil, now: now)
+    check(theirs[0].plants.first?.archived != nil,
+          "слияние: поздняя правка архива побеждает")
+    let split = Garden.split(theirs, living: theirs)
+    check(split.rooms[0].plants.isEmpty && split.archive.count == 1,
+          "пришедший архив уходит из комнат в архив")
+    yard.adopt(rooms: whole, log: yard.log, recast: false)
+    check(yard.archive.count == 1 && yard.rooms[0].plants.map(\.id) == ["Живой"],
+          "свой сад целиком — обратно в комнаты и архив")
+    yard.revive("Погиб", at: now.addingTimeInterval(60))
+    check(yard.plant(id: "Погиб")?.archived == nil && yard.archive.isEmpty
+          && yard.rooms.count == 1,
+          "«Вернуть из архива» — в свою комнату")
+    yard.retire("Погиб", at: now)
+    yard.adopt(rooms: [Room(name: "Т", plants: [
+        plantNamed("Живой", moisture: 0.5, dryingDays: 7),
+        plantNamed("Погиб", moisture: 0.5, dryingDays: 7),
+    ], key: "room-t")], log: yard.log, recast: false)
+    check(yard.archive.isEmpty && yard.plant(id: "Погиб") != nil,
+          "вернули из архива на другом телефоне — вернулось и здесь")
+    yard.restore(kept)
+}
+
 if failed > 0 {
     print("\nне сошлось: \(failed)")
     exit(1)
