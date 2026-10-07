@@ -5472,6 +5472,32 @@ do {
           "сухое при посадке — «Полить сегодня»")
 }
 
+print("контраст цветов:")
+do {
+    // Каждый цвет со смыслом — на фоне и на карточке, в обеих темах.
+    for (name, pair, role) in Legible.all {
+        guard let floor = Legible.floor(role) else { continue }
+        for dark in [false, true] {
+            let got = Legible.worst(pair, role, dark: dark)
+            check(got >= floor, "\(name) \(dark ? "тёмная" : "светлая"): "
+                  + "\(round2(got)) от \(round2(floor))")
+        }
+    }
+    let nights = [Legible.night, Legible.nightTrip]
+    for (name, paint) in Legible.nightInks {
+        let got = nights.map { paint.contrast(on: $0) }.min() ?? 1
+        check(got >= 4.5, "\(name) на подложке живых действий: \(round2(got))")
+    }
+    // Мерка сама: белое на чёрном — 21, #777 на белом — известные 4.48.
+    check(round2(Paint(hex: 0xFFFFFF).contrast(on: Paint(hex: 0))), "21.00",
+          "контраст: белое на чёрном")
+    check(round2(Paint(hex: 0x777777).contrast(on: Paint(hex: 0xFFFFFF))),
+          "4.48", "контраст: #777 на белом")
+    // Вторичный текст — не системные 60%: на белом их мало.
+    check(Paint(60, 60, 67, 0.6).contrast(on: Legible.background.light) < 4.5,
+          "контраст: системные 60% не проходят — потому свой вторичный")
+}
+
 if failed > 0 {
     print("\nне сошлось: \(failed)")
     exit(1)

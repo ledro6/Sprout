@@ -29,7 +29,7 @@ struct SensorPicker: View {
                                 : Lang.text("Датчиков влажности в «Доме» нет.")))
                     Text("Датчик в горшке показывает настоящую влажность земли: проценты растения берутся с него, а полив, замеченный датчиком, сам ложится в журнал.")
                         .font(Typography.settingNote)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Palette.secondaryText)
                         .fixedSize(horizontal: false, vertical: true)
                         .padding(.horizontal, 6)
                 }
@@ -73,7 +73,7 @@ struct SensorPicker: View {
             if found.isEmpty {
                 Text(empty)
                     .font(Typography.settingNote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Palette.secondaryText)
                     .fixedSize(horizontal: false, vertical: true)
             }
             ForEach(Array(found.enumerated()), id: \.element.id) { item in
@@ -93,7 +93,7 @@ struct SensorPicker: View {
                             if let detail = item.element.detail {
                                 Text(detail)
                                     .font(Typography.settingNote)
-                                    .foregroundStyle(.secondary)
+                                    .foregroundStyle(Palette.secondaryText)
                                     .lineLimit(1)
                             }
                         }

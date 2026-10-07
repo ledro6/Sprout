@@ -66,7 +66,7 @@ struct DayCard: View {
                         .minimumScaleFactor(0.8)
                     Text(MoistureStatus.dayLine(room: room, in: garden.rooms))
                         .font(Typography.settingNote)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Palette.secondaryText)
                         .fixedSize(horizontal: false, vertical: true)
                         .contentTransition(.numericText())
                 }
@@ -197,7 +197,7 @@ struct DayCard: View {
                         Text(Lang.format("Задания недели: %1$lld из %2$lld",
                                          week.done, week.challenges.count))
                             .font(Typography.settingNote)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(Palette.secondaryText)
                             .monospacedDigit()
                             .contentTransition(.numericText())
                     }

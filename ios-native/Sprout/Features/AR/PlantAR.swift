@@ -89,7 +89,7 @@ struct PlantAR: View {
         .padding(.horizontal, big ? 14 : 10)
         .padding(.vertical, big ? 10 : 6)
         .glassEffect(big && stage.many
-                         ? Glass.regular.tint(Palette.accent.opacity(0.25))
+                         ? Glass.regular.tint(Palette.accentGlow.opacity(0.25))
                          : Glass.regular,
                      in: .rect(cornerRadius: 18))
         .animation(Motion.number, value: plant.moisture)
@@ -121,7 +121,7 @@ struct PlantAR: View {
             }
             .padding(.horizontal, 14)
             .padding(.vertical, 9)
-            .glassEffect(.regular, in: .rect(cornerRadius: 18))
+            .sproutGlass(in: .rect(cornerRadius: 18))
             .id(hint)
             .transition(.blurReplace)
             .hintSpot(.arHint)
@@ -179,6 +179,7 @@ struct PlantAR: View {
                     .padding(.vertical, 6)
                 }
                 .buttonStyle(.glassProminent)
+                .tint(Palette.accentFill)
             case .placed, .watering:
                 Button { stage.replace() } label: {
                     Label("Переставить", systemImage: "move.3d")
@@ -206,6 +207,7 @@ struct PlantAR: View {
                         .padding(.vertical, 6)
                 }
                 .buttonStyle(.glassProminent)
+                .tint(Palette.accentFill)
                 .disabled(stage.many && stage.chosen == nil)
             }
         }

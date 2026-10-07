@@ -128,11 +128,12 @@ struct FamilyGroup: View {
                     .frame(maxWidth: .infinity)
             }
             .buttonStyle(.glassProminent)
+            .tint(Palette.accentFill)
             .controlSize(.large)
             .disabled(kin.busy)
             Text(Self.invitation)
                 .font(Typography.settingNote)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Palette.secondaryText)
                 .fixedSize(horizontal: false, vertical: true)
         }
     }
@@ -185,7 +186,7 @@ struct FamilyGroup: View {
                           : "person.fill")
                         .font(Typography.settingNote)
                         .foregroundStyle(person.owner || person.accepted
-                                         ? Palette.green : Color.secondary)
+                                         ? Palette.green : Palette.secondaryText)
                         .frame(width: 22)
                     Text(person.name)
                         .font(Typography.settingRow)
@@ -194,7 +195,7 @@ struct FamilyGroup: View {
                     Spacer(minLength: 8)
                     Text(role(of: person))
                         .font(Typography.settingNote)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Palette.secondaryText)
                 }
             }
         }
@@ -243,7 +244,7 @@ struct FamilyGroup: View {
     private func note(_ text: String) -> some View {
         Text(text)
             .font(Typography.settingNote)
-            .foregroundStyle(.secondary)
+            .foregroundStyle(Palette.secondaryText)
             .fixedSize(horizontal: false, vertical: true)
             .transition(.blurReplace)
     }
@@ -259,7 +260,7 @@ struct FamilyGroup: View {
                     .fixedSize(horizontal: false, vertical: true)
                 Text("Уведомление вроде „Маша полила: Баксик“.")
                     .font(Typography.settingNote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Palette.secondaryText)
                     .fixedSize(horizontal: false, vertical: true)
             }
             Spacer(minLength: 0)

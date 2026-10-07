@@ -72,7 +72,10 @@ struct ComplicationView: View {
 
     @Environment(\.widgetFamily) private var family
 
-    private static let water = Color(red: 0.25, green: 0.62, blue: 1)
+    /// Тёмная половина таблицы приложения (`Legible`): циферблат тёмный.
+    private static let water = Color(red: Legible.wet.dark.red / 255,
+                                     green: Legible.wet.dark.green / 255,
+                                     blue: Legible.wet.dark.blue / 255)
 
     /// «Просят воды: 3» или «Все политы».
     private var line: String {

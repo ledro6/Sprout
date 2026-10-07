@@ -261,7 +261,7 @@ private struct PourButton: View {
         }
         .buttonStyle(.borderedProminent)
         .buttonBorderShape(.capsule)
-        .tint(Tone.water)
+        .tint(Tone.fill)
         .disabled(sprig.moisture >= 0.99)
     }
 }
@@ -321,19 +321,40 @@ struct Leafy: View {
     }
 }
 
+/// Цвета виджетов — из той же таблицы, что у приложения (`Legible`): там
+/// их контраст проверяет модель.
 enum Tone {
-    static let water = Color(red: 0, green: 0.53, blue: 1)
-    static let leaf = Color(red: 0.2, green: 0.62, blue: 0.3)
+    /// Вода текстом и значками.
+    static let water = inked(Legible.wet)
+    static let leaf = inked(Legible.ok)
 
-    /// Статус — из общего движка (`MoistureStatus`), цвета — свои, виджета:
-    /// «скоро пить» — оранжевый, «сухо» — красный.
+    /// Заливка кнопки «Полить» — белая надпись на ней читается в обеих темах.
+    static let fill = inked(Legible.accentFill)
+
+    /// Статус — из общего движка (`MoistureStatus`), цвета — из таблицы
+    /// `Legible`: не системные оранжевый и красный — на белом они бледнее
+    /// нужного.
     static func of(_ status: MoistureStatus) -> Color {
         switch status.tone {
-        case .warn: .orange
-        case .alarm: .red
+        case .warn: inked(Legible.soon)
+        case .alarm: inked(Legible.urgent)
         case .water, .green, .secondary: .primary
         }
     }
+}
+
+/// Цвет из таблицы модели.
+func inked(_ paint: Paint) -> Color {
+    Color(red: paint.red / 255, green: paint.green / 255,
+          blue: paint.blue / 255, opacity: paint.alpha)
+}
+
+/// Пара из таблицы — по теме.
+func inked(_ pair: Legible.Pair) -> Color {
+    Color(UIColor { traits in
+        UIColor(inked(traits.userInterfaceStyle == .dark
+                      ? pair.dark : pair.light))
+    })
 }
 
 // MARK: - Экран блокировки

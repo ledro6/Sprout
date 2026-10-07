@@ -38,7 +38,7 @@ struct GardenCompare: View {
                                      friend.stamp.formatted(
                                         .dateTime.day().month(.wide))))
                         .font(Typography.settingNote)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Palette.secondaryText)
                         .fixedSize(horizontal: false, vertical: true)
                         .padding(.horizontal, 6)
                 }
@@ -83,7 +83,7 @@ struct GardenCompare: View {
                 .minimumScaleFactor(0.8)
             Text(rival.level.map { Gardener.title($0) } ?? "—")
                 .font(Typography.settingNote)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Palette.secondaryText)
                 .multilineTextAlignment(.center)
                 .lineLimit(2)
         }
@@ -102,7 +102,7 @@ struct GardenCompare: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
             Text(title)
                 .font(Typography.settingNote)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Palette.secondaryText)
                 .multilineTextAlignment(.center)
                 .fixedSize(horizontal: false, vertical: true)
                 .frame(maxWidth: .infinity)
@@ -142,7 +142,7 @@ struct RaceCard: View {
                         .fixedSize(horizontal: false, vertical: true)
                     Text(status)
                         .font(Typography.settingNote)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Palette.secondaryText)
                 }
             }
             ForEach(Array(places.enumerated()), id: \.offset) { item in
@@ -168,7 +168,7 @@ struct RaceCard: View {
             if places.count < 2 {
                 Text("Пока в таблице только вы: друзья появятся, когда пришлют свой код.")
                     .font(Typography.settingNote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Palette.secondaryText)
                     .fixedSize(horizontal: false, vertical: true)
             }
             ViewThatFits(in: .horizontal) {

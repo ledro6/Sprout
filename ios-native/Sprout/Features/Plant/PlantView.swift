@@ -349,7 +349,7 @@ struct PlantView: View {
         VStack(alignment: .leading, spacing: Metrics.diaryGap) {
             Text("Заметки")
                 .font(Typography.groupTitle)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Palette.secondaryText)
             TextField("Пересадка, удобрения, где любит стоять…",
                       text: $noteDraft, axis: .vertical)
                 .textFieldStyle(.plain)
@@ -395,6 +395,7 @@ struct PlantView: View {
                 .frame(maxWidth: .infinity)
         }
         .buttonStyle(.glassProminent)
+        .tint(Palette.accentFill)
         .controlSize(.extraLarge)
         .sproutRide()
     }
@@ -444,7 +445,7 @@ struct PlantView: View {
             .foregroundStyle(Palette.ink)
             .padding(6)
             .frame(maxWidth: .infinity, minHeight: Metrics.toolTile)
-            .glassEffect(.regular, in: .rect(cornerRadius: Metrics.toolRadius))
+            .sproutGlass(in: .rect(cornerRadius: Metrics.toolRadius))
             .contentShape(.rect(cornerRadius: Metrics.toolRadius))
         }
         .buttonStyle(SproutPress())
@@ -466,7 +467,7 @@ struct PlantView: View {
                              Species.periodPhrase(days),
                              Species.periodPhrase(plant.dryingDays)))
                 .font(Typography.settingNote)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Palette.secondaryText)
                 .fixedSize(horizontal: false, vertical: true)
             HStack(spacing: Metrics.actionGap) {
                 Button { adopt(days) } label: {
@@ -476,6 +477,7 @@ struct PlantView: View {
                         .frame(maxWidth: .infinity)
                 }
                 .buttonStyle(.glassProminent)
+                .tint(Palette.accentFill)
                 Button {
                     withAnimation(Motion.enter) { garden.quiet(plantID, days) }
                 } label: {
@@ -515,7 +517,7 @@ struct PlantView: View {
             VStack(alignment: .leading, spacing: 14) {
                 Text("Уход")
                     .font(Typography.groupTitle)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Palette.secondaryText)
                 if let line = tending.feedLabel {
                     chore(line, due: tending.feedDue, done: "Подкормил",
                           icon: "sparkles", term: .feeding) {
@@ -634,11 +636,11 @@ struct PlantView: View {
         return VStack(alignment: .leading, spacing: Metrics.diaryGap) {
             Text("Поливы")
                 .font(Typography.groupTitle)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Palette.secondaryText)
             if diary.entries.isEmpty {
                 Text("Поливов ещё не было.")
                     .font(Typography.settingNote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Palette.secondaryText)
                     .fixedSize(horizontal: false, vertical: true)
                     .transition(.blurReplace)
             } else {
@@ -655,7 +657,7 @@ struct PlantView: View {
                         }
                         Text("Ошибочную запись удалит долгое нажатие.")
                             .font(Typography.settingNote)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(Palette.secondaryText)
                             .fixedSize(horizontal: false, vertical: true)
                             .padding(.top, 4)
                     }
@@ -696,7 +698,7 @@ struct PlantView: View {
                 .contentTransition(.numericText())
             Text(caption)
                 .font(Typography.figureCaption)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Palette.secondaryText)
         }
     }
 
@@ -714,7 +716,7 @@ struct PlantView: View {
                 if let who = signature(of: moment) {
                     Text(who)
                         .font(Typography.settingNote)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Palette.secondaryText)
                 }
             }
         }

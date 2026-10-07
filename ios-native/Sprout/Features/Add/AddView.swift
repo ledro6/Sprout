@@ -186,7 +186,7 @@ struct AddView: View {
             if let sighting {
                 Text(sighting)
                     .font(Typography.settingNote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Palette.secondaryText)
                     .fixedSize(horizontal: false, vertical: true)
                     .id(sighting)
                     .transition(.blurReplace)
@@ -315,7 +315,7 @@ struct AddView: View {
                         .lineLimit(1)
                     Text("Посадится со сроками ухода, как у друга.")
                         .font(Typography.settingNote)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Palette.secondaryText)
                         .fixedSize(horizontal: false, vertical: true)
                 }
                 Spacer(minLength: 8)
@@ -334,7 +334,7 @@ struct AddView: View {
             HStack(spacing: 10) {
                 Label("Растение от друга", systemImage: "gift")
                     .font(Typography.settingNote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Palette.secondaryText)
                     .lineLimit(1)
                     .minimumScaleFactor(0.85)
                 Spacer(minLength: 8)

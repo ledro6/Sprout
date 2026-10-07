@@ -97,7 +97,7 @@ struct AskView: View {
                     .foregroundStyle(Palette.ink)
                 Text(plant.species)
                     .font(Typography.settingNote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Palette.secondaryText)
             }
             .lineLimit(1)
         }
@@ -109,7 +109,7 @@ struct AskView: View {
         VStack(alignment: .leading, spacing: 10) {
             Text("Спросите о саде своими словами — ответит языковая модель прямо на телефоне, без интернета.")
                 .font(Typography.settingNote)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Palette.secondaryText)
                 .fixedSize(horizontal: false, vertical: true)
                 .padding(.horizontal, 6)
             ForEach(prompts, id: \.self) { prompt in
@@ -125,7 +125,7 @@ struct AskView: View {
             }
             Text("Модель может ошибаться. Если растение болеет, покажите его на снимке: «Что с ним?» на экране растения.")
                 .font(Typography.settingNote)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Palette.secondaryText)
                 .fixedSize(horizontal: false, vertical: true)
                 .padding(.horizontal, 6)
         }
@@ -142,7 +142,7 @@ struct AskView: View {
                 .fixedSize(horizontal: false, vertical: true)
                 .padding(.horizontal, 16)
                 .padding(.vertical, 10)
-                .glassEffect(.regular.tint(Palette.accent),
+                .glassEffect(.regular.tint(Palette.accentFill),
                              in: .rect(cornerRadius: Metrics.toolRadius))
                 .padding(.leading, 48)
                 .frame(maxWidth: .infinity, alignment: .trailing)
@@ -165,7 +165,7 @@ struct AskView: View {
             ProgressView()
             Text("Думаю…")
                 .font(Typography.settingNote)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Palette.secondaryText)
         }
         .padding(.horizontal, 6)
     }
@@ -175,7 +175,7 @@ struct AskView: View {
         VStack(alignment: .leading, spacing: 10) {
             Label(trouble.text, systemImage: "exclamationmark.bubble")
                 .font(Typography.settingNote)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Palette.secondaryText)
                 .fixedSize(horizontal: false, vertical: true)
             if trouble == .long {
                 Button {
@@ -198,13 +198,14 @@ struct AskView: View {
                 .onSubmit(send)
                 .padding(.horizontal, 16)
                 .padding(.vertical, 12)
-                .glassEffect(.regular, in: .capsule)
+                .sproutGlass(in: .capsule)
             Button(action: send) {
                 Image(systemName: "arrow.up")
                     .font(Typography.detail)
                     .frame(width: Metrics.gearBox, height: Metrics.gearBox)
             }
             .buttonStyle(.glassProminent)
+            .tint(Palette.accentFill)
             .buttonBorderShape(.circle)
             .disabled(talk.busy || Sage.question(draft) == nil)
             .accessibilityLabel("Спросить")

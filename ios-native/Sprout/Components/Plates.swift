@@ -15,7 +15,7 @@ struct SproutGroup<Content: View>: View {
         VStack(alignment: .leading, spacing: 8) {
             Text(title)
                 .font(Typography.groupTitle)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Palette.secondaryText)
                 .padding(.leading, 6)
             VStack(alignment: .leading, spacing: Metrics.rowGap) {
                 content
@@ -56,7 +56,7 @@ struct SproutBlock<Control: View>: View {
             if let note {
                 Text(note)
                     .font(Typography.settingNote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Palette.secondaryText)
                     .fixedSize(horizontal: false, vertical: true)
             }
         }
@@ -158,7 +158,7 @@ struct SproutFigure: View {
                 .contentTransition(.numericText())
             Text(caption)
                 .font(Typography.figureCaption)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Palette.secondaryText)
             if let note {
                 Text(note)
                     .font(Typography.figureCaption)
@@ -267,7 +267,7 @@ struct Paragraph: View {
             }
             Text(text)
                 .font(Typography.settingNote)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Palette.secondaryText)
                 .fixedSize(horizontal: false, vertical: true)
         }
         .frame(maxWidth: .infinity, alignment: .leading)

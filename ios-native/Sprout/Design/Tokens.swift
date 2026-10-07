@@ -12,27 +12,72 @@ enum Palette {
         })
     }
 
+    /// Пара из таблицы модели (`Legible`): по ней же проверка модели меряет
+    /// контраст, так что числа здесь и там не разойдутся.
+    private static func dual(_ pair: Legible.Pair) -> Color {
+        dual(tone(pair.light), tone(pair.dark))
+    }
+
+    private static func tone(_ p: Paint) -> Color {
+        Color(red: p.red / 255, green: p.green / 255, blue: p.blue / 255)
+            .opacity(p.alpha)
+    }
+
     private static func rgb(_ r: Double, _ g: Double, _ b: Double) -> Color {
         Color(red: r / 255, green: g / 255, blue: b / 255)
     }
 
-    static let background = dual(.white, rgb(43, 46, 44))
+    static let background = dual(Legible.background)
+
+    /// Карточка с данными — непрозрачная подложка под стеклом плашки, см.
+    /// `sproutPlate`.
+    static let card = dual(Legible.card)
 
     /// В тёмной теме не чистый белый: на сером он звенит.
-    static let ink = dual(.black, rgb(238, 241, 237))
+    static let ink = dual(Legible.primary)
+
+    /// Вторичный текст с данными — вместо системного `.secondary`: тот на
+    /// белом даёт 3.5 вместо нужных 4.5. Системный остаётся там, где строка
+    /// только украшает.
+    static let secondaryText = dual(Legible.secondary)
+
+    /// Только украшение, никогда не данные.
+    static let decorative = dual(Legible.decorative)
+
+    static let hairline = dual(Legible.hairline)
+    static let controlBorder = dual(Legible.controlBorder)
 
     /// Приветственный экран — зелёный в обеих темах: он фирменный.
     static let welcome = dual(rgb(207, 248, 201), rgb(18, 54, 13))
     static let welcomeInk = dual(.black, .white)
 
-    /// Системный синий iOS; в тёмной теме светлее, как у самой iOS.
-    static let accent = dual(rgb(0, 136, 255), rgb(74, 168, 255))
+    /// Синий текста, ссылок и значков. Прежний системный #0088FF давал на
+    /// белом 3.6 — для текста мало, он остался украшением (`accentGlow`).
+    static let accent = dual(Legible.accentText)
 
-    static let green = rgb(55, 181, 81)
+    /// Синяя заливка кнопок с белой надписью — в обеих темах темнее
+    /// текстового синего тёмной темы, иначе белое на ней не читалось бы.
+    static let accentFill = dual(Legible.accentFill)
+
+    /// Прежний синий — подсветка и свечение без текста.
+    static let accentGlow = dual(Legible.accentGlow)
+
+    /// Зелёный «всё хорошо» — текстом и значками.
+    static let green = dual(Legible.ok)
+
+    /// Зелёная заливка кнопки под белую надпись.
+    static let greenFill = dual(Legible.okFill)
+
+    /// Яркий зелёный макета — только украшение: узор, градиент открытки.
+    static let leaf = dual(Legible.leafGlow)
 
     static let greenSoft = rgb(198, 250, 183)
 
-    static let water = rgb(71, 181, 228)
+    /// Вода текстом, значками и линией графика.
+    static let water = dual(Legible.wet)
+
+    /// Яркая вода макета — заливки и свечение без текста.
+    static let waterGlow = dual(Legible.waterGlow)
 
     /// Цвет фигурки узора: 0 — покой, 1 — гребень волны.
     ///
@@ -111,15 +156,22 @@ enum Palette {
             .opacity(ink.a)
     }
 
-    /// Тревожная тень от 40 до 20 процентов влажности. В тёмной теме светлее.
-    static let warn = dual(rgb(255, 149, 0), rgb(255, 169, 46))
+    /// «Скоро пить» — текстом и значками.
+    static let warn = dual(Legible.soon)
 
-    /// Ниже двадцати. Силу тени считает сама карточка.
-    static let alarm = dual(rgb(255, 59, 48), rgb(255, 92, 82))
+    /// «Ждёт воды» — текстом и значками.
+    static let alarm = dual(Legible.urgent)
 
     /// Земля досуха — темнее тревоги: в статистике её надо отличить от
-    /// «в последний момент».
-    static let parched = dual(rgb(150, 32, 26), rgb(205, 72, 62))
+    /// «в последний момент». Рядом всегда значок — одним цветом не различить.
+    static let parched = dual(Legible.parched)
+
+    /// Тревожная тень от 40 до 20 процентов влажности — яркие цвета макета:
+    /// это свечение, а не надпись. В тёмной теме светлее.
+    static let warnGlow = dual(Legible.warnGlow)
+
+    /// Тень ниже двадцати. Силу тени считает сама карточка.
+    static let alarmGlow = dual(Legible.alarmGlow)
 
     /// Небо планетария — ночное в обеих темах: планеты видны только на
     /// тёмном.

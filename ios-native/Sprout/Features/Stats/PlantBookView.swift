@@ -82,7 +82,7 @@ struct PlantBookView: View {
                 Text([plant.species, garden.roomName(of: plant.id) ?? ""]
                         .filter { !$0.isEmpty }.joined(separator: " · "))
                     .font(Typography.settingNote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Palette.secondaryText)
                 Text(plant.moistureLine)
                     .font(Typography.settingNote.weight(.semibold))
                     .foregroundStyle(Palette.level(plant.moisture))
@@ -133,7 +133,7 @@ struct PlantBookView: View {
                 }
                 Text(Stats.verdict(Almanac.Aim.zone(typical)))
                     .font(Typography.settingNote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Palette.secondaryText)
                     .fixedSize(horizontal: false, vertical: true)
                 ZoneBar(aim: book.aim)
                 ForEach(Almanac.Aim.Zone.allCases) { zone in
@@ -142,7 +142,7 @@ struct PlantBookView: View {
             } else {
                 Text("Полейте растение — и здесь появится, сколько воды было в земле в этот миг.")
                     .font(Typography.settingNote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Palette.secondaryText)
                     .fixedSize(horizontal: false, vertical: true)
             }
         }
@@ -160,7 +160,7 @@ struct PlantBookView: View {
             if points.isEmpty {
                 Text("Поливов ещё не было.")
                     .font(Typography.settingNote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Palette.secondaryText)
             } else {
                 DryingChart(points: points)
             }
@@ -194,7 +194,7 @@ struct PlantBookView: View {
                                  Species.periodPhrase(days),
                                  Species.periodPhrase(plant.dryingDays)))
                     .font(Typography.settingNote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Palette.secondaryText)
                     .fixedSize(horizontal: false, vertical: true)
             }
         }

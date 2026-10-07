@@ -43,10 +43,32 @@ extension View {
     /// и плашка тянулась за пальцем и дёргалась. Нажатие показывает
     /// `SproutPress`.
     func sproutPlate(in shape: some Shape) -> some View {
-        glassEffect(.regular, in: shape)
+        sproutGlass(in: shape)
             // Нажатия ловит рамка вью — очерчиваем, чтобы тап у скруглённого
             // угла не проходил мимо.
             .contentShape(shape)
+    }
+
+    /// Стекло под текстом. При «Понижении прозрачности» — непрозрачная
+    /// карточка (`Palette.card`): на ней текст держит контраст 4.5 и выше,
+    /// что бы ни лежало под плашкой.
+    func sproutGlass(in shape: some Shape) -> some View {
+        modifier(SproutGlass(shape: shape))
+    }
+}
+
+private struct SproutGlass<S: Shape>: ViewModifier {
+    let shape: S
+
+    @Environment(\.accessibilityReduceTransparency) private var solid
+
+    @ViewBuilder
+    func body(content: Content) -> some View {
+        if solid {
+            content.background(Palette.card, in: shape)
+        } else {
+            content.glassEffect(.regular, in: shape)
+        }
     }
 }
 

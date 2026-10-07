@@ -89,7 +89,7 @@ struct PlantRow: View {
                 // Ручка — знак, а не хватка: тащить можно за всю строку.
                 Image(systemName: "line.3.horizontal")
                     .font(.system(size: Metrics.gripGlyph, weight: .semibold))
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Palette.secondaryText)
                     .transition(.opacity.combined(with: .scale))
                     .accessibilityHidden(true)
             }

@@ -41,6 +41,7 @@ struct TourView: View {
                             .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(.glassProminent)
+                    .tint(Palette.accentFill)
                     .controlSize(.extraLarge)
                 }
                 .padding(.horizontal, Metrics.margin)
@@ -91,7 +92,7 @@ private struct TourPage: View {
                 .multilineTextAlignment(.center)
             Text(page.text)
                 .font(Typography.settingRow)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Palette.secondaryText)
                 .multilineTextAlignment(.center)
                 .fixedSize(horizontal: false, vertical: true)
             // Двойной низ: страница держится выше середины, над точками.

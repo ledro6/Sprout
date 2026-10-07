@@ -161,7 +161,7 @@ struct OrreryView: View {
         .overlay(alignment: .top) {
             Image(systemName: "drop.fill")
                 .font(Typography.settingNote)
-                .foregroundStyle(Palette.water)
+                .foregroundStyle(Palette.waterGlow)
                 .padding(4)
                 .hintSpot(.orreryGate)
                 .allowsHitTesting(false)
@@ -237,7 +237,7 @@ struct OrreryView: View {
                 Label("Нажмите на планету — узнаете, кто это.",
                       systemImage: "hand.tap")
                     .font(Typography.settingNote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Palette.secondaryText)
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
         }
@@ -262,7 +262,7 @@ struct OrreryView: View {
                         .foregroundStyle(Palette.ink)
                     Text(plant.species)
                         .font(Typography.settingNote)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Palette.secondaryText)
                 }
                 Spacer(minLength: 8)
                 Text(Stats.percent(level))
@@ -276,7 +276,7 @@ struct OrreryView: View {
                      moisture: level, period: plant.period,
                      estimated: plant.estimated) } ?? "")
                 .font(Typography.settingNote)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Palette.secondaryText)
                 .contentTransition(.numericText())
             HStack(spacing: 10) {
                 if live {
@@ -287,6 +287,7 @@ struct OrreryView: View {
                             .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(.glassProminent)
+                    .tint(Palette.accentFill)
                 }
                 NavigationLink(value: StatsRoute.plant(plant.id)) {
                     Label("Открыть растение", systemImage: "arrow.up.forward")
@@ -324,7 +325,7 @@ struct OrreryView: View {
                 Text(ahead == 0 ? Lang.text("Сейчас")
                      : Stats.day(Int(ahead.rounded())))
                     .font(Typography.settingNote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Palette.secondaryText)
                     .contentTransition(.numericText())
             }
             TimelineView(.animation(paused: playing == nil)) { context in
@@ -379,6 +380,7 @@ struct OrreryView: View {
                 .frame(maxWidth: .infinity)
             }
             .buttonStyle(.glassProminent)
+            .tint(Palette.accentFill)
             .controlSize(.extraLarge)
             .disabled(preparing || orbits.isEmpty)
             HStack(spacing: 6) {
@@ -391,7 +393,7 @@ struct OrreryView: View {
                 }
             }
             .font(Typography.settingNote)
-            .foregroundStyle(.secondary)
+            .foregroundStyle(Palette.secondaryText)
             .fixedSize(horizontal: false, vertical: true)
         }
     }
@@ -453,11 +455,11 @@ struct OrreryView: View {
                     let line = Self.line(omen)
                     HStack(alignment: .firstTextBaseline, spacing: 10) {
                         Image(systemName: line.icon)
-                            .foregroundStyle(Palette.water)
+                            .foregroundStyle(Palette.waterGlow)
                             .frame(width: 22)
                         Text(line.text)
                             .font(Typography.settingNote)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(Palette.secondaryText)
                             .fixedSize(horizontal: false, vertical: true)
                     }
                     .transition(.blurReplace)
@@ -510,7 +512,7 @@ struct OrreryView: View {
             if parades.isEmpty {
                 Text("В ближайший месяц парадов нет: растения просят воды вразнобой.")
                     .font(Typography.settingNote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Palette.secondaryText)
                     .fixedSize(horizontal: false, vertical: true)
             }
             ForEach(Array(parades.enumerated()), id: \.element.id) { item in
@@ -538,14 +540,14 @@ struct OrreryView: View {
                 .font(Typography.detail)
                 .foregroundStyle(Palette.space)
                 .frame(width: 34, height: 34)
-                .background(Circle().fill(Palette.water))
+                .background(Circle().fill(Palette.waterGlow))
             VStack(alignment: .leading, spacing: 2) {
                 Text(Stats.day(parade.day))
                     .font(Typography.settingRow)
                     .foregroundStyle(Palette.ink)
                 Text(Stats.names(parade.names))
                     .font(Typography.settingNote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Palette.secondaryText)
                     .lineLimit(2)
             }
             Spacer(minLength: 8)

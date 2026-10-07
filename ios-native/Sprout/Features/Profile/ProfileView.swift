@@ -132,14 +132,14 @@ struct ProfileView: View {
                 VStack(alignment: .leading, spacing: 3) {
                     Text(named ? garden.owner : Lang.text("Имя не задано"))
                         .font(Typography.navTitle)
-                        .foregroundStyle(named ? Palette.ink : .secondary)
+                        .foregroundStyle(named ? Palette.ink : Palette.secondaryText)
                         .lineLimit(1)
                     Text(named
                          ? Lang.format("Садовод с %@", garden.since.formatted(
                              .dateTime.day().month(.wide).year()))
                          : Lang.text("Назовитесь — имя встретит вас при запуске"))
                         .font(Typography.settingNote)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Palette.secondaryText)
                 }
                 Spacer(minLength: 8)
                 Button(named ? "Изменить" : "Назвать") { editing = true }
@@ -168,7 +168,7 @@ struct ProfileView: View {
                             .minimumScaleFactor(0.8)
                         Text(Lang.format("Уровень %lld", grower.level))
                             .font(Typography.settingNote)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(Palette.secondaryText)
                         ProgressView(value: grower.progress)
                             .tint(Palette.green)
                     }
@@ -231,7 +231,7 @@ struct ProfileView: View {
                             .frame(width: 44, height: 44)
                         Text("Первая — за первый полив")
                             .font(Typography.settingNote)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(Palette.secondaryText)
                     } else {
                         ForEach(latest) { rank in
                             MedalBadge(rank: rank, earned: true)
@@ -242,7 +242,7 @@ struct ProfileView: View {
                     Text(Lang.format("%1$lld из %2$lld",
                                      Cabinet.shared.total, Award.total))
                         .font(Typography.settingNote)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Palette.secondaryText)
                         .monospacedDigit()
                     Image(systemName: "chevron.right")
                         .font(Typography.settingNote)
@@ -411,7 +411,7 @@ struct ProfileView: View {
                     .lineLimit(1)
                 Text(note(for: rival))
                     .font(Typography.figureCaption)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Palette.secondaryText)
             }
             Spacer(minLength: 8)
             VStack(alignment: .trailing, spacing: 1) {
@@ -421,7 +421,7 @@ struct ProfileView: View {
                     .contentTransition(.numericText())
                 Text(Lang.format("дней подряд: %lld", rival.streak))
                     .font(Typography.figureCaption)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Palette.secondaryText)
             }
         }
         .contentShape(Rectangle())

@@ -45,6 +45,7 @@ struct PosterSheet: View {
                             .padding(.horizontal, 6)
                     }
                     .buttonStyle(.glassProminent)
+                    .tint(Palette.accentFill)
                     .controlSize(.large)
                 } else {
                     ProgressView()
@@ -139,7 +140,7 @@ struct PlantPoster: View {
                         .minimumScaleFactor(0.6)
                     Text(verbatim: species)
                         .font(.system(size: 15, weight: .medium))
-                        .foregroundStyle(Palette.ink.opacity(0.62))
+                        .foregroundStyle(Palette.secondaryText)
                         .lineLimit(1)
                         .minimumScaleFactor(0.8)
                 }
@@ -178,7 +179,7 @@ struct PlantPoster: View {
             }
         } else {
             ZStack {
-                LinearGradient(colors: [Palette.greenSoft, Palette.green.opacity(0.55)],
+                LinearGradient(colors: [Palette.greenSoft, Palette.leaf.opacity(0.55)],
                                startPoint: .topLeading, endPoint: .bottomTrailing)
                 if UIImage(named: plant.photo) != nil {
                     Image(plant.photo)
@@ -209,7 +210,7 @@ struct GardenPoster: View {
                 Text(Lang.text("Моя оранжерея"))
                     .font(.system(size: 13, weight: .bold))
                     .textCase(.uppercase)
-                    .foregroundStyle(Palette.ink.opacity(0.6))
+                    .foregroundStyle(Palette.secondaryText)
                 Text(verbatim: owner.isEmpty ? grower.title : owner)
                     .font(.system(size: 30, weight: .bold, design: .rounded))
                     .foregroundStyle(Palette.ink)
@@ -340,7 +341,7 @@ private struct PosterFigure: View {
                 .minimumScaleFactor(0.55)
             Text(verbatim: caption)
                 .font(.system(size: 12, weight: .semibold))
-                .foregroundStyle(Palette.ink.opacity(0.6))
+                .foregroundStyle(Palette.secondaryText)
                 .lineLimit(2)
                 .fixedSize(horizontal: false, vertical: true)
         }

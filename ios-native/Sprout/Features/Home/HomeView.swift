@@ -692,6 +692,7 @@ struct HomeView: View {
                     .frame(width: Metrics.gearBox, height: Metrics.gearBox)
             }
             .buttonStyle(.glassProminent)
+            .tint(Palette.accentFill)
             .buttonBorderShape(.circle)
             .accessibilityLabel("Готово")
             .transition(.scale.combined(with: .opacity))
@@ -806,7 +807,7 @@ struct HomeView: View {
                 во вкладке «Добавить» или перевезите из другой комнаты.
                 """))
                 .font(Typography.settingNote)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Palette.secondaryText)
                 .multilineTextAlignment(.center)
                 .fixedSize(horizontal: false, vertical: true)
         }

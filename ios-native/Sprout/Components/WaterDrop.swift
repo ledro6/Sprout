@@ -21,7 +21,7 @@ struct WaterDrop: View {
         }
         .buttonStyle(.glassProminent)
         .buttonBorderShape(.circle)
-        .tint(Palette.accent)
+        .tint(Palette.accentFill)
         .disabled(full)
         .animation(Motion.number, value: full)
         .accessibilityLabel(Lang.format("Полить: %@", plant.name))

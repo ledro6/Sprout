@@ -140,7 +140,7 @@ struct PlantSettingsView: View {
 
                 Text(forecast)
                     .font(Typography.settingNote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Palette.secondaryText)
                     .contentTransition(.numericText())
 
                 if let usual = suggestion {
@@ -218,7 +218,7 @@ struct PlantSettingsView: View {
                             .lineLimit(1)
                         Text(sensor.status ?? Lang.text("Ждём первых показаний…"))
                             .font(Typography.settingNote)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(Palette.secondaryText)
                             .contentTransition(.numericText())
                     }
                     Spacer(minLength: 8)
@@ -262,7 +262,7 @@ struct PlantSettingsView: View {
                 .disabled(sensor.last == nil)
                 Text("Отметьте, когда земля сухая и когда только что полита, — проценты растения встанут между метками.")
                     .font(Typography.settingNote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Palette.secondaryText)
                     .fixedSize(horizontal: false, vertical: true)
                 Button(role: .destructive) {
                     withAnimation(Motion.enter) {
@@ -276,7 +276,7 @@ struct PlantSettingsView: View {
             } else {
                 Text("Датчик в горшке покажет настоящую влажность земли: Flower Care по Bluetooth или датчик из приложения «Дом».")
                     .font(Typography.settingNote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Palette.secondaryText)
                     .fixedSize(horizontal: false, vertical: true)
                 Button { linking = true } label: {
                     Label("Подключить датчик", systemImage: "sensor")

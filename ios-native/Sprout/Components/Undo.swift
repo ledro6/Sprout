@@ -192,7 +192,7 @@ private struct UndoToast: View {
                     .foregroundStyle(Palette.ink)
                 Text(slip.name)
                     .font(Typography.toastNote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Palette.secondaryText)
                     .lineLimit(1)
             }
 
@@ -213,7 +213,7 @@ private struct UndoToast: View {
         .padding(.leading, 10)
         .padding(.trailing, 6)
         .padding(.vertical, 8)
-        .glassEffect(.regular, in: .capsule)
+        .sproutGlass(in: .capsule)
         .padding(.horizontal, Metrics.contentMargin)
         .padding(.bottom, Metrics.toastGap)
         .accessibilityElement(children: .contain)

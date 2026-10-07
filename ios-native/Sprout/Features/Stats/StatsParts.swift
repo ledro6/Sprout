@@ -11,12 +11,13 @@ extension Palette {
         }
     }
 
-    /// Зоны точности: заранее — синяя вода, вовремя — оранжевая тень,
-    /// в последний момент — красная, досуха — тёмно-красная.
+    /// Зоны точности: заранее — вода, вовремя — зелёный «всё хорошо» (не
+    /// оранжевый: тот значит «скоро пить»), в последний момент — тревога,
+    /// досуха — темнее тревоги и со значком: цветом одним их не различить.
     static func zone(_ zone: Almanac.Aim.Zone) -> Color {
         switch zone {
         case .early: water
-        case .onTime: warn
+        case .onTime: green
         case .lastMoment: alarm
         case .dry: parched
         }
@@ -112,7 +113,7 @@ struct StatTile: View {
                 .minimumScaleFactor(0.6)
             Text(caption)
                 .font(Typography.figureCaption)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Palette.secondaryText)
             if let note {
                 HStack(spacing: 3) {
                     if let icon {
@@ -123,7 +124,7 @@ struct StatTile: View {
                         .font(Typography.figureCaption)
                         .contentTransition(.numericText())
                 }
-                .foregroundStyle(tone ?? .secondary)
+                .foregroundStyle(tone ?? Palette.secondaryText)
                 .transition(.blurReplace)
             }
         }
@@ -169,16 +170,26 @@ struct ZoneRow: View {
 
     var body: some View {
         HStack(spacing: 10) {
-            Circle()
-                .fill(Palette.zone(zone))
-                .frame(width: 10, height: 10)
+            // Досуха — значком, а не точкой: рядом с «в последний момент»
+            // одного цвета мало.
+            if zone == .dry {
+                Image(systemName: "exclamationmark.triangle.fill")
+                    .font(Typography.figureCaption)
+                    .foregroundStyle(Palette.zone(zone))
+                    .frame(width: 10, height: 10)
+                    .accessibilityHidden(true)
+            } else {
+                Circle()
+                    .fill(Palette.zone(zone))
+                    .frame(width: 10, height: 10)
+            }
             VStack(alignment: .leading, spacing: 1) {
                 Text(zone.title)
                     .font(Typography.settingRow)
                     .foregroundStyle(Palette.ink)
                 Text(zone.range)
                     .font(Typography.figureCaption)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Palette.secondaryText)
             }
             Spacer(minLength: 8)
             VStack(alignment: .trailing, spacing: 1) {
@@ -188,7 +199,7 @@ struct ZoneRow: View {
                     .contentTransition(.numericText())
                 Text(Lang.format("%lld поливов", aim.count(zone)))
                     .font(Typography.figureCaption)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Palette.secondaryText)
             }
         }
         .accessibilityElement(children: .combine)
@@ -240,7 +251,7 @@ struct HourClock: View {
                                     y: middle.y + sin(angle) * (outer + 8))
                 context.draw(Text(label)
                                 .font(Typography.figureCaption)
-                                .foregroundStyle(.secondary),
+                                .foregroundStyle(Palette.secondaryText),
                              at: point)
             }
         }
@@ -268,7 +279,7 @@ struct WeekBars: View {
                         .frame(height: Metrics.weekBars, alignment: .bottom)
                     Text(day.symbol)
                         .font(Typography.figureCaption)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Palette.secondaryText)
                         .lineLimit(1)
                         .minimumScaleFactor(0.7)
                 }

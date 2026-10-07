@@ -173,7 +173,7 @@ struct RecapPage: View {
                 .overlay(alignment: .top) {
                     Text(verbatim: star.count.formatted())
                         .font(RecapTheme.huge(28))
-                        .foregroundStyle(.black.opacity(0.7))
+                        .foregroundStyle(.black)
                         .padding(.top, 10)
                         .opacity(grow)
                 }
@@ -320,6 +320,7 @@ struct RecapPage: View {
                             .padding(.horizontal, 6)
                     }
                     .buttonStyle(.glassProminent)
+                    .tint(Palette.accentFill)
                     .controlSize(.large)
                 }
                 Button(action: again) {

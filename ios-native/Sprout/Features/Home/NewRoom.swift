@@ -37,7 +37,7 @@ struct NewRoom: View {
                     вкладке «Добавить».
                     """))
                     .font(Typography.settingNote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Palette.secondaryText)
                     .multilineTextAlignment(.center)
                     .fixedSize(horizontal: false, vertical: true)
                 if let sample {
@@ -50,7 +50,7 @@ struct NewRoom: View {
             }
             Text("Растения в неё можно будет посадить или перевезти.")
                 .font(Typography.settingNote)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Palette.secondaryText)
                 .multilineTextAlignment(.center)
                 .fixedSize(horizontal: false, vertical: true)
 
@@ -62,6 +62,7 @@ struct NewRoom: View {
                     .frame(maxWidth: .infinity)
             }
             .buttonStyle(.glassProminent)
+            .tint(Palette.accentFill)
             .controlSize(.large)
             .disabled(blank)
 

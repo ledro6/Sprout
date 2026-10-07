@@ -43,7 +43,7 @@ struct LeafFall: View {
                 .foregroundStyle(Palette.ink)
                 .padding(.horizontal, 18)
                 .padding(.vertical, 12)
-                .glassEffect(.regular, in: .capsule)
+                .sproutGlass(in: .capsule)
                 .scaleEffect(shown ? 1 : Motion.medalScale)
                 .opacity(shown ? 1 : 0)
         }

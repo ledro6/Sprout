@@ -24,11 +24,11 @@ struct TreatmentCard: View {
                 HStack(spacing: 8) {
                     Text("План лечения")
                         .font(Typography.groupTitle)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Palette.secondaryText)
                     Spacer(minLength: 8)
                     Text(Lang.format("%1$lld из %2$lld", plan.done, plan.total))
                         .font(Typography.settingNote)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Palette.secondaryText)
                         .monospacedDigit()
                         .contentTransition(.numericText())
                 }
@@ -97,12 +97,12 @@ struct TreatmentCard: View {
                 .padding(.vertical, 4)
         }
         .buttonStyle(.glassProminent)
-        .tint(Palette.green)
+        .tint(Palette.greenFill)
         .controlSize(.large)
         Button("Отменить план") { dropping = true }
             .font(Typography.settingNote)
             .buttonStyle(.plain)
-            .foregroundStyle(.secondary)
+            .foregroundStyle(Palette.secondaryText)
             .frame(maxWidth: .infinity)
     }
 
@@ -141,7 +141,7 @@ struct TreatmentCard: View {
                 .foregroundStyle(Palette.ink.opacity(done ? 0.5 : 1))
                 Text(meta)
                     .font(Typography.settingNote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Palette.secondaryText)
                     .contentTransition(.numericText())
             }
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -224,7 +224,7 @@ struct TreatmentCard: View {
                 .foregroundStyle(Palette.ink)
             Text("Растение снова в строю. Снимки «до» и «после» остаются здесь, пока план не убран.")
                 .font(Typography.settingNote)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Palette.secondaryText)
                 .multilineTextAlignment(.center)
                 .fixedSize(horizontal: false, vertical: true)
             photos

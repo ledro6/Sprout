@@ -21,7 +21,7 @@ struct StatusStyle {
         case .green: Palette.green
         case .warn: Palette.warn
         case .alarm: Palette.alarm
-        case .secondary: Color.secondary
+        case .secondary: Palette.secondaryText
         }
     }
 }
@@ -52,7 +52,7 @@ struct SourceBadge: View {
     var body: some View {
         Text(MoistureStatus.source(estimated: estimated))
             .font(.caption2.weight(.semibold))
-            .foregroundStyle(.secondary)
+            .foregroundStyle(Palette.secondaryText)
             .lineLimit(1)
             .fixedSize()
             .padding(.horizontal, 6)

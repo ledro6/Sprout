@@ -85,6 +85,7 @@
 				Model/Botany/Preset.swift,
 				Model/Botany/Sculpt.swift,
 				Model/Core/Lang.swift,
+				Model/Core/Legible.swift,
 				Model/Core/Status.swift,
 				Model/Core/Store.swift,
 				Model/Garden/Care.swift,
@@ -110,6 +111,7 @@
 			membershipExceptions = (
 				Localizable.xcstrings,
 				Model/Core/Lang.swift,
+				Model/Core/Legible.swift,
 				Model/Core/Status.swift,
 				Model/Garden/Wrist.swift,
 			);
@@ -120,6 +122,7 @@
 			membershipExceptions = (
 				Localizable.xcstrings,
 				Model/Core/Lang.swift,
+				Model/Core/Legible.swift,
 				Model/Core/Status.swift,
 				Model/Garden/Wrist.swift,
 			);

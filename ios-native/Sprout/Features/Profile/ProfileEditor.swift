@@ -36,7 +36,7 @@ struct ProfileEditor: View {
                             .onSubmit(save)
                         Text("Имя стоит в профиле и уходит вместе со счётом друзьям.")
                             .font(Typography.settingNote)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(Palette.secondaryText)
                     }
                     // Цвет — кружку без фото; с фото выбирать нечего.
                     if settings.avatarShot == nil {

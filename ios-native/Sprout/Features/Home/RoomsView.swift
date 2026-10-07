@@ -35,7 +35,7 @@ struct RoomsView: View {
                     if !garden.rooms.isEmpty {
                         Text(Self.hint)
                             .font(Typography.settingNote)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(Palette.secondaryText)
                             .padding(.horizontal, Metrics.contentMargin)
                     }
                 }
@@ -163,7 +163,7 @@ private struct RoomRow: View {
             }
             Text(count)
                 .font(Typography.settingNote)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Palette.secondaryText)
                 .contentTransition(.numericText())
         }
         .padding(.horizontal, Metrics.groupPadding)

@@ -80,7 +80,7 @@ struct TripView: View {
                 .font(Typography.settingRow)
             Text(Lang.format("Поездка — %lld дней", days))
                 .font(Typography.settingNote)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Palette.secondaryText)
                 .contentTransition(.numericText())
         }
         .sproutRide()
@@ -110,7 +110,7 @@ struct TripView: View {
                     Text(Lang.format("Остальные дождутся сами: %@.",
                                      Lang.format("%lld растений", others)))
                         .font(Typography.settingNote)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Palette.secondaryText)
                 }
             }
             .transition(.blurReplace)
@@ -131,7 +131,7 @@ struct TripView: View {
             Text(Lang.format("%1$@ · полить: %2$@", need.room,
                              dates.joined(separator: ", ")))
                 .font(Typography.settingNote)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Palette.secondaryText)
                 .fixedSize(horizontal: false, vertical: true)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -153,6 +153,7 @@ struct TripView: View {
                 .frame(maxWidth: .infinity)
             }
             .buttonStyle(.glassProminent)
+            .tint(Palette.accentFill)
             .controlSize(.extraLarge)
             .disabled(watered)
             .onGeometryChange(for: CGRect.self) { $0.frame(in: .global) }
@@ -206,7 +207,7 @@ struct TripView: View {
                 if leave.timeIntervalSinceNow > Trip.countdownSpan {
                     Text("Отсчёт появится на экране блокировки за 8 часов до отъезда.")
                         .font(Typography.settingNote)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Palette.secondaryText)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .fixedSize(horizontal: false, vertical: true)
                 }

@@ -21,7 +21,7 @@ struct PetNote: View {
     /// Те же цвета, что строка на экране растения.
     private func tone(of danger: Toxicity) -> Color {
         switch danger {
-        case .safe: .secondary
+        case .safe: Palette.secondaryText
         case .toxic: Palette.warn
         case .lily, .deadly: Palette.alarm
         }

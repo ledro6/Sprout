@@ -122,7 +122,7 @@ private struct PotPage: View {
                             .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(.borderedProminent)
-                    .tint(WristTone.water)
+                    .tint(WristTone.fill)
                     .disabled(pot.moisture >= 0.99)
                     .handGestureShortcut(.primaryAction)
                     .padding(.top, 4)
@@ -166,16 +166,28 @@ private struct Dial<Label: View>: View {
     }
 }
 
+/// Часы всегда тёмные — берём тёмную половину таблицы приложения
+/// (`Legible`), где проверяется контраст.
 enum WristTone {
-    static let water = Color(red: 0.25, green: 0.62, blue: 1)
-    static let done = Color(red: 0.42, green: 0.86, blue: 0.5)
+    static let water = inked(Legible.wet.dark)
+    static let done = inked(Legible.ok.dark)
 
-    /// Статус — из общего движка (`MoistureStatus`), цвета — свои, часов.
+    /// Заливка кнопки «Полить» под белую надпись.
+    static let fill = inked(Legible.accentFill.dark)
+
+    /// Статус — из общего движка (`MoistureStatus`), цвета — тёмная
+    /// половина таблицы `Legible`.
     static func of(_ status: MoistureStatus) -> Color {
         switch status.tone {
-        case .warn: .orange
-        case .alarm: .red
+        case .warn: inked(Legible.soon.dark)
+        case .alarm: inked(Legible.urgent.dark)
         case .water, .green, .secondary: water
         }
     }
+}
+
+/// Цвет из таблицы модели.
+func inked(_ paint: Paint) -> Color {
+    Color(red: paint.red / 255, green: paint.green / 255,
+          blue: paint.blue / 255, opacity: paint.alpha)
 }

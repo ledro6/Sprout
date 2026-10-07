@@ -166,7 +166,7 @@ struct SearchView: View {
                 .foregroundStyle(.tertiary)
             Text(text)
                 .font(Typography.settingNote)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Palette.secondaryText)
                 .multilineTextAlignment(.center)
                 .fixedSize(horizontal: false, vertical: true)
         }

@@ -33,7 +33,7 @@ struct DiagnosisSheet: View {
                             ProgressView()
                             Text("Смотрю на листья…")
                                 .font(Typography.settingNote)
-                                .foregroundStyle(.secondary)
+                                .foregroundStyle(Palette.secondaryText)
                         }
                         .transition(.blurReplace)
                     }
@@ -56,7 +56,7 @@ struct DiagnosisSheet: View {
                     planOffer
                     Text("Это подсказка по снимку, а не приговор: тень, блик или белые цветки телефон может принять за беду.")
                         .font(Typography.settingNote)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Palette.secondaryText)
                         .fixedSize(horizontal: false, vertical: true)
                         .padding(.horizontal, 6)
                 }
@@ -109,7 +109,7 @@ struct DiagnosisSheet: View {
             } else {
                 Text("Снимите растение целиком, при дневном свете — телефон посмотрит на листья.")
                     .font(Typography.settingNote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Palette.secondaryText)
                     .fixedSize(horizontal: false, vertical: true)
             }
             HStack(spacing: Metrics.actionGap) {
@@ -121,6 +121,7 @@ struct DiagnosisSheet: View {
                             .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(.glassProminent)
+                    .tint(Palette.accentFill)
                 }
                 PhotosPicker(selection: $item, matching: .images) {
                     Label("Из галереи", systemImage: "photo")
@@ -166,10 +167,11 @@ struct DiagnosisSheet: View {
                         .padding(.vertical, 6)
                     }
                     .buttonStyle(.glassProminent)
+                    .tint(Palette.accentFill)
                     .controlSize(.large)
                     Text("Шаги — из советов выше, со сроками и напоминаниями. Этот снимок станет снимком «до».")
                         .font(Typography.settingNote)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Palette.secondaryText)
                         .fixedSize(horizontal: false, vertical: true)
                         .padding(.horizontal, 6)
                 }
@@ -206,14 +208,14 @@ struct DiagnosisSheet: View {
                         .percent.precision(.fractionLength(0)))
                     Text(share)
                         .font(Typography.settingNote)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Palette.secondaryText)
                         .monospacedDigit()
                         .accessibilityLabel(Lang.format("Уверенность %@", share))
                 }
             }
             Text(finding.detail)
                 .font(Typography.settingNote)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Palette.secondaryText)
                 .fixedSize(horizontal: false, vertical: true)
             ForEach(finding.tips, id: \.self) { tip in
                 Label {

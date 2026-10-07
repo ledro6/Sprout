@@ -245,11 +245,11 @@ private struct CoachLayer: View {
     /// Ободок дышит: глаз находит окно сразу.
     private func ring(_ hole: CGRect) -> some View {
         RoundedRectangle(cornerRadius: radius(hole), style: .continuous)
-            .strokeBorder(Palette.accent, lineWidth: 2)
+            .strokeBorder(Palette.accentGlow, lineWidth: 2)
             .frame(width: hole.width, height: hole.height)
             .phaseAnimator([false, true]) { view, lit in
                 view
-                    .shadow(color: Palette.accent.opacity(lit ? 0.9 : 0.35),
+                    .shadow(color: Palette.accentGlow.opacity(lit ? 0.9 : 0.35),
                             radius: lit ? 14 : 6)
                     .scaleEffect(lit ? 1.015 : 1)
             } animation: { _ in .easeInOut(duration: 1.1) }
@@ -293,7 +293,7 @@ private struct CoachLayer: View {
         let card = VStack(alignment: .leading, spacing: 8) {
             Text(Lang.format("%1$lld из %2$lld", step + 1, hints.count))
                 .font(Typography.figureCaption)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Palette.secondaryText)
                 .monospacedDigit()
             Text(hint.title)
                 .font(Typography.detail)
@@ -306,7 +306,7 @@ private struct CoachLayer: View {
                 if !last {
                     Button("Пропустить") { skip() }
                         .font(Typography.settingNote)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Palette.secondaryText)
                         .buttonStyle(.plain)
                 }
                 Spacer(minLength: 0)
@@ -316,6 +316,7 @@ private struct CoachLayer: View {
                         .padding(.horizontal, 6)
                 }
                 .buttonStyle(.glassProminent)
+                .tint(Palette.accentFill)
             }
             .padding(.top, 4)
         }

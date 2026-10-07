@@ -92,7 +92,7 @@ struct StatsView: View {
                                 if choosing {
                                     Text("Тяните за полоски справа, чтобы поменять порядок, «−» — убрать.")
                                         .font(Typography.settingNote)
-                                        .foregroundStyle(.secondary)
+                                        .foregroundStyle(Palette.secondaryText)
                                         .fixedSize(horizontal: false, vertical: true)
                                         .padding(.leading, 6)
                                         .transition(.blurReplace)
@@ -118,7 +118,7 @@ struct StatsView: View {
                                 if shown.isEmpty && !choosing {
                                     Text("Все блоки убраны — нажмите «Выбрать», чтобы вернуть.")
                                         .font(Typography.settingNote)
-                                        .foregroundStyle(.secondary)
+                                        .foregroundStyle(Palette.secondaryText)
                                         .fixedSize(horizontal: false, vertical: true)
                                         .padding(.leading, 6)
                                 }
@@ -228,7 +228,7 @@ struct StatsView: View {
             Spacer(minLength: 8)
             Image(systemName: "line.3.horizontal")
                 .font(Typography.settingRow)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Palette.secondaryText)
                 .frame(width: 48, height: Metrics.statRow)
                 .contentShape(Rectangle())
                 .gesture(carry(block))
@@ -378,7 +378,7 @@ struct StatsView: View {
                 .foregroundStyle(.tertiary)
             Text("В саду пока пусто. Посадите первое растение во вкладке «Добавить» — и здесь появятся цифры.")
                 .font(Typography.settingNote)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Palette.secondaryText)
                 .multilineTextAlignment(.center)
                 .fixedSize(horizontal: false, vertical: true)
         }
@@ -416,7 +416,7 @@ struct StatsView: View {
                             .contentTransition(.numericText())
                         Text("Довольны")
                             .font(Typography.figureCaption)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(Palette.secondaryText)
                     }
                 }
                 .frame(width: Metrics.statRingSize,
@@ -432,7 +432,7 @@ struct StatsView: View {
                 HStack(alignment: .firstTextBaseline, spacing: 6) {
                     Text(nowLine(average: average, driest: state.driest))
                         .font(Typography.settingNote)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Palette.secondaryText)
                         .fixedSize(horizontal: false, vertical: true)
                         .contentTransition(.numericText())
                     TermHint(.moisture)
@@ -529,7 +529,7 @@ struct StatsView: View {
             VStack(alignment: .leading, spacing: 12) {
                 Text(barCaption)
                     .font(Typography.settingNote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Palette.secondaryText)
                     .contentTransition(.numericText())
                     .animation(Motion.number, value: pickedBar)
                 if book.total == 0 {
@@ -648,7 +648,7 @@ struct StatsView: View {
                     }
                     Text(Stats.verdict(Almanac.Aim.zone(typical)))
                         .font(Typography.settingNote)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Palette.secondaryText)
                         .fixedSize(horizontal: false, vertical: true)
                 }
                 histogram(typical: typical)
@@ -659,7 +659,7 @@ struct StatsView: View {
             } else {
                 Text("Полейте растение — и здесь появится, сколько воды было в земле в этот миг.")
                     .font(Typography.settingNote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Palette.secondaryText)
                     .fixedSize(horizontal: false, vertical: true)
             }
         }
@@ -680,7 +680,7 @@ struct StatsView: View {
                     .cornerRadius(3, style: .continuous)
             }
             RuleMark(x: .value(Self.levelAxis, typical * 100))
-                .foregroundStyle(Palette.ink.opacity(0.7))
+                .foregroundStyle(Palette.secondaryText)
                 .lineStyle(StrokeStyle(lineWidth: 1.5, dash: [3, 3]))
         }
         .chartXScale(domain: 0.0 ... 100.0)
@@ -703,7 +703,7 @@ struct StatsView: View {
             if book.total == 0 {
                 Text("Когда появятся поливы, здесь будет видно, в какие часы и дни вы поливаете.")
                     .font(Typography.settingNote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Palette.secondaryText)
                     .fixedSize(horizontal: false, vertical: true)
             } else {
                 HStack(spacing: 16) {
@@ -741,7 +741,7 @@ struct StatsView: View {
         SproutGroup("Календарь поливов") {
             Text(cellCaption)
                 .font(Typography.settingNote)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Palette.secondaryText)
                 .fixedSize(horizontal: false, vertical: true)
                 .contentTransition(.numericText())
                 .animation(Motion.number, value: pickedCell)
@@ -803,7 +803,7 @@ struct StatsView: View {
             VStack(alignment: .leading, spacing: 12) {
                 Text(aheadCaption)
                     .font(Typography.settingNote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Palette.secondaryText)
                     .fixedSize(horizontal: false, vertical: true)
                     .contentTransition(.numericText())
                     .animation(Motion.number, value: chosenDay?.offset)
@@ -908,7 +908,7 @@ struct StatsView: View {
                 }
             Text(details.joined(separator: " · "))
                 .font(Typography.figureCaption)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Palette.secondaryText)
         }
         .animation(Motion.number, value: level)
         .accessibilityElement(children: .combine)
@@ -952,7 +952,7 @@ struct StatsView: View {
             }
             Text("Нажмите на растение — откроется его статистика.")
                 .font(Typography.figureCaption)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Palette.secondaryText)
         }
         .sproutRide()
     }
@@ -961,7 +961,7 @@ struct StatsView: View {
         HStack(spacing: 12) {
             Text(place.formatted())
                 .font(Typography.detail)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Palette.secondaryText)
                 .monospacedDigit()
                 .frame(width: 22)
             VStack(alignment: .leading, spacing: 2) {
@@ -973,7 +973,7 @@ struct StatsView: View {
                 Text([line.species, line.room].filter { !$0.isEmpty }
                         .joined(separator: " · "))
                     .font(Typography.figureCaption)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Palette.secondaryText)
                     .lineLimit(1)
                     .contentTransition(.numericText())
             }

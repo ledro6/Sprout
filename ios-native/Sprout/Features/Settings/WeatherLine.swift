@@ -27,13 +27,13 @@ struct WeatherLine: View {
                         .symbolRenderingMode(.multicolor)
                 }
                 .font(Typography.settingNote)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Palette.secondaryText)
             } else if weatherman.busy {
                 HStack(spacing: 8) {
                     ProgressView()
                     Text("Узнаю погоду…")
                         .font(Typography.settingNote)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Palette.secondaryText)
                 }
             }
             if let mark = weatherman.mark, let legal = weatherman.legal {
