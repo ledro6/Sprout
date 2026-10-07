@@ -4593,8 +4593,12 @@ do {
           "подробности: кличка в падеже находится")
     check(card.contains("Status: \"Сухо — полить сегодня\"; \"Полить сегодня\"."),
           "подробности: статус и срок — словами движка, не «завтра»")
-    check(card.contains("Last watered: yesterday; waterings recorded: 2."),
+    check(card.contains("Last watered: yesterday (September 29, 2026).")
+          && card.contains("waterings recorded: 2."),
           "подробности: последний полив и сколько всего")
+    check(card.contains("Last waterings: September 29, 2026; "
+                        + "September 26, 2026."),
+          "подробности: последние поливы датами")
     check(card.contains("Feeding: every 14 days; due now."),
           "подробности: подкормка подошла")
     let quiet = Sage.details("«тапок»", in: rooms, log: log, now: now,
@@ -4632,10 +4636,97 @@ do {
     let told = Sage.instructions(language: "Russian", focus: tapok)
     check(told.contains("Always answer in Russian")
           && told.contains("\"Тапок\" (Хлорофитум)")
-          && told.contains("\"Что с ним?\" button"),
-          "наставление: язык, растение листа и «Что с ним?»")
+          && told.contains("\"Спросить о растении\" button")
+          && told.contains("Never advise watering a plant whose status is wet"),
+          "наставление: язык, растение листа, вход по фото и правило полива")
     check(!Sage.instructions(language: "Russian", focus: nil)
             .contains("opened this chat"), "с главной — без растения")
+}
+
+print("ИИ: один рассказ о растении и проверка ответа:")
+do {
+    // Фикстура приёмки T-10: Баксик, 89 % по датчику, жёлтые листья.
+    var utc = Calendar(identifier: .gregorian)
+    utc.timeZone = TimeZone(identifier: "UTC")!
+    let now = utc.date(from: DateComponents(year: 2026, month: 9, day: 30,
+                                            hour: 12))!
+    var baksik = plantNamed("Баксик", moisture: 0.89, dryingDays: 9)
+    baksik.species = "Монстера"
+    baksik.sensor = Sensor(kind: .flora, id: "s", name: "Flower care")
+    baksik.sensor?.last = Reading(moisture: 40, when: now)
+    baksik.source = .sensor
+    check(baksik.status == .wet && !baksik.estimated,
+          "фикстура: влажно, по датчику")
+    let rooms = [Room(name: "Спальня", plants: [baksik])]
+    let log = (1 ... 7).map {
+        Watering(plant: baksik.id,
+                 when: now.addingTimeInterval(-Double($0) * 3 * 86_400))
+    }
+    let told = Sage.context(baksik, room: "Спальня", log: log, now: now,
+                            calendar: utc)
+    check(told.hasPrefix("\"Баксик\": species Монстера, room Спальня."),
+          "рассказ: вид и комната")
+    check(told.contains("Soil moisture 89%, measured by a soil sensor."),
+          "рассказ: влажность и её источник")
+    check(told.contains("Status: \"Влажно — не поливать\""),
+          "рассказ: статус словами движка")
+    check(told.contains("Last watered: 3 days ago (September 27, 2026)."),
+          "рассказ: дата последнего полива")
+    check(told.components(separatedBy: "Last waterings: ")[1]
+            .components(separatedBy: "; ").count == 5,
+          "рассказ: пять последних поливов, не семь")
+    check(told.contains("Do not advise watering \"Баксик\" now"),
+          "рассказ: при wet — не советовать полив")
+    check(!told.contains("approximate"), "датчик — без оговорки о расчёте")
+    var guessed = baksik
+    guessed.source = .estimate
+    check(Sage.context(guessed, room: nil, log: [], now: now, calendar: utc)
+            .contains("say it is approximate"),
+          "расчётная влажность — с оговоркой")
+
+    // Оба режима знают о растении одно и то же.
+    let findings = [Finding(kind: .yellowing, confidence: 0.6)]
+    let photo = Sage.diagnosis(findings, plant: baksik, room: "Спальня",
+                               log: log, language: "Russian", now: now,
+                               calendar: utc)
+    let chat = Sage.instructions(language: "Russian", focus: baksik,
+                                 rooms: rooms, log: log, now: now,
+                                 calendar: utc)
+    check(photo.contains(told) && chat.contains(told),
+          "«Что с ним?» и «Спросить сад» получают один рассказ")
+    check(photo.contains(Sage.rule) && chat.contains(Sage.rule),
+          "в обоих режимах — правило не советовать полив при wet/ok")
+
+    // Проверка ответа: модель всё же велит полить влажный Баксик.
+    let wet = "Сейчас земля влажная (89%): с поливом подождите."
+    let bad = "Листья желтеют от нехватки воды. Полейте Баксика как следует. "
+        + "Уберите жёлтые листья.\nПоливайте чаще."
+    check(Sage.screen(bad, plant: baksik), "Листья желтеют от нехватки "
+          + "воды. " + wet + " Уберите жёлтые листья.",
+          "совет полить при wet — заменён, повтор убран")
+    let good = "Не поливайте пока Баксика. Уберите жёлтые листья."
+    check(Sage.screen(good, plant: baksik), good,
+          "«не поливайте» — не совет полить")
+    check(Sage.screen("Полейте его.", plant: nil), "Полейте его.",
+          "без растения — как есть")
+    var dry = baksik
+    dry.moisture = 0.1
+    check(Sage.screen("Полейте его.", plant: dry), "Полейте его.",
+          "сухому совет полить оставлен")
+    check(Sage.screen("Water it today.", plant: baksik), wet,
+          "по-английски тоже")
+    check(Sage.subject("Почему желтеют листья у Баксика?", in: rooms,
+                       focus: nil)?.id == baksik.id,
+          "о ком вопрос — кличка в падеже")
+    check(Sage.subject("Кого полить?", in: rooms, focus: baksik.id)?.id
+            == baksik.id, "без клички — растение листа")
+
+    check(Sureness(0.9).word, "Похоже на то", "уверенность: похоже")
+    check(Sureness(0.5).word, "Возможно", "уверенность: возможно")
+    check(Sureness(0.2).word, "Не уверен", "уверенность: не уверен")
+    check(Sureness(0.5).species("Монстера"),
+          "Возможно, это Монстера. Поправьте, если не так.",
+          "вид в «Добавить» — словами, без процента")
 }
 
 print("датчики влажности:")

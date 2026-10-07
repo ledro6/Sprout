@@ -21,7 +21,8 @@ enum Sage {
     /// простыня в наставлении съела бы окно уже на втором вопросе.
     static func instructions(language: String, focus: Plant?) -> String {
         // Кнопка — словами приложения: так модель и назовёт её хозяину.
-        let check = Lang.text("Что с ним?")
+        let check = Lang.text("Спросить о растении")
+        let photo = Lang.text("По фото")
         var text = """
         You are the garden assistant in Sprout, an app for caring for \
         houseplants. Always answer in \(language), briefly: two to five \
@@ -33,9 +34,10 @@ enum Sage {
         widely accepted advice and say when you are not sure. If the \
         question is about a disease, pests, spots or yellow or falling \
         leaves, also advise checking the plant from a photo with the \
-        "\(check)" button on the plant's screen. Do not \
+        "\(check)" button on the plant's screen, mode "\(photo)". Do not \
         greet, apologize or explain what you are doing.
         """
+        text += " " + rule
         if let focus {
             text += """
              The user opened this chat from the screen of the plant \
@@ -44,6 +46,187 @@ enum Sage {
             """
         }
         return text
+    }
+
+    /// Наставление с растением листа: то же, что знает «Что с ним?», —
+    /// `context`. Сад читается в миг первого вопроса.
+    static func instructions(language: String, focus: Plant?, rooms: [Room],
+                             log: [Watering], now: Date = Date(),
+                             calendar: Calendar = .current) -> String {
+        var text = instructions(language: language, focus: focus)
+        if let focus {
+            let room = rooms.first { room in
+                room.plants.contains { $0.id == focus.id }
+            }
+            text += "\n\nAbout this plant:\n" + context(
+                focus, room: room?.name, log: log, now: now, calendar: calendar)
+        }
+        return text
+    }
+
+    // MARK: - Растение для модели
+
+    /// Правило полива — в наставлении обоих входов: модель не советует
+    /// полить влажное, а о расчётной влажности говорит с оговоркой.
+    static let rule = """
+        Never advise watering a plant whose status is wet or ok: say to \
+        wait with watering instead. If the soil moisture is estimated by \
+        the app rather than measured by a sensor, say that it is \
+        approximate and suggest checking the soil with a finger.
+        """
+
+    /// Что модель знает о растении — одно на «Что с ним?» и на «Спросить
+    /// сад»: вид, комната, влажность и откуда она, статус словами движка,
+    /// последний полив, пять последних поливов и правило про полив.
+    static func context(_ plant: Plant, room: String?, log: [Watering],
+                        now: Date = Date(),
+                        calendar: Calendar = .current) -> String {
+        let diary = Diary.of(log, plant: plant.id)
+        let place = room.map { ", room \($0)" } ?? ""
+        let measured = plant.estimated
+            ? "estimated by the app from the watering period, not measured"
+            : "measured by a soil sensor"
+        let last = diary.entries.first.map {
+            ago($0, now: now, calendar: calendar)
+                + " (\(day($0, calendar: calendar)))"
+        } ?? "not recorded"
+        let recent = diary.entries.prefix(5).map { day($0, calendar: calendar) }
+        var lines = [
+            "\(quoted(plant.name)): species \(plant.species)\(place).",
+            "Soil moisture \(percent(plant.moisture)), \(measured).",
+            "Status: \(quoted(plant.status.word)); "
+                + "\(quoted(plant.nextWateringText)).",
+            "Status means: \(meaning(plant.status)).",
+            "Last watered: \(last).",
+            "Last waterings: " + (recent.isEmpty ? "none recorded."
+                : recent.joined(separator: "; ") + "."),
+        ]
+        switch plant.status {
+        case .wet, .ok:
+            lines.append("Do not advise watering \(quoted(plant.name)) now: "
+                         + "the soil is still moist.")
+        case .soon, .urgent, .unknown:
+            break
+        }
+        if plant.estimated {
+            lines.append("The moisture is an estimate: say it is approximate.")
+        }
+        return lines.joined(separator: "\n")
+    }
+
+    /// Просьба к модели в «Что с ним?»: находки по снимку и растение —
+    /// тем же `context`, что у «Спросить сад».
+    static func diagnosis(_ findings: [Finding], plant: Plant, room: String?,
+                          log: [Watering], language: String,
+                          now: Date = Date(),
+                          calendar: Calendar = .current) -> String {
+        let facts = findings.map { "\($0.title): \($0.detail)" }
+            .joined(separator: "\n")
+        return """
+        A houseplant was checked from a photo.
+        \(context(plant, room: room, log: log, now: now, calendar: calendar))
+        Findings from the photo:
+        \(facts)
+        \(rule)
+        Write two or three short, warm sentences in \(language) telling the \
+        owner what to do first. Do not repeat the findings word for word, \
+        do not use lists or headings.
+        """
+    }
+
+    // MARK: - Проверка ответа
+
+    /// Ответ модели — проверкой приложения: земля влажная (`wet`), а модель
+    /// всё же велит полить — первая такая рекомендация заменяется словами
+    /// «Сейчас земля влажная (N %): с поливом подождите», остальные
+    /// убираются. Иначе ответ как есть. Годится и для потока: каждый кусок —
+    /// ответ целиком на эту минуту.
+    static func screen(_ answer: String, plant: Plant?) -> String {
+        guard let plant, plant.status == .wet else { return answer }
+        let wait = Lang.format("Сейчас земля влажная (%@): с поливом подождите.",
+                               MoistureStatus.percent(plant.moisture,
+                                                      estimated: plant.estimated))
+        var replaced = false
+        var out = ""
+        for sentence in sentences(answer) {
+            guard pours(sentence) else {
+                out += sentence
+                continue
+            }
+            if !replaced {
+                replaced = true
+                // Хвост предложения — пробел или перевод строки — остаётся.
+                let tail = String(sentence.reversed()
+                    .prefix { $0.isWhitespace }.reversed())
+                out += wait + (tail.isEmpty ? " " : tail)
+            }
+        }
+        return replaced ? out.trimmingCharacters(in: .whitespacesAndNewlines)
+            : answer
+    }
+
+    /// О ком ответ: растение, названное в вопросе, иначе — растение листа.
+    static func subject(_ question: String, in rooms: [Room],
+                        focus: Plant.ID?) -> Plant? {
+        let asked = " " + fold(question)
+            .components(separatedBy: CharacterSet.letters.inverted)
+            .joined(separator: " ") + " "
+        // Кличка в падеже — «у Баксика» — по началу слова, если кличка не
+        // короче четырёх букв: «Пр» нашлось бы в «просохла».
+        let named = rooms.flatMap(\.plants).filter { plant in
+            let name = fold(plant.name)
+            guard !name.isEmpty else { return false }
+            return asked.contains(" " + name + " ")
+                || (name.count >= 4 && asked.contains(" " + name))
+        }
+        if let mine = named.first(where: { $0.id == focus }) { return mine }
+        if let first = named.first { return first }
+        return rooms.flatMap(\.plants).first { $0.id == focus }
+    }
+
+    /// Совет полить: глагол полива без отрицания и без «подождите».
+    static func pours(_ sentence: String) -> Bool {
+        let text = " " + sentence.lowercased() + " "
+        let verbs = ["полейте", "полить", "поливайте", "поливать", "полей ",
+                     "подлейте", "напоите", "дайте воды", "добавьте воды",
+                     "увеличьте полив", "water it", "water the", "water your",
+                     "give it water", "needs water", "нужен полив"]
+        guard verbs.contains(where: text.contains) else { return false }
+        let calm = [" не ", "подожд", "реже", "сократ", "уменьш", "избега",
+                    "пересуш", "просохн", "don't", "do not", "wait", "avoid",
+                    "less often"]
+        return !calm.contains(where: text.contains)
+    }
+
+    /// Предложения с хвостом пробелов — склеенные, дают текст как был.
+    static func sentences(_ text: String) -> [String] {
+        var out: [String] = []
+        var current = ""
+        var ended = false
+        for character in text {
+            if ended, !character.isWhitespace {
+                out.append(current)
+                current = ""
+                ended = false
+            }
+            current.append(character)
+            if character == "\n" || ".!?…".contains(character) {
+                ended = true
+            }
+        }
+        if !current.isEmpty { out.append(current) }
+        return out
+    }
+
+    /// Статус словами для модели: что из него следует.
+    private static func meaning(_ status: MoistureStatus) -> String {
+        switch status {
+        case .wet: "wet soil, do not water"
+        case .ok: "moist enough, no watering needed now"
+        case .soon: "drying out, watering soon"
+        case .urgent: "dry, water today"
+        case .unknown: "unknown, check the soil with a finger"
+        }
     }
 
     /// Весь сад коротко: кого полить сегодня и завтра, чей уход подошёл и по
@@ -172,20 +355,11 @@ enum Sage {
                              now: Date, calendar: Calendar) -> String {
         let diary = Diary.of(log, plant: plant.id)
         let added = calendar.date(from: plant.addedOn) ?? now
-        let place = room.map { ", room \($0)" } ?? ""
-        let measured = plant.sensor?.last != nil ? "from a soil sensor"
-            : "estimated by the app from the watering period"
-        let last = diary.entries.first.map {
-            ago($0, now: now, calendar: calendar)
-        } ?? "not recorded"
         var lines = [
-            "\(quoted(plant.name)): species \(plant.species)\(place), "
-                + "in the garden since \(day(added, calendar: calendar)).",
-            "Soil moisture \(percent(plant.moisture)), \(measured).",
-            "Status: \(quoted(plant.status.word)); "
-                + "\(quoted(plant.nextWateringText)).",
-            "Watering: every \(number(plant.dryingDays)) days.",
-            "Last watered: \(last); waterings recorded: \(diary.total).",
+            context(plant, room: room, log: log, now: now, calendar: calendar),
+            "In the garden since \(day(added, calendar: calendar)).",
+            "Watering: every \(number(plant.dryingDays)) days; "
+                + "waterings recorded: \(diary.total).",
         ]
         let tending = plant.tending
         if let every = tending.feedEvery {

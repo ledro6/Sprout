@@ -31,6 +31,10 @@ struct PlantView: View {
     @State private var portraying = false
 
     @State private var asking = false
+
+    /// «Спросить о растении» — выбор: по фото («Что с ним?») или вопросом
+    /// («Спросить сад» о нём).
+    @State private var choosing = false
     /// «Подключить датчик» — лист поиска датчика.
     @State private var linking = false
 
@@ -154,6 +158,16 @@ struct PlantView: View {
         .sheet(isPresented: $modelling) {
             ModelSheet(plantID: plantID).environment(garden)
         }
+        // Один вход на два режима. «Вопросом» есть и без Apple
+        // Intelligence: лист объяснит, чего не хватает, а не пропадёт.
+        .confirmationDialog("Спросить о растении", isPresented: $choosing,
+                            titleVisibility: .visible) {
+            Button("По фото") { diagnosing = true }
+            Button("Вопросом") { asking = true }
+            Button("Отмена", role: .cancel) {}
+        } message: {
+            Text("Разбирается на телефоне, ничего не отправляется.")
+        }
         .sheet(isPresented: $diagnosing) {
             DiagnosisSheet(plantID: plantID).environment(garden)
         }
@@ -228,11 +242,9 @@ struct PlantView: View {
                     }
                 }
             }
-            if Muse.ready {
-                Button { asking = true } label: {
-                    Label("Спросить о растении",
-                          systemImage: "bubble.left.and.text.bubble.right")
-                }
+            Button { choosing = true } label: {
+                Label("Спросить о растении",
+                      systemImage: "bubble.left.and.text.bubble.right")
             }
             // Черенок — кодом в переписку: друг посадит его со всем уходом.
             if let plant {
@@ -412,7 +424,8 @@ struct PlantView: View {
                 }
                 tool("Модель", icon: "cube.transparent") { modelling = true }
             }
-            tool("Что с ним?", icon: "stethoscope") { diagnosing = true }
+            tool("Спросить о растении",
+                 icon: "bubble.left.and.text.bubble.right") { choosing = true }
             tool("Настройки", icon: "slider.horizontal.3") { tuning = true }
         }
         .frame(maxWidth: .infinity, alignment: .leading)

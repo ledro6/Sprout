@@ -236,8 +236,8 @@ struct AddView: View {
         .accessibilityHint(shot == nil ? "" : "Нажмите, чтобы выбрать кадр")
     }
 
-    /// С долей уверенности: классификатор ошибается, и выдавать догадку за
-    /// ответ — врать.
+    /// С уверенностью словами: классификатор ошибается, и выдавать догадку
+    /// за ответ — врать.
     private var sighting: String? {
         guard shot != nil, !looking else { return nil }
         guard let guess else {
@@ -245,10 +245,7 @@ struct AddView: View {
                 Растения на снимке телефон не узнал — впишите вид сами.
                 """)
         }
-        let sure = Int((guess.confidence * 100).rounded())
-        return Lang.format("""
-            Телефон узнал: %1$@ — уверен на %2$lld%%. Поправьте, если не так.
-            """, guess.species, sure)
+        return Sureness(guess.confidence).species(guess.species)
     }
 
     // MARK: - Растение

@@ -3,7 +3,8 @@ import SwiftUI
 /// «Спросить сад»: вопрос обычными словами — ответ языковой модели Apple
 /// прямо на телефоне, без сети, потоком. Открывается с экрана растения —
 /// тогда разговор о нём, — из «ещё» на главной и из поиска, который ничего
-/// не нашёл. Без модели на языке приложения (`Muse.ready`) входов нет.
+/// не нашёл. Без модели на языке приложения (`Muse.ready`) вход остаётся,
+/// а лист объясняет, чего не хватает.
 struct AskView: View {
     @Environment(Garden.self) private var garden
     @Environment(\.dismiss) private var dismiss
@@ -32,7 +33,9 @@ struct AskView: View {
                     if let plant {
                         about(plant)
                     }
-                    if talk.lines.isEmpty {
+                    if !Muse.ready {
+                        unavailable
+                    } else if talk.lines.isEmpty {
                         intro
                             .transition(.blurReplace)
                     }
@@ -61,7 +64,8 @@ struct AskView: View {
             .scrollDismissesKeyboard(.interactively)
             .background { SproutBackground() }
             .safeAreaInset(edge: .bottom) { composer }
-            .navigationTitle("Спросить сад")
+            .navigationTitle(plant == nil ? "Спросить сад"
+                             : "Спросить о растении")
             .navigationBarTitleDisplayMode(.inline)
             .scrollEdgeEffectStyle(.soft, for: .top)
             .sproutSettledEdge()
@@ -107,7 +111,7 @@ struct AskView: View {
     /// Пока не спросили: что это и вопросы-подсказки кнопками.
     private var intro: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text("Спросите о саде своими словами — ответит языковая модель прямо на телефоне, без интернета.")
+            Text("Спросите своими словами — ответит языковая модель. Разбирается на телефоне, ничего не отправляется.")
                 .font(Typography.settingNote)
                 .foregroundStyle(Palette.secondaryText)
                 .fixedSize(horizontal: false, vertical: true)
@@ -123,7 +127,7 @@ struct AskView: View {
                 .buttonStyle(.glass)
                 .buttonBorderShape(.roundedRectangle(radius: Metrics.toolRadius))
             }
-            Text("Модель может ошибаться. Если растение болеет, покажите его на снимке: «Что с ним?» на экране растения.")
+            Text("Модель может ошибаться. Если растение болеет, покажите его на снимке: «Спросить о растении» → «По фото» на экране растения.")
                 .font(Typography.settingNote)
                 .foregroundStyle(Palette.secondaryText)
                 .fixedSize(horizontal: false, vertical: true)
@@ -160,12 +164,36 @@ struct AskView: View {
         }
     }
 
+    /// Нет модели на этом телефоне — что нужно и что можно без неё.
+    private var unavailable: some View {
+        Label {
+            Text("Отвечать на вопросы умеет Apple Intelligence, а на этом телефоне её нет или она не говорит на языке приложения. Нужен iPhone 15 Pro или новее, Apple Intelligence включается в Настройках → «Apple Intelligence и Siri». Проверить растение по фото можно и без неё: «Спросить о растении» → «По фото».")
+                .fixedSize(horizontal: false, vertical: true)
+        } icon: {
+            Image(systemName: "sparkles")
+                .foregroundStyle(Palette.secondaryText)
+        }
+        .font(Typography.settingNote)
+        .foregroundStyle(Palette.ink)
+        .padding(Metrics.groupPadding)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .sproutPlate(in: RoundedRectangle(cornerRadius: Metrics.cardRadius,
+                                          style: .continuous))
+    }
+
+    /// Ждём первых слов — и можно передумать.
     private var thinking: some View {
         HStack(spacing: 8) {
             ProgressView()
             Text("Думаю…")
                 .font(Typography.settingNote)
                 .foregroundStyle(Palette.secondaryText)
+            Spacer(minLength: 8)
+            Button("Остановить") {
+                withAnimation(Motion.enter) { talk.stop() }
+            }
+            .buttonStyle(.glass)
+            .font(Typography.settingNote)
         }
         .padding(.horizontal, 6)
     }
@@ -186,13 +214,24 @@ struct AskView: View {
                 .buttonStyle(.glass)
                 .font(Typography.settingNote)
             }
+            if trouble == .failed {
+                Button {
+                    withAnimation(Motion.enter) { talk.retry() }
+                } label: {
+                    Label("Попробовать ещё раз",
+                          systemImage: "arrow.clockwise")
+                }
+                .buttonStyle(.glass)
+                .font(Typography.settingNote)
+            }
         }
         .padding(.horizontal, 6)
     }
 
     private var composer: some View {
         HStack(spacing: 10) {
-            TextField("Спросите о саде…", text: $draft)
+            TextField(plant == nil ? "Спросите о саде…"
+                      : "Спросите о растении…", text: $draft)
                 .font(Typography.settingRow)
                 .submitLabel(.send)
                 .onSubmit(send)
@@ -207,7 +246,7 @@ struct AskView: View {
             .buttonStyle(.glassProminent)
             .tint(Palette.accentFill)
             .buttonBorderShape(.circle)
-            .disabled(talk.busy || Sage.question(draft) == nil)
+            .disabled(!Muse.ready || talk.busy || Sage.question(draft) == nil)
             .accessibilityLabel("Спросить")
         }
         .padding(.horizontal, Metrics.contentMargin)
@@ -215,7 +254,7 @@ struct AskView: View {
     }
 
     private func send() {
-        guard !talk.busy, let question = Sage.question(draft) else { return }
+        guard Muse.ready, !talk.busy, let question = Sage.question(draft) else { return }
         draft = ""
         ask(question)
     }

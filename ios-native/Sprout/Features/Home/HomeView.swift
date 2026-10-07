@@ -590,11 +590,10 @@ struct HomeView: View {
                 }
             }
             round
-            if Muse.ready {
-                Button { asking = true } label: {
-                    Label("Спросить сад",
-                          systemImage: "bubble.left.and.text.bubble.right")
-                }
+            // И без Apple Intelligence: лист объяснит, чего не хватает.
+            Button { asking = true } label: {
+                Label("Спросить сад",
+                      systemImage: "bubble.left.and.text.bubble.right")
             }
             // Метка на горшке — только когда NFC в сборке включён, см.
             // `Tags.enabled`.

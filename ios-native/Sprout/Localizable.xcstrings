@@ -34352,6 +34352,12 @@
         }
       }
     },
+    "Возможно": {
+      "extractionState": "manual"
+    },
+    "Возможно, это %@. Поправьте, если не так.": {
+      "extractionState": "manual"
+    },
     "Волна": {
       "extractionState": "manual",
       "localizations": {
@@ -34638,6 +34644,9 @@
           }
         }
       }
+    },
+    "Вопросом": {
+      "extractionState": "manual"
     },
     "Ворота полива": {
       "extractionState": "manual",
@@ -112883,7 +112892,7 @@
         }
       }
     },
-    "Модель может ошибаться. Если растение болеет, покажите его на снимке: «Что с ним?» на экране растения.": {
+    "Модель может ошибаться. Если растение болеет, покажите его на снимке: «Спросить о растении» → «По фото» на экране растения.": {
       "extractionState": "manual"
     },
     "Модель не собралась. Попробуйте снять ещё раз, при ровном свете.": {
@@ -113172,6 +113181,9 @@
           }
         }
       }
+    },
+    "Модель ничего не ответила — спросите иначе.": {
+      "extractionState": "manual"
     },
     "Модель по снимку: %@": {
       "extractionState": "manual",
@@ -128432,9 +128444,6 @@
         }
       }
     },
-    "Не вышло ответить — попробуйте ещё раз.": {
-      "extractionState": "manual"
-    },
     "Не вышло связаться с iCloud. Попробую ещё раз позже.": {
       "extractionState": "manual"
     },
@@ -129015,13 +129024,25 @@
     "Не получилось записать метку.": {
       "extractionState": "manual"
     },
+    "Не получилось открыть снимок. Попробуйте ещё раз — снимите или выберите другой.": {
+      "extractionState": "manual"
+    },
     "Не получилось связаться с меткой. Попробуйте ещё раз.": {
+      "extractionState": "manual"
+    },
+    "Не получилось.": {
       "extractionState": "manual"
     },
     "Не помню": {
       "extractionState": "manual"
     },
     "Не сейчас": {
+      "extractionState": "manual"
+    },
+    "Не уверен": {
+      "extractionState": "manual"
+    },
+    "Не уверен — может быть, %@. Лучше впишите вид сами.": {
       "extractionState": "manual"
     },
     "Не хватает места на телефоне: кадрам нужно несколько гигабайт.": {
@@ -142019,6 +142040,9 @@
       }
     },
     "От друга: %@": {
+      "extractionState": "manual"
+    },
+    "Отвечать на вопросы умеет Apple Intelligence, а на этом телефоне её нет или она не говорит на языке приложения. Нужен iPhone 15 Pro или новее, Apple Intelligence включается в Настройках → «Apple Intelligence и Siri». Проверить растение по фото можно и без неё: «Спросить о растении» → «По фото».": {
       "extractionState": "manual"
     },
     "Отключить датчик": {
@@ -159328,6 +159352,9 @@
           }
         }
       }
+    },
+    "По фото": {
+      "extractionState": "manual"
     },
     "По фото растения": {
       "extractionState": "manual",
@@ -191149,6 +191176,9 @@
         }
       }
     },
+    "Попробовать ещё раз": {
+      "extractionState": "manual"
+    },
     "Пора опрыскать": {
       "extractionState": "manual",
       "localizations": {
@@ -196898,6 +196928,9 @@
         }
       }
     },
+    "Похоже на %@. Поправьте, если не так.": {
+      "extractionState": "manual"
+    },
     "Похоже на недолив": {
       "extractionState": "manual",
       "localizations": {
@@ -197471,6 +197504,9 @@
           }
         }
       }
+    },
+    "Похоже на то": {
+      "extractionState": "manual"
     },
     "Похоже, голодает": {
       "extractionState": "manual",
@@ -210189,6 +210225,12 @@
           }
         }
       }
+    },
+    "Разбирается на телефоне, ничего не отправляется.": {
+      "extractionState": "manual"
+    },
+    "Разбираю фото…": {
+      "extractionState": "manual"
     },
     "Разговор получился длинным — начните новый.": {
       "extractionState": "manual"
@@ -229180,6 +229222,9 @@
         }
       }
     },
+    "Сейчас земля влажная (%@): с поливом подождите.": {
+      "extractionState": "manual"
+    },
     "Сейчас сухо": {
       "extractionState": "manual",
       "localizations": {
@@ -236730,293 +236775,6 @@
         }
       }
     },
-    "Смотрю на листья…": {
-      "extractionState": "manual",
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "أنظر إلى الأوراق…"
-          }
-        },
-        "bg": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Гледам листата…"
-          }
-        },
-        "bn": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "পাতাগুলো দেখছি…"
-          }
-        },
-        "ca": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Mirant les fulles…"
-          }
-        },
-        "cs": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Prohlížím listy…"
-          }
-        },
-        "da": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ser på bladene …"
-          }
-        },
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ich sehe mir die Blätter an …"
-          }
-        },
-        "el": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Κοιτάζω τα φύλλα…"
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Looking at the leaves…"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Mirando las hojas…"
-          }
-        },
-        "fi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Katson lehtiä…"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "J’examine les feuilles…"
-          }
-        },
-        "gu": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "પાંદડાં જોઈ રહ્યા છીએ…"
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "מסתכל על העלים…"
-          }
-        },
-        "hi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "पत्ते देख रहे हैं…"
-          }
-        },
-        "hr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Gledam listove…"
-          }
-        },
-        "hu": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nézem a leveleket…"
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Melihat daun…"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Guardo le foglie…"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "葉を見ています…"
-          }
-        },
-        "kk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Жапырақтарға қарап жатырмын…"
-          }
-        },
-        "kn": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ಎಲೆಗಳನ್ನು ನೋಡುತ್ತಿದೆ…"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "잎을 보는 중…"
-          }
-        },
-        "lt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Žiūriu į lapus…"
-          }
-        },
-        "ml": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ഇലകൾ നോക്കുന്നു…"
-          }
-        },
-        "mr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "पाने पाहत आहे…"
-          }
-        },
-        "ms": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Melihat daun…"
-          }
-        },
-        "nb": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ser på bladene …"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ik bekijk de bladeren…"
-          }
-        },
-        "or": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ପତ୍ର ଦେଖୁଛି…"
-          }
-        },
-        "pa": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ਪੱਤੇ ਦੇਖ ਰਹੇ ਹਾਂ…"
-          }
-        },
-        "pl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Oglądam liście…"
-          }
-        },
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Olhando as folhas…"
-          }
-        },
-        "pt-PT": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "A olhar para as folhas…"
-          }
-        },
-        "ro": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Mă uit la frunze…"
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Prezerám listy…"
-          }
-        },
-        "sl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Gledam liste …"
-          }
-        },
-        "sv": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tittar på bladen …"
-          }
-        },
-        "ta": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "இலைகளைப் பார்க்கிறது…"
-          }
-        },
-        "te": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ఆకులను చూస్తోంది…"
-          }
-        },
-        "th": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "กำลังดูใบ…"
-          }
-        },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Yapraklara bakıyorum…"
-          }
-        },
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Дивлюся на листя…"
-          }
-        },
-        "ur": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "پتے دیکھ رہے ہیں…"
-          }
-        },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Đang xem lá…"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "正在看叶子…"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "正在看葉子⋯"
-          }
-        }
-      }
-    },
     "Смотрю на снимок…": {
       "extractionState": "manual",
       "localizations": {
@@ -238452,7 +238210,7 @@
         }
       }
     },
-    "Снимите растение снова в «Что с ним?» и сравните с тем, что было.": {
+    "Снимите растение снова: «Спросить о растении» → «По фото» — и сравните с тем, что было.": {
       "extractionState": "manual"
     },
     "Снимите растение целиком, при дневном свете — телефон посмотрит на листья.": {
@@ -242766,6 +242524,9 @@
         }
       }
     },
+    "Совет словами пишет Apple Intelligence — на этом телефоне её нет. Находки по снимку работают и без неё.": {
+      "extractionState": "manual"
+    },
     "Соединение: %1$@ попросят воды вместе — %2$@.": {
       "extractionState": "manual",
       "localizations": {
@@ -245364,10 +245125,13 @@
         }
       }
     },
-    "Спросите о саде своими словами — ответит языковая модель прямо на телефоне, без интернета.": {
+    "Спросите о растении…": {
       "extractionState": "manual"
     },
     "Спросите о саде…": {
+      "extractionState": "manual"
+    },
+    "Спросите своими словами — ответит языковая модель. Разбирается на телефоне, ничего не отправляется.": {
       "extractionState": "manual"
     },
     "Спросить": {
@@ -252568,293 +252332,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "手機會辨識照片中的植物並構想它的模型：葉、花和花盆的顏色，以及茂密程度和高度。一切都在手機上離線完成，只需幾秒。"
-          }
-        }
-      }
-    },
-    "Телефон узнал: %1$@ — уверен на %2$lld%%. Поправьте, если не так.": {
-      "extractionState": "manual",
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "تم التعرف: %1$@ — بثقة %2$lld٪. صحّح إن لم يكن صحيحًا."
-          }
-        },
-        "bg": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Разпознато: %1$@ — сигурност %2$lld%%. Поправете, ако не е така."
-          }
-        },
-        "bn": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "চেনা গেছে: %1$@ — %2$lld%% নিশ্চিত। ভুল হলে ঠিক করুন।"
-          }
-        },
-        "ca": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Reconeguda: %1$@, amb un %2$lld %% de seguretat. Corregeix-ho si no és així."
-          }
-        },
-        "cs": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Rozpoznáno: %1$@ — jistota %2$lld %%. Pokud to nesedí, opravte to."
-          }
-        },
-        "da": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Genkendt: %1$@ – %2$lld %% sikker. Ret det, hvis det er forkert."
-          }
-        },
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Erkannt: %1$@ — zu %2$lld %% sicher. Korrigiere es, falls es nicht stimmt."
-          }
-        },
-        "el": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Αναγνωρίστηκε: %1$@ — βεβαιότητα %2$lld%%. Διορθώστε αν δεν είναι σωστό."
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Recognized: %1$@ — %2$lld%% sure. Correct it if that’s wrong."
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Reconocida: %1$@, con un %2$lld %% de seguridad. Corrígelo si no es así."
-          }
-        },
-        "fi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tunnistettu: %1$@ – %2$lld %% varma. Korjaa, jos se on väärin."
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Reconnu : %1$@ — sûr à %2$lld %%. Corrigez si ce n’est pas ça."
-          }
-        },
-        "gu": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ઓળખાયું: %1$@ — %2$lld%% ખાતરી. ખોટું હોય તો સુધારો."
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "זוהה: %1$@ — ודאות של %2$lld%%. אפשר לתקן אם זה לא נכון."
-          }
-        },
-        "hi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "पहचाना गया: %1$@ — %2$lld%% भरोसा। गलत हो तो ठीक करें।"
-          }
-        },
-        "hr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Prepoznato: %1$@ — sigurnost %2$lld %%. Ispravite ako nije točno."
-          }
-        },
-        "hu": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Felismerve: %1$@ — %2$lld%%-os biztonsággal. Javítsd, ha nem ez."
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Dikenali: %1$@ — yakin %2$lld%%. Perbaiki kalau salah."
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Riconosciuta: %1$@, sicuro al %2$lld%%. Correggi se non è giusto."
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "認識結果：%1$@ — 確信度%2$lld%%。違っていたら修正してください。"
-          }
-        },
-        "kk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Танылды: %1$@ — сенімділік %2$lld%%. Қате болса, түзетіңіз."
-          }
-        },
-        "kn": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ಗುರುತಿಸಲಾಗಿದೆ: %1$@ — %2$lld%% ಖಚಿತ. ತಪ್ಪಾಗಿದ್ದರೆ ಸರಿಪಡಿಸಿ."
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "인식됨: %1$@ — 확신도 %2$lld%%. 틀렸다면 고쳐 주세요."
-          }
-        },
-        "lt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Atpažinta: %1$@ – tikimybė %2$lld %%. Pataisykite, jei ne tas."
-          }
-        },
-        "ml": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "തിരിച്ചറിഞ്ഞു: %1$@ — %2$lld%% ഉറപ്പ്. തെറ്റാണെങ്കിൽ തിരുത്തുക."
-          }
-        },
-        "mr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ओळखले: %1$@ — %2$lld%% खात्री. चुकीचे असल्यास दुरुस्त करा."
-          }
-        },
-        "ms": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Dikenal pasti: %1$@ — yakin %2$lld%%. Betulkan jika salah."
-          }
-        },
-        "nb": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Gjenkjent: %1$@ – %2$lld %% sikker. Rett det hvis det er feil."
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Herkend: %1$@ — %2$lld%% zeker. Pas het aan als het niet klopt."
-          }
-        },
-        "or": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ଚିହ୍ନାଗଲା: %1$@ — %2$lld%% ନିଶ୍ଚିତ। ଭୁଲ୍ ହେଲେ ସୁଧାରନ୍ତୁ।"
-          }
-        },
-        "pa": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ਪਛਾਣਿਆ: %1$@ — %2$lld%% ਯਕੀਨ। ਗਲਤ ਹੋਵੇ ਤਾਂ ਠੀਕ ਕਰੋ।"
-          }
-        },
-        "pl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Rozpoznano: %1$@ — pewność %2$lld%%. Popraw, jeśli to nie to."
-          }
-        },
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Reconhecida: %1$@ — %2$lld%% de certeza. Corrija se não for."
-          }
-        },
-        "pt-PT": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Reconhecida: %1$@ — %2$lld%% de certeza. Corrija se não for."
-          }
-        },
-        "ro": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Recunoscută: %1$@ — sigur în proporție de %2$lld %%. Corectează dacă nu e așa."
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Rozpoznané: %1$@ — istota %2$lld %%. Ak to nesedí, opravte to."
-          }
-        },
-        "sl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Prepoznano: %1$@ — %2$lld %% gotovosti. Popravite, če ni prav."
-          }
-        },
-        "sv": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Igenkänd: %1$@ – %2$lld %% säker. Rätta om det inte stämmer."
-          }
-        },
-        "ta": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "அடையாளம்: %1$@ — %2$lld%% உறுதி. தவறெனில் திருத்தவும்."
-          }
-        },
-        "te": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "గుర్తించబడింది: %1$@ — %2$lld%% నమ్మకం. తప్పైతే సరిచేయండి."
-          }
-        },
-        "th": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "จำได้ว่า: %1$@ — มั่นใจ %2$lld%% แก้ไขได้หากไม่ใช่"
-          }
-        },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tanındı: %1$@ — %%%2$lld emin. Yanlışsa düzeltin."
-          }
-        },
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Телефон упізнав: %1$@ — упевнений на %2$lld%%. Виправте, якщо не так."
-          }
-        },
-        "ur": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "پہچانا گیا: %1$@ — %2$lld%% یقین۔ غلط ہو تو درست کریں۔"
-          }
-        },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nhận ra: %1$@ — chắc chắn %2$lld%%. Hãy sửa nếu sai."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "识别结果：%1$@——把握%2$lld%%。如不对请修改。"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "辨識結果：%1$@——把握%2$lld%%。如不正確請修改。"
           }
         }
       }
@@ -262354,292 +261831,8 @@
         }
       }
     },
-    "Уверенность %@": {
-      "extractionState": "manual",
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "الثقة %@"
-          }
-        },
-        "bg": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Увереност %@"
-          }
-        },
-        "bn": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "নিশ্চয়তা %@"
-          }
-        },
-        "ca": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Confiança %@"
-          }
-        },
-        "cs": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Jistota %@"
-          }
-        },
-        "da": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sikkerhed %@"
-          }
-        },
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sicherheit %@"
-          }
-        },
-        "el": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Βεβαιότητα %@"
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Confidence %@"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Confianza %@"
-          }
-        },
-        "fi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Varmuus %@"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Confiance %@"
-          }
-        },
-        "gu": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ખાતરી %@"
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ודאות %@"
-          }
-        },
-        "hi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "भरोसा %@"
-          }
-        },
-        "hr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Pouzdanost %@"
-          }
-        },
-        "hu": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Biztosság: %@"
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Keyakinan %@"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Affidabilità %@"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "確信度 %@"
-          }
-        },
-        "kk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Сенімділік %@"
-          }
-        },
-        "kn": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ಖಚಿತತೆ %@"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "확신도 %@"
-          }
-        },
-        "lt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tikimybė %@"
-          }
-        },
-        "ml": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ഉറപ്പ് %@"
-          }
-        },
-        "mr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "खात्री %@"
-          }
-        },
-        "ms": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Keyakinan %@"
-          }
-        },
-        "nb": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sikkerhet %@"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Zekerheid %@"
-          }
-        },
-        "or": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ନିଶ୍ଚିତତା %@"
-          }
-        },
-        "pa": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ਭਰੋਸਾ %@"
-          }
-        },
-        "pl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Pewność %@"
-          }
-        },
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Confiança %@"
-          }
-        },
-        "pt-PT": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Confiança %@"
-          }
-        },
-        "ro": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Încredere %@"
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Istota %@"
-          }
-        },
-        "sl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Zanesljivost %@"
-          }
-        },
-        "sv": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Säkerhet %@"
-          }
-        },
-        "ta": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "உறுதி %@"
-          }
-        },
-        "te": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "నిశ్చయత %@"
-          }
-        },
-        "th": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ความมั่นใจ %@"
-          }
-        },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Güven %@"
-          }
-        },
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Впевненість %@"
-          }
-        },
-        "ur": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "یقین %@"
-          }
-        },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Độ tin cậy %@"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "置信度 %@"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "信心水準 %@"
-          }
-        }
-      }
+    "Уверенность: %@": {
+      "extractionState": "manual"
     },
     "Удаление": {
       "extractionState": "manual",
@@ -280166,293 +279359,6 @@
         }
       }
     },
-    "Что с ним?": {
-      "extractionState": "manual",
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ما خطبها؟"
-          }
-        },
-        "bg": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Какво му е?"
-          }
-        },
-        "bn": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "কী হয়েছে?"
-          }
-        },
-        "ca": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Què li passa?"
-          }
-        },
-        "cs": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Co jí je?"
-          }
-        },
-        "da": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Hvad fejler den?"
-          }
-        },
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Was fehlt ihr?"
-          }
-        },
-        "el": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Τι έχει;"
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "What’s Wrong?"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "¿Qué le pasa?"
-          }
-        },
-        "fi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Mikä sitä vaivaa?"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Qu’a-t-elle ?"
-          }
-        },
-        "gu": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "શું થયું છે?"
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "מה לא בסדר?"
-          }
-        },
-        "hi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "क्या हुआ है?"
-          }
-        },
-        "hr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Što nije u redu?"
-          }
-        },
-        "hu": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Mi baja?"
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ada apa dengannya?"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Cos’ha?"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "どうしたの？"
-          }
-        },
-        "kk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Оған не болды?"
-          }
-        },
-        "kn": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ಏನಾಗಿದೆ?"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "무슨 일이에요?"
-          }
-        },
-        "lt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Kas negerai?"
-          }
-        },
-        "ml": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "എന്തുപറ്റി?"
-          }
-        },
-        "mr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "काय झाले?"
-          }
-        },
-        "ms": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Kenapa dengannya?"
-          }
-        },
-        "nb": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Hva feiler det den?"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Wat heeft hij?"
-          }
-        },
-        "or": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "କଣ ହୋଇଛି?"
-          }
-        },
-        "pa": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ਕੀ ਹੋਇਆ ਹੈ?"
-          }
-        },
-        "pl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Co jej jest?"
-          }
-        },
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "O que ela tem?"
-          }
-        },
-        "pt-PT": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "O que tem ela?"
-          }
-        },
-        "ro": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ce are?"
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Čo jej je?"
-          }
-        },
-        "sl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Kaj je narobe?"
-          }
-        },
-        "sv": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Vad är det med den?"
-          }
-        },
-        "ta": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "என்ன ஆனது?"
-          }
-        },
-        "te": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ఏమైంది?"
-          }
-        },
-        "th": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "เป็นอะไรไป"
-          }
-        },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Neyi var?"
-          }
-        },
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Що з ним?"
-          }
-        },
-        "ur": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "کیا ہوا ہے؟"
-          }
-        },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nó bị sao vậy?"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "它怎么了？"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "它怎麼了？"
-          }
-        }
-      }
-    },
     "Что с растением?": {
       "extractionState": "manual",
       "localizations": {
@@ -282770,292 +281676,8 @@
         }
       }
     },
-    "Это подсказка по снимку, а не приговор: тень, блик или белые цветки телефон может принять за беду.": {
-      "extractionState": "manual",
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "هذا تلميح من الصورة وليس حكمًا: قد يظن الهاتف أن الظل أو الانعكاس أو الأزهار البيضاء مشكلة."
-          }
-        },
-        "bg": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Това е подсказка по снимката, а не присъда: сянка, отблясък или бели цветове телефонът може да сметне за беда."
-          }
-        },
-        "bn": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "এটি ছবি দেখে একটি ইঙ্গিত, রায় নয়: ছায়া, ঝলক বা সাদা ফুলকে ফোন সমস্যা ভেবে নিতে পারে।"
-          }
-        },
-        "ca": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "És una pista a partir de la foto, no un veredicte: el telèfon pot confondre una ombra, un reflex o unes flors blanques amb un problema."
-          }
-        },
-        "cs": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Je to nápověda podle fotky, ne verdikt: stín, odlesk nebo bílé květy si telefon může splést s problémem."
-          }
-        },
-        "da": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Det her er et hint ud fra billedet, ikke en dom: telefonen kan tage en skygge, et genskin eller hvide blomster for et problem."
-          }
-        },
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Das ist ein Hinweis anhand des Fotos, kein Urteil: Schatten, Spiegelungen oder weiße Blüten kann das Telefon für ein Problem halten."
-          }
-        },
-        "el": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Είναι μια ένδειξη από τη φωτογραφία, όχι ετυμηγορία: το τηλέφωνο μπορεί να περάσει μια σκιά, μια αντανάκλαση ή λευκά άνθη για πρόβλημα."
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "This is a hint from a photo, not a verdict: your phone may mistake a shadow, glare or white flowers for trouble."
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Es una pista a partir de la foto, no un veredicto: el teléfono puede confundir una sombra, un reflejo o flores blancas con un problema."
-          }
-        },
-        "fi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tämä on vihje kuvan perusteella, ei tuomio: puhelin voi erehtyä pitämään varjoa, heijastusta tai valkoisia kukkia ongelmana."
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "C’est un indice tiré de la photo, pas un verdict : le téléphone peut prendre une ombre, un reflet ou des fleurs blanches pour un problème."
-          }
-        },
-        "gu": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "આ ફોટા પરથી સંકેત છે, ચુકાદો નહીં: ફોન પડછાયા, ચમક કે સફેદ ફૂલોને સમસ્યા સમજી શકે છે."
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "זה רמז לפי התמונה, לא פסק דין: הטלפון עלול לחשוב שצל, השתקפות או פרחים לבנים הם בעיה."
-          }
-        },
-        "hi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "यह फ़ोटो पर आधारित संकेत है, फ़ैसला नहीं: फ़ोन परछाईं, चमक या सफ़ेद फूलों को समस्या समझ सकता है।"
-          }
-        },
-        "hr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ovo je savjet na temelju fotografije, a ne presuda: sjenu, odsjaj ili bijele cvjetove telefon može zamijeniti za problem."
-          }
-        },
-        "hu": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ez a fotó alapján adott tipp, nem ítélet: egy árnyékot, csillogást vagy fehér virágokat a telefon bajnak nézhet."
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ini petunjuk dari foto, bukan vonis: bayangan, pantulan, atau bunga putih bisa dikira masalah oleh ponsel."
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "È un indizio ricavato dalla foto, non un verdetto: il telefono può scambiare un’ombra, un riflesso o dei fiori bianchi per un problema."
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "これは写真からのヒントで、診断ではありません：影や反射、白い花を問題と見間違えることがあります。"
-          }
-        },
-        "kk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Бұл — суретке қарап берілген кеңес, үкім емес: телефон көлеңкені, шағылысты немесе ақ гүлдерді ақау деп қабылдауы мүмкін."
-          }
-        },
-        "kn": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ಇದು ಫೋಟೋ ಆಧಾರಿತ ಸುಳಿವು, ತೀರ್ಪಲ್ಲ: ಫೋನ್ ನೆರಳು, ಹೊಳಪು ಅಥವಾ ಬಿಳಿ ಹೂವುಗಳನ್ನು ಸಮಸ್ಯೆ ಎಂದು ತಿಳಿಯಬಹುದು."
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "사진으로 본 힌트일 뿐 진단이 아니에요: 그림자, 빛 반사, 흰 꽃을 문제로 착각할 수 있어요."
-          }
-        },
-        "lt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tai užuomina pagal nuotrauką, o ne nuosprendis: šešėlį, atspindį ar baltus žiedus telefonas gali palaikyti bėda."
-          }
-        },
-        "ml": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ഇത് ഫോട്ടോയെ അടിസ്ഥാനമാക്കിയുള്ള സൂചനയാണ്, വിധിയല്ല: നിഴലോ തിളക്കമോ വെളുത്ത പൂക്കളോ ഫോൺ പ്രശ്നമായി തെറ്റിദ്ധരിച്ചേക്കാം."
-          }
-        },
-        "mr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "हा फोटोवरून दिलेला संकेत आहे, निकाल नाही: फोन सावली, चकाकी किंवा पांढरी फुले यांना समस्या समजू शकतो."
-          }
-        },
-        "ms": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ini petunjuk daripada foto, bukan keputusan muktamad: bayang, pantulan atau bunga putih mungkin disangka masalah oleh telefon."
-          }
-        },
-        "nb": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Dette er et hint ut fra bildet, ikke en dom: telefonen kan ta en skygge, et gjenskinn eller hvite blomster for et problem."
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Dit is een hint op basis van de foto, geen oordeel: schaduw, schittering of witte bloemen kan je telefoon aanzien voor een probleem."
-          }
-        },
-        "or": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ଏହା ଫଟୋ ଆଧାରିତ ସୂଚନା, ରାୟ ନୁହେଁ: ଫୋନ୍ ଛାଇ, ଚମକ କିମ୍ବା ଧଳା ଫୁଲକୁ ସମସ୍ୟା ଭାବିପାରେ।"
-          }
-        },
-        "pa": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ਇਹ ਫ਼ੋਟੋ 'ਤੇ ਆਧਾਰਿਤ ਇਸ਼ਾਰਾ ਹੈ, ਫ਼ੈਸਲਾ ਨਹੀਂ: ਫ਼ੋਨ ਪਰਛਾਵੇਂ, ਚਮਕ ਜਾਂ ਚਿੱਟੇ ਫੁੱਲਾਂ ਨੂੰ ਸਮੱਸਿਆ ਸਮਝ ਸਕਦਾ ਹੈ।"
-          }
-        },
-        "pl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "To wskazówka na podstawie zdjęcia, a nie wyrok: telefon może wziąć cień, odblask lub białe kwiaty za kłopot."
-          }
-        },
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Isto é uma pista a partir da foto, não um veredito: o celular pode confundir sombra, reflexo ou flores brancas com problema."
-          }
-        },
-        "pt-PT": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Isto é uma pista a partir da fotografia, não um veredicto: o telemóvel pode confundir sombra, reflexo ou flores brancas com um problema."
-          }
-        },
-        "ro": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "E un indiciu pe baza fotografiei, nu un verdict: telefonul poate lua o umbră, o reflexie sau flori albe drept problemă."
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Je to nápoveda podľa fotky, nie verdikt: tieň, odlesk alebo biele kvety si telefón môže pomýliť s problémom."
-          }
-        },
-        "sl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "To je namig po posnetku, ne sodba: senco, odsev ali bele cvetove lahko telefon zamenja za težavo."
-          }
-        },
-        "sv": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Det här är en ledtråd från bilden, inte en dom: telefonen kan ta en skugga, en reflex eller vita blommor för ett problem."
-          }
-        },
-        "ta": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "இது புகைப்படத்தை வைத்துச் சொல்லும் குறிப்பு, தீர்ப்பல்ல: நிழல், பளபளப்பு அல்லது வெள்ளைப் பூக்களை ஃபோன் பிரச்சினையாகக் கருதக்கூடும்."
-          }
-        },
-        "te": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ఇది ఫోటో ఆధారిత సూచన, తీర్పు కాదు: నీడ, మెరుపు లేదా తెల్లని పువ్వులను ఫోన్ సమస్యగా భావించవచ్చు."
-          }
-        },
-        "th": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "นี่เป็นคำใบ้จากรูป ไม่ใช่คำตัดสิน: โทรศัพท์อาจเข้าใจผิดว่าเงา แสงสะท้อน หรือดอกสีขาวเป็นปัญหา"
-          }
-        },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bu fotoğrafa dayalı bir ipucu, kesin bir hüküm değil: telefon bir gölgeyi, yansımayı ya da beyaz çiçekleri sorun sanabilir."
-          }
-        },
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Це підказка за знімком, а не вирок: тінь, відблиск або білі квіти телефон може сприйняти за біду."
-          }
-        },
-        "ur": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "یہ تصویر پر مبنی اشارہ ہے، فیصلہ نہیں: فون سائے، چمک یا سفید پھولوں کو مسئلہ سمجھ سکتا ہے۔"
-          }
-        },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Đây là gợi ý theo ảnh, không phải phán quyết: bóng, ánh phản chiếu hay hoa trắng có thể bị điện thoại nhầm là vấn đề."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "这只是根据照片给出的提示，不是结论：手机可能把阴影、反光或白色花朵当成问题。"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "這只是根據照片給出的提示，不是結論：手機可能把陰影、反光或白色花朵當成問題。"
-          }
-        }
-      }
+    "Это подсказка по снимку, а не приговор: тень, блик или белые цветки телефон может принять за беду. Разбирается на телефоне, ничего не отправляется.": {
+      "extractionState": "manual"
     },
     "Это растение от друга, а не его счёт. Добавьте растение на вкладке «Добавить» — кнопкой «Вставить» в строке «Растение от друга».": {
       "extractionState": "manual"

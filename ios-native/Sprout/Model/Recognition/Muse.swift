@@ -46,18 +46,16 @@ enum Muse {
     }
 
     /// Два-три дружеских предложения о том, что делать, — по находкам
-    /// диагностики. Нет модели — нет и абзаца: находки говорят сами.
-    static func advise(_ findings: [Finding], plant: Plant) async -> String? {
-        let facts = findings.map { "\($0.title): \($0.detail)" }
-            .joined(separator: "\n")
-        return await say("""
-        A houseplant "\(plant.name)" (\(plant.species)) was checked from a \
-        photo. Findings:
-        \(facts)
-        Write two or three short, warm sentences in \(language) telling the \
-        owner what to do first. Do not repeat the findings word for word, \
-        do not use lists or headings.
-        """)
+    /// диагностики и тому же рассказу о растении, что у «Спросить сад»
+    /// (`Sage.context`). Ответ проверяет приложение: полить влажное модель
+    /// не посоветует (`Sage.screen`). Нет модели — нет и абзаца: находки
+    /// говорят сами.
+    static func advise(_ findings: [Finding], plant: Plant, room: String?,
+                       log: [Watering]) async -> String? {
+        let answer = await say(Sage.diagnosis(findings, plant: plant,
+                                              room: room, log: log,
+                                              language: language))
+        return answer.map { Sage.screen($0, plant: plant) }
     }
 
     /// Сеанс на каждый вопрос: общая память сбивала бы ответы. Без
