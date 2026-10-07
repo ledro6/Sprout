@@ -427,6 +427,9 @@ struct StatsView: View {
     private var now: some View {
         let state = book.now
         return SproutGroup("Сад сегодня") {
+            Text("Состояние сада")
+                .font(Typography.settingNote)
+                .foregroundStyle(Palette.secondaryText)
             HStack(spacing: 18) {
                 ThirstRing(state) {
                     VStack(spacing: 0) {
@@ -434,7 +437,7 @@ struct StatsView: View {
                             .font(Typography.figure)
                             .foregroundStyle(Palette.ink)
                             .contentTransition(.numericText())
-                        Text("Довольны")
+                        Text("В порядке")
                             .font(Typography.figureCaption)
                             .foregroundStyle(Palette.secondaryText)
                     }
@@ -443,9 +446,9 @@ struct StatsView: View {
                        height: Metrics.statRingSize)
                 VStack(alignment: .leading, spacing: 10) {
                     legend(Palette.secondaryText, state.calm,
-                           Lang.text("Довольны"))
+                           Lang.text("В порядке"))
                     legend(Palette.warn, state.warn, Lang.text("Скоро пить"))
-                    legend(Palette.alarm, state.alarm, Lang.text("Ждут воды"))
+                    legend(Palette.alarm, state.alarm, Lang.text("Сухо"))
                 }
             }
             if !state.thirsty.isEmpty {
@@ -565,7 +568,7 @@ struct StatsView: View {
                     StatTile(value: book.aim.known > 0
                                  ? Stats.percent(book.aim.share(.onTime))
                                  : "—",
-                             caption: "Вовремя")
+                             caption: "В срок")
                 }
             }
         }
@@ -943,7 +946,7 @@ struct StatsView: View {
         let level = room.moisture ?? 0
         let details = [Lang.format("%lld растений", room.plants),
                        Lang.format("%lld поливов", room.waterings)]
-            + (room.onTime.map { [Lang.format("вовремя %@",
+            + (room.onTime.map { [Lang.format("в срок %@",
                                               Stats.percent($0))] } ?? [])
         return VStack(alignment: .leading, spacing: 6) {
             HStack(spacing: 8) {

@@ -229,7 +229,7 @@ struct RecapPage: View {
         if let share = recap.onTime {
             let percent = Int((share * 100).rounded())
             VStack(alignment: .leading, spacing: 14) {
-                caption(Lang.text("Вовремя"))
+                caption(Lang.text("В срок"))
                 ZStack {
                     Circle()
                         .stroke(.white.opacity(0.2), lineWidth: 18)

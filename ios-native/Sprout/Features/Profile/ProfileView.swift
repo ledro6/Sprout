@@ -122,7 +122,7 @@ struct ProfileView: View {
     /// кружок, как и «Изменить», открывает лист `ProfileEditor`: фото, имя
     /// и цвет кружка.
     private var person: some View {
-        SproutGroup("Хозяин") {
+        SproutGroup("Вы") {
             HStack(spacing: 14) {
                 Button { editing = true } label: {
                     AvatarCircle(size: Metrics.avatar)

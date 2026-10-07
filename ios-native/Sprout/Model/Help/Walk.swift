@@ -246,7 +246,7 @@ enum Walk: String, CaseIterable, Identifiable, Sendable {
             ]
         case .profile:
             [
-                Hint(target: .profilePerson, title: Lang.text("Хозяин"),
+                Hint(target: .profilePerson, title: Lang.text("Вы"),
                      text: Lang.text("""
                          Назовитесь — приложение будет здороваться по имени. \
                          Нажмите на кружок, чтобы сменить фото, имя или цвет.
