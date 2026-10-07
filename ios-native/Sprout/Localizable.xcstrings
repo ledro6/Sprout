@@ -11169,292 +11169,8 @@
     "Bluetooth выключен. Включите его в Пункте управления.": {
       "extractionState": "manual"
     },
-    "Sprout не собирает о вас никаких сведений и никуда их не передаёт.": {
-      "extractionState": "manual",
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "لا يجمع Sprout أي معلومات عنك ولا يرسل شيئًا إلى أي مكان."
-          }
-        },
-        "bg": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sprout не събира никакви сведения за вас и не ги изпраща никъде."
-          }
-        },
-        "bn": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sprout আপনার সম্পর্কে কোনো তথ্য সংগ্রহ করে না এবং কোথাও কিছু পাঠায় না।"
-          }
-        },
-        "ca": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sprout no recull cap informació sobre tu ni l’envia enlloc."
-          }
-        },
-        "cs": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sprout o vás nesbírá žádné údaje a nikam nic neposílá."
-          }
-        },
-        "da": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sprout indsamler ingen oplysninger om dig og sender intet nogen steder hen."
-          }
-        },
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sprout sammelt keine Informationen über dich und gibt nichts weiter."
-          }
-        },
-        "el": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Το Sprout δεν συλλέγει καμία πληροφορία για εσάς και δεν στέλνει τίποτα πουθενά."
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sprout collects no information about you and sends nothing anywhere."
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sprout no recopila ninguna información sobre ti ni la envía a ninguna parte."
-          }
-        },
-        "fi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sprout ei kerää sinusta mitään tietoja eikä lähetä mitään mihinkään."
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sprout ne collecte aucune information sur vous et ne transmet rien."
-          }
-        },
-        "gu": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sprout તમારા વિશે કોઈ માહિતી એકઠી કરતું નથી અને ક્યાંય કંઈ મોકલતું નથી."
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sprout לא אוסף עליך שום מידע ולא שולח דבר לשום מקום."
-          }
-        },
-        "hi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sprout आपके बारे में कोई जानकारी इकट्ठा नहीं करता और कहीं कुछ नहीं भेजता।"
-          }
-        },
-        "hr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sprout ne prikuplja nikakve podatke o vama i nikamo ih ne šalje."
-          }
-        },
-        "hu": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "A Sprout semmilyen adatot nem gyűjt rólad, és nem küld sehova."
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sprout tidak mengumpulkan informasi apa pun tentangmu dan tidak mengirimkan apa pun ke mana pun."
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sprout non raccoglie informazioni su di te e non invia nulla."
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sproutはあなたに関する情報を一切集めず、どこにも送信しません。"
-          }
-        },
-        "kk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sprout сіз туралы ешқандай мәлімет жинамайды және ешқайда жібермейді."
-          }
-        },
-        "kn": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sprout ನಿಮ್ಮ ಬಗ್ಗೆ ಯಾವುದೇ ಮಾಹಿತಿ ಸಂಗ್ರಹಿಸುವುದಿಲ್ಲ, ಎಲ್ಲಿಗೂ ಕಳುಹಿಸುವುದಿಲ್ಲ."
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sprout은 사용자에 관한 어떤 정보도 수집하지 않으며 어디에도 보내지 않아요."
-          }
-        },
-        "lt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sprout nerenka jokios informacijos apie jus ir niekur nieko nesiunčia."
-          }
-        },
-        "ml": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sprout നിങ്ങളെക്കുറിച്ച് ഒരു വിവരവും ശേഖരിക്കുന്നില്ല, എവിടേക്കും ഒന്നും അയയ്ക്കുന്നില്ല."
-          }
-        },
-        "mr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sprout तुमच्याबद्दल कोणतीही माहिती गोळा करत नाही आणि कुठेही पाठवत नाही."
-          }
-        },
-        "ms": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sprout tidak mengumpul sebarang maklumat tentang anda dan tidak menghantar apa-apa ke mana-mana."
-          }
-        },
-        "nb": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sprout samler ikke inn noen opplysninger om deg og sender ingenting noe sted."
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sprout verzamelt geen gegevens over je en stuurt niets door."
-          }
-        },
-        "or": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sprout ଆପଣଙ୍କ ବିଷୟରେ କୌଣସି ସୂଚନା ସଂଗ୍ରହ କରେ ନାହିଁ ଏବଂ କୁଆଡ଼େ କିଛି ପଠାଏ ନାହିଁ।"
-          }
-        },
-        "pa": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sprout ਤੁਹਾਡੇ ਬਾਰੇ ਕੋਈ ਜਾਣਕਾਰੀ ਇਕੱਠੀ ਨਹੀਂ ਕਰਦੀ ਅਤੇ ਕਿਤੇ ਕੁਝ ਨਹੀਂ ਭੇਜਦੀ।"
-          }
-        },
-        "pl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sprout nie zbiera o tobie żadnych informacji i nigdzie ich nie wysyła."
-          }
-        },
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "O Sprout não coleta nenhuma informação sobre você e não envia nada para lugar nenhum."
-          }
-        },
-        "pt-PT": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "O Sprout não recolhe nenhuma informação sobre si e não envia nada para lado nenhum."
-          }
-        },
-        "ro": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sprout nu colectează nicio informație despre tine și nu trimite nimic nicăieri."
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sprout o vás nezbiera žiadne údaje a nikam nič neposiela."
-          }
-        },
-        "sl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sprout o vas ne zbira nobenih podatkov in jih nikamor ne pošilja."
-          }
-        },
-        "sv": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sprout samlar inga uppgifter om dig och skickar inget någonstans."
-          }
-        },
-        "ta": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sprout உங்களைப் பற்றி எந்தத் தகவலையும் சேகரிப்பதில்லை, எங்கும் அனுப்புவதில்லை."
-          }
-        },
-        "te": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sprout మీ గురించి ఎలాంటి సమాచారాన్నీ సేకరించదు, ఎక్కడికీ పంపదు."
-          }
-        },
-        "th": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sprout ไม่เก็บข้อมูลใดๆ เกี่ยวกับคุณและไม่ส่งอะไรไปที่ไหน"
-          }
-        },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sprout hakkınızda hiçbir bilgi toplamaz ve hiçbir yere göndermez."
-          }
-        },
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sprout не збирає про вас жодних відомостей і нікуди їх не передає."
-          }
-        },
-        "ur": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sprout آپ کے بارے میں کوئی معلومات جمع نہیں کرتی اور کہیں کچھ نہیں بھیجتی۔"
-          }
-        },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sprout không thu thập bất kỳ thông tin nào về bạn và không gửi đi đâu cả."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sprout 不会收集你的任何信息，也不会发送到任何地方。"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sprout 不會收集你的任何資訊，也不會傳送到任何地方。"
-          }
-        }
-      }
+    "Sprout %1$@ (%2$@), iOS %3$@": {
+      "extractionState": "manual"
     },
     "iCloud на этом телефоне ограничен — сад не синхронизируется.": {
       "extractionState": "manual"
@@ -14044,6 +13760,9 @@
           }
         }
       }
+    },
+    "«Спросить о растении», «Спросить сад» и подсказки кличек работают на телефоне: фото разбирает Vision, тексты пишет Apple Intelligence на самом iPhone. Ни фото, ни вопросы никуда не отправляются.": {
+      "extractionState": "manual"
     },
     "Академик": {
       "extractionState": "manual",
@@ -26147,6 +25866,9 @@
     "Введите 18, чтобы стереть": {
       "extractionState": "manual"
     },
+    "Введите «удалить»": {
+      "extractionState": "manual"
+    },
     "Ведите ползунок — сад перенесётся на дни вперёд, если поливать вовремя.": {
       "extractionState": "manual",
       "localizations": {
@@ -31324,6 +31046,9 @@
           }
         }
       }
+    },
+    "Влажность до полива, %": {
+      "extractionState": "manual"
     },
     "Вместе с ней уйдут %lld растений. Вернуть их будет нельзя.": {
       "extractionState": "manual",
@@ -37397,6 +37122,9 @@
       "extractionState": "manual"
     },
     "Вы в испытании от %@. Свой счёт отправляйте кнопкой «Отправить счёт».": {
+      "extractionState": "manual"
+    },
+    "Вы выйдете из общего сада. Сам сад останется у хозяина.": {
       "extractionState": "manual"
     },
     "Вы вышли из iCloud — синхронизация выключена, сад остался на телефоне.": {
@@ -48083,6 +47811,15 @@
           }
         }
       }
+    },
+    "Данные и поддержка": {
+      "extractionState": "manual"
+    },
+    "Данные удалены": {
+      "extractionState": "manual"
+    },
+    "Дата": {
+      "extractionState": "manual"
     },
     "Датчик": {
       "extractionState": "manual"
@@ -62192,7 +61929,7 @@
     "Думаю…": {
       "extractionState": "manual"
     },
-    "Если включить «Сад в iCloud», сад — растения, снимки и журнал поливов — хранится и в вашем iCloud, а те, кого вы пригласили в общий сад, видят его в своём. Это iCloud Apple, а не сервер Sprout. Выключить — в профиле, в группе «Семья».": {
+    "Если включено «Учитывать погоду», примерное место телефона и место дачи уходят в погоду Apple (WeatherKit) — узнать погоду и дождь. Выключите — не уходит ничего.": {
       "extractionState": "manual"
     },
     "Если вы поливаете раньше срока, приложение заметит и предложит сделать срок короче.": {
@@ -64780,6 +64517,12 @@
           }
         }
       }
+    },
+    "Журнал поливов, CSV": {
+      "extractionState": "manual"
+    },
+    "Журнал поливов, JSON": {
+      "extractionState": "manual"
     },
     "За период": {
       "extractionState": "manual",
@@ -68229,6 +67972,9 @@
       }
     },
     "Закончить полив по очереди": {
+      "extractionState": "manual"
+    },
+    "Закройте Sprout: смахните его вверх в переключателе приложений. При следующем запуске он начнёт с чистого листа.": {
       "extractionState": "manual"
     },
     "Закрыть": {
@@ -80306,6 +80052,9 @@
         }
       }
     },
+    "Исчезнут растения, журнал поливов, снимки, настройки, друзья и награды. Вернуть их будет нельзя.": {
+      "extractionState": "manual"
+    },
     "Итоги %@ в Sprout": {
       "extractionState": "manual"
     },
@@ -88937,292 +88686,8 @@
         }
       }
     },
-    "Клички растений, виды, влажность, даты — всё, что вы вводите, — лежит в файле внутри приложения, на самом телефоне. Там же настройки. Ничего из этого не покидает устройство.": {
-      "extractionState": "manual",
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ألقاب النباتات والأنواع والرطوبة والتواريخ — كل ما تدخله محفوظ في ملف داخل التطبيق، على الهاتف نفسه. وكذلك الإعدادات. لا شيء من ذلك يغادر الجهاز."
-          }
-        },
-        "bg": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Прякори на растенията, видове, влажност, дати — всичко, което въвеждате, стои във файл в приложението, на самия телефон. Там са и настройките. Нищо от това не напуска устройството."
-          }
-        },
-        "bn": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "গাছের ডাকনাম, প্রজাতি, আর্দ্রতা, তারিখ — আপনি যা লেখেন সবই অ্যাপের ভেতরের একটি ফাইলে, ফোনেই থাকে। সেটিংসও সেখানে। এর কিছুই ডিভাইস ছেড়ে যায় না।"
-          }
-        },
-        "ca": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sobrenoms de les plantes, espècies, humitat, dates: tot el que escrius es desa en un fitxer dins l’app, al mateix telèfon. També la configuració. Res no surt del dispositiu."
-          }
-        },
-        "cs": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Přezdívky rostlin, druhy, vlhkost, data — vše, co zadáte, leží v souboru uvnitř aplikace, přímo v telefonu. Stejně tak nastavení. Nic z toho neopouští zařízení."
-          }
-        },
-        "da": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Planternes kælenavne, arter, fugt, datoer – alt, du indtaster, ligger i en fil i appen, på selve telefonen. Det gør indstillingerne også. Intet af det forlader enheden."
-          }
-        },
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Namen der Pflanzen, Arten, Feuchtigkeit, Daten — alles, was du eingibst, liegt in einer Datei in der App, auf dem Telefon selbst. Dort liegen auch die Einstellungen. Nichts davon verlässt das Gerät."
-          }
-        },
-        "el": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Παρατσούκλια φυτών, είδη, υγρασία, ημερομηνίες — ό,τι εισάγετε βρίσκεται σε ένα αρχείο μέσα στην εφαρμογή, στο ίδιο το τηλέφωνο. Εκεί και οι ρυθμίσεις. Τίποτα δεν φεύγει από τη συσκευή."
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Plant nicknames, species, moisture, dates — everything you enter is kept in a file inside the app, on the phone itself. So are the settings. None of it leaves the device."
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Apodos de las plantas, especies, humedad, fechas: todo lo que escribes se guarda en un archivo dentro de la app, en el propio teléfono. También los ajustes. Nada sale del dispositivo."
-          }
-        },
-        "fi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Kasvien lempinimet, lajit, kosteus, päivämäärät – kaikki syöttämäsi on tiedostossa apin sisällä, itse puhelimessa. Samoin asetukset. Mikään niistä ei poistu laitteesta."
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Surnoms des plantes, espèces, humidité, dates — tout ce que vous saisissez est conservé dans un fichier de l’app, sur le téléphone lui-même. Les réglages aussi. Rien ne quitte l’appareil."
-          }
-        },
-        "gu": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "છોડનાં હુલામણાં નામ, પ્રજાતિઓ, ભેજ, તારીખો — તમે જે લખો તે બધું ઍપની અંદરની ફાઇલમાં, ફોન પર જ રહે છે. સેટિંગ્સ પણ ત્યાં જ. આમાંનું કંઈ ડિવાઇસ બહાર જતું નથી."
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "כינויי צמחים, זנים, לחות, תאריכים — כל מה שמזינים נשמר בקובץ בתוך האפליקציה, בטלפון עצמו. גם ההגדרות. שום דבר מזה לא יוצא מהמכשיר."
-          }
-        },
-        "hi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "पौधों के उपनाम, प्रजातियाँ, नमी, तारीखें — आप जो भी दर्ज करते हैं, वह ऐप के अंदर एक फ़ाइल में, फ़ोन पर ही रहता है। सेटिंग्ज़ भी वहीं हैं। इनमें से कुछ भी डिवाइस से बाहर नहीं जाता।"
-          }
-        },
-        "hr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nadimci biljaka, vrste, vlažnost, datumi — sve što unesete nalazi se u datoteci unutar aplikacije, na samom telefonu. Tu su i postavke. Ništa od toga ne napušta uređaj."
-          }
-        },
-        "hu": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "A növények becenevei, fajok, nedvesség, dátumok — minden, amit beírsz, egy fájlban van az alkalmazásban, magán a telefonon. A beállítások is. Semmi sem hagyja el az eszközt."
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nama panggilan tanaman, spesies, kelembapan, tanggal — semua yang kamu masukkan tersimpan di file dalam aplikasi, di ponsel itu sendiri. Begitu juga pengaturannya. Tidak ada yang keluar dari perangkat."
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Soprannomi delle piante, specie, umidità, date: tutto ciò che inserisci resta in un file dentro l’app, sul telefono stesso. Anche le impostazioni. Niente lascia il dispositivo."
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "植物のニックネーム、種類、湿度、日付 — 入力したものはすべてアプリ内のファイルに、iPhone本体に保存されます。設定も同様です。どれもデバイスの外には出ません。"
-          }
-        },
-        "kk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Өсімдіктердің лақап аттары, түрлері, ылғал, күндер — сіз енгізгеннің бәрі қолданбаның ішіндегі файлда, телефонның өзінде жатады. Баптаулар да сонда. Ешқайсысы құрылғыдан шықпайды."
-          }
-        },
-        "kn": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ಗಿಡಗಳ ಅಡ್ಡಹೆಸರುಗಳು, ಜಾತಿಗಳು, ತೇವಾಂಶ, ದಿನಾಂಕಗಳು — ನೀವು ನಮೂದಿಸುವುದೆಲ್ಲವೂ ಆ್ಯಪ್ ಒಳಗಿನ ಫೈಲ್‌ನಲ್ಲಿ, ಫೋನ್‌ನಲ್ಲೇ ಇರುತ್ತದೆ. ಸೆಟ್ಟಿಂಗ್‌ಗಳೂ ಅಲ್ಲೇ. ಇವುಗಳಲ್ಲಿ ಯಾವುದೂ ಸಾಧನವನ್ನು ಬಿಟ್ಟು ಹೋಗುವುದಿಲ್ಲ."
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "식물 별명, 종, 습도, 날짜 — 입력한 모든 것은 앱 안의 파일에, 기기 자체에 저장돼요. 설정도 마찬가지예요. 어떤 것도 기기 밖으로 나가지 않아요."
-          }
-        },
-        "lt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Augalų pravardės, rūšys, drėgmė, datos – viskas, ką įvedate, laikoma faile programoje, pačiame telefone. Ten ir nustatymai. Niekas iš to nepalieka įrenginio."
-          }
-        },
-        "ml": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ചെടികളുടെ ഓമനപ്പേരുകൾ, ഇനങ്ങൾ, ഈർപ്പം, തീയതികൾ — നിങ്ങൾ നൽകുന്നതെല്ലാം ആപ്പിനുള്ളിലെ ഒരു ഫയലിൽ, ഫോണിൽ തന്നെയാണ്. ക്രമീകരണങ്ങളും അവിടെത്തന്നെ. ഇതൊന്നും ഉപകരണം വിട്ടുപോകുന്നില്ല."
-          }
-        },
-        "mr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "रोपांची टोपणनावे, प्रजाती, ओलावा, तारखा — तुम्ही जे काही लिहिता ते अ‍ॅपमधील एका फाइलमध्ये, फोनवरच राहते. सेटिंग्जही तिथेच. यापैकी काहीही डिव्हाइस सोडत नाही."
-          }
-        },
-        "ms": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nama panggilan tumbuhan, spesies, kelembapan, tarikh — semua yang anda masukkan disimpan dalam fail di dalam apl, pada telefon itu sendiri. Begitu juga tetapan. Tiada yang keluar dari peranti."
-          }
-        },
-        "nb": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Kallenavn på planter, arter, fukt, datoer – alt du skriver inn, ligger i en fil i appen, på selve telefonen. Det gjør innstillingene også. Ingenting av det forlater enheten."
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bijnamen van planten, soorten, vochtigheid, data — alles wat je invoert staat in een bestand in de app, op de telefoon zelf. De instellingen ook. Niets daarvan verlaat het apparaat."
-          }
-        },
-        "or": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ଗଛର ଡାକନାମ, ପ୍ରଜାତି, ଆର୍ଦ୍ରତା, ତାରିଖ — ଆପଣ ଯାହା ଲେଖନ୍ତି ସବୁ ଆପ୍ ଭିତରର ଏକ ଫାଇଲ୍‌ରେ, ଫୋନ୍‌ରେ ହିଁ ରହେ। ସେଟିଂସ୍ ମଧ୍ୟ ସେଠାରେ। ଏଥିରୁ କିଛି ଡିଭାଇସ୍ ଛାଡ଼େ ନାହିଁ।"
-          }
-        },
-        "pa": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ਪੌਦਿਆਂ ਦੇ ਉਪਨਾਮ, ਕਿਸਮਾਂ, ਨਮੀ, ਤਾਰੀਖਾਂ — ਜੋ ਵੀ ਤੁਸੀਂ ਦਰਜ ਕਰਦੇ ਹੋ ਉਹ ਐਪ ਦੇ ਅੰਦਰ ਇੱਕ ਫ਼ਾਈਲ ਵਿੱਚ, ਫ਼ੋਨ 'ਤੇ ਹੀ ਰਹਿੰਦਾ ਹੈ। ਸੈਟਿੰਗਾਂ ਵੀ ਉੱਥੇ ਹੀ। ਇਸ ਵਿੱਚੋਂ ਕੁਝ ਵੀ ਡਿਵਾਈਸ ਤੋਂ ਬਾਹਰ ਨਹੀਂ ਜਾਂਦਾ।"
-          }
-        },
-        "pl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Przezwiska roślin, gatunki, wilgotność, daty — wszystko, co wpisujesz, leży w pliku wewnątrz aplikacji, w samym telefonie. Tam też są ustawienia. Nic z tego nie opuszcza urządzenia."
-          }
-        },
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Apelidos das plantas, espécies, umidade, datas — tudo o que você digita fica num arquivo dentro do app, no próprio celular. Os ajustes também. Nada disso sai do aparelho."
-          }
-        },
-        "pt-PT": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Alcunhas das plantas, espécies, humidade, datas — tudo o que escreve fica num ficheiro dentro da app, no próprio telemóvel. As definições também. Nada disto sai do dispositivo."
-          }
-        },
-        "ro": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Poreclele plantelor, speciile, umiditatea, datele — tot ce introduci stă într-un fișier în aplicație, pe telefon. La fel și setările. Nimic nu părăsește dispozitivul."
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Prezývky rastlín, druhy, vlhkosť, dátumy — všetko, čo zadáte, leží v súbore vnútri apky, priamo v telefóne. Rovnako aj nastavenia. Nič z toho neopúšťa zariadenie."
-          }
-        },
-        "sl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Vzdevki rastlin, vrste, vlažnost, datumi — vse, kar vnesete, je v datoteki v aplikaciji, na samem telefonu. Tam so tudi nastavitve. Nič od tega ne zapusti naprave."
-          }
-        },
-        "sv": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Växternas smeknamn, arter, fukt, datum – allt du skriver in ligger i en fil i appen, på själva telefonen. Där finns också inställningarna. Inget av det lämnar enheten."
-          }
-        },
-        "ta": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "செடிகளின் செல்லப்பெயர்கள், இனங்கள், ஈரப்பதம், தேதிகள் — நீங்கள் உள்ளிடும் அனைத்தும் செயலிக்குள் ஒரு கோப்பில், ஃபோனிலேயே இருக்கும். அமைப்புகளும் அங்கேதான். இவற்றில் எதுவும் சாதனத்தை விட்டு வெளியேறாது."
-          }
-        },
-        "te": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "మొక్కల ముద్దుపేర్లు, జాతులు, తేమ, తేదీలు — మీరు నమోదు చేసేవన్నీ యాప్ లోపలి ఫైల్‌లో, ఫోన్‌లోనే ఉంటాయి. సెట్టింగ్‌లు కూడా అక్కడే. వీటిలో ఏదీ పరికరాన్ని వదిలి వెళ్లదు."
-          }
-        },
-        "th": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ชื่อเล่นต้นไม้ พันธุ์ ความชื้น วันที่ — ทุกอย่างที่คุณป้อนอยู่ในไฟล์ภายในแอป บนโทรศัพท์ของคุณเอง การตั้งค่าก็เช่นกัน ไม่มีสิ่งใดออกไปจากอุปกรณ์"
-          }
-        },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bitki takma adları, türler, nem, tarihler — girdiğiniz her şey uygulamanın içindeki bir dosyada, telefonun kendisinde durur. Ayarlar da orada. Hiçbiri cihazdan çıkmaz."
-          }
-        },
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Клички рослин, види, вологість, дати — усе, що ви вводите, лежить у файлі всередині застосунку, на самому телефоні. Там само налаштування. Ніщо з цього не залишає пристрій."
-          }
-        },
-        "ur": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "پودوں کے عرفی نام، انواع، نمی، تاریخیں — جو کچھ آپ درج کرتے ہیں وہ ایپ کے اندر ایک فائل میں، فون ہی پر رہتا ہے۔ ترتیبات بھی وہیں ہیں۔ اس میں سے کچھ بھی آلے سے باہر نہیں جاتا۔"
-          }
-        },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Biệt danh cây, loài, độ ẩm, ngày tháng — mọi thứ bạn nhập nằm trong một tệp bên trong ứng dụng, ngay trên điện thoại. Cả phần cài đặt cũng vậy. Không gì rời khỏi thiết bị."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "植物昵称、品种、湿度、日期——你输入的一切都保存在 App 内的文件中，就在手机上。设置也是如此。这些都不会离开设备。"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "植物暱稱、品種、濕度、日期——你輸入的一切都儲存在 App 內的檔案中，就在手機上。設定也是如此。這些都不會離開裝置。"
-          }
-        }
-      }
+    "Клички растений, виды, влажность, даты, снимки — всё, что вы вводите, — лежит в файлах приложения на самом телефоне. Там же настройки.": {
+      "extractionState": "manual"
     },
     "Кнопки": {
       "extractionState": "manual",
@@ -97558,6 +97023,9 @@
           }
         }
       }
+    },
+    "Кто полил": {
+      "extractionState": "manual"
     },
     "Кто следующий — на экране блокировки": {
       "extractionState": "manual"
@@ -120591,6 +120059,9 @@
         }
       }
     },
+    "Написать нам": {
+      "extractionState": "manual"
+    },
     "Напоминалка о поливе комнатных растений": {
       "extractionState": "manual",
       "localizations": {
@@ -123183,6 +122654,9 @@
         }
       }
     },
+    "Настройки → «Удалить все данные» стирает всё, что помнит Sprout, — на телефоне и в вашем iCloud. Удалите приложение — исчезнет то, что на телефоне.": {
+      "extractionState": "manual"
+    },
     "Начать": {
       "extractionState": "manual",
       "localizations": {
@@ -125484,6 +124958,9 @@
           }
         }
       }
+    },
+    "Не получилось выйти из общего сада. Проверьте интернет и попробуйте ещё раз.": {
+      "extractionState": "manual"
     },
     "Не получилось записать метку.": {
       "extractionState": "manual"
@@ -196872,293 +196349,6 @@
         }
       }
     },
-    "Приложение не выходит в интернет. У него нет ни учётной записи, ни сервера, ни аналитики, ни рекламы.": {
-      "extractionState": "manual",
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "لا يتصل التطبيق بالإنترنت. لا حساب ولا خادم ولا تحليلات ولا إعلانات."
-          }
-        },
-        "bg": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Приложението не излиза в интернет. Няма профил, сървър, анализи и реклами."
-          }
-        },
-        "bn": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "অ্যাপটি ইন্টারনেটে যায় না। এর কোনো অ্যাকাউন্ট, সার্ভার, অ্যানালিটিক্স বা বিজ্ঞাপন নেই।"
-          }
-        },
-        "ca": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "L’app no es connecta a internet. No té compte, ni servidor, ni analítiques, ni publicitat."
-          }
-        },
-        "cs": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Aplikace nechodí na internet. Nemá účet, server, analytiku ani reklamy."
-          }
-        },
-        "da": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Appen går aldrig på internettet. Den har ingen konto, ingen server, ingen analyse og ingen reklamer."
-          }
-        },
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Die App geht nicht ins Internet. Sie hat weder ein Konto noch einen Server, keine Analyse und keine Werbung."
-          }
-        },
-        "el": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Η εφαρμογή δεν συνδέεται στο διαδίκτυο. Δεν έχει λογαριασμό, διακομιστή, αναλυτικά στοιχεία ή διαφημίσεις."
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The app never goes online. It has no account, no server, no analytics and no ads."
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "La app no se conecta a internet. No tiene cuenta, ni servidor, ni analíticas, ni publicidad."
-          }
-        },
-        "fi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Appi ei käytä internetiä. Sillä ei ole tiliä, palvelinta, analytiikkaa eikä mainoksia."
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "L’app ne se connecte jamais à Internet. Elle n’a ni compte, ni serveur, ni statistiques, ni publicité."
-          }
-        },
-        "gu": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ઍપ ઇન્ટરનેટ સાથે જોડાતી નથી. તેમાં ખાતું, સર્વર, ઍનાલિટિક્સ કે જાહેરાતો નથી."
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "האפליקציה לא מתחברת לאינטרנט. אין לה חשבון, שרת, ניתוח נתונים או פרסומות."
-          }
-        },
-        "hi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ऐप इंटरनेट से नहीं जुड़ता। इसमें न खाता है, न सर्वर, न एनालिटिक्स, न विज्ञापन।"
-          }
-        },
-        "hr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Aplikacija ne izlazi na internet. Nema račun, poslužitelj, analitiku ni oglase."
-          }
-        },
-        "hu": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Az alkalmazás nem csatlakozik az internetre. Nincs fiókja, szervere, analitikája és hirdetése."
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Aplikasi tidak terhubung ke internet. Tidak ada akun, server, analitik, maupun iklan."
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "L’app non va su internet. Non ha account, server, analisi né pubblicità."
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "アプリはインターネットに接続しません。アカウントも、サーバも、解析も、広告もありません。"
-          }
-        },
-        "kk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Қолданба интернетке шықпайды. Онда аккаунт та, сервер де, аналитика да, жарнама да жоқ."
-          }
-        },
-        "kn": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ಆ್ಯಪ್ ಇಂಟರ್ನೆಟ್‌ಗೆ ಸಂಪರ್ಕಿಸುವುದಿಲ್ಲ. ಖಾತೆ, ಸರ್ವರ್, ವಿಶ್ಲೇಷಣೆ, ಜಾಹೀರಾತು ಯಾವುದೂ ಇಲ್ಲ."
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "앱은 인터넷에 연결하지 않아요. 계정도, 서버도, 분석도, 광고도 없어요."
-          }
-        },
-        "lt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Programa nesijungia prie interneto. Ji neturi paskyros, serverio, analitikos ar reklamos."
-          }
-        },
-        "ml": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ആപ്പ് ഇന്റർനെറ്റിൽ കണക്റ്റ് ചെയ്യുന്നില്ല. അക്കൗണ്ടോ സെർവറോ അനലിറ്റിക്സോ പരസ്യങ്ങളോ ഇല്ല."
-          }
-        },
-        "mr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "अ‍ॅप इंटरनेटला जोडत नाही. त्यात खाते, सर्व्हर, विश्लेषण किंवा जाहिराती नाहीत."
-          }
-        },
-        "ms": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Apl tidak menyambung ke internet. Tiada akaun, pelayan, analitik atau iklan."
-          }
-        },
-        "nb": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Appen går aldri på internett. Den har ingen konto, ingen server, ingen analyse og ingen reklame."
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "De app gaat niet online. Hij heeft geen account, geen server, geen analyse en geen reclame."
-          }
-        },
-        "or": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ଆପ୍ ଇଣ୍ଟରନେଟ୍‌ରେ ଯାଏ ନାହିଁ। ଏହାର ଆକାଉଣ୍ଟ, ସର୍ଭର୍, ଆନାଲିଟିକ୍ସ କିମ୍ବା ବିଜ୍ଞାପନ ନାହିଁ।"
-          }
-        },
-        "pa": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ਐਪ ਇੰਟਰਨੈੱਟ ਨਾਲ ਨਹੀਂ ਜੁੜਦੀ। ਇਸ ਵਿੱਚ ਨਾ ਖਾਤਾ, ਨਾ ਸਰਵਰ, ਨਾ ਵਿਸ਼ਲੇਸ਼ਣ, ਨਾ ਇਸ਼ਤਿਹਾਰ ਹਨ।"
-          }
-        },
-        "pl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Aplikacja nie łączy się z internetem. Nie ma konta, serwera, analityki ani reklam."
-          }
-        },
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "O app não acessa a internet. Não tem conta, servidor, análises nem anúncios."
-          }
-        },
-        "pt-PT": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "A app não acede à internet. Não tem conta, servidor, estatísticas nem publicidade."
-          }
-        },
-        "ro": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Aplicația nu accesează internetul. Nu are cont, server, analize sau reclame."
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Apka nechodí na internet. Nemá účet, server, analytiku ani reklamy."
-          }
-        },
-        "sl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Aplikacija ne dostopa do interneta. Nima računa, strežnika, analitike ne oglasov."
-          }
-        },
-        "sv": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Appen går aldrig ut på internet. Den har inget konto, ingen server, ingen analys och ingen reklam."
-          }
-        },
-        "ta": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "செயலி இணையத்துடன் இணைவதில்லை. கணக்கு, சர்வர், பகுப்பாய்வு, விளம்பரம் எதுவும் இல்லை."
-          }
-        },
-        "te": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "యాప్ ఇంటర్నెట్‌కు కనెక్ట్ అవ్వదు. ఖాతా, సర్వర్, విశ్లేషణలు, ప్రకటనలు ఏవీ లేవు."
-          }
-        },
-        "th": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "แอปไม่ใช้อินเทอร์เน็ต ไม่มีบัญชี เซิร์ฟเวอร์ การวิเคราะห์ หรือโฆษณา"
-          }
-        },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Uygulama internete çıkmaz. Hesabı, sunucusu, analitiği ve reklamı yoktur."
-          }
-        },
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Застосунок не виходить в інтернет. У нього немає ні облікового запису, ні сервера, ні аналітики, ні реклами."
-          }
-        },
-        "ur": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ایپ انٹرنیٹ سے نہیں جڑتی۔ اس کا نہ اکاؤنٹ ہے، نہ سرور، نہ تجزیات، نہ اشتہارات۔"
-          }
-        },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ứng dụng không kết nối internet. Không có tài khoản, máy chủ, phân tích hay quảng cáo."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "App 不会联网。它没有账户、服务器、分析，也没有广告。"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "App 不會連上網路。它沒有帳號、伺服器、分析，也沒有廣告。"
-          }
-        }
-      }
-    },
     "Приложить к метке": {
       "extractionState": "manual"
     },
@@ -217937,6 +217127,9 @@
         }
       }
     },
+    "Сад попадает и в резервную копию iPhone — по правилам Apple, вместе с остальными данными телефона.": {
+      "extractionState": "manual"
+    },
     "Сад просыпается вместе с вами — и сразу пьёт.": {
       "extractionState": "manual",
       "localizations": {
@@ -218225,6 +217418,9 @@
       }
     },
     "Сад сегодня": {
+      "extractionState": "manual"
+    },
+    "Сад сейчас синхронизируется. Попробуйте через минуту.": {
       "extractionState": "manual"
     },
     "Сад стоит. Нажмите на растение, чтобы полить его.": {
@@ -218802,6 +217998,12 @@
       }
     },
     "Сад удалили из iCloud. Он остался на телефоне; включите «Сад в iCloud», чтобы сохранить его снова.": {
+      "extractionState": "manual"
+    },
+    "Сад удалится и из iCloud — у всех, кого вы пригласили, его тоже не станет.": {
+      "extractionState": "manual"
+    },
+    "Сад удалится и из вашего iCloud.": {
       "extractionState": "manual"
     },
     "Садик": {
@@ -225712,293 +224914,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "白銀"
-          }
-        }
-      }
-    },
-    "Сеть": {
-      "extractionState": "manual",
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "الشبكة"
-          }
-        },
-        "bg": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Мрежа"
-          }
-        },
-        "bn": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "নেটওয়ার্ক"
-          }
-        },
-        "ca": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Xarxa"
-          }
-        },
-        "cs": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Síť"
-          }
-        },
-        "da": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Netværk"
-          }
-        },
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Netzwerk"
-          }
-        },
-        "el": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Δίκτυο"
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Network"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Red"
-          }
-        },
-        "fi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Verkko"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Réseau"
-          }
-        },
-        "gu": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "નેટવર્ક"
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "רשת"
-          }
-        },
-        "hi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "नेटवर्क"
-          }
-        },
-        "hr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Mreža"
-          }
-        },
-        "hu": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Hálózat"
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Jaringan"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Rete"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ネットワーク"
-          }
-        },
-        "kk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Желі"
-          }
-        },
-        "kn": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ನೆಟ್‌ವರ್ಕ್"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "네트워크"
-          }
-        },
-        "lt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tinklas"
-          }
-        },
-        "ml": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "നെറ്റ്‌വർക്ക്"
-          }
-        },
-        "mr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "नेटवर्क"
-          }
-        },
-        "ms": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Rangkaian"
-          }
-        },
-        "nb": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nettverk"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Netwerk"
-          }
-        },
-        "or": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ନେଟୱାର୍କ"
-          }
-        },
-        "pa": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ਨੈੱਟਵਰਕ"
-          }
-        },
-        "pl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sieć"
-          }
-        },
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Rede"
-          }
-        },
-        "pt-PT": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Rede"
-          }
-        },
-        "ro": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Rețea"
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sieť"
-          }
-        },
-        "sl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Omrežje"
-          }
-        },
-        "sv": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nätverk"
-          }
-        },
-        "ta": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "நெட்வொர்க்"
-          }
-        },
-        "te": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "నెట్‌వర్క్"
-          }
-        },
-        "th": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "เครือข่าย"
-          }
-        },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ağ"
-          }
-        },
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Мережа"
-          }
-        },
-        "ur": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "نیٹ ورک"
-          }
-        },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Mạng"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "网络"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "網路"
           }
         }
       }
@@ -246537,6 +245452,9 @@
         }
       }
     },
+    "Таблица CSV": {
+      "extractionState": "manual"
+    },
     "Тапок": {
       "extractionState": "manual",
       "localizations": {
@@ -248833,6 +247751,9 @@
         }
       }
     },
+    "Только если включить «Сад в iCloud»: сад — растения, снимки и журнал поливов — хранится и в вашем iCloud, а те, кого вы пригласили в общий сад, видят его в своём. Это iCloud Apple, а не сервер Sprout. Выключить — в профиле, в группе «Семья».": {
+      "extractionState": "manual"
+    },
     "Только что полил": {
       "extractionState": "manual",
       "localizations": {
@@ -249413,7 +248334,7 @@
     "Точно узнать место не вышло. Попробуйте ещё раз под открытым небом.": {
       "extractionState": "manual"
     },
-    "Точное место телефон узнаёт один раз — когда вы нажимаете «Отметить дачу здесь», — и хранит у себя. О приезде на дачу узнаёт сам iPhone. Если включено «Учитывать погоду», примерное место и место дачи уходят в погоду Apple (WeatherKit) — узнать погоду и дождь.": {
+    "Точное место телефон узнаёт один раз — когда вы нажимаете «Отметить дачу здесь», — и хранит у себя. О приезде на дачу узнаёт сам iPhone.": {
       "extractionState": "manual"
     },
     "Трава": {
@@ -253437,6 +252358,9 @@
         }
       }
     },
+    "У Sprout нет ни учётной записи, ни своего сервера, ни аналитики, ни рекламы. С телефона уходит только то, что описано ниже в «Погоде» и «iCloud», — и только если вы это включили.": {
+      "extractionState": "manual"
+    },
     "Уберите горшок от батареи.": {
       "extractionState": "manual",
       "localizations": {
@@ -256896,293 +255820,6 @@
         }
       }
     },
-    "Удалите приложение — вместе с ним исчезнет и всё, что оно помнило.": {
-      "extractionState": "manual",
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "احذف التطبيق — وسيختفي معه كل ما كان يتذكره."
-          }
-        },
-        "bg": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Изтрийте приложението — и всичко, което е помнело, изчезва с него."
-          }
-        },
-        "bn": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "অ্যাপ মুছে ফেলুন — এর মনে রাখা সবকিছুও সঙ্গে মুছে যাবে।"
-          }
-        },
-        "ca": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Elimina l’app i tot el que recordava desapareixerà amb ella."
-          }
-        },
-        "cs": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Smažte aplikaci — a vše, co si pamatovala, zmizí s ní."
-          }
-        },
-        "da": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Slet appen – og alt, hvad den huskede, forsvinder med den."
-          }
-        },
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Lösch die App — und alles, was sie sich gemerkt hat, verschwindet mit ihr."
-          }
-        },
-        "el": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Διαγράψτε την εφαρμογή — και ό,τι θυμόταν θα εξαφανιστεί μαζί της."
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Delete the app — and everything it remembered disappears with it."
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Elimina la app y todo lo que recordaba desaparecerá con ella."
-          }
-        },
-        "fi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Poista appi – ja kaikki, mitä se muisti, katoaa sen mukana."
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Supprimez l’app — et tout ce qu’elle a retenu disparaîtra avec elle."
-          }
-        },
-        "gu": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ઍપ ડિલીટ કરો — તેને જે યાદ હતું તે બધું તેની સાથે જતું રહેશે."
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "מוחקים את האפליקציה — וכל מה שהיא זכרה נעלם איתה."
-          }
-        },
-        "hi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ऐप डिलीट करें — और जो कुछ उसे याद था, वह भी उसके साथ मिट जाएगा।"
-          }
-        },
-        "hr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Izbrišite aplikaciju — i sve što je zapamtila nestat će s njom."
-          }
-        },
-        "hu": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Töröld az alkalmazást — és vele együtt eltűnik minden, amire emlékezett."
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Hapus aplikasi — dan semua yang diingatnya ikut hilang."
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Elimina l’app e tutto ciò che ricordava sparirà con lei."
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "アプリを削除すると、アプリが覚えていたこともすべて一緒に消えます。"
-          }
-        },
-        "kk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Қолданбаны жойыңыз — оның есінде қалғанның бәрі бірге жоғалады."
-          }
-        },
-        "kn": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ಆ್ಯಪ್ ಅಳಿಸಿ — ಅದು ನೆನಪಿಟ್ಟಿದ್ದೆಲ್ಲವೂ ಅದರೊಂದಿಗೆ ಹೋಗುತ್ತದೆ."
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "앱을 삭제하면 앱이 기억하던 모든 것도 함께 사라져요."
-          }
-        },
-        "lt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ištrinkite programą – ir kartu su ja išnyks viskas, ką ji prisiminė."
-          }
-        },
-        "ml": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ആപ്പ് ഇല്ലാതാക്കുക — അത് ഓർത്തുവച്ചതെല്ലാം അതിനൊപ്പം പോകും."
-          }
-        },
-        "mr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "अ‍ॅप हटवा — त्याने जे लक्षात ठेवले ते सर्व त्यासोबत नाहीसे होईल."
-          }
-        },
-        "ms": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Padam apl — dan semua yang diingatinya hilang bersamanya."
-          }
-        },
-        "nb": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Slett appen – og alt den husket, forsvinner med den."
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Verwijder de app — en alles wat hij onthield verdwijnt mee."
-          }
-        },
-        "or": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ଆପ୍ ଡିଲିଟ୍ କରନ୍ତୁ — ଏହାର ମନେ ଥିବା ସବୁକିଛି ସାଥିରେ ଲିଭିଯିବ।"
-          }
-        },
-        "pa": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ਐਪ ਮਿਟਾਓ — ਇਸ ਨੂੰ ਜੋ ਯਾਦ ਸੀ ਉਹ ਸਭ ਨਾਲ ਹੀ ਮਿਟ ਜਾਵੇਗਾ।"
-          }
-        },
-        "pl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Usuń aplikację — a zniknie z nią wszystko, co pamiętała."
-          }
-        },
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Apague o app — e tudo o que ele lembrava some junto."
-          }
-        },
-        "pt-PT": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Apague a app — e tudo o que ela lembrava desaparece com ela."
-          }
-        },
-        "ro": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Șterge aplicația — și tot ce își amintea dispare odată cu ea."
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Vymažte apku — a všetko, čo si pamätala, zmizne s ňou."
-          }
-        },
-        "sl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Izbrišite aplikacijo — in z njo izgine vse, kar si je zapomnila."
-          }
-        },
-        "sv": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Radera appen – så försvinner allt den kom ihåg."
-          }
-        },
-        "ta": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "செயலியை நீக்குங்கள் — அது நினைவில் வைத்திருந்த அனைத்தும் அதனுடன் மறைந்துவிடும்."
-          }
-        },
-        "te": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "యాప్‌ను తొలగించండి — అది గుర్తుంచుకున్నవన్నీ దానితో పాటు పోతాయి."
-          }
-        },
-        "th": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ลบแอป — ทุกสิ่งที่แอปจำไว้จะหายไปด้วย"
-          }
-        },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Uygulamayı silin — hatırladığı her şey de onunla birlikte kaybolur."
-          }
-        },
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Видаліть застосунок — разом із ним зникне все, що він пам’ятав."
-          }
-        },
-        "ur": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ایپ حذف کریں — اسے جو کچھ یاد تھا وہ سب ساتھ ہی مٹ جائے گا۔"
-          }
-        },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Xóa ứng dụng — mọi điều nó nhớ sẽ biến mất cùng nó."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "删除 App，它记住的一切都会随之消失。"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "刪除 App，它記得的一切都會隨之消失。"
-          }
-        }
-      }
-    },
     "Удалить": {
       "extractionState": "manual",
       "localizations": {
@@ -257469,6 +256106,15 @@
           }
         }
       }
+    },
+    "Удалить все данные": {
+      "extractionState": "manual"
+    },
+    "Удалить все данные?": {
+      "extractionState": "manual"
+    },
+    "Удалить всё": {
+      "extractionState": "manual"
     },
     "Удалить запись": {
       "extractionState": "manual",
@@ -262932,6 +261578,9 @@
         }
       }
     },
+    "Файл JSON": {
+      "extractionState": "manual"
+    },
     "Файл сада попадает в резервную копию iPhone — туда же, куда и остальные ваши данные, по правилам Apple.": {
       "extractionState": "manual",
       "localizations": {
@@ -265514,6 +264163,9 @@
           }
         }
       }
+    },
+    "Фото и вопросы": {
+      "extractionState": "manual"
     },
     "Фуксия": {
       "extractionState": "manual",
@@ -275013,6 +273665,9 @@
     "Экономить заряд": {
       "extractionState": "manual"
     },
+    "Экспортировать журнал": {
+      "extractionState": "manual"
+    },
     "Эта метка не подходит: на неё не записать ссылку.": {
       "extractionState": "manual"
     },
@@ -284292,6 +282947,9 @@
           }
         }
       }
+    },
+    "удалить": {
+      "extractionState": "manual"
     },
     "хозяин сада": {
       "extractionState": "manual"

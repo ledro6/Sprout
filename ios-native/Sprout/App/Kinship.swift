@@ -964,6 +964,48 @@ final class Kinship {
         close(Self.left)
     }
 
+    // MARK: - Удалить все данные
+
+    /// «Удалить все данные», облачная часть. Гость выходит из общего сада —
+    /// сам сад остаётся у хозяина. Свой сад в iCloud удаляется зоной целиком:
+    /// с ней уходит и приглашение, семья теряет доступ. Пусто — вышло;
+    /// иначе — что помешало, и тогда на телефоне ничего не стирается.
+    func wipe() async -> String? {
+        guard Self.enabled else { return nil }
+        if ledger.mode == .guest {
+            await leave()
+            if ledger.mode == .guest {
+                return Lang.text("Не получилось выйти из общего сада. Проверьте интернет и попробуйте ещё раз.")
+            }
+        }
+        guard ledger.mode == .own else { return nil }
+        guard !busy else {
+            return Lang.text("Сад сейчас синхронизируется. Попробуйте через минуту.")
+        }
+        busy = true
+        defer { busy = false }
+        stop()
+        let container = CKContainer(identifier: Self.container)
+        do {
+            _ = try await container.privateCloudDatabase
+                .deleteRecordZone(withID: zoneID)
+        } catch let error as CKError
+            where error.code == .zoneNotFound || error.code == .unknownItem {
+            // Зоны уже нет — удалять нечего.
+        } catch {
+            start()
+            return Self.message(for: error)
+        }
+        ledger = Family.Ledger()
+        setMode(.off)
+        people = []
+        sharing = false
+        names = [:]
+        status = .idle
+        persist()
+        return nil
+    }
+
     /// Из общего сада — назад к своему: он ждал в запасе и досох за время
     /// отсутствия. Запаса нет — общий сад остаётся на телефоне своим, но
     /// уже без iCloud: в свою зону его не смешиваем.

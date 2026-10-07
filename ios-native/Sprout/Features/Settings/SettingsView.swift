@@ -39,6 +39,7 @@ struct SettingsView: View {
                         watering
                             .hintSpot(.settingsWatering)
                         protection
+                        DataGroup()
                         about
                             .hintSpot(.settingsAbout)
                     }

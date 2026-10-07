@@ -4913,6 +4913,38 @@ do {
     check(yard.plant(id: "Папоротник")!.sensor == nil, "датчик отвязали")
 }
 
+print("экспорт журнала:")
+do {
+    let rooms = [Room(name: "Кухня", plants: [
+        plantNamed("Баксик", moisture: 0.5, dryingDays: 6),
+        plantNamed("=1+1", moisture: 0.5, dryingDays: 6),
+    ])]
+    let start = Date(timeIntervalSince1970: 1_800_000_000)
+    let log = [
+        Watering(plant: "=1+1", when: start.addingTimeInterval(60)),
+        Watering(plant: "Баксик", when: start, left: 0.234, by: "Маша, \"мама\""),
+        Watering(plant: "ушёл", when: start.addingTimeInterval(120)),
+    ]
+    let rows = Export.rows(log, places: Export.places(rooms))
+    check(rows.map(\.plant) == ["Баксик", "=1+1", "ушёл"]
+          && rows[0].room == "Кухня" && rows[0].moistureBefore == 23
+          && rows[2].room == nil,
+          "журнал — по порядку, с комнатой; растения нет — номером")
+    let csv = Export.csv(rows)
+    let lines = csv.dropFirst().components(separatedBy: "\r\n")
+    check(csv.hasPrefix("\u{FEFF}") && lines.count == 5 && lines[4].isEmpty,
+          "CSV: метка UTF-8, заголовок, три строки, CRLF")
+    check(lines[1].contains("\"Маша, \"\"мама\"\"\"")
+          && lines[1].contains(",23,"),
+          "CSV: запятая и кавычки — в кавычках")
+    check(lines[2].contains(",'=1+1,"), "CSV: формула — с апострофом")
+    let decoder = JSONDecoder()
+    decoder.dateDecodingStrategy = .iso8601
+    let back = try! decoder.decode([Export.Row].self, from: Export.json(rows))
+    check(back == rows,
+          "JSON читается обратно")
+}
+
 print("погода:")
 do {
     check(round2(Climate.pace(temperature: 22, humidity: 0.5, outdoor: false)),
