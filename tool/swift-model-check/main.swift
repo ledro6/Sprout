@@ -464,8 +464,17 @@ do {
     let keys = ["statsOrder", "statsHidden"]
     for key in keys { store.removeObject(forKey: key) }
     let board = Settings(store: store)
-    check(board.statsShown == StatsBlock.allCases,
-          "сначала видно всё — в привычном порядке")
+    check(board.statsShown == [.now, .forecast, .aim, .summary, .waterings,
+                               .habits, .rooms, .orrery],
+          "по умолчанию: Сад сегодня → Ближайшие поливы → Полив вовремя → "
+              + "Главное → Поливы → Когда вы поливаете → Комнаты → Планетарий")
+    check(board.statsHidden == [.calendar, .records, .plants],
+          "календарь, рекорды и растения — по выбору")
+    check(!board.statsShown.contains(.recap),
+          "«Итоги года» в списке не стоят — встают сами")
+    board.show(.plants)
+    board.show(.records)
+    board.show(.calendar)
     board.move(.plants, before: .now)
     check(board.statsShown.prefix(2) == [.plants, .now],
           "растения подняли наверх — встали перед «Сейчас»")
@@ -475,21 +484,22 @@ do {
           "тащили вниз — встал рядом с целью")
     check(board.statsShown[board.statsShown.firstIndex(of: .now)! - 1] == .aim,
           "сверху вниз — после цели, как в списках iOS")
-    board.hide(.recap)
+    board.hide(.records)
     board.hide(.orrery)
-    check(!board.statsShown.contains(.recap)
-          && board.statsShown.count == StatsBlock.allCases.count - 2,
+    check(!board.statsShown.contains(.records)
+          && board.statsShown.count == StatsBlock.allCases.count - 3,
           "убранные не видны")
     let reopened = Settings(store: store)
-    check(reopened.statsHidden == [.recap, .orrery]
+    check(reopened.statsHidden == [.records, .orrery]
           && reopened.statsShown == board.statsShown,
           "порядок и убранные переживают запуск")
     let pair = Array(reopened.statsShown.prefix(2))
     reopened.swap(pair[0], with: pair[1])
     check(Array(reopened.statsShown.prefix(2)) == [pair[1], pair[0]],
           "перетаскивание в списке — соседи меняются местами")
-    reopened.show(.recap)
-    check(reopened.statsShown.last == .recap && !reopened.statsHidden.contains(.recap),
+    reopened.show(.records)
+    check(reopened.statsShown.last == .records
+          && !reopened.statsHidden.contains(.records),
           "вернули — встал в конец")
     check(StatsBlock.order([.rooms, .rooms, .now]).count == StatsBlock.allCases.count
           && StatsBlock.order([.rooms, .now]).prefix(2) == [.rooms, .now],
@@ -3418,6 +3428,10 @@ do {
           "сейчас: по одному в каждой зоне")
     check(book.now.driest == "Борис" && book.now.levels == [0.08, 0.3, 0.9],
           "самый сухой и полоска от сухого")
+    check(book.now.thirsty.map(\.name).first == "Борис"
+          && book.now.thirsty.map(\.moisture) == [0.08, 0.3, 0.9]
+          && book.now.thirsty[0].status == .urgent,
+          "«Самые сухие» — от самого сухого, со статусом движка")
     check(round2(book.now.content), "0.33", "довольна треть")
     check(book.ahead.count == Almanac.horizon, "прогноз на две недели сада")
     check(book.ahead.map(\.count)
@@ -5093,11 +5107,30 @@ do {
         Watering(plant: "a", when: at(3, 6, 8), left: 0.3),
         Watering(plant: "x", when: at(3, 7, 13)),
     ]
+    // Полив по влажной земле в итоги не идёт.
+    log.append(Watering(plant: "a", when: at(3, 8, 8), left: 0.8))
     let recap = Recap.of(log, rooms: rooms,
                          awards: [Rank(.drops, 1): at(1, 10, 8),
                                   Rank(.streak, 2): at(12, 31, 8, year: 2025)],
                          year: 2026, now: at(9, 25, 12), calendar: utc)
-    check("\(recap.waterings)", "10", "поливы года — без прошлогоднего")
+    check("\(recap.waterings)", "10",
+          "поливы года — без прошлогоднего и без полива по влажной земле")
+    check(Recap.needed(Watering(plant: "a", when: at(3, 8, 8)))
+          && !Recap.needed(Watering(plant: "a", when: at(3, 8, 8), left: 0.6))
+          && Recap.needed(Watering(plant: "a", when: at(3, 8, 8), left: 0.59)),
+          "нужный полив — не по влажной земле; без остатка — нужный")
+    let early = [Watering(plant: "a", when: at(1, 2, 8))]
+    check(Recap.place(early, now: at(12, 1, 9), calendar: utc) == .banner
+          && Recap.place([], now: at(1, 15, 20), calendar: utc) == .banner,
+          "итоги баннером — с 1 декабря по 15 января")
+    check(Recap.place(early, now: at(1, 16, 9), calendar: utc) == .hidden,
+          "16 января и две недели журнала — итогов нет")
+    check(Recap.place(early, now: at(4, 2, 9), calendar: utc) == .footer
+          && Recap.place(early, now: at(3, 31, 9), calendar: utc) == .hidden,
+          "вне сезона — внизу, с девяноста дней журнала")
+    check(Recap.year(for: at(1, 10, 9), calendar: utc) == 2025
+          && Recap.year(for: at(12, 10, 9), calendar: utc) == 2026,
+          "в январе итоги — за прошедший год")
     check("\(recap.days)", "10", "десять дней с поливом")
     check("\(recap.streak)", "5", "самая длинная череда за год — пять дней")
     check(recap.favorite?.name ?? "—", "Баксик", "любимчик — кого поливали чаще")

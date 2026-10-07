@@ -198,7 +198,7 @@ final class Settings {
 
     /// Что видно на экране статистики — по порядку.
     var statsShown: [StatsBlock] {
-        statsOrder.filter { !statsHidden.contains($0) }
+        statsOrder.filter { $0.listed && !statsHidden.contains($0) }
     }
 
     func hide(_ block: StatsBlock) {
@@ -502,7 +502,7 @@ final class Settings {
         statsOrder = StatsBlock.order(
             Self.take([StatsBlock].self, Key.statsOrder, from: store) ?? [])
         statsHidden = Self.take(Set<StatsBlock>.self, Key.statsHidden,
-                                from: store) ?? []
+                                from: store) ?? StatsBlock.optional
         avatarHue = Self.take(Hue.self, Key.avatarHue, from: store)
             ?? Self.tint(store, Key.avatarTint).map(Hue.preset) ?? .avatar
         avatarShot = store.string(forKey: Key.avatarShot)

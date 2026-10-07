@@ -36,6 +36,13 @@ struct StatsView: View {
     /// «Итоги года» открыты — во весь экран, поверх вкладок.
     @State private var recapping = false
 
+    /// Где «Итоги года»: сверху в сезон, внизу при долгом журнале, —
+    /// пересчитывается с итогом, см. `recount`.
+    @State private var recapPlace: Recap.Place = .hidden
+
+    /// «Самые сухие» раскрыты целиком.
+    @State private var allThirsty = false
+
     /// «Выбрать»: блоки складываются в список, их можно перетаскивать и
     /// убирать.
     @State private var choosing = false
@@ -73,8 +80,8 @@ struct StatsView: View {
 
     private let calendar = Calendar.current
 
-    /// Итоги — за нынешний год: до декабря — с января по сегодня.
-    private var year: Int { calendar.component(.year, from: Date()) }
+    /// Итоги — за нынешний год, а в январе — за прошедший.
+    private var year: Int { Recap.year(for: Date(), calendar: calendar) }
 
     var body: some View {
         NavigationStack(path: $path) {
@@ -109,11 +116,13 @@ struct StatsView: View {
                                         }
                                     }
                                 } else {
+                                    if recapPlace == .banner { recapTeaser }
                                     ForEach(shown, id: \.self) { block in
                                         content(block)
                                             .matchedGeometryEffect(
                                                 id: block, in: fold)
                                     }
+                                    if recapPlace == .footer { recapTeaser }
                                 }
                                 if shown.isEmpty && !choosing {
                                     Text("Все блоки убраны — нажмите «Выбрать», чтобы вернуть.")
@@ -122,7 +131,8 @@ struct StatsView: View {
                                         .fixedSize(horizontal: false, vertical: true)
                                         .padding(.leading, 6)
                                 }
-                                if choosing && !settings.statsHidden.isEmpty {
+                                if choosing
+                                    && settings.statsHidden.contains(where: \.listed) {
                                     hiddenGroup
                                         .transition(.blurReplace)
                                 }
@@ -184,6 +194,15 @@ struct StatsView: View {
     private func recount() {
         book = Almanac.of(garden.log, rooms: garden.rooms, period: period,
                           since: garden.since)
+        recapPlace = Recap.place(garden.log, calendar: calendar)
+    }
+
+    /// «Итоги года» — не блок списка: баннер сверху с 1 декабря по 15
+    /// января, в остальное время — внизу и только при 90 днях журнала.
+    private var recapTeaser: some View {
+        Button { recapping = true } label: { RecapTeaser(year: year) }
+            .buttonStyle(.plain)
+            .sproutRide()
     }
 
     private func refresh() {
@@ -312,9 +331,8 @@ struct StatsView: View {
         case .now:
             now.hintSpot(.statsNow)
         case .recap:
-            Button { recapping = true } label: { RecapTeaser(year: year) }
-                .buttonStyle(.plain)
-                .sproutRide()
+            // Не в списке — см. `recapTeaser`.
+            EmptyView()
         case .orrery:
             NavigationLink(value: StatsRoute.orrery) { OrreryTeaser() }
                 .buttonStyle(.plain)
@@ -344,7 +362,9 @@ struct StatsView: View {
     /// Скрытые — строками с «+»: вернуть на место, в конец.
     private var hiddenGroup: some View {
         SproutGroup("Скрытые") {
-            ForEach(StatsBlock.allCases.filter(settings.statsHidden.contains)) {
+            ForEach(StatsBlock.allCases.filter {
+                $0.listed && settings.statsHidden.contains($0)
+            }) {
                 block in
                 Button {
                     withAnimation(Motion.arrange) { settings.show(block) }
@@ -422,12 +442,15 @@ struct StatsView: View {
                 .frame(width: Metrics.statRingSize,
                        height: Metrics.statRingSize)
                 VStack(alignment: .leading, spacing: 10) {
-                    legend(Palette.green, state.calm, Lang.text("Довольны"))
+                    legend(Palette.secondaryText, state.calm,
+                           Lang.text("Довольны"))
                     legend(Palette.warn, state.warn, Lang.text("Скоро пить"))
                     legend(Palette.alarm, state.alarm, Lang.text("Ждут воды"))
                 }
             }
-            MoistureStrip(levels: state.levels)
+            if !state.thirsty.isEmpty {
+                thirsty(state.thirsty)
+            }
             if let average = state.average {
                 HStack(alignment: .firstTextBaseline, spacing: 6) {
                     Text(nowLine(average: average, driest: state.driest))
@@ -440,6 +463,52 @@ struct StatsView: View {
             }
         }
         .sproutRide()
+    }
+
+    /// «Самые сухие»: пять строк — имя, статус словом движка и процент, —
+    /// остальные по «Показать все».
+    private func thirsty(_ lines: [Almanac.Now.Thirsty]) -> some View {
+        let short = Almanac.Now.shortList
+        let shown = allThirsty ? lines : Array(lines.prefix(short))
+        return VStack(alignment: .leading, spacing: 10) {
+            Text("Самые сухие")
+                .font(Typography.settingNote.weight(.semibold))
+                .foregroundStyle(Palette.secondaryText)
+            ForEach(shown) { line in
+                NavigationLink(value: StatsRoute.plant(line.id)) {
+                    HStack(spacing: 10) {
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(line.name)
+                                .font(Typography.settingRow)
+                                .foregroundStyle(Palette.ink)
+                                .lineLimit(1)
+                            StatusLabel(status: line.status)
+                                .font(Typography.figureCaption)
+                                .foregroundStyle(Palette.secondaryText)
+                        }
+                        Spacer(minLength: 8)
+                        Text(MoistureStatus.percent(line.moisture,
+                                                    estimated: line.estimated))
+                            .font(Typography.detail)
+                            .foregroundStyle(Palette.ink)
+                            .monospacedDigit()
+                            .contentTransition(.numericText())
+                    }
+                    .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+                .accessibilityElement(children: .combine)
+            }
+            if lines.count > short {
+                Button(allThirsty ? Lang.text("Свернуть")
+                       : Lang.format("Показать все (%lld)", lines.count)) {
+                    withAnimation(Motion.enter) { allThirsty.toggle() }
+                }
+                .buttonStyle(.glass)
+                .font(Typography.settingNote)
+            }
+        }
+        .animation(Motion.enter, value: allThirsty)
     }
 
     private func nowLine(average: Double, driest: String?) -> String {

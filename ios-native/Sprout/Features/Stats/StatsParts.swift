@@ -11,9 +11,10 @@ extension Palette {
         }
     }
 
-    /// Зоны точности: заранее — вода, вовремя — зелёный «всё хорошо» (не
-    /// оранжевый: тот значит «скоро пить»), в последний момент — тревога,
-    /// досуха — темнее тревоги и со значком: цветом одним их не различить.
+    /// Зоны точности цветами статусов: «Рано» — wet (вода), «В срок» — ok
+    /// (зелёный, не оранжевый: тот значит «скоро пить»), «Впритык» —
+    /// urgent, «Пересохло» — темнее urgent и со значком: цветом одним их не
+    /// различить.
     static func zone(_ zone: Almanac.Aim.Zone) -> Color {
         switch zone {
         case .early: water
@@ -39,7 +40,9 @@ struct ThirstRing<Center: View>: View {
 
     private var parts: [(Double, Color)] {
         let total = Double(max(now.count, 1))
-        return [(Double(now.calm) / total, Palette.green),
+        // «В порядке» — вторичным цветом: кольцо зовёт к тем, кому вода
+        // нужна, а не хвалит остальных.
+        return [(Double(now.calm) / total, Palette.secondaryText),
                 (Double(now.warn) / total, Palette.warn),
                 (Double(now.alarm) / total, Palette.alarm)]
     }
@@ -64,34 +67,6 @@ struct ThirstRing<Center: View>: View {
             withAnimation(Motion.enter.delay(0.15)) { grown = true }
         }
         .animation(Motion.number, value: now)
-    }
-}
-
-/// Влажность каждого растения чёрточкой, от самого сухого: весь сад одним
-/// взглядом.
-struct MoistureStrip: View {
-    let levels: [Double]
-
-    var body: some View {
-        GeometryReader { geometry in
-            let count = max(levels.count, 1)
-            let gap: CGFloat = count > 40 ? 1 : 2
-            let width = max((geometry.size.width - gap * CGFloat(count - 1))
-                            / CGFloat(count), 1)
-            HStack(alignment: .bottom, spacing: gap) {
-                ForEach(Array(levels.enumerated()), id: \.offset) { item in
-                    Capsule()
-                        .fill(Palette.level(item.element))
-                        .frame(width: width,
-                               height: max(geometry.size.height
-                                           * CGFloat(item.element), width))
-                }
-            }
-            .frame(maxHeight: .infinity, alignment: .bottom)
-        }
-        .frame(height: Metrics.stripHeight)
-        .animation(Motion.number, value: levels)
-        .accessibilityHidden(true)
     }
 }
 
@@ -170,8 +145,8 @@ struct ZoneRow: View {
 
     var body: some View {
         HStack(spacing: 10) {
-            // Досуха — значком, а не точкой: рядом с «в последний момент»
-            // одного цвета мало.
+            // Досуха — значком, а не точкой: рядом с «Впритык» одного цвета
+            // мало.
             if zone == .dry {
                 Image(systemName: "exclamationmark.triangle.fill")
                     .font(Typography.figureCaption)
