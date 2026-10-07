@@ -170582,6 +170582,9 @@
         }
       }
     },
+    "Показать пример": {
+      "extractionState": "manual"
+    },
     "Покрутите барабан — ниже видно, как новый срок ляжет на карточку.": {
       "extractionState": "manual",
       "localizations": {

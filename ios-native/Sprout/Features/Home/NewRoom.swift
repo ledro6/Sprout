@@ -22,6 +22,9 @@ struct NewRoom: View {
 
     let edit: () -> Void
 
+    /// «Показать пример» — сад-пример на пустом саду.
+    var sample: (() -> Void)?
+
     private var blank: Bool {
         draft.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
@@ -37,6 +40,13 @@ struct NewRoom: View {
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
                     .fixedSize(horizontal: false, vertical: true)
+                if let sample {
+                    Button(action: sample) {
+                        Label("Показать пример", systemImage: "sparkles")
+                            .font(Typography.settingNote)
+                    }
+                    .buttonStyle(.glass)
+                }
             }
             Text("Растения в неё можно будет посадить или перевезти.")
                 .font(Typography.settingNote)

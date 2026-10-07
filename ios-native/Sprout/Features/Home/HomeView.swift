@@ -365,9 +365,24 @@ struct HomeView: View {
                             ideas: ideas,
                             misses: misses,
                             make: create,
-                            edit: { roomsOpen = true })
+                            edit: { roomsOpen = true },
+                            sample: sampler)
                 }
             }
+        }
+    }
+
+    /// «Показать пример» — пока в саду ни одного растения.
+    private var sampler: (() -> Void)? {
+        guard garden.plantCount == 0 else { return nil }
+        return {
+            withAnimation(Motion.arrange) {
+                garden.showSample()
+                if let first = garden.rooms.first {
+                    target = .room(first.name)
+                }
+            }
+            Feel.done()
         }
     }
 

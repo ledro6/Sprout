@@ -46,8 +46,12 @@ final class Garden {
     /// о WidgetKit не знает.
     nonisolated(unsafe) static var saved: (() -> Void)?
 
-    init() {
-        let state = Store.read() ?? Seed.state
+    /// Первый запуск — пустой сад (`first`): выдуманные растения с
+    /// выдуманными процентами в настоящий сад не попадают. Пример — по
+    /// кнопке «Показать пример», см. `showSample`. Файл на диске есть — он и
+    /// читается, как прежде.
+    init(first: GardenState = Seed.blank) {
+        let state = Store.read() ?? first
         owner = state.owner
         rooms = state.rooms
         log = state.log
@@ -177,6 +181,17 @@ final class Garden {
         rooms = state.rooms
         log = state.log
         since = state.since
+        roster += 1
+        save()
+    }
+
+    /// «Показать пример» на пустом саду: комнаты и растения макета. Только
+    /// пока растений нет — свой сад пример не трогает; пустые комнаты
+    /// хозяина остаются после примера.
+    func showSample() {
+        guard plantCount == 0 else { return }
+        let names = Set(Seed.rooms.map(\.name))
+        rooms = Seed.rooms + rooms.filter { !names.contains($0.name) }
         roster += 1
         save()
     }

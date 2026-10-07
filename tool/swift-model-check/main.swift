@@ -173,7 +173,7 @@ dry.dry(days: 100)
 check(round2(dry.moisture), "0.00", "ниже нуля влажность не уходит")
 
 print("часы сада:")
-let garden = Garden()
+let garden = Garden(first: Seed.state)
 garden.rooms = Seed.rooms
 let start = Date()
 // Ровно сутки сада — сколько бы ни длились они на часах.
@@ -662,7 +662,7 @@ check("\(quiet.plants.count)", "1", "кого ни разу не полили, �
 check("\(quiet.rooms.count)", "1", "и пустых комнат тоже")
 
 print("сад ведёт журнал:")
-let plot2 = Garden()
+let plot2 = Garden(first: Seed.state)
 let before = plot2.log.count
 plot2.water("pr")
 check("\(plot2.log.count - before)", "1", "полив добавил запись")
@@ -1049,7 +1049,7 @@ check(Seed.greeting(for: "  Аня  "), "Добро пожаловать, Аня
 check(Seed.owner.isEmpty,
       "у нового сада имени нет: макетное «Святослав» встречало бы всех")
 
-let nameless = Garden()
+let nameless = Garden(first: Seed.state)
 check(nameless.owner.isEmpty, "сад заводится безымянным")
 check(nameless.signed, Seed.stranger, "но подписаться ему есть чем")
 // Код с пустым именем обратно не разберётся.
@@ -1266,7 +1266,7 @@ do {
     var probed = plantNamed("Перец", moisture: 0.2, dryingDays: 4)
     probed.sensor = Sensor(kind: .flora, id: "a", name: "Flower care")
     beds.plants.append(probed)
-    let yard = Garden()
+    let yard = Garden(first: Seed.state)
     yard.rooms = [flat, beds, porch]
     let log = yard.log.count
     yard.settle("Кухня", dacha: true)
@@ -1343,7 +1343,7 @@ do {
         Store.testing = nil
         try? FileManager.default.removeItem(at: folder)
     }
-    let yard = Garden()
+    let yard = Garden(first: Seed.state)
     yard.rooms = [Room(name: "Кухня", plants: [
         plantNamed("Баксик", moisture: 0.5, dryingDays: 6),
     ])]
@@ -1997,7 +1997,7 @@ check(swayStill.allSatisfy { $0.width == 0 && $0.height == 0 },
 
 print("убрать и вернуть:")
 do {
-    let yard = Garden()
+    let yard = Garden(first: Seed.state)
     yard.rooms = Seed.rooms
     let roster = yard.roster
     let bedroom = yard.rooms[0].plants.map(\.id)
@@ -2024,7 +2024,7 @@ do {
 
 print("комнаты:")
 do {
-    let yard = Garden()
+    let yard = Garden(first: Seed.state)
     yard.rooms = Seed.rooms
     check(yard.addRoom("  Балкон "), "новая комната заводится")
     check(yard.rooms.last?.name == "Балкон"
@@ -2237,7 +2237,7 @@ do {
 
 print("настройки растения:")
 do {
-    let garden = Garden()
+    let garden = Garden(first: Seed.state)
     let roster = garden.roster
     garden.tune("baksik", name: "  Бакс ", species: "Роза", dryingDays: 18)
     let bax = garden.plant(id: "baksik")!
@@ -2253,7 +2253,7 @@ do {
 
 print("заметки:")
 do {
-    let garden = Garden()
+    let garden = Garden(first: Seed.state)
     garden.note("pr", "  Пересадил в мае.\nУдобрять раз в месяц.  \n")
     check(garden.plant(id: "pr")!.note ?? "",
           "Пересадил в мае.\nУдобрять раз в месяц.", "обрезается по краям")
@@ -2270,7 +2270,7 @@ do {
 
 print("отмена полива:")
 do {
-    let garden = Garden()
+    let garden = Garden(first: Seed.state)
     let before = garden.plant(id: "sumka")!.moisture
     let count = garden.log.count
     let moment = Date()
@@ -2651,7 +2651,7 @@ do {
     let file = try! JSONEncoder().encode(planted)
     check(try! JSONDecoder().decode(Plant.self, from: file).plan == planted.plan,
           "чертёж переживает запуск")
-    let garden = Garden()
+    let garden = Garden(first: Seed.state)
     garden.add(planted, to: "Кабинет")
     garden.tune("новый-1", name: "Новый", species: "Кактус", dryingDays: 7)
     let changed = garden.plant(id: "новый-1")!.plan
@@ -2889,7 +2889,7 @@ do {
     check(Rhythm.suggest(for: often, log: entries([0.6, 0.55, 0.62])) == 4,
           "а новое — предлагается")
 
-    let yard = Garden()
+    let yard = Garden(first: Seed.state)
     let id = yard.rooms[0].plants[0].id
     let before = yard.plant(id: id)!.moisture
     let pour = yard.water(id)!
@@ -2918,7 +2918,7 @@ do {
     check(Care(feedEvery: nil).feedIn == nil && !Care(feedEvery: nil).feedDue,
           "выключенная подкормка не напоминает")
 
-    let yard = Garden()
+    let yard = Garden(first: Seed.state)
     let id = yard.rooms[0].plants[0].id
     Season.growing = true
     yard.advance(to: Date().addingTimeInterval(20 * 86_400 / Garden.speed))
@@ -2995,9 +2995,9 @@ do {
         Store.testing = nil
         try? FileManager.default.removeItem(at: folder)
     }
-    let home = Garden()
+    let home = Garden(first: Seed.state)
     home.save()
-    let other = Garden()
+    let other = Garden(first: Seed.state)
     check(other.plantCount == home.plantCount, "второй сад читает тот же файл")
     let id = other.rooms[0].plants[0].id
     other.advance(to: Date().addingTimeInterval(3 * 86_400 / Garden.speed))
@@ -3021,7 +3021,7 @@ do {
                                                      plants: [sleeper])],
                              savedAt: Date().addingTimeInterval(-night))
     try! JSONEncoder().encode(asleep).write(to: Store.garden!)
-    let woke = Garden()
+    let woke = Garden(first: Seed.state)
     woke.advance()
     let lost = night * Garden.speed / 86_400 / sleeper.period
     check(abs((1 - woke.plant(id: "sleeper")!.moisture) - lost) < 0.001,
@@ -3034,7 +3034,7 @@ do {
             .plants[0].moisture == 1,
           "в прошлое сад не сохнет")
     woke.save()
-    let widget = Garden()
+    let widget = Garden(first: Seed.state)
     widget.advance()
     _ = widget.water("sleeper")
     woke.reload()
@@ -3198,7 +3198,7 @@ do {
 
 print("модель для AR: выбор хозяина:")
 do {
-    let yard = Garden()
+    let yard = Garden(first: Seed.state)
     let id = yard.rooms[0].plants[0].id
     let colours = Traits(leaf: Channels(90, 160, 60), variegation: nil,
                          flower: nil, pot: nil, density: 1.1, stretch: 1)
@@ -4426,7 +4426,7 @@ do {
         Store.testing = nil
         try? FileManager.default.removeItem(at: folder)
     }
-    let yard = Garden()
+    let yard = Garden(first: Seed.state)
     yard.rooms = [Room(name: "Кухня", plants: [frond])]
     yard.treat("tr", dry)
     var now = yard.plant(id: "tr")!
@@ -4484,7 +4484,7 @@ do {
 
 print("портреты растений:")
 do {
-    let yard = Garden()
+    let yard = Garden(first: Seed.state)
     yard.rooms = Seed.rooms
     let id = yard.rooms[0].plants[0].id
     check(yard.plant(id: id)!.cover == nil,
@@ -4669,7 +4669,7 @@ do {
     sensor.wet = 32
     check(round2(sensor.level(30)), "0.50", "слипшиеся метки — обычная шкала")
 
-    let yard = Garden()
+    let yard = Garden(first: Seed.state)
     var fern = plantNamed("Папоротник", moisture: 1, dryingDays: 7)
     fern.sensor = Sensor(kind: .flora, id: "a", name: "Flower care")
     yard.rooms = [Room(name: "Спальня", plants: [fern])]
@@ -4746,7 +4746,7 @@ do {
     let fern = plantNamed("Папоротник", moisture: 1, dryingDays: 10)
     check(round2(fern.period), round2(10 / hot.pace()),
           "срок с погодой — через `period`")
-    let yard = Garden()
+    let yard = Garden(first: Seed.state)
     yard.rooms = [Room(name: "Балкон", plants: [fern]),
                   Room(name: "Спальня", plants: [fern])]
     yard.advance(to: Date().addingTimeInterval(86_400 / Garden.speed))
@@ -5338,6 +5338,51 @@ do {
                     "5 комнат", "11 комнат", "12 комнат", "21 комната",
                     "22 комнаты", "25 комнат", "101 комната"],
           "«комната» — те же формы CLDR")
+}
+
+print("единый источник чисел:")
+do {
+    check(Seed.blank.rooms.isEmpty && Seed.blank.log.isEmpty,
+          "первый запуск — пустой сад, без примера")
+    let yard = Garden(first: Seed.state)
+    let kept = (yard.rooms, yard.log)
+    yard.rooms = [Room(name: "Моя", plants: [])]
+    yard.showSample()
+    check(yard.plantCount == Seed.rooms.flatMap(\.plants).count
+          && yard.rooms.contains { $0.name == "Моя" },
+          "«Показать пример» — растения примера, своя пустая комната осталась")
+    let before = yard.rooms
+    yard.showSample()
+    check(yard.rooms == before, "второй раз пример сад не трогает")
+    yard.rooms = kept.0
+    yard.save()
+    // Сады в 0, 18 и 100 растений: группы «Сад сегодня» = растений сада =
+    // число в профиле (`Garden.plantCount`).
+    for size in [0, 18, 100] {
+        let plants = (0 ..< size).map { index in
+            plantNamed("Р\(index)", moisture: Double(index % 21) / 20,
+                       dryingDays: [1.5, 2, 5, 7, 14, 57][index % 6])
+        }
+        let rooms = stride(from: 0, to: max(size, 1), by: 7).map { start in
+            Room(name: "Комната \(start)",
+                 plants: Array(plants[min(start, size) ..< min(start + 7, size)]))
+        }
+        let garden = Garden(first: Seed.state)
+        let saved = garden.rooms
+        garden.rooms = rooms
+        let now = Almanac.now(garden.rooms)
+        check(now.calm + now.warn + now.alarm == size
+              && now.count == garden.plantCount && garden.plantCount == size
+              && now.levels.count == size,
+              "\(size) растений: группы \(now.calm)+\(now.warn)+\(now.alarm) "
+              + "= в саду = в профиле")
+        check(now.alarm == MoistureStatus.needsWater(in: rooms).count
+              && now.warn == plants.filter {
+                  !$0.needsWaterToday && $0.status == .soon
+              }.count,
+              "\(size) растений: «Ждут воды» — тот же набор, что на карточке дня")
+        garden.rooms = saved
+    }
 }
 
 if failed > 0 {

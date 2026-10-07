@@ -317,8 +317,15 @@ enum Seed {
             : Lang.format("Добро пожаловать, %@!", name)
     }
 
+    /// Сад-пример: для «Показать пример», превью и проверок модели.
     static var state: GardenState {
         GardenState(owner: owner, rooms: rooms, savedAt: Date(),
+                    log: [], since: Date())
+    }
+
+    /// Новый сад первого запуска — пустой.
+    static var blank: GardenState {
+        GardenState(owner: owner, rooms: [], savedAt: Date(),
                     log: [], since: Date())
     }
 
