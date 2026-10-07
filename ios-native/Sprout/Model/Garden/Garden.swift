@@ -373,6 +373,50 @@ final class Garden {
         change(id) { $0.care = tended }
     }
 
+    // MARK: - Лечение
+
+    /// Новый план лечения — вместо прежнего; снимки прежнего, которых нет в
+    /// новом, уходят с диска.
+    func treat(_ id: Plant.ID, _ plan: Treatment) {
+        let old = plant(id: id)?.treatment?.files ?? []
+        change(id) { $0.treatment = plan }
+        for file in old where !plan.files.contains(file) { Shots.drop(file) }
+    }
+
+    /// Шаг плана сделан — или отметку сняли.
+    func step(_ id: Plant.ID, _ step: Treatment.Step.ID, done: Bool,
+              at now: Date = Date()) {
+        guard var plan = plant(id: id)?.treatment else { return }
+        plan.mark(step, done: done, at: now)
+        change(id) { $0.treatment = plan }
+    }
+
+    /// «Вылечено».
+    func cure(_ id: Plant.ID, at now: Date = Date()) {
+        guard var plan = plant(id: id)?.treatment, plan.active else { return }
+        plan.cure(at: now)
+        change(id) { $0.treatment = plan }
+    }
+
+    /// План убрали — со снимками «до» и «после».
+    func untreat(_ id: Plant.ID) {
+        guard let gone = plant(id: id)?.treatment else { return }
+        change(id) { $0.treatment = nil }
+        for file in gone.files { Shots.drop(file) }
+    }
+
+    /// Снимок «до» или «после»; файл уже лежит в `Shots`. Прежний — с диска.
+    func treatmentShot(_ id: Plant.ID, file: String, after: Bool) {
+        guard var plan = plant(id: id)?.treatment else {
+            Shots.drop(file)
+            return
+        }
+        let old = after ? plan.after : plan.before
+        if after { plan.after = file } else { plan.before = file }
+        change(id) { $0.treatment = plan }
+        if let old, old != file { Shots.drop(old) }
+    }
+
     /// Предложение срока отклонили — это же больше не предлагать.
     func quiet(_ id: Plant.ID, _ days: Double) {
         guard plant(id: id) != nil else { return }

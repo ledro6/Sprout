@@ -9,6 +9,7 @@ ios-native/Sprout/Model/Garden/Wrist.swift
 ios-native/Sprout/Model/Garden/Wrist+Garden.swift
 ios-native/Sprout/Model/Core/Store.swift
 ios-native/Sprout/Model/Scene/Rig.swift
+ios-native/Sprout/Model/Garden/Treatment.swift
 ios-native/Sprout/Model/Garden/Plants.swift
 ios-native/Sprout/Model/Garden/Garden.swift
 ios-native/Sprout/Model/Garden/PotTag.swift

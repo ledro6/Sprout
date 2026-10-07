@@ -572,6 +572,12 @@ enum Family {
             if let portrait = remote.portrait, !safe(file: portrait) {
                 remote.portrait = nil
             }
+            if let file = remote.treatment?.before, !safe(file: file) {
+                remote.treatment?.before = nil
+            }
+            if let file = remote.treatment?.after, !safe(file: file) {
+                remote.treatment?.after = nil
+            }
             let roomName = rooms.first { $0.key == body.room }?.name
                 ?? body.roomName
             remote = aged(remote, from: body.at, to: now,
@@ -598,6 +604,7 @@ enum Family {
             merged.wet = water.wet
             let care = keepCare ? mine : remote
             merged.care = care.care
+            merged.treatment = care.treatment
             merged.tended = care.tended
             if !keepWet { outcome.wet.insert(mine.id) }
             if !keepBody, rooms[r].key != body.room {

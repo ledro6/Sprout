@@ -9,7 +9,7 @@ import Observation
 enum Award: String, CaseIterable, Identifiable, Sendable {
     case drops, bullseye
     case streak, noDrought
-    case feeder, traveler
+    case feeder, traveler, healer
     case jungle, botanist
     case earlyBird, nightOwl, newYear
     case spring, summer, autumn, winter
@@ -39,7 +39,7 @@ enum Award: String, CaseIterable, Identifiable, Sendable {
         switch self {
         case .drops, .bullseye: .waterings
         case .streak, .noDrought: .streaks
-        case .feeder, .traveler: .care
+        case .feeder, .traveler, .healer: .care
         case .jungle, .botanist: .garden
         case .earlyBird, .nightOwl, .newYear: .moments
         case .spring, .summer, .autumn, .winter: .seasons
@@ -55,6 +55,7 @@ enum Award: String, CaseIterable, Identifiable, Sendable {
         case .noDrought: [30, 90, 180, 365]
         case .feeder: [1, 5, 20]
         case .traveler: [1, 3, 10]
+        case .healer: [1, 3, 10]
         case .jungle: [5, 10, 25, 50]
         case .botanist: [5, 10, 20, 30]
         case .earlyBird, .nightOwl: [1, 10, 50]
@@ -90,6 +91,8 @@ enum Award: String, CaseIterable, Identifiable, Sendable {
                        Lang.text("Двадцать подкормок")]
         case .traveler: [Lang.text("В дорогу"), Lang.text("Бывалый путник"),
                          Lang.text("Кругосветка")]
+        case .healer: [Lang.text("Врач растений"), Lang.text("Лекарь со стажем"),
+                       Lang.text("Главный врач сада")]
         case .jungle: [Lang.text("Садик"), Lang.text("Джунгли"),
                        Lang.text("Оранжерея"), Lang.text("Ботанический сад")]
         case .botanist: [Lang.text("Ботаник"), Lang.text("Знаток"),
@@ -152,6 +155,11 @@ enum Award: String, CaseIterable, Identifiable, Sendable {
             Lang.text("Подготовить сад к отъезду трижды."),
             Lang.text("Подготовить сад к отъезду десять раз."),
         ]
+        case .healer: [
+            Lang.text("Вылечить растение по плану лечения."),
+            Lang.text("Вылечить растения по плану трижды."),
+            Lang.text("Вылечить растения по плану десять раз."),
+        ]
         case .jungle: [
             Lang.text("Собрать сад из пяти растений."),
             Lang.text("Собрать сад из десяти растений."),
@@ -213,6 +221,7 @@ enum Award: String, CaseIterable, Identifiable, Sendable {
         case .noDrought: .cactus
         case .feeder: .citrus
         case .traveler: .zamioculcas
+        case .healer: .aloe
         case .jungle: .alocasia
         case .botanist: .ficus
         case .earlyBird: .tulip
@@ -229,7 +238,8 @@ enum Award: String, CaseIterable, Identifiable, Sendable {
     /// их считает сама полка; времена года считает книга заданий.
     var deed: Bool {
         switch self {
-        case .feeder, .traveler, .spring, .summer, .autumn, .winter: true
+        case .feeder, .traveler, .healer, .spring, .summer, .autumn, .winter:
+            true
         default: false
         }
     }

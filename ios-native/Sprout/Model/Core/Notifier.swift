@@ -8,6 +8,7 @@ enum Notifier {
     /// Уведомлений два — полив и уход; новое заменяет прежнее по имени.
     private static let id = "watering"
     private static let careID = "care"
+    private static let cureID = "treatment"
 
     /// Кнопка «Полил» прямо в уведомлении — без захода в приложение.
     static let category = "watering"
@@ -75,6 +76,13 @@ enum Notifier {
             note.sound = .default
             await post(note, id: careID, after: chore.after)
         }
+        if let remedy = Reminder.remedy(in: rooms) {
+            let note = UNMutableNotificationContent()
+            note.title = Reminder.title(for: remedy)
+            note.body = Reminder.text(for: remedy)
+            note.sound = .default
+            await post(note, id: cureID, after: remedy.after)
+        }
     }
 
     private static func post(_ note: UNMutableNotificationContent, id: String,
@@ -90,7 +98,8 @@ enum Notifier {
     /// устарел.
     static func clear() {
         UNUserNotificationCenter.current()
-            .removePendingNotificationRequests(withIdentifiers: [id, careID])
+            .removePendingNotificationRequests(withIdentifiers: [id, careID,
+                                                                  cureID])
     }
 }
 

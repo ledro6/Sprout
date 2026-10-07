@@ -95,6 +95,7 @@
 				Model/Garden/Season.swift,
 				Model/Garden/Sensor.swift,
 				Model/Garden/Shots.swift,
+				Model/Garden/Treatment.swift,
 				Model/Pattern/Tint.swift,
 				Model/Recognition/Species.swift,
 				Model/Scene/Greenhouse.swift,

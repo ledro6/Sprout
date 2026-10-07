@@ -34914,6 +34914,9 @@
         }
       }
     },
+    "Врач растений": {
+      "extractionState": "manual"
+    },
     "Время года": {
       "extractionState": "manual",
       "localizations": {
@@ -37496,6 +37499,9 @@
           }
         }
       }
+    },
+    "Все шаги сделаны — пора сказать «Вылечено».": {
+      "extractionState": "manual"
     },
     "Всего": {
       "extractionState": "manual",
@@ -40102,6 +40108,21 @@
       "extractionState": "manual"
     },
     "Выключенное не будет напоминать. Вернуть можно в настройках растения.": {
+      "extractionState": "manual"
+    },
+    "Вылечено": {
+      "extractionState": "manual"
+    },
+    "Вылечено!": {
+      "extractionState": "manual"
+    },
+    "Вылечить растение по плану лечения.": {
+      "extractionState": "manual"
+    },
+    "Вылечить растения по плану десять раз.": {
+      "extractionState": "manual"
+    },
+    "Вылечить растения по плану трижды.": {
       "extractionState": "manual"
     },
     "Выполнено": {
@@ -45570,6 +45591,9 @@
       }
     },
     "Главное за период": {
+      "extractionState": "manual"
+    },
+    "Главный врач сада": {
       "extractionState": "manual"
     },
     "Главный садовник": {
@@ -58785,6 +58809,9 @@
           }
         }
       }
+    },
+    "До": {
+      "extractionState": "manual"
     },
     "До «%1$@» осталось %2$lld": {
       "extractionState": "manual",
@@ -103343,6 +103370,9 @@
         }
       }
     },
+    "Лекарь со стажем": {
+      "extractionState": "manual"
+    },
     "Лера": {
       "extractionState": "manual",
       "localizations": {
@@ -104203,6 +104233,9 @@
           }
         }
       }
+    },
+    "Лечение: «%@»": {
+      "extractionState": "manual"
     },
     "Лилия": {
       "extractionState": "manual",
@@ -144550,6 +144583,12 @@
         }
       }
     },
+    "Отменить план": {
+      "extractionState": "manual"
+    },
+    "Отменить план лечения?": {
+      "extractionState": "manual"
+    },
     "Отметить дачу здесь": {
       "extractionState": "manual"
     },
@@ -156670,6 +156709,12 @@
           }
         }
       }
+    },
+    "План лечения": {
+      "extractionState": "manual"
+    },
+    "План лечения — на экране растения": {
+      "extractionState": "manual"
     },
     "План на отпуск: полить всех перед отъездом и отправить соседу памятку, кого и когда поливать.": {
       "extractionState": "manual",
@@ -195039,6 +195084,9 @@
     "Посадить такое же": {
       "extractionState": "manual"
     },
+    "После": {
+      "extractionState": "manual"
+    },
     "После полива по узору бежит цветная волна — так видно, что полив засчитан.": {
       "extractionState": "manual",
       "localizations": {
@@ -212935,6 +212983,9 @@
         }
       }
     },
+    "Растение снова в строю. Снимки «до» и «после» остаются здесь, пока план не убран.": {
+      "extractionState": "manual"
+    },
     "Растение стоит. Его можно полить.": {
       "extractionState": "manual",
       "localizations": {
@@ -227309,6 +227360,9 @@
         }
       }
     },
+    "Сделано": {
+      "extractionState": "manual"
+    },
     "Сегодня": {
       "extractionState": "manual",
       "localizations": {
@@ -237957,6 +238011,9 @@
         }
       }
     },
+    "Следующий шаг — %@": {
+      "extractionState": "manual"
+    },
     "Слишком темно — включите свет": {
       "extractionState": "manual",
       "localizations": {
@@ -240827,6 +240884,9 @@
         }
       }
     },
+    "Снимите растение снова в «Что с ним?» и сравните с тем, что было.": {
+      "extractionState": "manual"
+    },
     "Снимите растение целиком, при дневном свете — телефон посмотрит на листья.": {
       "extractionState": "manual",
       "localizations": {
@@ -243409,6 +243469,12 @@
           }
         }
       }
+    },
+    "Снять «после»": {
+      "extractionState": "manual"
+    },
+    "Снять отметку": {
+      "extractionState": "manual"
     },
     "Собираю модель: %@": {
       "extractionState": "manual",
@@ -246282,6 +246348,12 @@
           }
         }
       }
+    },
+    "Составить план заново": {
+      "extractionState": "manual"
+    },
+    "Составить план лечения": {
+      "extractionState": "manual"
     },
     "Сохранено в iCloud в %@": {
       "extractionState": "manual"
@@ -263547,6 +263619,9 @@
           }
         }
       }
+    },
+    "Убрать план": {
+      "extractionState": "manual"
     },
     "Убрать растение друга": {
       "extractionState": "manual"
@@ -283955,6 +284030,12 @@
     "Чтобы участвовать, скопируйте это сообщение целиком и нажмите «Вставить» в Sprout → Профиль → Друзья. Свой счёт присылайте кнопкой «Отправить счёт».": {
       "extractionState": "manual"
     },
+    "Шаги — из советов выше, со сроками и напоминаниями. Этот снимок станет снимком «до».": {
+      "extractionState": "manual"
+    },
+    "Шаги, отметки и снимки «до» и «после» пропадут.": {
+      "extractionState": "manual"
+    },
     "Шнурок": {
       "extractionState": "manual",
       "localizations": {
@@ -289429,6 +289510,9 @@
         }
       }
     },
+    "пора": {
+      "extractionState": "manual"
+    },
     "раз в %@ дня": {
       "extractionState": "manual",
       "localizations": {
@@ -293223,6 +293307,12 @@
     "рекорд — %lld": {
       "extractionState": "manual"
     },
+    "сделано": {
+      "extractionState": "manual"
+    },
+    "сегодня": {
+      "extractionState": "manual"
+    },
     "сохнут быстрее": {
       "extractionState": "manual",
       "localizations": {
@@ -294370,6 +294460,41 @@
           "stringUnit": {
             "state": "translated",
             "value": "每分鐘不只一次"
+          }
+        }
+      }
+    },
+    "через %lld дней": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "variations": {
+            "plural": {
+              "few": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "через %lld дня"
+                }
+              },
+              "many": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "через %lld дней"
+                }
+              },
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "через %lld день"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "через %lld дня"
+                }
+              }
+            }
           }
         }
       }

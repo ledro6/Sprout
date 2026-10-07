@@ -4289,6 +4289,187 @@ do {
           "без маски — середина кадра")
 }
 
+print("план лечения:")
+do {
+    let start = Date(timeIntervalSince1970: 1_800_000_000)
+    func day(_ days: Double) -> Date {
+        start.addingTimeInterval(days * 86_400 / Garden.speed)
+    }
+    func finding(_ kind: Finding.Kind) -> Finding {
+        Finding(kind: kind, confidence: 0.7)
+    }
+    let frond = Plant.new(name: "Нефрон", species: "Папоротник", dryingDays: 5,
+                          id: "tr")
+    check(Treatment.plan([finding(.healthy)], plant: frond, now: start) == nil
+          && Treatment.plan([finding(.unclear)], plant: frond, now: start) == nil,
+          "здоров или не разглядеть — плана нет")
+    check(finding(.pale).tips == finding(.pale).advice.map { Lang.text($0.key) }
+          && finding(.crispy).tips.count == 2,
+          "советы на карточке — те же, что в плане")
+
+    let dry = Treatment.plan([finding(.crispy)], plant: frond, now: start)!
+    let mistKey = finding(.crispy).advice[0].key
+    let mists = dry.steps.filter { $0.advice == mistKey }
+    check(mists.map(\.due) == [0, 3, 6, 9, 12].map(day)
+          && mists.map(\.round) == [1, 2, 3, 4, 5]
+          && mists.allSatisfy { $0.rounds == 5 },
+          "опрыскивание — по сроку вида, раз в 3 дня, не больше пяти раз")
+    check(dry.steps.map(\.id).prefix(2) == ["crispy-0-1", "crispy-1-1"],
+          "в один день — по порядку советов")
+    check(dry.steps.last?.id == "check" && dry.steps.last?.due == day(14),
+          "последним — снова снимок через две недели сада")
+    check(dry.kinds == ["crispy"] && dry.total == 7 && dry.started == start,
+          "что лечим и сколько шагов")
+    check(dry.steps[1].title == finding(.crispy).tips[1],
+          "шаг — слово в слово совет находки")
+
+    let cactus = Plant.new(name: "Ёж", species: "Кактус", dryingDays: 30,
+                           id: "cx")
+    let prickly = Treatment.plan([finding(.crispy)], plant: cactus, now: start)!
+    check(prickly.steps.filter { $0.advice == mistKey }.map(\.due)
+            == [0, 7, 14].map(day),
+          "вид без опрыскивания — раз в неделю")
+    var tuned = frond
+    var care = Care.usual(for: .fern)
+    care.set(.mist, every: 5)
+    tuned.care = care
+    check(Treatment.plan([finding(.crispy)], plant: tuned, now: start)!.steps
+            .filter { $0.advice == mistKey }.map(\.due) == [0, 5, 10].map(day),
+          "свой срок опрыскивания — главнее срока вида")
+    let pale = Treatment.plan([finding(.pale)], plant: frond, now: start)!
+    check(pale.steps.map(\.due) == [day(0), day(0), day(14), day(14)]
+          && pale.steps.filter { $0.rounds == 2 }.count == 2,
+          "поворот — «раз в пару недель»: сразу и через 14 дней")
+    let both = Treatment.plan([finding(.overwatered), finding(.yellowing),
+                               finding(.healthy)], plant: frond, now: start)!
+    check(both.kinds == ["overwatered", "yellowing"] && both.total == 5,
+          "несколько находок — шаги всех, проверка одна")
+
+    var plan = dry
+    check(plan.done == 0 && plan.next?.id == "crispy-0-1"
+          && plan.due(at: start).count == 2 && plan.active && !plan.complete,
+          "в начале: ничего не сделано, два шага сразу")
+    plan.mark("crispy-0-1", done: true, at: start)
+    plan.mark("crispy-1-1", done: true, at: start)
+    check(plan.done == 2 && plan.next?.id == "crispy-0-2"
+          && plan.due(at: start).isEmpty && plan.due(at: day(3)).count == 1,
+          "сделанное не ждёт; следующий — через срок")
+    plan.mark("crispy-1-1", done: true, at: day(5))
+    check(plan.steps.first { $0.id == "crispy-1-1" }?.done == start,
+          "повторная отметка не сдвигает дату")
+    plan.mark("crispy-0-1", done: false)
+    check(plan.done == 1 && plan.next?.id == "crispy-0-1", "отметку можно снять")
+    plan.mark("нет такого", done: true)
+    check(plan.done == 1, "чужой шаг — ничего")
+    for step in plan.steps { plan.mark(step.id, done: true, at: day(14)) }
+    check(plan.complete && plan.next == nil, "всё сделано")
+    plan.cure(at: day(15))
+    plan.cure(at: day(20))
+    check(!plan.active && plan.cured == day(15), "вылечено — один раз")
+    check(Treatment.when(start, from: start), "пора", "срок пришёл")
+    check(Treatment.when(day(0.5), from: start), "сегодня", "меньше дня")
+    check(Treatment.when(day(1), from: start), "через 1 день", "через день")
+    check(Treatment.when(day(3), from: start), "через 3 дня", "через три дня")
+    check(dry.steps[0].count ?? "", "1 из 5", "который раз из скольких")
+
+    let data = try! JSONEncoder().encode(dry)
+    check(try! JSONDecoder().decode(Treatment.self, from: data) == dry,
+          "план пишется и читается")
+    let bare = try? JSONDecoder().decode(Treatment.self,
+        from: Data(#"{"steps":[{"id":"x"}]}"#.utf8))
+    check(bare?.steps.first?.rounds == 1 && bare?.kinds == []
+          && bare?.cured == nil,
+          "план с пропусками — по умолчанию, а не ошибка")
+    let old = try? JSONDecoder().decode(Plant.self, from: Data(#"""
+        {"id":"o","name":"Старичок","species":"Фикус","moisture":0.5,
+         "dryingDays":7,"addedOn":{"year":2024,"month":1,"day":1},
+         "photo":"monstera"}
+        """#.utf8))
+    check(old != nil && old?.treatment == nil,
+          "растение прежней сборки читается — без плана")
+
+    var sick = frond
+    sick.treatment = dry
+    let ward = [Room(name: "Кухня", plants: [sick, cactus])]
+    let remedy = Reminder.remedy(in: ward, now: start)
+    check(remedy?.step.id == "crispy-0-2"
+          && round2(remedy?.after ?? 0) == round2(3 * 86_400 / Garden.speed),
+          "напоминание — о ближайшем шаге впереди")
+    check(remedy.map { Reminder.title(for: $0) } ?? "", "Лечение: «Нефрон»",
+          "заголовок напоминания")
+    check(remedy.map { Reminder.text(for: $0) } ?? "",
+          finding(.crispy).tips[0] + " · 2 из 5", "текст — шаг и который раз")
+    var healed = sick
+    healed.treatment?.cure(at: start)
+    check(Reminder.remedy(in: [Room(name: "Кухня", plants: [healed])],
+                          now: start) == nil,
+          "вылеченное не напоминает")
+
+    let folder = FileManager.default.temporaryDirectory
+        .appendingPathComponent("sprout-cure-\(UUID().uuidString)")
+    try! FileManager.default.createDirectory(at: folder,
+                                             withIntermediateDirectories: true)
+    Store.testing = folder
+    defer {
+        Store.testing = nil
+        try? FileManager.default.removeItem(at: folder)
+    }
+    let yard = Garden()
+    yard.rooms = [Room(name: "Кухня", plants: [frond])]
+    yard.treat("tr", dry)
+    var now = yard.plant(id: "tr")!
+    check(now.treatment == dry && now.tended != nil && now.edited == nil,
+          "план — правка ухода, а не растения")
+    yard.treatmentShot("tr", file: "do.jpg", after: false)
+    yard.treatmentShot("tr", file: "posle.jpg", after: true)
+    now = yard.plant(id: "tr")!
+    check(now.files == ["do.jpg", "posle.jpg"]
+          && Family.photos(yard.rooms).contains("posle.jpg"),
+          "снимки «до» и «после» — файлы растения и общего сада")
+    yard.step("tr", "crispy-0-1", done: true)
+    yard.cure("tr")
+    now = yard.plant(id: "tr")!
+    check(now.treatment?.done == 1 && now.treatment?.active == false,
+          "шаг отмечен, растение вылечено")
+    yard.untreat("tr")
+    check(yard.plant(id: "tr")!.treatment == nil, "план убран")
+
+    // Общий сад: план едет с растением и сливается по отметке ухода.
+    let kitchen = Room(name: "Кухня", plants: [frond], key: "kitchen", rank: 1)
+    var mine = [kitchen]
+    var log: [Watering] = []
+    var book = Family.Book()
+    var theirs = frond
+    theirs.treatment = dry
+    theirs.treatment?.after = "../escape.jpg"
+    theirs.tended = day(1)
+    var arrival = Family.Arrival()
+    arrival.plants = [Family.body(theirs, in: kitchen, at: day(1))]
+    _ = Family.apply(arrival, to: &mine, log: &log, book: &book, me: "me",
+                     now: day(1))
+    var merged = mine[0].plants[0]
+    check(merged.treatment?.steps == dry.steps && merged.tended == day(1),
+          "чужой план пришёл с растением")
+    check(merged.treatment?.after == nil, "чужое имя снимка — только простое")
+    mine[0].plants[0].treatment?.mark("crispy-0-1", done: true, at: day(2))
+    mine[0].plants[0].tended = day(2)
+    _ = Family.apply(arrival, to: &mine, log: &log, book: &book, me: "me",
+                     now: day(3))
+    merged = mine[0].plants[0]
+    check(merged.treatment?.done == 1, "своя отметка новее — остаётся")
+    theirs.treatment?.cure(at: day(4))
+    theirs.tended = day(4)
+    arrival.plants = [Family.body(theirs, in: kitchen, at: day(4))]
+    _ = Family.apply(arrival, to: &mine, log: &log, book: &book, me: "me",
+                     now: day(4))
+    check(mine[0].plants[0].treatment?.active == false,
+          "вылечили на другом телефоне — вылечено и здесь")
+
+    check(Award.healer.deed && Award.healer.group == .care
+          && Award.healer.title(1) == "Врач растений",
+          "награда «Врач растений» — разовое дело заботы")
+}
+
 print("портреты растений:")
 do {
     let yard = Garden()

@@ -158,39 +158,61 @@ struct Finding: Identifiable, Hashable, Sendable {
         }
     }
 
-    var tips: [String] {
+    /// Советы на языке приложения — строками на карточке находки.
+    var tips: [String] { advice.map { Lang.text($0.key) } }
+
+    /// Советы находки и то, как каждый ложится в план лечения: разовый —
+    /// сразу, повторяющийся — раз в `every` дней сада. Срок повтора — из
+    /// самого совета («раз в пару недель») или из сроков вида; придумывать
+    /// свои нельзя.
+    var advice: [Advice] {
         switch kind {
         case .unclear, .healthy: []
         case .overwatered: [
-            Lang.text("Поливайте, только когда карточка засветится оранжевым."),
-            Lang.text("Проверьте, есть ли в горшке дырка и не стоит ли вода в поддоне."),
+            Advice(key: Lang.key("Поливайте, только когда карточка засветится оранжевым."),
+                   icon: "drop.fill"),
+            Advice(key: Lang.key("Проверьте, есть ли в горшке дырка и не стоит ли вода в поддоне."),
+                   icon: "cylinder.split.1x2"),
         ]
         case .underwatered: [
-            Lang.text("Включите напоминания о поливе или сократите срок в настройках растения."),
-            Lang.text("Пересохший ком земли поливайте погружением: горшок — в таз с водой на полчаса."),
+            Advice(key: Lang.key("Включите напоминания о поливе или сократите срок в настройках растения."),
+                   icon: "bell.fill"),
+            Advice(key: Lang.key("Пересохший ком земли поливайте погружением: горшок — в таз с водой на полчаса."),
+                   icon: "drop.fill"),
         ]
         case .hungry: [
-            Lang.text("Подкормите растение и отметьте это на его экране."),
+            Advice(key: Lang.key("Подкормите растение и отметьте это на его экране."),
+                   icon: "sparkles"),
         ]
         case .yellowing: [
-            Lang.text("Уберите пожелтевшие листья целиком."),
-            Lang.text("Сравните с историей полива: земля не пересыхала и не стояла мокрой?"),
+            Advice(key: Lang.key("Уберите пожелтевшие листья целиком."),
+                   icon: "scissors"),
+            Advice(key: Lang.key("Сравните с историей полива: земля не пересыхала и не стояла мокрой?"),
+                   icon: "chart.bar.fill"),
         ]
         case .crispy: [
-            Lang.text("Опрыскивайте листья или поставьте рядом воду — воздух станет влажнее."),
-            Lang.text("Уберите горшок от батареи."),
+            Advice(key: Lang.key("Опрыскивайте листья или поставьте рядом воду — воздух станет влажнее."),
+                   icon: Duty.mist.icon, every: .mist),
+            Advice(key: Lang.key("Уберите горшок от батареи."),
+                   icon: "heater.vertical.fill"),
         ]
         case .spots: [
-            Lang.text("Уберите пятнистые листья и не лейте воду на листья."),
-            Lang.text("Уберите растение от прямого полуденного солнца."),
+            Advice(key: Lang.key("Уберите пятнистые листья и не лейте воду на листья."),
+                   icon: "scissors"),
+            Advice(key: Lang.key("Уберите растение от прямого полуденного солнца."),
+                   icon: "sun.max.fill"),
         ]
         case .powder: [
-            Lang.text("Посмотрите на изнанку листьев: нет ли там ватных комочков или паутинки."),
-            Lang.text("Протрите листья мягкой губкой с тёплой водой."),
+            Advice(key: Lang.key("Посмотрите на изнанку листьев: нет ли там ватных комочков или паутинки."),
+                   icon: "magnifyingglass"),
+            Advice(key: Lang.key("Протрите листья мягкой губкой с тёплой водой."),
+                   icon: Duty.wipe.icon),
         ]
         case .pale: [
-            Lang.text("Переставьте ближе к окну, но не под прямое солнце."),
-            Lang.text("Поворачивайте горшок раз в пару недель, чтобы свет доставался всем листьям."),
+            Advice(key: Lang.key("Переставьте ближе к окну, но не под прямое солнце."),
+                   icon: "sun.min.fill"),
+            Advice(key: Lang.key("Поворачивайте горшок раз в пару недель, чтобы свет доставался всем листьям."),
+                   icon: Duty.turn.icon, every: .days(14)),
         ]
         }
     }
@@ -253,5 +275,90 @@ struct Finding: Identifiable, Hashable, Sendable {
             add(.healthy, 0.4 + seen.green)
         }
         return out.sorted { $0.confidence > $1.confidence }
+    }
+}
+
+/// Совет находки: ключ каталога строк, знак и повтор.
+struct Advice: Hashable, Sendable {
+    /// Как часто повторять: срок, названный в самом совете, или срок
+    /// опрыскивания — своего растения или его вида.
+    enum Repeat: Hashable, Sendable {
+        case days(Double)
+        case mist
+    }
+
+    var key: String
+    var icon: String
+    /// Пусто — сделать один раз, сразу.
+    var every: Repeat? = nil
+}
+
+extension Treatment {
+    /// Сколько дней сада идёт лечение: через две недели — снова снимок.
+    static let span = 14.0
+
+    /// Совет повторяют не чаще, чем укладывается в лечение, и не больше
+    /// пяти раз: напоминание каждый день — уже шум.
+    static let most = 5
+
+    /// Опрыскивание у вида, который обычно не опрыскивают, — раз в
+    /// неделю: самый редкий срок среди тех, кого опрыскивают (`Duty.mist`).
+    static let rareMist = 7.0
+
+    /// План по находкам: шаги — советы находок по порядку, повторяющиеся —
+    /// по сроку, последним — снова снимок в «Что с ним?». Нет советов
+    /// (здоров или не разглядеть) — плана нет.
+    static func plan(_ findings: [Finding], plant: Plant, now: Date = Date(),
+                     speed: Double = Garden.speed) -> Treatment? {
+        var steps: [Step] = []
+        var kinds: [String] = []
+        var seen = Set<String>()
+        var last = 0.0
+        for finding in findings {
+            let advice = finding.advice.filter { seen.insert($0.key).inserted }
+            guard !advice.isEmpty else { continue }
+            kinds.append(finding.kind.rawValue)
+            for (index, tip) in advice.enumerated() {
+                let every = tip.every.map { period($0, plant: plant) }
+                let rounds = every.map {
+                    min(Int((span / $0).rounded(.down)) + 1, most)
+                } ?? 1
+                for round in 1 ... rounds {
+                    let day = Double(round - 1) * (every ?? 0)
+                    last = max(last, day)
+                    steps.append(Step(
+                        id: "\(finding.kind.rawValue)-\(index)-\(round)",
+                        advice: tip.key, icon: tip.icon, round: round,
+                        rounds: rounds,
+                        due: now.addingTimeInterval(seconds(days: day,
+                                                            speed: speed))))
+                }
+            }
+        }
+        guard !steps.isEmpty else { return nil }
+        steps.append(Step(
+            id: "check",
+            advice: Lang.key("Снимите растение снова в «Что с ним?» и сравните с тем, что было."),
+            icon: "camera.viewfinder",
+            due: now.addingTimeInterval(seconds(days: max(span, last),
+                                                speed: speed))))
+        // По сроку; в один день — по порядку советов.
+        let order = Dictionary(uniqueKeysWithValues:
+            steps.enumerated().map { ($0.element.id, $0.offset) })
+        steps.sort {
+            $0.due != $1.due ? $0.due < $1.due
+                : order[$0.id, default: 0] < order[$1.id, default: 0]
+        }
+        return Treatment(kinds: kinds, started: now, steps: steps)
+    }
+
+    /// Срок повтора в днях сада.
+    static func period(_ every: Advice.Repeat, plant: Plant) -> Double {
+        switch every {
+        case .days(let days): days
+        case .mist:
+            plant.tending.every(.mist)
+                ?? Duty.mist.usual(for: plant.blueprint.preset) ?? rareMist
+        }
     }
 }

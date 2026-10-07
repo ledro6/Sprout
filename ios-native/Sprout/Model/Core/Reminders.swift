@@ -103,6 +103,40 @@ enum Reminder {
                      after: max(best.days * 86_400 / Garden.speed, soonest))
     }
 
+    /// Шаг плана лечения — своим уведомлением: ближайший несделанный, чей
+    /// срок ещё впереди. Прошедший уже был на экране растения и в прошлом
+    /// напоминании; вылеченное больше не зовёт.
+    struct Remedy {
+        var plant: Plant
+        var step: Treatment.Step
+        var after: TimeInterval
+    }
+
+    static func remedy(in rooms: [Room], now: Date = Date()) -> Remedy? {
+        var best: Remedy?
+        for plant in rooms.flatMap(\.plants) {
+            guard let plan = plant.treatment, plan.active else { continue }
+            for step in plan.steps where step.done == nil && step.due > now {
+                let after = step.due.timeIntervalSince(now)
+                if best == nil || after < best!.after {
+                    best = Remedy(plant: plant, step: step, after: after)
+                }
+            }
+        }
+        guard var best else { return nil }
+        best.after = max(best.after, soonest)
+        return best
+    }
+
+    static func title(for remedy: Remedy) -> String {
+        Lang.format("Лечение: «%@»", remedy.plant.name)
+    }
+
+    static func text(for remedy: Remedy) -> String {
+        guard let count = remedy.step.count else { return remedy.step.title }
+        return remedy.step.title + " · " + count
+    }
+
     static func title(for chore: Chore) -> String {
         switch chore.kind {
         case .feed: Lang.text("Пора подкормить")

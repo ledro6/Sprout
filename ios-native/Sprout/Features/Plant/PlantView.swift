@@ -70,6 +70,10 @@ struct PlantView: View {
                                 .transition(.blurReplace)
                         }
                         care(plant)
+                        if let plan = plant.treatment {
+                            TreatmentCard(plant: plant, plan: plan)
+                                .transition(.blurReplace)
+                        }
                         facts(plant)
                         notes
                             .hintSpot(.plantNotes)

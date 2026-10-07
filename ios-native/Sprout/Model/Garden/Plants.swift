@@ -44,8 +44,11 @@ struct Plant: Identifiable, Hashable, Codable {
     /// хозяина; пусто — рисунок вида (`photo`).
     var cover: String? { portrait ?? shot }
 
-    /// Файлы растения на диске — уходят вместе с ним.
-    var files: [String] { [shot, portrait].compactMap { $0 } }
+    /// Файлы растения на диске — уходят вместе с ним: снимок, портрет и
+    /// снимки «до» и «после» плана лечения.
+    var files: [String] {
+        [shot, portrait].compactMap { $0 } + (treatment?.files ?? [])
+    }
 
     /// Заметка хозяина. Необязательная по той же причине, что и `shot`.
     var note: String?
@@ -85,6 +88,11 @@ struct Plant: Identifiable, Hashable, Codable {
     /// Место в комнате для общего сада: порядок массива у каждого телефона
     /// свой, а место числом одно на всех. Ставит `Family.settle`.
     var rank: Double?
+
+    /// План лечения после «Что с ним?», см. `Treatment`. Пусто — не лечится;
+    /// в садах прежних сборок его нет. Правка плана — правка ухода
+    /// (`tended`).
+    var treatment: Treatment?
 
     /// Уход со сроками вида там, где своих нет: мелкого ухода в садах
     /// прежних сборок не было.
@@ -139,7 +147,7 @@ struct Plant: Identifiable, Hashable, Codable {
     /// мигом `now`. Высыхание сюда не ходит — оно не правка.
     mutating func stamp(since old: Plant, at now: Date = Date()) {
         if moisture != old.moisture { wet = now }
-        if care != old.care { tended = now }
+        if care != old.care || treatment != old.treatment { tended = now }
         if Self.plain(self) != Self.plain(old) { edited = now }
     }
 
@@ -149,6 +157,7 @@ struct Plant: Identifiable, Hashable, Codable {
         var plain = plant
         plain.moisture = 0
         plain.care = nil
+        plain.treatment = nil
         plain.sensor = nil
         plain.scan = nil
         plain.edited = nil

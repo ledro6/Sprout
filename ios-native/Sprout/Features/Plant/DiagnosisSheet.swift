@@ -18,6 +18,8 @@ struct DiagnosisSheet: View {
     @State private var thinking = false
     @State private var findings: [Finding] = []
     @State private var advice: String?
+    /// План лечения составлен по этому снимку.
+    @State private var planned = false
 
     private var plant: Plant? { garden.plant(id: plantID) }
 
@@ -51,6 +53,7 @@ struct DiagnosisSheet: View {
                         card(finding)
                             .transition(.blurReplace)
                     }
+                    planOffer
                     Text("Это подсказка по снимку, а не приговор: тень, блик или белые цветки телефон может принять за беду.")
                         .font(Typography.settingNote)
                         .foregroundStyle(.secondary)
@@ -63,6 +66,7 @@ struct DiagnosisSheet: View {
                 .animation(Motion.enter, value: findings)
                 .animation(Motion.enter, value: thinking)
                 .animation(Motion.enter, value: advice)
+                .animation(Motion.enter, value: planned)
             }
             .background { SproutBackground() }
             .navigationTitle("Что с растением?")
@@ -135,6 +139,56 @@ struct DiagnosisSheet: View {
                                           style: .continuous))
     }
 
+    /// Есть что делать — план лечения: шаги из советов выше, с
+    /// напоминаниями; разобранный снимок становится снимком «до».
+    @ViewBuilder
+    private var planOffer: some View {
+        if !thinking, findings.contains(where: { !$0.advice.isEmpty }) {
+            VStack(alignment: .leading, spacing: 10) {
+                if planned {
+                    Label("План лечения — на экране растения",
+                          systemImage: "checkmark.circle.fill")
+                        .font(Typography.settingRow)
+                        .foregroundStyle(Palette.green)
+                } else {
+                    Button { makePlan() } label: {
+                        Group {
+                            if plant?.treatment?.active == true {
+                                Label("Составить план заново",
+                                      systemImage: "list.bullet.clipboard")
+                            } else {
+                                Label("Составить план лечения",
+                                      systemImage: "list.bullet.clipboard")
+                            }
+                        }
+                        .font(Typography.detail)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 6)
+                    }
+                    .buttonStyle(.glassProminent)
+                    .controlSize(.large)
+                    Text("Шаги — из советов выше, со сроками и напоминаниями. Этот снимок станет снимком «до».")
+                        .font(Typography.settingNote)
+                        .foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .padding(.horizontal, 6)
+                }
+            }
+            .transition(.blurReplace)
+        }
+    }
+
+    private func makePlan() {
+        guard let plant,
+              var plan = Treatment.plan(findings, plant: plant) else { return }
+        plan.before = shown.flatMap { Snapshot.keep($0) }
+        withAnimation(Motion.enter) {
+            garden.treat(plantID, plan)
+            planned = true
+        }
+        Feel.done()
+    }
+
     private func card(_ finding: Finding) -> some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack(spacing: 10) {
@@ -203,6 +257,7 @@ struct DiagnosisSheet: View {
             thinking = true
             findings = []
             advice = nil
+            planned = false
         }
         let seen = await Eye.examine(image)
         let found = Finding.diagnose(seen, plant: plant, log: garden.log,
