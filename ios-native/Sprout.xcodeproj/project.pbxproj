@@ -90,6 +90,7 @@
 				Model/Core/Store.swift,
 				Model/Garden/Care.swift,
 				Model/Garden/Climate.swift,
+				Model/Garden/Fair.swift,
 				Model/Garden/Garden.swift,
 				Model/Garden/Plants.swift,
 				Model/Garden/Round.swift,

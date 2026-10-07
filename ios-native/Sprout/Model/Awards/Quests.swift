@@ -14,6 +14,9 @@ enum Quest: String, CaseIterable, Codable, Identifiable, Sendable {
     case morning
     /// Поливы — и ни одного по мокрой земле.
     case noFlood
+    /// Ни одного пересохшего растения семь дней — вместо «Поливайте N дней»
+    /// по честным правилам (`Fair`).
+    case noDry
 
     var id: String { rawValue }
 
@@ -24,6 +27,7 @@ enum Quest: String, CaseIterable, Codable, Identifiable, Sendable {
         case .noDrought: "sun.max"
         case .morning: "sunrise"
         case .noFlood: "drop.triangle"
+        case .noDry: "leaf"
         }
     }
 
@@ -36,6 +40,8 @@ enum Quest: String, CaseIterable, Codable, Identifiable, Sendable {
         case .morning: Lang.format("Полейте до десяти утра %lld раз", goal)
         case .noFlood:
             Lang.format("%lld поливов — и ни одного по мокрой земле", goal)
+        case .noDry:
+            Lang.format("Ни одного пересохшего растения %lld дней", goal)
         }
     }
 
@@ -43,7 +49,9 @@ enum Quest: String, CaseIterable, Codable, Identifiable, Sendable {
     var detail: String {
         switch self {
         case .onTime:
-            Lang.text("Вовремя — когда в земле осталось 20–40% воды.")
+            Fair.from == nil
+                ? Lang.text("Вовремя — когда в земле осталось 20–40% воды.")
+                : Lang.text("Вовремя — когда земля подсохла: «скоро пить» или «сухо». Полив влажной земли не считается.")
         case .days:
             Lang.text("Хотя бы один полив в день, дни — не обязательно подряд.")
         case .noDrought:
@@ -52,6 +60,8 @@ enum Quest: String, CaseIterable, Codable, Identifiable, Sendable {
             Lang.text("С пяти до десяти утра: за день вода уйдёт в корни, а не простоит в земле всю ночь.")
         case .noFlood:
             Lang.text("Мокрая земля — больше 60% воды. Корням нужен воздух.")
+        case .noDry:
+            Lang.text("Каждый день поливайте тех, кому пора: «сухо» или срок вышел. Лишний полив не нужен.")
         }
     }
 }
@@ -101,8 +111,11 @@ struct Week: Hashable, Sendable {
 
     /// Три задания из пяти, по номеру недели: шаг два по кругу из пяти не
     /// повторяется, а соседние недели не совпадают целиком.
-    static func quests(for index: Int) -> [Quest] {
-        let pool = Quest.allCases
+    static func quests(for index: Int, fair: Bool = false) -> [Quest] {
+        // Пул из пяти, как прежде: по честным правилам «Поливайте N дней»
+        // меняется на «Ни одного пересохшего» на том же месте.
+        let pool: [Quest] = [.onTime, fair ? .noDry : .days, .noDrought,
+                             .morning, .noFlood]
         let start = ((index % pool.count) + pool.count) % pool.count
         return (0 ..< size).map { pool[(start + $0 * 2) % pool.count] }
     }
@@ -119,11 +132,15 @@ struct Week: Hashable, Sendable {
         case .noDrought: return share(0.5, 15)
         case .morning: return share(0.2, 5)
         case .noFlood: return share(0.5, 15)
+        case .noDry: return 7
         }
     }
 
+    /// `fair` — дата честных правил (`Fair`): с неё задания считают только
+    /// нужные поливы, а «Поливайте N дней» сменяет «Ни одного
+    /// пересохшего».
     static func of(_ moment: Date, log: [Watering], rooms: [Room],
-                   now: Date = Date(),
+                   now: Date = Date(), fair: Date? = Fair.from,
                    calendar: Calendar = .current) -> Week {
         let span = calendar.dateInterval(of: .weekOfYear, for: moment)
             ?? DateInterval(start: moment, duration: 7 * 86_400)
@@ -136,21 +153,50 @@ struct Week: Hashable, Sendable {
             return Week(start: span.start, end: span.end,
                         key: "\(year)-W\(number)", challenges: [])
         }
-        // Лишний полив по влажной земле в задания не идёт.
+        // Лишний полив по влажной земле в задания не идёт, а по честным
+        // правилам — и полив земли, которой ещё рано пить.
         let entries = log.filter {
-            $0.counts && $0.when >= span.start && $0.when < span.end
+            Fair.credits($0, from: fair)
+                && $0.when >= span.start && $0.when < span.end
         }
+        let honest = fair.map { span.end > $0 } ?? false
         // Сухое сейчас — засуха этой недели, даже если его ещё не полили.
         let parched = span.start <= now && now < span.end
             && rooms.flatMap(\.plants).contains {
                 $0.moisture < Almanac.Aim.dryBelow
             }
-        let challenges = quests(for: year * 53 + number).map {
-            challenge($0, need: need, entries: entries, parched: parched,
-                      calendar: calendar)
+        let challenges = quests(for: year * 53 + number, fair: honest).map {
+            quest -> Challenge in
+            guard quest == .noDry else {
+                return challenge(quest, need: need, entries: entries,
+                                 parched: parched, calendar: calendar)
+            }
+            return dry(span, log: log, rooms: rooms, now: now,
+                       calendar: calendar)
         }
         return Week(start: span.start, end: span.end, key: "\(year)-W\(number)",
                     challenges: challenges)
+    }
+
+    /// «Ни одного пересохшего растения 7 дней»: хорошие дни недели
+    /// (`Fair.verdict`); плохой — задание сорвано до следующей недели.
+    static func dry(_ span: DateInterval, log: [Watering], rooms: [Room],
+                    now: Date, calendar: Calendar) -> Challenge {
+        var challenge = Challenge(quest: .noDry, goal: goal(.noDry, need: 1))
+        let pours = Fair.pours(log)
+        var day = span.start
+        while day < span.end, day <= now {
+            switch Fair.verdict(day, rooms: rooms, pours: pours, now: now,
+                                calendar: calendar) {
+            case .good: challenge.count += 1
+            case .bad: challenge.failed = true
+            case .pending, .empty: break
+            }
+            guard let next = calendar.date(byAdding: .day, value: 1, to: day)
+            else { break }
+            day = next
+        }
+        return challenge
     }
 
     /// Одно задание по поливам недели. `parched` — в саду сейчас есть
@@ -162,8 +208,15 @@ struct Week: Hashable, Sendable {
         switch quest {
         case .onTime:
             challenge.count = entries.count {
-                $0.left.map { Almanac.Aim.zone($0) == .onTime } ?? false
+                guard let left = $0.left else { return false }
+                // По честным правилам вовремя — всё окно «скоро пить» и
+                // «сухо»; прежде — 20–40%.
+                return Fair.from != nil ? left < MoistureStatus.soonBelow
+                    : Almanac.Aim.zone(left) == .onTime
             }
+        case .noDry:
+            // Считается по дням сада, см. `Week.dry`.
+            break
         case .days:
             challenge.count = Set(entries.map {
                 calendar.startOfDay(for: $0.when)

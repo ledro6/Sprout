@@ -60,6 +60,8 @@ struct Score: Sendable {
 
     var streak = 0
     var best = 0
+    /// Серия только что прервалась — по честным правилам (`Fair`).
+    var broke = false
 
     var rooms: [Tally] = []
     var plants: [Tally] = []
@@ -72,8 +74,10 @@ struct Score: Sendable {
 
     /// Календарь и «сейчас» — снаружи, чтобы прогон модели не зависел от
     /// часового пояса и дня запуска.
+    /// `fair` — дата честных правил (`Fair`): с неё серия — хорошие дни
+    /// подряд, а не дни с поливом; пусто — прежние правила.
     static func of(_ log: [Watering], rooms: [Room],
-                   now: Date = Date(),
+                   now: Date = Date(), fair: Date? = Fair.from,
                    calendar: Calendar = .current) -> Score {
         var score = Score()
         score.total = log.count
@@ -92,6 +96,13 @@ struct Score: Sendable {
         score.streak = Self.streak(from: midnight, days: Set(byDay.keys),
                                    calendar: calendar)
         score.best = Self.best(days: Set(byDay.keys), calendar: calendar)
+        if let fair {
+            let run = Fair.run(log, rooms: rooms, from: fair, now: now,
+                               calendar: calendar)
+            score.streak = run.streak
+            score.best = run.best
+            score.broke = run.broke
+        }
 
         score.days = (0 ..< Self.span).reversed().compactMap { back in
             guard let day = calendar.date(byAdding: .day, value: -back,

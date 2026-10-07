@@ -5838,6 +5838,132 @@ do {
     yard.restore(kept)
 }
 
+print("честные серия и задания:")
+do {
+    let kept = (Season.stretch, Climate.stretch)
+    Season.stretch = 1
+    Climate.stretch = 1
+    defer {
+        Season.stretch = kept.0
+        Climate.stretch = kept.1
+    }
+    var utc = Calendar(identifier: .gregorian)
+    utc.timeZone = TimeZone(identifier: "UTC")!
+    let start = utc.date(from: DateComponents(year: 2026, month: 3, day: 2))!
+    func moment(_ day: Int, _ hour: Int) -> Date {
+        start.addingTimeInterval(Double(day) * 86_400 + Double(hour) * 3_600)
+    }
+    let periods: [Double] = [1, 3, 7, 14]
+    let initial: [Double] = [0.5, 0.3, 0.9, 0.2]
+    /// 30 дней сада: каждое утро в девять — полить тех, кому пора
+    /// (`daily == false`), или всех подряд, подтверждая влажных.
+    func simulate(daily: Bool, skip: Set<Int> = [], fair: Date? = start)
+        -> (score: Score, grower: Gardener, week: Week) {
+        var levels = initial
+        var at = start
+        var log: [Watering] = []
+        let names = periods.indices.map { "п\($0)" }
+        func dry(to moment: Date) {
+            let days = moment.timeIntervalSince(at) / 86_400
+            for index in levels.indices {
+                levels[index] = max(0, levels[index] - days / periods[index])
+            }
+            at = moment
+        }
+        for day in 0 ... 30 {
+            dry(to: moment(day, 9))
+            guard !skip.contains(day) else { continue }
+            for index in levels.indices {
+                let due = MoistureStatus.due(moisture: levels[index],
+                                             period: periods[index])
+                guard daily || due else { continue }
+                let wet = MoistureStatus.wateringGuard(moisture: levels[index])
+                    != .allow
+                log.append(Watering(plant: names[index], when: moment(day, 9),
+                                    left: levels[index], extra: wet ? true : nil))
+                levels[index] = 1
+            }
+        }
+        let now = moment(30, 20)
+        dry(to: now)
+        let rooms = [Room(name: "Т", plants: levels.indices.map {
+            plantNamed(names[$0], moisture: levels[$0], dryingDays: periods[$0])
+        })]
+        return (Score.of(log, rooms: rooms, now: now, fair: fair, calendar: utc),
+                Gardener.of(log: log, quests: 0, medals: 0, fair: fair),
+                Week.of(moment(29, 12), log: log, rooms: rooms, now: now,
+                        fair: fair, calendar: utc))
+    }
+    let need = simulate(daily: false)
+    let every = simulate(daily: true)
+    check(need.score.streak >= 30 && need.score.best >= 30,
+          "по нужде: 30 дней — серия \(need.score.streak)")
+    check(need.score.streak >= every.score.streak
+          && need.score.best >= every.score.best,
+          "по нужде серия не меньше, чем «каждый день»: "
+          + "\(need.score.best) и \(every.score.best)")
+    check(need.grower.experience >= every.grower.experience,
+          "по нужде опыта не меньше: \(need.grower.experience) "
+          + "и \(every.grower.experience)")
+    let early = [Watering(plant: "п1", when: moment(3, 9), left: 0.5)]
+    check(Gardener.of(log: early, quests: 0, medals: 0, fair: nil).experience
+          == Gardener.pour
+          && Gardener.of(log: early, quests: 0, medals: 0, fair: start)
+          .experience == 0,
+          "полив в норме опыта больше не даёт, прежде — давал")
+    // Заморозка: один пропуск за неделю серию не рвёт, два — рвут.
+    let once = simulate(daily: false, skip: [10])
+    check(once.score.streak == need.score.streak - 1 && !once.score.broke,
+          "один пропуск — серия держится (\(once.score.streak))")
+    let twice = simulate(daily: false, skip: [10, 12])
+    check(twice.score.streak < 20 && twice.score.best >= 10,
+          "второй пропуск за неделю — серия заново, рекорд виден")
+    let late = simulate(daily: false, skip: [29])
+    check(late.score.streak == need.score.streak - 1,
+          "вчерашний пропуск заморожен — серия не обнулилась")
+    let broken = simulate(daily: false, skip: [27, 29])
+    check(broken.score.streak <= 1 && broken.score.best >= 27,
+          "серия прервалась — лучший результат остался")
+    // Задания: «Ни одного пересохшего» вместо «Поливайте N дней».
+    check(!Week.quests(for: 1, fair: true).contains(.days)
+          && Week.quests(for: 1, fair: true).contains(.noDry)
+          && Week.quests(for: 1) == Week.quests(for: 1, fair: false),
+          "по честным правилам «дни с поливом» сменяет «ни одного пересохшего»")
+    let dry = Week.dry(utc.dateInterval(of: .weekOfYear, for: moment(29, 12))!,
+                       log: [Watering(plant: "п", when: moment(25, 9),
+                                      left: 0.1)],
+                       rooms: [Room(name: "Т", plants: [
+                           plantNamed("п", moisture: 0, dryingDays: 3)])],
+                       now: moment(30, 20), calendar: utc)
+    check(dry.failed, "сухое и неполитое — задание недели сорвано")
+    check(Quest.noDry.title(7) == "Ни одного пересохшего растения 7 дней",
+          "задание — «Ни одного пересохшего растения 7 дней»")
+    // Миграция: дни с поливом до даты правил — по-прежнему, серия не
+    // пересчитывается задним числом.
+    let before = (0 ..< 10).map {
+        Watering(plant: "п1", when: moment($0, 9), left: 0.9)
+    }
+    let rooms = [Room(name: "Т", plants: [
+        plantNamed("п1", moisture: 0.8, dryingDays: 7)])]
+    let cutoff = moment(10, 0)
+    let migrated = Score.of(before, rooms: rooms, now: moment(10, 12),
+                            fair: cutoff, calendar: utc)
+    let previous = Score.of(before, rooms: rooms, now: moment(10, 12),
+                            fair: nil, calendar: utc)
+    check(migrated.streak >= previous.streak && migrated.best >= previous.best
+          && previous.streak == 10,
+          "серия до даты правил сохранилась: \(migrated.streak)")
+    check(Gardener.of(log: before, quests: 2, medals: 1, fair: cutoff)
+          == Gardener.of(log: before, quests: 2, medals: 1, fair: nil),
+          "опыт за прежние поливы не пересчитан")
+    let saved = UserDefaults(suiteName: "fair-test")!
+    saved.removeObject(forKey: "fairSince")
+    let first = Fair.start(store: saved, now: start)
+    check(first == start && Fair.start(store: saved, now: moment(5, 0)) == start,
+          "дата правил запоминается при первом запуске")
+    check(Rank(.streak, 2).toGo(2).hasPrefix("До «"), "сколько осталось — с двоеточием")
+}
+
 if failed > 0 {
     print("\nне сошлось: \(failed)")
     exit(1)

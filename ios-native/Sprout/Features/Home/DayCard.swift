@@ -17,6 +17,7 @@ struct DayCard: View {
 
     @State private var trophies = Trophies()
     @State private var streak = 0
+    @State private var broke = false
     @State private var me = Gardener(experience: 0)
     @State private var week: Week?
     @State private var growing = false
@@ -140,11 +141,14 @@ struct DayCard: View {
         if streak > 0 {
             chip(Lang.format("Дней подряд: %lld", streak), icon: "flame.fill",
                  tint: Palette.warn)
+        } else if broke {
+            // Без красного и упрёка: серия — не повод для вины.
+            chip(Lang.text("Серия прервалась. Бывает — начнём заново"),
+                 icon: "leaf", tint: Palette.secondaryText)
         }
         if let next = cabinet.next(trophies) {
             Button(action: awards) {
-                chip(Lang.format("До «%1$@» осталось %2$lld",
-                                 next.rank.title, next.left),
+                chip(next.rank.toGo(next.left),
                      icon: "medal.fill", tint: Palette.accent)
             }
             .buttonStyle(.plain)
@@ -226,7 +230,9 @@ struct DayCard: View {
         withTransaction(quiet) {
             trophies = Trophies.of(garden.log, rooms: garden.rooms,
                                    since: garden.since)
-            streak = garden.score().streak
+            let score = garden.score()
+            streak = score.streak
+            broke = score.broke
             me = Gardener.of(log: garden.log, quests: QuestBook.shared.done,
                              medals: Cabinet.shared.total)
             week = Week.of(Date(), log: garden.log, rooms: garden.rooms)

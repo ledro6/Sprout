@@ -4986,6 +4986,76 @@
         }
       }
     },
+    "%lld дней без засухи": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "variations": {
+            "plural": {
+              "few": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld дня без засухи"
+                }
+              },
+              "many": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld дней без засухи"
+                }
+              },
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld день без засухи"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld дня без засухи"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "%lld дней подряд": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "variations": {
+            "plural": {
+              "few": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld дня подряд"
+                }
+              },
+              "many": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld дней подряд"
+                }
+              },
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld день подряд"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld дня подряд"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "%lld поливов": {
       "extractionState": "manual",
       "localizations": {
@@ -5863,6 +5933,41 @@
           "stringUnit": {
             "state": "translated",
             "value": "澆水%lld次"
+          }
+        }
+      }
+    },
+    "%lld поливов вовремя": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "variations": {
+            "plural": {
+              "few": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld полива вовремя"
+                }
+              },
+              "many": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld поливов вовремя"
+                }
+              },
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld полив вовремя"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld полива вовремя"
+                }
+              }
+            }
           }
         }
       }
@@ -7664,6 +7769,41 @@
         }
       }
     },
+    "%lld раз": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "variations": {
+            "plural": {
+              "few": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld раза"
+                }
+              },
+              "many": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld раз"
+                }
+              },
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld раз"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld раза"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "%lld растений": {
       "extractionState": "manual",
       "localizations": {
@@ -8573,6 +8713,41 @@
                 "stringUnit": {
                   "state": "translated",
                   "value": "%lld ступени"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "%lld хороших дней": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "variations": {
+            "plural": {
+              "few": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld хороших дня"
+                }
+              },
+              "many": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld хороших дней"
+                }
+              },
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld хороший день"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld хороших дня"
                 }
               }
             }
@@ -31942,6 +32117,9 @@
           }
         }
       }
+    },
+    "Вовремя — когда земля подсохла: «скоро пить» или «сухо». Полив влажной земли не считается.": {
+      "extractionState": "manual"
     },
     "Вовремя, %": {
       "extractionState": "manual",
@@ -56470,292 +56648,8 @@
     "До": {
       "extractionState": "manual"
     },
-    "До «%1$@» осталось %2$lld": {
-      "extractionState": "manual",
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "حتى «%1$@» بقي %2$lld"
-          }
-        },
-        "bg": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "До „%1$@“ остават %2$lld"
-          }
-        },
-        "bn": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "“%1$@” পর্যন্ত বাকি %2$lld"
-          }
-        },
-        "ca": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Per a «%1$@» en falten %2$lld"
-          }
-        },
-        "cs": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Do „%1$@“ zbývá %2$lld"
-          }
-        },
-        "da": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%2$lld tilbage til ”%1$@”"
-          }
-        },
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Noch %2$lld bis „%1$@“"
-          }
-        },
-        "el": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Μέχρι το «%1$@» μένουν %2$lld"
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%2$lld to go until “%1$@”"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Faltan %2$lld para “%1$@”"
-          }
-        },
-        "fi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%2$lld jäljellä: ”%1$@”"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Encore %2$lld avant « %1$@ »"
-          }
-        },
-        "gu": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "“%1$@” સુધી %2$lld બાકી"
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "עד “%1$@” נשארו %2$lld"
-          }
-        },
-        "hi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "“%1$@” तक %2$lld बाक़ी"
-          }
-        },
-        "hr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Do „%1$@” još %2$lld"
-          }
-        },
-        "hu": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Még %2$lld a következőig: „%1$@”"
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Menuju “%1$@” tinggal %2$lld"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Mancano %2$lld a “%1$@”"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "「%1$@」まであと%2$lld"
-          }
-        },
-        "kk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "«%1$@» дейін %2$lld қалды"
-          }
-        },
-        "kn": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "“%1$@” ವರೆಗೆ %2$lld ಬಾಕಿ"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "‘%1$@’까지 %2$lld 남음"
-          }
-        },
-        "lt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Iki „%1$@“ liko %2$lld"
-          }
-        },
-        "ml": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "“%1$@” വരെ %2$lld ബാക്കി"
-          }
-        },
-        "mr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "“%1$@” पर्यंत %2$lld बाकी"
-          }
-        },
-        "ms": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ke “%1$@” tinggal %2$lld"
-          }
-        },
-        "nb": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%2$lld igjen til «%1$@»"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nog %2$lld tot ‘%1$@’"
-          }
-        },
-        "or": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "“%1$@” ପର୍ଯ୍ୟନ୍ତ %2$lld ବାକି"
-          }
-        },
-        "pa": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "“%1$@” ਤੱਕ %2$lld ਬਾਕੀ"
-          }
-        },
-        "pl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Do „%1$@” zostało %2$lld"
-          }
-        },
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Faltam %2$lld para “%1$@”"
-          }
-        },
-        "pt-PT": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Faltam %2$lld para “%1$@”"
-          }
-        },
-        "ro": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Până la „%1$@” mai sunt %2$lld"
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Do „%1$@“ zostáva %2$lld"
-          }
-        },
-        "sl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Do »%1$@« še %2$lld"
-          }
-        },
-        "sv": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%2$lld kvar till ”%1$@”"
-          }
-        },
-        "ta": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "“%1$@” வரை %2$lld மீதம்"
-          }
-        },
-        "te": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "“%1$@” వరకు %2$lld మిగిలింది"
-          }
-        },
-        "th": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "อีก %2$lld ถึง “%1$@”"
-          }
-        },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "“%1$@” için %2$lld kaldı"
-          }
-        },
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "До «%1$@» лишилося %2$lld"
-          }
-        },
-        "ur": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "“%1$@” تک %2$lld باقی"
-          }
-        },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Còn %2$lld đến “%1$@”"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "距“%1$@”还差 %2$lld"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "距「%1$@」還差 %2$lld"
-          }
-        }
-      }
+    "До «%1$@»: %2$@": {
+      "extractionState": "manual"
     },
     "До встречи в %@": {
       "extractionState": "manual"
@@ -82090,6 +81984,9 @@
           }
         }
       }
+    },
+    "Каждый день поливайте тех, кому пора: «сухо» или срок вышел. Лишний полив не нужен.": {
+      "extractionState": "manual"
     },
     "Каждый полив — нота: ближние планеты поют выше.": {
       "extractionState": "manual",
@@ -128459,6 +128356,41 @@
           "stringUnit": {
             "state": "translated",
             "value": "翡翠"
+          }
+        }
+      }
+    },
+    "Ни одного пересохшего растения %lld дней": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "variations": {
+            "plural": {
+              "few": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Ни одного пересохшего растения %lld дня"
+                }
+              },
+              "many": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Ни одного пересохшего растения %lld дней"
+                }
+              },
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Ни одного пересохшего растения %lld день"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Ни одного пересохшего растения %lld дня"
+                }
+              }
+            }
           }
         }
       }
@@ -224104,6 +224036,9 @@
           }
         }
       }
+    },
+    "Серия прервалась. Бывает — начнём заново": {
+      "extractionState": "manual"
     },
     "Сеянец": {
       "extractionState": "manual",
