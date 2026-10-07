@@ -212,10 +212,6 @@
   "Полив": "Kastelu",
   "Посадить": "Istuta",
   "Растёт в комнате «%@».": "Kasvaa huoneessa ”%@”.",
-  "Полито, следующий полив через %lld дней.": {
-    "one": "Kasteltu. Seuraava kastelu %lld päivän päästä.",
-    "other": "Kasteltu. Seuraava kastelu %lld päivän päästä."
-  },
   "Главная": "Koti",
   "Порядок": "Järjestys",
   "Сад в AR": "Puutarha AR:ssä",

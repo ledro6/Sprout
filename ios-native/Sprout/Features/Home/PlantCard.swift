@@ -43,17 +43,21 @@ struct PlantCard: View {
             .animation(Motion.number, value: plant.moistureLabel)
             .modifier(Sharpen())
 
-            Text(plant.wateringLabel)
-                .font(Typography.cardCaption)
-                .foregroundStyle(Palette.ink)
-                // Одна строка: самая длинная подпись помещается; предел — на
-                // случай крупного шрифта.
-                .lineLimit(1)
-                .minimumScaleFactor(0.7)
-                .contentTransition(.numericText())
-                .animation(Motion.number, value: plant.daysUntilWatering)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .modifier(Sharpen())
+            HStack(spacing: 4) {
+                Text(plant.wateringLabel)
+                    .font(Typography.cardCaption)
+                    .foregroundStyle(Palette.ink)
+                    // Одна строка: самая длинная подпись помещается; предел —
+                    // на случай крупного шрифта.
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.7)
+                    .contentTransition(.numericText())
+                    .animation(Motion.number, value: plant.daysUntilWatering)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                // Откуда процент над ней: «Датчик» или «Расчёт».
+                SourceBadge(estimated: plant.estimated)
+            }
+            .modifier(Sharpen())
         }
         .padding(.horizontal, Metrics.cardPadding)
         .padding(.vertical, 10)

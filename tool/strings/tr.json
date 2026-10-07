@@ -212,10 +212,6 @@
   "Полив": "Sulama",
   "Посадить": "Dik",
   "Растёт в комнате «%@».": "“%@” odasında büyüyor.",
-  "Полито, следующий полив через %lld дней.": {
-    "one": "Sulandı. Sonraki sulama %lld gün sonra.",
-    "other": "Sulandı. Sonraki sulama %lld gün sonra."
-  },
   "Главная": "Ana sayfa",
   "Порядок": "Sıra",
   "Сад в AR": "AR’de bahçe",

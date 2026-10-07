@@ -212,10 +212,6 @@
   "Полив": "Vattning",
   "Посадить": "Plantera",
   "Растёт в комнате «%@».": "Växer i ”%@”.",
-  "Полито, следующий полив через %lld дней.": {
-    "one": "Vattnad. Nästa vattning om %lld dag.",
-    "other": "Vattnad. Nästa vattning om %lld dagar."
-  },
   "Главная": "Hem",
   "Порядок": "Ordning",
   "Сад в AR": "Trädgård i AR",

@@ -41,6 +41,8 @@ enum Reminder {
     static func delay(for plant: Plant) -> TimeInterval? {
         guard plant.dryingDays > 0, plant.period > 0 else { return nil }
         guard !plant.needsWaterToday else { return 0 }
+        // С датчика влажность сама не падает: срок скажет новое показание.
+        guard plant.estimated else { return nil }
         // Ноль дней — когда влажность × срок меньше половины дня.
         let edge = max(MoistureStatus.urgentBelow, 0.5 / plant.period)
         let days = max(0, plant.moisture - edge) * plant.period

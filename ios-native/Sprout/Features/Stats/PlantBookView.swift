@@ -83,7 +83,7 @@ struct PlantBookView: View {
                         .filter { !$0.isEmpty }.joined(separator: " · "))
                     .font(Typography.settingNote)
                     .foregroundStyle(.secondary)
-                Text(Lang.format("Влажность %@", plant.moistureLabel))
+                Text(plant.moistureLine)
                     .font(Typography.settingNote.weight(.semibold))
                     .foregroundStyle(Palette.level(plant.moisture))
                     .contentTransition(.numericText())

@@ -212,10 +212,6 @@
   "Полив": "Annaffiatura",
   "Посадить": "Pianta",
   "Растёт в комнате «%@».": "Cresce in “%@”.",
-  "Полито, следующий полив через %lld дней.": {
-    "one": "Annaffiata. Prossima annaffiatura tra %lld giorno.",
-    "other": "Annaffiata. Prossima annaffiatura tra %lld giorni."
-  },
   "Главная": "Home",
   "Порядок": "Ordine",
   "Сад в AR": "Giardino in AR",

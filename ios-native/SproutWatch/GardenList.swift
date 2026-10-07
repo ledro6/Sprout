@@ -92,7 +92,8 @@ private struct PotPage: View {
                 VStack(spacing: 8) {
                     Dial(moisture: pot.moisture, width: 9) {
                         VStack(spacing: 0) {
-                            Text(Lang.format("%lld%%", pot.percent))
+                            Text(MoistureStatus.percent(
+                                pot.moisture, estimated: pot.estimated))
                                 .font(.system(size: 26, weight: .bold,
                                               design: .rounded))
                                 .monospacedDigit()

@@ -212,10 +212,6 @@
   "Полив": "Gießen",
   "Посадить": "Einpflanzen",
   "Растёт в комнате «%@».": "Wächst im Raum „%@“.",
-  "Полито, следующий полив через %lld дней.": {
-    "one": "Gegossen. Nächstes Gießen in %lld Tag.",
-    "other": "Gegossen. Nächstes Gießen in %lld Tagen."
-  },
   "Главная": "Start",
   "Порядок": "Sortierung",
   "Сад в AR": "Garten in AR",

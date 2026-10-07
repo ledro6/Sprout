@@ -70,12 +70,15 @@ struct PlantRow: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             .modifier(Sharpen())
 
-            Text(plant.moistureLabel)
-                .font(Typography.cardTitle)
-                .foregroundStyle(Palette.ink)
-                .contentTransition(.numericText())
-                .animation(Motion.number, value: plant.moistureLabel)
-                .modifier(Sharpen())
+            VStack(alignment: .trailing, spacing: 2) {
+                Text(plant.moistureLabel)
+                    .font(Typography.cardTitle)
+                    .foregroundStyle(Palette.ink)
+                    .contentTransition(.numericText())
+                    .animation(Motion.number, value: plant.moistureLabel)
+                SourceBadge(estimated: plant.estimated)
+            }
+            .modifier(Sharpen())
 
             if drop, !editing {
                 WaterDrop(plant: plant)

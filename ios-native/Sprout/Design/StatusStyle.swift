@@ -44,3 +44,20 @@ struct StatusLabel: View {
         }
     }
 }
+
+/// Откуда процент: «Датчик» или «Расчёт» — маленькой плашкой рядом с ним.
+struct SourceBadge: View {
+    let estimated: Bool
+
+    var body: some View {
+        Text(MoistureStatus.source(estimated: estimated))
+            .font(.caption2.weight(.semibold))
+            .foregroundStyle(.secondary)
+            .lineLimit(1)
+            .fixedSize()
+            .padding(.horizontal, 6)
+            .padding(.vertical, 2)
+            .background(Capsule().fill(Color.secondary.opacity(0.12)))
+            .accessibilityLabel(MoistureStatus.source(estimated: estimated))
+    }
+}

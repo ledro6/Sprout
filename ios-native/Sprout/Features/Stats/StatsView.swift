@@ -978,7 +978,10 @@ struct StatsView: View {
                     .contentTransition(.numericText())
             }
             Spacer(minLength: 8)
-            Text(board == .driest ? Stats.percent(line.moisture)
+            if board == .driest { SourceBadge(estimated: line.estimated) }
+            Text(board == .driest
+                 ? MoistureStatus.percent(line.moisture,
+                                          estimated: line.estimated)
                  : Lang.format("%lld поливов", line.waterings))
                 .font(Typography.settingRow)
                 .foregroundStyle(board == .driest

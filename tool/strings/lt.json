@@ -222,11 +222,6 @@
   "Полив": "Laistymas",
   "Посадить": "Pasodinti",
   "Растёт в комнате «%@».": "Auga kambaryje „%@“.",
-  "Полито, следующий полив через %lld дней.": {
-    "one": "Palaistyta. Kitas laistymas po %lld dienos.",
-    "few": "Palaistyta. Kitas laistymas po %lld dienų.",
-    "other": "Palaistyta. Kitas laistymas po %lld dienų."
-  },
   "Главная": "Pradžia",
   "Порядок": "Tvarka",
   "Сад в AR": "Sodas AR",

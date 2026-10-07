@@ -20,6 +20,14 @@ enum Thirst {
     }
 }
 
+/// Откуда влажность: измерил датчик или посчитал срок.
+enum MoistureSource: String, Codable, Hashable, Sendable {
+    /// Последнее показание датчика: между показаниями не сохнет.
+    case sensor
+    /// Посчитано по сроку от полива — или задано вопросом при посадке.
+    case estimate
+}
+
 struct Plant: Identifiable, Hashable, Codable {
     let id: String
     var name: String
@@ -73,6 +81,11 @@ struct Plant: Identifiable, Hashable, Codable {
     /// считается по сроку.
     var sensor: Sensor?
 
+    /// Откуда нынешняя влажность. Пусто в садах прежних сборок и после
+    /// полива рукой — посчитана (`estimate`). Ставит датчик, снимает полив
+    /// и отвязка датчика; см. `estimated`.
+    var source: MoistureSource?
+
     /// Когда хозяин в последний раз правил растение: кличку, вид, срок,
     /// снимок, заметку, комнату или место в ней. В общем саду (`Family`) из
     /// двух правок одного растения побеждает поздняя. Пусто в садах прежних
@@ -122,8 +135,9 @@ struct Plant: Identifiable, Hashable, Codable {
         return min(1, (Thirst.warnBelow - moisture) / Thirst.warnBelow)
     }
 
+    /// Процент на экране: с датчика — как есть, посчитанный — «≈N%».
     var moistureLabel: String {
-        Lang.format("%lld%%", Int((moisture * 100).rounded()))
+        MoistureStatus.percent(moisture, estimated: estimated)
     }
 
     /// Подпись срока — словами статуса, см. `MoistureStatus.nextWatering`.
@@ -137,9 +151,11 @@ struct Plant: Identifiable, Hashable, Codable {
                 .locale(Lang.locale)))
     }
 
+    /// Измеренная датчиком влажность по таймеру не сохнет: до нового
+    /// показания стоит последнее — иначе «датчик» показывал бы расчёт.
     mutating func dry(days: Double) {
         guard dryingDays > 0, days > 0 else { return }
-        moisture = max(0, moisture - days / period)
+        if estimated { moisture = max(0, moisture - days / period) }
         var tended = tending
         tended.pass(days: days, growing: Season.growing)
         care = tended
@@ -161,6 +177,7 @@ struct Plant: Identifiable, Hashable, Codable {
         plain.care = nil
         plain.treatment = nil
         plain.sensor = nil
+        plain.source = nil
         plain.scan = nil
         plain.edited = nil
         plain.wet = nil
@@ -191,10 +208,10 @@ struct Plant: Identifiable, Hashable, Codable {
     static func new(name: String, species: String, dryingDays: Double,
                     photo: String = "monstera", shot: String? = nil,
                     traits: Traits? = nil, id: String = UUID().uuidString,
-                    on day: Date = Date(),
+                    moisture: Double = 1, on day: Date = Date(),
                     calendar: Calendar = .current) -> Plant {
         Plant(id: id, name: name, species: species,
-              moisture: 1, dryingDays: dryingDays,
+              moisture: min(max(moisture, 0), 1), dryingDays: dryingDays,
               addedOn: calendar.dateComponents([.year, .month, .day],
                                                from: day),
               photo: photo, shot: shot,

@@ -146,6 +146,8 @@ struct Almanac: Sendable {
         var moisture: Double
         /// Дней сада до полива — тем же счётом, что на карточке.
         var due: Int
+        /// Влажность посчитана, а не с датчика — «≈» и «Расчёт».
+        var estimated = true
         var waterings: Int
         var total: Int
         var last: Date?
@@ -302,6 +304,7 @@ struct Almanac: Sendable {
                     id: plant.id, name: plant.name, species: plant.species,
                     room: room.name, moisture: plant.moisture,
                     due: plant.daysUntilWatering,
+                    estimated: plant.estimated,
                     waterings: all.count { $0.when >= start
                         && $0.when <= moment },
                     total: all.count,
@@ -330,6 +333,7 @@ struct Almanac: Sendable {
             var line = line
             line.moisture = plant.moisture
             line.due = plant.daysUntilWatering
+            line.estimated = plant.estimated
             return line
         }
         return book

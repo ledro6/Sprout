@@ -602,6 +602,8 @@ enum Family {
             let water = keepWet ? mine : remote
             merged.moisture = water.moisture
             merged.wet = water.wet
+            // Датчик — свой у каждого телефона: чужое число здесь — расчёт.
+            merged.source = keepWet ? mine.source : nil
             let care = keepCare ? mine : remote
             merged.care = care.care
             merged.treatment = care.treatment

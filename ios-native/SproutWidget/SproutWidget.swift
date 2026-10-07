@@ -30,8 +30,10 @@ struct Sprig: Identifiable, Hashable {
     let thumb: URL?
     /// Полить сегодня — тот же набор, что «Ждут воды» в приложении.
     var due = false
+    /// Влажность посчитана, а не с датчика — «≈» у процента.
+    var estimated = true
 
-    var percent: String { Lang.format("%lld%%", Int((moisture * 100).rounded())) }
+    var percent: String { MoistureStatus.percent(moisture, estimated: estimated) }
 
     var status: MoistureStatus { MoistureStatus(moisture: moisture) }
 }
@@ -69,7 +71,8 @@ struct Glance: TimelineEntry {
                     Sprig(id: plant.id, name: plant.name, room: room.name,
                           moisture: plant.moisture, label: plant.wateringLabel,
                           thumb: Store.thumb(for: plant),
-                          due: plant.needsWaterToday)
+                          due: plant.needsWaterToday,
+                          estimated: plant.estimated)
                 }
             }
             return Glance(date: date,

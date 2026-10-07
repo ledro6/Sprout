@@ -232,12 +232,6 @@
   "Полив": "Podlewanie",
   "Посадить": "Posadź",
   "Растёт в комнате «%@».": "Rośnie w pokoju „%@”.",
-  "Полито, следующий полив через %lld дней.": {
-    "one": "Podlane. Następne podlewanie za %lld dzień.",
-    "few": "Podlane. Następne podlewanie za %lld dni.",
-    "many": "Podlane. Następne podlewanie za %lld dni.",
-    "other": "Podlane. Następne podlewanie za %lld dnia."
-  },
   "Главная": "Start",
   "Порядок": "Kolejność",
   "Сад в AR": "Ogród w AR",

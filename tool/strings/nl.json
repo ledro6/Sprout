@@ -212,10 +212,6 @@
   "Полив": "Water geven",
   "Посадить": "Plant",
   "Растёт в комнате «%@».": "Groeit in ‘%@’.",
-  "Полито, следующий полив через %lld дней.": {
-    "one": "Water gegeven. Volgende keer over %lld dag.",
-    "other": "Water gegeven. Volgende keer over %lld dagen."
-  },
   "Главная": "Start",
   "Порядок": "Volgorde",
   "Сад в AR": "Tuin in AR",

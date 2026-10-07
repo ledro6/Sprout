@@ -212,10 +212,6 @@
   "Полив": "Öntözés",
   "Посадить": "Elültetés",
   "Растёт в комнате «%@».": "Ebben a szobában nő: „%@”.",
-  "Полито, следующий полив через %lld дней.": {
-    "one": "Megöntözve. Következő öntözés %lld nap múlva.",
-    "other": "Megöntözve. Következő öntözés %lld nap múlva."
-  },
   "Главная": "Főoldal",
   "Порядок": "Sorrend",
   "Сад в AR": "Kert AR-ben",

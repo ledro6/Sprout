@@ -212,10 +212,6 @@
   "Полив": "Reg",
   "Посадить": "Planta-la",
   "Растёт в комнате «%@».": "Creix a «%@».",
-  "Полито, следующий полив через %lld дней.": {
-    "one": "Regada. Propera regada d’aquí a %lld dia.",
-    "other": "Regada. Propera regada d’aquí a %lld dies."
-  },
   "Главная": "Inici",
   "Порядок": "Ordre",
   "Сад в AR": "Jardí en RA",

@@ -212,10 +212,6 @@
   "Полив": "Vanning",
   "Посадить": "Plant",
   "Растёт в комнате «%@».": "Vokser i «%@».",
-  "Полито, следующий полив через %lld дней.": {
-    "one": "Vannet. Neste vanning om %lld dag.",
-    "other": "Vannet. Neste vanning om %lld dager."
-  },
   "Главная": "Hjem",
   "Порядок": "Rekkefølge",
   "Сад в AR": "Hage i AR",

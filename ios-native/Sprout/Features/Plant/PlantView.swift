@@ -31,6 +31,8 @@ struct PlantView: View {
     @State private var portraying = false
 
     @State private var asking = false
+    /// «Подключить датчик» — лист поиска датчика.
+    @State private var linking = false
 
     /// Открытка для друзей — см. `PosterSheet`.
     @State private var posting = false
@@ -157,6 +159,9 @@ struct PlantView: View {
         }
         .sheet(isPresented: $asking) {
             AskView(focus: plantID).environment(garden)
+        }
+        .sheet(isPresented: $linking) {
+            SensorPicker(plantID: plantID).environment(garden)
         }
         // Стиль выбирают в самом листе; готовый портрет встаёт обложкой.
         .imagePlaygroundSheet(isPresented: $portraying, concepts: concepts,
@@ -571,17 +576,21 @@ struct PlantView: View {
 
     private func facts(_ plant: Plant) -> some View {
         VStack(alignment: .leading, spacing: 14) {
-            fact(Lang.format("Влажность %@", plant.moistureLabel),
-                 term: .moisture)
+            // Одна строка: процент, откуда он и заряд датчика.
+            fact(plant.moistureLine, term: .moisture)
                 .contentTransition(.numericText())
             // Статус — словами и значком общего движка, см. `StatusStyle`.
             StatusLabel(status: plant.status)
                 .font(Typography.detail)
                 .foregroundStyle(Palette.ink)
                 .animation(Motion.number, value: plant.status)
-            if let status = plant.sensor?.status {
-                fact(status)
-                    .contentTransition(.numericText())
+            if plant.sensor == nil {
+                Button { linking = true } label: {
+                    Label("Подключить датчик — точная влажность",
+                          systemImage: "sensor.fill")
+                        .font(Typography.settingNote)
+                }
+                .buttonStyle(.glass)
             }
             fact(plant.species)
             // Сразу под видом: питомца касается вид, а не кличка.

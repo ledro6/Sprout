@@ -222,11 +222,6 @@
   "Полив": "Zálivka",
   "Посадить": "Zasadit",
   "Растёт в комнате «%@».": "Roste v místnosti „%@“.",
-  "Полито, следующий полив через %lld дней.": {
-    "one": "Zalito. Další zálivka za %lld den.",
-    "few": "Zalito. Další zálivka za %lld dny.",
-    "other": "Zalito. Další zálivka za %lld dní."
-  },
   "Главная": "Domů",
   "Порядок": "Pořadí",
   "Сад в AR": "Zahrada v AR",

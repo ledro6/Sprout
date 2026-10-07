@@ -129,7 +129,11 @@ final class Garden {
         // Запись в журнал — до полива: `change` пишет файл, и запись должна в
         // него попасть.
         log.append(Watering(plant: id, when: moment, left: before.moisture))
-        change(id) { $0.moisture = 1 }
+        // Полили рукой — до нового показания датчика влажность посчитанная.
+        change(id) {
+            $0.moisture = 1
+            $0.source = nil
+        }
         return Pour(plant: id, name: before.name, moisture: before.moisture,
                     when: moment)
     }
@@ -147,6 +151,7 @@ final class Garden {
         }
         change(pour.plant) {
             $0.moisture = max(0, pour.moisture - (1 - $0.moisture))
+            $0.source = nil
         }
     }
 
@@ -322,7 +327,10 @@ final class Garden {
     /// Привязали датчик — или отвязали, пусто.
     func link(_ id: Plant.ID, sensor: Sensor?) {
         guard plant(id: id) != nil else { return }
-        change(id) { $0.sensor = sensor }
+        change(id) {
+            $0.sensor = sensor
+            if sensor == nil { $0.source = nil }
+        }
     }
 
     /// Метка шкалы датчика по последнему показанию: «сейчас сухо» или
@@ -334,6 +342,7 @@ final class Garden {
         change(id) {
             $0.sensor = sensor
             $0.moisture = sensor.level(now)
+            $0.source = .sensor
         }
     }
 
@@ -360,6 +369,7 @@ final class Garden {
         change(id) {
             $0.sensor = sensor
             $0.moisture = sensor.level(reading.moisture)
+            $0.source = .sensor
         }
         return poured
     }

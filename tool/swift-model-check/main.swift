@@ -119,7 +119,7 @@ print("данные из макета:")
 let bedroom = Seed.rooms[0]
 check(bedroom.name, "Спальня", "первая комната")
 check("\(bedroom.plants.count)", "8", "растений в спальне")
-check(bedroom.plants[0].moistureLabel, "89%", "влажность Баксика")
+check(bedroom.plants[0].moistureLabel, "≈89%", "влажность Баксика — посчитанная, «≈»")
 check(bedroom.plants[0].addedLabel, "Добавлен 02.11.2024", "дата добавления")
 check(bedroom.plants[0].wateringLabel, "Полив примерно через 8 дней",
       "у Баксика 89% при сушке за 9 суток дают 8 дней")
@@ -5383,6 +5383,93 @@ do {
               "\(size) растений: «Ждут воды» — тот же набор, что на карточке дня")
         garden.rooms = saved
     }
+}
+
+print("источник влажности:")
+do {
+    let kept = (Season.stretch, Climate.stretch)
+    Season.stretch = 1
+    Climate.stretch = 1
+    defer {
+        Season.stretch = kept.0
+        Climate.stretch = kept.1
+    }
+    // Старый файл: поля source нет — читается, влажность посчитанная.
+    let old = try! JSONEncoder().encode(plant(moisture: 0.5))
+    var json = try! JSONSerialization.jsonObject(with: old) as! [String: Any]
+    json.removeValue(forKey: "source")
+    let decoded = try? JSONDecoder().decode(
+        Plant.self, from: JSONSerialization.data(withJSONObject: json))
+    check(decoded?.source == nil && decoded?.estimated == true,
+          "растение прежней сборки читается — расчёт")
+    var sensed = plant(moisture: 0.5, dryingDays: 5)
+    sensed.sensor = Sensor(kind: .flora, id: "s", name: "Flower care")
+    sensed.sensor?.last = Reading(moisture: 30, battery: 82, when: Date())
+    sensed.source = .sensor
+    let back = try? JSONDecoder().decode(Plant.self,
+                                         from: JSONEncoder().encode(sensed))
+    check(back?.source == .sensor, "источник переживает запись")
+    check(!sensed.estimated && sensed.moistureLabel == "50%"
+          && sensed.sourceLabel == "Датчик",
+          "с датчика — без «≈», плашка «Датчик»")
+    check(sensed.moistureLine, "Влажность 50% · Датчик · батарейка 82%",
+          "одна строка влажности: без сырого процента датчика")
+    var dried = sensed
+    dried.dry(days: 2)
+    check(dried.moisture == 0.5, "с датчика между показаниями не сохнет")
+    check(Reminder.delay(for: sensed) == nil,
+          "с датчика срок напоминания скажет новое показание")
+    check(sensed.nextWateringText == "Полив через 3 дня",
+          "срок по датчику — без «примерно»")
+    var guessed = plant(moisture: 0.5, dryingDays: 5)
+    guessed.dry(days: 1)
+    check(round2(guessed.moisture) == "0.30" && guessed.estimated
+          && guessed.moistureLabel == "≈30%"
+          && guessed.moistureLine == "Влажность ≈30% · Расчёт",
+          "посчитанное сохнет и показывается «≈» с «Расчёт»")
+    check(guessed.nextWateringText.contains("примерно"), "срок — «примерно»")
+    // Полив рукой: до нового показания — расчёт.
+    let yard = Garden(first: Seed.state)
+    let saved = yard.rooms
+    yard.rooms = [Room(name: "Тест", plants: [sensed])]
+    yard.water("x")
+    check(yard.plant(id: "x")?.estimated == true, "полили рукой — расчёт")
+    _ = yard.sense("x", Reading(moisture: 40, when: Date()))
+    check(yard.plant(id: "x")?.source == .sensor
+          && yard.plant(id: "x")?.estimated == false,
+          "новое показание — снова датчик")
+    yard.link("x", sensor: nil)
+    check(yard.plant(id: "x")?.estimated == true, "отвязали датчик — расчёт")
+    yard.rooms = saved
+    yard.save()
+
+    // «Последний полив» при посадке.
+    check(Start.moisture(last: .today, soil: nil, period: 7) == 1, "сегодня — 100 %")
+    check(round2(Start.moisture(last: .yesterday, soil: nil, period: 7)!) == "0.86",
+          "вчера — на сутки меньше")
+    check(round2(Start.moisture(last: .longAgo, soil: nil, period: 7)!) == "0.57",
+          "три дня назад — на трое суток меньше")
+    check(Start.moisture(last: .longAgo, soil: nil, period: 2) == 0,
+          "у двухдневного три дня назад — сухо")
+    check(Start.moisture(last: .unknown, soil: nil, period: 7) == nil
+          && MoistureStatus(moisture: Start.moisture(last: .unknown, soil: nil,
+                                                    period: 7)) == .unknown,
+          "не помню и землю не трогали — «Проверьте землю»")
+    check(MoistureStatus(moisture: Start.moisture(last: .unknown, soil: .dry,
+                                                 period: 7)) == .urgent
+          && MoistureStatus(moisture: Start.moisture(last: .unknown, soil: .damp,
+                                                    period: 7)) == .soon
+          && MoistureStatus(moisture: Start.moisture(last: .unknown, soil: .wet,
+                                                    period: 7)) == .wet,
+          "сухая — сегодня, чуть влажная — скоро, мокрая — влажно")
+    check(Start.Last.allCases.map(\.title)
+          == ["Сегодня", "Вчера", "3+ дня назад", "Не помню"]
+          && Start.Soil.allCases.map(\.title) == ["Сухая", "Чуть влажная", "Мокрая"],
+          "ответы — словами экрана")
+    let seedling = Plant.new(name: "Новый", species: "Фикус", dryingDays: 7,
+                             moisture: Start.Soil.dry.moisture)
+    check(seedling.needsWaterToday && seedling.nextWateringText == "Полить сегодня",
+          "сухое при посадке — «Полить сегодня»")
 }
 
 if failed > 0 {

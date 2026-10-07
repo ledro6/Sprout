@@ -222,11 +222,6 @@
   "Полив": "Polievanie",
   "Посадить": "Zasadiť",
   "Растёт в комнате «%@».": "Rastie v miestnosti „%@“.",
-  "Полито, следующий полив через %lld дней.": {
-    "one": "Poliate. Ďalšie polievanie o %lld deň.",
-    "few": "Poliate. Ďalšie polievanie o %lld dni.",
-    "other": "Poliate. Ďalšie polievanie o %lld dní."
-  },
   "Главная": "Domov",
   "Порядок": "Poradie",
   "Сад в AR": "Záhrada v AR",

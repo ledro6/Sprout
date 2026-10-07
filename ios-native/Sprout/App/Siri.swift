@@ -41,7 +41,7 @@ struct PlantEntity: AppEntity {
         id = plant.id
         name = plant.name
         self.room = room
-        let percent = Lang.format("%lld%%", Int((plant.moisture * 100).rounded()))
+        let percent = plant.moistureLabel
         let line = Lang.format("%1$@ · %2$@", room, percent)
         status = plant.needsWaterToday
             ? Lang.format("%1$@ · %2$@", line, Lang.text("Пора поливать"))

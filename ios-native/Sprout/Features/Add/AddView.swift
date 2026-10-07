@@ -33,6 +33,10 @@ struct AddView: View {
     @State private var species = ""
     @State private var room = ""
     @State private var period: Double = 7
+    /// «Последний полив» — от него влажность нового растения, см. `Start`.
+    @State private var last = Start.Last.today
+    /// «Не помню» — «Земля сухая?»; пусто — ещё не ответили.
+    @State private var soil: Start.Soil?
 
     /// Уход, от которого отказались при посадке. Вид предлагает, а делать
     /// ли — решает хозяин: отказанного нет ни в напоминаниях, ни на экране
@@ -382,6 +386,39 @@ struct AddView: View {
                 PeriodWheel(days: $period)
             }
 
+            SproutDivider()
+
+            SproutBlock("Последний полив") {
+                Picker("Последний полив",
+                       selection: $last.animation(Motion.appear)) {
+                    ForEach(Start.Last.allCases, id: \.self) { answer in
+                        Text(answer.title).tag(answer)
+                    }
+                }
+                .pickerStyle(.segmented)
+            }
+
+            if last == .unknown {
+                SproutDivider()
+                    .transition(.opacity)
+                SproutBlock("Земля сухая?") {
+                    VStack(alignment: .leading, spacing: 10) {
+                        Picker("Земля сухая?", selection: $soil) {
+                            ForEach(Start.Soil.allCases, id: \.self) { answer in
+                                Text(answer.title).tag(Optional(answer))
+                            }
+                        }
+                        .pickerStyle(.segmented)
+                        StatusLabel(status: MoistureStatus(
+                            moisture: Start.moisture(last: last, soil: soil,
+                                                     period: period)))
+                            .font(Typography.settingNote)
+                            .foregroundStyle(Palette.ink)
+                    }
+                }
+                .transition(.blurReplace)
+            }
+
             if !offered.isEmpty {
                 SproutDivider()
 
@@ -552,13 +589,15 @@ struct AddView: View {
         let kind = wanted.isEmpty ? Lang.text("Комнатное растение") : wanted
         let chosen = room.trimmingCharacters(in: .whitespacesAndNewlines)
         let place = chosen.isEmpty ? Lang.text("Дом") : chosen
-        let days = Int(period.rounded())
+        let start = Start.moisture(last: last, soil: soil, period: period)
+            ?? Start.unsure
 
         let saved = shot.flatMap { Snapshot.keep($0) }
         // Модель для AR — готовая модель вида: своя, по снимку или сканом,
         // — только если хозяин попросит, на экране растения.
         let seedling = Plant.new(name: nickname, species: kind,
-                                 dryingDays: period, shot: saved)
+                                 dryingDays: period, shot: saved,
+                                 moisture: start)
         withAnimation(Motion.appear) { garden.add(seedling, to: place) }
         if let cutting {
             garden.tend(seedling.id, feedEvery: cutting.feed,
@@ -578,11 +617,11 @@ struct AddView: View {
         Cheer.shared.now(from: button.rect)
         Feel.planted()
         typing = false
-        // Две строки каталога: у второй форма числа своя.
+        // Две строки каталога: срок — словами движка статусов.
         planted = Planted(
             name: nickname,
             note: Lang.format("Растёт в комнате «%@».", place) + "\n"
-                + Lang.format("Полито, следующий полив через %lld дней.", days))
+                + seedling.nextWateringText)
         reset()
     }
 
@@ -597,6 +636,8 @@ struct AddView: View {
             item = nil
             guess = nil
             period = 7
+            last = .today
+            soil = nil
             cutting = nil
         }
     }

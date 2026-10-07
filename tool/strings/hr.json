@@ -222,11 +222,6 @@
   "Полив": "Zalijevanje",
   "Посадить": "Posadi",
   "Растёт в комнате «%@».": "Raste u sobi „%@”.",
-  "Полито, следующий полив через %lld дней.": {
-    "one": "Zaliveno. Sljedeće zalijevanje za %lld dan.",
-    "few": "Zaliveno. Sljedeće zalijevanje za %lld dana.",
-    "other": "Zaliveno. Sljedeće zalijevanje za %lld dana."
-  },
   "Главная": "Početna",
   "Порядок": "Redoslijed",
   "Сад в AR": "Vrt u AR-u",

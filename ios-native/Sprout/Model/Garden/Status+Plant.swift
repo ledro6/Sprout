@@ -19,8 +19,24 @@ extension Plant {
         MoistureStatus(moisture: moisture, wetFrom: wetFrom)
     }
 
-    /// Влажность посчитана по сроку, а не измерена датчиком.
-    var estimated: Bool { sensor?.last == nil }
+    /// Влажность посчитана по сроку, а не измерена датчиком: датчик
+    /// привязан и последнее значение — его.
+    var estimated: Bool { !(source == .sensor && sensor?.last != nil) }
+
+    /// «Датчик» или «Расчёт» — значок у процента.
+    var sourceLabel: String { MoistureStatus.source(estimated: estimated) }
+
+    /// Одна строка влажности на экране растения: процент, откуда он и, у
+    /// датчика, заряд. Сырое показание датчика в процентах его шкалы сюда
+    /// не идёт: два разных процента подряд читались бы противоречием.
+    var moistureLine: String {
+        let head = Lang.format("Влажность %@", moistureLabel)
+        guard !estimated, let battery = sensor?.last?.battery else {
+            return Lang.format("%1$@ · %2$@", head, sourceLabel)
+        }
+        return Lang.format("%1$@ · %2$@ · батарейка %3$@", head, sourceLabel,
+                           Lang.format("%lld%%", battery))
+    }
 
     /// Полить сегодня — см. `MoistureStatus.due`.
     var needsWaterToday: Bool {
@@ -63,4 +79,61 @@ extension MoistureStatus {
         }
         return Lang.text("Здесь все довольны — можно выдохнуть.")
     }
+}
+
+/// Влажность нового растения — по ответу «Последний полив» при посадке, а
+/// не 100 % у всех: растение из магазина бывает и сухим.
+enum Start {
+    enum Last: String, CaseIterable, Sendable {
+        case today, yesterday, longAgo, unknown
+
+        var title: String {
+            switch self {
+            case .today: Lang.text("Сегодня")
+            case .yesterday: Lang.text("Вчера")
+            case .longAgo: Lang.text("3+ дня назад")
+            case .unknown: Lang.text("Не помню")
+            }
+        }
+    }
+
+    /// «Не помню» — «Земля сухая?»: потрогать пальцем.
+    enum Soil: String, CaseIterable, Sendable {
+        case dry, damp, wet
+
+        var title: String {
+            switch self {
+            case .dry: Lang.text("Сухая")
+            case .damp: Lang.text("Чуть влажная")
+            case .wet: Lang.text("Мокрая")
+            }
+        }
+
+        /// Сухая — «полить сегодня», чуть влажная — «скоро пить», мокрая —
+        /// «влажно».
+        var moisture: Double {
+            switch self {
+            case .dry: 0.1
+            case .damp: 0.35
+            case .wet: 0.85
+            }
+        }
+    }
+
+    /// Не помнят и землю не трогали — пусто: статус «Проверьте землю».
+    static func moisture(last: Last, soil: Soil?, period: Double) -> Double? {
+        let days: Double
+        switch last {
+        case .today: return 1
+        case .yesterday: days = 1
+        case .longAgo: days = 3
+        case .unknown: return soil?.moisture
+        }
+        guard period > 0 else { return 1 }
+        return min(max(1 - days / period, 0), 1)
+    }
+
+    /// Посадили, не ответив про землю: как «чуть влажная» — пусть растение
+    /// попадёт в «скоро пить» и хозяин потрогает землю, а не забудет о нём.
+    static let unsure = Soil.damp.moisture
 }

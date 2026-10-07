@@ -131,7 +131,9 @@ struct ComplicationView: View {
             } else {
                 ForEach(entry.thirsty.prefix(2)) { pot in
                     Text(Lang.format("%1$@ · %2$@", pot.name,
-                                     Lang.format("%lld%%", pot.percent)))
+                                     MoistureStatus.percent(
+                                         pot.moisture,
+                                         estimated: pot.estimated)))
                         .font(.caption)
                         .lineLimit(1)
                 }

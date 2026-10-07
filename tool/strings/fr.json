@@ -212,10 +212,6 @@
   "Полив": "Arrosage",
   "Посадить": "Planter",
   "Растёт в комнате «%@».": "Pousse dans la pièce « %@ ».",
-  "Полито, следующий полив через %lld дней.": {
-    "one": "Arrosée. Prochain arrosage dans %lld jour.",
-    "other": "Arrosée. Prochain arrosage dans %lld jours."
-  },
   "Главная": "Accueil",
   "Порядок": "Ordre",
   "Сад в AR": "Jardin en RA",

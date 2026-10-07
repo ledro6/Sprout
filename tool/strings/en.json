@@ -212,10 +212,6 @@
   "Полив": "Watering",
   "Посадить": "Plant It",
   "Растёт в комнате «%@».": "Growing in “%@”.",
-  "Полито, следующий полив через %lld дней.": {
-    "one": "Watered. Next watering in %lld day.",
-    "other": "Watered. Next watering in %lld days."
-  },
   "Главная": "Home",
   "Порядок": "Sort",
   "Сад в AR": "Garden in AR",

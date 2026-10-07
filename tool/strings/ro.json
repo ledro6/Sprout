@@ -222,11 +222,6 @@
   "Полив": "Udare",
   "Посадить": "Plantează",
   "Растёт в комнате «%@».": "Crește în camera „%@”.",
-  "Полито, следующий полив через %lld дней.": {
-    "one": "Udată. Următoarea udare peste %lld zi.",
-    "few": "Udată. Următoarea udare peste %lld zile.",
-    "other": "Udată. Următoarea udare peste %lld de zile."
-  },
   "Главная": "Acasă",
   "Порядок": "Ordine",
   "Сад в AR": "Grădina în RA",
