@@ -552,6 +552,16 @@ final class Garden {
         return nil
     }
 
+    /// Удалённое насовсем — отсчёт «Вернуть» кончился: журнал поливов
+    /// уходит следом, как и обещал вопрос перед удалением. Растение успели
+    /// вернуть — журнал его.
+    func purge(_ id: Plant.ID) {
+        guard plant(id: id) == nil, log.contains(where: { $0.plant == id })
+        else { return }
+        log.removeAll { $0.plant == id }
+        save()
+    }
+
     /// Комнату за отсчёт могли удалить — тогда она заводится там, где стояла.
     /// Второй раз не встаёт.
     func putBack(_ gone: Removal) {

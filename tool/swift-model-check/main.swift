@@ -5964,6 +5964,29 @@ do {
     check(Rank(.streak, 2).toGo(2).hasPrefix("До «"), "сколько осталось — с двоеточием")
 }
 
+print("удаление с журналом:")
+do {
+    let yard = Garden(first: Seed.state)
+    let kept = yard.state
+    let day = Date().addingTimeInterval(-86_400)
+    yard.restore(GardenState(owner: "", rooms: [Room(name: "Т", plants: [
+        plantNamed("Ушёл", moisture: 0.3, dryingDays: 7),
+        plantNamed("Остался", moisture: 0.3, dryingDays: 7),
+    ])], savedAt: Date(), log: [
+        Watering(plant: "Ушёл", when: day), Watering(plant: "Остался", when: day),
+    ]))
+    let gone = yard.remove("Ушёл")!
+    yard.purge("Остался")
+    check(yard.log.count == 2, "в отсчёте журнал цел; живому purge не страшен")
+    yard.putBack(gone)
+    yard.purge("Ушёл")
+    check(yard.log.count == 2, "вернули — растение с историей")
+    _ = yard.remove("Ушёл")
+    yard.purge("Ушёл")
+    check(yard.log.map(\.plant) == ["Остался"], "отсчёт кончился — журнал ушёл следом")
+    yard.restore(kept)
+}
+
 if failed > 0 {
     print("\nне сошлось: \(failed)")
     exit(1)

@@ -33,15 +33,27 @@ enum Slip: Equatable {
 
 /// Последнее удаление или полив, которые ещё можно отменить.
 ///
-/// Удаление не спрашивает «вы уверены?»: растение уходит из сада сразу, а
-/// здесь пять секунд лежат оно и его место. Снимок с диска выбрасывается
-/// только по истечении отсчёта — его одного не восстановить. Полив так же:
-/// промахнулись карточкой — пять секунд, чтобы вернуть влажность и журнал.
+/// Удаление сперва спрашивает (`ask`, лист `TossPrompt`): «Удалить …?
+/// Журнал поливов тоже исчезнет». Потом растение уходит из сада, а здесь
+/// восемь секунд лежат оно и его место. Снимок с диска и журнал поливов
+/// уходят только по истечении отсчёта — «Вернуть» возвращает растение с
+/// историей. Полив так же: промахнулись карточкой — восемь секунд, чтобы
+/// вернуть влажность и журнал.
 @Observable
 final class Bin {
     static let shared = Bin()
 
     private(set) var pending: Slip?
+
+    /// Вопрос перед удалением — показывает корень (`TossPrompt`).
+    struct Farewell: Identifiable {
+        let id: Plant.ID
+        let name: String
+        let plate: CGRect
+        let garden: Garden
+    }
+
+    var asking: Farewell?
 
     private(set) var left = 0
 
@@ -52,6 +64,15 @@ final class Bin {
     @ObservationIgnored private weak var garden: Garden?
 
     private init() {}
+
+    /// Спросить, прежде чем удалить. `plate` — откуда потом разгорится
+    /// красное.
+    @MainActor
+    func ask(_ id: Plant.ID, from plate: CGRect, in garden: Garden) {
+        guard let plant = garden.plant(id: id) else { return }
+        asking = Farewell(id: id, name: plant.name, plate: plate,
+                          garden: garden)
+    }
 
     /// Плашка — где стояла карточка, в координатах окна: оттуда разгорается
     /// красное; нулевая — из середины экрана. Прежнее убранное уходит
@@ -131,6 +152,7 @@ final class Bin {
         run?.cancel()
         if case .removal(let gone) = slip {
             for file in gone.plant.files { Shots.drop(file) }
+            garden?.purge(gone.plant.id)
         }
         pending = nil
         since = nil
@@ -156,6 +178,30 @@ enum Screen {
             .flatMap(\.windows)
             .first { $0.isKeyWindow }?
             .bounds ?? .zero
+    }
+}
+
+/// «Удалить «Фикус»? Журнал поливов тоже исчезнет» — «Удалить» и
+/// «Отмена». Один лист на главную, поиск и экран растения.
+struct TossPrompt: ViewModifier {
+    private let bin = Bin.shared
+
+    func body(content: Content) -> some View {
+        content
+            .confirmationDialog(
+                Text(bin.asking.map {
+                    Lang.format("Удалить «%@»? Журнал поливов тоже исчезнет", $0.name)
+                } ?? ""),
+                isPresented: Binding(get: { bin.asking != nil },
+                                     set: { if !$0 { bin.asking = nil } }),
+                titleVisibility: .visible,
+                presenting: bin.asking) { farewell in
+                Button("Удалить", role: .destructive) {
+                    bin.toss(farewell.id, from: farewell.plate,
+                             in: farewell.garden)
+                }
+                Button("Отмена", role: .cancel) {}
+            }
     }
 }
 

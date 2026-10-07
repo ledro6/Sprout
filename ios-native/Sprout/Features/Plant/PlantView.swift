@@ -307,9 +307,9 @@ struct PlantView: View {
         }
     }
 
-    /// Красное идёт от плашки с фото.
+    /// Сперва вопрос; красное идёт от плашки с фото.
     private func toss() {
-        Bin.shared.toss(plantID, from: spot.rect, in: garden)
+        Bin.shared.ask(plantID, from: spot.rect, in: garden)
     }
 
     private func relocate(to room: String) {

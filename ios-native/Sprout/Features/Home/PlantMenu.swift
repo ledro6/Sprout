@@ -30,7 +30,8 @@ final class Tenant {
 /// Меню растения по долгому нажатию — одно на главную и поиск: настройки,
 /// AR, переезд и удаление. Полить — каплей на карточке, переименовать — в
 /// настройках растения, расставить — продержав палец дольше меню. Удаление
-/// без подтверждения: вернуть можно с плашки, см. `Bin`.
+/// переспрашивает, потом восемь секунд его можно вернуть с плашки, см.
+/// `Bin`.
 struct PlantMenu: ViewModifier {
     let id: Plant.ID
 
@@ -150,7 +151,7 @@ struct PlantMenu: ViewModifier {
 
     private func toss() {
         let who = tenant.id
-        Bin.shared.toss(who, from: Cards.shared.rect(who), in: garden)
+        Bin.shared.ask(who, from: Cards.shared.rect(who), in: garden)
     }
 
     private func relocate(to room: String) {
