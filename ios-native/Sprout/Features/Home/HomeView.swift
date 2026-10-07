@@ -406,6 +406,11 @@ struct HomeView: View {
         for (index, leaf) in leaves.enumerated()
         where index != here && glide.lifts[leaf, default: 0] > 1 {
             fresh[leaf, default: 0] += 1
+            // Новая прокрутка стоит в начале, но о своём положении может не
+            // сказать, пока её не тронут: старый подъём остался бы в `Glide`,
+            // и, вернувшись, шапка доросла бы до него над страницей у верха,
+            // а с первым касанием сама сжалась бы обратно.
+            glide.track(leaf, lift: 0)
         }
     }
 
