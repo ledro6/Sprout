@@ -293,6 +293,14 @@ struct DachaGroup: View {
                        isOn: Binding(get: { dachnik.only },
                                      set: { dachnik.only = $0 }))
                     .labelsHidden()
+                    .disabled(!dachnik.located)
+            }
+            if !dachnik.located {
+                Text("Без геопозиции напоминания по даче приходят как обычно.")
+                    .font(Typography.settingNote)
+                    .foregroundStyle(Palette.secondaryText)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .transition(.blurReplace)
             }
         } else {
             Text("Напоминание по приезде придёт, если включить «Напоминать о поливе» в настройках.")

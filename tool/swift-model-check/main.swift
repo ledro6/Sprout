@@ -1268,6 +1268,27 @@ do {
           "«Прошёл дождь» — сутки")
     check(!Dacha.lately(nil) && !Dacha.tomorrow(nil),
           "погоды на даче нет — дождевая часть молчит")
+    check(Dacha.rainLine(rain, now: at(20), calendar: clock) ?? "—",
+          "Дождь: полив отложен до завтра", "прошёл дождь — одна плашка")
+    var promisedOnly = Dacha.Rainfall(counted: noon, checked: noon,
+                                      promised: tomorrow)
+    check(Dacha.rainLine(promisedOnly, now: noon, calendar: clock) != nil
+          && Dacha.rainLine(promisedOnly, now: noon, calendar: clock)!
+              .hasPrefix("Дождь: полив отложен до ")
+          && Dacha.rainLine(promisedOnly, now: noon, calendar: clock)
+              != "Дождь: полив отложен до завтра",
+          "обещан завтра — до послезавтра, с датой")
+    promisedOnly.soaked = noon
+    check(Dacha.rainLine(promisedOnly, now: noon, calendar: clock)
+              == Dacha.rainLine(Dacha.Rainfall(counted: noon, checked: noon,
+                                               promised: tomorrow),
+                                now: noon, calendar: clock),
+          "прошёл и обещан — всё равно одна плашка, по дальнему сроку")
+    check(Dacha.rainLine(nil, now: noon, calendar: clock) == nil,
+          "нет дождя — нет плашки")
+    check(!Dacha.onlyThere(true, located: false)
+          && Dacha.onlyThere(true, located: true),
+          "без геопозиции «только на даче» выключается")
 
     let folder = FileManager.default.temporaryDirectory
         .appendingPathComponent("sprout-dacha-\(UUID().uuidString)")

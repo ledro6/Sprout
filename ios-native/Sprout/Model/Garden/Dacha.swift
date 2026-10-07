@@ -130,6 +130,38 @@ enum Dacha {
         return age >= 0 && age < 86_400
     }
 
+    /// Одна плашка дождя на карточке дачи: «Дождь: полив отложен до
+    /// завтра». Прошёл дождь — полив ждёт до завтра; обещан на завтра — до
+    /// послезавтра, с датой. Нет дождя — пусто.
+    static func rainLine(_ rain: Rainfall?, now: Date = Date(),
+                         calendar: Calendar = .current) -> String? {
+        let days: Int
+        if tomorrow(rain, now: now, calendar: calendar) {
+            days = 2
+        } else if lately(rain, now: now) {
+            days = 1
+        } else {
+            return nil
+        }
+        guard days > 1 else {
+            return Lang.text("Дождь: полив отложен до завтра")
+        }
+        guard let day = calendar.date(byAdding: .day, value: days,
+                                      to: calendar.startOfDay(for: now))
+        else { return nil }
+        let style = Date.FormatStyle(calendar: calendar,
+                                     timeZone: calendar.timeZone)
+            .day().month(.wide).locale(Lang.locale)
+        return Lang.format("Дождь: полив отложен до %@", day.formatted(style))
+    }
+
+    /// «Напоминать только на даче» держится, пока приезд можно заметить:
+    /// без точной геопозиции настройка выключается сама — иначе о дачных
+    /// растениях не напомнило бы ничего.
+    static func onlyThere(_ wanted: Bool, located: Bool) -> Bool {
+        wanted && located
+    }
+
     /// «Завтра дождь» — пока обещанные сутки и правда завтрашние.
     static func tomorrow(_ rain: Rainfall?, now: Date = Date(),
                          calendar: Calendar = .current) -> Bool {

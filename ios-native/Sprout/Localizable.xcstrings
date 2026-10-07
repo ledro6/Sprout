@@ -17202,6 +17202,9 @@
         }
       }
     },
+    "Без геопозиции напоминания по даче приходят как обычно.": {
+      "extractionState": "manual"
+    },
     "Без имени": {
       "extractionState": "manual"
     },
@@ -60739,6 +60742,12 @@
         }
       }
     },
+    "Дождь: полив отложен до %@": {
+      "extractionState": "manual"
+    },
+    "Дождь: полив отложен до завтра": {
+      "extractionState": "manual"
+    },
     "Дом": {
       "extractionState": "manual",
       "localizations": {
@@ -66783,9 +66792,6 @@
           }
         }
       }
-    },
-    "Завтра дождь — можно не поливать": {
-      "extractionState": "manual"
     },
     "Задание недели": {
       "extractionState": "manual",
@@ -202347,9 +202353,6 @@
           }
         }
       }
-    },
-    "Прошёл дождь — полив отложен": {
-      "extractionState": "manual"
     },
     "Пряные травы": {
       "extractionState": "manual",
