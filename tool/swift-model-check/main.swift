@@ -4843,6 +4843,41 @@ do {
           "французский: Siri")
 }
 
+// Лента комнат растёт до заголовка без отката: ширина имени по ходу
+// прокрутки только растёт (или только ужимается) и не заезжает под кнопки.
+// Числа — iPhone 17 Pro: 402 пункта, четыре кнопки справа.
+do {
+    let strip: CGFloat = 402, corner: CGFloat = 248
+    func fits(_ grown: CGFloat) -> CGFloat {
+        max(strip - Swell.trail(corner, grown: grown) - 72, 40)
+    }
+    for natural: CGFloat in [105, 165, 400] {
+        var last = Swell.width(natural: natural, rest: 22.0 / 34, grown: 0,
+                               fits: fits)
+        let rising = Swell.width(natural: natural, rest: 22.0 / 34, grown: 1,
+                                 fits: fits) >= last
+        var steady = true, inside = true
+        for step in 1 ... 100 {
+            let grown = CGFloat(step) / 100
+            let now = Swell.width(natural: natural, rest: 22.0 / 34,
+                                  grown: grown, fits: fits)
+            if rising ? now < last - 0.0001 : now > last + 0.0001 {
+                steady = false
+            }
+            if now > fits(grown) + 0.0001 { inside = false }
+            last = now
+        }
+        check(steady, "лента: имя шириной \(Int(natural)) идёт в одну сторону")
+        check(inside, "лента: имя шириной \(Int(natural)) не под кнопками")
+    }
+    check(round2(Double(Swell.width(natural: 105, rest: 22.0 / 34, grown: 0,
+                                    fits: fits))), "67.94",
+          "лента: в покое — кегль покоя")
+    check(round2(Double(Swell.width(natural: 105, rest: 22.0 / 34, grown: 1,
+                                    fits: fits))), "82.00",
+          "лента: доросшее — не шире места у кнопок")
+}
+
 if failed > 0 {
     print("\nне сошлось: \(failed)")
     exit(1)

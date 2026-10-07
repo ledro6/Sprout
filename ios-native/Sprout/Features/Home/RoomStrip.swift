@@ -111,8 +111,12 @@ struct RoomStrip: View {
     /// прыгали по пикселям, а ширины — ступеньками по пункту.
     var face: CGFloat = 0
 
-    /// Сколько с конца занято кнопками: поднявшись к ним, лента ужимается.
-    var trail: CGFloat = 0
+    /// Кегль в покое и насколько лента доросла до заголовка (0…1).
+    var rest: CGFloat = 0
+    var grown: CGFloat = 0
+
+    /// Ширина кнопок у конца: поднявшись к ним, лента ужимается.
+    var corner: CGFloat = 0
 
     let go: (Int) -> Void
 
@@ -128,12 +132,16 @@ struct RoomStrip: View {
     private var flipped: Bool { direction == .rightToLeft }
 
     /// Видимая часть ленты — без кнопок.
-    private var span: CGFloat { max(width - trail, 1) }
+    private var span: CGFloat { room(grown) }
+
+    private func room(_ grown: CGFloat) -> CGFloat {
+        max(width - Swell.trail(corner, grown: grown), 1)
+    }
 
     /// Шире — ужимается: имя целиком помещается в ленту.
-    private var widest: CGFloat {
-        max(span - Metrics.contentMargin - Metrics.roomPeek - Metrics.roomTail,
-            40)
+    private func widest(_ grown: CGFloat) -> CGFloat {
+        max(room(grown) - Metrics.contentMargin - Metrics.roomPeek
+            - Metrics.roomTail, 40)
     }
 
     /// Кегль вёрстки: не меньше экранного.
@@ -143,8 +151,14 @@ struct RoomStrip: View {
         // Ширины в кегле вёрстки не меняются на прокрутке; на экране —
         // масштабом, и не шире ленты.
         let natural = (0 ..< count).map(measure)
-        let zoom = size / typeSize
-        let widths = natural.map { min($0 * zoom, widest) }
+        let calm = min(rest > 0 ? rest : size, typeSize) / typeSize
+        // Ширина — по концам, в покое и доросшая, а не «кегль сейчас, но не
+        // шире места сейчас»: место съедается быстрее, чем растёт кегль, и
+        // имя росло, а потом само ужималось — см. `Swell`.
+        let widths = natural.map { wide in
+            Swell.width(natural: wide, rest: calm, grown: grown,
+                        fits: { widest($0) })
+        }
         // Грань — от поля страницы; со второй комнаты — чуть правее: слева
         // остаётся место под загнутый край прошлой.
         let lead = Metrics.contentMargin

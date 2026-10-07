@@ -65,3 +65,4 @@ ios-native/Sprout/Model/Botany/Grower+Flowers.swift
 ios-native/Sprout/Model/Workshop/Sample.swift
 ios-native/Sprout/Model/Scene/Greenhouse.swift
 ios-native/Sprout/Model/Scene/Rill.swift
+ios-native/Sprout/Model/Core/Swell.swift

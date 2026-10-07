@@ -850,9 +850,9 @@ private struct HomeHead: View {
                       at: glide.at,
                       size: size + (grownSize - size) * grown,
                       face: max(size, grownSize),
-                      // Ужимается с опережением: поднимаясь, лента не
-                      // заезжает под кнопки.
-                      trail: (corner + Metrics.roomGap) * min(grown * 1.5, 1),
+                      rest: size,
+                      grown: grown,
+                      corner: corner + Metrics.roomGap,
                       go: go)
                 .frame(height: row + (grownRow - row) * grown)
                 .sproutRide()
