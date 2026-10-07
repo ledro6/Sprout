@@ -25,6 +25,8 @@ struct PlantSettingsView: View {
 
     @State private var naming = false
     @State private var newRoom = ""
+    /// Имя датчика в поле «Назвать».
+    @State private var sensorName = ""
 
     @State private var linking = false
 
@@ -199,6 +201,15 @@ struct PlantSettingsView: View {
 
     // MARK: - Датчик
 
+    /// Новое имя датчика; пустое не сохраняем — останется прежнее.
+    private func renameSensor() {
+        let name = sensorName.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard var sensor = plant?.sensor, !name.isEmpty, name != sensor.name
+        else { return }
+        sensor.name = name
+        garden.link(plantID, sensor: sensor)
+    }
+
     /// Датчик влажности: привязан — чей, что показывает и метки шкалы;
     /// нет — привязать. Действия ложатся в сад сразу, мимо «Готово»: это
     /// не черновик, а устройство.
@@ -212,10 +223,15 @@ struct PlantSettingsView: View {
                         .foregroundStyle(Palette.accent)
                         .frame(width: 24)
                     VStack(alignment: .leading, spacing: 2) {
-                        Text(sensor.name)
+                        // Своё имя датчику: два Flower Care в списке
+                        // одинаковы, «У окна» и «Кухня» — нет.
+                        TextField("Назвать", text: $sensorName)
                             .font(Typography.settingRow)
                             .foregroundStyle(Palette.ink)
-                            .lineLimit(1)
+                            .submitLabel(.done)
+                            .onSubmit(renameSensor)
+                            .onAppear { sensorName = sensor.name }
+                            .onDisappear(perform: renameSensor)
                         Text(sensor.status ?? Lang.text("Ждём первых показаний…"))
                             .font(Typography.settingNote)
                             .foregroundStyle(Palette.secondaryText)

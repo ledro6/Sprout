@@ -15,18 +15,22 @@ struct SensorPicker: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: Metrics.groupGap) {
                     group(.flora, title: "Рядом по Bluetooth",
-                          empty: sensors.blind
-                            ? Lang.text("Bluetooth выключен или запрещён для Sprout.")
-                            : sensors.scanning
-                                ? Lang.text("Ищу… Поднесите телефон к горшку.")
-                                : Lang.text("Датчиков Flower Care не видно. Поднесите телефон ближе и поищите снова."))
+                          empty: sensors.denied
+                            ? Lang.text("Нужен доступ к Bluetooth, чтобы найти датчик.")
+                            : sensors.blind
+                                ? Lang.text("Bluetooth выключен. Включите его в Пункте управления.")
+                                : sensors.scanning
+                                    ? Lang.text("Ищу… Поднесите телефон к горшку.")
+                                    : Lang.text("Датчиков Flower Care не видно. Поднесите телефон ближе и поищите снова."),
+                          settings: sensors.denied)
                     // Пока «Дом» не ответил, «нет» было бы неправдой: ищем,
                     // как по Bluetooth.
                     group(.home, title: "Из приложения «Дом»",
                           empty: sensors.homeless
                             ?? (sensors.asking && sensors.scanning
                                 ? Lang.text("Ищу…")
-                                : Lang.text("Датчиков влажности в «Доме» нет.")))
+                                : Lang.text("Датчиков в «Доме» не найдено. Добавьте датчик в приложении «Дом» или выберите из списка выше.")),
+                          settings: sensors.homeDenied)
                     Text("Датчик в горшке показывает настоящую влажность земли: проценты растения берутся с него, а полив, замеченный датчиком, сам ложится в журнал.")
                         .font(Typography.settingNote)
                         .foregroundStyle(Palette.secondaryText)
@@ -67,7 +71,7 @@ struct SensorPicker: View {
     }
 
     private func group(_ kind: Sensor.Kind, title: LocalizedStringKey,
-                       empty: String) -> some View {
+                       empty: String, settings: Bool) -> some View {
         let found = sensors.found.filter { $0.kind == kind }
         return SproutGroup(title) {
             if found.isEmpty {
@@ -75,6 +79,10 @@ struct SensorPicker: View {
                     .font(Typography.settingNote)
                     .foregroundStyle(Palette.secondaryText)
                     .fixedSize(horizontal: false, vertical: true)
+                if settings {
+                    Button("Открыть Настройки", action: openSettings)
+                        .buttonStyle(.glass)
+                }
             }
             ForEach(Array(found.enumerated()), id: \.element.id) { item in
                 if item.offset > 0 { SproutDivider() }
@@ -91,10 +99,20 @@ struct SensorPicker: View {
                                 .foregroundStyle(Palette.ink)
                                 .lineLimit(1)
                             if let detail = item.element.detail {
-                                Text(detail)
-                                    .font(Typography.settingNote)
-                                    .foregroundStyle(Palette.secondaryText)
-                                    .lineLimit(1)
+                                // «Рядом / Далеко» — словом; децибелы —
+                                // мелкой припиской для любопытных.
+                                HStack(spacing: 6) {
+                                    Text(detail)
+                                        .font(Typography.settingNote)
+                                        .foregroundStyle(Palette.secondaryText)
+                                    if let signal = item.element.signal {
+                                        Text(signal)
+                                            .font(Typography.cardCaption)
+                                            .foregroundStyle(Palette.secondaryText)
+                                            .monospacedDigit()
+                                    }
+                                }
+                                .lineLimit(1)
                             }
                         }
                         Spacer(minLength: 8)
@@ -107,6 +125,12 @@ struct SensorPicker: View {
                 .buttonStyle(.plain)
             }
         }
+    }
+
+    private func openSettings() {
+        guard let url = URL(string: UIApplication.openSettingsURLString)
+        else { return }
+        UIApplication.shared.open(url)
     }
 
     private func link(_ found: Sensors.Found) {

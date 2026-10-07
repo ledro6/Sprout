@@ -4840,6 +4840,9 @@ do {
     sensor.dry = 30
     sensor.wet = 32
     check(round2(sensor.level(30)), "0.50", "слипшиеся метки — обычная шкала")
+    check(Sensor.distance(-55) == "Рядом" && Sensor.distance(-70) == "Рядом"
+          && Sensor.distance(-85) == "Далеко",
+          "одинаковые датчики — «Рядом / Далеко», а не децибелы")
 
     let yard = Garden(first: Seed.state)
     var fern = plantNamed("Папоротник", moisture: 1, dryingDays: 7)
