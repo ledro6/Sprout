@@ -141,21 +141,19 @@ struct SearchView: View {
         }
     }
 
-    /// Есть языковая модель — под пустым поиском «Спросить сад»: набранное,
-    /// может, и не кличка, а вопрос.
+    /// Под пустым поиском — «Спросить сад» с набранным: может, это и не
+    /// кличка, а вопрос. Без Apple Intelligence кнопка остаётся — лист
+    /// объяснит, чего не хватает.
     private var nothing: some View {
         VStack(spacing: 18) {
-            hint(Lang.format("По запросу «%@» в квартире ничего не растёт.",
-                             asked),
+            hint(Lang.format("По запросу «%@» ничего не найдено", asked),
                  icon: "leaf")
-            if Muse.ready {
-                Button { asking = true } label: {
-                    Label("Спросить сад",
-                          systemImage: "bubble.left.and.text.bubble.right")
-                }
-                .buttonStyle(.glass)
-                .font(Typography.settingNote)
+            Button { asking = true } label: {
+                Label("Спросить сад",
+                      systemImage: "bubble.left.and.text.bubble.right")
             }
+            .buttonStyle(.glass)
+            .font(Typography.settingNote)
         }
     }
 

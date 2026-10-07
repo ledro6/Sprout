@@ -245,6 +245,11 @@ print("поиск по всей квартире:")
 check("\(Seed.search("лера", in: Seed.rooms).count)", "1", "«лера» находит одно")
 check("\(Seed.search("баксик", in: Seed.rooms).count)", "2", "«баксик» находит два")
 check("\(Seed.search("монстера", in: Seed.rooms).count)", "2", "ищет и по виду")
+check(Seed.search("дачник", in: [
+    Room(name: "Дом", plants: []),
+    Room(name: "Веранда", plants: [plantNamed("Дачник", moisture: 0.5,
+                                              dryingDays: 7)], dacha: true),
+]).map(\.id) == ["Дачник"], "поиск идёт и по комнатам дачи")
 check("\(Seed.search("   ", in: Seed.rooms).count)", "0", "пустой запрос ничего не возвращает")
 
 print("настройки: значения по умолчанию и границы:")
