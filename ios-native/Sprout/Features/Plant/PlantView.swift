@@ -50,6 +50,9 @@ struct PlantView: View {
 
     @State private var chrome = false
 
+    /// Растёт на каждый полив — кольцо у кнопки, см. `PourRing`.
+    @State private var poured = 0
+
     /// Список записей под графиком — свёрнут: он нужен, чтобы удалить
     /// ошибочную.
     @State private var listing = false
@@ -301,7 +304,8 @@ struct PlantView: View {
     /// Полив с анимацией, иначе тревожная тень гасла бы щелчком. Влажную
     /// землю — сперва вопрос, см. `Overflow`.
     private func water() {
-        Overflow.shared.water(plantID, in: garden) { [spot] in
+        Overflow.shared.water(plantID, in: garden) { [self] in
+            poured += 1
             Cheer.shared.now(from: spot.rect)
             Feel.water()
         }
@@ -410,6 +414,7 @@ struct PlantView: View {
                 Button(action: water) { pourLabel }
                     .buttonStyle(.glass)
                     .controlSize(.extraLarge)
+                    .pourRing(Capsule(), trigger: poured)
                 Text(Lang.format("Земля ещё влажная (%@)", MoistureStatus.percent(
                     wet, estimated: plant?.estimated ?? true)))
                     .font(Typography.settingNote)
@@ -421,6 +426,7 @@ struct PlantView: View {
                 .buttonStyle(.glassProminent)
                 .tint(Palette.accentFill)
                 .controlSize(.extraLarge)
+                .pourRing(Capsule(), trigger: poured)
                 .sproutRide()
         }
     }

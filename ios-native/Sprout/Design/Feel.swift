@@ -7,11 +7,13 @@ import UIKit
 /// всходы без звука: выбор щёлкает сам, а всходы идут и при запуске.
 @MainActor
 enum Feel {
-    /// Капли каждый раз новые — зерно случайное.
+    /// Капли каждый раз новые — зерно случайное. Лёгкие и короткие, за
+    /// время кольца у кнопки (`Motion.pourSeconds`): отклик, а не дождь.
     static func water() {
-        Engine.shared.play(Rain.drops(over: Motion.cheerSeconds,
-                                      seed: .random(in: .min ... .max)),
-                           long: true)
+        let drops = Rain.drops(over: Motion.pourSeconds,
+                               seed: .random(in: .min ... .max))
+            .map { Tap(at: $0.at, strength: $0.strength * 0.6, edge: $0.edge) }
+        Engine.shared.play(drops, long: true)
         Chime.pour.play()
     }
 

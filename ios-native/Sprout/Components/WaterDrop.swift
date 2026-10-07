@@ -11,6 +11,11 @@ struct WaterDrop: View {
     /// Чужой полив меньше часа назад, о котором спрашиваем перед своим.
     @State private var asking: Watering?
 
+    /// Растёт на каждый полив — кольцо и подскок капли, см. `PourRing`.
+    @State private var poured = 0
+
+    @Environment(\.accessibilityReduceMotion) private var still
+
     private var full: Bool { plant.moisture >= 0.99 }
 
     /// Только что полил кто-то из семьи — капля приглушена, нажатие сначала
@@ -28,11 +33,14 @@ struct WaterDrop: View {
                 .font(.system(size: Metrics.dropGlyph, weight: .semibold))
                 .symbolEffect(.breathe, isActive: plant.thirst == .alarm
                               && !Power.shared.calm)
+                .symbolEffect(.bounce, options: .speed(2),
+                              value: still ? 0 : poured)
                 .frame(width: Metrics.dropBox, height: Metrics.dropBox)
         }
         .buttonStyle(.glassProminent)
         .buttonBorderShape(.circle)
         .tint(Palette.accentFill)
+        .pourRing(Circle(), trigger: poured)
         .disabled(full)
         .opacity(recent == nil ? 1 : 0.5)
         .animation(Motion.number, value: full)
@@ -42,7 +50,15 @@ struct WaterDrop: View {
                                 get: { asking != nil },
                                 set: { if !$0 { asking = nil } }),
                             titleVisibility: .visible) {
-            Button("Полить") { pour() }
+            // Следом может спросить защита от перелива — её лист
+            // поднимается, когда этот уже ушёл: два листа разом SwiftUI
+            // не покажет.
+            Button("Полить") {
+                Task { @MainActor in
+                    try? await Task.sleep(for: .seconds(0.4))
+                    pour()
+                }
+            }
             Button("Отмена", role: .cancel) {}
         }
     }
@@ -50,7 +66,8 @@ struct WaterDrop: View {
     /// Влажную землю — сперва вопрос, см. `Overflow`.
     private func pour() {
         let id = plant.id
-        Overflow.shared.water(id, in: garden) {
+        Overflow.shared.water(id, in: garden) { [self] in
+            poured += 1
             // Волна — от карточки, а не от капли: поливают растение.
             let spot = Cards.shared.rect(id)
             Cheer.shared.now(from: spot == .zero ? Screen.middle : spot)
