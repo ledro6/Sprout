@@ -5299,6 +5299,47 @@ do {
           "«Спросить сад» с растением на 14 % не скажет «никого»")
 }
 
+print("склонения по числу:")
+do {
+    // Формы — по CLDR, тем же выбором, что у каталога (`Catalog.form`).
+    let numbers = [0, 1, 2, 4, 5, 11, 12, 21, 22, 25, 101]
+    let forms = ["many", "one", "few", "few", "many", "many", "many", "one",
+                 "few", "many", "one"]
+    check(numbers.map { Catalog.form("ru", $0) } == forms,
+          "русские формы: 0, 1, 2, 4, 5, 11, 12, 21, 22, 25, 101")
+    func row(_ key: String, _ one: String, _ few: String,
+             _ many: String) -> [String] {
+        numbers.map { n in
+            let word = ["one": one, "few": few, "many": many][Catalog.form("ru", n)]!
+            return key.replacingOccurrences(of: "%lld", with: "\(n)")
+                .replacingOccurrences(of: "{w}", with: word)
+        }
+    }
+    let words: [(String, String, String, String, String)] = [
+        ("%lld растений", "%lld {w}", "растение", "растения", "растений"),
+        ("%lld дней", "%lld {w}", "день", "дня", "дней"),
+        ("Раз в %lld месяцев", "Раз в %lld {w}", "месяц", "месяца", "месяцев"),
+        ("%lld поливов", "%lld {w}", "полив", "полива", "поливов"),
+        ("раз в %lld минут", "раз в %lld {w}", "минуту", "минуты", "минут"),
+        ("Полив через %lld дней", "Полив через %lld {w}", "день", "дня", "дней"),
+    ]
+    for (key, shape, one, few, many) in words {
+        let got = numbers.map { Lang.format(key, $0) }
+        check(got == row(shape, one, few, many),
+              "«\(one)»: \(got.joined(separator: ", "))")
+    }
+    // Комнат с числом на экране нет («комнат: 3» — после двоеточия), ключа
+    // в каталоге нет; формы слова — тем же выбором.
+    let rooms = numbers.map { n in
+        "\(n) " + ["one": "комната", "few": "комнаты",
+                    "many": "комнат"][Catalog.form("ru", n)]!
+    }
+    check(rooms == ["0 комнат", "1 комната", "2 комнаты", "4 комнаты",
+                    "5 комнат", "11 комнат", "12 комнат", "21 комната",
+                    "22 комнаты", "25 комнат", "101 комната"],
+          "«комната» — те же формы CLDR")
+}
+
 if failed > 0 {
     print("\nне сошлось: \(failed)")
     exit(1)
