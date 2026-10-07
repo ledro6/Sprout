@@ -33,7 +33,7 @@ private struct GardenerPage: View {
             }
             .padding(.horizontal, Metrics.contentMargin)
             .padding(.top, 8)
-            .padding(.bottom, 28)
+            .padding(.bottom, Metrics.barGap)
         }
         .background { SproutBackground() }
         .navigationTitle("Садовник")

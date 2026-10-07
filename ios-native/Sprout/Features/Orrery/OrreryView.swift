@@ -48,7 +48,7 @@ struct OrreryView: View {
                 }
                 .padding(.horizontal, Metrics.contentMargin)
                 .padding(.top, 8)
-                .padding(.bottom, 40)
+                .padding(.bottom, Metrics.barGap)
             }
             .background { StarField() }
             .walk(.orrery, scroll: reader)

@@ -86,7 +86,7 @@ struct PlantView: View {
                                value: Rhythm.suggest(for: plant, log: garden.log))
                     .padding(.horizontal, Metrics.margin)
                     .padding(.top, 14)
-                    .padding(.bottom, 40)
+                    .padding(.bottom, Metrics.barGap)
                 }
             }
             .scrollDismissesKeyboard(.interactively)

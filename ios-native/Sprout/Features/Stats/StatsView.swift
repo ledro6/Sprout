@@ -132,7 +132,7 @@ struct StatsView: View {
                         .animation(Motion.fold, value: choosing)
                         .padding(.horizontal, Metrics.contentMargin)
                         .padding(.top, 8)
-                        .padding(.bottom, 28)
+                        .padding(.bottom, Metrics.barGap)
                     }
                 }
                 // Вход во вкладку — плавно; фон стоит.

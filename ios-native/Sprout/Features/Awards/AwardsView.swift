@@ -25,7 +25,7 @@ struct AwardsView: View {
             }
             .padding(.horizontal, Metrics.contentMargin)
             .padding(.top, 4)
-            .padding(.bottom, 40)
+            .padding(.bottom, Metrics.barGap)
         }
         .background { SproutBackground() }
         .navigationTitle("Награды")

@@ -76,7 +76,7 @@ struct ProfileView: View {
                         }
                         .padding(.horizontal, Metrics.contentMargin)
                         .padding(.top, 8)
-                        .padding(.bottom, 28)
+                        .padding(.bottom, Metrics.barGap)
                     }
                     // Ровно в ширину экрана: системная кнопка вставки
                     // просила места больше, чем есть, и весь экран ездил

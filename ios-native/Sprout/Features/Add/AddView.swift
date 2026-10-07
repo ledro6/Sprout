@@ -85,7 +85,7 @@ struct AddView: View {
                         }
                         .padding(.horizontal, Metrics.contentMargin)
                         .padding(.top, 8)
-                        .padding(.bottom, 28)
+                        .padding(.bottom, Metrics.barGap)
                     }
                 }
                 // Иначе до кнопки «Посадить» из последнего поля не добраться.
