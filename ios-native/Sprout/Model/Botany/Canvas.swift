@@ -320,13 +320,6 @@ struct Relief: Sendable {
         SIMD2(uv.x * Float(width), (1 - uv.y) * Float(height))
     }
 
-    mutating func raise(_ shape: [SIMD2<Float>], by amount: Float) {
-        let cover = Picture.coverage(shape.map(spot), width: width,
-                                     height: height)
-        for index in cover.indices { values[index] += cover[index] * amount }
-        Meter.tick(cover.count * 4)
-    }
-
     mutating func stroke(_ path: [SIMD2<Float>], width thickness: (Float) -> Float,
                          by amount: Float) {
         guard let band = Picture.band(path.map(spot), scale: Float(width),

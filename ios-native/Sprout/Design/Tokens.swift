@@ -311,10 +311,6 @@ enum Metrics {
     /// неё.
     static let gearBox: CGFloat = 24
 
-    /// Кнопки «назад» и «ещё» на экране растения: до них тянуться через
-    /// весь экран — коробка больше, чем у шестерёнки главной.
-    static let navBox: CGFloat = 32
-
     /// Круглая кнопка панели на экране растения — как системная, 44 pt.
     static let navCircle: CGFloat = 44
     static let gearGlyph: CGFloat = 24
