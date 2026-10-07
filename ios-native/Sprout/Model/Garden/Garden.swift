@@ -122,15 +122,32 @@ final class Garden {
 
     // MARK: - Что с ними делают
 
-    /// Отвечает, что было до полива, — для отмены, см. `unwater`.
+    /// Защита от перелива — одна на все входы полива: экран растения,
+    /// капля, уведомление, виджет, часы, Siri, живые действия, AR,
+    /// планетарий, метка на горшке. Земля ещё влажная — влажность, при
+    /// которой надо переспросить; пусто — поливать можно сразу.
+    func wetCheck(_ id: Plant.ID) -> Double? {
+        guard case .warn(let moisture)? = plant(id: id)?.wateringGuard
+        else { return nil }
+        return moisture
+    }
+
+    /// Отвечает, что было до полива, — для отмены, см. `unwater`. Влажную
+    /// землю (`wetCheck`) без подтверждения (`anyway`) не поливает: записи
+    /// нет, ответ пустой. С подтверждением полив ложится в журнал «лишним»
+    /// (`Watering.extra`) — он не идёт в серию, задания, опыт и «вовремя».
     @discardableResult
-    func water(_ id: Plant.ID, at moment: Date = Date()) -> Pour? {
+    func water(_ id: Plant.ID, at moment: Date = Date(),
+               anyway: Bool = false) -> Pour? {
         guard let before = plant(id: id) else { return nil }
+        let wet = wetCheck(id) != nil
+        guard !wet || anyway else { return nil }
         // Запись в журнал — до полива: `change` пишет файл, и запись должна в
         // него попасть. Полив в пределах десяти минут от прежнего — датчика
         // или кого-то из семьи — тот же полив, второй записи нет (`Twin`).
         if Twin.index(id, at: moment, in: log) == nil {
-            log.append(Watering(plant: id, when: moment, left: before.moisture))
+            log.append(Watering(plant: id, when: moment, left: before.moisture,
+                                extra: wet ? true : nil))
         }
         // Полили рукой — до нового показания датчика влажность посчитанная.
         change(id) {
@@ -139,6 +156,18 @@ final class Garden {
         }
         return Pour(plant: id, name: before.name, moisture: before.moisture,
                     when: moment)
+    }
+
+    /// Массовый полив — «Полить всех», «Уезжаю», живое действие: только те,
+    /// кому пора пить (`MoistureStatus.bulk`), влажные и в норме не
+    /// участвуют. `ids` — из кого выбирать; пусто — весь сад.
+    @discardableResult
+    func waterNeeded(_ ids: [Plant.ID]? = nil,
+                     at moment: Date = Date()) -> [Pour] {
+        let chosen = ids.map(Set.init)
+        return MoistureStatus.bulk(rooms.flatMap(\.plants))
+            .filter { chosen?.contains($0.id) ?? true }
+            .compactMap { water($0.id, at: moment) }
     }
 
     /// Запись уходит из журнала, влажность — на прежнюю, за вычетом того, что

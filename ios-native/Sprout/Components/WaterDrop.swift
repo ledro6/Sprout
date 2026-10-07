@@ -47,11 +47,14 @@ struct WaterDrop: View {
         }
     }
 
+    /// Влажную землю — сперва вопрос, см. `Overflow`.
     private func pour() {
-        guard Bin.shared.water(plant.id, in: garden) else { return }
-        // Волна — от карточки, а не от капли: поливают растение.
-        let spot = Cards.shared.rect(plant.id)
-        Cheer.shared.now(from: spot == .zero ? Screen.middle : spot)
-        Feel.water()
+        let id = plant.id
+        Overflow.shared.water(id, in: garden) {
+            // Волна — от карточки, а не от капли: поливают растение.
+            let spot = Cards.shared.rect(id)
+            Cheer.shared.now(from: spot == .zero ? Screen.middle : spot)
+            Feel.water()
+        }
     }
 }

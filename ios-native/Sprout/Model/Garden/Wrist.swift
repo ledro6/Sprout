@@ -30,6 +30,12 @@ struct Wrist: Codable, Equatable, Sendable {
 
         var percent: Int { Int((moisture * 100).rounded()) }
 
+        /// Земля ещё влажная — полив переспрашивает, см.
+        /// `MoistureStatus.wateringGuard`.
+        var wet: Bool {
+            MoistureStatus.wateringGuard(moisture: moisture) != .allow
+        }
+
         var estimated: Bool { measured != true }
 
         /// Те же слова, что на карточке в приложении, — и те же переводы.
@@ -49,13 +55,19 @@ struct Wrist: Codable, Equatable, Sendable {
     /// Полили с часов — сразу на часах, не дожидаясь телефона: он догонит.
     /// Слепок помечается мигом полива: посылка телефона, собранная раньше,
     /// его уже не перетрёт.
-    mutating func water(_ id: String, at moment: Date = Date()) {
-        guard let index = pots.firstIndex(where: { $0.id == id }) else {
-            return
+    /// Влажную землю — только с подтверждением (`anyway`), как на
+    /// телефоне; отвечает, полилось ли.
+    @discardableResult
+    mutating func water(_ id: String, at moment: Date = Date(),
+                        anyway: Bool = false) -> Bool {
+        guard let index = pots.firstIndex(where: { $0.id == id }),
+              anyway || !pots[index].wet else {
+            return false
         }
         pots[index].moisture = 1
         pots.sort { $0.moisture < $1.moisture }
         sent = max(sent, moment)
+        return true
     }
 
     /// Новая посылка — только если она не старше того, что уже есть.
@@ -98,5 +110,7 @@ struct Wrist: Codable, Equatable, Sendable {
         static let garden = "garden"
         static let water = "water"
         static let when = "when"
+        /// Полили влажную землю, подтвердив, — см. `Garden.water`.
+        static let anyway = "anyway"
     }
 }

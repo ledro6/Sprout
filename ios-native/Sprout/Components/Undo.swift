@@ -74,10 +74,12 @@ final class Bin {
     /// Отвечает, полилось ли.
     @MainActor
     @discardableResult
-    func water(_ id: Plant.ID, in garden: Garden) -> Bool {
+    func water(_ id: Plant.ID, in garden: Garden,
+               anyway: Bool = false) -> Bool {
         commit()
-        guard let pour = withAnimation(Motion.appear, { garden.water(id) })
-        else { return false }
+        guard let pour = withAnimation(Motion.appear, {
+            garden.water(id, anyway: anyway)
+        }) else { return false }
         self.garden = garden
         count(.pour(pour))
         return true

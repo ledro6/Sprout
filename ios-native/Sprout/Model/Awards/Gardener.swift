@@ -16,7 +16,7 @@ struct Gardener: Equatable, Sendable {
     static let medal = 40
 
     static func of(log: [Watering], quests: Int, medals: Int) -> Gardener {
-        let pours = log.reduce(0) { sum, entry in
+        let pours = log.filter(\.counts).reduce(0) { sum, entry in
             let onTime = entry.left.map { Almanac.Aim.zone($0) == .onTime }
                 ?? false
             return sum + pour + (onTime ? aim : 0)

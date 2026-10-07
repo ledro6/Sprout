@@ -72,6 +72,8 @@ struct RootView: View {
         }
         // «Полить?» и сообщения после метки на горшке.
         .modifier(TagPrompt())
+        // «Земля ещё влажная» — вопрос перед лишним поливом, см. `Overflow`.
+        .wetPrompt()
         // «Посадить такое же» из каталога — на вкладку «Добавить».
         .onChange(of: Sowing.shared.specimen) { _, asked in
             if asked != nil { pane = .add }

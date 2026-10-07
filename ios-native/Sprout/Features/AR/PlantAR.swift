@@ -15,6 +15,10 @@ struct PlantAR: View {
 
     @State private var stage = Stage()
 
+    /// «Земля ещё влажная» — свой вопрос: корень поверх обложки его не
+    /// покажет.
+    @State private var overflow = Overflow()
+
     init(plantID: Plant.ID) {
         ids = [plantID]
     }
@@ -37,6 +41,7 @@ struct PlantAR: View {
             .safeAreaInset(edge: .bottom) { controls }
             .overlay(alignment: .top) { header }
             .walk(.ar)
+            .wetPrompt(overflow)
             .animation(Motion.enter, value: stage.phase)
             .animation(Motion.enter, value: stage.chosen)
             .tint(Palette.accent)
@@ -49,9 +54,24 @@ struct PlantAR: View {
 
     private func start() {
         stage.cast(plants, in: garden)
-        stage.onWatered = { [garden] id in
-            guard Bin.shared.water(id, in: garden) else { return }
+        stage.onWatered = { [garden, stage] id in
+            let anyway = stage.anyway.remove(id) != nil
+            guard Bin.shared.water(id, in: garden, anyway: anyway) else {
+                return
+            }
             Feel.water()
+        }
+    }
+
+    /// Влажную землю — сперва вопрос; лейка летит после ответа.
+    private func pour() {
+        guard let id = stage.aimed, garden.wetCheck(id) != nil else {
+            stage.water()
+            return
+        }
+        overflow.ask(id, in: garden) { [stage] in
+            stage.anyway.insert(id)
+            stage.water()
         }
     }
 
@@ -200,7 +220,7 @@ struct PlantAR: View {
                     .buttonStyle(.glass)
                     .transition(.blurReplace)
                 }
-                Button { stage.water() } label: {
+                Button(action: pour) {
                     Label("Полить", systemImage: "drop.fill")
                         .font(Typography.detail)
                         .padding(.horizontal, 10)

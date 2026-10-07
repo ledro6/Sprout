@@ -145,7 +145,7 @@ struct TripView: View {
                     if watered {
                         Label("Все политы", systemImage: "checkmark")
                     } else {
-                        Label("Полить всех перед отъездом",
+                        Label("Полить всех, кому пора",
                               systemImage: "drop.fill")
                     }
                 }
@@ -233,9 +233,8 @@ struct TripView: View {
     /// незачем, а плашка на каждое растение была бы очередью.
     private func waterAll() {
         withAnimation(Motion.appear) {
-            for plant in garden.rooms.flatMap(\.plants) {
-                _ = garden.water(plant.id)
-            }
+            // Только кому пора пить: влажные и в норме не участвуют.
+            garden.waterNeeded()
             watered = true
         }
         Cheer.shared.now(from: button.rect)

@@ -13477,6 +13477,9 @@
         }
       }
     },
+    "«%@»: полив не записан. Лишний полив вреден корням — откройте растение и проверьте землю.": {
+      "extractionState": "manual"
+    },
     "«Полить» зовёт лейку: полив засчитается, когда вода коснётся земли.": {
       "extractionState": "manual",
       "localizations": {
@@ -36549,6 +36552,9 @@
           }
         }
       }
+    },
+    "Всё равно полить": {
+      "extractionState": "manual"
     },
     "Вчера": {
       "extractionState": "manual"
@@ -72581,7 +72587,13 @@
         }
       }
     },
+    "Земля ещё влажная (%@)": {
+      "extractionState": "manual"
+    },
     "Земля сухая?": {
+      "extractionState": "manual"
+    },
+    "Земля у «%1$@» ещё влажная (%2$@) — полив не записан. Лишний полив вреден корням.": {
       "extractionState": "manual"
     },
     "Земля успевает пересохнуть — поливайте чуть раньше.": {
@@ -102500,6 +102512,9 @@
           }
         }
       }
+    },
+    "Лишний полив вреден корням": {
+      "extractionState": "manual"
     },
     "Любимчик года": {
       "extractionState": "manual",
@@ -179676,579 +179691,8 @@
         }
       }
     },
-    "Полить всех": {
-      "extractionState": "manual",
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "اسقِ الجميع"
-          }
-        },
-        "bg": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Полей всички"
-          }
-        },
-        "bn": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "সবাইকে জল দিন"
-          }
-        },
-        "ca": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Rega-les totes"
-          }
-        },
-        "cs": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Zalít všechny"
-          }
-        },
-        "da": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Vand alle"
-          }
-        },
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Alle gießen"
-          }
-        },
-        "el": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Πότισμα όλων"
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Water All"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Regar todas"
-          }
-        },
-        "fi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Kastele kaikki"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tout arroser"
-          }
-        },
-        "gu": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "બધાને પાણી આપો"
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "להשקות את כולם"
-          }
-        },
-        "hi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "सबको पानी दें"
-          }
-        },
-        "hr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Zalij sve"
-          }
-        },
-        "hu": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Mindet megöntözni"
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Siram semua"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Annaffia tutte"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "すべてに水やり"
-          }
-        },
-        "kk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Бәрін суару"
-          }
-        },
-        "kn": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ಎಲ್ಲಕ್ಕೂ ನೀರು ಹಾಕಿ"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "모두 물주기"
-          }
-        },
-        "lt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Palaistyti visus"
-          }
-        },
-        "ml": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "എല്ലാം നനയ്ക്കുക"
-          }
-        },
-        "mr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "सगळ्यांना पाणी घाला"
-          }
-        },
-        "ms": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Siram semua"
-          }
-        },
-        "nb": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Vann alle"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Iedereen water"
-          }
-        },
-        "or": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ସମସ୍ତଙ୍କୁ ପାଣି ଦିଅନ୍ତୁ"
-          }
-        },
-        "pa": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ਸਭ ਨੂੰ ਪਾਣੀ ਦਿਓ"
-          }
-        },
-        "pl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Podlej wszystkie"
-          }
-        },
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Regar todas"
-          }
-        },
-        "pt-PT": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Regar todas"
-          }
-        },
-        "ro": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Udă toate"
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Poliať všetky"
-          }
-        },
-        "sl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Zalij vse"
-          }
-        },
-        "sv": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Vattna alla"
-          }
-        },
-        "ta": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "அனைத்துக்கும் ஊற்று"
-          }
-        },
-        "te": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "అన్నింటికీ నీళ్లు పోయండి"
-          }
-        },
-        "th": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "รดน้ำทั้งหมด"
-          }
-        },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Hepsini sula"
-          }
-        },
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Полити всіх"
-          }
-        },
-        "ur": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "سب کو پانی دیں"
-          }
-        },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tưới tất cả"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "全部浇水"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "全部澆水"
-          }
-        }
-      }
-    },
-    "Полить всех перед отъездом": {
-      "extractionState": "manual",
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "اسقِ الجميع قبل السفر"
-          }
-        },
-        "bg": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Полей всички преди тръгване"
-          }
-        },
-        "bn": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "যাওয়ার আগে সবাইকে জল দিন"
-          }
-        },
-        "ca": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Rega-les totes abans de marxar"
-          }
-        },
-        "cs": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Před odjezdem zalít všechny"
-          }
-        },
-        "da": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Vand alle før afrejsen"
-          }
-        },
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Vor der Abreise alle gießen"
-          }
-        },
-        "el": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Πότισμα όλων πριν την αναχώρηση"
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Water Everyone Before Leaving"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Regar todas antes de irme"
-          }
-        },
-        "fi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Kastele kaikki ennen lähtöä"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tout arroser avant le départ"
-          }
-        },
-        "gu": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "જતાં પહેલાં બધાને પાણી આપો"
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "להשקות את כולם לפני הנסיעה"
-          }
-        },
-        "hi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "जाने से पहले सबको पानी दें"
-          }
-        },
-        "hr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Zalij sve prije odlaska"
-          }
-        },
-        "hu": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Mindet megöntözni indulás előtt"
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Siram semua sebelum berangkat"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Annaffia tutte prima di partire"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "出発前にすべてに水やり"
-          }
-        },
-        "kk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Кетер алдында бәрін суару"
-          }
-        },
-        "kn": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ಹೊರಡುವ ಮುನ್ನ ಎಲ್ಲಕ್ಕೂ ನೀರು ಹಾಕಿ"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "떠나기 전에 모두 물주기"
-          }
-        },
-        "lt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Palaistyti visus prieš išvykstant"
-          }
-        },
-        "ml": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "പോകും മുമ്പ് എല്ലാം നനയ്ക്കുക"
-          }
-        },
-        "mr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "जाण्याआधी सगळ्यांना पाणी घाला"
-          }
-        },
-        "ms": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Siram semua sebelum bertolak"
-          }
-        },
-        "nb": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Vann alle før avreise"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Geef iedereen water voor vertrek"
-          }
-        },
-        "or": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ଯିବା ପୂର୍ବରୁ ସମସ୍ତଙ୍କୁ ପାଣି ଦିଅନ୍ତୁ"
-          }
-        },
-        "pa": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ਜਾਣ ਤੋਂ ਪਹਿਲਾਂ ਸਭ ਨੂੰ ਪਾਣੀ ਦਿਓ"
-          }
-        },
-        "pl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Podlej wszystkie przed wyjazdem"
-          }
-        },
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Regar todas antes de viajar"
-          }
-        },
-        "pt-PT": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Regar todas antes de viajar"
-          }
-        },
-        "ro": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Udă toate înainte de plecare"
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Pred odchodom poliať všetky"
-          }
-        },
-        "sl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Zalij vse pred odhodom"
-          }
-        },
-        "sv": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Vattna alla före avresan"
-          }
-        },
-        "ta": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "கிளம்பும் முன் அனைத்துக்கும் ஊற்று"
-          }
-        },
-        "te": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "బయలుదేరే ముందు అన్నింటికీ నీళ్లు పోయండి"
-          }
-        },
-        "th": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "รดน้ำทั้งหมดก่อนออกเดินทาง"
-          }
-        },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Gitmeden önce hepsini sula"
-          }
-        },
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Полити всіх перед від’їздом"
-          }
-        },
-        "ur": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "جانے سے پہلے سب کو پانی دیں"
-          }
-        },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tưới tất cả trước khi đi"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "出发前全部浇水"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "出發前全部澆水"
-          }
-        }
-      }
+    "Полить всех, кому пора": {
+      "extractionState": "manual"
     },
     "Полить и к следующему": {
       "extractionState": "manual"
@@ -180539,6 +179983,9 @@
           }
         }
       }
+    },
+    "Полить перед отъездом, кому пора": {
+      "extractionState": "manual"
     },
     "Полить по очереди": {
       "extractionState": "manual"
@@ -183989,6 +183436,9 @@
           }
         }
       }
+    },
+    "Полить, кому пора": {
+      "extractionState": "manual"
     },
     "Полить: %@": {
       "extractionState": "manual",

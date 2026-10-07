@@ -29,11 +29,12 @@ final class Wristband {
     }
 
     /// Полили с часов — сразу здесь и на циферблате, телефону — вдогонку.
-    func water(_ id: String) {
-        guard var current = wrist else { return }
-        current.water(id)
+    func water(_ id: String, anyway: Bool = false) {
+        guard var current = wrist, current.water(id, anyway: anyway) else {
+            return
+        }
         keep(current)
-        relay.water(id)
+        relay.water(id, anyway: anyway)
     }
 
     private func keep(_ fresh: Wrist) {
@@ -59,10 +60,11 @@ final class Relay: NSObject, WCSessionDelegate {
     /// Телефон рядом — сразу, с ответом свежим садом; нет — посылкой, она
     /// дойдёт, когда он проснётся.
     @MainActor
-    func water(_ id: String) {
+    func water(_ id: String, anyway: Bool) {
         let note: [String: Any] = [
             Wrist.Key.water: id,
             Wrist.Key.when: Date().timeIntervalSince1970,
+            Wrist.Key.anyway: anyway,
         ]
         let session = WCSession.default
         guard session.activationState == .activated else {

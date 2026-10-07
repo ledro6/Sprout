@@ -9,6 +9,10 @@ enum Notifier {
     private static let id = "watering"
     private static let careID = "care"
     private static let cureID = "treatment"
+    /// «Земля ещё влажная» после «Полил» — нажатие открывает растение.
+    private static let wetID = "wet"
+    /// Номер растения, которое открыть по нажатию.
+    static let open = "open"
 
     /// Кнопка «Полил» прямо в уведомлении — без захода в приложение.
     static let category = "watering"
@@ -85,6 +89,19 @@ enum Notifier {
         }
     }
 
+    /// «Полил» нажали, а земля у растения ещё влажная — полив не записан
+    /// (защита от перелива). Говорим об этом сразу; нажатие откроет
+    /// растение — посмотреть самому.
+    static func wet(_ plant: Plant) async {
+        let note = UNMutableNotificationContent()
+        note.title = Lang.format("Земля ещё влажная (%@)", MoistureStatus.percent(
+            plant.moisture, estimated: plant.estimated))
+        note.body = Lang.format("«%@»: полив не записан. Лишний полив вреден корням — откройте растение и проверьте землю.",
+                                plant.name)
+        note.userInfo = [open: plant.id]
+        await post(note, id: wetID, after: 1)
+    }
+
     private static func post(_ note: UNMutableNotificationContent, id: String,
                              after: TimeInterval) async {
         let when = UNTimeIntervalNotificationTrigger(timeInterval: after,
@@ -110,18 +127,28 @@ private final class Postman: NSObject, UNUserNotificationCenterDelegate {
     func userNotificationCenter(_ center: UNUserNotificationCenter,
                                 didReceive response: UNNotificationResponse)
         async {
+        let info = response.notification.request.content.userInfo
+        if response.actionIdentifier == UNNotificationDefaultActionIdentifier,
+           let id = info[Notifier.open] as? String {
+            await MainActor.run { Summon.shared.plant = id }
+            return
+        }
         guard response.actionIdentifier == Notifier.pour,
-              let ids = response.notification.request.content
-                  .userInfo["plants"] as? [String]
+              let ids = info["plants"] as? [String]
         else { return }
-        await MainActor.run {
+        let wet = await MainActor.run { () -> [Plant] in
             let garden = Garden.shared
             // Приложение могло стоять в фоне — сперва чужие правки (виджет),
             // потом прошедшее время.
             garden.reload()
             garden.advance()
-            for id in ids { _ = garden.water(id) }
+            // Влажную землю «Полил» не поливает: подтвердить в уведомлении
+            // нечем — растение откроется по следующему уведомлению.
+            return ids.compactMap { id in
+                garden.water(id) == nil ? garden.plant(id: id) : nil
+            }
         }
+        if let first = wet.first { await Notifier.wet(first) }
     }
 
     /// Пока приложение на экране, напоминания сняты; пришедшее всё же —

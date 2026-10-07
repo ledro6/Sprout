@@ -86,6 +86,9 @@ private struct PotPage: View {
 
     @State private var poured = 0
 
+    /// Земля ещё влажная — переспросить, как на телефоне.
+    @State private var asking = false
+
     var body: some View {
         if let pot = band.wrist?.pots.first(where: { $0.id == id }) {
             ScrollView {
@@ -115,8 +118,12 @@ private struct PotPage: View {
                         .multilineTextAlignment(.center)
                         .contentTransition(.opacity)
                     Button {
-                        band.water(pot.id)
-                        poured += 1
+                        if pot.wet {
+                            asking = true
+                        } else {
+                            band.water(pot.id)
+                            poured += 1
+                        }
                     } label: {
                         Label("Полить", systemImage: "drop.fill")
                             .frame(maxWidth: .infinity)
@@ -130,6 +137,18 @@ private struct PotPage: View {
             }
             .navigationTitle(pot.name)
             .sensoryFeedback(.success, trigger: poured)
+            .confirmationDialog(
+                Text(Lang.format("Земля ещё влажная (%@)", MoistureStatus.percent(
+                    pot.moisture, estimated: pot.estimated))),
+                isPresented: $asking, titleVisibility: .visible) {
+                Button("Всё равно полить") {
+                    band.water(pot.id, anyway: true)
+                    poured += 1
+                }
+                Button("Отмена", role: .cancel) {}
+            } message: {
+                Text("Лишний полив вреден корням")
+            }
         } else {
             Image(systemName: "leaf")
                 .font(.title2)

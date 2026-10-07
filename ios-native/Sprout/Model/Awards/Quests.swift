@@ -136,7 +136,10 @@ struct Week: Hashable, Sendable {
             return Week(start: span.start, end: span.end,
                         key: "\(year)-W\(number)", challenges: [])
         }
-        let entries = log.filter { $0.when >= span.start && $0.when < span.end }
+        // Лишний полив по влажной земле в задания не идёт.
+        let entries = log.filter {
+            $0.counts && $0.when >= span.start && $0.when < span.end
+        }
         // Сухое сейчас — засуха этой недели, даже если его ещё не полили.
         let parched = span.start <= now && now < span.end
             && rooms.flatMap(\.plants).contains {

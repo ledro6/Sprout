@@ -304,12 +304,13 @@ struct OrreryView: View {
     }
 
     private func water(_ id: Plant.ID) {
-        guard Bin.shared.water(id, in: garden) else { return }
-        let now = Date()
-        // Отыгравшие круги больше не нужны.
-        splashed = splashed.filter { now.timeIntervalSince($0.value) < 2 }
-        splashed[id] = now
-        Feel.water()
+        Overflow.shared.water(id, in: garden) {
+            let now = Date()
+            // Отыгравшие круги больше не нужны.
+            splashed = splashed.filter { now.timeIntervalSince($0.value) < 2 }
+            splashed[id] = now
+            Feel.water()
+        }
     }
 
     // MARK: - Время

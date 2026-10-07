@@ -298,11 +298,13 @@ struct PlantView: View {
         }
     }
 
-    /// Полив с анимацией, иначе тревожная тень гасла бы щелчком.
+    /// Полив с анимацией, иначе тревожная тень гасла бы щелчком. Влажную
+    /// землю — сперва вопрос, см. `Overflow`.
     private func water() {
-        guard Bin.shared.water(plantID, in: garden) else { return }
-        Cheer.shared.now(from: spot.rect)
-        Feel.water()
+        Overflow.shared.water(plantID, in: garden) { [spot] in
+            Cheer.shared.now(from: spot.rect)
+            Feel.water()
+        }
     }
 
     /// Красное идёт от плашки с фото.
@@ -399,17 +401,34 @@ struct PlantView: View {
     }
 
     /// Главное действие экрана — широкой синей кнопкой, как в системных
-    /// приложениях iOS 26.
+    /// приложениях iOS 26. Земля ещё влажная — кнопка вторичная, под ней
+    /// почему: лишний полив вреден, нажатие переспросит.
+    @ViewBuilder
     private var pour: some View {
-        Button(action: water) {
-            Label("Полить сейчас", systemImage: "drop.fill")
-                .font(Typography.detail)
-                .frame(maxWidth: .infinity)
+        if let wet = garden.wetCheck(plantID) {
+            VStack(spacing: 6) {
+                Button(action: water) { pourLabel }
+                    .buttonStyle(.glass)
+                    .controlSize(.extraLarge)
+                Text(Lang.format("Земля ещё влажная (%@)", MoistureStatus.percent(
+                    wet, estimated: plant?.estimated ?? true)))
+                    .font(Typography.settingNote)
+                    .foregroundStyle(Palette.secondaryText)
+            }
+            .sproutRide()
+        } else {
+            Button(action: water) { pourLabel }
+                .buttonStyle(.glassProminent)
+                .tint(Palette.accentFill)
+                .controlSize(.extraLarge)
+                .sproutRide()
         }
-        .buttonStyle(.glassProminent)
-        .tint(Palette.accentFill)
-        .controlSize(.extraLarge)
-        .sproutRide()
+    }
+
+    private var pourLabel: some View {
+        Label("Полить сейчас", systemImage: "drop.fill")
+            .font(Typography.detail)
+            .frame(maxWidth: .infinity)
     }
 
     /// Остальные действия — квадратными плитками стекла: значок и под ним

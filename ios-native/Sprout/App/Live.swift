@@ -100,9 +100,8 @@ final class Live {
                 await put(state, into: activity)
             }
         case .waterAll:
-            for plant in garden.rooms.flatMap(\.plants) {
-                _ = garden.water(plant.id)
-            }
+            // Только кому пора пить: влажные и в норме не участвуют.
+            garden.waterNeeded()
             Cabinet.shared.deed(.traveler)
         }
         await sync()

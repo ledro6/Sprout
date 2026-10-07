@@ -568,7 +568,7 @@ private struct WaterAll: View {
                 .minimumScaleFactor(0.7)
         } else {
             Button(intent: WaterBeforeTrip()) {
-                Label("Полить всех", systemImage: "drop.fill")
+                Label("Полить, кому пора", systemImage: "drop.fill")
                     .font(.subheadline.weight(.bold))
                     .lineLimit(1)
                     .minimumScaleFactor(0.7)

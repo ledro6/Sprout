@@ -60,14 +60,16 @@ enum Trip {
     /// Полит перед отъездом — если не раньше, чем за полсуток до него.
     static let fresh: TimeInterval = 12 * 3600
 
+    /// Сад готов к отъезду: кому пора пить (`MoistureStatus.bulk`), политы
+    /// за последние полсуток. Влажные и в норме перед отъездом не льют —
+    /// защита от перелива.
     static func watered(_ rooms: [Room], log: [Watering],
                         now: Date = Date()) -> Bool {
         let recent = Set(log.lazy.filter {
             now.timeIntervalSince($0.when) < fresh
         }.map(\.plant))
-        return rooms.allSatisfy { room in
-            room.plants.allSatisfy { recent.contains($0.id) }
-        }
+        return MoistureStatus.bulk(rooms.flatMap(\.plants))
+            .allSatisfy { recent.contains($0.id) }
     }
 
     /// Когда сосед придёт в первый раз.

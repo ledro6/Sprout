@@ -348,7 +348,8 @@ struct Trophies: Sendable {
                    now: Date = Date(),
                    calendar: Calendar = .current) -> Trophies {
         var out = Trophies()
-        let sorted = log.sorted { $0.when < $1.when }
+        // Лишний полив по влажной земле наград не приносит.
+        let sorted = log.filter(\.counts).sorted { $0.when < $1.when }
         out.set(.drops, count: sorted.count,
                 at: Award.drops.steps.filter { $0 <= sorted.count }
                     .map { sorted[$0 - 1].when })

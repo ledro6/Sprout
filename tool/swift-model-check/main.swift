@@ -183,7 +183,8 @@ let baksik = garden.plant(id: "baksik")!
 check(round2(baksik.moisture), "0.78", "за сутки Баксик потерял девятую часть")
 
 print("полив:")
-garden.water("baksik")
+check(garden.water("baksik") == nil, "78 % — влажно: без подтверждения не поливается")
+garden.water("baksik", anyway: true)
 check(round2(garden.plant(id: "baksik")!.moisture), "1.00", "полив наполняет до краёв")
 check("\(garden.plant(id: "baksik")!.thirst)", "calm", "и снимает тревогу")
 check(garden.plant(id: "baksik")!.wateringLabel, "Полив примерно через 9 дней",
@@ -679,7 +680,7 @@ check("\(quiet.rooms.count)", "1", "и пустых комнат тоже")
 print("сад ведёт журнал:")
 let plot2 = Garden(first: Seed.state)
 let before = plot2.log.count
-plot2.water("pr")
+plot2.water("pr", anyway: true)
 check("\(plot2.log.count - before)", "1", "полив добавил запись")
 check(plot2.log.last!.plant, "pr", "и записал, кого")
 check("\(plot2.score().total)", "\(plot2.log.count)", "статистика считает весь журнал")
@@ -1387,7 +1388,7 @@ do {
     let renamed = yard.rooms[0].plants[0]
     check(renamed.edited != nil && renamed.wet == nil && renamed.tended == nil,
           "новая кличка — правка, влажность и уход не тронуты")
-    yard.water("Баксик")
+    yard.water("Баксик", anyway: true)
     check(yard.rooms[0].plants[0].wet != nil, "полив — событие влажности")
     yard.feed("Баксик")
     check(yard.rooms[0].plants[0].tended != nil, "подкормка — событие ухода")
@@ -2373,7 +2374,7 @@ do {
     let before = garden.plant(id: "sumka")!.moisture
     let count = garden.log.count
     let moment = Date()
-    let pour = garden.water("sumka", at: moment)!
+    let pour = garden.water("sumka", at: moment, anyway: true)!
     check(round2(pour.moisture), round2(before), "полив помнит, что было")
     check(pour.name, "Сумка", "и кличку — для плашки")
     garden.advance(to: Date().addingTimeInterval(2))
@@ -2387,10 +2388,10 @@ do {
     check(garden.log.count == count, "и в журнал не пишется")
 
     let first = Watering(plant: "pr", when: moment.addingTimeInterval(-20 * 60))
-    garden.water("pr", at: first.when)
-    garden.water("pr", at: moment)
+    garden.water("pr", at: first.when, anyway: true)
+    garden.water("pr", at: moment, anyway: true)
     let twice = garden.log.count
-    garden.water("pr", at: moment.addingTimeInterval(5 * 60))
+    garden.water("pr", at: moment.addingTimeInterval(5 * 60), anyway: true)
     check(garden.log.count == twice,
           "полили снова через пять минут — та же запись")
     garden.unwater(Pour(plant: "pr", name: "pr", moisture: 1,
@@ -2998,7 +2999,7 @@ do {
     let yard = Garden(first: Seed.state)
     let id = yard.rooms[0].plants[0].id
     let before = yard.plant(id: id)!.moisture
-    let pour = yard.water(id)!
+    let pour = yard.water(id, anyway: true)!
     check(round2(yard.log.last?.left ?? -1) == round2(before),
           "полив пишет в журнал, сколько воды оставалось")
     yard.unwater(pour)
@@ -3107,7 +3108,7 @@ do {
     check(other.plantCount == home.plantCount, "второй сад читает тот же файл")
     let id = other.rooms[0].plants[0].id
     other.advance(to: Date().addingTimeInterval(3 * 86_400 / Garden.speed))
-    _ = other.water(id)
+    _ = other.water(id, anyway: true)
     check(home.log.count != other.log.count, "пока не перечитал — не знает")
     home.reload()
     check(home.log.count == other.log.count
@@ -3142,7 +3143,7 @@ do {
     woke.save()
     let widget = Garden(first: Seed.state)
     widget.advance()
-    _ = widget.water("sleeper")
+    _ = widget.water("sleeper", anyway: true)
     woke.reload()
     woke.advance(to: Date().addingTimeInterval(night))
     check(abs((1 - woke.plant(id: "sleeper")!.moisture) - lost) < 0.01,
@@ -3763,8 +3764,10 @@ do {
     }
     check(Trip.watered(rooms, log: fresh, now: now),
           "все политы утром — к вечернему отъезду готовы")
-    check(!Trip.watered(rooms, log: Array(fresh.dropLast()), now: now),
-          "одного не полили — не готовы")
+    check(!Trip.watered(rooms, log: Array(fresh.dropFirst()), now: now),
+          "сухой папоротник не полили — не готовы")
+    check(Trip.watered(rooms, log: [fresh[0]], now: now),
+          "влажный кактус и фикус в норме перед отъездом не льют — готовы")
     check(!Trip.watered(rooms, log: fresh, now: at(26, 10)),
           "полив суточной давности — уже не перед отъездом")
     check(Trip.firstVisit(needs, leave: at(25, 20), calendar: utc) == at(29, 0),
@@ -3886,7 +3889,7 @@ do {
         return pot.days == plant.daysUntilWatering
             && pot.label == plant.wateringLabel
     }, "срок и подпись — как на карточке в приложении")
-    wrist.water("папоротник", at: start.addingTimeInterval(60))
+    wrist.water("папоротник", at: start.addingTimeInterval(60), anyway: true)
     check(wrist.pots.last?.id == "папоротник" && wrist.pots.last?.moisture == 1,
           "полили с часов — полон и ушёл в конец")
     check(wrist.thirsty.isEmpty, "полили — просить некому")
@@ -4888,7 +4891,7 @@ do {
           && yard.log.count == base + 1
           && round2(yard.log.last?.left ?? -1) == "0.17",
           "подскок — полив сам лёг в журнал, с тем, сколько было воды")
-    _ = yard.water("Папоротник", at: later.addingTimeInterval(3_600 * 20))
+    _ = yard.water("Папоротник", at: later.addingTimeInterval(3_600 * 20), anyway: true)
     _ = yard.sense("Папоротник", Reading(moisture: 18,
                                          when: later.addingTimeInterval(3_600 * 19)))
     check(!yard.sense("Папоротник", Reading(moisture: 45,
@@ -4908,10 +4911,10 @@ do {
                                            when: sensed.addingTimeInterval(60))),
           "датчик заметил полив")
     let sensedCount = yard.log.count
-    yard.water("Папоротник", at: sensed.addingTimeInterval(6 * 60))
+    yard.water("Папоротник", at: sensed.addingTimeInterval(6 * 60), anyway: true)
     check(yard.log.count == sensedCount,
           "датчик записал, через пять минут нажали «Полить» — одна запись")
-    yard.water("Папоротник", at: sensed.addingTimeInterval(12 * 60))
+    yard.water("Папоротник", at: sensed.addingTimeInterval(12 * 60), anyway: true)
     check(yard.log.count == sensedCount + 1, "через одиннадцать — вторая")
 
     // Гость общего сада стереть его не может и в обход экрана.
@@ -5702,7 +5705,7 @@ do {
     let yard = Garden(first: Seed.state)
     let saved = yard.rooms
     yard.rooms = [Room(name: "Тест", plants: [sensed])]
-    yard.water("x")
+    yard.water("x", anyway: true)
     check(yard.plant(id: "x")?.estimated == true, "полили рукой — расчёт")
     _ = yard.sense("x", Reading(moisture: 40, when: Date()))
     check(yard.plant(id: "x")?.source == .sensor
@@ -5766,6 +5769,73 @@ do {
     // Вторичный текст — не системные 60%: на белом их мало.
     check(Paint(60, 60, 67, 0.6).contrast(on: Legible.background.light) < 4.5,
           "контраст: системные 60% не проходят — потому свой вторичный")
+}
+
+print("защита от перелива:")
+do {
+    let yard = Garden(first: Seed.state)
+    let kept = yard.state
+    let start = GardenState(owner: "", rooms: [Room(name: "Т", plants: [
+        plantNamed("Мокрый", moisture: 0.89, dryingDays: 7),
+        plantNamed("Сухой", moisture: 0.3, dryingDays: 7),
+        plantNamed("Норма", moisture: 0.5, dryingDays: 7),
+        plantNamed("Пустыня", moisture: 0.1, dryingDays: 7),
+    ])], savedAt: Date())
+    yard.restore(start)
+    check(yard.wetCheck("Мокрый") == 0.89 && yard.wetCheck("Сухой") == nil
+          && yard.wetCheck("Норма") == nil && yard.wetCheck("нет") == nil,
+          "переспросить — только влажную землю")
+    check(yard.water("Мокрый") == nil && yard.log.isEmpty
+          && yard.plant(id: "Мокрый")?.moisture == 0.89,
+          "89 % без подтверждения — записи нет, влажность та же")
+    check(yard.water("Сухой") != nil && yard.log.count == 1
+          && yard.log.last?.extra == nil
+          && yard.plant(id: "Сухой")?.moisture == 1,
+          "30 % — полито одним нажатием, без вопроса")
+    check(yard.water("Мокрый", anyway: true) != nil && yard.log.count == 2
+          && yard.log.last?.extra == true && yard.log.last?.counts == false,
+          "подтвердили — полив записан лишним")
+    check(Gardener.of(log: yard.log, quests: 0, medals: 0).experience
+          == Gardener.pour + Gardener.aim,
+          "лишний полив опыта не даёт, вовремя — даёт")
+    let day = Calendar.current.startOfDay(for: Date())
+    let extraOnly = [Watering(plant: "Мокрый", when: day.addingTimeInterval(3_600),
+                              left: 0.9, extra: true)]
+    check(Score.of(extraOnly, rooms: start.rooms).streak == 0,
+          "день с одним лишним поливом в серию не идёт")
+    check(Trophies.of(extraOnly, rooms: start.rooms, since: day).count(.drops) == 0,
+          "лишний полив наград не приносит")
+    let week = Week.of(Date(), log: extraOnly, rooms: start.rooms)
+    check(week.challenges.allSatisfy { $0.count == 0 },
+          "лишний полив в задания недели не идёт")
+    // Массовый полив: только «скоро пить» и «сухо».
+    yard.restore(start)
+    let poured = yard.waterNeeded()
+    check(Set(poured.map(\.plant)) == ["Сухой", "Пустыня"]
+          && yard.plant(id: "Мокрый")?.moisture == 0.89
+          && yard.plant(id: "Норма")?.moisture == 0.5 && yard.log.count == 2,
+          "«Полить всех» — без влажных и тех, что в норме")
+    yard.restore(start)
+    check(yard.waterNeeded(["Мокрый", "Сухой"]).map(\.plant) == ["Сухой"],
+          "массовый полив из списка — тоже только нужные")
+    // Старый журнал: поля нет — полив засчитывается.
+    let old = try! JSONEncoder().encode(Watering(plant: "x", when: day))
+    let back = try! JSONDecoder().decode(Watering.self, from: old)
+    check(back.extra == nil && back.counts, "журнал прежних сборок читается, полив не лишний")
+    let marked = try! JSONEncoder().encode(Watering(plant: "x", when: day, extra: true))
+    check(try! JSONDecoder().decode(Watering.self, from: marked).extra == true,
+          "отметка «лишний» доходит через файл и iCloud")
+    // Часы: та же защита.
+    var wrist = Wrist(pots: [
+        Wrist.Pot(id: "м", name: "м", room: "к", moisture: 0.89, period: 7),
+        Wrist.Pot(id: "с", name: "с", room: "к", moisture: 0.3, period: 7),
+    ], sent: day)
+    check(wrist.pots[0].wet && !wrist.pots[1].wet, "часы: влажный горшок узнают")
+    check(!wrist.water("м") && wrist.pots.first { $0.id == "м" }?.moisture == 0.89,
+          "часы: 89 % без подтверждения не поливают")
+    check(wrist.water("с") && wrist.water("м", anyway: true),
+          "часы: 30 % — сразу, 89 % — с подтверждением")
+    yard.restore(kept)
 }
 
 if failed > 0 {

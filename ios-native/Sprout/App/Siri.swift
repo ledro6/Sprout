@@ -102,6 +102,13 @@ struct WaterPlant: AppIntent {
         guard garden.plant(id: plant.id) != nil else {
             return .result(dialog: "\(Lang.format("Растения «%@» в саду больше нет.", plant.name))")
         }
+        // Влажную землю голосом не поливаем: подтвердить нечем, а лишний
+        // полив вреден. Пусть хозяин посмотрит сам.
+        if let wet = garden.wetCheck(plant.id) {
+            let level = MoistureStatus.percent(
+                wet, estimated: garden.plant(id: plant.id)?.estimated ?? true)
+            return .result(dialog: "\(Lang.format("Земля у «%1$@» ещё влажная (%2$@) — полив не записан. Лишний полив вреден корням.", plant.name, level))")
+        }
         withAnimation(Motion.appear) { _ = garden.water(plant.id) }
         if UIApplication.shared.applicationState == .active {
             let spot = Cards.shared.rect(plant.id)

@@ -262,7 +262,9 @@ private struct PourButton: View {
         .buttonStyle(.borderedProminent)
         .buttonBorderShape(.capsule)
         .tint(Tone.fill)
-        .disabled(sprig.moisture >= 0.99)
+        // Влажную землю из виджета не льём: подтвердить здесь нечем, а
+        // лишний полив вреден, — см. `Garden.water`.
+        .disabled(sprig.status == .wet)
     }
 }
 
