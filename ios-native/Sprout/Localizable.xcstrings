@@ -4058,6 +4058,9 @@
         }
       }
     },
+    "%@ — в саду": {
+      "extractionState": "manual"
+    },
     "%@ — на даче": {
       "extractionState": "manual"
     },
@@ -25778,6 +25781,9 @@
     "Введите «удалить»": {
       "extractionState": "manual"
     },
+    "Ввести вручную": {
+      "extractionState": "manual"
+    },
     "Ввести код-пароль": {
       "extractionState": "manual"
     },
@@ -29520,6 +29526,9 @@
           }
         }
       }
+    },
+    "Вид не указан": {
+      "extractionState": "manual"
     },
     "Вида «%@» в каталоге нет.": {
       "extractionState": "manual"
@@ -60696,6 +60705,9 @@
         }
       }
     },
+    "Дополнительно": {
+      "extractionState": "manual"
+    },
     "Дополнительный уход": {
       "extractionState": "manual"
     },
@@ -75955,6 +75967,9 @@
         }
       }
     },
+    "Из фото": {
+      "extractionState": "manual"
+    },
     "Изменить": {
       "extractionState": "manual",
       "localizations": {
@@ -83440,6 +83455,9 @@
           }
         }
       }
+    },
+    "Как назовём?": {
+      "extractionState": "manual"
     },
     "Как пересадить растение «%@»?": {
       "extractionState": "manual"
@@ -120584,6 +120602,9 @@
         }
       }
     },
+    "Напоминать": {
+      "extractionState": "manual"
+    },
     "Напоминать о дачных растениях только на даче": {
       "extractionState": "manual"
     },
@@ -121160,6 +121181,9 @@
           }
         }
       }
+    },
+    "Напоминать, когда пора полить?": {
+      "extractionState": "manual"
     },
     "Настройки": {
       "extractionState": "manual",
@@ -191157,6 +191181,9 @@
         }
       }
     },
+    "Похоже на %@": {
+      "extractionState": "manual"
+    },
     "Похоже на %@. Поправьте, если не так.": {
       "extractionState": "manual"
     },
@@ -209650,580 +209677,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "照片裡看不到植物——請把整株植物拍進來。"
-          }
-        }
-      }
-    },
-    "Растения на снимке телефон не узнал — впишите вид сами.": {
-      "extractionState": "manual",
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "لم يتعرف الهاتف على نبتة في الصورة — اكتب النوع بنفسك."
-          }
-        },
-        "bg": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Телефонът не разпозна растение на снимката — впишете вида сами."
-          }
-        },
-        "bn": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ফোন ছবিতে কোনো গাছ চিনতে পারেনি — প্রজাতি নিজে লিখুন।"
-          }
-        },
-        "ca": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "El telèfon no ha reconegut cap planta a la foto: escriu tu l’espècie."
-          }
-        },
-        "cs": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Telefon na fotce nerozpoznal žádnou rostlinu — zadejte druh sami."
-          }
-        },
-        "da": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Telefonen genkendte ingen plante på fotoet – skriv selv arten."
-          }
-        },
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Das Telefon hat auf dem Foto keine Pflanze erkannt — gib die Art selbst ein."
-          }
-        },
-        "el": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Το τηλέφωνο δεν αναγνώρισε φυτό στη φωτογραφία — γράψτε το είδος μόνοι σας."
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The phone didn’t recognize a plant in the photo — enter the species yourself."
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "El teléfono no reconoció ninguna planta en la foto: escribe la especie tú mismo."
-          }
-        },
-        "fi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Puhelin ei tunnistanut kuvasta kasvia – kirjoita laji itse."
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Le téléphone n’a pas reconnu de plante sur la photo — saisissez l’espèce vous-même."
-          }
-        },
-        "gu": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ફોન ફોટામાં છોડ ઓળખી શક્યો નહીં — પ્રજાતિ જાતે લખો."
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "הטלפון לא זיהה צמח בתמונה — יש להקליד את הזן."
-          }
-        },
-        "hi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "फ़ोन फ़ोटो में पौधा नहीं पहचान पाया — प्रजाति खुद लिखें।"
-          }
-        },
-        "hr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Telefon nije prepoznao biljku na fotografiji — upišite vrstu sami."
-          }
-        },
-        "hu": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "A telefon nem ismert fel növényt a fotón — írd be a fajt magad."
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ponsel tidak mengenali tanaman di foto — ketik spesiesnya sendiri."
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Il telefono non ha riconosciuto piante nella foto: inserisci tu la specie."
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "写真の植物を認識できませんでした — 種類を入力してください。"
-          }
-        },
-        "kk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Телефон суреттегі өсімдікті танымады — түрін өзіңіз жазыңыз."
-          }
-        },
-        "kn": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ಫೋನ್ ಫೋಟೋದಲ್ಲಿ ಗಿಡವನ್ನು ಗುರುತಿಸಲಿಲ್ಲ — ಜಾತಿಯನ್ನು ನೀವೇ ನಮೂದಿಸಿ."
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "사진에서 식물을 인식하지 못했어요 — 종을 직접 입력하세요."
-          }
-        },
-        "lt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Telefonas neatpažino augalo nuotraukoje – įrašykite rūšį patys."
-          }
-        },
-        "ml": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ഫോട്ടോയിലെ ചെടി ഫോൺ തിരിച്ചറിഞ്ഞില്ല — ഇനം സ്വയം നൽകുക."
-          }
-        },
-        "mr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "फोनने फोटोतील रोप ओळखले नाही — प्रजाती स्वतः लिहा."
-          }
-        },
-        "ms": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Telefon tidak mengecam tumbuhan dalam foto — taipkan spesies sendiri."
-          }
-        },
-        "nb": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Telefonen kjente ikke igjen noen plante på bildet – skriv inn arten selv."
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "De telefoon herkende geen plant op de foto — vul de soort zelf in."
-          }
-        },
-        "or": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ଫୋନ୍ ଫଟୋରେ ଗଛ ଚିହ୍ନିପାରିଲା ନାହିଁ — ପ୍ରଜାତି ନିଜେ ଲେଖନ୍ତୁ।"
-          }
-        },
-        "pa": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ਫ਼ੋਨ ਨੇ ਫ਼ੋਟੋ ਵਿੱਚ ਪੌਦਾ ਨਹੀਂ ਪਛਾਣਿਆ — ਕਿਸਮ ਆਪ ਲਿਖੋ।"
-          }
-        },
-        "pl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Telefon nie rozpoznał rośliny na zdjęciu — wpisz gatunek sam."
-          }
-        },
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "O celular não reconheceu nenhuma planta na foto — digite a espécie você mesmo."
-          }
-        },
-        "pt-PT": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "O telemóvel não reconheceu nenhuma planta na fotografia — escreva a espécie."
-          }
-        },
-        "ro": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Telefonul n-a recunoscut nicio plantă în fotografie — scrie tu specia."
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Telefón na fotke nerozpoznal žiadnu rastlinu — zadajte druh sami."
-          }
-        },
-        "sl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Telefon na fotografiji ni prepoznal rastline — vrsto vpišite sami."
-          }
-        },
-        "sv": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Telefonen kände inte igen någon växt på fotot – skriv in arten själv."
-          }
-        },
-        "ta": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "புகைப்படத்தில் செடியை ஃபோன் அடையாளம் காணவில்லை — இனத்தை நீங்களே உள்ளிடவும்."
-          }
-        },
-        "te": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ఫోన్ ఫోటోలో మొక్కను గుర్తించలేదు — జాతిని మీరే నమోదు చేయండి."
-          }
-        },
-        "th": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "โทรศัพท์จำต้นไม้ในรูปไม่ได้ — โปรดพิมพ์พันธุ์เอง"
-          }
-        },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Telefon fotoğrafta bitki tanımadı — türü kendiniz yazın."
-          }
-        },
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Рослину на знімку телефон не впізнав — впишіть вид самі."
-          }
-        },
-        "ur": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "فون تصویر میں پودا نہیں پہچان سکا — نوع خود لکھیں۔"
-          }
-        },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Điện thoại không nhận ra cây trong ảnh — hãy tự nhập loài."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "手机没有在照片中认出植物——请自己填写品种。"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "手機沒有在照片中認出植物——請自行填寫品種。"
-          }
-        }
-      }
-    },
-    "Растёт в комнате «%@».": {
-      "extractionState": "manual",
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "تنمو في غرفة «%@»."
-          }
-        },
-        "bg": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Расте в стая „%@“."
-          }
-        },
-        "bn": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "“%@” ঘরে বাড়ছে।"
-          }
-        },
-        "ca": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Creix a «%@»."
-          }
-        },
-        "cs": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Roste v místnosti „%@“."
-          }
-        },
-        "da": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Vokser i ”%@”."
-          }
-        },
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Wächst im Raum „%@“."
-          }
-        },
-        "el": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Μεγαλώνει στο δωμάτιο «%@»."
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Growing in “%@”."
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Crece en “%@”."
-          }
-        },
-        "fi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Kasvaa huoneessa ”%@”."
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Pousse dans la pièce « %@ »."
-          }
-        },
-        "gu": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "“%@” રૂમમાં ઊગે છે."
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "גדל בחדר “%@”."
-          }
-        },
-        "hi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "“%@” कमरे में उग रहा है।"
-          }
-        },
-        "hr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Raste u sobi „%@”."
-          }
-        },
-        "hu": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ebben a szobában nő: „%@”."
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tumbuh di ruangan “%@”."
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Cresce in “%@”."
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "「%@」で育っています。"
-          }
-        },
-        "kk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "«%@» бөлмесінде өседі."
-          }
-        },
-        "kn": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "“%@” ಕೋಣೆಯಲ್ಲಿ ಬೆಳೆಯುತ್ತಿದೆ."
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "‘%@’에서 자라고 있어요."
-          }
-        },
-        "lt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Auga kambaryje „%@“."
-          }
-        },
-        "ml": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "“%@” മുറിയിൽ വളരുന്നു."
-          }
-        },
-        "mr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "“%@” खोलीत वाढत आहे."
-          }
-        },
-        "ms": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tumbuh dalam bilik “%@”."
-          }
-        },
-        "nb": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Vokser i «%@»."
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Groeit in ‘%@’."
-          }
-        },
-        "or": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "“%@” ରୁମ୍‌ରେ ବଢ଼ୁଛି।"
-          }
-        },
-        "pa": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "“%@” ਕਮਰੇ ਵਿੱਚ ਵਧ ਰਿਹਾ ਹੈ।"
-          }
-        },
-        "pl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Rośnie w pokoju „%@”."
-          }
-        },
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Cresce no cômodo “%@”."
-          }
-        },
-        "pt-PT": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Cresce na divisão “%@”."
-          }
-        },
-        "ro": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Crește în camera „%@”."
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Rastie v miestnosti „%@“."
-          }
-        },
-        "sl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Raste v sobi »%@«."
-          }
-        },
-        "sv": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Växer i ”%@”."
-          }
-        },
-        "ta": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "“%@” அறையில் வளர்கிறது."
-          }
-        },
-        "te": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "“%@” గదిలో పెరుగుతోంది."
-          }
-        },
-        "th": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "เติบโตในห้อง “%@”"
-          }
-        },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "“%@” odasında büyüyor."
-          }
-        },
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Росте в кімнаті «%@»."
-          }
-        },
-        "ur": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "“%@” کمرے میں اُگ رہا ہے۔"
-          }
-        },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Đang lớn trong phòng “%@”."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "生长在“%@”。"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "生長在「%@」。"
           }
         }
       }
@@ -235943,6 +235396,9 @@
     "Сообщать, когда полили другие": {
       "extractionState": "manual"
     },
+    "Сообщим, когда растению нужна вода.": {
+      "extractionState": "manual"
+    },
     "Соседу — %1$@, первый раз %2$@": {
       "extractionState": "manual",
       "localizations": {
@@ -243458,6 +242914,9 @@
           }
         }
       }
+    },
+    "Сфотографируйте растение — вид и срок полива подскажет телефон.": {
+      "extractionState": "manual"
     },
     "Сфотографируйте растение — телефон попробует узнать его вид.": {
       "extractionState": "manual",
@@ -262748,293 +262207,6 @@
         }
       }
     },
-    "Фото": {
-      "extractionState": "manual",
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "الصور"
-          }
-        },
-        "bg": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Снимки"
-          }
-        },
-        "bn": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ছবি"
-          }
-        },
-        "ca": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Fotos"
-          }
-        },
-        "cs": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Fotky"
-          }
-        },
-        "da": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Fotos"
-          }
-        },
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Fotos"
-          }
-        },
-        "el": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Φωτογραφίες"
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Photos"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Fotos"
-          }
-        },
-        "fi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Kuvat"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Photos"
-          }
-        },
-        "gu": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ફોટા"
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "תמונות"
-          }
-        },
-        "hi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "फ़ोटो"
-          }
-        },
-        "hr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Fotografije"
-          }
-        },
-        "hu": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Fotók"
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Foto"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Foto"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "写真"
-          }
-        },
-        "kk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Суреттер"
-          }
-        },
-        "kn": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ಫೋಟೋಗಳು"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "사진"
-          }
-        },
-        "lt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nuotraukos"
-          }
-        },
-        "ml": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ഫോട്ടോകൾ"
-          }
-        },
-        "mr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "फोटो"
-          }
-        },
-        "ms": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Foto"
-          }
-        },
-        "nb": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bilder"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Foto’s"
-          }
-        },
-        "or": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ଫଟୋଗୁଡ଼ିକ"
-          }
-        },
-        "pa": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ਫ਼ੋਟੋਆਂ"
-          }
-        },
-        "pl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Zdjęcia"
-          }
-        },
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Fotos"
-          }
-        },
-        "pt-PT": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Fotos"
-          }
-        },
-        "ro": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Poze"
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Fotky"
-          }
-        },
-        "sl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Fotografije"
-          }
-        },
-        "sv": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bilder"
-          }
-        },
-        "ta": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "புகைப்படங்கள்"
-          }
-        },
-        "te": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ఫోటోలు"
-          }
-        },
-        "th": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "รูปภาพ"
-          }
-        },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Fotoğraflar"
-          }
-        },
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Фото"
-          }
-        },
-        "ur": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "تصاویر"
-          }
-        },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ảnh"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "照片"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "照片"
-          }
-        }
-      }
-    },
     "Фото и вопросы": {
       "extractionState": "manual"
     },
@@ -270793,9 +269965,6 @@
         }
       }
     },
-    "Что ещё делать": {
-      "extractionState": "manual"
-    },
     "Что значит «%@»": {
       "extractionState": "manual",
       "localizations": {
@@ -276296,6 +275465,9 @@
           }
         }
       }
+    },
+    "изменить": {
+      "extractionState": "manual"
     },
     "как в прошлый раз": {
       "extractionState": "manual",

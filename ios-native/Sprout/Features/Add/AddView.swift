@@ -1,6 +1,7 @@
 import PhotosUI
 import SwiftUI
 import UIKit
+import UserNotifications
 
 /// Добавить растение. Вид и срок полива подсказывает классификатор Vision,
 /// кличку — языковая модель, если есть Apple Intelligence; всё прямо на
@@ -48,18 +49,29 @@ struct AddView: View {
 
     @State private var thinking = false
 
-    /// Строка готова заранее: к моменту показа поля уже очищены под следующее
-    /// растение.
-    @State private var planted: Planted?
+    /// Форма без снимка: «Ввести вручную», вид из каталога.
+    @State private var manual = false
+
+    /// Другие виды, если классификатор не уверен: до трёх чипов.
+    @State private var candidates: [Guess] = []
+
+    /// Предложенная кличка: подставится при посадке, если поле пустое.
+    @State private var suggestion: String?
+
+    @State private var editingKind = false
+
+    /// «Дополнительно» свёрнуто: уход вида включён сам.
+    @State private var extra = false
+
+    /// Тост после посадки: «{Имя} — в саду».
+    @State private var welcome: String?
+
+    /// «Напоминать, когда пора полить?» — после первого растения.
+    @State private var reminding = false
 
     /// Вставленный черенок: с ним — срок и уход, как у друга.
     @State private var cutting: Cutting?
     @State private var trouble: String?
-
-    private struct Planted {
-        var name: String
-        var note: String
-    }
 
     @State private var button = Spot()
 
@@ -67,21 +79,23 @@ struct AddView: View {
 
     private var rooms: [String] { garden.rooms.map(\.name) }
 
+    /// Форма — после снимка, вручную, с черенком или видом из каталога;
+    /// до этого — вход: «Снять» и «Из фото».
+    private var formShown: Bool { shot != nil || manual || cutting != nil }
+
     var body: some View {
         NavigationStack {
             ScrollViewReader { reader in
                 ScrollView {
                     VStack(alignment: .leading, spacing: 0) {
-                        SproutHead("Добавить", walk: .add)
+                        SproutHead("Добавить")
                         VStack(alignment: .leading, spacing: Metrics.groupGap) {
-                            picture
-                                .hintSpot(.addPicture)
-                            about
-                                .hintSpot(.addAbout)
-                            habits
-                                .hintSpot(.addHabits)
-                            plantButton
-                                .hintSpot(.addPlant)
+                            if formShown {
+                                form
+                            } else {
+                                entry
+                                    .hintSpot(.addPicture)
+                            }
                         }
                         .padding(.horizontal, Metrics.contentMargin)
                         .padding(.top, 8)
@@ -95,6 +109,9 @@ struct AddView: View {
                 .background { SproutBackground() }
                 .sproutSoftTop()
                 .toolbar(.hidden, for: .navigationBar)
+                // «Посадить» закреплена над панелью вкладок; вставка — до
+                // `walk`, чтобы подсказка видела кнопку.
+                .safeAreaInset(edge: .bottom, spacing: 8) { pinned }
                 .walk(.add, scroll: reader)
             }
         }
@@ -105,6 +122,9 @@ struct AddView: View {
         // вкладка на экране.
         .onChange(of: Sowing.shared.specimen, initial: true) { _, _ in sow() }
         .onChange(of: shown) { _, _ in sow() }
+        .onChange(of: item) { _, chosen in
+            Task { await pick(chosen) }
+        }
         .sheet(isPresented: $browsing) { HerbariumView() }
         // `onDismiss` объявлен до содержимого — вторым замыканием его не
         // переставить.
@@ -127,13 +147,15 @@ struct AddView: View {
                 newRoom = ""
             }
         }
-        .alert(planted?.name ?? "", isPresented: Binding(
-            get: { planted != nil },
-            set: { if !$0 { planted = nil } }
-        )) {
-            Button("Хорошо", role: .cancel) {}
+        .alert("Напоминать, когда пора полить?", isPresented: $reminding) {
+            Button("Напоминать") {
+                Task { @MainActor in
+                    if await Notifier.ask() { Settings.shared.reminders = true }
+                }
+            }
+            Button("Не сейчас", role: .cancel) {}
         } message: {
-            Text(planted?.note ?? "")
+            Text("Сообщим, когда растению нужна вода.")
         }
         .alert("Не вышло", isPresented: Binding(
             get: { trouble != nil },
@@ -145,64 +167,100 @@ struct AddView: View {
         }
     }
 
-    // MARK: - Снимок
-
-    private var picture: some View {
-        SproutGroup("Снимок") {
-            well
-
-            // У третьей кнопки подписи нет: три подписи в ряд на узком
-            // телефоне переносились по слогам.
-            HStack(spacing: 10) {
-                PhotosPicker(selection: $item, matching: .images,
-                             photoLibrary: .shared()) {
-                    Label("Фото", systemImage: "photo.on.rectangle")
-                        .lineLimit(1)
-                        .fixedSize()
-                }
-                .buttonStyle(.glass)
-
-                if Camera.exists {
-                    Button { shooting = true } label: {
-                        Label("Снять", systemImage: "camera")
-                            .lineLimit(1)
-                            .fixedSize()
-                    }
-                    .buttonStyle(.glass)
-                }
-
-                if shot != nil {
-                    Button(role: .destructive) { forget() } label: {
-                        Image(systemName: "xmark")
-                    }
-                    .buttonStyle(.glass)
-                    .accessibilityLabel("Убрать снимок")
-                }
-
-                Spacer(minLength: 0)
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
-
-            if let sighting {
-                Text(sighting)
-                    .font(Typography.settingNote)
-                    .foregroundStyle(Palette.secondaryText)
-                    .fixedSize(horizontal: false, vertical: true)
-                    .id(sighting)
+    /// Закреплено над панелью: тост после посадки и «Посадить».
+    private var pinned: some View {
+        VStack(spacing: 8) {
+            if let welcome {
+                Text(welcome)
+                    .font(Typography.toastTitle)
+                    .foregroundStyle(Palette.ink)
+                    .lineLimit(1)
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 10)
+                    .sproutGlass(in: .capsule)
                     .transition(.blurReplace)
             }
-
+            if formShown {
+                plantButton
+                    .hintSpot(.addPlant)
+                    .transition(.blurReplace)
+            }
         }
+        .padding(.horizontal, Metrics.contentMargin)
+        .padding(.bottom, Metrics.barGap)
+        .animation(Motion.toast, value: welcome)
+    }
+
+    // MARK: - Вход
+
+    /// Росток поменьше 160 pt, большая «Снять», вторичная «Из фото» и мелкие
+    /// ссылки. Без камеры (симулятор) «Из фото» — единственный путь.
+    private var entry: some View {
+        VStack(spacing: 18) {
+            SproutPiece(index: 0)
+                .fill(Palette.ink.opacity(Metrics.pieceOff))
+                .frame(width: 128, height: 128)
+                .padding(.top, 12)
+                .accessibilityHidden(true)
+
+            Text("Сфотографируйте растение — вид и срок полива подскажет телефон.")
+                .font(Typography.settingNote)
+                .foregroundStyle(Palette.secondaryText)
+                .multilineTextAlignment(.center)
+                .fixedSize(horizontal: false, vertical: true)
+
+            VStack(spacing: 12) {
+                if Camera.exists {
+                    Button { shooting = true } label: {
+                        Label("Снять", systemImage: "camera.fill")
+                            .font(Typography.detail)
+                            .frame(maxWidth: .infinity)
+                    }
+                    .buttonStyle(.glassProminent)
+                    .tint(Palette.accentFill)
+                    .controlSize(.extraLarge)
+                }
+                PhotosPicker(selection: $item, matching: .images,
+                             photoLibrary: .shared()) {
+                    Label("Из фото", systemImage: "photo.on.rectangle")
+                        .font(Typography.detail)
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.glass)
+                .controlSize(.extraLarge)
+            }
+
+            graft
+
+            Button { withAnimation(Motion.appear) { manual = true } } label: {
+                Text("Ввести вручную")
+                    .font(Typography.settingNote)
+                    .foregroundStyle(Palette.accent)
+                    .padding(.vertical, 8)
+                    .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+        }
+        .frame(maxWidth: .infinity)
         .sproutRide()
-        .onChange(of: item) { _, chosen in
-            Task { await pick(chosen) }
+    }
+
+    // MARK: - Форма
+
+    private var form: some View {
+        VStack(alignment: .leading, spacing: Metrics.groupGap) {
+            if cutting != nil {
+                graft
+            }
+            about
+                .hintSpot(.addAbout)
+            habits
+                .hintSpot(.addHabits)
         }
     }
 
-    /// Пока снимка нет — росток на том же месте.
-    private var well: some View {
-        // Наложениями на пустой цвет, а не стопкой: `scaledToFill` растянул
-        // бы окно.
+    /// Миниатюра снимка: нажатие — выбрать кадр заново из оригинала.
+    private var thumb: some View {
         Color.clear
             .overlay {
                 if let shot {
@@ -212,53 +270,50 @@ struct AddView: View {
                 } else {
                     SproutPiece(index: 0)
                         .fill(Palette.ink.opacity(Metrics.pieceOff))
-                        .frame(width: 64, height: 64)
+                        .frame(width: 32, height: 32)
                 }
             }
             .overlay {
                 if looking {
                     ProgressView()
-                        .controlSize(.large)
-                        .padding(14)
+                        .padding(8)
                         .sproutPlate(in: Circle())
                 }
             }
-        .frame(maxWidth: .infinity)
-        .aspectRatio(1, contentMode: .fit)
-        .clipShape(RoundedRectangle(cornerRadius: Metrics.cardRadius,
-                                    style: .continuous))
-        .sproutPlate(in: RoundedRectangle(cornerRadius: Metrics.cardRadius,
-                                          style: .continuous))
-        .contentShape(Rectangle())
-        // Перевыбрать кадр — из непорезанного оригинала.
-        .onTapGesture { if raw != nil { trimming = true } }
-        .accessibilityLabel(shot == nil ? "Снимка нет" : "Снимок растения")
-        .accessibilityHint(shot == nil ? "" : "Нажмите, чтобы выбрать кадр")
-    }
-
-    /// С уверенностью словами: классификатор ошибается, и выдавать догадку
-    /// за ответ — врать.
-    private var sighting: String? {
-        guard shot != nil, !looking else { return nil }
-        guard let guess else {
-            return Lang.text("""
-                Растения на снимке телефон не узнал — впишите вид сами.
-                """)
-        }
-        return Sureness(guess.confidence).species(guess.species)
+            .frame(width: 72, height: 72)
+            .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+            .contentShape(Rectangle())
+            .onTapGesture {
+                if raw != nil {
+                    trimming = true
+                } else if Camera.exists {
+                    shooting = true
+                }
+            }
+            .accessibilityLabel(shot == nil ? "Снимка нет" : "Снимок растения")
+            .accessibilityHint(shot == nil ? "" : "Нажмите, чтобы выбрать кадр")
     }
 
     // MARK: - Растение
 
     private var about: some View {
         SproutGroup("Растение") {
-            graft
-
-            SproutDivider()
-
-            SproutBlock("Кличка") {
-                HStack(spacing: 10) {
-                    TextField("Баксик", text: $name)
+            HStack(alignment: .center, spacing: 12) {
+                thumb
+                    .overlay(alignment: .topTrailing) {
+                        if shot != nil {
+                            Button { forget() } label: {
+                                Image(systemName: "xmark.circle.fill")
+                                    .font(Typography.navTitle)
+                                    .foregroundStyle(Palette.ink.opacity(0.6))
+                            }
+                            .buttonStyle(.plain)
+                            .offset(x: 6, y: -6)
+                            .accessibilityLabel("Убрать снимок")
+                        }
+                    }
+                HStack(spacing: 8) {
+                    TextField("Как назовём?", text: $name)
                         .textFieldStyle(.plain)
                         .font(Typography.settingRow)
                         .focused($typing)
@@ -278,13 +333,60 @@ struct AddView: View {
 
             SproutDivider()
 
-            SproutBlock("Вид") {
+            kind
+        }
+        .sproutRide()
+    }
+
+    /// «Похоже на … · изменить»; не уверен — ещё до трёх видов чипами.
+    private var kind: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack(spacing: 6) {
+                Text(kindLine)
+                    .font(Typography.settingRow)
+                    .foregroundStyle(Palette.ink)
+                    .fixedSize(horizontal: false, vertical: true)
+                Text("·")
+                    .foregroundStyle(Palette.secondaryText)
+                Button {
+                    withAnimation(Motion.appear) { editingKind.toggle() }
+                } label: {
+                    Text("изменить")
+                        .font(Typography.settingRow)
+                        .foregroundStyle(Palette.accent)
+                        .padding(.vertical, 6)
+                        .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+                Spacer(minLength: 0)
+            }
+            if lowConfidence {
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 8) {
+                        ForEach(candidates.prefix(3), id: \.self) { option in
+                            Button {
+                                withAnimation(Motion.appear) {
+                                    species = option.species
+                                    period = max(option.dryingDays.rounded(), 1)
+                                }
+                                Feel.pick()
+                            } label: {
+                                Text(option.species)
+                                    .lineLimit(1)
+                                    .fixedSize()
+                            }
+                            .buttonStyle(.glass)
+                            .font(Typography.settingNote)
+                        }
+                    }
+                }
+            }
+            if editingKind || species.isEmpty {
                 TextField("Монстера", text: $species)
                     .textFieldStyle(.plain)
                     .font(Typography.settingRow)
                     .focused($typing)
                     .submitLabel(.done)
-                PetNote(species: wanted)
                 Button { browsing = true } label: {
                     Label("Выбрать из каталога", systemImage: "books.vertical")
                         .lineLimit(1)
@@ -293,8 +395,23 @@ struct AddView: View {
                 .buttonStyle(.glass)
                 .font(Typography.settingNote)
             }
+            PetNote(species: wanted)
         }
-        .sproutRide()
+        .animation(Motion.appear, value: editingKind)
+    }
+
+    private var kindLine: String {
+        if species.isEmpty { return Lang.text("Вид не указан") }
+        if let guess, guess.species == species {
+            return Lang.format("Похоже на %@", species)
+        }
+        return species
+    }
+
+    /// Классификатор не уверен и назвал больше одного вида.
+    private var lowConfidence: Bool {
+        guard shot != nil, !looking, candidates.count > 1 else { return false }
+        return Sureness(guess?.confidence ?? 0) != .likely
     }
 
     /// Черенок от друга: вставили — кличка, вид и срок встают сами, уход —
@@ -365,7 +482,11 @@ struct AddView: View {
 
     private var habits: some View {
         SproutGroup("Уход") {
-            SproutBlock("Комната") {
+            HStack(spacing: 8) {
+                Text("Комната")
+                    .font(Typography.settingRow)
+                    .foregroundStyle(Palette.ink)
+                Spacer(minLength: 8)
                 Menu {
                     Picker("Комната", selection: $room) {
                         ForEach(rooms, id: \.self) { Text($0).tag($0) }
@@ -373,14 +494,27 @@ struct AddView: View {
                     Divider()
                     Button("Новая комната…") { naming = true }
                 } label: {
-                    field(room.isEmpty ? Lang.text("Выбрать") : room)
+                    HStack(spacing: 6) {
+                        Text(room.isEmpty ? Lang.text("Выбрать") : room)
+                            .font(Typography.settingRow)
+                        Image(systemName: "chevron.up.chevron.down")
+                            .font(Typography.settingNote)
+                    }
+                    .foregroundStyle(Palette.accent)
                 }
             }
 
             SproutDivider()
 
-            SproutBlock("Полив", term: .period) {
+            VStack(alignment: .leading, spacing: 4) {
                 PeriodStepper(days: $period)
+                if let usual = Species.usual(for: wanted),
+                   Int(usual.rounded()) != Int(period.rounded()) {
+                    Text(Lang.format("Обычно для вида: %@",
+                                     Species.periodPhrase(usual)))
+                        .font(Typography.settingNote)
+                        .foregroundStyle(Palette.secondaryText)
+                }
             }
 
             SproutDivider()
@@ -419,14 +553,23 @@ struct AddView: View {
             if !offered.isEmpty {
                 SproutDivider()
 
-                SproutBlock("Что ещё делать",
-                            note: "Выключенное не будет напоминать. Вернуть можно в настройках растения.") {
-                    VStack(spacing: 12) {
+                DisclosureGroup(isExpanded: $extra.animation(Motion.pill)) {
+                    VStack(alignment: .leading, spacing: 12) {
                         ForEach(offered, id: \.self) { chore in
                             choreRow(chore)
                         }
+                        Text("Выключенное не будет напоминать. Вернуть можно в настройках растения.")
+                            .font(Typography.settingNote)
+                            .foregroundStyle(Palette.secondaryText)
+                            .fixedSize(horizontal: false, vertical: true)
                     }
+                    .padding(.top, 10)
+                } label: {
+                    Text("Дополнительно")
+                        .font(Typography.settingRow)
+                        .foregroundStyle(Palette.ink)
                 }
+                .tint(Palette.accent)
                 .transition(.blurReplace)
             }
         }
@@ -467,17 +610,6 @@ struct AddView: View {
         }
     }
 
-    private func field(_ text: String) -> some View {
-        HStack(spacing: 6) {
-            Text(text)
-                .font(Typography.settingRow)
-            Image(systemName: "chevron.up.chevron.down")
-                .font(Typography.settingNote)
-        }
-        .foregroundStyle(Palette.accent)
-        .frame(maxWidth: .infinity, alignment: .leading)
-    }
-
     // MARK: - Посадить
 
     private var plantButton: some View {
@@ -487,13 +619,11 @@ struct AddView: View {
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 6)
         }
-        .buttonStyle(.glass)
+        .buttonStyle(.glassProminent)
         .controlSize(.large)
-        .tint(Palette.accent)
-        .disabled(name.trimmingCharacters(in: .whitespaces).isEmpty)
+        .tint(Palette.accentFill)
         .onGeometryChange(for: CGRect.self) { $0.frame(in: .global) }
             action: { button.rect = $0 }
-        .sproutRide()
     }
 
     // MARK: - Что происходит
@@ -510,7 +640,9 @@ struct AddView: View {
         guard let image = fresh else { return }
         fresh = nil
         raw = image
-        trimming = true
+        // Без листа кадра: «Снять» → затвор → «Посадить». Кадр можно
+        // выбрать заново, нажав на миниатюру.
+        Task { await take(image) }
     }
 
     @MainActor
@@ -520,10 +652,7 @@ struct AddView: View {
               let image = UIImage(data: data)
         else { return }
         raw = image
-        // Лист выбора фото ещё закрывается, и поднятый в тот же миг лист
-        // кадра система не покажет.
-        try? await Task.sleep(for: .milliseconds(350))
-        trimming = true
+        await take(image)
     }
 
     /// Подсказка не затирает вписанный руками вид; срок подставляется только
@@ -532,14 +661,22 @@ struct AddView: View {
     private func take(_ image: UIImage) async {
         withAnimation(Motion.appear) { shot = image }
         looking = true
-        let seen = await Eye.guess(image)
+        let sightings = await Eye.look(at: image)
+        let seen = Species.read(sightings)
         withAnimation(Motion.number) {
             guess = seen
+            candidates = Species.candidates(sightings)
             looking = false
             if let seen, species.trimmingCharacters(in: .whitespaces).isEmpty {
                 species = seen.species
                 period = max(seen.dryingDays.rounded(), 1)
             }
+        }
+        // Кличка про запас: подставится при посадке, если поле пустое.
+        if Muse.ready {
+            suggestion = await Muse.nickname(for: wanted.isEmpty
+                                             ? Lang.text("Комнатное растение")
+                                             : wanted)
         }
     }
 
@@ -550,6 +687,7 @@ struct AddView: View {
         guard shown, let asked = Sowing.shared.specimen else { return }
         Sowing.shared.specimen = nil
         withAnimation(Motion.appear) {
+            manual = true
             cutting = nil
             species = asked.title
             if let days = asked.watering { period = max(days.rounded(), 1) }
@@ -560,7 +698,11 @@ struct AddView: View {
 
     private func forget() {
         withAnimation(Motion.appear) {
+            // Вид, подсказанный снимком, уходит вместе с ним.
+            if let guess, guess.species == species { species = "" }
             shot = nil
+            candidates = []
+            suggestion = nil
             raw = nil
             fresh = nil
             item = nil
@@ -581,9 +723,10 @@ struct AddView: View {
     /// Снимок кладётся на диск только здесь: передуманные снимки копились бы
     /// в Documents мусором.
     private func plant() {
-        let nickname = name.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !nickname.isEmpty else { return }
         let kind = wanted.isEmpty ? Lang.text("Комнатное растение") : wanted
+        // Кличка не обязательна: пусто — предложенная, а без неё — вид.
+        let typed = name.trimmingCharacters(in: .whitespacesAndNewlines)
+        let nickname = typed.isEmpty ? (suggestion ?? kind) : typed
         let chosen = room.trimmingCharacters(in: .whitespacesAndNewlines)
         let place = chosen.isEmpty ? Lang.text("Дом") : chosen
         let start = Start.moisture(last: last, soil: soil, period: period)
@@ -614,11 +757,19 @@ struct AddView: View {
         Cheer.shared.now(from: button.rect)
         Feel.planted()
         typing = false
-        // Две строки каталога: срок — словами движка статусов.
-        planted = Planted(
-            name: nickname,
-            note: Lang.format("Растёт в комнате «%@».", place) + "\n"
-                + seedling.nextWateringText)
+        // Пола у растения в данных нет — форма нейтральная.
+        welcome = Lang.format("%@ — в саду", nickname)
+        Task { @MainActor in
+            try? await Task.sleep(for: .seconds(3))
+            welcome = nil
+        }
+        if garden.plantCount == 1 {
+            Task { @MainActor in
+                let status = await UNUserNotificationCenter.current()
+                    .notificationSettings().authorizationStatus
+                if status == .notDetermined { reminding = true }
+            }
+        }
         reset()
     }
 
@@ -636,6 +787,11 @@ struct AddView: View {
             last = .today
             soil = nil
             cutting = nil
+            manual = false
+            candidates = []
+            suggestion = nil
+            editingKind = false
+            extra = false
         }
     }
 }
