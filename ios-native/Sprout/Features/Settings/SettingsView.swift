@@ -58,9 +58,6 @@ struct SettingsView: View {
             .scrollEdgeEffectStyle(.soft, for: .top)
             .sproutSettledEdge()
             .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    WalkButton(walk: .settings, bare: true)
-                }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Готово") { dismiss() }
                 }

@@ -99,7 +99,7 @@ struct DiagnosisSheet: View {
             .sproutSettledEdge()
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("Готово") { dismiss() }
+                    Button("Закрыть") { dismiss() }
                 }
             }
         }

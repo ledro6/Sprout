@@ -117,12 +117,10 @@ struct OrreryView: View {
                 .minimumScaleFactor(0.7)
                 .frame(maxWidth: .infinity)
                 .accessibilityAddTraits(.isHeader)
-            Button { Coach.shared.start(.orrery) } label: {
-                Image(systemName: "questionmark")
-                    .modifier(NavCircle())
-            }
-            .buttonStyle(.plain)
-            .accessibilityLabel("Подсказки")
+            // Противовес «назад»: заголовок стоит ровно посередине.
+            Color.clear
+                .frame(width: Metrics.navCircle, height: Metrics.navCircle)
+                .accessibilityHidden(true)
         }
         .padding(.horizontal, Metrics.contentMargin)
         // Пустое место шапки держит касания, как системная панель: под ним

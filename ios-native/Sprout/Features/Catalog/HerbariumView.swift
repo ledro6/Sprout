@@ -72,7 +72,7 @@ struct HerbariumView: View {
             }
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("Готово") { dismiss() }
+                    Button("Закрыть") { dismiss() }
                 }
             }
         }

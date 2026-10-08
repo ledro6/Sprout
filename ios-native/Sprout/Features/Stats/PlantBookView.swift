@@ -48,11 +48,6 @@ struct PlantBookView: View {
         .scrollEdgeEffectStyle(.soft, for: .top)
         .sproutSettledEdge()
         .toolbar(.visible, for: .navigationBar)
-        .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                WalkButton(walk: .book, bare: true)
-            }
-        }
         .onAppear(perform: recount)
         .onChange(of: garden.log.count) {
             withAnimation(Motion.number) { recount() }

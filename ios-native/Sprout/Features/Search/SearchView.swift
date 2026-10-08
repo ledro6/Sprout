@@ -38,7 +38,7 @@ struct SearchView: View {
         NavigationStack(path: $path) {
             ScrollView {
                 VStack(alignment: .leading, spacing: 0) {
-                    SproutHead("Поиск", walk: .search)
+                    SproutHead("Поиск")
                     Group {
                         if asked.isEmpty {
                             history
@@ -84,7 +84,7 @@ struct SearchView: View {
                 }
                 .toolbar {
                     ToolbarItem(placement: .topBarTrailing) {
-                        Button("Готово") { specimen = nil }
+                        Button("Закрыть") { specimen = nil }
                     }
                 }
             }

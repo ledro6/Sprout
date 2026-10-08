@@ -56,7 +56,7 @@ struct ProfileView: View {
             ScrollViewReader { reader in
                 ScrollView {
                     VStack(alignment: .leading, spacing: 0) {
-                        SproutHead("Профиль", walk: .profile)
+                        SproutHead("Профиль", gear: true)
                         VStack(alignment: .leading, spacing: Metrics.groupGap) {
                             person
                                 .hintSpot(.profilePerson)
@@ -490,6 +490,18 @@ struct ProfileView: View {
         SproutGroup("Ещё") {
             Button { opening = true } label: {
                 SproutLink("Настройки", icon: "gearshape")
+            }
+            .buttonStyle(.plain)
+
+            SproutDivider()
+
+            // Подсказки экранов — снова, при следующем заходе на каждый;
+            // этот экран — сразу, чтобы было видно, что сработало.
+            Button {
+                Settings.shared.rewalk()
+                Coach.shared.start(.profile)
+            } label: {
+                SproutLink("Подсказки", icon: "lightbulb")
             }
             .buttonStyle(.plain)
 

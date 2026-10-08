@@ -83,22 +83,23 @@ struct SproutGear: View {
     }
 }
 
-/// Заголовок раздела и кнопка настроек — на каждом экране, кроме главной: там
-/// кнопка живёт в закреплённой строке комнаты. У экрана с подсказками рядом
-/// «?» — показать их ещё раз.
+/// Заголовок раздела. Шестерёнка настроек — только в Профиле (`gear`) и в
+/// «•••» главной; «?» в шапках нет — подсказки повторяют из Профиля.
 struct SproutHead: View {
     let title: LocalizedStringKey
-    let walk: Walk?
 
     /// «Выбрать» — правка блоков экрана; пусто — кнопки нет.
     var choosing: Binding<Bool>?
 
+    /// Шестерёнка — только у Профиля.
+    var gear = false
+
     @State private var open = false
 
-    init(_ title: LocalizedStringKey, walk: Walk? = nil,
+    init(_ title: LocalizedStringKey, gear: Bool = false,
          choosing: Binding<Bool>? = nil) {
         self.title = title
-        self.walk = walk
+        self.gear = gear
         self.choosing = choosing
     }
 
@@ -123,8 +124,7 @@ struct SproutHead: View {
                 .buttonStyle(.glass)
                 .fixedSize()
             }
-            if choosing?.wrappedValue != true {
-                if let walk { WalkButton(walk: walk) }
+            if gear, choosing?.wrappedValue != true {
                 SproutGear { open = true }
             }
         }

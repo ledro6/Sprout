@@ -80,7 +80,7 @@ struct AskView: View {
                     .disabled(talk.lines.isEmpty && talk.trouble == nil)
                 }
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("Готово") { dismiss() }
+                    Button("Закрыть") { dismiss() }
                 }
             }
         }

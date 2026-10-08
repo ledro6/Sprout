@@ -88,7 +88,7 @@ struct StatsView: View {
             ScrollViewReader { reader in
                 ScrollView {
                     VStack(alignment: .leading, spacing: 0) {
-                        SproutHead("Статистика", walk: .stats,
+                        SproutHead("Статистика",
                                    choosing: blank ? nil : $choosing)
                         VStack(alignment: .leading,
                                spacing: Metrics.groupGap) {

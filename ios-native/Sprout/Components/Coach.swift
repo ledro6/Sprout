@@ -21,13 +21,14 @@ final class Coach {
     private init() {}
 
     /// Сами — только в первый запуск приложения, при первом заходе на экран
-    /// и после знакомства: оно важнее. Со второго запуска — только по «?»;
-    /// кроме нового на знакомом экране (`Walk.news`): оно показывается один
+    /// и после знакомства: оно важнее. Со второго запуска — только после
+    /// «Подсказки» в Профиле (`Settings.rewalk`); кроме нового на знакомом экране (`Walk.news`): оно показывается один
     /// раз, но после подсказок самого экрана.
     func offer(_ walk: Walk) {
         let settings = Settings.shared
         guard self.walk == nil, settings.toured,
-              settings.firstRun || walk.news, !settings.seen(walk),
+              settings.firstRun || settings.replay || walk.news,
+              !settings.seen(walk),
               walk.after.map(settings.seen) ?? true
         else { return }
         start(walk)
@@ -375,34 +376,5 @@ private struct Beak: Shape {
         path.addLine(to: CGPoint(x: rect.maxX, y: rect.maxY))
         path.closeSubpath()
         return path
-    }
-}
-
-/// «?» в заголовке экрана — подсказки ещё раз.
-struct WalkButton: View {
-    let walk: Walk
-
-    /// В панели навигации стекло под кнопкой рисует система — своё легло
-    /// бы вторым, и кнопка читалась бы двойной.
-    var bare = false
-
-    var body: some View {
-        if bare {
-            Button { Coach.shared.start(walk) } label: {
-                Image(systemName: "questionmark")
-            }
-            .accessibilityLabel("Подсказки")
-        } else {
-            Button { Coach.shared.start(walk) } label: {
-                Image(systemName: "questionmark")
-                    .font(.system(size: Metrics.gearGlyph - 4,
-                                  weight: .semibold))
-                    .foregroundStyle(Palette.ink)
-                    .frame(width: Metrics.gearBox, height: Metrics.gearBox)
-            }
-            .buttonStyle(.glass)
-            .buttonBorderShape(.circle)
-            .accessibilityLabel("Подсказки")
-        }
     }
 }

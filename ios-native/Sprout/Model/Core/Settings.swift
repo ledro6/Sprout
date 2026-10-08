@@ -347,6 +347,12 @@ final class Settings {
 
     func seen(_ walk: Walk) -> Bool { walked.contains(walk.rawValue) }
 
+    /// «Подсказки» в Профиле: экраны подсказывают сами и после первого
+    /// запуска — «?» в шапках больше нет, это единственный путь назад.
+    private(set) var replay: Bool {
+        didSet { store.set(replay, forKey: Key.replay) }
+    }
+
     /// Который по счёту запуск. Подсказки экранов сами показываются только в
     /// первый: во второй раз хозяин уже знает, где что.
     private(set) var launches: Int {
@@ -360,7 +366,10 @@ final class Settings {
 
     func mark(_ walk: Walk) { walked.insert(walk.rawValue) }
 
-    func rewalk() { walked = [] }
+    func rewalk() {
+        walked = []
+        replay = true
+    }
 
     /// Последнюю не выключить: пустой набор — голый фон. Отвечает, изменилось
     /// ли что-нибудь, — по нему экран решает, пускать ли всходы.
@@ -441,6 +450,7 @@ final class Settings {
         static let toured = "toured"
         static let walked = "walkedScreens"
         static let launches = "launches"
+        static let replay = "replayHints"
     }
 
     /// Отсутствие ключа ловим отдельно: `UserDefaults` отвечает нулём, а ноль
@@ -523,6 +533,7 @@ final class Settings {
             ?? .now
         toured = store.bool(forKey: Key.toured)
         walked = Set(store.stringArray(forKey: Key.walked) ?? [])
+        replay = store.bool(forKey: Key.replay)
         // Счётчика не было, а знакомство уже прошло — сад старый: первым
         // этот запуск не считаем.
         launches = max(store.integer(forKey: Key.launches),
