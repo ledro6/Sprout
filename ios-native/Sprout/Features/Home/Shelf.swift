@@ -59,12 +59,20 @@ struct PlantRow: View {
                     .lineLimit(1)
                     .truncationMode(.tail)
                     .contentTransition(.numericText())
-                Text(plant.wateringLabel)
+                // Статус — значком и словом: цвет один не различить.
+                StatusLabel(status: plant.status)
                     .font(Typography.cardCaption)
                     .lineLimit(1)
-                    .minimumScaleFactor(0.7)
-                    .contentTransition(.numericText())
-                    .animation(Motion.number, value: plant.daysUntilWatering)
+                    .minimumScaleFactor(0.8)
+                // Сухому «полить сегодня» уже сказал статус.
+                if plant.status != .urgent {
+                    Text(plant.wateringLabel)
+                        .font(Typography.cardCaption)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.7)
+                        .contentTransition(.numericText())
+                        .animation(Motion.number, value: plant.daysUntilWatering)
+                }
                 RecentPour(plant: plant)
             }
             .foregroundStyle(Palette.ink)
