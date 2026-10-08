@@ -57261,6 +57261,9 @@
         }
       }
     },
+    "Добавить растение": {
+      "extractionState": "manual"
+    },
     "Добавить свой цвет": {
       "extractionState": "manual",
       "localizations": {
@@ -182342,6 +182345,9 @@
           }
         }
       }
+    },
+    "Полить: %lld": {
+      "extractionState": "manual"
     },
     "Полить?": {
       "extractionState": "manual"

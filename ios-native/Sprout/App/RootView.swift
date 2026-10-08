@@ -62,6 +62,20 @@ struct RootView: View {
             pane = .add
             Summon.shared.add = false
         }
+        .onChange(of: Summon.shared.home) { _, asked in
+            guard asked else { return }
+            pane = .home
+            Summon.shared.home = false
+        }
+        // «Уезжаю» с иконки — лист поверх любой вкладки.
+        .sheet(isPresented: Binding(
+            get: { Summon.shared.trip },
+            set: { Summon.shared.trip = $0 })) {
+            TripView().environment(garden)
+        }
+        // Быстрые действия иконки: при запуске с нуля — как только корень
+        // слушает.
+        .task { QuickActions.run() }
         // Ссылка на растение — та же, что на NFC-метке, см. `PotTag`.
         // Снаружи она приходит, только если схема `sprout` объявлена в
         // Info.plist (README «NFC-метки на горшках»).
@@ -148,7 +162,12 @@ struct RootView: View {
         }
         // Заперли — вход прячется под замком; открыли — отыгрывает заново.
         .onChange(of: lock.open) { _, open in
-            if open { Launch.shared.replay() } else { Launch.shared.hide() }
+            if open {
+                Launch.shared.replay()
+                QuickActions.run()
+            } else {
+                Launch.shared.hide()
+            }
         }
         // Наблюдатель касаний — тоже на окно, см. `Finger`.
         .onAppear {
@@ -186,6 +205,8 @@ struct RootView: View {
             // попадают шторка, «Пункт управления» и Face ID. Календарь —
             // тогда же и уже без удалённого: план пишется заново целиком.
             if now == .background {
+                // «Полить всех (n)» на иконке — по саду на этот миг.
+                QuickActions.refresh(garden.rooms)
                 Bin.shared.commit()
                 if settings.calendar { CalendarSync.shared.sync(garden.rooms) }
             }

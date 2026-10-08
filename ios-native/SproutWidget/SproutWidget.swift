@@ -159,9 +159,13 @@ struct ThirstView: View {
             Blank(icon: "leaf", line: "Откройте Sprout — и сад появится здесь.")
         } else if entry.sprigs.isEmpty {
             Blank(icon: "leaf", line: "В саду пока пусто.")
+        } else if entry.thirsty.isEmpty, family != .systemLarge {
+            // Малый и средний показывают только тех, кому пора пить
+            // (`MoistureStatus.needsWater`); некому — так и сказано.
+            Blank(icon: "checkmark.circle", line: "Все политы")
         } else {
             switch family {
-            case .systemSmall: small(entry.sprigs[0])
+            case .systemSmall: small(entry.thirsty[0])
             case .systemMedium: medium
             default: large
             }
@@ -194,7 +198,7 @@ struct ThirstView: View {
 
     private var medium: some View {
         HStack(alignment: .top, spacing: 10) {
-            ForEach(entry.sprigs.prefix(3)) { sprig in
+            ForEach(entry.thirsty.prefix(3)) { sprig in
                 VStack(spacing: 5) {
                     Thumb(url: sprig.thumb, side: 48)
                     Text(sprig.name)
@@ -248,6 +252,12 @@ private struct PourButton: View {
     let wide: Bool
 
     var body: some View {
+        // Влажную землю из виджета не льём: подтвердить здесь нечем, а
+        // лишний полив вреден, — см. `Garden.water`. Кнопки нет вовсе.
+        if sprig.status != .wet { button }
+    }
+
+    private var button: some View {
         Button(intent: WaterFromWidget(plant: sprig.id)) {
             if wide {
                 Label("Полить", systemImage: "drop.fill")
@@ -262,9 +272,6 @@ private struct PourButton: View {
         .buttonStyle(.borderedProminent)
         .buttonBorderShape(.capsule)
         .tint(Tone.fill)
-        // Влажную землю из виджета не льём: подтвердить здесь нечем, а
-        // лишний полив вреден, — см. `Garden.water`.
-        .disabled(sprig.status == .wet)
     }
 }
 
@@ -395,18 +402,20 @@ struct GlanceView: View {
             Text(entry.thirsty.count.formatted())
         }
         .gaugeStyle(.accessoryCircular)
-        .accessibilityLabel(Lang.format("Просят воды: %lld", entry.thirsty.count))
+        .accessibilityLabel(Lang.format("Полить: %lld", entry.thirsty.count))
     }
 
     private var inline: some View {
         Label(entry.thirsty.isEmpty ? Lang.text("Все политы")
-              : Lang.format("Просят воды: %lld", entry.thirsty.count),
+              : Lang.format("Полить: %lld", entry.thirsty.count),
               systemImage: "drop.fill")
     }
 
     private var rectangular: some View {
         VStack(alignment: .leading, spacing: 2) {
-            Label("Кого полить", systemImage: "drop.fill")
+            Label(entry.thirsty.isEmpty ? Lang.text("Кого полить")
+                  : Lang.format("Полить: %lld", entry.thirsty.count),
+                  systemImage: "drop.fill")
                 .font(.headline)
                 .widgetAccentable()
             if entry.thirsty.isEmpty {
