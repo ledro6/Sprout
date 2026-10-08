@@ -30,7 +30,9 @@ struct WaterFromWidget: AppIntent {
         let garden = Garden.shared
         garden.reload()
         garden.advance()
-        if garden.water(plant) != nil { Journal.shared.waterTap(.widget) }
+        // Журнала здесь нет: кнопка исполняется в процессе виджета, а журнал
+        // живёт в настройках приложения.
+        _ = garden.water(plant)
         WidgetCenter.shared.reloadAllTimelines()
         return .result()
     }
