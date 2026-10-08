@@ -265,7 +265,7 @@ struct FamilyGroup: View {
                 get: { kin.news },
                 set: { on in
                     kin.news = on
-                    if on { Task { _ = await Notifier.ask() } }
+                    if on { Task { _ = await Notifier.ask(reminders: false) } }
                 }))
                 .labelsHidden()
         }

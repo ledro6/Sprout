@@ -403,6 +403,11 @@ struct SettingsView: View {
                 get: { settings.reminders },
                 set: { want(reminders: $0) }))
 
+            if settings.reminders {
+                ReminderTimes()
+                    .transition(.blurReplace)
+            }
+
             SproutDivider()
 
             switchRow("Сроки в Календаре", term: .agenda, isOn: Binding(

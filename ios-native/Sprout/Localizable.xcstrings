@@ -2614,6 +2614,9 @@
         }
       }
     },
+    "%1$@: %2$lld": {
+      "extractionState": "manual"
+    },
     "%1$lld из %2$lld": {
       "extractionState": "manual",
       "localizations": {
@@ -129328,6 +129331,9 @@
     "Нужен доступ к «Дому», чтобы найти датчик.": {
       "extractionState": "manual"
     },
+    "Нужен доступ к «Дому», чтобы найти датчики HomeKit.": {
+      "extractionState": "manual"
+    },
     "Нужен доступ к камере, чтобы сфотографировать растение.": {
       "extractionState": "manual"
     },
@@ -176813,6 +176819,9 @@
     "Полил %@": {
       "extractionState": "manual"
     },
+    "Полил всех": {
+      "extractionState": "manual"
+    },
     "Полила": {
       "extractionState": "manual"
     },
@@ -181172,6 +181181,9 @@
       }
     },
     "Полить сегодня": {
+      "extractionState": "manual"
+    },
+    "Полить сегодня: %@": {
       "extractionState": "manual"
     },
     "Полить сегодня: %lld": {
@@ -194144,6 +194156,9 @@
       "extractionState": "manual"
     },
     "Применить рекомендацию": {
+      "extractionState": "manual"
+    },
+    "Приходит одно напоминание в день и только когда есть кого полить; всего не больше двух уведомлений в день.": {
       "extractionState": "manual"
     },
     "Прихожая": {
@@ -244711,6 +244726,12 @@
         }
       }
     },
+    "Тихие часы до": {
+      "extractionState": "manual"
+    },
+    "Тихие часы с": {
+      "extractionState": "manual"
+    },
     "Толстянка": {
       "extractionState": "manual",
       "localizations": {
@@ -252777,6 +252798,9 @@
         }
       }
     },
+    "Уведомления выключены в Настройках телефона — напоминание о поливе не придёт.": {
+      "extractionState": "manual"
+    },
     "Уверенность: %@": {
       "extractionState": "manual"
     },
@@ -257970,6 +257994,9 @@
         }
       }
     },
+    "Утреннее напоминание": {
+      "extractionState": "manual"
+    },
     "Уход": {
       "extractionState": "manual",
       "localizations": {
@@ -258256,6 +258283,9 @@
           }
         }
       }
+    },
+    "Уход на этой неделе": {
+      "extractionState": "manual"
     },
     "Учитывать время года": {
       "extractionState": "manual",

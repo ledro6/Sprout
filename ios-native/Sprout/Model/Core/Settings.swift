@@ -327,6 +327,28 @@ final class Settings {
         didSet { store.set(reminders, forKey: Key.reminders) }
     }
 
+    /// Утреннее напоминание о поливе — во сколько, минут от полуночи.
+    /// По умолчанию 09:00, см. `Plan`.
+    var morning: Int {
+        didSet { store.set(morning, forKey: Key.morning) }
+    }
+
+    /// Тихие часы: пушей нет с `quietFrom` до `quietTo`, минут от полуночи.
+    /// По умолчанию 22:00–08:00.
+    var quietFrom: Int {
+        didSet { store.set(quietFrom, forKey: Key.quietFrom) }
+    }
+
+    var quietTo: Int {
+        didSet { store.set(quietTo, forKey: Key.quietTo) }
+    }
+
+    /// Вопрос «Напоминать, когда пора полить?» после первого растения уже
+    /// задан — второй раз не спрашиваем, см. `Plan.askAfterFirstPlant`.
+    var reminderAsked: Bool {
+        didSet { store.set(reminderAsked, forKey: Key.reminderAsked) }
+    }
+
     /// Сроки в Календаре телефона, см. `Agenda`. Доступ к календарю — так
     /// же, по переключателю.
     var calendar: Bool {
@@ -412,6 +434,10 @@ final class Settings {
         static let kinds = "patternKinds"
         static let shapes = "patternShapes"
         static let reminders = "reminders"
+        static let morning = "reminderMorning"
+        static let quietFrom = "quietFrom"
+        static let quietTo = "quietTo"
+        static let reminderAsked = "reminderAsked"
         static let calendar = "calendarSync"
         static let tagPour = "tagPour"
         /// Прежние ключи — номером готового цвета; читаются ради тех, у кого
@@ -536,6 +562,12 @@ final class Settings {
         seasonalPattern = !store.bool(forKey: Key.plainPattern)
         pattern = !store.bool(forKey: Key.hiddenPattern)
         reminders = store.bool(forKey: Key.reminders)
+        morning = store.object(forKey: Key.morning) as? Int ?? Plan.Rules().morning
+        quietFrom = store.object(forKey: Key.quietFrom) as? Int
+            ?? Plan.Rules().quietFrom
+        quietTo = store.object(forKey: Key.quietTo) as? Int
+            ?? Plan.Rules().quietTo
+        reminderAsked = store.bool(forKey: Key.reminderAsked)
         calendar = store.bool(forKey: Key.calendar)
         tagPour = PotTag.Pour(rawValue: store.string(forKey: Key.tagPour) ?? "")
             ?? .now

@@ -39,6 +39,7 @@ ios-native/Sprout/Model/Garden/Family.swift
 ios-native/Sprout/Model/Garden/Sensor.swift
 ios-native/Sprout/Model/Recognition/Ailment.swift
 ios-native/Sprout/Model/Core/Reminders.swift
+ios-native/Sprout/Model/Core/Plan.swift
 ios-native/Sprout/Model/Core/Agenda.swift
 ios-native/Sprout/Model/Garden/Rival.swift
 ios-native/Sprout/Model/Garden/Race.swift

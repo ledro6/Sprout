@@ -6140,6 +6140,68 @@ do {
     yard.restore(kept)
 }
 
+// T-24: распорядок уведомлений — сад из 18 растений, весь уход включён.
+do {
+    var utc = Calendar(identifier: .gregorian)
+    utc.timeZone = TimeZone(identifier: "UTC")!
+    let start = utc.date(from: DateComponents(
+        timeZone: utc.timeZone, year: 2026, month: 3, day: 2, hour: 20))!
+    var rows: [Room] = []
+    for roomIndex in 0 ..< 3 {
+        var plants: [Plant] = []
+        for index in 0 ..< 6 {
+            var one = plantNamed("Р\(roomIndex)Р\(index)",
+                                 moisture: 0.1 + 0.05 * Double(roomIndex * 6 + index),
+                                 dryingDays: Double(3 + index * 2))
+            one.care = Care(feedEvery: 2 + Double(index), sinceFed: 0,
+                            repotEvery: 3, sinceRepot: 0,
+                            duties: [.mist: 1, .turn: 2, .wipe: 3],
+                            dutiesSince: [:])
+            plants.append(one)
+        }
+        rows.append(Room(name: "К\(roomIndex)", plants: plants))
+    }
+    for reserve in [0, 1] {
+        var rules = Plan.Rules()
+        rules.reserve = reserve
+        let slots = Plan.slots(in: rows, now: start, rules: rules, calendar: utc)
+        var perDay: [Date: Int] = [:]
+        for slot in slots { perDay[utc.startOfDay(for: slot.at), default: 0] += 1 }
+        check((perDay.values.max() ?? 0) <= 2 - reserve,
+              "18 растений, весь уход, резерв \(reserve): не больше \(2 - reserve) в день")
+        check(slots.allSatisfy { !Plan.quiet(Plan.minutes(of: $0.at, utc), rules) },
+              "ни один пуш не попадает в тихие часы (резерв \(reserve))")
+        check(slots.filter { $0.kind == .weekly }.count <= 1,
+              "сводка по уходу — не больше одной")
+        check(slots.allSatisfy { $0.at > start }, "всё в будущем")
+        check(slots.contains { $0.kind == .morning }, "утреннее стоит")
+    }
+    let all = Plan.slots(in: rows, now: start, calendar: utc)
+    let first = all.first { $0.kind == .morning }
+    check(first.map { utc.component(.hour, from: $0.at) } == 9,
+          "утреннее — в 09:00 по умолчанию")
+    check(first?.body.hasPrefix("Полить сегодня: Р0Р0, Р0Р1 (+") == true,
+          "утреннее называет двоих и «+n»: \(first?.body ?? "")")
+    check(all.filter { $0.kind == .morning }.count <= Plan.reach.count,
+          "утренних не больше, чем шагов в расписании")
+    var late = Plan.Rules()
+    late.morning = 23 * 60
+    let shifted = Plan.slots(in: rows, now: start, rules: late, calendar: utc)
+    check(shifted.first { $0.kind == .morning }
+          .map { Plan.minutes(of: $0.at, utc) } == 8 * 60,
+          "утреннее в тихие часы уезжает на конец тихих")
+    let snoozed = Plan.slots(in: rows, now: start,
+                             notBefore: utc.date(byAdding: .day, value: 1,
+                                                 to: utc.startOfDay(for: start)),
+                             calendar: utc)
+    check(snoozed.first { $0.kind == .morning }
+          .map { utc.startOfDay(for: $0.at) } == utc.date(
+              byAdding: .day, value: 1, to: utc.startOfDay(for: start)),
+          "«Завтра» — не раньше следующего утра")
+    check(Plan.slots(in: [], now: start, calendar: utc).isEmpty,
+          "пустой сад — ни одного пуша")
+}
+
 if failed > 0 {
     print("\nне сошлось: \(failed)")
     exit(1)

@@ -791,7 +791,7 @@ final class Kinship {
         let helper = Sharer(title: Lang.text("Наш сад")) {
             Task { @MainActor in
                 await Kinship.shared.refresh()
-                _ = await Notifier.ask()
+                _ = await Notifier.ask(reminders: false)
             }
         }
         sharer = helper
@@ -910,7 +910,7 @@ final class Kinship {
                 return
             }
             join(zone)
-            _ = await Notifier.ask()
+            _ = await Notifier.ask(reminders: false)
         }
     }
 

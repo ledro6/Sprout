@@ -62,7 +62,7 @@ struct EmptyGarden: View {
 /// Нет доступа к камере или Bluetooth — что нужно и куда идти.
 struct AccessNote: View {
     enum Need {
-        case camera, bluetooth
+        case camera, bluetooth, notifications, homekit
 
         var text: String {
             switch self {
@@ -70,6 +70,10 @@ struct AccessNote: View {
                 Lang.text("Нужен доступ к камере, чтобы сфотографировать растение.")
             case .bluetooth:
                 Lang.text("Нужен доступ к Bluetooth, чтобы найти датчик.")
+            case .notifications:
+                Lang.text("Уведомления выключены в Настройках телефона — напоминание о поливе не придёт.")
+            case .homekit:
+                Lang.text("Нужен доступ к «Дому», чтобы найти датчики HomeKit.")
             }
         }
 
@@ -77,6 +81,8 @@ struct AccessNote: View {
             switch self {
             case .camera: "camera"
             case .bluetooth: "antenna.radiowaves.left.and.right"
+            case .notifications: "bell.slash"
+            case .homekit: "house"
             }
         }
     }
