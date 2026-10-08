@@ -78,7 +78,7 @@ struct PlantCard: View {
         }
         .padding(.horizontal, Metrics.cardPadding)
         .padding(.vertical, 10)
-        .sproutPlate(in: shape)
+        .sproutSolidPlate(in: shape)
         .modifier(PlantGlow(plant: plant, shape: shape))
     }
 

@@ -117,7 +117,7 @@ struct PlantRow: View {
         }
         .padding([.leading, .vertical], Metrics.rowPadding)
         .padding(.trailing, Metrics.rowTrail)
-        .sproutPlate(in: shape)
+        .sproutSolidPlate(in: shape)
         .modifier(PlantGlow(plant: plant, shape: shape))
     }
 

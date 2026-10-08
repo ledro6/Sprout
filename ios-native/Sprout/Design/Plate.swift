@@ -55,11 +55,36 @@ extension View {
             .contentShape(shape)
     }
 
+    /// Плашка для того, что повторяется десятками (карточки и строки
+    /// растений): непрозрачная карточка с волосяной рамкой, без стекла. Стекло
+    /// на каждой из сотни плашек — слой на каждую, и список тяжелеет; стекло
+    /// остаётся навигации и редким крупным блокам. При «Повышенной
+    /// контрастности» рамка толще.
+    func sproutSolidPlate(in shape: some Shape) -> some View {
+        modifier(SolidPlate(shape: shape))
+    }
+
     /// Стекло под текстом. При «Понижении прозрачности» — непрозрачная
     /// карточка (`Palette.card`): на ней текст держит контраст 4.5 и выше,
     /// что бы ни лежало под плашкой.
     func sproutGlass(in shape: some Shape) -> some View {
         modifier(SproutGlass(shape: shape))
+    }
+}
+
+private struct SolidPlate<S: Shape>: ViewModifier {
+    let shape: S
+
+    @Environment(\.colorSchemeContrast) private var contrast
+
+    func body(content: Content) -> some View {
+        content
+            .background(Palette.card, in: shape)
+            .overlay {
+                shape.stroke(Palette.hairline,
+                             lineWidth: contrast == .increased ? 1.5 : 1)
+            }
+            .contentShape(shape)
     }
 }
 
