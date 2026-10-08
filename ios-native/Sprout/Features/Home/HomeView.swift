@@ -509,26 +509,24 @@ struct HomeView: View {
         Task { @MainActor in path.append(id) }
     }
 
-    /// Кнопки справа сверху: порядок, «ещё» и вид, «Готово» в правке и
-    /// настройки. Стоят на месте и в покое, и на прокрутке: в покое — вровень
+    /// Кнопки справа сверху: вид и «•••» (сад, отъезд, сортировка,
+    /// настройки), «Готово» в правке. Стоят на месте и в покое, и на прокрутке: в покое — вровень
     /// с заголовком, на прокрутке к ним поднимается лента комнат. Стекло
     /// системное (`.glass`): с ним приходят продавливание, отскок, блик,
     /// меню, вырастающее из кнопки, и «Уменьшение прозрачности».
     private var corner: some View {
         HStack(spacing: Metrics.cornerGap) {
-            // В правке — только «Готово» и настройки, как на «Домой»: пять
-            // кругов в ряд наезжали на заголовок, а сортировать и менять вид
-            // посреди перестановки незачем.
+            // В правке — только «Готово»: сортировать и менять вид посреди
+            // перестановки незачем. Вне правки — вид и «•••»: сортировка и
+            // настройки живут в меню.
             if !editing {
                 Group {
-                    orderMenu
-                    moreMenu
                     lookButton
+                    moreMenu
                 }
                 .transition(.scale.combined(with: .opacity))
             }
             doneButton
-            SproutGear { settings = true }
         }
         .sproutRide()
         .frame(height: row)
@@ -548,57 +546,58 @@ struct HomeView: View {
             .contentTransition(.symbolEffect(.replace))
     }
 
-    /// Порядок карточек; на кнопке — значок того, что выбран. Смена порядка
-    /// перекладывает карточки пружиной.
-    private var orderMenu: some View {
-        Menu {
-            Picker("Порядок", selection: Binding(
-                get: { Settings.shared.order },
-                set: { sort($0) }
-            )) {
-                ForEach(Settings.Order.allCases) { item in
-                    Label(item.title, systemImage: item.icon).tag(item)
-                }
-            }
-        } label: {
-            cornerIcon(Settings.shared.order.icon)
-        }
-        .menuStyle(.button)
-        .buttonStyle(.glass)
-        .buttonBorderShape(.circle)
-        .accessibilityLabel("Порядок")
-        .accessibilityValue(Settings.shared.order.title)
-    }
-
     /// Всё, что делают с садом целиком: AR, обход, вопрос модели, отъезд,
     /// комнаты. Идёт обход или отсчёт до отъезда — на кнопке его значок, а не
     /// точки.
     private var moreMenu: some View {
         Menu {
-            if PlantAR.available, !plants.isEmpty {
-                Button(action: stage) {
-                    Label("Сад в AR", systemImage: "arkit")
+            Section {
+                if PlantAR.available, !plants.isEmpty {
+                    Button(action: stage) {
+                        Label("Сад в AR", systemImage: "arkit")
+                    }
                 }
-            }
-            round
-            // И без Apple Intelligence: лист объяснит, чего не хватает.
-            Button { asking = true } label: {
-                Label("Спросить сад",
-                      systemImage: "bubble.left.and.text.bubble.right")
-            }
-            // Метка на горшке — только когда NFC в сборке включён, см.
-            // `Tags.enabled`.
-            if Tags.ready {
-                Button { Tags.shared.read() } label: {
-                    Label("Приложить к метке",
-                          systemImage: "sensor.tag.radiowaves.forward")
+                // И без Apple Intelligence: лист объяснит, чего не хватает.
+                Button { asking = true } label: {
+                    Label("Спросить сад",
+                          systemImage: "bubble.left.and.text.bubble.right")
                 }
+                // Метка на горшке — только когда NFC в сборке включён, см.
+                // `Tags.enabled`.
+                if Tags.ready {
+                    Button { Tags.shared.read() } label: {
+                        Label("Приложить к метке",
+                              systemImage: "sensor.tag.radiowaves.forward")
+                    }
+                }
+                Button { roomsOpen = true } label: {
+                    Label("Изменить комнаты…", systemImage: "pencil")
+                }
+            } header: {
+                Text("Сад")
             }
-            Button { tripping = true } label: {
-                Label("Уезжаю…", systemImage: "airplane.departure")
+            Section {
+                Button { tripping = true } label: {
+                    Label("Уезжаю…", systemImage: "airplane.departure")
+                }
+                round
+            } header: {
+                Text("Уехать")
             }
-            Button { roomsOpen = true } label: {
-                Label("Изменить комнаты…", systemImage: "pencil")
+            Menu {
+                Picker("Порядок", selection: Binding(
+                    get: { Settings.shared.order },
+                    set: { sort($0) }
+                )) {
+                    ForEach(Settings.Order.allCases) { item in
+                        Label(item.title, systemImage: item.icon).tag(item)
+                    }
+                }
+            } label: {
+                Label("Сортировка", systemImage: Settings.shared.order.icon)
+            }
+            Button { settings = true } label: {
+                Label("Настройки", systemImage: "gearshape")
             }
         } label: {
             cornerIcon(moreIcon)
@@ -655,7 +654,7 @@ struct HomeView: View {
                     Feel.done()
                 } label: {
                     Label("Полить по очереди", systemImage: "drop.circle")
-                    Text("Кто следующий — на экране блокировки")
+                    Text("Показывает на экране блокировки, какое растение поливать следующим")
                 }
             }
         }

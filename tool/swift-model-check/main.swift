@@ -268,7 +268,11 @@ for key in keys { store.removeObject(forKey: key) }
 let fresh = Settings(store: store)
 check("\(fresh.theme)", "system", "тема по умолчанию — за системой")
 check("\(fresh.look)", "grid", "растения по умолчанию плиткой — как в макете")
-check("\(fresh.order)", "manual", "и в том порядке, в каком их расставили")
+check("\(fresh.order)", "thirsty", "порядок по умолчанию — «Сначала сухие»")
+store.set("manual", forKey: "plantOrder")
+check("\(Settings(store: store).order)", "manual",
+      "выбранный порядок (вручную) сохраняется")
+store.removeObject(forKey: "plantOrder")
 check("\(fresh.chosen)", "[0, 1]", "в узоре росток и капля — узор макета")
 check(fresh.patternHue == .preset(.green), "узор по умолчанию зелёный — цвет макета")
 check(fresh.waveHue == .preset(.blue), "волна по умолчанию синяя")
@@ -2189,8 +2193,8 @@ do {
         Plant(id: "b", name: "А", species: "", moisture: 0.25,
               dryingDays: 8, addedOn: day),
     ]
-    check(Settings.Order.thirsty.arrange(twins).map(\.id) == ["a", "b"],
-          "равные сроки остаются, как стояли вручную")
+    check(Settings.Order.thirsty.arrange(twins).map(\.id) == ["b", "a"],
+          "равные сроки — по имени")
     check(Settings.Order.newest.arrange(twins).map(\.id) == ["a", "b"],
           "и равные дни посадки тоже")
     check(Settings.Order.name.arrange(twins).map(\.id) == ["b", "a"],

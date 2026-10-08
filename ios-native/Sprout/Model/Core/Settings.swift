@@ -91,7 +91,8 @@ final class Settings {
 
         /// Равные остаются в ручном порядке, иначе менялись бы местами от
         /// пересборки к пересборке. «Сначала сухие» — по дням до полива, а не
-        /// по процентам: 20% у папоротника — день, у кактуса — две недели.
+        /// по процентам: 20% у папоротника — день, у кактуса — две недели; при
+        /// равных — по имени.
         func arrange(_ plants: [Plant]) -> [Plant] {
             let lined = Array(plants.enumerated())
             let sorted: [(offset: Int, element: Plant)]
@@ -102,7 +103,13 @@ final class Settings {
                 sorted = lined.sorted { a, b in
                     let x = a.element.moisture * a.element.dryingDays
                     let y = b.element.moisture * b.element.dryingDays
-                    return x != y ? x < y : a.offset < b.offset
+                    if x != y { return x < y }
+                    switch a.element.name
+                        .localizedStandardCompare(b.element.name) {
+                    case .orderedAscending: return true
+                    case .orderedDescending: return false
+                    case .orderedSame: return a.offset < b.offset
+                    }
                 }
             case .name:
                 sorted = lined.sorted { a, b in
@@ -480,8 +487,9 @@ final class Settings {
         theme = Theme(rawValue: store.string(forKey: Key.theme) ?? "")
             ?? .system
         look = Look(rawValue: store.string(forKey: Key.look) ?? "") ?? .grid
+        // Выбора нет — «Сначала сухие»; кто выбрал порядок, тот его и видит.
         order = Order(rawValue: store.string(forKey: Key.order) ?? "")
-            ?? .manual
+            ?? .thirsty
         // Ноль — «ключа нет»: пустого набора фигурок не бывает.
         let mask = store.integer(forKey: Key.shapes)
         if mask != 0 {
