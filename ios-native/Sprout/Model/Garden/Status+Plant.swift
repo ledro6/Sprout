@@ -66,6 +66,37 @@ extension MoistureStatus {
 }
 
 extension MoistureStatus {
+    /// Ближайший полив среди тех, кому пить пока не пора: растение и дней до
+    /// него (не меньше одного). Отложенному на день — «завтра». Пусто — в
+    /// саду нет растений.
+    static func soonest(in rooms: [Room], now: Date = Date())
+        -> (plant: Plant, days: Int)? {
+        let found = rooms.flatMap(\.plants).map { plant -> (Plant, Int) in
+            let days = max(plant.daysUntilWatering, 0)
+            return (plant, max(days, 1))
+        }
+        guard let best = found.min(by: { a, b in
+            a.1 != b.1 ? a.1 < b.1 : a.0.moisture < b.0.moisture
+        }) else { return nil }
+        return (best.0, best.1)
+    }
+
+    /// «завтра» или «через N дн».
+    static func inDays(_ days: Int) -> String {
+        days <= 1 ? Lang.text("завтра") : Lang.format("через %lld дн", days)
+    }
+
+    /// Строка блока «Сегодня», когда поливать некого.
+    static func calmLine(in rooms: [Room], now: Date = Date()) -> String {
+        guard let next = soonest(in: rooms, now: now) else {
+            return Lang.text("Всё в порядке")
+        }
+        return Lang.format("Всё в порядке · ближайший полив — %1$@, %2$@",
+                           next.plant.name, inDays(next.days))
+    }
+}
+
+extension MoistureStatus {
     /// Кого поливать разом: «скоро пить» и «сухо». Влажные и в норме в
     /// массовых действиях не участвуют — защита от перелива.
     static func bulk(_ plants: [Plant]) -> [Plant] {

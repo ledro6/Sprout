@@ -50,9 +50,6 @@ struct HomeView: View {
     /// «Спросить сад» — из «ещё».
     @State private var asking = false
 
-    /// Полка наград — из карточки дня.
-    @State private var awardsOpen = false
-
     /// Полили последнего, кто ждал воды, — листопад «Все политы!».
     @State private var cheering = false
 
@@ -211,17 +208,6 @@ struct HomeView: View {
         .sheet(isPresented: $roomsOpen) { RoomsView().environment(garden) }
         .sheet(isPresented: $tripping) { TripView().environment(garden) }
         .sheet(isPresented: $asking) { AskView().environment(garden) }
-        .sheet(isPresented: $awardsOpen) {
-            NavigationStack {
-                AwardsView()
-                    .toolbar {
-                        ToolbarItem(placement: .topBarTrailing) {
-                            SheetClose { awardsOpen = false }
-                        }
-                    }
-            }
-            .environment(garden)
-        }
         // Ждали воды, и полили последнего — праздник. Высохли новые —
         // просто счёт растёт.
         .onChange(of: MoistureStatus.needsWater(in: garden.rooms).count) { old, now in
@@ -345,7 +331,7 @@ struct HomeView: View {
                     VStack(spacing: Metrics.gutterV) {
                         if let room, !room.plants.isEmpty {
                             let key = "day:" + room.name
-                            DayCard(room: room) { awardsOpen = true }
+                            TodayBlock(room: room)
                                 .modifier(CardAppear(
                                     index: 0, room: index,
                                     animates: !revealed.contains(key),
@@ -768,10 +754,17 @@ struct HomeView: View {
         let plants = Settings.shared.order.arrange(room?.plants ?? [])
         if plants.isEmpty, garden.plantCount == 0 {
             // Пустой сад — с чего начать, а не «в этой комнате пусто».
-            EmptyGarden(add: { Summon.shared.add = true }, sample: sampler)
-                .padding(.horizontal, 48)
-                .padding(.top, 100)
-                .transition(.blurReplace)
+            // Приветствие — только здесь, в пустом саду.
+            VStack(spacing: 18) {
+                Text(Daypart.of(Date()).greeting(garden.owner))
+                    .font(Typography.detail)
+                    .foregroundStyle(Palette.ink)
+                    .multilineTextAlignment(.center)
+                EmptyGarden(add: { Summon.shared.add = true }, sample: sampler)
+            }
+            .padding(.horizontal, 48)
+            .padding(.top, 100)
+            .transition(.blurReplace)
         } else if plants.isEmpty {
             empty
         } else {

@@ -581,293 +581,6 @@
         }
       }
     },
-    "%1$@ · уровень %2$lld": {
-      "extractionState": "manual",
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ · المستوى %2$lld"
-          }
-        },
-        "bg": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ · ниво %2$lld"
-          }
-        },
-        "bn": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ · লেভেল %2$lld"
-          }
-        },
-        "ca": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ · nivell %2$lld"
-          }
-        },
-        "cs": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ · úroveň %2$lld"
-          }
-        },
-        "da": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ · niveau %2$lld"
-          }
-        },
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ · Level %2$lld"
-          }
-        },
-        "el": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ · επίπεδο %2$lld"
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ · level %2$lld"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ · nivel %2$lld"
-          }
-        },
-        "fi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ · taso %2$lld"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ · niveau %2$lld"
-          }
-        },
-        "gu": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ · લેવલ %2$lld"
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ · רמה %2$lld"
-          }
-        },
-        "hi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ · लेवल %2$lld"
-          }
-        },
-        "hr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ · razina %2$lld"
-          }
-        },
-        "hu": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ · %2$lld. szint"
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ · level %2$lld"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ · livello %2$lld"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ · レベル%2$lld"
-          }
-        },
-        "kk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ · деңгей %2$lld"
-          }
-        },
-        "kn": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ · ಹಂತ %2$lld"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ · 레벨 %2$lld"
-          }
-        },
-        "lt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ · %2$lld lygis"
-          }
-        },
-        "ml": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ · ലെവൽ %2$lld"
-          }
-        },
-        "mr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ · स्तर %2$lld"
-          }
-        },
-        "ms": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ · tahap %2$lld"
-          }
-        },
-        "nb": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ · nivå %2$lld"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ · niveau %2$lld"
-          }
-        },
-        "or": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ · ସ୍ତର %2$lld"
-          }
-        },
-        "pa": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ · ਲੈਵਲ %2$lld"
-          }
-        },
-        "pl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ · poziom %2$lld"
-          }
-        },
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ · nível %2$lld"
-          }
-        },
-        "pt-PT": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ · nível %2$lld"
-          }
-        },
-        "ro": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ · nivelul %2$lld"
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ · úroveň %2$lld"
-          }
-        },
-        "sl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ · raven %2$lld"
-          }
-        },
-        "sv": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ · nivå %2$lld"
-          }
-        },
-        "ta": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ · நிலை %2$lld"
-          }
-        },
-        "te": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ · స్థాయి %2$lld"
-          }
-        },
-        "th": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ · ระดับ %2$lld"
-          }
-        },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ · seviye %2$lld"
-          }
-        },
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ · рівень %2$lld"
-          }
-        },
-        "ur": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ · لیول %2$lld"
-          }
-        },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ · cấp %2$lld"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ · 等级 %2$lld"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ · 等級 %2$lld"
-          }
-        }
-      }
-    },
     "%1$@ · уровень %2$lld из %3$lld": {
       "extractionState": "manual",
       "localizations": {
@@ -36184,6 +35897,12 @@
         }
       }
     },
+    "Всё в порядке": {
+      "extractionState": "manual"
+    },
+    "Всё в порядке · ближайший полив — %1$@, %2$@": {
+      "extractionState": "manual"
+    },
     "Всё время": {
       "extractionState": "manual",
       "localizations": {
@@ -66474,293 +66193,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "每週任務"
-          }
-        }
-      }
-    },
-    "Задания недели: %1$lld из %2$lld": {
-      "extractionState": "manual",
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "مهام الأسبوع: %1$lld من %2$lld"
-          }
-        },
-        "bg": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Задачи за седмицата: %1$lld от %2$lld"
-          }
-        },
-        "bn": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "সপ্তাহের কাজ: %1$lld / %2$lld"
-          }
-        },
-        "ca": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Missions de la setmana: %1$lld de %2$lld"
-          }
-        },
-        "cs": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Úkoly týdne: %1$lld z %2$lld"
-          }
-        },
-        "da": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ugens opgaver: %1$lld af %2$lld"
-          }
-        },
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Wochenaufgaben: %1$lld von %2$lld"
-          }
-        },
-        "el": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Αποστολές της εβδομάδας: %1$lld από %2$lld"
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Weekly quests: %1$lld of %2$lld"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Misiones de la semana: %1$lld de %2$lld"
-          }
-        },
-        "fi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Viikon tehtävät: %1$lld/%2$lld"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Quêtes de la semaine : %1$lld sur %2$lld"
-          }
-        },
-        "gu": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "અઠવાડિયાનાં કાર્યો: %1$lld / %2$lld"
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "משימות השבוע: %1$lld מתוך %2$lld"
-          }
-        },
-        "hi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "हफ़्ते के टास्क: %1$lld / %2$lld"
-          }
-        },
-        "hr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tjedni zadaci: %1$lld od %2$lld"
-          }
-        },
-        "hu": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Heti feladatok: %1$lld/%2$lld"
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tugas mingguan: %1$lld dari %2$lld"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Missioni della settimana: %1$lld di %2$lld"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "週間課題：%1$lld／%2$lld"
-          }
-        },
-        "kk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Апта тапсырмалары: %1$lld/%2$lld"
-          }
-        },
-        "kn": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ವಾರದ ಕಾರ್ಯಗಳು: %1$lld / %2$lld"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "주간 과제: %1$lld/%2$lld"
-          }
-        },
-        "lt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Savaitės užduotys: %1$lld iš %2$lld"
-          }
-        },
-        "ml": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ആഴ്ചയിലെ ദൗത്യങ്ങൾ: %1$lld / %2$lld"
-          }
-        },
-        "mr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "आठवड्याची कामे: %1$lld / %2$lld"
-          }
-        },
-        "ms": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tugasan mingguan: %1$lld daripada %2$lld"
-          }
-        },
-        "nb": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ukens oppdrag: %1$lld av %2$lld"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Weekopdrachten: %1$lld van %2$lld"
-          }
-        },
-        "or": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ସପ୍ତାହର କାମ: %1$lld / %2$lld"
-          }
-        },
-        "pa": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ਹਫ਼ਤੇ ਦੇ ਕੰਮ: %1$lld / %2$lld"
-          }
-        },
-        "pl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Zadania tygodnia: %1$lld z %2$lld"
-          }
-        },
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Missões da semana: %1$lld de %2$lld"
-          }
-        },
-        "pt-PT": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Missões da semana: %1$lld de %2$lld"
-          }
-        },
-        "ro": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Misiunile săptămânii: %1$lld din %2$lld"
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Úlohy týždňa: %1$lld z %2$lld"
-          }
-        },
-        "sl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tedenske naloge: %1$lld od %2$lld"
-          }
-        },
-        "sv": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Veckans uppdrag: %1$lld av %2$lld"
-          }
-        },
-        "ta": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "வாரப் பணிகள்: %1$lld / %2$lld"
-          }
-        },
-        "te": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "వారపు పనులు: %1$lld / %2$lld"
-          }
-        },
-        "th": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ภารกิจประจำสัปดาห์: %1$lld จาก %2$lld"
-          }
-        },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Haftanın görevleri: %1$lld / %2$lld"
-          }
-        },
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Завдання тижня: %1$lld з %2$lld"
-          }
-        },
-        "ur": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ہفتے کے ٹاسک: %1$lld / %2$lld"
-          }
-        },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nhiệm vụ trong tuần: %1$lld/%2$lld"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "每周任务：%1$lld/%2$lld"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "每週任務：%1$lld/%2$lld"
           }
         }
       }
@@ -178532,6 +177964,41 @@
         }
       }
     },
+    "Политы %lld растений": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "variations": {
+            "plural": {
+              "few": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Политы %lld растения"
+                }
+              },
+              "many": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Политы %lld растений"
+                }
+              },
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Полито %lld растение"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Политы %lld растения"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "Полить": {
       "extractionState": "manual",
       "localizations": {
@@ -178818,6 +178285,9 @@
           }
         }
       }
+    },
+    "Полить всех (%lld)": {
+      "extractionState": "manual"
     },
     "Полить и к следующему": {
       "extractionState": "manual"
@@ -181699,6 +181169,9 @@
       }
     },
     "Полить сегодня": {
+      "extractionState": "manual"
+    },
+    "Полить сегодня: %lld": {
       "extractionState": "manual"
     },
     "Полить сейчас": {
@@ -222670,9 +222143,6 @@
           }
         }
       }
-    },
-    "Серия прервалась. Бывает — начнём заново": {
-      "extractionState": "manual"
     },
     "Сеянец": {
       "extractionState": "manual",
@@ -274046,6 +273516,9 @@
     "ждёт ответа": {
       "extractionState": "manual"
     },
+    "завтра": {
+      "extractionState": "manual"
+    },
     "земля сухая": {
       "extractionState": "manual",
       "localizations": {
@@ -280730,6 +280203,9 @@
           }
         }
       }
+    },
+    "через %lld дн": {
+      "extractionState": "manual"
     },
     "через %lld дней": {
       "extractionState": "manual",

@@ -6071,6 +6071,31 @@ do {
     yard.restore(kept)
 }
 
+print("блок «Сегодня»:")
+do {
+    let rooms = [Room(name: "Т", plants: [
+        plantNamed("Сухой", moisture: 0.05, dryingDays: 7),
+        plantNamed("Влажный", moisture: 0.9, dryingDays: 10),
+        plantNamed("Средний", moisture: 0.5, dryingDays: 6),
+    ], key: "room-t")]
+    check(MoistureStatus.needsWater(in: rooms).map(\.id) == ["Сухой"],
+          "ждёт воды один — кнопка «Полить всех (1)»")
+    let calm = [Room(name: "Т", plants: Array(rooms[0].plants.dropFirst()),
+                     key: "room-t")]
+    let next = MoistureStatus.soonest(in: calm)
+    let days = calm[0].plants[1].daysUntilWatering
+    check(next?.plant.id == "Средний" && next?.days == days && days > 1,
+          "ближайший полив — у кого меньше дней до него")
+    check(MoistureStatus.calmLine(in: calm)
+          == "Всё в порядке · ближайший полив — Средний, "
+              + MoistureStatus.inDays(days),
+          "когда поливать некого — «Всё в порядке · ближайший полив — …»")
+    check(MoistureStatus.calmLine(in: []) == "Всё в порядке",
+          "в пустом саду — просто «Всё в порядке»")
+    check(MoistureStatus.inDays(1) == "завтра" && MoistureStatus.inDays(4) == "через 4 дн",
+          "когда: «завтра», «через N дн»")
+}
+
 if failed > 0 {
     print("\nне сошлось: \(failed)")
     exit(1)

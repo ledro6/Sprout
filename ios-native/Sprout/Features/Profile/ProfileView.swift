@@ -186,6 +186,15 @@ struct ProfileView: View {
 
             SproutDivider()
 
+            // Задания недели переехали с главной сюда: открывают тот же экран
+            // садовника.
+            NavigationLink { GardenerView() } label: {
+                SproutLink("Задания недели", icon: "checklist")
+            }
+            .buttonStyle(.plain)
+
+            SproutDivider()
+
             Button { posting = true } label: {
                 SproutLink("Моя оранжерея — открыткой",
                            icon: "photo.on.rectangle")
