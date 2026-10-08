@@ -130,6 +130,12 @@ final class Scanner {
         }
     }
 
+    /// Камере отказали — на экране ошибки появляется «Открыть Настройки».
+    static var cameraBlocked: Bool {
+        let status = AVCaptureDevice.authorizationStatus(for: .video)
+        return status == .denied || status == .restricted
+    }
+
     /// Нет доступа к камере — куда идти.
     private static var blind: String {
         Lang.text("Нет доступа к камере. Разрешите его в Настройках → Sprout.")

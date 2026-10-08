@@ -3388,7 +3388,9 @@ do {
     check(Set(terms.map(\.meaning)).count == terms.count,
           "и пояснения тоже")
     let pages = Tour.pages
-    check(pages.count == 7, "в знакомстве семь страниц")
+    check(pages.count == 3, "в знакомстве три страницы")
+    check(pages.contains { $0.id == Tour.reminderPage },
+          "страница с временем напоминания есть")
     check(pages.map(\.id) == Array(0 ..< pages.count),
           "страницы идут по порядку с нуля — по ним листает TabView")
     check(pages.allSatisfy { !$0.icon.isEmpty && !$0.title.isEmpty

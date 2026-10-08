@@ -399,7 +399,9 @@ struct SettingsView: View {
 
             SproutDivider()
 
-            switchRow("Напоминать о поливе", term: .reminders, isOn: Binding(
+            switchRow("Напоминать о поливе", term: .reminders,
+                      note: "Утром — кого пора полить. Сразу после включения система спросит разрешение.",
+                      isOn: Binding(
                 get: { settings.reminders },
                 set: { want(reminders: $0) }))
 

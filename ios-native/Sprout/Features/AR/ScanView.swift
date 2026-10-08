@@ -137,6 +137,10 @@ struct ScanView: View {
                     .padding(12)
                     .glassEffect(.regular, in: .circle)
             case .failed:
+                if Scanner.cameraBlocked {
+                    tool("Открыть Настройки", icon: "gear",
+                         prominent: true) { SystemSettings.open() }
+                }
                 tool("Закрыть", icon: "xmark", prominent: false) {
                     dismiss()
                 }
