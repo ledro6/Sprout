@@ -40,7 +40,13 @@ extension Plant {
 
     /// Полить сегодня — см. `MoistureStatus.due`.
     var needsWaterToday: Bool {
-        MoistureStatus.due(moisture: moisture, period: period)
+        !isSnoozed() && MoistureStatus.due(moisture: moisture, period: period)
+    }
+
+    /// Хозяин отложил полив на день, и срок отсрочки ещё не вышел.
+    func isSnoozed(at now: Date = Date()) -> Bool {
+        guard let snoozed else { return false }
+        return snoozed > now
     }
 
     var nextWateringText: String {
@@ -72,7 +78,7 @@ extension MoistureStatus {
     static func soonest(in rooms: [Room], now: Date = Date())
         -> (plant: Plant, days: Int)? {
         let found = rooms.flatMap(\.plants).map { plant -> (Plant, Int) in
-            let days = max(plant.daysUntilWatering, 0)
+            let days = max(plant.daysUntilWatering, plant.isSnoozed(at: now) ? 1 : 0)
             return (plant, max(days, 1))
         }
         guard let best = found.min(by: { a, b in

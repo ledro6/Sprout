@@ -138307,6 +138307,9 @@
         }
       }
     },
+    "Отложить на день": {
+      "extractionState": "manual"
+    },
     "Отмена": {
       "extractionState": "manual",
       "localizations": {

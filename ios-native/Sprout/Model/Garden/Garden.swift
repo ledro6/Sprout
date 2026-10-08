@@ -159,6 +159,7 @@ final class Garden {
         change(id) {
             $0.moisture = 1
             $0.source = nil
+            $0.snoozed = nil
         }
         return Pour(plant: id, name: before.name, moisture: before.moisture,
                     when: moment)
@@ -174,6 +175,12 @@ final class Garden {
         return MoistureStatus.bulk(rooms.flatMap(\.plants))
             .filter { chosen?.contains($0.id) ?? true }
             .compactMap { water($0.id, at: moment) }
+    }
+
+    /// «Отложить на день»: растение сутки не числится ждущим воды. Влажность
+    /// и журнал не трогает.
+    func snooze(_ id: Plant.ID, at moment: Date = Date()) {
+        change(id) { $0.snoozed = moment.addingTimeInterval(86_400) }
     }
 
     /// Запись уходит из журнала, влажность — на прежнюю, за вычетом того, что

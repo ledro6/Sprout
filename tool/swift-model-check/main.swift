@@ -6100,6 +6100,46 @@ do {
           "когда: «завтра», «через N дн»")
 }
 
+print("отложить на день:")
+do {
+    let yard = Garden(first: Seed.state)
+    let kept = yard.state
+    let now = Date()
+    yard.restore(GardenState(owner: "", rooms: [Room(name: "Т", plants: [
+        plantNamed("Сухой", moisture: 0.05, dryingDays: 7),
+        plantNamed("Влажный", moisture: 0.9, dryingDays: 10),
+    ], key: "room-t")], savedAt: now, log: []))
+    check(MoistureStatus.needsWater(in: yard.rooms).map(\.id) == ["Сухой"],
+          "до отсрочки сухой ждёт воды")
+    yard.snooze("Сухой", at: now)
+    let dry = yard.plant(id: "Сухой")!
+    check(dry.snoozed == now.addingTimeInterval(86_400) && dry.isSnoozed(at: now)
+          && !dry.needsWaterToday
+          && MoistureStatus.needsWater(in: yard.rooms).isEmpty,
+          "отложенный на день не числится ждущим воды")
+    check(!dry.isSnoozed(at: now.addingTimeInterval(86_401)),
+          "через сутки отсрочка кончается")
+    check(dry.moisture == 0.05 && yard.log.isEmpty && dry.edited != nil,
+          "отсрочка не трогает влажность и журнал, но отмечена правкой")
+    check(MoistureStatus.calmLine(in: yard.rooms, now: now)
+          == "Всё в порядке · ближайший полив — Сухой, завтра",
+          "отложенный — «завтра» в строке «Сегодня»")
+    // Старый файл без поля читается, поле переживает запись.
+    let json = try! JSONEncoder().encode(dry)
+    var raw = try! JSONSerialization.jsonObject(with: json) as! [String: Any]
+    check(raw["snoozed"] != nil, "поле едет в записи растения")
+    raw["snoozed"] = nil
+    let old = try! JSONDecoder().decode(
+        Plant.self, from: JSONSerialization.data(withJSONObject: raw))
+    check(old.snoozed == nil, "без поля в файле — не отложено")
+    let back = try! JSONDecoder().decode(Plant.self, from: json)
+    check(back.snoozed == dry.snoozed, "отсрочка переживает запись и чтение")
+    check(yard.water("Сухой", at: now) != nil
+          && yard.plant(id: "Сухой")?.snoozed == nil,
+          "полив снимает отсрочку")
+    yard.restore(kept)
+}
+
 if failed > 0 {
     print("\nне сошлось: \(failed)")
     exit(1)

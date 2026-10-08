@@ -27,8 +27,9 @@ final class Tenant {
     var id: Plant.ID = ""
 }
 
-/// Меню растения по долгому нажатию — одно на главную и поиск: настройки,
-/// AR, переезд и удаление. Полить — каплей на карточке, переименовать — в
+/// Меню растения по долгому нажатию — одно на главную и поиск: полить,
+/// (ждущему воды — отложить на день), настройки, AR, переезд и удаление; те
+/// же действия — у VoiceOver (`accessibilityAction`). Переименовать — в
 /// настройках растения, расставить — продержав палец дольше меню. Удаление
 /// переспрашивает, потом восемь секунд его можно вернуть с плашки, см.
 /// `Bin`.
@@ -66,6 +67,10 @@ struct PlantMenu: ViewModifier {
 
     @State private var tenant = Tenant()
 
+    /// Чужой полив меньше часа назад, о котором спрашиваем перед своим, как
+    /// у капли, см. `WaterDrop`.
+    @State private var asking: Watering?
+
     private var plant: Plant? { garden.plant(id: tenant.id) }
 
     func body(content: Content) -> some View {
@@ -75,6 +80,21 @@ struct PlantMenu: ViewModifier {
             .onGeometryChange(for: CGRect.self) { $0.frame(in: .global) }
                 action: { keep($0) }
             .environment(\.sproutHalos, halos && !dimmed))
+            .confirmationDialog(asking.map { Family.again($0) } ?? "",
+                                isPresented: Binding(
+                                    get: { asking != nil },
+                                    set: { if !$0 { asking = nil } }),
+                                titleVisibility: .visible) {
+                // Следом может спросить защита от перелива: лист поднимается,
+                // когда этот уже ушёл.
+                Button("Полить") {
+                    Task { @MainActor in
+                        try? await Task.sleep(for: .seconds(0.4))
+                        pour()
+                    }
+                }
+                Button("Отмена", role: .cancel) {}
+            }
             .alert("Новая комната", isPresented: $moving) {
                 TextField("Балкон", text: $roomDraft)
                 Button("Отмена", role: .cancel) {}
@@ -109,6 +129,14 @@ struct PlantMenu: ViewModifier {
     private func menu(_ base: some View) -> some View {
         if enabled {
             base.contextMenu {
+                Button { ask() } label: {
+                    Label("Полить", systemImage: "drop.fill")
+                }
+                if plant?.needsWaterToday == true {
+                    Button { snooze() } label: {
+                        Label("Отложить на день", systemImage: "moon.zzz")
+                    }
+                }
                 Button { tuning = tenant.id } label: {
                     Label("Настройки", systemImage: "slider.horizontal.3")
                 }
@@ -135,6 +163,10 @@ struct PlantMenu: ViewModifier {
             } preview: {
                 preview
             }
+            // То же, что свайпы списка, — для VoiceOver и Переключателей.
+            .accessibilityAction(named: Text("Полить")) { ask() }
+            .accessibilityAction(named: Text("Отложить на день")) { snooze() }
+            .accessibilityAction(named: Text("Настройки")) { tuning = tenant.id }
         } else {
             base
         }
@@ -151,6 +183,34 @@ struct PlantMenu: ViewModifier {
         guard look == .list else { return Metrics.previewCard }
         let wide = Cards.shared.rect(tenant.id).width
         return wide > 0 ? wide : Screen.width - 2 * Metrics.contentMargin
+    }
+
+    /// Полить: недавно полил кто-то из семьи — сперва вопрос, иначе сразу;
+    /// влажную землю переспросит защита от перелива, см. `Overflow`.
+    private func ask() {
+        let id = tenant.id
+        if let recent = Kinship.shared.recent(id, in: garden.log) {
+            asking = recent
+        } else {
+            pour()
+        }
+    }
+
+    private func pour() {
+        let id = tenant.id
+        Overflow.shared.water(id, in: garden) {
+            // Волна — от карточки, а не от меню: поливают растение.
+            let spot = Cards.shared.rect(id)
+            Cheer.shared.now(from: spot == .zero ? Screen.middle : spot)
+            Feel.water()
+        }
+    }
+
+    /// «Отложить на день»: растение сутки не числится ждущим воды.
+    private func snooze() {
+        let id = tenant.id
+        withAnimation(Motion.arrange) { garden.snooze(id) }
+        Feel.pick()
     }
 
     private func toss() {
