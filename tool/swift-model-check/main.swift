@@ -6255,6 +6255,17 @@ trail.observe(streak: 0)
 check("\(trail.events.count)", "1", "нулевая серия повторно разрывом не считается")
 check(Journal.Kind.allCases.count == 9, "девять видов событий из плана")
 
+print("часы: порог «влажно» вида:")
+let pot04 = Wrist.Pot(id: "k", name: "k", room: "", moisture: 0.5, period: 20,
+                       measured: true, wetFrom: 0.4)
+let pot05 = Wrist.Pot(id: "f", name: "f", room: "", moisture: 0.5, period: 5,
+                     measured: true)
+check(pot04.wet && pot04.status == .wet,
+      "у вида с порогом 0,4 половина — уже влажно: полив переспросит")
+check(!pot05.wet && pot05.status == .ok, "без порога — общий, половина в норме")
+check(Wrist.Pot(id: "o", name: "o", room: "", moisture: 0.5, period: 5,
+                measured: nil).wetFrom == nil, "посылка прежней сборки без порога")
+
 if failed > 0 {
     print("\nне сошлось: \(failed)")
     exit(1)

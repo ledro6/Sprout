@@ -9,7 +9,8 @@ extension Wrist {
             for plant in room.plants {
                 pots.append(Pot(id: plant.id, name: plant.name, room: room.name,
                                 moisture: plant.moisture, period: plant.period,
-                                measured: plant.estimated ? nil : true))
+                                measured: plant.estimated ? nil : true,
+                                wetFrom: plant.wetFrom))
             }
         }
         pots.sort { $0.moisture < $1.moisture }

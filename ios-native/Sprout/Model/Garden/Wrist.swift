@@ -17,10 +17,15 @@ struct Wrist: Codable, Equatable, Sendable {
         /// Влажность с датчика, а не посчитана по сроку. Пусто в посылках
         /// прежних сборок — посчитана.
         var measured: Bool?
+        /// С какой влажности вид считается «влажным» — у суккулентов своя.
+        /// Пусто в посылках прежних сборок — общий порог.
+        var wetFrom: Double?
 
         /// Статус и сроки — тем же движком, что в приложении
         /// (`MoistureStatus`): своих порогов у часов нет.
-        var status: MoistureStatus { MoistureStatus(moisture: moisture) }
+        var status: MoistureStatus {
+            MoistureStatus(moisture: moisture, wetFrom: wetFrom)
+        }
 
         /// Полить сегодня — как «Ждут воды» на телефоне.
         var due: Bool { MoistureStatus.due(moisture: moisture, period: period) }
@@ -33,7 +38,8 @@ struct Wrist: Codable, Equatable, Sendable {
         /// Земля ещё влажная — полив переспрашивает, см.
         /// `MoistureStatus.wateringGuard`.
         var wet: Bool {
-            MoistureStatus.wateringGuard(moisture: moisture) != .allow
+            MoistureStatus.wateringGuard(moisture: moisture,
+                                         wetFrom: wetFrom) != .allow
         }
 
         var estimated: Bool { measured != true }
