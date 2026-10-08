@@ -15,6 +15,12 @@ struct PlantAR: View {
 
     @State private var stage = Stage()
 
+    @State private var modelling = false
+
+    /// «Земля ещё влажная» — свой вопрос: корень поверх обложки его не
+    /// покажет.
+    @State private var overflow = Overflow()
+
     init(plantID: Plant.ID) {
         ids = [plantID]
     }
@@ -37,6 +43,12 @@ struct PlantAR: View {
             .safeAreaInset(edge: .bottom) { controls }
             .overlay(alignment: .top) { header }
             .walk(.ar)
+            .sheet(isPresented: $modelling) {
+                if let id = ids.first {
+                    ModelSheet(plantID: id).environment(garden)
+                }
+            }
+            .wetPrompt(overflow)
             .animation(Motion.enter, value: stage.phase)
             .animation(Motion.enter, value: stage.chosen)
             .tint(Palette.accent)
@@ -49,9 +61,25 @@ struct PlantAR: View {
 
     private func start() {
         stage.cast(plants, in: garden)
-        stage.onWatered = { [garden] id in
-            guard Bin.shared.water(id, in: garden) else { return }
+        stage.onWatered = { [garden, stage] id in
+            let anyway = stage.anyway.remove(id) != nil
+            guard Bin.shared.water(id, in: garden, anyway: anyway) else {
+                return
+            }
+            Journal.shared.waterTap(.ar)
             Feel.water()
+        }
+    }
+
+    /// Влажную землю — сперва вопрос; лейка летит после ответа.
+    private func pour() {
+        guard let id = stage.aimed, garden.wetCheck(id) != nil else {
+            stage.water()
+            return
+        }
+        overflow.ask(id, in: garden) { [stage] in
+            stage.anyway.insert(id)
+            stage.water()
         }
     }
 
@@ -89,7 +117,7 @@ struct PlantAR: View {
         .padding(.horizontal, big ? 14 : 10)
         .padding(.vertical, big ? 10 : 6)
         .glassEffect(big && stage.many
-                         ? Glass.regular.tint(Palette.accent.opacity(0.25))
+                         ? Glass.regular.tint(Palette.accentGlow.opacity(0.25))
                          : Glass.regular,
                      in: .rect(cornerRadius: 18))
         .animation(Motion.number, value: plant.moisture)
@@ -121,17 +149,30 @@ struct PlantAR: View {
             }
             .padding(.horizontal, 14)
             .padding(.vertical, 9)
-            .glassEffect(.regular, in: .rect(cornerRadius: 18))
+            .sproutGlass(in: .rect(cornerRadius: 18))
             .id(hint)
             .transition(.blurReplace)
             .hintSpot(.arHint)
 
             Spacer(minLength: 0)
 
-            // Противовес крестику — подсказка встаёт ровно посередине.
-            Color.clear
-                .frame(width: 44, height: 44)
-                .accessibilityHidden(true)
+            // У одного растения здесь «Модель» — выбор модели; у сада, как и
+            // раньше, пустое место: противовес крестику, чтобы подсказка
+            // стояла ровно посередине.
+            if ids.count == 1 {
+                Button { modelling = true } label: {
+                    Image(systemName: "cube.transparent")
+                        .font(Typography.navTitle)
+                        .frame(width: Metrics.gearBox, height: Metrics.gearBox)
+                }
+                .buttonStyle(.glass)
+                .buttonBorderShape(.circle)
+                .accessibilityLabel("Модель")
+            } else {
+                Color.clear
+                    .frame(width: 44, height: 44)
+                    .accessibilityHidden(true)
+            }
         }
         .padding(.horizontal, Metrics.contentMargin)
     }
@@ -179,6 +220,7 @@ struct PlantAR: View {
                     .padding(.vertical, 6)
                 }
                 .buttonStyle(.glassProminent)
+                .tint(Palette.accentFill)
             case .placed, .watering:
                 Button { stage.replace() } label: {
                     Label("Переставить", systemImage: "move.3d")
@@ -199,13 +241,14 @@ struct PlantAR: View {
                     .buttonStyle(.glass)
                     .transition(.blurReplace)
                 }
-                Button { stage.water() } label: {
+                Button(action: pour) {
                     Label("Полить", systemImage: "drop.fill")
                         .font(Typography.detail)
                         .padding(.horizontal, 10)
                         .padding(.vertical, 6)
                 }
                 .buttonStyle(.glassProminent)
+                .tint(Palette.accentFill)
                 .disabled(stage.many && stage.chosen == nil)
             }
         }

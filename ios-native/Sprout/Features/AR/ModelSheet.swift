@@ -85,7 +85,7 @@ struct ModelSheet: View {
                         .foregroundStyle(Palette.ink)
                     Text(note(plant))
                         .font(Typography.settingNote)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Palette.secondaryText)
                         .fixedSize(horizontal: false, vertical: true)
                         .contentTransition(.numericText())
                 }
@@ -131,7 +131,7 @@ struct ModelSheet: View {
                 считается на телефоне, без сети, — за пару секунд.
                 """)
                 .font(Typography.settingNote)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Palette.secondaryText)
                 .fixedSize(horizontal: false, vertical: true)
             // Три подписи в ряд на узком телефоне рвались по слогам: своё
             // фото — отдельной строкой, галерея и камера — вдвоём.
@@ -146,6 +146,7 @@ struct ModelSheet: View {
                         .frame(maxWidth: .infinity)
                 }
                 .buttonStyle(.glassProminent)
+                .tint(Palette.accentFill)
                 .controlSize(.large)
                 .disabled(thinking)
             }
@@ -158,6 +159,7 @@ struct ModelSheet: View {
                             .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(.glassProminent)
+                    .tint(Palette.accentFill)
                 }
                 PhotosPicker(selection: $item, matching: .images) {
                     Label("Из галереи", systemImage: "photo")
@@ -175,7 +177,7 @@ struct ModelSheet: View {
                     ProgressView()
                     Text("Смотрю на снимок…")
                         .font(Typography.settingNote)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Palette.secondaryText)
                 }
                 .transition(.blurReplace)
             }
@@ -242,7 +244,7 @@ struct ModelSheet: View {
                 модели — ещё несколько; всё на телефоне.
                 """)
                 .font(Typography.settingNote)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Palette.secondaryText)
                 .fixedSize(horizontal: false, vertical: true)
             Button { scanning = true } label: {
                 Label("Начать скан", systemImage: "viewfinder")
@@ -250,12 +252,13 @@ struct ModelSheet: View {
                     .frame(maxWidth: .infinity)
             }
             .buttonStyle(.glassProminent)
+            .tint(Palette.accentFill)
             .controlSize(.large)
             .disabled(!ScanView.supported)
             if !ScanView.supported {
                 Text("Нужен iPhone с датчиком LiDAR — модели Pro, начиная с iPhone 12 Pro.")
                     .font(Typography.settingNote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Palette.secondaryText)
                     .fixedSize(horizontal: false, vertical: true)
             }
         }

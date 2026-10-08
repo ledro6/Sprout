@@ -8,6 +8,10 @@ struct Shelf<Content: View>: View {
     let look: Settings.Look
     let content: Content
 
+    /// Крупный шрифт — одна колонка: в половине экрана кличка и срок не
+    /// помещаются.
+    @Environment(\.dynamicTypeSize) private var type
+
     init(_ look: Settings.Look, @ViewBuilder content: () -> Content) {
         self.look = look
         self.content = content()
@@ -17,10 +21,9 @@ struct Shelf<Content: View>: View {
         switch look {
         case .grid:
             LazyVGrid(
-                columns: [
-                    GridItem(.flexible(), spacing: Metrics.gutterH),
-                    GridItem(.flexible(), spacing: Metrics.gutterH),
-                ],
+                columns: Array(
+                    repeating: GridItem(.flexible(), spacing: Metrics.gutterH),
+                    count: type.isAccessibilitySize ? 1 : 2),
                 spacing: Metrics.gutterV
             ) {
                 content
@@ -43,8 +46,17 @@ struct PlantRow: View {
     /// Капля «Полить»; у предпросмотров меню и перетаскивания её нет.
     var drop = false
 
+    /// Крупный шрифт: строка растёт в высоту, а не режет текст — фото, текст
+    /// и процент встают друг под другом.
+    @Environment(\.dynamicTypeSize) private var type
+
+    private var stacked: Bool { type.isAccessibilitySize }
+
     var body: some View {
-        HStack(spacing: 12) {
+        let layout = stacked
+            ? AnyLayout(VStackLayout(alignment: .leading, spacing: 8))
+            : AnyLayout(HStackLayout(spacing: 12))
+        layout {
             PlantPhoto(plant: plant)
                 .frame(width: Metrics.rowPhoto, height: Metrics.rowPhoto)
                 // Снизу, а не в углу: у маленькой картинки угла не хватает.
@@ -56,26 +68,38 @@ struct PlantRow: View {
             VStack(alignment: .leading, spacing: 4) {
                 Text(plant.name)
                     .font(Typography.cardTitle)
-                    .lineLimit(1)
+                    .lineLimit(stacked ? nil : 2)
                     .truncationMode(.tail)
                     .contentTransition(.numericText())
-                Text(plant.wateringLabel)
+                // Статус — значком и словом: цвет один не различить.
+                StatusLabel(status: plant.status)
                     .font(Typography.cardCaption)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.7)
-                    .contentTransition(.numericText())
-                    .animation(Motion.number, value: plant.daysUntilWatering)
+                    .lineLimit(stacked ? nil : 1)
+                    .minimumScaleFactor(0.8)
+                // Сухому «полить сегодня» уже сказал статус.
+                if plant.status != .urgent {
+                    Text(plant.wateringLabel)
+                        .font(Typography.cardCaption)
+                        .lineLimit(stacked ? nil : 2)
+                        .minimumScaleFactor(0.7)
+                        .contentTransition(.numericText())
+                        .animation(Motion.number, value: plant.daysUntilWatering)
+                }
+                RecentPour(plant: plant)
             }
             .foregroundStyle(Palette.ink)
             .frame(maxWidth: .infinity, alignment: .leading)
             .modifier(Sharpen())
 
-            Text(plant.moistureLabel)
-                .font(Typography.cardTitle)
-                .foregroundStyle(Palette.ink)
-                .contentTransition(.numericText())
-                .animation(Motion.number, value: plant.moistureLabel)
-                .modifier(Sharpen())
+            VStack(alignment: stacked ? .leading : .trailing, spacing: 2) {
+                Text(plant.moistureLabel)
+                    .font(Typography.cardTitle)
+                    .foregroundStyle(Palette.ink)
+                    .contentTransition(.numericText())
+                    .animation(Motion.number, value: plant.moistureLabel)
+                SourceBadge(estimated: plant.estimated)
+            }
+            .modifier(Sharpen())
 
             if drop, !editing {
                 WaterDrop(plant: plant)
@@ -86,14 +110,14 @@ struct PlantRow: View {
                 // Ручка — знак, а не хватка: тащить можно за всю строку.
                 Image(systemName: "line.3.horizontal")
                     .font(.system(size: Metrics.gripGlyph, weight: .semibold))
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Palette.secondaryText)
                     .transition(.opacity.combined(with: .scale))
                     .accessibilityHidden(true)
             }
         }
         .padding([.leading, .vertical], Metrics.rowPadding)
         .padding(.trailing, Metrics.rowTrail)
-        .sproutPlate(in: shape)
+        .sproutSolidPlate(in: shape)
         .modifier(PlantGlow(plant: plant, shape: shape))
     }
 

@@ -188,7 +188,7 @@ struct RoomStrip: View {
                 // Дальше соседей не рисуем: их всё равно не видно.
                 if away > -2, away < 2 {
                     let scale = widths[index] / max(natural[index], 1)
-                    title(index, bend: Drum(
+                    title(index, selected: index == current, bend: Drum(
                         along: along, flat: flat, ahead: ahead,
                         behind: max(size * Metrics.roomCurl, lead * 1.1),
                         width: natural[index], flipped: flipped,
@@ -272,7 +272,7 @@ struct RoomStrip: View {
     /// Изгиб — у самого текста: плюс «Новой комнаты» стоит у ближнего края,
     /// там дуга едва начинается, и ему гнуться незачем.
     @ViewBuilder
-    private func title(_ index: Int, bend: Drum) -> some View {
+    private func title(_ index: Int, selected: Bool, bend: Drum) -> some View {
         Group {
             if index < names.count {
                 Text(names[index])
@@ -287,7 +287,9 @@ struct RoomStrip: View {
             }
         }
         .font(.system(size: typeSize, weight: .semibold))
-        .foregroundStyle(Palette.accent)
+        // Текущая комната — акцентом, остальные — цветом вторичного текста:
+        // он держит 4.5:1, а бледность соседей теперь не гасит читаемость.
+        .foregroundStyle(selected ? Palette.accent : Palette.secondaryText)
         .lineLimit(1)
         .minimumScaleFactor(0.6)
     }

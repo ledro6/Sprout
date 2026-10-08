@@ -99,8 +99,8 @@ enum Walk: String, CaseIterable, Identifiable, Sendable {
                          """)),
                 Hint(target: .statsNow, title: Lang.text("Сад сегодня"),
                      text: Lang.text("""
-                         Кольцо — сколько растений довольны. Полоска под ним \
-                         — влажность каждого, от самого сухого.
+                         Кольцо — кому скоро пить и у кого сухо. Ниже — \
+                         самые сухие растения.
                          """)),
                 Hint(target: .statsOrrery, title: Lang.text("Планетарий"),
                      text: Lang.text("""
@@ -116,7 +116,7 @@ enum Walk: String, CaseIterable, Identifiable, Sendable {
                 Hint(target: .statsAim, title: Lang.text("Полив вовремя"),
                      text: Lang.text("""
                          Сколько воды оставалось в земле, когда вы поливали. \
-                         Оранжевая зона — в самый раз.
+                         Зелёная зона «В срок» — в самый раз.
                          """)),
                 Hint(target: .statsCalendar,
                      title: Lang.text("Календарь поливов"),
@@ -246,7 +246,7 @@ enum Walk: String, CaseIterable, Identifiable, Sendable {
             ]
         case .profile:
             [
-                Hint(target: .profilePerson, title: Lang.text("Хозяин"),
+                Hint(target: .profilePerson, title: Lang.text("Вы"),
                      text: Lang.text("""
                          Назовитесь — приложение будет здороваться по имени. \
                          Нажмите на кружок, чтобы сменить фото, имя или цвет.

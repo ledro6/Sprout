@@ -31,12 +31,13 @@ enum Round {
     /// сколько влезет с запасом на то, как их упакует система.
     static let budget = 3400
 
-    /// Кого обойти: всех, кто просит воды, — от самого сухого.
+    /// Кого обойти: всех, кого полить сегодня (`MoistureStatus.needsWater`),
+    /// — от самого сухого.
     static func stops(in rooms: [Room],
                       thumb: (Plant) -> String? = { _ in nil }) -> [Stop] {
         var thirsty: [(room: String, plant: Plant)] = []
         for room in rooms {
-            for plant in room.plants where plant.thirst != .calm {
+            for plant in room.plants where plant.needsWaterToday {
                 thirsty.append((room.name, plant))
             }
         }

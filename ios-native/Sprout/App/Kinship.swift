@@ -227,7 +227,8 @@ final class Kinship {
                 let kind = Family.kind(of: $0)
                 return kind == .room || kind == .plant
             }
-            var rooms = garden.rooms
+            // Сад целиком — с архивом: архивные растения тоже в iCloud.
+            var rooms = garden.whole
             if cloud, Family.prune(&rooms, log: garden.log, book: book) {
                 garden.adopt(rooms: rooms, log: garden.log, recast: true)
             }
@@ -285,7 +286,7 @@ final class Kinship {
     private func pass() {
         guard let engine, ledger.book.primed else { return }
         let garden = Garden.shared
-        var rooms = garden.rooms
+        var rooms = garden.whole
         var log = garden.log
         var book = ledger.book
         if Family.settle(&rooms, &log, book: book, hand: hand, now: Date()) {
@@ -352,7 +353,7 @@ final class Kinship {
         let encoder = JSONEncoder()
         switch kind {
         case .room:
-            guard let room = garden.rooms.first(where: {
+            guard let room = garden.whole.first(where: {
                 $0.key.map { Family.name(.room, $0) } == name
             }), let data = try? encoder.encode(Family.body(room)) else {
                 return nil
@@ -360,7 +361,7 @@ final class Kinship {
             record.encryptedValues[Self.body] = data
         case .plant:
             var found: Data?
-            for room in garden.rooms {
+            for room in garden.whole {
                 guard let plant = room.plants.first(where: {
                     Family.name(.plant, $0.id) == name
                 }) else { continue }
@@ -469,7 +470,7 @@ final class Kinship {
         // встало бы рядом со своим, застывшим раньше.
         garden.reload()
         garden.advance()
-        var rooms = garden.rooms
+        var rooms = garden.whole
         var log = garden.log
         var book = ledger.book
         let primed = book.primed
@@ -540,8 +541,7 @@ final class Kinship {
         await Dachnik.shared.post(garden.rooms)
         let settings = Settings.shared
         guard settings.reminders else { return }
-        await Notifier.schedule(in: Dachnik.shared.reminded(garden.rooms),
-                                threshold: settings.threshold)
+        await Notifier.schedule(in: Dachnik.shared.reminded(garden.rooms))
     }
 
     /// Ответ сервера на отправку: что принято — то и известно о нём; что
@@ -791,7 +791,7 @@ final class Kinship {
         let helper = Sharer(title: Lang.text("Наш сад")) {
             Task { @MainActor in
                 await Kinship.shared.refresh()
-                _ = await Notifier.ask()
+                _ = await Notifier.ask(reminders: false)
             }
         }
         sharer = helper
@@ -910,7 +910,7 @@ final class Kinship {
                 return
             }
             join(zone)
-            _ = await Notifier.ask()
+            _ = await Notifier.ask(reminders: false)
         }
     }
 
@@ -965,6 +965,48 @@ final class Kinship {
         close(Self.left)
     }
 
+    // MARK: - Удалить все данные
+
+    /// «Удалить все данные», облачная часть. Гость выходит из общего сада —
+    /// сам сад остаётся у хозяина. Свой сад в iCloud удаляется зоной целиком:
+    /// с ней уходит и приглашение, семья теряет доступ. Пусто — вышло;
+    /// иначе — что помешало, и тогда на телефоне ничего не стирается.
+    func wipe() async -> String? {
+        guard Self.enabled else { return nil }
+        if ledger.mode == .guest {
+            await leave()
+            if ledger.mode == .guest {
+                return Lang.text("Не получилось выйти из общего сада. Проверьте интернет и попробуйте ещё раз.")
+            }
+        }
+        guard ledger.mode == .own else { return nil }
+        guard !busy else {
+            return Lang.text("Сад сейчас синхронизируется. Попробуйте через минуту.")
+        }
+        busy = true
+        defer { busy = false }
+        stop()
+        let container = CKContainer(identifier: Self.container)
+        do {
+            _ = try await container.privateCloudDatabase
+                .deleteRecordZone(withID: zoneID)
+        } catch let error as CKError
+            where error.code == .zoneNotFound || error.code == .unknownItem {
+            // Зоны уже нет — удалять нечего.
+        } catch {
+            start()
+            return Self.message(for: error)
+        }
+        ledger = Family.Ledger()
+        setMode(.off)
+        people = []
+        sharing = false
+        names = [:]
+        status = .idle
+        persist()
+        return nil
+    }
+
     /// Из общего сада — назад к своему: он ждал в запасе и досох за время
     /// отсутствия. Запаса нет — общий сад остаётся на телефоне своим, но
     /// уже без iCloud: в свою зону его не смешиваем.
@@ -973,7 +1015,9 @@ final class Kinship {
         let garden = Garden.shared
         var back = ledger.before
         if let spare = Self.spare() {
-            garden.adopt(rooms: spare.rooms(at: Date()), log: spare.log,
+            garden.adopt(rooms: Garden.join(spare.rooms(at: Date()),
+                                             spare.archive),
+                         log: spare.log,
                          recast: true)
         } else {
             back = .off
@@ -999,6 +1043,28 @@ final class Kinship {
     func credit(_ entry: Watering) -> String? {
         Family.credit(named(entry), me: ledger.me)
     }
+
+    /// Чужой полив меньше часа назад — для подписи на карточке, приглушённой
+    /// капли и вопроса «Всё равно полить?». Имя — из приглашения, если в
+    /// записи его нет.
+    func recent(_ plant: Plant.ID, in log: [Watering],
+                now: Date = Date()) -> Watering? {
+        guard Self.enabled, mode != .off,
+              let last = log.last(where: { $0.plant == plant })
+        else { return nil }
+        return Family.recent(plant, in: [named(last)], me: ledger.me, now: now)
+    }
+
+    /// Полив ещё не в iCloud — значок «ожидает отправки» в журнале растения.
+    /// Состояние читается ради наблюдения: ушло — экран перерисуется.
+    func waiting(_ entry: Watering) -> Bool {
+        guard Self.enabled, mode != .off else { return false }
+        _ = status
+        return Family.waiting(entry, book: ledger.book)
+    }
+
+    /// Гость общего сада: стереть сад ему нельзя (`Family.mayErase`).
+    var guest: Bool { Self.enabled && !Family.mayErase(mode) }
 
     /// Подпись в записи журнала, где время уже есть: «Полила Маша».
     func signature(_ entry: Watering) -> String? {

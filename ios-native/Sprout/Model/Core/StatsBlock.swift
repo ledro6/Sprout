@@ -2,9 +2,21 @@ import Foundation
 
 /// Блоки статистики — те, что хозяин переставляет и убирает через
 /// «Выбрать». Период сверху не блок: без него остальное не читается.
+///
+/// Порядок случаев — порядок по умолчанию: Сад сегодня → Ближайшие поливы
+/// → Полив вовремя → Главное за период → Поливы → Когда вы поливаете →
+/// Комнаты → Планетарий; дальше — то, что по умолчанию убрано
+/// (`optional`). «Итоги года» в список не входят: они встают сами, см.
+/// `Recap.place`. Хранится имя случая, так что порядок можно менять.
 enum StatsBlock: String, CaseIterable, Codable, Identifiable, Sendable {
-    case now, recap, orrery, summary, waterings, aim, habits, calendar,
-         records, forecast, rooms, plants
+    case now, forecast, aim, summary, waterings, habits, rooms, orrery,
+         calendar, records, plants, recap
+
+    /// Убраны, пока хозяин не вернёт их через «Выбрать».
+    static let optional: Set<StatsBlock> = [.calendar, .records, .plants]
+
+    /// В списке «Выбрать» — все, кроме «Итогов года».
+    var listed: Bool { self != .recap }
 
     var id: String { rawValue }
 

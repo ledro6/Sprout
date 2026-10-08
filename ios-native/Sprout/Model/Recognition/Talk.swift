@@ -24,6 +24,8 @@ final class Talk {
         case long
         /// Модель на такое не отвечает.
         case refused
+        /// Модель смолчала.
+        case empty
         case failed
 
         init(_ error: any Error) {
@@ -45,8 +47,10 @@ final class Talk {
                 Lang.text("Разговор получился длинным — начните новый.")
             case .refused:
                 Lang.text("На такой вопрос модель не отвечает — спросите иначе.")
+            case .empty:
+                Lang.text("Модель ничего не ответила — спросите иначе.")
             case .failed:
-                Lang.text("Не вышло ответить — попробуйте ещё раз.")
+                Lang.text("Не получилось.")
             }
         }
     }
@@ -71,6 +75,10 @@ final class Talk {
     /// новый разговор не ложится.
     @ObservationIgnored private var turn = 0
 
+    /// О ком последний вопрос: ответ о нём проверяется — полить влажное
+    /// модель не посоветует (`Sage.screen`).
+    @ObservationIgnored private var subject: Plant?
+
     init(focus: Plant.ID? = nil) {
         self.focus = focus
     }
@@ -80,11 +88,22 @@ final class Talk {
         turn += 1
         let mine = turn
         let session = self.session ?? begin()
+        subject = Sage.subject(question, in: Garden.shared.rooms, focus: focus)
         trouble = nil
         lines.append(Line(asked: true, text: question))
         lines.append(Line(asked: false, text: ""))
         busy = true
         task = Task { await answer(question, in: session, turn: mine) }
+    }
+
+    /// «Попробовать ещё раз»: последний вопрос — заново, без прежней
+    /// попытки на экране.
+    func retry() {
+        guard !busy, let index = lines.lastIndex(where: \.asked) else { return }
+        let question = lines[index].text
+        lines.removeSubrange(index...)
+        trouble = nil
+        ask(question)
     }
 
     /// «Новый разговор»: сеанс заново — модель забывает прежние вопросы.
@@ -107,13 +126,15 @@ final class Talk {
     }
 
     /// Наставление знает, с какого растения открыт лист: вопрос «а его
-    /// когда полить?» — о нём.
+    /// когда полить?» — о нём, и знает о нём то же, что «Что с ним?».
     private func begin() -> LanguageModelSession {
-        let plant = focus.flatMap { Garden.shared.plant(id: $0) }
+        let garden = Garden.shared
+        let plant = focus.flatMap { garden.plant(id: $0) }
         let made = LanguageModelSession(
             tools: [GardenTool(), PlantTool(focus: focus)],
             instructions: Sage.instructions(language: Muse.language,
-                                            focus: plant))
+                                            focus: plant, rooms: garden.rooms,
+                                            log: garden.log))
         session = made
         return made
     }
@@ -125,7 +146,8 @@ final class Talk {
             for try await snapshot in session.streamResponse(to: question) {
                 guard mine == turn else { return }
                 if let last = lines.indices.last {
-                    lines[last].text = snapshot.content
+                    lines[last].text = Sage.screen(snapshot.content,
+                                                   plant: subject)
                 }
             }
         } catch {
@@ -138,7 +160,7 @@ final class Talk {
         if let last = lines.last, !last.asked,
            last.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             lines.removeLast()
-            if trouble == nil { trouble = .failed }
+            if trouble == nil { trouble = .empty }
         }
     }
 }

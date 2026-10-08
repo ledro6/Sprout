@@ -18,7 +18,7 @@ struct RoomsView: View {
             List {
                 Section {
                     ForEach(garden.rooms) { room in
-                        RoomRow(room: room)
+                        RoomRow(room: room) { shift(room, by: $0) }
                             .listRowBackground(Color.clear)
                             .listRowSeparator(.hidden)
                             .listRowInsets(EdgeInsets(
@@ -35,7 +35,7 @@ struct RoomsView: View {
                     if !garden.rooms.isEmpty {
                         Text(Self.hint)
                             .font(Typography.settingNote)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(Palette.secondaryText)
                             .padding(.horizontal, Metrics.contentMargin)
                     }
                 }
@@ -126,6 +126,17 @@ struct RoomsView: View {
         }
     }
 
+    /// «Выше» и «Ниже» для VoiceOver и Переключателей: перетаскивать ручку
+    /// не у всех получается.
+    private func shift(_ room: Room, by step: Int) {
+        guard let index = garden.rooms.firstIndex(where: { $0.id == room.id }),
+              garden.rooms.indices.contains(index + step) else { return }
+        withAnimation(Motion.arrange) {
+            garden.moveRooms(from: IndexSet(integer: index),
+                             to: step > 0 ? index + 2 : index - 1)
+        }
+    }
+
     private func add() {
         let added = withAnimation(Motion.arrange) { garden.addRoom(draft) }
         if !added { Feel.wrong() }
@@ -137,13 +148,17 @@ struct RoomsView: View {
 private struct RoomRow: View {
     let room: Room
 
+    /// Сдвиг на строку: −1 выше, +1 ниже.
+    let shift: (Int) -> Void
+
     @Environment(Garden.self) private var garden
 
     @State private var draft: String
     @FocusState private var focused: Bool
 
-    init(room: Room) {
+    init(room: Room, shift: @escaping (Int) -> Void) {
         self.room = room
+        self.shift = shift
         _draft = State(initialValue: room.name)
     }
 
@@ -155,6 +170,8 @@ private struct RoomRow: View {
                 .focused($focused)
                 .submitLabel(.done)
                 .onSubmit { commit() }
+                .accessibilityAction(named: Text("Выше")) { shift(-1) }
+                .accessibilityAction(named: Text("Ниже")) { shift(1) }
             if room.atDacha {
                 Image(systemName: "house.lodge.fill")
                     .font(Typography.settingNote)
@@ -163,7 +180,7 @@ private struct RoomRow: View {
             }
             Text(count)
                 .font(Typography.settingNote)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Palette.secondaryText)
                 .contentTransition(.numericText())
         }
         .padding(.horizontal, Metrics.groupPadding)

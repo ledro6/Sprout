@@ -56,13 +56,13 @@ struct OrreryDial: View {
                     y: middle.y - (full + 8) * CGFloat(cos(angle))))
             }
             wedge.closeSubpath()
-            context.fill(wedge, with: .color(Palette.water.opacity(0.1)))
+            context.fill(wedge, with: .color(Palette.waterGlow.opacity(0.1)))
             var beam = Path()
             beam.move(to: CGPoint(x: middle.x, y: middle.y - sun / 2))
             beam.addLine(to: CGPoint(x: middle.x, y: middle.y - full - 6))
             context.stroke(beam, with: .linearGradient(
-                Gradient(colors: [Palette.water.opacity(0.9),
-                                  Palette.water.opacity(0.15)]),
+                Gradient(colors: [Palette.waterGlow.opacity(0.9),
+                                  Palette.waterGlow.opacity(0.15)]),
                 startPoint: middle,
                 endPoint: CGPoint(x: middle.x, y: middle.y - full)),
                 style: StrokeStyle(lineWidth: small ? 1.5 : 2.5,
@@ -96,7 +96,7 @@ struct OrreryDial: View {
                 context.stroke(
                     Path(ellipseIn: CGRect(x: at.x - r, y: at.y - r,
                                            width: r * 2, height: r * 2)),
-                    with: .color(Palette.water.opacity(flash.strength)),
+                    with: .color(Palette.waterGlow.opacity(flash.strength)),
                     lineWidth: 2)
             }
 
@@ -107,13 +107,13 @@ struct OrreryDial: View {
                                                   y: middle.y - sun * 0.7,
                                                   width: sun * 1.4,
                                                   height: sun * 1.4)),
-                           with: .color(Palette.water.opacity(0.55)))
+                           with: .color(Palette.waterGlow.opacity(0.55)))
             }
             context.fill(Path(ellipseIn: CGRect(x: middle.x - sun / 2,
                                                 y: middle.y - sun / 2,
                                                 width: sun, height: sun)),
                          with: .radialGradient(
-                             Gradient(colors: [.white, Palette.water]),
+                             Gradient(colors: [.white, Palette.waterGlow]),
                              center: middle, startRadius: 0,
                              endRadius: sun / 2))
             var drop = context.resolve(Image(systemName: "drop.fill"))
@@ -173,7 +173,7 @@ struct OrreryDial: View {
     private func diameter(of planet: Orrery.Planet) -> CGFloat {
         let base = planet.id == picked ? Metrics.planetPicked : Metrics.planet
         let scaled = small ? base * 0.62 : base
-        guard Thirst(moisture: planet.moisture) == .alarm else { return scaled }
+        guard MoistureStatus(moisture: planet.moisture) == .urgent else { return scaled }
         return scaled * (1 + 0.3 * CGFloat(beat))
     }
 }

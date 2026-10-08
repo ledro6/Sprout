@@ -41,6 +41,15 @@ struct Sensor: Codable, Hashable, Sendable {
     func poured(from old: Double, to new: Double) -> Bool {
         level(new) - level(old) > 0.33
     }
+
+    /// Сигнал сильнее этого — датчик рядом, в шаге-двух от телефона.
+    static let nearSignal = -70
+
+    /// «Рядом» или «Далеко» вместо децибел: одинаковые Flower Care в списке
+    /// различают по тому, к какому горшку поднесли телефон.
+    static func distance(_ rssi: Int) -> String {
+        rssi >= nearSignal ? Lang.text("Рядом") : Lang.text("Далеко")
+    }
 }
 
 /// Одно показание датчика.

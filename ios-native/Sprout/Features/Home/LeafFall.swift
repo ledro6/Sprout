@@ -43,7 +43,7 @@ struct LeafFall: View {
                 .foregroundStyle(Palette.ink)
                 .padding(.horizontal, 18)
                 .padding(.vertical, 12)
-                .glassEffect(.regular, in: .capsule)
+                .sproutGlass(in: .capsule)
                 .scaleEffect(shown ? 1 : Motion.medalScale)
                 .opacity(shown ? 1 : 0)
         }
@@ -73,7 +73,7 @@ struct LeafFall: View {
         let y = CGFloat(-30 + t * fall + 40 * t * t)
         guard y < size.height + 30 else { return }
         let fade = max(0, 1 - t / (Self.seconds - delay))
-        let hue = index % 3 == 0 ? settings.waveHue : settings.patternHue
+        let hue = index % 3 == 0 ? settings.waveColour : settings.patternHue
         var piece = context
         piece.opacity = fade
         piece.translateBy(x: x, y: y)

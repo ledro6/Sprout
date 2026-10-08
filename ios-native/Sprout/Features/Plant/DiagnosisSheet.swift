@@ -20,6 +20,10 @@ struct DiagnosisSheet: View {
     @State private var advice: String?
     /// План лечения составлен по этому снимку.
     @State private var planned = false
+    /// Разбор снимка — его можно отменить.
+    @State private var job: Task<Void, Never>?
+    /// Снимок не открылся.
+    @State private var failed = false
 
     private var plant: Plant? { garden.plant(id: plantID) }
 
@@ -31,11 +35,23 @@ struct DiagnosisSheet: View {
                     if thinking {
                         HStack(spacing: 8) {
                             ProgressView()
-                            Text("Смотрю на листья…")
+                            Text("Разбираю фото…")
                                 .font(Typography.settingNote)
-                                .foregroundStyle(.secondary)
+                                .foregroundStyle(Palette.secondaryText)
+                            Spacer(minLength: 8)
+                            Button("Отмена", action: cancel)
+                                .buttonStyle(.glass)
+                                .font(Typography.settingNote)
                         }
                         .transition(.blurReplace)
+                    }
+                    if failed {
+                        Label("Не получилось открыть снимок. Попробуйте ещё раз — снимите или выберите другой.",
+                              systemImage: "exclamationmark.bubble")
+                            .font(Typography.settingNote)
+                            .foregroundStyle(Palette.secondaryText)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .transition(.blurReplace)
                     }
                     if let advice {
                         Text(advice)
@@ -54,9 +70,16 @@ struct DiagnosisSheet: View {
                             .transition(.blurReplace)
                     }
                     planOffer
-                    Text("Это подсказка по снимку, а не приговор: тень, блик или белые цветки телефон может принять за беду.")
+                    if !Muse.ready {
+                        Text("Совет словами пишет Apple Intelligence — на этом телефоне её нет. Находки по снимку работают и без неё.")
+                            .font(Typography.settingNote)
+                            .foregroundStyle(Palette.secondaryText)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .padding(.horizontal, 6)
+                    }
+                    Text("Это подсказка по снимку, а не приговор: тень, блик или белые цветки телефон может принять за беду. Разбирается на телефоне, ничего не отправляется.")
                         .font(Typography.settingNote)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Palette.secondaryText)
                         .fixedSize(horizontal: false, vertical: true)
                         .padding(.horizontal, 6)
                 }
@@ -67,6 +90,7 @@ struct DiagnosisSheet: View {
                 .animation(Motion.enter, value: thinking)
                 .animation(Motion.enter, value: advice)
                 .animation(Motion.enter, value: planned)
+                .animation(Motion.enter, value: failed)
             }
             .background { SproutBackground() }
             .navigationTitle("Что с растением?")
@@ -75,13 +99,15 @@ struct DiagnosisSheet: View {
             .sproutSettledEdge()
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("Готово") { dismiss() }
+                    Button("Закрыть") { dismiss() }
                 }
             }
         }
         .onChange(of: item) { _, chosen in
             Task { await pick(chosen) }
         }
+        // Лист закрыли посреди разбора — дальше не нужен.
+        .onDisappear { job?.cancel() }
         .fullScreenCover(isPresented: $shooting, onDismiss: { snapped() }) {
             Camera { image in fresh = image }
                 .ignoresSafeArea()
@@ -90,7 +116,7 @@ struct DiagnosisSheet: View {
             // Своё фото растения — сразу в разбор: чаще всего его и хотят
             // проверить.
             if let name = plant?.shot, let image = Snapshot.image(name) {
-                await examine(image)
+                run(image)
             }
         }
     }
@@ -109,7 +135,7 @@ struct DiagnosisSheet: View {
             } else {
                 Text("Снимите растение целиком, при дневном свете — телефон посмотрит на листья.")
                     .font(Typography.settingNote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Palette.secondaryText)
                     .fixedSize(horizontal: false, vertical: true)
             }
             HStack(spacing: Metrics.actionGap) {
@@ -121,6 +147,7 @@ struct DiagnosisSheet: View {
                             .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(.glassProminent)
+                    .tint(Palette.accentFill)
                 }
                 PhotosPicker(selection: $item, matching: .images) {
                     Label("Из галереи", systemImage: "photo")
@@ -166,10 +193,11 @@ struct DiagnosisSheet: View {
                         .padding(.vertical, 6)
                     }
                     .buttonStyle(.glassProminent)
+                    .tint(Palette.accentFill)
                     .controlSize(.large)
                     Text("Шаги — из советов выше, со сроками и напоминаниями. Этот снимок станет снимком «до».")
                         .font(Typography.settingNote)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Palette.secondaryText)
                         .fixedSize(horizontal: false, vertical: true)
                         .padding(.horizontal, 6)
                 }
@@ -202,18 +230,16 @@ struct DiagnosisSheet: View {
                     .foregroundStyle(Palette.ink)
                 Spacer(minLength: 8)
                 if finding.kind != .unclear && finding.kind != .healthy {
-                    let share = finding.confidence.formatted(
-                        .percent.precision(.fractionLength(0)))
-                    Text(share)
+                    let sure = Sureness(finding.confidence).word
+                    Text(sure)
                         .font(Typography.settingNote)
-                        .foregroundStyle(.secondary)
-                        .monospacedDigit()
-                        .accessibilityLabel(Lang.format("Уверенность %@", share))
+                        .foregroundStyle(Palette.secondaryText)
+                        .accessibilityLabel(Lang.format("Уверенность: %@", sure))
                 }
             }
             Text(finding.detail)
                 .font(Typography.settingNote)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Palette.secondaryText)
                 .fixedSize(horizontal: false, vertical: true)
             ForEach(finding.tips, id: \.self) { tip in
                 Label {
@@ -235,18 +261,40 @@ struct DiagnosisSheet: View {
 
     @MainActor
     private func pick(_ chosen: PhotosPickerItem?) async {
-        guard let chosen,
-              let data = try? await chosen.loadTransferable(type: Data.self),
+        guard let chosen else { return }
+        guard let data = try? await chosen.loadTransferable(type: Data.self),
               let image = UIImage(data: data)
-        else { return }
+        else {
+            item = nil
+            withAnimation(Motion.enter) { failed = true }
+            return
+        }
         item = nil
-        await examine(image)
+        run(image)
     }
 
     private func snapped() {
         guard let image = fresh else { return }
         fresh = nil
-        Task { await examine(image) }
+        run(image)
+    }
+
+    /// Новый разбор — прежний, если идёт, долой.
+    private func run(_ image: UIImage) {
+        job?.cancel()
+        job = Task { await examine(image) }
+    }
+
+    /// «Отмена» во время разбора: снимок убирается, можно взять другой.
+    private func cancel() {
+        job?.cancel()
+        job = nil
+        withAnimation(Motion.enter) {
+            thinking = false
+            shown = nil
+            findings = []
+            advice = nil
+        }
     }
 
     @MainActor
@@ -258,8 +306,10 @@ struct DiagnosisSheet: View {
             findings = []
             advice = nil
             planned = false
+            failed = false
         }
         let seen = await Eye.examine(image)
+        guard !Task.isCancelled else { return }
         let found = Finding.diagnose(seen, plant: plant, log: garden.log,
                                      climate: Settings.shared.weather
                                         ? Settings.shared.climate : nil)
@@ -269,9 +319,11 @@ struct DiagnosisSheet: View {
         }
         Feel.done()
         if Muse.ready, found.first?.kind != .unclear {
-            let words = await Muse.advise(found, plant: plant)?
+            let words = await Muse.advise(found, plant: plant,
+                                          room: garden.roomName(of: plantID),
+                                          log: garden.log)?
                 .trimmingCharacters(in: .whitespacesAndNewlines)
-            guard let words, !words.isEmpty else { return }
+            guard !Task.isCancelled, let words, !words.isEmpty else { return }
             withAnimation(Motion.enter) { advice = words }
         }
     }

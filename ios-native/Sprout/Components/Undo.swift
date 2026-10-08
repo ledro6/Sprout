@@ -5,6 +5,8 @@ import UIKit
 enum Slip: Equatable {
     case removal(Removal)
     case pour(Pour)
+    /// Пачка поливов разом — «Полить всех» на главной и «Уезжаю».
+    case pours([Pour])
 
     /// Личность плашки: следующее действие сменяет её размытием, даже если
     /// растение то же.
@@ -13,6 +15,8 @@ enum Slip: Equatable {
         case .removal(let gone): "removal-\(gone.plant.id)"
         case .pour(let pour):
             "pour-\(pour.plant)-\(pour.when.timeIntervalSinceReferenceDate)"
+        case .pours(let pours):
+            "pours-\(pours.count)-\(pours.first?.when.timeIntervalSinceReferenceDate ?? 0)"
         }
     }
 
@@ -20,6 +24,7 @@ enum Slip: Equatable {
         switch self {
         case .removal: Lang.text("Растение удалено")
         case .pour: Lang.text("Полито")
+        case .pours(let pours): Lang.format("Политы %lld растений", pours.count)
         }
     }
 
@@ -27,21 +32,39 @@ enum Slip: Equatable {
         switch self {
         case .removal(let gone): gone.plant.name
         case .pour(let pour): pour.name
+        case .pours(let pours):
+            pours.map(\.name).joined(separator: ", ")
         }
     }
 }
 
 /// Последнее удаление или полив, которые ещё можно отменить.
 ///
-/// Удаление не спрашивает «вы уверены?»: растение уходит из сада сразу, а
-/// здесь пять секунд лежат оно и его место. Снимок с диска выбрасывается
-/// только по истечении отсчёта — его одного не восстановить. Полив так же:
-/// промахнулись карточкой — пять секунд, чтобы вернуть влажность и журнал.
+/// Удаление сперва спрашивает (`ask`, лист `TossPrompt`): «Удалить …?
+/// Журнал поливов тоже исчезнет». Потом растение уходит из сада, а здесь
+/// восемь секунд лежат оно и его место. Снимок с диска и журнал поливов
+/// уходят только по истечении отсчёта — «Вернуть» возвращает растение с
+/// историей. Полив так же: промахнулись карточкой — восемь секунд, чтобы
+/// вернуть влажность и журнал.
 @Observable
 final class Bin {
     static let shared = Bin()
 
     private(set) var pending: Slip?
+
+    /// Вопрос перед удалением — показывает корень (`TossPrompt`).
+    struct Farewell: Identifiable {
+        let id: Plant.ID
+        let name: String
+        let plate: CGRect
+        let garden: Garden
+    }
+
+    var asking: Farewell?
+
+    /// Вопрос «Растение погибло — в архив» — показывает корень
+    /// (`TossPrompt`).
+    var retiring: Farewell?
 
     private(set) var left = 0
 
@@ -52,6 +75,23 @@ final class Bin {
     @ObservationIgnored private weak var garden: Garden?
 
     private init() {}
+
+    /// Спросить, прежде чем удалить. `plate` — откуда потом разгорится
+    /// красное.
+    @MainActor
+    func ask(_ id: Plant.ID, from plate: CGRect, in garden: Garden) {
+        guard let plant = garden.plant(id: id) else { return }
+        asking = Farewell(id: id, name: plant.name, plate: plate,
+                          garden: garden)
+    }
+
+    /// «Растение погибло — в архив»: сперва вопрос.
+    @MainActor
+    func askRetire(_ id: Plant.ID, in garden: Garden) {
+        guard let plant = garden.plant(id: id) else { return }
+        retiring = Farewell(id: id, name: plant.name, plate: .zero,
+                            garden: garden)
+    }
 
     /// Плашка — где стояла карточка, в координатах окна: оттуда разгорается
     /// красное; нулевая — из середины экрана. Прежнее убранное уходит
@@ -74,13 +114,30 @@ final class Bin {
     /// Отвечает, полилось ли.
     @MainActor
     @discardableResult
-    func water(_ id: Plant.ID, in garden: Garden) -> Bool {
+    func water(_ id: Plant.ID, in garden: Garden,
+               anyway: Bool = false) -> Bool {
         commit()
-        guard let pour = withAnimation(Motion.appear, { garden.water(id) })
-        else { return false }
+        guard let pour = withAnimation(Motion.appear, {
+            garden.water(id, anyway: anyway)
+        }) else { return false }
         self.garden = garden
         count(.pour(pour))
         return true
+    }
+
+    /// Всех, кому пора пить, разом (`Garden.waterNeeded`) — одной плашкой
+    /// «Вернуть» на восемь секунд. `ids` — из кого выбирать (на главной —
+    /// ждущие воды), пусто — весь сад. Отвечает, сколько полито.
+    @MainActor
+    @discardableResult
+    func waterNeeded(_ ids: [Plant.ID]? = nil, in garden: Garden) -> Int {
+        commit()
+        let pours = withAnimation(Motion.appear) { garden.waterNeeded(ids) }
+        guard !pours.isEmpty else { return 0 }
+        Journal.shared.note(.waterAll, "\(pours.count)")
+        self.garden = garden
+        count(.pours(pours))
+        return pours.count
     }
 
     @MainActor
@@ -118,6 +175,7 @@ final class Bin {
         switch slip {
         case .removal(let gone): garden.putBack(gone)
         case .pour(let pour): garden.unwater(pour)
+        case .pours(let pours): pours.reversed().forEach { garden.unwater($0) }
         }
     }
 
@@ -129,6 +187,7 @@ final class Bin {
         run?.cancel()
         if case .removal(let gone) = slip {
             for file in gone.plant.files { Shots.drop(file) }
+            garden?.purge(gone.plant.id)
         }
         pending = nil
         since = nil
@@ -157,12 +216,57 @@ enum Screen {
     }
 }
 
+/// «Удалить «Фикус»? Журнал поливов тоже исчезнет» — «Удалить» и
+/// «Отмена». Один лист на главную, поиск и экран растения.
+struct TossPrompt: ViewModifier {
+    private let bin = Bin.shared
+
+    func body(content: Content) -> some View {
+        content
+            .confirmationDialog(
+                Text(bin.asking.map {
+                    Lang.format("Удалить «%@»? Журнал поливов тоже исчезнет", $0.name)
+                } ?? ""),
+                isPresented: Binding(get: { bin.asking != nil },
+                                     set: { if !$0 { bin.asking = nil } }),
+                titleVisibility: .visible,
+                presenting: bin.asking) { farewell in
+                Button("Удалить", role: .destructive) {
+                    bin.toss(farewell.id, from: farewell.plate,
+                             in: farewell.garden)
+                }
+                Button("Отмена", role: .cancel) {}
+            }
+            // «Бывает» — без упрёка: растения погибают и у бережных.
+            .confirmationDialog(
+                "Бывает. Перенести в архив?",
+                isPresented: Binding(get: { bin.retiring != nil },
+                                     set: { if !$0 { bin.retiring = nil } }),
+                titleVisibility: .visible,
+                presenting: bin.retiring) { farewell in
+                Button("В архив") {
+                    withAnimation(Motion.appear) {
+                        farewell.garden.retire(farewell.id)
+                    }
+                    Feel.done()
+                }
+                Button("Это ошибка", role: .cancel) {}
+            } message: { _ in
+                Text("Журнал сохранится. Вернуть растение можно в «Профиль → Архив».")
+            }
+    }
+}
+
 extension View {
     /// Плашка отмены над панелью вкладок — на каждой вкладке: узор тлеет
-    /// везде, и без плашки это читалось бы поломкой. Наложением на содержимое
-    /// вкладки: его безопасная зона уже включает панель.
+    /// везде, и без плашки это читалось бы поломкой. Вставкой в безопасную
+    /// зону, а не наложением: она встаёт ровно над панелью (её высота уже в
+    /// зоне), а прокрутка вкладки на время плашки получает её высоту
+    /// отступом — нижние кнопки экрана («Повернул», «Пересадил», «Посадить»)
+    /// выезжают из-под плашки, а не прячутся под ней. Без плашки вставка
+    /// пустая, нулевой высоты.
     func sproutUndo() -> some View {
-        overlay(alignment: .bottom) { UndoToast() }
+        safeAreaInset(edge: .bottom, spacing: 0) { UndoToast() }
     }
 }
 
@@ -192,7 +296,7 @@ private struct UndoToast: View {
                     .foregroundStyle(Palette.ink)
                 Text(slip.name)
                     .font(Typography.toastNote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Palette.secondaryText)
                     .lineLimit(1)
             }
 
@@ -213,7 +317,7 @@ private struct UndoToast: View {
         .padding(.leading, 10)
         .padding(.trailing, 6)
         .padding(.vertical, 8)
-        .glassEffect(.regular, in: .capsule)
+        .sproutGlass(in: .capsule)
         .padding(.horizontal, Metrics.contentMargin)
         .padding(.bottom, Metrics.toastGap)
         .accessibilityElement(children: .contain)
@@ -223,7 +327,7 @@ private struct UndoToast: View {
     private func tint(_ slip: Slip) -> Color {
         switch slip {
         case .removal: Palette.alarm
-        case .pour: Palette.water
+        case .pour, .pours: Palette.water
         }
     }
 }

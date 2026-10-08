@@ -50,6 +50,7 @@ struct LevelUp: View {
                         .frame(maxWidth: 220)
                 }
                 .buttonStyle(.glassProminent)
+                .tint(Palette.accentFill)
                 .controlSize(.large)
                 .padding(.top, 10)
             }

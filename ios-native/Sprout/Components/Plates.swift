@@ -15,7 +15,7 @@ struct SproutGroup<Content: View>: View {
         VStack(alignment: .leading, spacing: 8) {
             Text(title)
                 .font(Typography.groupTitle)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Palette.secondaryText)
                 .padding(.leading, 6)
             VStack(alignment: .leading, spacing: Metrics.rowGap) {
                 content
@@ -56,7 +56,7 @@ struct SproutBlock<Control: View>: View {
             if let note {
                 Text(note)
                     .font(Typography.settingNote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Palette.secondaryText)
                     .fixedSize(horizontal: false, vertical: true)
             }
         }
@@ -83,22 +83,23 @@ struct SproutGear: View {
     }
 }
 
-/// Заголовок раздела и кнопка настроек — на каждом экране, кроме главной: там
-/// кнопка живёт в закреплённой строке комнаты. У экрана с подсказками рядом
-/// «?» — показать их ещё раз.
+/// Заголовок раздела. Шестерёнка настроек — только в Профиле (`gear`) и в
+/// «•••» главной; «?» в шапках нет — подсказки повторяют из Профиля.
 struct SproutHead: View {
     let title: LocalizedStringKey
-    let walk: Walk?
 
     /// «Выбрать» — правка блоков экрана; пусто — кнопки нет.
     var choosing: Binding<Bool>?
 
+    /// Шестерёнка — только у Профиля.
+    var gear = false
+
     @State private var open = false
 
-    init(_ title: LocalizedStringKey, walk: Walk? = nil,
+    init(_ title: LocalizedStringKey, gear: Bool = false,
          choosing: Binding<Bool>? = nil) {
         self.title = title
-        self.walk = walk
+        self.gear = gear
         self.choosing = choosing
     }
 
@@ -123,8 +124,7 @@ struct SproutHead: View {
                 .buttonStyle(.glass)
                 .fixedSize()
             }
-            if choosing?.wrappedValue != true {
-                if let walk { WalkButton(walk: walk) }
+            if gear, choosing?.wrappedValue != true {
                 SproutGear { open = true }
             }
         }
@@ -158,7 +158,7 @@ struct SproutFigure: View {
                 .contentTransition(.numericText())
             Text(caption)
                 .font(Typography.figureCaption)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Palette.secondaryText)
             if let note {
                 Text(note)
                     .font(Typography.figureCaption)
@@ -234,7 +234,7 @@ struct SproutPage<Content: View>: View {
                                               style: .continuous))
             .padding(.horizontal, Metrics.contentMargin)
             .padding(.top, 4)
-            .padding(.bottom, 40)
+            .padding(.bottom, Metrics.barGap)
         }
         .background { SproutBackground() }
         .navigationTitle(title)
@@ -267,7 +267,7 @@ struct Paragraph: View {
             }
             Text(text)
                 .font(Typography.settingNote)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Palette.secondaryText)
                 .fixedSize(horizontal: false, vertical: true)
         }
         .frame(maxWidth: .infinity, alignment: .leading)

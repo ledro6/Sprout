@@ -23,6 +23,25 @@ struct TripView: View {
 
     private var needs: [Trip.Need] { Trip.needs(in: garden.rooms, days: days) }
 
+    /// Вернуться раньше, чем уехал, нельзя: подпись под полем, кнопки гаснут.
+    private var backward: Bool {
+        let calendar = Calendar.current
+        return calendar.startOfDay(for: back) < calendar.startOfDay(for: leave)
+    }
+
+    /// Кому пора пить перед отъездом: «скоро» и «сухо». Влажных и тех, кто в
+    /// порядке, массовый полив не трогает.
+    private var thirsty: [Plant] {
+        MoistureStatus.bulk(garden.rooms.flatMap(\.plants))
+    }
+
+    /// Остальные: не в поливе и не в списке соседу — дождутся сами.
+    private var rest: Int {
+        let all = garden.rooms.flatMap(\.plants).map(\.id)
+        let busy = Set(thirsty.map(\.id)).union(needs.map(\.plant.id))
+        return all.filter { !busy.contains($0) }.count
+    }
+
     var body: some View {
         NavigationStack {
             ScrollViewReader { reader in
@@ -40,6 +59,8 @@ struct TripView: View {
                     .padding(.bottom, 40)
                 }
                 .background { SproutBackground() }
+                // Плашка «Вернуть» — вставкой в нижнюю зону листа.
+                .sproutUndo()
                 .walk(.trip, scroll: reader)
             }
             .navigationTitle("Уезжаю")
@@ -48,7 +69,7 @@ struct TripView: View {
             .sproutSettledEdge()
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("Готово") { dismiss() }
+                    Button("Закрыть") { dismiss() }
                 }
             }
         }
@@ -60,9 +81,7 @@ struct TripView: View {
                 back = plan.back
             }
         }
-        .onChange(of: leave) { _, now in
-            // Вернуться раньше, чем уехал, нельзя — возвращение едет следом.
-            if back < now { back = now }
+        .onChange(of: leave) { _, _ in
             replan()
         }
         .onChange(of: back) { _, _ in replan() }
@@ -75,13 +94,22 @@ struct TripView: View {
                        displayedComponents: [.date, .hourAndMinute])
                 .font(Typography.settingRow)
             SproutDivider()
-            DatePicker("Вернусь", selection: $back, in: leave...,
+            DatePicker("Вернусь", selection: $back, in: Date()...,
                        displayedComponents: .date)
                 .font(Typography.settingRow)
-            Text(Lang.format("Поездка — %lld дней", days))
-                .font(Typography.settingNote)
-                .foregroundStyle(.secondary)
-                .contentTransition(.numericText())
+            if backward {
+                Label("Возвращение не может быть раньше отъезда.",
+                      systemImage: "exclamationmark.circle")
+                    .font(Typography.settingNote)
+                    .foregroundStyle(Palette.warn)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .transition(.blurReplace)
+            } else {
+                Text(Lang.format("Поездка — %lld дней", days))
+                    .font(Typography.settingNote)
+                    .foregroundStyle(Palette.secondaryText)
+                    .contentTransition(.numericText())
+            }
         }
         .sproutRide()
     }
@@ -90,7 +118,7 @@ struct TripView: View {
     private var plan: some View {
         if needs.isEmpty {
             SproutGroup("Сад") {
-                Label("Все дождутся вас: перед отъездом полейте — и можно ехать.",
+                Label("Соседу ничего не нужно",
                       systemImage: "checkmark.circle")
                     .font(Typography.settingRow)
                     .foregroundStyle(Palette.ink)
@@ -103,14 +131,6 @@ struct TripView: View {
                 ForEach(Array(needs.enumerated()), id: \.element.plant.id) { item in
                     if item.offset > 0 { SproutDivider() }
                     visit(item.element)
-                }
-                let others = Trip.fine(in: garden.rooms, days: days).count
-                if others > 0 {
-                    SproutDivider()
-                    Text(Lang.format("Остальные дождутся сами: %@.",
-                                     Lang.format("%lld растений", others)))
-                        .font(Typography.settingNote)
-                        .foregroundStyle(.secondary)
                 }
             }
             .transition(.blurReplace)
@@ -131,7 +151,7 @@ struct TripView: View {
             Text(Lang.format("%1$@ · полить: %2$@", need.room,
                              dates.joined(separator: ", ")))
                 .font(Typography.settingNote)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Palette.secondaryText)
                 .fixedSize(horizontal: false, vertical: true)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -142,23 +162,35 @@ struct TripView: View {
         VStack(spacing: Metrics.actionGap) {
             Button(action: waterAll) {
                 Group {
-                    if watered {
+                    if !thirsty.isEmpty {
+                        Label(Lang.format("Полить тех, кому нужно перед отъездом (%lld)",
+                                          thirsty.count),
+                              systemImage: "drop.fill")
+                    } else if watered {
                         Label("Все политы", systemImage: "checkmark")
                     } else {
-                        Label("Полить всех перед отъездом",
-                              systemImage: "drop.fill")
+                        Label("Поливать сейчас некого", systemImage: "checkmark")
                     }
                 }
                 .font(Typography.detail)
                 .frame(maxWidth: .infinity)
             }
             .buttonStyle(.glassProminent)
+            .tint(Palette.accentFill)
             .controlSize(.extraLarge)
-            .disabled(watered)
+            .disabled(thirsty.isEmpty || backward)
             .onGeometryChange(for: CGRect.self) { $0.frame(in: .global) }
                 action: { button.rect = $0 }
 
-            if !needs.isEmpty {
+            if rest > 0 {
+                Text(Lang.format("Остальные (%lld) дождутся сами", rest))
+                    .font(Typography.settingNote)
+                    .foregroundStyle(Palette.secondaryText)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .contentTransition(.numericText())
+            }
+
+            if !needs.isEmpty && !backward {
                 ShareLink(item: Trip.memo(needs, leave: leave, back: back)) {
                     Label("Отправить памятку соседу",
                           systemImage: "square.and.arrow.up")
@@ -180,7 +212,7 @@ struct TripView: View {
     @ViewBuilder
     private var countdown: some View {
         let live = Live.shared
-        if live.enabled {
+        if live.enabled && !backward {
             VStack(alignment: .leading, spacing: 8) {
                 Button {
                     if live.counting {
@@ -206,7 +238,7 @@ struct TripView: View {
                 if leave.timeIntervalSinceNow > Trip.countdownSpan {
                     Text("Отсчёт появится на экране блокировки за 8 часов до отъезда.")
                         .font(Typography.settingNote)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Palette.secondaryText)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .fixedSize(horizontal: false, vertical: true)
                 }
@@ -228,15 +260,13 @@ struct TripView: View {
         }
     }
 
-    /// Всех разом, без плашки «Вернуть»: отменять полив перед отъездом
-    /// незачем, а плашка на каждое растение была бы очередью.
+    /// Всех разом, одной плашкой «Вернуть» на восемь секунд: на каждое
+    /// растение плашка была бы очередью. Только кому пора пить — влажные и
+    /// в норме не участвуют. Список соседу пересчитывается сам: он
+    /// считается из сада.
     private func waterAll() {
-        withAnimation(Motion.appear) {
-            for plant in garden.rooms.flatMap(\.plants) {
-                _ = garden.water(plant.id)
-            }
-            watered = true
-        }
+        guard Bin.shared.waterNeeded(in: garden) > 0 else { return }
+        withAnimation(Motion.appear) { watered = true }
         Cheer.shared.now(from: button.rect)
         Feel.water()
         Cabinet.shared.deed(.traveler)

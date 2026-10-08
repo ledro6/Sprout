@@ -69,7 +69,7 @@ struct ScanView: View {
             }
             .padding(.horizontal, 14)
             .padding(.vertical, 9)
-            .glassEffect(.regular, in: .rect(cornerRadius: 18))
+            .sproutGlass(in: .rect(cornerRadius: 18))
             .id(scanner.trouble ?? hint)
             .transition(.blurReplace)
             // Поверх — подсказка ARKit, как вернуть опору; своя ей мешала бы.
@@ -137,6 +137,10 @@ struct ScanView: View {
                     .padding(12)
                     .glassEffect(.regular, in: .circle)
             case .failed:
+                if Scanner.cameraBlocked {
+                    tool("Открыть Настройки", icon: "gear",
+                         prominent: true) { SystemSettings.open() }
+                }
                 tool("Закрыть", icon: "xmark", prominent: false) {
                     dismiss()
                 }
@@ -161,6 +165,7 @@ struct ScanView: View {
         if prominent {
             Button(action: action) { label }
                 .buttonStyle(.glassProminent)
+                .tint(Palette.accentFill)
         } else {
             Button(action: action) { label }
                 .buttonStyle(.glass)

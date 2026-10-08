@@ -338,7 +338,7 @@ extension Treatment {
         guard !steps.isEmpty else { return nil }
         steps.append(Step(
             id: "check",
-            advice: Lang.key("Снимите растение снова в «Что с ним?» и сравните с тем, что было."),
+            advice: Lang.key("Снимите растение снова: «Спросить о растении» → «По фото» — и сравните с тем, что было."),
             icon: "camera.viewfinder",
             due: now.addingTimeInterval(seconds(days: max(span, last),
                                                 speed: speed))))
@@ -359,6 +359,42 @@ extension Treatment {
         case .mist:
             plant.tending.every(.mist)
                 ?? Duty.mist.usual(for: plant.blueprint.preset) ?? rareMist
+        }
+    }
+}
+
+/// Уверенность словами, а не процентом: догадка не выглядит измерением.
+/// Одна шкала на находки «Что с ним?» и на вид в «Добавить».
+enum Sureness: Sendable, Equatable {
+    case likely, maybe, unsure
+
+    init(_ confidence: Double) {
+        switch confidence {
+        case 0.7...: self = .likely
+        case 0.4...: self = .maybe
+        default: self = .unsure
+        }
+    }
+
+    /// Подпись у находки.
+    var word: String {
+        switch self {
+        case .likely: Lang.text("Похоже на то")
+        case .maybe: Lang.text("Возможно")
+        case .unsure: Lang.text("Не уверен")
+        }
+    }
+
+    /// Вид на снимке в «Добавить» — фразой.
+    func species(_ name: String) -> String {
+        switch self {
+        case .likely:
+            Lang.format("Похоже на %@. Поправьте, если не так.", name)
+        case .maybe:
+            Lang.format("Возможно, это %@. Поправьте, если не так.", name)
+        case .unsure:
+            Lang.format("Не уверен — может быть, %@. Лучше впишите вид сами.",
+                        name)
         }
     }
 }

@@ -125,7 +125,8 @@ private struct StandRow: View {
 
     private func water(_ sprig: Sprig) -> Color {
         guard colored else { return .primary }
-        return sprig.thirst == .calm ? Tone.water : Tone.of(sprig.thirst)
+        return sprig.status.tone == .warn || sprig.status.tone == .alarm
+            ? Tone.of(sprig.status) : Tone.water
     }
 }
 

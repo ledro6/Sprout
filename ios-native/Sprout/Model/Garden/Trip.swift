@@ -60,14 +60,16 @@ enum Trip {
     /// Полит перед отъездом — если не раньше, чем за полсуток до него.
     static let fresh: TimeInterval = 12 * 3600
 
+    /// Сад готов к отъезду: кому пора пить (`MoistureStatus.bulk`), политы
+    /// за последние полсуток. Влажные и в норме перед отъездом не льют —
+    /// защита от перелива.
     static func watered(_ rooms: [Room], log: [Watering],
                         now: Date = Date()) -> Bool {
         let recent = Set(log.lazy.filter {
             now.timeIntervalSince($0.when) < fresh
         }.map(\.plant))
-        return rooms.allSatisfy { room in
-            room.plants.allSatisfy { recent.contains($0.id) }
-        }
+        return MoistureStatus.bulk(rooms.flatMap(\.plants))
+            .allSatisfy { recent.contains($0.id) }
     }
 
     /// Когда сосед придёт в первый раз.
@@ -102,15 +104,23 @@ enum Trip {
             return lines.joined(separator: "\n")
         }
         lines.append(Lang.text("Пожалуйста, полей растения:"))
-        for need in needs {
-            let dates = need.visits.compactMap {
-                calendar.date(byAdding: .day, value: $0, to: leave)?
-                    .formatted(style)
+        // По комнатам, в порядке первой нужды: сосед обходит комнату за
+        // комнатой, а не растение за растением.
+        var rooms: [String] = []
+        for need in needs where !rooms.contains(need.room) {
+            rooms.append(need.room)
+        }
+        for room in rooms {
+            lines.append(Lang.format("Комната «%@»:", room))
+            for need in needs where need.room == room {
+                let dates = need.visits.compactMap {
+                    calendar.date(byAdding: .day, value: $0, to: leave)?
+                        .formatted(style)
+                }
+                lines.append(Lang.format("• %1$@ (%2$@) — %3$@",
+                                         need.plant.name, need.plant.species,
+                                         dates.joined(separator: ", ")))
             }
-            lines.append(Lang.format("• %1$@ (%2$@, «%3$@») — %4$@",
-                                     need.plant.name, need.plant.species,
-                                     need.room,
-                                     dates.joined(separator: ", ")))
         }
         lines.append(Lang.text("Полить — до мокрой земли, но чтобы вода не стояла в поддоне. Остальные растения дождутся меня сами. Спасибо!"))
         return lines.joined(separator: "\n")

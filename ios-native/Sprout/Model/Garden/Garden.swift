@@ -5,10 +5,11 @@ import Observation
 /// не по числу тактов: такт может задержаться.
 @Observable
 final class Garden {
-    /// Во сколько раз время сада быстрее настоящего: втрое — сутки за восемь
-    /// часов. Проценты за день живые, но растения не пересыхают за вечер.
-    /// Захочется иначе — это единственное число.
-    static let speed: Double = 3
+    /// Во сколько раз время сада быстрее настоящего. Единица — настоящее
+    /// время: «через 3 дня» на карточке — это три настоящих дня, и так же
+    /// считают виджет, напоминания, Календарь и план лечения. Ускоренного
+    /// режима в сборке нет; число оставлено одно — на случай показа.
+    static let speed: Double = 1
 
     /// Один сад на приложение — ради Siri: команда исполняется и без окон,
     /// когда корня интерфейса нет, и должна поливать тот же сад, что видят
@@ -19,6 +20,10 @@ final class Garden {
     var rooms: [Room]
 
     private(set) var log: [Watering]
+
+    /// Архив — погибшие растения, см. `retire`. Не в комнатах: всё, что
+    /// смотрит на `rooms`, архивных не видит.
+    private(set) var archive: [Archived]
 
     /// Счётчик изменений состава сада — по нему корень пересказывает Siri
     /// клички. Следить за самими комнатами нельзя: влажность в них меняется
@@ -45,11 +50,16 @@ final class Garden {
     /// о WidgetKit не знает.
     nonisolated(unsafe) static var saved: (() -> Void)?
 
-    init() {
-        let state = Store.read() ?? Seed.state
+    /// Первый запуск — пустой сад (`first`): выдуманные растения с
+    /// выдуманными процентами в настоящий сад не попадают. Пример — по
+    /// кнопке «Показать пример», см. `showSample`. Файл на диске есть — он и
+    /// читается, как прежде.
+    init(first: GardenState = Seed.blank) {
+        let state = Store.read() ?? first
         owner = state.owner
         rooms = state.rooms
         log = state.log
+        archive = state.archive
         since = state.since
         written = state.stamp
         // Время шло и пока приложение было выгружено: отсчёт — с записи.
@@ -64,6 +74,7 @@ final class Garden {
         owner = state.owner
         rooms = state.rooms
         log = state.log
+        archive = state.archive
         since = state.since
         written = state.stamp
         // Файл записан тогда-то — с того мига и сохнет.
@@ -117,16 +128,59 @@ final class Garden {
 
     // MARK: - Что с ними делают
 
-    /// Отвечает, что было до полива, — для отмены, см. `unwater`.
+    /// Защита от перелива — одна на все входы полива: экран растения,
+    /// капля, уведомление, виджет, часы, Siri, живые действия, AR,
+    /// планетарий, метка на горшке. Земля ещё влажная — влажность, при
+    /// которой надо переспросить; пусто — поливать можно сразу.
+    func wetCheck(_ id: Plant.ID) -> Double? {
+        guard case .warn(let moisture)? = plant(id: id)?.wateringGuard
+        else { return nil }
+        return moisture
+    }
+
+    /// Отвечает, что было до полива, — для отмены, см. `unwater`. Влажную
+    /// землю (`wetCheck`) без подтверждения (`anyway`) не поливает: записи
+    /// нет, ответ пустой. С подтверждением полив ложится в журнал «лишним»
+    /// (`Watering.extra`) — он не идёт в серию, задания, опыт и «вовремя».
     @discardableResult
-    func water(_ id: Plant.ID, at moment: Date = Date()) -> Pour? {
+    func water(_ id: Plant.ID, at moment: Date = Date(),
+               anyway: Bool = false) -> Pour? {
         guard let before = plant(id: id) else { return nil }
+        let wet = wetCheck(id) != nil
+        guard !wet || anyway else { return nil }
         // Запись в журнал — до полива: `change` пишет файл, и запись должна в
-        // него попасть.
-        log.append(Watering(plant: id, when: moment, left: before.moisture))
-        change(id) { $0.moisture = 1 }
+        // него попасть. Полив в пределах десяти минут от прежнего — датчика
+        // или кого-то из семьи — тот же полив, второй записи нет (`Twin`).
+        if Twin.index(id, at: moment, in: log) == nil {
+            log.append(Watering(plant: id, when: moment, left: before.moisture,
+                                extra: wet ? true : nil))
+        }
+        // Полили рукой — до нового показания датчика влажность посчитанная.
+        change(id) {
+            $0.moisture = 1
+            $0.source = nil
+            $0.snoozed = nil
+        }
         return Pour(plant: id, name: before.name, moisture: before.moisture,
                     when: moment)
+    }
+
+    /// Массовый полив — «Полить всех», «Уезжаю», живое действие: только те,
+    /// кому пора пить (`MoistureStatus.bulk`), влажные и в норме не
+    /// участвуют. `ids` — из кого выбирать; пусто — весь сад.
+    @discardableResult
+    func waterNeeded(_ ids: [Plant.ID]? = nil,
+                     at moment: Date = Date()) -> [Pour] {
+        let chosen = ids.map(Set.init)
+        return MoistureStatus.bulk(rooms.flatMap(\.plants))
+            .filter { chosen?.contains($0.id) ?? true }
+            .compactMap { water($0.id, at: moment) }
+    }
+
+    /// «Отложить на день»: растение сутки не числится ждущим воды. Влажность
+    /// и журнал не трогает.
+    func snooze(_ id: Plant.ID, at moment: Date = Date()) {
+        change(id) { $0.snoozed = moment.addingTimeInterval(86_400) }
     }
 
     /// Запись уходит из журнала, влажность — на прежнюю, за вычетом того, что
@@ -142,6 +196,7 @@ final class Garden {
         }
         change(pour.plant) {
             $0.moisture = max(0, pour.moisture - (1 - $0.moisture))
+            $0.source = nil
         }
     }
 
@@ -175,20 +230,40 @@ final class Garden {
         owner = state.owner
         rooms = state.rooms
         log = state.log
+        archive = state.archive
         since = state.since
         roster += 1
         save()
     }
 
+    /// «Показать пример» на пустом саду: комнаты и растения макета. Только
+    /// пока растений нет — свой сад пример не трогает; пустые комнаты
+    /// хозяина остаются после примера.
+    func showSample() {
+        guard plantCount == 0 else { return }
+        let names = Set(Seed.rooms.map(\.name))
+        rooms = Seed.rooms + rooms.filter { !names.contains($0.name) }
+        roster += 1
+        save()
+    }
+
     /// Имя хозяина и день начала сада остаются: стирают сад, а не себя.
-    func erase() {
+    /// Гость общего сада стереть его не может — ни с экрана, ни иначе: пункта
+    /// у него нет, а здесь проверка на случай любого другого пути
+    /// (`Family.mayErase`). Отвечает, стёрт ли сад.
+    @discardableResult
+    func erase(guest: Bool) -> Bool {
+        guard !guest else { return false }
         for file in rooms.flatMap(\.plants).flatMap(\.files) {
             Shots.drop(file)
         }
+        for file in archive.flatMap(\.plant.files) { Shots.drop(file) }
         rooms = []
         log = []
+        archive = []
         roster += 1
         save()
+        return true
     }
 
     func rename(owner name: String) {
@@ -306,7 +381,10 @@ final class Garden {
     /// Привязали датчик — или отвязали, пусто.
     func link(_ id: Plant.ID, sensor: Sensor?) {
         guard plant(id: id) != nil else { return }
-        change(id) { $0.sensor = sensor }
+        change(id) {
+            $0.sensor = sensor
+            if sensor == nil { $0.source = nil }
+        }
     }
 
     /// Метка шкалы датчика по последнему показанию: «сейчас сухо» или
@@ -318,12 +396,15 @@ final class Garden {
         change(id) {
             $0.sensor = sensor
             $0.moisture = sensor.level(now)
+            $0.source = .sensor
         }
     }
 
     /// Показание пришло: влажность растения — по датчику. Подскочила —
     /// значит, полили, пока приложение не смотрело: полив сам ложится в
-    /// журнал, если его не записали кнопкой за последние два часа.
+    /// журнал, если его не записали кнопкой за последние два часа. Окно
+    /// шире десяти минут `Twin`: показание читают, когда телефон рядом, и
+    /// подскок замечают с опозданием.
     @discardableResult
     func sense(_ id: Plant.ID, _ reading: Reading) -> Bool {
         guard let plant = plant(id: id), var sensor = plant.sensor else {
@@ -333,10 +414,8 @@ final class Garden {
         sensor.last = reading
         var poured = false
         if let before, sensor.poured(from: before, to: reading.moisture),
-           !log.contains(where: {
-               $0.plant == id
-                   && abs($0.when.timeIntervalSince(reading.when)) < 2 * 3_600
-           }) {
+           Twin.index(id, at: reading.when, in: log,
+                      within: 2 * 3_600) == nil {
             log.append(Watering(plant: id, when: reading.when,
                                 left: sensor.level(before)))
             poured = true
@@ -344,6 +423,7 @@ final class Garden {
         change(id) {
             $0.sensor = sensor
             $0.moisture = sensor.level(reading.moisture)
+            $0.source = .sensor
         }
         return poured
     }
@@ -488,6 +568,16 @@ final class Garden {
         return nil
     }
 
+    /// Удалённое насовсем — отсчёт «Вернуть» кончился: журнал поливов
+    /// уходит следом, как и обещал вопрос перед удалением. Растение успели
+    /// вернуть — журнал его.
+    func purge(_ id: Plant.ID) {
+        guard plant(id: id) == nil, log.contains(where: { $0.plant == id })
+        else { return }
+        log.removeAll { $0.plant == id }
+        save()
+    }
+
     /// Комнату за отсчёт могли удалить — тогда она заводится там, где стояла.
     /// Второй раз не встаёт.
     func putBack(_ gone: Removal) {
@@ -592,11 +682,119 @@ final class Garden {
 
     /// Сад из iCloud: семья полила, переименовала, добавила — см. `Family`.
     /// Сменился состав, клички или обложки — пересказываем Siri и виджету.
+    ///
+    /// Сад приходит целиком (`whole`) — с архивными растениями в их
+    /// комнатах; они уходят в архив, вернувшиеся из архива — в комнаты.
+    /// Комната, в которой были одни архивные и которой здесь нет, не
+    /// заводится.
     func adopt(rooms: [Room], log: [Watering], recast: Bool) {
-        self.rooms = rooms
+        let split = Self.split(rooms, living: self.rooms)
+        if split.archive.map(\.plant.id) != archive.map(\.plant.id) {
+            roster += 1
+        }
+        self.rooms = split.rooms
+        self.archive = split.archive
         self.log = log
         if recast { roster += 1 }
         save()
+    }
+
+    // MARK: - Архив
+
+    /// «Растение погибло — в архив»: уходит из комнат, журнал остаётся.
+    /// Серия от этого не рвётся — архивных в ней нет.
+    func retire(_ id: Plant.ID, at moment: Date = Date()) {
+        for room in rooms.indices {
+            guard let index = rooms[room].plants.firstIndex(where: {
+                $0.id == id
+            }) else { continue }
+            var plant = rooms[room].plants.remove(at: index)
+            let before = plant
+            plant.archived = moment
+            plant.stamp(since: before, at: moment)
+            archive.append(Archived(plant: plant, room: rooms[room].name,
+                                    key: rooms[room].key))
+            roster += 1
+            save()
+            return
+        }
+    }
+
+    /// «Вернуть из архива» — в свою комнату, а её нет — заводится заново.
+    func revive(_ id: Plant.ID, at moment: Date = Date()) {
+        guard let index = archive.firstIndex(where: { $0.plant.id == id })
+        else { return }
+        let entry = archive.remove(at: index)
+        var plant = entry.plant
+        let before = plant
+        plant.archived = nil
+        plant.stamp(since: before, at: moment)
+        if let room = rooms.firstIndex(where: {
+            entry.key != nil ? $0.key == entry.key : $0.name == entry.room
+        }) ?? rooms.firstIndex(where: { $0.name == entry.room }) {
+            rooms[room].plants.append(plant)
+        } else {
+            rooms.append(Room(name: entry.room, plants: [plant],
+                              key: entry.key))
+        }
+        roster += 1
+        save()
+    }
+
+    /// Сад целиком — с архивными в их комнатах: так его видит общий сад
+    /// (`Family`), запись растения едет с отметкой архива.
+    var whole: [Room] { Self.join(rooms, archive) }
+
+    static func join(_ rooms: [Room], _ archive: [Archived]) -> [Room] {
+        var rooms = rooms
+        for entry in archive {
+            if let room = rooms.firstIndex(where: {
+                entry.key != nil ? $0.key == entry.key : $0.name == entry.room
+            }) ?? rooms.firstIndex(where: { $0.name == entry.room }) {
+                rooms[room].plants.append(entry.plant)
+            } else {
+                rooms.append(Room(name: entry.room, plants: [entry.plant],
+                                  key: entry.key))
+            }
+        }
+        return rooms
+    }
+
+    /// Обратно: архивные — из комнат в архив. Комната с одними архивными,
+    /// которой нет среди живых (`living`), не остаётся пустой комнатой.
+    static func split(_ whole: [Room], living: [Room])
+        -> (rooms: [Room], archive: [Archived]) {
+        var rooms: [Room] = []
+        var archive: [Archived] = []
+        for room in whole {
+            var kept = room
+            kept.plants = room.plants.filter { $0.archived == nil }
+            for plant in room.plants where plant.archived != nil {
+                archive.append(Archived(plant: plant, room: room.name,
+                                        key: room.key))
+            }
+            let known = living.contains {
+                room.key != nil ? $0.key == room.key : $0.name == room.name
+            }
+            if kept.plants.isEmpty, !room.plants.isEmpty, !known { continue }
+            rooms.append(kept)
+        }
+        return (rooms, archive)
+    }
+
+    // MARK: - Просрочено
+
+    /// Подпись срока с просрочкой: «Просрочено 3 дн · Можно полить сейчас»
+    /// — тем же статусом «сухо», без вспышек. Не просрочено — обычная
+    /// подпись (`nextWateringText`).
+    func wateringLabel(_ plant: Plant, now: Date = Date()) -> String {
+        let last = log.last { $0.plant == plant.id }?.when
+        let late = MoistureStatus.overdue(last: last, period: plant.period,
+                                          now: now)
+        guard late > 0, plant.status == .urgent else {
+            return plant.nextWateringText
+        }
+        return Lang.format("Просрочено %lld дн · Можно полить сейчас", late)
     }
 
     // MARK: - Файл
@@ -604,7 +802,8 @@ final class Garden {
     var state: GardenState {
         GardenState(owner: owner, rooms: rooms, savedAt: Date(),
                     log: log, since: since, stamp: written,
-                    season: Season.stretch, climate: Climate.current)
+                    season: Season.stretch, climate: Climate.current,
+                    archive: archive)
     }
 
     /// На действиях хозяина и при уходе в фон, но не на каждом такте часов.

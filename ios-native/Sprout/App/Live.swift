@@ -91,7 +91,7 @@ final class Live {
         garden.advance()
         switch act {
         case .water(let id):
-            _ = garden.water(id)
+            if garden.water(id) != nil { Journal.shared.waterTap(.live) }
         case .skip(let id):
             for activity in Activity<RoundAttributes>.activities
                 where Self.running(activity.activityState) {
@@ -100,9 +100,9 @@ final class Live {
                 await put(state, into: activity)
             }
         case .waterAll:
-            for plant in garden.rooms.flatMap(\.plants) {
-                _ = garden.water(plant.id)
-            }
+            // Только кому пора пить: влажные и в норме не участвуют.
+            let done = garden.waterNeeded().count
+            if done > 0 { Journal.shared.note(.waterAll, "\(done)") }
             Cabinet.shared.deed(.traveler)
         }
         await sync()

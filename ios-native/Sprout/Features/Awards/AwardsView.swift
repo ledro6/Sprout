@@ -25,7 +25,7 @@ struct AwardsView: View {
             }
             .padding(.horizontal, Metrics.contentMargin)
             .padding(.top, 4)
-            .padding(.bottom, 40)
+            .padding(.bottom, Metrics.barGap)
         }
         .background { SproutBackground() }
         .navigationTitle("Награды")
@@ -44,7 +44,7 @@ struct AwardsView: View {
         Text(Lang.format("Получено %1$lld из %2$lld", cabinet.total,
                          Award.total))
             .font(Typography.settingNote)
-            .foregroundStyle(.secondary)
+            .foregroundStyle(Palette.secondaryText)
             .contentTransition(.numericText())
             .padding(.leading, 6)
     }
@@ -53,7 +53,7 @@ struct AwardsView: View {
         VStack(alignment: .leading, spacing: 8) {
             Text(group.title)
                 .font(Typography.groupTitle)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Palette.secondaryText)
                 .padding(.leading, 6)
             LazyVGrid(columns: columns, spacing: 18) {
                 ForEach(group.awards) { award in
@@ -84,7 +84,7 @@ struct AwardsView: View {
                              count: cabinet.count(award, in: trophies),
                              cabinet: cabinet))
                 .font(Typography.cardCaption)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Palette.secondaryText)
                 .monospacedDigit()
                 .lineLimit(1)
                 .minimumScaleFactor(0.8)
@@ -180,13 +180,13 @@ struct AwardSheet: View {
                             .multilineTextAlignment(.center)
                         Text(rank.detail)
                             .font(Typography.settingRow)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(Palette.secondaryText)
                             .multilineTextAlignment(.center)
                             .fixedSize(horizontal: false, vertical: true)
                         if let earned {
                             Text(Lang.format("Получена %@", AwardsView.day(earned)))
                                 .font(Typography.settingNote)
-                                .foregroundStyle(.secondary)
+                                .foregroundStyle(Palette.secondaryText)
                                 .padding(.top, 4)
                         } else if rank.goal > 1 {
                             ProgressView(value: Double(min(count, rank.goal)),
@@ -196,7 +196,7 @@ struct AwardSheet: View {
                                 .padding(.top, 8)
                             Text(AwardsView.left(rank, count))
                                 .font(Typography.settingNote)
-                                .foregroundStyle(.secondary)
+                                .foregroundStyle(Palette.secondaryText)
                                 .monospacedDigit()
                         }
                     }
@@ -209,7 +209,7 @@ struct AwardSheet: View {
             }
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("Готово") { dismiss() }
+                    Button("Закрыть") { dismiss() }
                 }
             }
         }
@@ -236,7 +236,7 @@ struct AwardSheet: View {
                             Text(date.map(AwardsView.day)
                                  ?? AwardsView.left(rank, count))
                                 .font(Typography.settingNote)
-                                .foregroundStyle(.secondary)
+                                .foregroundStyle(Palette.secondaryText)
                                 .monospacedDigit()
                         }
                         Spacer(minLength: 8)

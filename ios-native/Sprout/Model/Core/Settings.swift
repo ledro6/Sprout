@@ -91,7 +91,8 @@ final class Settings {
 
         /// Равные остаются в ручном порядке, иначе менялись бы местами от
         /// пересборки к пересборке. «Сначала сухие» — по дням до полива, а не
-        /// по процентам: 20% у папоротника — день, у кактуса — две недели.
+        /// по процентам: 20% у папоротника — день, у кактуса — две недели; при
+        /// равных — по имени.
         func arrange(_ plants: [Plant]) -> [Plant] {
             let lined = Array(plants.enumerated())
             let sorted: [(offset: Int, element: Plant)]
@@ -102,7 +103,13 @@ final class Settings {
                 sorted = lined.sorted { a, b in
                     let x = a.element.moisture * a.element.dryingDays
                     let y = b.element.moisture * b.element.dryingDays
-                    return x != y ? x < y : a.offset < b.offset
+                    if x != y { return x < y }
+                    switch a.element.name
+                        .localizedStandardCompare(b.element.name) {
+                    case .orderedAscending: return true
+                    case .orderedDescending: return false
+                    case .orderedSame: return a.offset < b.offset
+                    }
                 }
             case .name:
                 sorted = lined.sorted { a, b in
@@ -144,6 +151,15 @@ final class Settings {
     var waveHue: Hue {
         didSet { Self.put(waveHue, Key.waveHue, in: store) }
     }
+
+    /// «Как узор»: волна берёт цвет узора, свой цвет волны не выбирается.
+    /// По умолчанию выключено — у волны свой цвет, как было.
+    var waveLikePattern: Bool {
+        didSet { store.set(waveLikePattern, forKey: Key.waveLikePattern) }
+    }
+
+    /// Цвет, которым волна красится на самом деле.
+    var waveColour: Hue { waveLikePattern ? patternHue : waveHue }
 
     /// Свои цвета — у узора, волны и кружка хозяина свои: добавленный к
     /// узору не лезет в ряд волны. По порядку добавления, до `Hue.ownLimit`
@@ -198,7 +214,7 @@ final class Settings {
 
     /// Что видно на экране статистики — по порядку.
     var statsShown: [StatsBlock] {
-        statsOrder.filter { !statsHidden.contains($0) }
+        statsOrder.filter { $0.listed && !statsHidden.contains($0) }
     }
 
     func hide(_ block: StatsBlock) {
@@ -250,11 +266,6 @@ final class Settings {
     var avatarShot: String? {
         didSet { store.set(avatarShot, forKey: Key.avatarShot) }
     }
-
-    /// Двадцать процентов по умолчанию — порог, на котором тень краснеет, см.
-    /// `Thirst.alarmBelow`. Выбирается барабаном — любым целым процентом.
-    static let thresholds = 1 ... 99
-    static let defaultThreshold = 0.2
 
     var theme: Theme {
         didSet { store.set(theme.rawValue, forKey: Key.theme) }
@@ -325,14 +336,32 @@ final class Settings {
         didSet { store.set(reminders, forKey: Key.reminders) }
     }
 
+    /// Утреннее напоминание о поливе — во сколько, минут от полуночи.
+    /// По умолчанию 09:00, см. `Plan`.
+    var morning: Int {
+        didSet { store.set(morning, forKey: Key.morning) }
+    }
+
+    /// Тихие часы: пушей нет с `quietFrom` до `quietTo`, минут от полуночи.
+    /// По умолчанию 22:00–08:00.
+    var quietFrom: Int {
+        didSet { store.set(quietFrom, forKey: Key.quietFrom) }
+    }
+
+    var quietTo: Int {
+        didSet { store.set(quietTo, forKey: Key.quietTo) }
+    }
+
+    /// Вопрос «Напоминать, когда пора полить?» после первого растения уже
+    /// задан — второй раз не спрашиваем, см. `Plan.askAfterFirstPlant`.
+    var reminderAsked: Bool {
+        didSet { store.set(reminderAsked, forKey: Key.reminderAsked) }
+    }
+
     /// Сроки в Календаре телефона, см. `Agenda`. Доступ к календарю — так
     /// же, по переключателю.
     var calendar: Bool {
         didSet { store.set(calendar, forKey: Key.calendar) }
-    }
-
-    var threshold: Double {
-        didSet { store.set(threshold, forKey: Key.threshold) }
     }
 
     /// Приложили iPhone к метке на горшке — полить сразу или спросить, см.
@@ -356,6 +385,12 @@ final class Settings {
 
     func seen(_ walk: Walk) -> Bool { walked.contains(walk.rawValue) }
 
+    /// «Подсказки» в Профиле: экраны подсказывают сами и после первого
+    /// запуска — «?» в шапках больше нет, это единственный путь назад.
+    private(set) var replay: Bool {
+        didSet { store.set(replay, forKey: Key.replay) }
+    }
+
     /// Который по счёту запуск. Подсказки экранов сами показываются только в
     /// первый: во второй раз хозяин уже знает, где что.
     private(set) var launches: Int {
@@ -369,7 +404,10 @@ final class Settings {
 
     func mark(_ walk: Walk) { walked.insert(walk.rawValue) }
 
-    func rewalk() { walked = [] }
+    func rewalk() {
+        walked = []
+        replay = true
+    }
 
     /// Последнюю не выключить: пустой набор — голый фон. Отвечает, изменилось
     /// ли что-нибудь, — по нему экран решает, пускать ли всходы.
@@ -405,8 +443,11 @@ final class Settings {
         static let kinds = "patternKinds"
         static let shapes = "patternShapes"
         static let reminders = "reminders"
+        static let morning = "reminderMorning"
+        static let quietFrom = "quietFrom"
+        static let quietTo = "quietTo"
+        static let reminderAsked = "reminderAsked"
         static let calendar = "calendarSync"
-        static let threshold = "remindThreshold"
         static let tagPour = "tagPour"
         /// Прежние ключи — номером готового цвета; читаются ради тех, у кого
         /// они сохранены.
@@ -414,6 +455,7 @@ final class Settings {
         static let waveTint = "waveTint"
         static let patternHue = "patternHue"
         static let waveHue = "waveHue"
+        static let waveLikePattern = "waveLikePattern"
         /// Общий ряд прежней сборки — читается, пока у слоя нет своего.
         static let ownHues = "ownHues"
 
@@ -451,6 +493,7 @@ final class Settings {
         static let toured = "toured"
         static let walked = "walkedScreens"
         static let launches = "launches"
+        static let replay = "replayHints"
     }
 
     /// Отсутствие ключа ловим отдельно: `UserDefaults` отвечает нулём, а ноль
@@ -480,8 +523,9 @@ final class Settings {
         theme = Theme(rawValue: store.string(forKey: Key.theme) ?? "")
             ?? .system
         look = Look(rawValue: store.string(forKey: Key.look) ?? "") ?? .grid
+        // Выбора нет — «Сначала сухие»; кто выбрал порядок, тот его и видит.
         order = Order(rawValue: store.string(forKey: Key.order) ?? "")
-            ?? .manual
+            ?? .thirsty
         // Ноль — «ключа нет»: пустого набора фигурок не бывает.
         let mask = store.integer(forKey: Key.shapes)
         if mask != 0 {
@@ -498,6 +542,7 @@ final class Settings {
             ?? Self.tint(store, Key.patternTint).map(Hue.preset) ?? .pattern
         waveHue = Self.take(Hue.self, Key.waveHue, from: store)
             ?? Self.tint(store, Key.waveTint).map(Hue.preset) ?? .wave
+        waveLikePattern = store.bool(forKey: Key.waveLikePattern)
         // Свои цвета прежней сборки были общими — достаются и узору, и волне.
         let shared = Self.take([Channels].self, Key.ownHues, from: store)
         ownHues = Dictionary(uniqueKeysWithValues: HueLayer.allCases.map {
@@ -512,7 +557,7 @@ final class Settings {
         statsOrder = StatsBlock.order(
             Self.take([StatsBlock].self, Key.statsOrder, from: store) ?? [])
         statsHidden = Self.take(Set<StatsBlock>.self, Key.statsHidden,
-                                from: store) ?? []
+                                from: store) ?? StatsBlock.optional
         avatarHue = Self.take(Hue.self, Key.avatarHue, from: store)
             ?? Self.tint(store, Key.avatarTint).map(Hue.preset) ?? .avatar
         avatarShot = store.string(forKey: Key.avatarShot)
@@ -528,14 +573,18 @@ final class Settings {
         seasonalPattern = !store.bool(forKey: Key.plainPattern)
         pattern = !store.bool(forKey: Key.hiddenPattern)
         reminders = store.bool(forKey: Key.reminders)
+        morning = store.object(forKey: Key.morning) as? Int ?? Plan.Rules().morning
+        quietFrom = store.object(forKey: Key.quietFrom) as? Int
+            ?? Plan.Rules().quietFrom
+        quietTo = store.object(forKey: Key.quietTo) as? Int
+            ?? Plan.Rules().quietTo
+        reminderAsked = store.bool(forKey: Key.reminderAsked)
         calendar = store.bool(forKey: Key.calendar)
-        let level = (store.double(forKey: Key.threshold) * 100).rounded()
-        threshold = Self.thresholds.contains(Int(level)) ? level / 100
-            : Self.defaultThreshold
         tagPour = PotTag.Pour(rawValue: store.string(forKey: Key.tagPour) ?? "")
             ?? .now
         toured = store.bool(forKey: Key.toured)
         walked = Set(store.stringArray(forKey: Key.walked) ?? [])
+        replay = store.bool(forKey: Key.replay)
         // Счётчика не было, а знакомство уже прошло — сад старый: первым
         // этот запуск не считаем.
         launches = max(store.integer(forKey: Key.launches),

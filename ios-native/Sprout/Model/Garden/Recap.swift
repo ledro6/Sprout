@@ -113,8 +113,10 @@ struct Recap: Sendable {
                    year: Int, now: Date = Date(),
                    calendar: Calendar = .current) -> Recap {
         var recap = Recap(year: year)
+        // Только нужные поливы: полив по влажной земле итогами не хвалится.
         let inside = log.filter {
             calendar.component(.year, from: $0.when) == year && $0.when <= now
+                && needed($0)
         }.sorted { $0.when < $1.when }
         recap.waterings = inside.count
         recap.days = Set(inside.map { calendar.startOfDay(for: $0.when) }).count
@@ -200,4 +202,49 @@ struct Recap: Sendable {
 
     /// Сколько длится мелодия: двенадцать тактов по восемь долей.
     static func length(beat: Double = 0.3) -> Double { 12 * 8 * beat }
+}
+
+// MARK: - Где показать и что считать
+
+extension Recap {
+    /// Где на статистике «Итоги года»: баннером сверху — в сезон, внизу
+    /// списка — когда данных хватает, иначе нигде.
+    enum Place: Equatable, Sendable {
+        case banner, footer, hidden
+    }
+
+    /// Столько дней журнала — и итоги встают внизу списка вне сезона.
+    static let enoughDays = 90
+
+    /// Сезон итогов — с 1 декабря по 15 января.
+    static func season(_ now: Date, calendar: Calendar = .current) -> Bool {
+        let month = calendar.component(.month, from: now)
+        let day = calendar.component(.day, from: now)
+        return month == 12 || (month == 1 && day <= 15)
+    }
+
+    /// Какой год подводить: в январе — прошедший, иначе нынешний.
+    static func year(for now: Date, calendar: Calendar = .current) -> Int {
+        let year = calendar.component(.year, from: now)
+        return calendar.component(.month, from: now) == 1 ? year - 1 : year
+    }
+
+    static func place(_ log: [Watering], now: Date = Date(),
+                      calendar: Calendar = .current) -> Place {
+        if season(now, calendar: calendar) { return .banner }
+        guard let first = log.lazy.map(\.when).min(),
+              let days = calendar.dateComponents(
+                [.day], from: calendar.startOfDay(for: first),
+                to: calendar.startOfDay(for: now)).day,
+              days >= enoughDays
+        else { return .hidden }
+        return .footer
+    }
+
+    /// Нужный полив — не по влажной земле (`MoistureStatus.wet`). Записи
+    /// прежних сборок без остатка воды считаются нужными: гадать нечем.
+    static func needed(_ entry: Watering) -> Bool {
+        guard let left = entry.left else { return true }
+        return MoistureStatus(moisture: left) != .wet
+    }
 }

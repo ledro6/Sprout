@@ -75,6 +75,8 @@ struct HueRow: View {
                         Circle().strokeBorder(Palette.accent, lineWidth: 2)
                     }
                 }
+                .frame(minWidth: Metrics.tapTarget, minHeight: Metrics.tapTarget)
+                .contentShape(Rectangle())
                 .frame(maxWidth: .infinity)
         }
         .buttonStyle(.plain)
@@ -101,6 +103,8 @@ struct HueRow: View {
                                                              dash: [3, 3]))
                 }
                 .padding(4)
+                .frame(minWidth: Metrics.tapTarget, minHeight: Metrics.tapTarget)
+                .contentShape(Rectangle())
                 .frame(maxWidth: .infinity)
         }
         .buttonStyle(.plain)

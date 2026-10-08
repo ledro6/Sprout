@@ -284,7 +284,7 @@ struct RecapPoster: View {
                                recap.streak.formatted())
                     }
                     GridRow {
-                        figure(Lang.text("Вовремя"),
+                        figure(Lang.text("В срок"),
                                recap.onTime.map {
                                    Lang.format("%lld%%", Int(($0 * 100).rounded()))
                                } ?? "—")

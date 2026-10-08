@@ -57,6 +57,25 @@ struct RootView: View {
         .onChange(of: Summon.shared.garden) { _, asked in
             if asked { pane = .home }
         }
+        .onChange(of: Summon.shared.add) { _, asked in
+            guard asked else { return }
+            pane = .add
+            Summon.shared.add = false
+        }
+        .onChange(of: Summon.shared.home) { _, asked in
+            guard asked else { return }
+            pane = .home
+            Summon.shared.home = false
+        }
+        // «Уезжаю» с иконки — лист поверх любой вкладки.
+        .sheet(isPresented: Binding(
+            get: { Summon.shared.trip },
+            set: { Summon.shared.trip = $0 })) {
+            TripView().environment(garden)
+        }
+        // Быстрые действия иконки: при запуске с нуля — как только корень
+        // слушает.
+        .task { QuickActions.run() }
         // Ссылка на растение — та же, что на NFC-метке, см. `PotTag`.
         // Снаружи она приходит, только если схема `sprout` объявлена в
         // Info.plist (README «NFC-метки на горшках»).
@@ -67,6 +86,10 @@ struct RootView: View {
         }
         // «Полить?» и сообщения после метки на горшке.
         .modifier(TagPrompt())
+        // «Земля ещё влажная» — вопрос перед лишним поливом, см. `Overflow`.
+        .wetPrompt()
+        // «Удалить …? Журнал поливов тоже исчезнет» — см. `Bin.ask`.
+        .modifier(TossPrompt())
         // «Посадить такое же» из каталога — на вкладку «Добавить».
         .onChange(of: Sowing.shared.specimen) { _, asked in
             if asked != nil { pane = .add }
@@ -139,7 +162,12 @@ struct RootView: View {
         }
         // Заперли — вход прячется под замком; открыли — отыгрывает заново.
         .onChange(of: lock.open) { _, open in
-            if open { Launch.shared.replay() } else { Launch.shared.hide() }
+            if open {
+                Launch.shared.replay()
+                QuickActions.run()
+            } else {
+                Launch.shared.hide()
+            }
         }
         // Наблюдатель касаний — тоже на окно, см. `Finger`.
         .onAppear {
@@ -177,6 +205,8 @@ struct RootView: View {
             // попадают шторка, «Пункт управления» и Face ID. Календарь —
             // тогда же и уже без удалённого: план пишется заново целиком.
             if now == .background {
+                // «Полить всех (n)» на иконке — по саду на этот миг.
+                QuickActions.refresh(garden.rooms)
                 Bin.shared.commit()
                 if settings.calendar { CalendarSync.shared.sync(garden.rooms) }
             }
@@ -262,8 +292,7 @@ struct RootView: View {
         }
         // Без дачных, если о них напоминают только на даче.
         let rooms = Dachnik.shared.reminded(garden.rooms)
-        let threshold = settings.threshold
-        Task { await Notifier.schedule(in: rooms, threshold: threshold) }
+        Task { await Notifier.schedule(in: rooms) }
     }
 
     /// Раз в секунду: даже у самого быстрого растения процент меняется за

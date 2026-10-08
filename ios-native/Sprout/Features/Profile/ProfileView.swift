@@ -56,7 +56,7 @@ struct ProfileView: View {
             ScrollViewReader { reader in
                 ScrollView {
                     VStack(alignment: .leading, spacing: 0) {
-                        SproutHead("Профиль", walk: .profile)
+                        SproutHead("Профиль", gear: true)
                         VStack(alignment: .leading, spacing: Metrics.groupGap) {
                             person
                                 .hintSpot(.profilePerson)
@@ -69,6 +69,10 @@ struct ProfileView: View {
                                 FamilyGroup()
                             }
                             awards
+                            // Погибшие растения — с «Вернуть из архива».
+                            if !garden.archive.isEmpty {
+                                ArchiveGroup()
+                            }
                             rivals
                                 .hintSpot(.profileRivals)
                             more
@@ -76,7 +80,7 @@ struct ProfileView: View {
                         }
                         .padding(.horizontal, Metrics.contentMargin)
                         .padding(.top, 8)
-                        .padding(.bottom, 28)
+                        .padding(.bottom, Metrics.barGap)
                     }
                     // Ровно в ширину экрана: системная кнопка вставки
                     // просила места больше, чем есть, и весь экран ездил
@@ -122,7 +126,7 @@ struct ProfileView: View {
     /// кружок, как и «Изменить», открывает лист `ProfileEditor`: фото, имя
     /// и цвет кружка.
     private var person: some View {
-        SproutGroup("Хозяин") {
+        SproutGroup("Вы") {
             HStack(spacing: 14) {
                 Button { editing = true } label: {
                     AvatarCircle(size: Metrics.avatar)
@@ -132,14 +136,14 @@ struct ProfileView: View {
                 VStack(alignment: .leading, spacing: 3) {
                     Text(named ? garden.owner : Lang.text("Имя не задано"))
                         .font(Typography.navTitle)
-                        .foregroundStyle(named ? Palette.ink : .secondary)
-                        .lineLimit(1)
+                        .foregroundStyle(named ? Palette.ink : Palette.secondaryText)
+                        .dataLines()
                     Text(named
                          ? Lang.format("Садовод с %@", garden.since.formatted(
                              .dateTime.day().month(.wide).year()))
                          : Lang.text("Назовитесь — имя встретит вас при запуске"))
                         .font(Typography.settingNote)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Palette.secondaryText)
                 }
                 Spacer(minLength: 8)
                 Button(named ? "Изменить" : "Назвать") { editing = true }
@@ -168,7 +172,7 @@ struct ProfileView: View {
                             .minimumScaleFactor(0.8)
                         Text(Lang.format("Уровень %lld", grower.level))
                             .font(Typography.settingNote)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(Palette.secondaryText)
                         ProgressView(value: grower.progress)
                             .tint(Palette.green)
                     }
@@ -177,6 +181,15 @@ struct ProfileView: View {
                         .foregroundStyle(.tertiary)
                 }
                 .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+
+            SproutDivider()
+
+            // Задания недели переехали с главной сюда: открывают тот же экран
+            // садовника.
+            NavigationLink { GardenerView() } label: {
+                SproutLink("Задания недели", icon: "checklist")
             }
             .buttonStyle(.plain)
 
@@ -231,7 +244,7 @@ struct ProfileView: View {
                             .frame(width: 44, height: 44)
                         Text("Первая — за первый полив")
                             .font(Typography.settingNote)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(Palette.secondaryText)
                     } else {
                         ForEach(latest) { rank in
                             MedalBadge(rank: rank, earned: true)
@@ -242,7 +255,7 @@ struct ProfileView: View {
                     Text(Lang.format("%1$lld из %2$lld",
                                      Cabinet.shared.total, Award.total))
                         .font(Typography.settingNote)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Palette.secondaryText)
                         .monospacedDigit()
                     Image(systemName: "chevron.right")
                         .font(Typography.settingNote)
@@ -279,9 +292,11 @@ struct ProfileView: View {
             SproutDivider()
 
             HStack(spacing: 10) {
-                // Значком: подписи «Позвать» и «Челлендж» рядом с «Вставить»
-                // в строку не помещались.
-                ShareLink(item: me.card) {
+                // Значком: подписи «Позвать» и «Испытание» рядом с
+                // «Вставить» в строку не помещались. Счёт испытания в этом
+                // коде не едет — его шлёт «Отправить счёт» в карточке
+                // испытания: чужим он по умолчанию не виден.
+                ShareLink(item: plainCard) {
                     Label("Поделиться", systemImage: "square.and.arrow.up")
                         .labelStyle(.iconOnly)
                 }
@@ -293,7 +308,7 @@ struct ProfileView: View {
                         Button(Race.title(quest)) { challenge(quest) }
                     }
                 } label: {
-                    Label("Челлендж", systemImage: "flag.checkered")
+                    Label("Испытание", systemImage: "flag.checkered")
                         .lineLimit(1)
                 }
                 .buttonStyle(.glass)
@@ -337,7 +352,7 @@ struct ProfileView: View {
         )) {
             Button("Хорошо", role: .cancel) {}
         } message: {
-            Text(Lang.format("Вы в челлендже от %@. Свой счёт отправляйте кнопкой «Отправить счёт».",
+            Text(Lang.format("Вы в испытании от %@. Свой счёт отправляйте кнопкой «Отправить счёт».",
                              joined?.host ?? ""))
         }
         .sheet(item: $comparing) { friend in
@@ -346,7 +361,15 @@ struct ProfileView: View {
         .animation(Motion.pill, value: friends.races)
     }
 
-    /// Новый челлендж — сразу с собой; друзей зовёт кнопка в карточке.
+    /// Своя карточка без счёта испытания — для «Поделиться».
+    private var plainCard: String {
+        var bare = me
+        bare.race = nil
+        return bare.card
+    }
+
+    /// Новое испытание — только по нажатию самого хозяина, сразу с собой;
+    /// друзей зовёт кнопка в карточке.
     private func challenge(_ quest: Quest) {
         let race = Race.new(quest, host: garden.signed)
         withAnimation(Motion.pill) { friends.join(race) }
@@ -389,10 +412,9 @@ struct ProfileView: View {
     }
 
     /// Своя строка пересчитывается на каждом поливе, чужие — какими их
-    /// прислали.
+    /// прислали. Места — по «Вовремя, %», см. `Friends.ranked`.
     private var standings: [Rival] {
-        ([me] + friends.rivals.filter { $0.id != me.id })
-            .sorted { ($0.total, $1.name) > ($1.total, $0.name) }
+        Friends.ranked([me] + friends.rivals.filter { $0.id != me.id })
     }
 
     private func row(_ place: Int, _ rival: Rival) -> some View {
@@ -408,20 +430,23 @@ struct ProfileView: View {
                 Text(rival.name)
                     .font(Typography.settingRow)
                     .foregroundStyle(Palette.ink)
-                    .lineLimit(1)
+                    .dataLines()
                 Text(note(for: rival))
                     .font(Typography.figureCaption)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Palette.secondaryText)
             }
             Spacer(minLength: 8)
+            // Главное — доля поливов вовремя; число поливов — справкой.
             VStack(alignment: .trailing, spacing: 1) {
-                Text(rival.total.formatted())
+                Text(rival.aim.map { Lang.format("вовремя %@",
+                                                 Lang.format("%lld%%", $0)) }
+                     ?? Lang.text("вовремя —"))
                     .font(Typography.settingRow)
                     .foregroundStyle(Palette.ink)
                     .contentTransition(.numericText())
-                Text(Lang.format("дней подряд: %lld", rival.streak))
+                Text(Lang.format("%lld поливов", rival.total))
                     .font(Typography.figureCaption)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Palette.secondaryText)
             }
         }
         .contentShape(Rectangle())
@@ -479,33 +504,59 @@ struct ProfileView: View {
 
             SproutDivider()
 
-            Button(role: .destructive) { erasing = true } label: {
-                HStack(spacing: 12) {
-                    Image(systemName: "trash")
-                        .font(Typography.settingRow)
-                        .frame(width: 24)
-                    Text("Стереть сад")
-                        .font(Typography.settingRow)
-                    Spacer(minLength: 8)
-                }
-                .foregroundStyle(.red)
-                .contentShape(Rectangle())
+            // Подсказки экранов — снова, при следующем заходе на каждый;
+            // этот экран — сразу, чтобы было видно, что сработало.
+            Button {
+                Settings.shared.rewalk()
+                Coach.shared.start(.profile)
+            } label: {
+                SproutLink("Подсказки", icon: "lightbulb")
             }
             .buttonStyle(.plain)
-        }
-        .sproutRide()
-        .confirmationDialog("Стереть сад?", isPresented: $erasing,
-                            titleVisibility: .visible) {
-            Button("Стереть", role: .destructive) { garden.erase() }
-            Button("Отмена", role: .cancel) {}
-        } message: {
-            // В общем саду стирается сад у всех, кто в нём.
-            if Kinship.enabled,
-               Kinship.shared.mode == .guest || Kinship.shared.sharing {
-                Text("Исчезнут все растения и весь журнал поливов — у всех, кто в общем саду. Вернуть их будет нельзя.")
-            } else {
-                Text("Исчезнут все растения и весь журнал поливов. Вернуть их будет нельзя.")
+
+            // Стереть общий сад может только хозяин: у гостя пункта нет вовсе,
+            // ему — «Выйти из общего сада» в группе «Семья».
+            if !kin.guest {
+                SproutDivider()
+
+                eraseRow
             }
         }
+        .sproutRide()
+        .sheet(isPresented: $erasing) {
+            TypedConfirm(
+                title: Lang.text("Стереть сад?"),
+                message: shared
+                    ? Lang.text("Исчезнут все растения и весь журнал поливов — у всех, кто в общем саду. Вернуть их будет нельзя.")
+                    : Lang.text("Исчезнут все растения и весь журнал поливов. Вернуть их будет нельзя."),
+                prompt: Lang.format("Введите %lld, чтобы стереть",
+                                    garden.plantCount),
+                answer: String(garden.plantCount),
+                done: Lang.text("Стереть"),
+                numeric: true) {
+                _ = garden.erase(guest: kin.guest)
+            }
+        }
+    }
+
+    private var kin: Kinship { Kinship.shared }
+
+    /// В общем саду стирается сад у всех, кто в нём.
+    private var shared: Bool { Kinship.enabled && kin.sharing }
+
+    private var eraseRow: some View {
+        Button(role: .destructive) { erasing = true } label: {
+            HStack(spacing: 12) {
+                Image(systemName: "trash")
+                    .font(Typography.settingRow)
+                    .frame(width: 24)
+                Text("Стереть сад")
+                    .font(Typography.settingRow)
+                Spacer(minLength: 8)
+            }
+            .foregroundStyle(.red)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
     }
 }

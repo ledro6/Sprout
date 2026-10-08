@@ -7,8 +7,8 @@ import UIKit
 /// а при запуске с нуля — в `connectionOptions`. У SwiftUI такого входа
 /// нет, поэтому делегат сцены свой; окна по-прежнему ведёт SwiftUI.
 ///
-/// Пока общий сад выключен (`Kinship.enabled`), делегат приложения говорит
-/// системе, что настройки сцен у него нет, — всё как без этого файла.
+/// Тот же делегат сцены принимает и быстрые действия иконки, см.
+/// `QuickActions`, поэтому он у сцены всегда.
 final class FamilyDoor: NSObject, UIApplicationDelegate {
     func application(
         _ application: UIApplication,
@@ -17,16 +17,8 @@ final class FamilyDoor: NSObject, UIApplicationDelegate {
     ) -> UISceneConfiguration {
         let configuration = UISceneConfiguration(
             name: nil, sessionRole: connectingSceneSession.role)
-        if Kinship.enabled { configuration.delegateClass = FamilyScene.self }
+        configuration.delegateClass = FamilyScene.self
         return configuration
-    }
-
-    nonisolated override func responds(to aSelector: Selector!) -> Bool {
-        if aSelector == #selector(UIApplicationDelegate.application(
-            _:configurationForConnecting:options:)) {
-            return Kinship.enabled
-        }
-        return super.responds(to: aSelector)
     }
 }
 
@@ -34,10 +26,26 @@ final class FamilyDoor: NSObject, UIApplicationDelegate {
 final class FamilyScene: NSObject, UIWindowSceneDelegate {
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession,
                options connectionOptions: UIScene.ConnectionOptions) {
+        // Запуск нажатием на быстрое действие: корень ещё не слушает —
+        // исполнит `QuickActions.run`, когда появится.
+        if let shortcut = connectionOptions.shortcutItem {
+            QuickActions.pending = shortcut.type
+        }
         guard let metadata = connectionOptions.cloudKitShareMetadata else {
             return
         }
         Task { @MainActor in Kinship.shared.accept(metadata) }
+    }
+
+    /// Приложение уже запущено — действие исполняется сразу.
+    func windowScene(
+        _ windowScene: UIWindowScene,
+        performActionFor shortcutItem: UIApplicationShortcutItem,
+        completionHandler: @escaping (Bool) -> Void
+    ) {
+        QuickActions.pending = shortcutItem.type
+        completionHandler(true)
+        Task { @MainActor in QuickActions.run() }
     }
 
     func windowScene(

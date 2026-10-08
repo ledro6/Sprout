@@ -26,13 +26,17 @@ final class WatchLink: NSObject, WCSessionDelegate {
         try? session.updateApplicationContext([Wrist.Key.garden: data])
     }
 
-    /// Полив с часов — в сад, в журнал и обратно на часы.
+    /// Полив с часов — в сад, в журнал и обратно на часы. Влажную землю —
+    /// только если на часах подтвердили: без этого полива нет и здесь, часы
+    /// получат сад как есть.
     @MainActor
-    private func water(_ id: String, at moment: Date) {
+    private func water(_ id: String, at moment: Date, anyway: Bool) {
         let garden = Garden.shared
         garden.reload()
         garden.advance()
-        _ = garden.water(id, at: min(moment, Date()))
+        if garden.water(id, at: min(moment, Date()), anyway: anyway) != nil {
+            Journal.shared.waterTap(.watch)
+        }
     }
 
     @MainActor
@@ -68,8 +72,9 @@ final class WatchLink: NSObject, WCSessionDelegate {
     func session(_ session: WCSession, didReceiveMessage message: [String: Any],
                  replyHandler: @escaping ([String: Any]) -> Void) {
         let id = message[Wrist.Key.water] as? String
+        let anyway = message[Wrist.Key.anyway] as? Bool ?? false
         Task { @MainActor in
-            if let id { self.water(id, at: Date()) }
+            if let id { self.water(id, at: Date(), anyway: anyway) }
             replyHandler(self.reply())
         }
     }
@@ -80,6 +85,7 @@ final class WatchLink: NSObject, WCSessionDelegate {
         guard let id = userInfo[Wrist.Key.water] as? String else { return }
         let moment = (userInfo[Wrist.Key.when] as? Double)
             .map(Date.init(timeIntervalSince1970:)) ?? Date()
-        Task { @MainActor in self.water(id, at: moment) }
+        let anyway = userInfo[Wrist.Key.anyway] as? Bool ?? false
+        Task { @MainActor in self.water(id, at: moment, anyway: anyway) }
     }
 }

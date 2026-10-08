@@ -11,8 +11,12 @@ struct SproutField: View {
     /// Угол сверяется, когда лист встал, — см. `Settle`.
     @State private var settle = Settle()
 
-    /// Просили меньше движения — гирлянда горит, но не бежит.
+    /// Просили меньше движения — узора нет: он живой, волны и всходы.
     @Environment(\.accessibilityReduceMotion) private var still
+
+    /// Просили меньше прозрачности — узора нет: под стеклом шапки и
+    /// плашек он и есть то, что просвечивает.
+    @Environment(\.accessibilityReduceTransparency) private var solid
 
     var body: some View {
         // Настройку читаем телом поля, а не внутри `TimelineView`: на паузе
@@ -22,7 +26,7 @@ struct SproutField: View {
         let shapes = motif.dress(Settings.shared.chosen)
         let weave = Launch.shared.weave(for: shapes.count)
         let baseShade = Settings.shared.patternHue.shade
-        let waveShade = Settings.shared.waveHue.shade
+        let waveShade = Settings.shared.waveColour.shade
         let busy = !Cheer.shared.rings.isEmpty
             || Launch.shared.bloomStart != nil
             || Launch.shared.swapStart != nil
@@ -33,12 +37,17 @@ struct SproutField: View {
         // Бережём заряд — огонь тоже стоит: фон рисуется на каждом экране, и
         // бегущая гирлянда — это холст десять раз в секунду. См. `Power`.
         let running = lit && !still && !Power.shared.calm
+        // Узора нет вовсе при «Уменьшении движения», «Понижении
+        // прозрачности» и в режиме энергосбережения системы — остаётся
+        // ровный фон. Свой бережный режим и жар узор только замораживают.
+        let shown = Settings.shared.pattern && !still && !solid
+            && !Power.shared.lowPower
         return ZStack {
             Palette.background
 
             // Холст шире экрана на размах параллакса, но живёт в наложении на
             // пустой слой и обрезан по нему — иначе ZStack вырос бы.
-            if Settings.shared.pattern {
+            if shown {
                 Color.clear
                     .overlay {
                         // Долю берём у `TimelineView`: он будит ровно к кадру.

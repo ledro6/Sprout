@@ -12,27 +12,72 @@ enum Palette {
         })
     }
 
+    /// Пара из таблицы модели (`Legible`): по ней же проверка модели меряет
+    /// контраст, так что числа здесь и там не разойдутся.
+    private static func dual(_ pair: Legible.Pair) -> Color {
+        dual(tone(pair.light), tone(pair.dark))
+    }
+
+    private static func tone(_ p: Paint) -> Color {
+        Color(red: p.red / 255, green: p.green / 255, blue: p.blue / 255)
+            .opacity(p.alpha)
+    }
+
     private static func rgb(_ r: Double, _ g: Double, _ b: Double) -> Color {
         Color(red: r / 255, green: g / 255, blue: b / 255)
     }
 
-    static let background = dual(.white, rgb(43, 46, 44))
+    static let background = dual(Legible.background)
+
+    /// Карточка с данными — непрозрачная подложка под стеклом плашки, см.
+    /// `sproutPlate`.
+    static let card = dual(Legible.card)
 
     /// В тёмной теме не чистый белый: на сером он звенит.
-    static let ink = dual(.black, rgb(238, 241, 237))
+    static let ink = dual(Legible.primary)
+
+    /// Вторичный текст с данными — вместо системного `.secondary`: тот на
+    /// белом даёт 3.5 вместо нужных 4.5. Системный остаётся там, где строка
+    /// только украшает.
+    static let secondaryText = dual(Legible.secondary)
+
+    /// Только украшение, никогда не данные.
+    static let decorative = dual(Legible.decorative)
+
+    static let hairline = dual(Legible.hairline)
+    static let controlBorder = dual(Legible.controlBorder)
 
     /// Приветственный экран — зелёный в обеих темах: он фирменный.
     static let welcome = dual(rgb(207, 248, 201), rgb(18, 54, 13))
     static let welcomeInk = dual(.black, .white)
 
-    /// Системный синий iOS; в тёмной теме светлее, как у самой iOS.
-    static let accent = dual(rgb(0, 136, 255), rgb(74, 168, 255))
+    /// Синий текста, ссылок и значков. Прежний системный #0088FF давал на
+    /// белом 3.6 — для текста мало, он остался украшением (`accentGlow`).
+    static let accent = dual(Legible.accentText)
 
-    static let green = rgb(55, 181, 81)
+    /// Синяя заливка кнопок с белой надписью — в обеих темах темнее
+    /// текстового синего тёмной темы, иначе белое на ней не читалось бы.
+    static let accentFill = dual(Legible.accentFill)
+
+    /// Прежний синий — подсветка и свечение без текста.
+    static let accentGlow = dual(Legible.accentGlow)
+
+    /// Зелёный «всё хорошо» — текстом и значками.
+    static let green = dual(Legible.ok)
+
+    /// Зелёная заливка кнопки под белую надпись.
+    static let greenFill = dual(Legible.okFill)
+
+    /// Яркий зелёный макета — только украшение: узор, градиент открытки.
+    static let leaf = dual(Legible.leafGlow)
 
     static let greenSoft = rgb(198, 250, 183)
 
-    static let water = rgb(71, 181, 228)
+    /// Вода текстом, значками и линией графика.
+    static let water = dual(Legible.wet)
+
+    /// Яркая вода макета — заливки и свечение без текста.
+    static let waterGlow = dual(Legible.waterGlow)
 
     /// Цвет фигурки узора: 0 — покой, 1 — гребень волны.
     ///
@@ -111,15 +156,22 @@ enum Palette {
             .opacity(ink.a)
     }
 
-    /// Тревожная тень от 40 до 20 процентов влажности. В тёмной теме светлее.
-    static let warn = dual(rgb(255, 149, 0), rgb(255, 169, 46))
+    /// «Скоро пить» — текстом и значками.
+    static let warn = dual(Legible.soon)
 
-    /// Ниже двадцати. Силу тени считает сама карточка.
-    static let alarm = dual(rgb(255, 59, 48), rgb(255, 92, 82))
+    /// «Ждёт воды» — текстом и значками.
+    static let alarm = dual(Legible.urgent)
 
     /// Земля досуха — темнее тревоги: в статистике её надо отличить от
-    /// «в последний момент».
-    static let parched = dual(rgb(150, 32, 26), rgb(205, 72, 62))
+    /// «в последний момент». Рядом всегда значок — одним цветом не различить.
+    static let parched = dual(Legible.parched)
+
+    /// Тревожная тень от 40 до 20 процентов влажности — яркие цвета макета:
+    /// это свечение, а не надпись. В тёмной теме светлее.
+    static let warnGlow = dual(Legible.warnGlow)
+
+    /// Тень ниже двадцати. Силу тени считает сама карточка.
+    static let alarmGlow = dual(Legible.alarmGlow)
 
     /// Небо планетария — ночное в обеих темах: планеты видны только на
     /// тёмном.
@@ -247,9 +299,10 @@ enum Metrics {
     /// доросшей. Изгиб и так отводит имя вглубь — размытие лишь подсказывает.
     static let roomBlur: CGFloat = 0.08
 
-    /// Выглядывающее имя — вполсилы; уходящее гаснет за две трети пути,
-    /// раньше, чем провернётся.
-    static let roomDim: CGFloat = 0.45
+    /// Выглядывающее имя читается: цвет вторичного текста держит 4.5:1, и
+    /// гасить его прозрачностью нельзя (0 — не гасить); уходящее гаснет за
+    /// две трети пути, раньше, чем провернётся.
+    static let roomDim: CGFloat = 0
     static let roomLeave: CGFloat = 1.5
 
     /// Между лентой и первыми карточками.
@@ -338,11 +391,11 @@ enum Metrics {
     /// скругления: не липнет к краю.
     static let modelBadgeInset: CGFloat = 7
 
-    /// Капля «Полить» на карточке: круг стекла размером с кнопки в углу
-    /// экрана — палец попадает, а фото не закрывает.
-    static let dropBox: CGFloat = 18
-    static let dropGlyph: CGFloat = 15
-    static let dropInset: CGFloat = 7
+    /// Капля «Полить» на карточке и в строке: круг стекла размером с кнопки в
+    /// углу экрана — 24 pt значка и поля стекла дают круг 44×44, палец
+    /// попадает.
+    static let dropBox: CGFloat = 24
+    static let dropGlyph: CGFloat = 17
 
     /// Подсказки на экранах: ниже этого от низа экрана пузырь не встаёт —
     /// там панель вкладок и полоска «Домой».
@@ -377,7 +430,15 @@ enum Metrics {
     static let teaser: CGFloat = 92
     static let ringLine: CGFloat = 2.5
 
-    static let toastGap: CGFloat = 10
+    /// Над панелью вкладок: последняя плашка прокрутки и плашка «Вернуть»
+    /// встают на столько выше панели. Высоту самой панели (и полоски
+    /// «Домой») система кладёт в безопасную зону вкладки — прокрутка
+    /// получает её сама, сверху добавляется только этот зазор. Одно число на
+    /// все экраны вкладок; главная считает низ сама (`HomeView.floor`) и
+    /// добавляет к нему свой `shelfTail`.
+    static let barGap: CGFloat = 8
+
+    static let toastGap: CGFloat = barGap
 
     /// Всплеск тления длится столько же, сколько у полива: волна та же, только
     /// идёт весь отсчёт.
@@ -398,9 +459,9 @@ enum Metrics {
     static let actionGap: CGFloat = 10
     static let toolRadius: CGFloat = 20
 
-    /// Барабан срока полива: три строки видно, как у «Таймера».
-    static let wheelWidth: CGFloat = 76
-    static let wheelHeight: CGFloat = 118
+    /// Герой карточки растения: миниатюра не больше 96 pt, кольцо влажности.
+    static let heroPhoto: CGFloat = 96
+    static let heroRing: CGFloat = 52
 
     /// «100%» помещается, и число не толкает ползунок.
     static let percentWidth: CGFloat = 52
@@ -418,6 +479,10 @@ enum Metrics {
 
     /// Цветов шесть — меньше клетки с фигуркой, иначе в строку не встанут.
     static let swatch: CGFloat = 28
+
+    /// Минимум для цели нажатия по HIG: кружки цвета держат её, пока сами
+    /// остаются мельче.
+    static let tapTarget: CGFloat = 44
 
     /// Мало нарочно: фигурка на гребне раздаётся на три пункта, и прыгнувший
     /// выше элемент ехал бы сам по себе.

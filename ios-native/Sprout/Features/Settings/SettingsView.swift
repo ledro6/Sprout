@@ -39,6 +39,7 @@ struct SettingsView: View {
                         watering
                             .hintSpot(.settingsWatering)
                         protection
+                        DataGroup()
                         about
                             .hintSpot(.settingsAbout)
                     }
@@ -57,9 +58,6 @@ struct SettingsView: View {
             .scrollEdgeEffectStyle(.soft, for: .top)
             .sproutSettledEdge()
             .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    WalkButton(walk: .settings, bare: true)
-                }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Готово") { dismiss() }
                 }
@@ -126,6 +124,18 @@ struct SettingsView: View {
             SproutDivider()
 
             SproutBlock("Цвет волны", term: .wave) {
+                // Палитра — только когда цвет волны свой: «Как узор» не
+                // просит выбирать то, что берётся с узора.
+                Picker("Цвет волны", selection: Binding(
+                    get: { settings.waveLikePattern },
+                    set: { settings.waveLikePattern = $0 })) {
+                    Text("Как узор").tag(true)
+                    Text("Свой цвет").tag(false)
+                }
+                .pickerStyle(.segmented)
+                .labelsHidden()
+                .onChange(of: settings.waveLikePattern) { _, _ in Feel.pick() }
+                if !settings.waveLikePattern {
                 HueRow(current: settings.waveHue, layer: .wave,
                        spots: waveSpots,
                        pick: { hue, spot in
@@ -137,6 +147,7 @@ struct SettingsView: View {
                            Feel.pick()
                        },
                        remove: { removeOwn($0, at: $1, from: .wave) })
+                }
             }
         }
     }
@@ -166,10 +177,19 @@ struct SettingsView: View {
 
     // MARK: - Фон
 
+    /// Подпись под «Узор на фоне» — по состоянию переключателя: включён —
+    /// что настраивается ниже, выключен — почему ниже всё погасло.
+    private var patternNote: LocalizedStringKey {
+        LocalizedStringKey(settings.pattern
+            ? Lang.text("Фигурки на фоне. Их цвет и движение — ниже.")
+            : Lang.text("Фон ровным цветом. Настройки узора ниже выключены."))
+    }
+
     private var backdrop: some View {
         SproutGroup("Фон") {
             // Узор можно убрать совсем — всё, что про узор, ниже гаснет.
-            switchRow("Узор на фоне", note: "Без узора фон — ровный цвет.",
+            switchRow("Узор на фоне",
+                      note: patternNote,
                       isOn: Binding(
                           get: { settings.pattern },
                           set: { on in
@@ -313,13 +333,13 @@ struct SettingsView: View {
                 if let note {
                     Text(note)
                         .font(Typography.settingNote)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Palette.secondaryText)
                         .fixedSize(horizontal: false, vertical: true)
                 }
                 if let hint {
                     Text(hint)
                         .font(Typography.settingNote)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Palette.secondaryText)
                         .fixedSize(horizontal: false, vertical: true)
                         .contentTransition(.opacity)
                 }
@@ -401,19 +421,15 @@ struct SettingsView: View {
 
             SproutDivider()
 
-            switchRow("Напоминать о поливе", term: .reminders, isOn: Binding(
+            switchRow("Напоминать о поливе", term: .reminders,
+                      note: "Утром — кого пора полить. Сразу после включения система спросит разрешение.",
+                      isOn: Binding(
                 get: { settings.reminders },
                 set: { want(reminders: $0) }))
 
             if settings.reminders {
-                SproutDivider()
-                    .transition(.opacity)
-                SproutBlock("Когда влажность ниже") {
-                    PercentWheel(share: Binding(
-                        get: { settings.threshold },
-                        set: { settings.threshold = $0 }))
-                }
-                .transition(.blurReplace)
+                ReminderTimes()
+                    .transition(.blurReplace)
             }
 
             SproutDivider()
@@ -568,6 +584,23 @@ struct SettingsView: View {
 
             NavigationLink { AboutView() } label: {
                 SproutLink("Сведения о приложении", icon: "info.circle")
+            }
+            .buttonStyle(.plain)
+
+            SproutDivider()
+
+            // Только на телефоне и только для самопроверки: ничего не
+            // отправляется, см. `Journal`.
+            switchRow("Журнал событий для самопроверки",
+                      note: "Что нажимали и сколько раз — без фото, кличек и мест. Только на этом телефоне.",
+                      isOn: Binding(
+                          get: { Journal.shared.enabled },
+                          set: { Journal.shared.enabled = $0 }))
+
+            SproutDivider()
+
+            NavigationLink { JournalView() } label: {
+                SproutLink("Журнал событий", icon: "list.bullet.rectangle")
             }
             .buttonStyle(.plain)
         }

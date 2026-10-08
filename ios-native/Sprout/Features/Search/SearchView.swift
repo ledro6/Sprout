@@ -38,7 +38,7 @@ struct SearchView: View {
         NavigationStack(path: $path) {
             ScrollView {
                 VStack(alignment: .leading, spacing: 0) {
-                    SproutHead("Поиск", walk: .search)
+                    SproutHead("Поиск")
                     Group {
                         if asked.isEmpty {
                             history
@@ -84,7 +84,7 @@ struct SearchView: View {
                 }
                 .toolbar {
                     ToolbarItem(placement: .topBarTrailing) {
-                        Button("Готово") { specimen = nil }
+                        Button("Закрыть") { specimen = nil }
                     }
                 }
             }
@@ -141,21 +141,19 @@ struct SearchView: View {
         }
     }
 
-    /// Есть языковая модель — под пустым поиском «Спросить сад»: набранное,
-    /// может, и не кличка, а вопрос.
+    /// Под пустым поиском — «Спросить сад» с набранным: может, это и не
+    /// кличка, а вопрос. Без Apple Intelligence кнопка остаётся — лист
+    /// объяснит, чего не хватает.
     private var nothing: some View {
         VStack(spacing: 18) {
-            hint(Lang.format("По запросу «%@» в квартире ничего не растёт.",
-                             asked),
+            hint(Lang.format("По запросу «%@» ничего не найдено", asked),
                  icon: "leaf")
-            if Muse.ready {
-                Button { asking = true } label: {
-                    Label("Спросить сад",
-                          systemImage: "bubble.left.and.text.bubble.right")
-                }
-                .buttonStyle(.glass)
-                .font(Typography.settingNote)
+            Button { asking = true } label: {
+                Label("Спросить сад",
+                      systemImage: "bubble.left.and.text.bubble.right")
             }
+            .buttonStyle(.glass)
+            .font(Typography.settingNote)
         }
     }
 
@@ -166,7 +164,7 @@ struct SearchView: View {
                 .foregroundStyle(.tertiary)
             Text(text)
                 .font(Typography.settingNote)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Palette.secondaryText)
                 .multilineTextAlignment(.center)
                 .fixedSize(horizontal: false, vertical: true)
         }
@@ -188,7 +186,7 @@ struct SearchView: View {
         .padding(.bottom, 28)
     }
 
-    /// Виды из каталога: в квартире такого может и не быть, а посадить —
+    /// Виды из каталога: в саду такого может и не быть, а посадить —
     /// можно.
     private var catalog: some View {
         SproutGroup("Каталог видов") {

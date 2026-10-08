@@ -31,7 +31,7 @@ struct HerbariumView: View {
                                          query.trimmingCharacters(
                                              in: .whitespacesAndNewlines)))
                             .font(Typography.settingNote)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(Palette.secondaryText)
                             .frame(maxWidth: .infinity)
                             .multilineTextAlignment(.center)
                             .padding(.top, 60)
@@ -52,7 +52,7 @@ struct HerbariumView: View {
                             style: .continuous))
                         Text("Сроки ухода — те же, что подставятся при посадке. Поправить их можно потом в настройках растения.")
                             .font(Typography.settingNote)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(Palette.secondaryText)
                             .fixedSize(horizontal: false, vertical: true)
                             .padding(.horizontal, 6)
                     }
@@ -72,7 +72,7 @@ struct HerbariumView: View {
             }
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("Готово") { dismiss() }
+                    Button("Закрыть") { dismiss() }
                 }
             }
         }
@@ -116,10 +116,11 @@ struct SpecimenView: View {
                         .padding(.vertical, 6)
                 }
                 .buttonStyle(.glassProminent)
+                .tint(Palette.accentFill)
                 .controlSize(.large)
                 Text("Откроется «Добавить» с этим видом и его сроками — останется дать кличку.")
                     .font(Typography.settingNote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Palette.secondaryText)
                     .fixedSize(horizontal: false, vertical: true)
                     .padding(.horizontal, 6)
             }
@@ -145,7 +146,7 @@ struct SpecimenView: View {
                     .minimumScaleFactor(0.7)
                 Text(Blueprint.stock(specimen.preset).source)
                     .font(Typography.settingNote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Palette.secondaryText)
                     .fixedSize(horizontal: false, vertical: true)
             }
             Spacer(minLength: 0)
@@ -197,7 +198,7 @@ struct SpecimenView: View {
             Spacer(minLength: 8)
             Text(fact.value)
                 .font(Typography.settingNote)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Palette.secondaryText)
                 .multilineTextAlignment(.trailing)
         }
         .accessibilityElement(children: .combine)
@@ -219,7 +220,7 @@ struct SpecimenRow: View {
                 if let days = specimen.watering {
                     Text(Lang.format("Полив %@", Species.periodPhrase(days)))
                         .font(Typography.settingNote)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Palette.secondaryText)
                         .lineLimit(1)
                 }
             }

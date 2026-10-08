@@ -85,9 +85,12 @@
 				Model/Botany/Preset.swift,
 				Model/Botany/Sculpt.swift,
 				Model/Core/Lang.swift,
+				Model/Core/Legible.swift,
+				Model/Core/Status.swift,
 				Model/Core/Store.swift,
 				Model/Garden/Care.swift,
 				Model/Garden/Climate.swift,
+				Model/Garden/Fair.swift,
 				Model/Garden/Garden.swift,
 				Model/Garden/Plants.swift,
 				Model/Garden/Round.swift,
@@ -95,7 +98,9 @@
 				Model/Garden/Season.swift,
 				Model/Garden/Sensor.swift,
 				Model/Garden/Shots.swift,
+				"Model/Garden/Status+Plant.swift",
 				Model/Garden/Treatment.swift,
+				Model/Garden/Twin.swift,
 				Model/Pattern/Tint.swift,
 				Model/Recognition/Species.swift,
 				Model/Scene/Greenhouse.swift,
@@ -108,6 +113,8 @@
 			membershipExceptions = (
 				Localizable.xcstrings,
 				Model/Core/Lang.swift,
+				Model/Core/Legible.swift,
+				Model/Core/Status.swift,
 				Model/Garden/Wrist.swift,
 			);
 			target = 1A0000000000000000000037 /* SproutWatch */;
@@ -117,6 +124,8 @@
 			membershipExceptions = (
 				Localizable.xcstrings,
 				Model/Core/Lang.swift,
+				Model/Core/Legible.swift,
+				Model/Core/Status.swift,
 				Model/Garden/Wrist.swift,
 			);
 			target = 1A0000000000000000000033 /* SproutWatchWidgetExtension */;

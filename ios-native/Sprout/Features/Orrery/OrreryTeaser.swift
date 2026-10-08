@@ -32,7 +32,7 @@ struct OrreryTeaser: View {
                 }
                 Text("Растения кружат по орбитам полива. Послушайте, как звучит месяц.")
                     .font(Typography.settingNote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Palette.secondaryText)
                     .fixedSize(horizontal: false, vertical: true)
             }
             Spacer(minLength: 0)

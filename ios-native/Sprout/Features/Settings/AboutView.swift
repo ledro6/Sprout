@@ -20,7 +20,7 @@ struct AboutView: View {
                         .foregroundStyle(Palette.ink)
                     Text("Напоминалка о поливе комнатных растений")
                         .font(Typography.settingNote)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Palette.secondaryText)
                         .fixedSize(horizontal: false, vertical: true)
                 }
             }
@@ -58,7 +58,7 @@ struct AboutView: View {
             Spacer(minLength: 8)
             Text(value)
                 .font(Typography.settingRow)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Palette.secondaryText)
         }
     }
 }

@@ -102,7 +102,13 @@ final class Tags {
             water(id)
         case .ask(let id):
             Summon.shared.plant = id
-            asking = id
+            // Земля влажная — сразу вопрос о ней, без «Полить?» перед ним:
+            // два листа подряд.
+            if Garden.shared.wetCheck(id) != nil {
+                water(id)
+            } else {
+                asking = id
+            }
         case .fresh(let id, let when):
             Summon.shared.plant = id
             notice = Lang.format("Полив уже отмечен в %@ — второй раз не записываю.",
@@ -111,11 +117,13 @@ final class Tags {
     }
 
     /// Как полив из Siri: с волной и отменой на плашке.
+    /// Влажную землю — сперва вопрос, см. `Overflow`.
     func water(_ id: Plant.ID) {
-        guard Bin.shared.water(id, in: Garden.shared) else { return }
-        let spot = Cards.shared.rect(id)
-        Cheer.shared.now(from: spot == .zero ? Screen.middle : spot)
-        Feel.water()
+        Overflow.shared.water(id, in: Garden.shared, source: .tag) {
+            let spot = Cards.shared.rect(id)
+            Cheer.shared.now(from: spot == .zero ? Screen.middle : spot)
+            Feel.water()
+        }
     }
 }
 

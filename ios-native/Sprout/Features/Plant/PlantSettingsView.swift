@@ -25,6 +25,8 @@ struct PlantSettingsView: View {
 
     @State private var naming = false
     @State private var newRoom = ""
+    /// Имя датчика в поле «Назвать».
+    @State private var sensorName = ""
 
     @State private var linking = false
 
@@ -136,11 +138,11 @@ struct PlantSettingsView: View {
             SproutDivider()
 
             SproutBlock("Полив", term: .period) {
-                PeriodWheel(days: $period)
+                PeriodStepper(days: $period)
 
                 Text(forecast)
                     .font(Typography.settingNote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Palette.secondaryText)
                     .contentTransition(.numericText())
 
                 if let usual = suggestion {
@@ -174,7 +176,7 @@ struct PlantSettingsView: View {
                     .labelsHidden()
             }
             if feeds {
-                PeriodWheel(days: $feedEvery)
+                PeriodStepper(days: $feedEvery)
                     .transition(.blurReplace)
             }
 
@@ -199,6 +201,15 @@ struct PlantSettingsView: View {
 
     // MARK: - Датчик
 
+    /// Новое имя датчика; пустое не сохраняем — останется прежнее.
+    private func renameSensor() {
+        let name = sensorName.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard var sensor = plant?.sensor, !name.isEmpty, name != sensor.name
+        else { return }
+        sensor.name = name
+        garden.link(plantID, sensor: sensor)
+    }
+
     /// Датчик влажности: привязан — чей, что показывает и метки шкалы;
     /// нет — привязать. Действия ложатся в сад сразу, мимо «Готово»: это
     /// не черновик, а устройство.
@@ -212,13 +223,18 @@ struct PlantSettingsView: View {
                         .foregroundStyle(Palette.accent)
                         .frame(width: 24)
                     VStack(alignment: .leading, spacing: 2) {
-                        Text(sensor.name)
+                        // Своё имя датчику: два Flower Care в списке
+                        // одинаковы, «У окна» и «Кухня» — нет.
+                        TextField("Назвать", text: $sensorName)
                             .font(Typography.settingRow)
                             .foregroundStyle(Palette.ink)
-                            .lineLimit(1)
+                            .submitLabel(.done)
+                            .onSubmit(renameSensor)
+                            .onAppear { sensorName = sensor.name }
+                            .onDisappear(perform: renameSensor)
                         Text(sensor.status ?? Lang.text("Ждём первых показаний…"))
                             .font(Typography.settingNote)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(Palette.secondaryText)
                             .contentTransition(.numericText())
                     }
                     Spacer(minLength: 8)
@@ -262,7 +278,7 @@ struct PlantSettingsView: View {
                 .disabled(sensor.last == nil)
                 Text("Отметьте, когда земля сухая и когда только что полита, — проценты растения встанут между метками.")
                     .font(Typography.settingNote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Palette.secondaryText)
                     .fixedSize(horizontal: false, vertical: true)
                 Button(role: .destructive) {
                     withAnimation(Motion.enter) {
@@ -276,7 +292,7 @@ struct PlantSettingsView: View {
             } else {
                 Text("Датчик в горшке покажет настоящую влажность земли: Flower Care по Bluetooth или датчик из приложения «Дом».")
                     .font(Typography.settingNote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Palette.secondaryText)
                     .fixedSize(horizontal: false, vertical: true)
                 Button { linking = true } label: {
                     Label("Подключить датчик", systemImage: "sensor")
@@ -308,7 +324,7 @@ struct PlantSettingsView: View {
         return HStack(spacing: 12) {
             Label {
                 Text(duty.title)
-                    .lineLimit(1)
+                    .dataLines()
                     .minimumScaleFactor(0.85)
             } icon: {
                 Image(systemName: duty.icon)
@@ -331,7 +347,7 @@ struct PlantSettingsView: View {
                     Text(every > 0 ? Lang.format("Раз в %lld дней", every)
                          : Lang.text("Не напоминать"))
                         .font(Typography.settingRow)
-                        .lineLimit(1)
+                        .dataLines()
                     Image(systemName: "chevron.up.chevron.down")
                         .font(Typography.settingNote)
                 }
@@ -345,7 +361,7 @@ struct PlantSettingsView: View {
         HStack(spacing: 6) {
             Text(text)
                 .font(Typography.settingRow)
-                .lineLimit(1)
+                .dataLines()
             Image(systemName: "chevron.up.chevron.down")
                 .font(Typography.settingNote)
         }

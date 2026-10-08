@@ -15,8 +15,13 @@ struct Gardener: Equatable, Sendable {
     /// За ступень медали.
     static let medal = 40
 
-    static func of(log: [Watering], quests: Int, medals: Int) -> Gardener {
-        let pours = log.reduce(0) { sum, entry in
+    /// С даты честных правил (`fair`) опыт — только за нужные поливы, в
+    /// «скоро пить» и «сухо»; прежние поливы — как были.
+    static func of(log: [Watering], quests: Int, medals: Int,
+                   fair: Date? = Fair.from) -> Gardener {
+        let pours = log.filter {
+            Fair.credits($0, from: fair)
+        }.reduce(0) { sum, entry in
             let onTime = entry.left.map { Almanac.Aim.zone($0) == .onTime }
                 ?? false
             return sum + pour + (onTime ? aim : 0)

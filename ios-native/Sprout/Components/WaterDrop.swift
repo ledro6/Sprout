@@ -8,30 +8,70 @@ struct WaterDrop: View {
 
     @Environment(Garden.self) private var garden
 
+    /// Чужой полив меньше часа назад, о котором спрашиваем перед своим.
+    @State private var asking: Watering?
+
+    /// Растёт на каждый полив — кольцо и подскок капли, см. `PourRing`.
+    @State private var poured = 0
+
+    @Environment(\.accessibilityReduceMotion) private var still
+
     private var full: Bool { plant.moisture >= 0.99 }
 
+    /// Только что полил кто-то из семьи — капля приглушена, нажатие сначала
+    /// спрашивает: два полива подряд заливают корни.
+    private var recent: Watering? {
+        Kinship.shared.recent(plant.id, in: garden.log)
+    }
+
     var body: some View {
-        Button(action: pour) {
+        Button {
+            if let recent { asking = recent } else { pour() }
+        } label: {
             // Пересыхает — капля дышит: зовёт полить.
             Image(systemName: "drop.fill")
                 .font(.system(size: Metrics.dropGlyph, weight: .semibold))
                 .symbolEffect(.breathe, isActive: plant.thirst == .alarm
                               && !Power.shared.calm)
+                .symbolEffect(.bounce, options: .speed(2),
+                              value: still ? 0 : poured)
                 .frame(width: Metrics.dropBox, height: Metrics.dropBox)
         }
         .buttonStyle(.glassProminent)
         .buttonBorderShape(.circle)
-        .tint(Palette.accent)
+        .tint(Palette.accentFill)
+        .pourRing(Circle(), trigger: poured)
         .disabled(full)
+        .opacity(recent == nil ? 1 : 0.5)
         .animation(Motion.number, value: full)
-        .accessibilityLabel(Lang.format("Полить: %@", plant.name))
+        .accessibilityLabel(Lang.format("Полить %@", plant.name))
+        .confirmationDialog(asking.map { Family.again($0) } ?? "",
+                            isPresented: Binding(
+                                get: { asking != nil },
+                                set: { if !$0 { asking = nil } }),
+                            titleVisibility: .visible) {
+            // Следом может спросить защита от перелива — её лист
+            // поднимается, когда этот уже ушёл: два листа разом SwiftUI
+            // не покажет.
+            Button("Полить") {
+                Task { @MainActor in
+                    try? await Task.sleep(for: .seconds(0.4))
+                    pour()
+                }
+            }
+            Button("Отмена", role: .cancel) {}
+        }
     }
 
+    /// Влажную землю — сперва вопрос, см. `Overflow`.
     private func pour() {
-        guard Bin.shared.water(plant.id, in: garden) else { return }
-        // Волна — от карточки, а не от капли: поливают растение.
-        let spot = Cards.shared.rect(plant.id)
-        Cheer.shared.now(from: spot == .zero ? Screen.middle : spot)
-        Feel.water()
+        let id = plant.id
+        Overflow.shared.water(id, in: garden) { [self] in
+            poured += 1
+            // Волна — от карточки, а не от капли: поливают растение.
+            let spot = Cards.shared.rect(id)
+            Cheer.shared.now(from: spot == .zero ? Screen.middle : spot)
+            Feel.water()
+        }
     }
 }

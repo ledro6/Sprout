@@ -79,7 +79,15 @@ final class Dachnik: NSObject {
     func look() {
         let now = Self.access(of: ensure())
         if access != now { access = now }
+        // Геопозицию запретили или оставили примерной — приезд не заметить:
+        // «только на даче» выключается само, напоминания идут как обычно.
+        if only, now == .denied || now == .approximate {
+            only = Dacha.onlyThere(only, located: false)
+        }
     }
+
+    /// Без геопозиции «только на даче» не включить, см. `look`.
+    var located: Bool { access == .fine }
 
     /// «Отметить дачу здесь»: разрешение, если его ещё не спрашивали, потом
     /// одно место — с той точностью, какую даст телефон.

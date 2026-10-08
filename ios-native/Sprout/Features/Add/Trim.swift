@@ -27,7 +27,7 @@ struct Trim: View {
                 window
                 Text("Потяните снимок или разведите пальцы. Двойное нажатие вернёт как было.")
                     .font(Typography.settingNote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Palette.secondaryText)
                     .multilineTextAlignment(.center)
                     .fixedSize(horizontal: false, vertical: true)
                     .padding(.horizontal, 40)

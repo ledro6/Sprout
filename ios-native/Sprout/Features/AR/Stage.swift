@@ -45,6 +45,13 @@ final class Stage {
 
     var many: Bool { cast.count > 1 }
 
+    /// Кого польёт «Полить»: выбранное, а одно растение — его.
+    var aimed: Plant.ID? { chosen ?? (many ? nil : cast.first) }
+
+    /// Влажную землю полить подтвердили — полив ляжет «лишним», см.
+    /// `Garden.water`.
+    @ObservationIgnored var anyway: Set<Plant.ID> = []
+
     /// Полив засчитывается, когда первая капля коснулась земли, а не по
     /// кнопке: иначе проценты прыгнули бы раньше, чем прилетела лейка.
     @ObservationIgnored var onWatered: (@MainActor (Plant.ID) -> Void)?
@@ -95,7 +102,7 @@ final class Stage {
         total = shown.count
         loaded = 0
         chosen = shown.count == 1 ? shown.first?.id : nil
-        tint = Settings.shared.waveHue.vivid
+        tint = Settings.shared.waveColour.vivid
         // Пока камера ищет пол, модели достаются из приложения, свои — с
         // диска, сканы — из своих файлов.
         Task { @MainActor [weak self] in

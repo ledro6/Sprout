@@ -10,13 +10,19 @@ import WidgetKit
 
 /// Подложка тёмная: на ней одинаково читается экран блокировки и в светлой
 /// теме, и в тёмной, а Dynamic Island и так чёрный.
+///
+/// Числа — в таблице модели (`Legible`), там же проверка контраста.
 private enum Night {
-    static let round = Color(red: 0.04, green: 0.13, blue: 0.11)
-    static let trip = Color(red: 0.06, green: 0.08, blue: 0.2)
-    static let sky = Color(red: 0.55, green: 0.72, blue: 1)
-    static let sun = Color(red: 1, green: 0.8, blue: 0.32)
+    static let round = inked(Legible.night)
+    static let trip = inked(Legible.nightTrip)
+    static let sky = inked(Legible.nightSky)
+    static let sun = inked(Legible.nightSun)
     /// Зелень галочки — светлее листа виджета: ей гореть на тёмном.
-    static let done = Color(red: 0.42, green: 0.86, blue: 0.5)
+    static let done = inked(Legible.nightDone)
+    /// Вода на тёмном — тема тут ни при чём: подложка тёмная всегда.
+    static let water = inked(Legible.nightWater)
+    /// Вторичная строка на тёмном.
+    static let dim = inked(Legible.nightDim)
 }
 
 // MARK: - Полив по очереди
@@ -47,7 +53,7 @@ struct RoundLive: Widget {
                 DynamicIslandExpandedRegion(.trailing) {
                     Count(stops: stops)
                         .font(.title3.weight(.bold))
-                        .foregroundStyle(Tone.water)
+                        .foregroundStyle(Night.water)
                         .padding(.trailing, 4)
                 }
                 DynamicIslandExpandedRegion(.center) {
@@ -82,7 +88,7 @@ struct RoundLive: Widget {
                 }
             } compactLeading: {
                 Image(systemName: "drop.fill")
-                    .foregroundStyle(Tone.water)
+                    .foregroundStyle(Night.water)
             } compactTrailing: {
                 if next == nil {
                     Image(systemName: "checkmark")
@@ -91,16 +97,16 @@ struct RoundLive: Widget {
                 } else {
                     Count(stops: stops)
                         .font(.caption.weight(.bold))
-                        .foregroundStyle(Tone.water)
+                        .foregroundStyle(Night.water)
                 }
             } minimal: {
                 Ring(fraction: RoundBanner.fraction(stops), width: 2.5) {
                     Image(systemName: next == nil ? "checkmark" : "drop.fill")
                         .font(.system(size: 9, weight: .bold))
-                        .foregroundStyle(next == nil ? Night.done : Tone.water)
+                        .foregroundStyle(next == nil ? Night.done : Night.water)
                 }
             }
-            .keylineTint(Tone.water)
+            .keylineTint(Night.water)
         }
         .supplementalActivityFamilies([.small])
     }
@@ -135,7 +141,7 @@ struct RoundBanner: View {
                     VStack(alignment: .leading, spacing: 1) {
                         Text("Полив по очереди")
                             .font(.caption.weight(.semibold))
-                            .foregroundStyle(.white.opacity(0.65))
+                            .foregroundStyle(Night.dim)
                         Text(next.name)
                             .font(.title3.weight(.bold))
                             .lineLimit(1)
@@ -143,7 +149,7 @@ struct RoundBanner: View {
                         Text(Lang.format("%1$@ · %2$@", next.room,
                                          Lang.format("%lld%%", next.percent)))
                             .font(.caption)
-                            .foregroundStyle(.white.opacity(0.65))
+                            .foregroundStyle(Night.dim)
                             .lineLimit(1)
                     }
                     .id(next.id)
@@ -158,7 +164,7 @@ struct RoundBanner: View {
                         Text(Lang.format("Полито %1$lld из %2$lld",
                                          Round.watered(stops), stops.count))
                             .font(.caption)
-                            .foregroundStyle(.white.opacity(0.65))
+                            .foregroundStyle(Night.dim)
                     }
                     Spacer(minLength: 0)
                 }
@@ -182,7 +188,7 @@ struct RoundBanner: View {
                         .lineLimit(1)
                     Count(stops: stops)
                         .font(.caption2.weight(.semibold))
-                        .foregroundStyle(Tone.water)
+                        .foregroundStyle(Night.water)
                 }
                 Spacer(minLength: 2)
                 Button(intent: WaterInRound(plant: next.id)) {
@@ -191,7 +197,7 @@ struct RoundBanner: View {
                 }
                 .buttonStyle(.borderedProminent)
                 .buttonBorderShape(.circle)
-                .tint(Tone.water)
+                .tint(Tone.fill)
             } else {
                 Tick(side: 36)
                 Text("Сад полит")
@@ -239,7 +245,7 @@ private struct RoundButtons: View {
             .buttonStyle(.borderedProminent)
             .buttonBorderShape(wide ? .capsule : .circle)
             .controlSize(wide ? .regular : .large)
-            .tint(Tone.water)
+            .tint(Tone.fill)
         }
         .font(.subheadline.weight(.bold))
     }
@@ -278,7 +284,7 @@ private struct Segments: View {
 
     private func colour(_ stop: Round.Stop, next: Plant.ID?) -> Color {
         switch stop.mark {
-        case .watered: Tone.water
+        case .watered: Night.water
         case .skipped: .white.opacity(0.35)
         case .waiting: .white.opacity(stop.id == next ? 0.75 : 0.18)
         }
@@ -304,7 +310,7 @@ private struct Ring<Content: View>: View {
                 .stroke(.white.opacity(0.18), lineWidth: width)
             Circle()
                 .trim(from: 0, to: max(0.001, min(fraction, 1)))
-                .stroke(Tone.water,
+                .stroke(Night.water,
                         style: StrokeStyle(lineWidth: width, lineCap: .round))
                 .rotationEffect(.degrees(-90))
             content
@@ -484,7 +490,7 @@ struct TripBanner: View {
                 VStack(alignment: .leading, spacing: 0) {
                     Text(gone ? "Хорошей поездки!" : "До отъезда")
                         .font(.caption.weight(.semibold))
-                        .foregroundStyle(.white.opacity(0.65))
+                        .foregroundStyle(Night.dim)
                     if gone {
                         Text(Lang.format("Вернусь %@", trip.back.formatted(
                             Date.FormatStyle.dateTime.day().month(.wide)
@@ -515,7 +521,7 @@ struct TripBanner: View {
             }
             Text(Self.line(trip, state))
                 .font(.caption)
-                .foregroundStyle(.white.opacity(0.7))
+                .foregroundStyle(Night.dim)
                 .lineLimit(2)
         }
         .foregroundStyle(.white)
@@ -528,7 +534,7 @@ struct TripBanner: View {
             VStack(alignment: .leading, spacing: 0) {
                 Text(gone ? "Хорошей поездки!" : "До отъезда")
                     .font(.caption2.weight(.semibold))
-                    .foregroundStyle(.white.opacity(0.7))
+                    .foregroundStyle(Night.dim)
                     .lineLimit(1)
                 if gone {
                     Text(trip.back.formatted(
@@ -562,14 +568,14 @@ private struct WaterAll: View {
                 .minimumScaleFactor(0.7)
         } else {
             Button(intent: WaterBeforeTrip()) {
-                Label("Полить всех", systemImage: "drop.fill")
+                Label("Полить, кому пора", systemImage: "drop.fill")
                     .font(.subheadline.weight(.bold))
                     .lineLimit(1)
                     .minimumScaleFactor(0.7)
             }
             .buttonStyle(.borderedProminent)
             .buttonBorderShape(.capsule)
-            .tint(Tone.water)
+            .tint(Tone.fill)
         }
     }
 }

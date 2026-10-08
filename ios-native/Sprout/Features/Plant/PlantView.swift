@@ -24,13 +24,19 @@ struct PlantView: View {
 
     @State private var staging = false
 
-    @State private var modelling = false
+    @State private var interval = false
 
     @State private var diagnosing = false
 
     @State private var portraying = false
 
     @State private var asking = false
+
+    /// «Спросить о растении» — выбор: по фото («Что с ним?») или вопросом
+    /// («Спросить сад» о нём).
+    @State private var choosing = false
+    /// «Подключить датчик» — лист поиска датчика.
+    @State private var linking = false
 
     /// Открытка для друзей — см. `PosterSheet`.
     @State private var posting = false
@@ -43,6 +49,9 @@ struct PlantView: View {
     @State private var spot = Spot()
 
     @State private var chrome = false
+
+    /// Растёт на каждый полив — кольцо у кнопки, см. `PourRing`.
+    @State private var poured = 0
 
     /// Список записей под графиком — свёрнут: он нужен, чтобы удалить
     /// ошибочную.
@@ -57,7 +66,7 @@ struct PlantView: View {
                     // Без стеклянного контейнера: он склеил бы экран в один слой
                     // и сломал разворачивание карточки.
                     VStack(spacing: Metrics.plantGap) {
-                        photo(plant)
+                        hero(plant)
                             .hintSpot(.plantPhoto)
                         VStack(spacing: Metrics.actionGap) {
                             pour
@@ -74,17 +83,18 @@ struct PlantView: View {
                             TreatmentCard(plant: plant, plan: plan)
                                 .transition(.blurReplace)
                         }
-                        facts(plant)
-                        notes
-                            .hintSpot(.plantNotes)
+                        extras(plant)
                         diary(plant)
                             .hintSpot(.plantDiary)
+                        notes
+                            .hintSpot(.plantNotes)
+                        meta(plant)
                     }
                     .animation(Motion.enter,
                                value: Rhythm.suggest(for: plant, log: garden.log))
                     .padding(.horizontal, Metrics.margin)
                     .padding(.top, 14)
-                    .padding(.bottom, 40)
+                    .padding(.bottom, Metrics.barGap)
                 }
             }
             .scrollDismissesKeyboard(.interactively)
@@ -149,14 +159,27 @@ struct PlantView: View {
         .fullScreenCover(isPresented: $staging) {
             PlantAR(plantID: plantID).environment(garden)
         }
-        .sheet(isPresented: $modelling) {
-            ModelSheet(plantID: plantID).environment(garden)
+        .sheet(isPresented: $interval) {
+            IntervalSheet(plantID: plantID).environment(garden)
+        }
+        // Один вход на два режима. «Вопросом» есть и без Apple
+        // Intelligence: лист объяснит, чего не хватает, а не пропадёт.
+        .confirmationDialog("Спросить о растении", isPresented: $choosing,
+                            titleVisibility: .visible) {
+            Button("По фото") { diagnosing = true }
+            Button("Вопросом") { asking = true }
+            Button("Отмена", role: .cancel) {}
+        } message: {
+            Text("Разбирается на телефоне, ничего не отправляется.")
         }
         .sheet(isPresented: $diagnosing) {
             DiagnosisSheet(plantID: plantID).environment(garden)
         }
         .sheet(isPresented: $asking) {
             AskView(focus: plantID).environment(garden)
+        }
+        .sheet(isPresented: $linking) {
+            SensorPicker(plantID: plantID).environment(garden)
         }
         // Стиль выбирают в самом листе; готовый портрет встаёт обложкой.
         .imagePlaygroundSheet(isPresented: $portraying, concepts: concepts,
@@ -223,11 +246,9 @@ struct PlantView: View {
                     }
                 }
             }
-            if Muse.ready {
-                Button { asking = true } label: {
-                    Label("Спросить о растении",
-                          systemImage: "bubble.left.and.text.bubble.right")
-                }
+            Button { choosing = true } label: {
+                Label("Спросить о растении",
+                      systemImage: "bubble.left.and.text.bubble.right")
             }
             // Черенок — кодом в переписку: друг посадит его со всем уходом.
             if let plant {
@@ -255,6 +276,9 @@ struct PlantView: View {
                          roomDraft = ""
                          moving = true
                      })
+            Button { Bin.shared.askRetire(plantID, in: garden) } label: {
+                Label("Растение погибло — в архив", systemImage: "archivebox")
+            }
             Button(role: .destructive) { toss() } label: {
                 Label("Удалить", systemImage: "trash")
             }
@@ -281,16 +305,19 @@ struct PlantView: View {
         }
     }
 
-    /// Полив с анимацией, иначе тревожная тень гасла бы щелчком.
+    /// Полив с анимацией, иначе тревожная тень гасла бы щелчком. Влажную
+    /// землю — сперва вопрос, см. `Overflow`.
     private func water() {
-        guard Bin.shared.water(plantID, in: garden) else { return }
-        Cheer.shared.now(from: spot.rect)
-        Feel.water()
+        Overflow.shared.water(plantID, in: garden, source: .plant) { [self] in
+            poured += 1
+            Cheer.shared.now(from: spot.rect)
+            Feel.water()
+        }
     }
 
-    /// Красное идёт от плашки с фото.
+    /// Сперва вопрос; красное идёт от плашки с фото.
     private func toss() {
-        Bin.shared.toss(plantID, from: spot.rect, in: garden)
+        Bin.shared.ask(plantID, from: spot.rect, in: garden)
     }
 
     private func relocate(to room: String) {
@@ -344,7 +371,7 @@ struct PlantView: View {
         VStack(alignment: .leading, spacing: Metrics.diaryGap) {
             Text("Заметки")
                 .font(Typography.groupTitle)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Palette.secondaryText)
             TextField("Пересадка, удобрения, где любит стоять…",
                       text: $noteDraft, axis: .vertical)
                 .textFieldStyle(.plain)
@@ -367,31 +394,125 @@ struct PlantView: View {
         Feel.toss()
     }
 
-    /// В макете 336×347: квадратное фото плюс поля.
-    private func photo(_ plant: Plant) -> some View {
-        PlantPhoto(plant: plant, radius: Metrics.cardRadius - 6)
-            .padding(.vertical, 6)
-            .frame(maxWidth: .infinity)
-            .aspectRatio(336.0 / 347.0, contentMode: .fit)
-            .sproutPlate(in: plate)
-            .modifier(PlantGlow(plant: plant, shape: plate))
-            .onGeometryChange(for: CGRect.self) { $0.frame(in: .global) }
-                action: { spot.rect = $0 }
-            // Отсюда волна трогается — эта плашка подпрыгивает первой.
-            .sproutRide()
+    /// Герой одной строкой: миниатюра до 96 pt, кольцо влажности, источник,
+    /// срок до полива и чип интервала «Раз в 9 дней ›». Влажность, срок и
+    /// кнопка «Полить» видны без прокрутки и на 667 pt.
+    private func hero(_ plant: Plant) -> some View {
+        HStack(alignment: .top, spacing: 14) {
+            PlantPhoto(plant: plant, radius: 18)
+                .frame(width: Metrics.heroPhoto, height: Metrics.heroPhoto)
+                .onGeometryChange(for: CGRect.self) { $0.frame(in: .global) }
+                    action: { spot.rect = $0 }
+            VStack(alignment: .leading, spacing: 8) {
+                HStack(spacing: 10) {
+                    MoistureRing(moisture: plant.moisture, status: plant.status,
+                                 label: plant.moistureLabel,
+                                 spoken: plant.moistureSpoken)
+                    VStack(alignment: .leading, spacing: 4) {
+                        StatusLabel(status: plant.status)
+                            .font(Typography.detail)
+                            .foregroundStyle(Palette.ink)
+                            .animation(Motion.number, value: plant.status)
+                        SourceBadge(estimated: plant.estimated)
+                    }
+                }
+                Text(garden.wateringLabel(plant))
+                    .font(Typography.settingNote)
+                    .foregroundStyle(Palette.secondaryText)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .contentTransition(.numericText())
+                intervalChip(plant)
+                toxicity(plant)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .padding(14)
+        .frame(maxWidth: .infinity)
+        .sproutPlate(in: plate)
+        .modifier(PlantGlow(plant: plant, shape: plate))
+        .animation(Motion.number, value: plant.moisture)
+        // Отсюда волна трогается — эта плашка подпрыгивает первой.
+        .sproutRide()
+    }
+
+    /// «Раз в 9 дней ›» — срок полива; нажатие открывает лист со степпером.
+    private func intervalChip(_ plant: Plant) -> some View {
+        Button { interval = true } label: {
+            HStack(spacing: 4) {
+                Text(Species.periodLabel(plant.dryingDays))
+                Image(systemName: "chevron.right")
+                    .font(.caption2.weight(.bold))
+            }
+            .font(Typography.settingNote.weight(.medium))
+            .foregroundStyle(Palette.ink)
+            .padding(.horizontal, 10)
+            .frame(minHeight: 32)
+            .background(Capsule().fill(Palette.ink.opacity(0.08)))
+            .contentShape(.capsule)
+        }
+        .buttonStyle(.plain)
+        .accessibilityHint("Меняет срок полива")
+    }
+
+    /// Токсичность — чипом со значком; цвет из токенов, как у тревоги:
+    /// смертельное красным, ядовитое оранжевым, безопасное обычным.
+    @ViewBuilder
+    private func toxicity(_ plant: Plant) -> some View {
+        if let danger = Toxicity.of(plant.species) {
+            let color = tone(of: danger)
+            HStack(spacing: 6) {
+                Label(danger.line, systemImage: symbol(of: danger))
+                    .font(Typography.settingNote.weight(.medium))
+                    .foregroundStyle(color)
+                    .fixedSize(horizontal: false, vertical: true)
+                TermHint(.pets)
+            }
+            .padding(.horizontal, 10)
+            .padding(.vertical, 5)
+            .background(RoundedRectangle(cornerRadius: 12, style: .continuous)
+                .fill(color.opacity(0.12)))
+        }
+    }
+
+    private func symbol(of danger: Toxicity) -> String {
+        switch danger {
+        case .safe: "checkmark.shield"
+        case .toxic: "exclamationmark.triangle.fill"
+        case .lily, .deadly: "exclamationmark.octagon.fill"
+        }
     }
 
     /// Главное действие экрана — широкой синей кнопкой, как в системных
-    /// приложениях iOS 26.
+    /// приложениях iOS 26. Земля ещё влажная — кнопка вторичная, под ней
+    /// почему: лишний полив вреден, нажатие переспросит.
+    @ViewBuilder
     private var pour: some View {
-        Button(action: water) {
-            Label("Полить сейчас", systemImage: "drop.fill")
-                .font(Typography.detail)
-                .frame(maxWidth: .infinity)
+        if let wet = garden.wetCheck(plantID) {
+            VStack(spacing: 6) {
+                Button(action: water) { pourLabel }
+                    .buttonStyle(.glass)
+                    .controlSize(.extraLarge)
+                    .pourRing(Capsule(), trigger: poured)
+                Text(Lang.format("Земля ещё влажная (%@)", MoistureStatus.percent(
+                    wet, estimated: plant?.estimated ?? true)))
+                    .font(Typography.settingNote)
+                    .foregroundStyle(Palette.secondaryText)
+            }
+            .sproutRide()
+        } else {
+            Button(action: water) { pourLabel }
+                .buttonStyle(.glassProminent)
+                .tint(Palette.accentFill)
+                .controlSize(.extraLarge)
+                .pourRing(Capsule(), trigger: poured)
+                .sproutRide()
         }
-        .buttonStyle(.glassProminent)
-        .controlSize(.extraLarge)
-        .sproutRide()
+    }
+
+    private var pourLabel: some View {
+        Label("Полить сейчас", systemImage: "drop.fill")
+            .font(Typography.detail)
+            .frame(maxWidth: .infinity)
     }
 
     /// Остальные действия — квадратными плитками стекла: значок и под ним
@@ -404,10 +525,9 @@ struct PlantView: View {
                 tool("В AR", action: { staging = true }) {
                     ModelMark(plant: plant)
                 }
-                tool("Модель", icon: "cube.transparent") { modelling = true }
             }
-            tool("Что с ним?", icon: "stethoscope") { diagnosing = true }
-            tool("Настройки", icon: "slider.horizontal.3") { tuning = true }
+            tool("Спросить о растении",
+                 icon: "bubble.left.and.text.bubble.right") { choosing = true }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .sproutRide()
@@ -439,7 +559,7 @@ struct PlantView: View {
             .foregroundStyle(Palette.ink)
             .padding(6)
             .frame(maxWidth: .infinity, minHeight: Metrics.toolTile)
-            .glassEffect(.regular, in: .rect(cornerRadius: Metrics.toolRadius))
+            .sproutGlass(in: .rect(cornerRadius: Metrics.toolRadius))
             .contentShape(.rect(cornerRadius: Metrics.toolRadius))
         }
         .buttonStyle(SproutPress())
@@ -461,7 +581,7 @@ struct PlantView: View {
                              Species.periodPhrase(days),
                              Species.periodPhrase(plant.dryingDays)))
                 .font(Typography.settingNote)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Palette.secondaryText)
                 .fixedSize(horizontal: false, vertical: true)
             HStack(spacing: Metrics.actionGap) {
                 Button { adopt(days) } label: {
@@ -471,6 +591,7 @@ struct PlantView: View {
                         .frame(maxWidth: .infinity)
                 }
                 .buttonStyle(.glassProminent)
+                .tint(Palette.accentFill)
                 Button {
                     withAnimation(Motion.enter) { garden.quiet(plantID, days) }
                 } label: {
@@ -510,7 +631,7 @@ struct PlantView: View {
             VStack(alignment: .leading, spacing: 14) {
                 Text("Уход")
                     .font(Typography.groupTitle)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Palette.secondaryText)
                 if let line = tending.feedLabel {
                     chore(line, due: tending.feedDue, done: "Подкормил",
                           icon: "sparkles", term: .feeding) {
@@ -569,47 +690,59 @@ struct PlantView: View {
         }
     }
 
-    private func facts(_ plant: Plant) -> some View {
-        VStack(alignment: .leading, spacing: 14) {
-            fact(Lang.format("Влажность %@", plant.moistureLabel),
-                 term: .moisture)
-                .contentTransition(.numericText())
-            if let status = plant.sensor?.status {
-                fact(status)
-                    .contentTransition(.numericText())
+    /// Редкое под уходом: датчик, чужой полив, сезон и погода. Нечего
+    /// сказать — плашки нет.
+    @ViewBuilder
+    private func extras(_ plant: Plant) -> some View {
+        let paid = credit(plant)
+        let season = Season.line(stretch: Season.stretch)
+        let weather = weatherLine(plant)
+        if plant.sensor == nil || paid != nil || season != nil
+            || weather != nil {
+            VStack(alignment: .leading, spacing: 14) {
+                if plant.sensor == nil {
+                    Button { linking = true } label: {
+                        Label("Подключить датчик — точная влажность",
+                              systemImage: "sensor.fill")
+                            .font(Typography.settingNote)
+                    }
+                    .buttonStyle(.glass)
+                }
+                if let paid {
+                    fact(paid)
+                        .transition(.blurReplace)
+                }
+                if let season { fact(season) }
+                if let weather { fact(weather, term: .weather) }
             }
-            fact(plant.species)
-            // Сразу под видом: питомца касается вид, а не кличка.
-            if let danger = Toxicity.of(plant.species) {
-                fact(danger.line, term: .pets, tone: tone(of: danger))
-            }
-            fact(plant.wateringLabel, term: .period)
-                .contentTransition(.numericText())
-            if let credit = credit(plant) {
-                fact(credit)
-                    .transition(.blurReplace)
-            }
-            if let room = garden.roomName(of: plant.id) {
-                fact(Lang.format("Комната «%@»", room))
-                    .contentTransition(.numericText())
-            }
-            if let season = Season.line(stretch: Season.stretch) {
-                fact(season)
-            }
-            if Settings.shared.weather, let climate = Settings.shared.climate,
-               climate.fresh(),
-               let line = climate.line(outdoor: Climate.outdoor(
-                   garden.roomName(of: plant.id) ?? "")) {
-                fact(line, term: .weather)
-            }
-            fact(plant.addedLabel)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.horizontal, 25)
+            .padding(.vertical, 22)
+            .sproutPlate(in: plate)
+            .sproutRide()
         }
-        .animation(Motion.number, value: plant.moisture)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(.horizontal, 25)
-        .padding(.vertical, 22)
-        .sproutPlate(in: plate)
-        .sproutRide()
+    }
+
+    private func weatherLine(_ plant: Plant) -> String? {
+        guard Settings.shared.weather, let climate = Settings.shared.climate,
+              climate.fresh()
+        else { return nil }
+        return climate.line(outdoor: Climate.outdoor(
+            garden.roomName(of: plant.id) ?? ""))
+    }
+
+    /// «вид · комната · добавлен» одной строкой в самом низу.
+    private func meta(_ plant: Plant) -> some View {
+        let parts = [plant.species, garden.roomName(of: plant.id),
+                     plant.addedLabel]
+            .compactMap { $0 }
+            .filter { !$0.isEmpty }
+        return Text(parts.joined(separator: " · "))
+            .font(Typography.settingNote)
+            .foregroundStyle(Palette.secondaryText)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.horizontal, 8)
+            .sproutRide()
     }
 
     /// История поливов: сколько и как часто, график высыхания и, под
@@ -620,11 +753,11 @@ struct PlantView: View {
         return VStack(alignment: .leading, spacing: Metrics.diaryGap) {
             Text("Поливы")
                 .font(Typography.groupTitle)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Palette.secondaryText)
             if diary.entries.isEmpty {
                 Text("Поливов ещё не было.")
                     .font(Typography.settingNote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Palette.secondaryText)
                     .fixedSize(horizontal: false, vertical: true)
                     .transition(.blurReplace)
             } else {
@@ -641,7 +774,7 @@ struct PlantView: View {
                         }
                         Text("Ошибочную запись удалит долгое нажатие.")
                             .font(Typography.settingNote)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(Palette.secondaryText)
                             .fixedSize(horizontal: false, vertical: true)
                             .padding(.top, 4)
                     }
@@ -682,7 +815,7 @@ struct PlantView: View {
                 .contentTransition(.numericText())
             Text(caption)
                 .font(Typography.figureCaption)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Palette.secondaryText)
         }
     }
 
@@ -700,7 +833,10 @@ struct PlantView: View {
                 if let who = signature(of: moment) {
                     Text(who)
                         .font(Typography.settingNote)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Palette.secondaryText)
+                }
+                if waiting(moment) {
+                    PendingBadge()
                 }
             }
         }
@@ -724,6 +860,16 @@ struct PlantView: View {
               let last = garden.log.last(where: { $0.plant == plant.id })
         else { return nil }
         return Kinship.shared.credit(last)
+    }
+
+    /// Полив общего сада, ещё не ушедший в iCloud.
+    private func waiting(_ moment: Date) -> Bool {
+        guard Kinship.enabled,
+              let entry = garden.log.last(where: {
+                  $0.plant == plantID && $0.when == moment
+              })
+        else { return false }
+        return Kinship.shared.waiting(entry)
     }
 
     /// Кто полил в этот миг, если не хозяин телефона: «Полила Маша».
@@ -793,6 +939,37 @@ private struct ModelMark: View {
             }
         }
         .animation(Motion.number, value: share)
+    }
+}
+
+/// Кольцо влажности: дуга цвета статуса и процент в середине.
+private struct MoistureRing: View {
+    let moisture: Double
+    let status: MoistureStatus
+    let label: String
+    /// Фраза для VoiceOver: процент, откуда он и срок.
+    let spoken: String
+
+    var body: some View {
+        ZStack {
+            Circle()
+                .stroke(Palette.ink.opacity(0.08), lineWidth: 5)
+            Circle()
+                .trim(from: 0, to: min(max(moisture, 0), 1))
+                .stroke(StatusStyle.color(status.tone),
+                        style: StrokeStyle(lineWidth: 5, lineCap: .round))
+                .rotationEffect(.degrees(-90))
+            Text(label)
+                .font(.caption2.weight(.semibold))
+                .monospacedDigit()
+                .foregroundStyle(Palette.ink)
+                .lineLimit(1)
+                .minimumScaleFactor(0.6)
+                .padding(.horizontal, 7)
+        }
+        .frame(width: Metrics.heroRing, height: Metrics.heroRing)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(spoken)
     }
 }
 

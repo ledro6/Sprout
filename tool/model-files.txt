@@ -1,6 +1,7 @@
 # Файлы модели, которые собираются без Apple: проверка модели
 # (tool/check_model.sh) и готовые модели видов (tool/make_stock.py).
 ios-native/Sprout/Model/Core/Lang.swift
+ios-native/Sprout/Model/Core/Status.swift
 ios-native/Sprout/Model/Garden/Season.swift
 ios-native/Sprout/Model/Garden/Care.swift
 ios-native/Sprout/Model/Garden/Trip.swift
@@ -11,6 +12,7 @@ ios-native/Sprout/Model/Core/Store.swift
 ios-native/Sprout/Model/Scene/Rig.swift
 ios-native/Sprout/Model/Garden/Treatment.swift
 ios-native/Sprout/Model/Garden/Plants.swift
+ios-native/Sprout/Model/Garden/Status+Plant.swift
 ios-native/Sprout/Model/Garden/Garden.swift
 ios-native/Sprout/Model/Garden/PotTag.swift
 ios-native/Sprout/Model/Garden/Postcard.swift
@@ -25,7 +27,11 @@ ios-native/Sprout/Model/Pattern/Frolic.swift
 ios-native/Sprout/Model/Core/Pulse.swift
 ios-native/Sprout/Model/Garden/Crop.swift
 ios-native/Sprout/Model/Core/Recents.swift
+ios-native/Sprout/Model/Core/Journal.swift
 ios-native/Sprout/Model/Garden/Score.swift
+ios-native/Sprout/Model/Garden/Twin.swift
+ios-native/Sprout/Model/Garden/Export.swift
+ios-native/Sprout/Model/Garden/Fair.swift
 ios-native/Sprout/Model/Garden/Diary.swift
 ios-native/Sprout/Model/Garden/Today.swift
 ios-native/Sprout/Model/Garden/Climate.swift
@@ -34,6 +40,7 @@ ios-native/Sprout/Model/Garden/Family.swift
 ios-native/Sprout/Model/Garden/Sensor.swift
 ios-native/Sprout/Model/Recognition/Ailment.swift
 ios-native/Sprout/Model/Core/Reminders.swift
+ios-native/Sprout/Model/Core/Plan.swift
 ios-native/Sprout/Model/Core/Agenda.swift
 ios-native/Sprout/Model/Garden/Rival.swift
 ios-native/Sprout/Model/Garden/Race.swift
@@ -70,3 +77,4 @@ ios-native/Sprout/Model/Workshop/Sample.swift
 ios-native/Sprout/Model/Scene/Greenhouse.swift
 ios-native/Sprout/Model/Scene/Rill.swift
 ios-native/Sprout/Model/Core/Swell.swift
+ios-native/Sprout/Model/Core/Legible.swift
