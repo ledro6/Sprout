@@ -18,7 +18,7 @@ struct DachaGroup: View {
 
     var body: some View {
         Section {
-            SproutGroup("Дача") {
+            SproutGroup("Какие комнаты на даче") {
                 ForEach(garden.rooms) { room in
                     if room.id != garden.rooms.first?.id { SproutDivider() }
                     row(room)

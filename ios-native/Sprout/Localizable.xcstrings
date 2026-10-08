@@ -49775,9 +49775,6 @@
         }
       }
     },
-    "Дача": {
-      "extractionState": "manual"
-    },
     "Два лета": {
       "extractionState": "manual",
       "localizations": {
@@ -83476,6 +83473,9 @@
           }
         }
       }
+    },
+    "Какие комнаты на даче": {
+      "extractionState": "manual"
     },
     "Какое растение полить?": {
       "extractionState": "manual",
@@ -240964,6 +240964,9 @@
           }
         }
       }
+    },
+    "Сухих: %lld": {
+      "extractionState": "manual"
     },
     "Сухо": {
       "extractionState": "manual"

@@ -97,6 +97,9 @@ struct HomeView: View {
     private var roomSize = Typography.roomSize
     @ScaledMetric(relativeTo: .largeTitle)
     private var roomGrown = Typography.roomGrown
+    /// Строка «Сухих: n» под лентой — с запасом на кегль.
+    @ScaledMetric(relativeTo: .caption)
+    private var dryRow: CGFloat = 18
 
     /// Строка ленты в покое и доросшая до заголовка — с запасом на кегль.
     private var row: CGFloat {
@@ -299,7 +302,8 @@ struct HomeView: View {
         // волны карточек.
         .transaction(value: Launch.shared.step >= 4) { $0.animation = nil }
         .contentMargins(.top, max(titleHeight + row + Metrics.shelfDrop
-                                  - grownRow - Metrics.headTail, 0),
+                                  - grownRow - Metrics.headTail, 0)
+                        + (dry(leaf) > 0 ? dryRow : 0),
                         for: .scrollContent)
         .contentMargins(.bottom, floor + Metrics.shelfTail, for: .scrollContent)
         .contentMargins(.bottom, floor, for: .scrollIndicators)
@@ -377,11 +381,20 @@ struct HomeView: View {
         }
     }
 
+    /// Сколько в комнате страницы ждёт воды — для «Сухих: n» под лентой.
+    private func dry(_ leaf: HomeLeaf) -> Int {
+        guard case .room(let name) = leaf,
+              let room = garden.rooms.first(where: { $0.name == name })
+        else { return 0 }
+        return room.plants.filter(\.needsWaterToday).count
+    }
+
     /// Шапка: заголовок и лента комнат — см. `HomeHead`.
     private var head: some View {
         HomeHead(glide: glide,
                  leaves: leaves,
                  names: garden.rooms.map(\.name),
+                 dry: leaves.map(dry),
                  size: roomSize,
                  grownSize: roomGrown,
                  row: row,
@@ -846,6 +859,9 @@ private struct HomeHead: View {
     let leaves: [HomeLeaf]
     let names: [String]
 
+    /// Сколько ждёт воды в комнате с тем же номером; у «Новой комнаты» — 0.
+    let dry: [Int]
+
     /// Кегль подписи комнаты в покое и доросший до заголовка.
     let size: CGFloat
     let grownSize: CGFloat
@@ -889,6 +905,23 @@ private struct HomeHead: View {
                 .sproutRide()
                 .modifier(Enter(step: 3))
                 .offset(y: -min(lift, titleHeight))
+            dryLine(lift: lift, grown: grown)
+        }
+    }
+
+    /// «Сухих: n» под названием текущей комнаты, пока n > 0. Лента растёт и
+    /// поднимается — строка уходит вместе с ней и тает.
+    @ViewBuilder
+    private func dryLine(lift: CGFloat, grown: CGFloat) -> some View {
+        let here = min(max(Int(glide.at.rounded()), 0), dry.count - 1)
+        if dry.indices.contains(here), dry[here] > 0 {
+            Text(Lang.format("Сухих: %lld", dry[here]))
+                .font(Typography.figureCaption.weight(.semibold))
+                .foregroundStyle(Palette.alarm)
+                .padding(.leading, Metrics.contentMargin)
+                .opacity(1 - min(grown * 3, 1))
+                .offset(y: -min(lift, titleHeight))
+                .allowsHitTesting(false)
         }
     }
 }
