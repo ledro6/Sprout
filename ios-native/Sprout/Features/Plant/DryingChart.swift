@@ -79,7 +79,16 @@ struct DryingChart: View {
                     .locale(Lang.locale))
             }
         }
-        .frame(height: 168)
+        // Оси подписаны: по вертикали — вода в земле, по горизонтали — даты.
+        .chartYAxisLabel(position: .leading) {
+            Text(Self.levelAxis).font(.caption2)
+                .foregroundStyle(Palette.secondaryText)
+        }
+        .chartXAxisLabel(position: .bottom) {
+            Text(Self.timeAxis).font(.caption2)
+                .foregroundStyle(Palette.secondaryText)
+        }
+        .frame(height: 192)
         .accessibilityElement()
         .accessibilityLabel("Как сохнет земля")
         .accessibilityValue(Lang.format("Поливов на графике: %lld",

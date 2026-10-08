@@ -138,7 +138,7 @@ struct PlantSettingsView: View {
             SproutDivider()
 
             SproutBlock("Полив", term: .period) {
-                PeriodWheel(days: $period)
+                PeriodStepper(days: $period)
 
                 Text(forecast)
                     .font(Typography.settingNote)
@@ -176,7 +176,7 @@ struct PlantSettingsView: View {
                     .labelsHidden()
             }
             if feeds {
-                PeriodWheel(days: $feedEvery)
+                PeriodStepper(days: $feedEvery)
                     .transition(.blurReplace)
             }
 

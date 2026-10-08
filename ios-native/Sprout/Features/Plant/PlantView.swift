@@ -24,7 +24,7 @@ struct PlantView: View {
 
     @State private var staging = false
 
-    @State private var modelling = false
+    @State private var interval = false
 
     @State private var diagnosing = false
 
@@ -66,7 +66,7 @@ struct PlantView: View {
                     // Без стеклянного контейнера: он склеил бы экран в один слой
                     // и сломал разворачивание карточки.
                     VStack(spacing: Metrics.plantGap) {
-                        photo(plant)
+                        hero(plant)
                             .hintSpot(.plantPhoto)
                         VStack(spacing: Metrics.actionGap) {
                             pour
@@ -83,11 +83,12 @@ struct PlantView: View {
                             TreatmentCard(plant: plant, plan: plan)
                                 .transition(.blurReplace)
                         }
-                        facts(plant)
-                        notes
-                            .hintSpot(.plantNotes)
+                        extras(plant)
                         diary(plant)
                             .hintSpot(.plantDiary)
+                        notes
+                            .hintSpot(.plantNotes)
+                        meta(plant)
                     }
                     .animation(Motion.enter,
                                value: Rhythm.suggest(for: plant, log: garden.log))
@@ -158,8 +159,8 @@ struct PlantView: View {
         .fullScreenCover(isPresented: $staging) {
             PlantAR(plantID: plantID).environment(garden)
         }
-        .sheet(isPresented: $modelling) {
-            ModelSheet(plantID: plantID).environment(garden)
+        .sheet(isPresented: $interval) {
+            IntervalSheet(plantID: plantID).environment(garden)
         }
         // Один вход на два режима. «Вопросом» есть и без Apple
         // Intelligence: лист объяснит, чего не хватает, а не пропадёт.
@@ -393,18 +394,91 @@ struct PlantView: View {
         Feel.toss()
     }
 
-    /// В макете 336×347: квадратное фото плюс поля.
-    private func photo(_ plant: Plant) -> some View {
-        PlantPhoto(plant: plant, radius: Metrics.cardRadius - 6)
-            .padding(.vertical, 6)
-            .frame(maxWidth: .infinity)
-            .aspectRatio(336.0 / 347.0, contentMode: .fit)
-            .sproutPlate(in: plate)
-            .modifier(PlantGlow(plant: plant, shape: plate))
-            .onGeometryChange(for: CGRect.self) { $0.frame(in: .global) }
-                action: { spot.rect = $0 }
-            // Отсюда волна трогается — эта плашка подпрыгивает первой.
-            .sproutRide()
+    /// Герой одной строкой: миниатюра до 96 pt, кольцо влажности, источник,
+    /// срок до полива и чип интервала «Раз в 9 дней ›». Влажность, срок и
+    /// кнопка «Полить» видны без прокрутки и на 667 pt.
+    private func hero(_ plant: Plant) -> some View {
+        HStack(alignment: .top, spacing: 14) {
+            PlantPhoto(plant: plant, radius: 18)
+                .frame(width: Metrics.heroPhoto, height: Metrics.heroPhoto)
+                .onGeometryChange(for: CGRect.self) { $0.frame(in: .global) }
+                    action: { spot.rect = $0 }
+            VStack(alignment: .leading, spacing: 8) {
+                HStack(spacing: 10) {
+                    MoistureRing(moisture: plant.moisture, status: plant.status,
+                                 label: plant.moistureLabel)
+                    VStack(alignment: .leading, spacing: 4) {
+                        StatusLabel(status: plant.status)
+                            .font(Typography.detail)
+                            .foregroundStyle(Palette.ink)
+                            .animation(Motion.number, value: plant.status)
+                        SourceBadge(estimated: plant.estimated)
+                    }
+                }
+                Text(garden.wateringLabel(plant))
+                    .font(Typography.settingNote)
+                    .foregroundStyle(Palette.secondaryText)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .contentTransition(.numericText())
+                intervalChip(plant)
+                toxicity(plant)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .padding(14)
+        .frame(maxWidth: .infinity)
+        .sproutPlate(in: plate)
+        .modifier(PlantGlow(plant: plant, shape: plate))
+        .animation(Motion.number, value: plant.moisture)
+        // Отсюда волна трогается — эта плашка подпрыгивает первой.
+        .sproutRide()
+    }
+
+    /// «Раз в 9 дней ›» — срок полива; нажатие открывает лист со степпером.
+    private func intervalChip(_ plant: Plant) -> some View {
+        Button { interval = true } label: {
+            HStack(spacing: 4) {
+                Text(Species.periodLabel(plant.dryingDays))
+                Image(systemName: "chevron.right")
+                    .font(.caption2.weight(.bold))
+            }
+            .font(Typography.settingNote.weight(.medium))
+            .foregroundStyle(Palette.ink)
+            .padding(.horizontal, 10)
+            .frame(minHeight: 32)
+            .background(Capsule().fill(Palette.ink.opacity(0.08)))
+            .contentShape(.capsule)
+        }
+        .buttonStyle(.plain)
+        .accessibilityHint("Меняет срок полива")
+    }
+
+    /// Токсичность — чипом со значком; цвет из токенов, как у тревоги:
+    /// смертельное красным, ядовитое оранжевым, безопасное обычным.
+    @ViewBuilder
+    private func toxicity(_ plant: Plant) -> some View {
+        if let danger = Toxicity.of(plant.species) {
+            let color = tone(of: danger)
+            HStack(spacing: 6) {
+                Label(danger.line, systemImage: symbol(of: danger))
+                    .font(Typography.settingNote.weight(.medium))
+                    .foregroundStyle(color)
+                    .fixedSize(horizontal: false, vertical: true)
+                TermHint(.pets)
+            }
+            .padding(.horizontal, 10)
+            .padding(.vertical, 5)
+            .background(RoundedRectangle(cornerRadius: 12, style: .continuous)
+                .fill(color.opacity(0.12)))
+        }
+    }
+
+    private func symbol(of danger: Toxicity) -> String {
+        switch danger {
+        case .safe: "checkmark.shield"
+        case .toxic: "exclamationmark.triangle.fill"
+        case .lily, .deadly: "exclamationmark.octagon.fill"
+        }
     }
 
     /// Главное действие экрана — широкой синей кнопкой, как в системных
@@ -450,11 +524,9 @@ struct PlantView: View {
                 tool("В AR", action: { staging = true }) {
                     ModelMark(plant: plant)
                 }
-                tool("Модель", icon: "cube.transparent") { modelling = true }
             }
             tool("Спросить о растении",
                  icon: "bubble.left.and.text.bubble.right") { choosing = true }
-            tool("Настройки", icon: "slider.horizontal.3") { tuning = true }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .sproutRide()
@@ -617,56 +689,59 @@ struct PlantView: View {
         }
     }
 
-    private func facts(_ plant: Plant) -> some View {
-        VStack(alignment: .leading, spacing: 14) {
-            // Одна строка: процент, откуда он и заряд датчика.
-            fact(plant.moistureLine, term: .moisture)
-                .contentTransition(.numericText())
-            // Статус — словами и значком общего движка, см. `StatusStyle`.
-            StatusLabel(status: plant.status)
-                .font(Typography.detail)
-                .foregroundStyle(Palette.ink)
-                .animation(Motion.number, value: plant.status)
-            if plant.sensor == nil {
-                Button { linking = true } label: {
-                    Label("Подключить датчик — точная влажность",
-                          systemImage: "sensor.fill")
-                        .font(Typography.settingNote)
+    /// Редкое под уходом: датчик, чужой полив, сезон и погода. Нечего
+    /// сказать — плашки нет.
+    @ViewBuilder
+    private func extras(_ plant: Plant) -> some View {
+        let paid = credit(plant)
+        let season = Season.line(stretch: Season.stretch)
+        let weather = weatherLine(plant)
+        if plant.sensor == nil || paid != nil || season != nil
+            || weather != nil {
+            VStack(alignment: .leading, spacing: 14) {
+                if plant.sensor == nil {
+                    Button { linking = true } label: {
+                        Label("Подключить датчик — точная влажность",
+                              systemImage: "sensor.fill")
+                            .font(Typography.settingNote)
+                    }
+                    .buttonStyle(.glass)
                 }
-                .buttonStyle(.glass)
+                if let paid {
+                    fact(paid)
+                        .transition(.blurReplace)
+                }
+                if let season { fact(season) }
+                if let weather { fact(weather, term: .weather) }
             }
-            fact(plant.species)
-            // Сразу под видом: питомца касается вид, а не кличка.
-            if let danger = Toxicity.of(plant.species) {
-                fact(danger.line, term: .pets, tone: tone(of: danger))
-            }
-            fact(garden.wateringLabel(plant), term: .period)
-                .contentTransition(.numericText())
-            if let credit = credit(plant) {
-                fact(credit)
-                    .transition(.blurReplace)
-            }
-            if let room = garden.roomName(of: plant.id) {
-                fact(Lang.format("Комната «%@»", room))
-                    .contentTransition(.numericText())
-            }
-            if let season = Season.line(stretch: Season.stretch) {
-                fact(season)
-            }
-            if Settings.shared.weather, let climate = Settings.shared.climate,
-               climate.fresh(),
-               let line = climate.line(outdoor: Climate.outdoor(
-                   garden.roomName(of: plant.id) ?? "")) {
-                fact(line, term: .weather)
-            }
-            fact(plant.addedLabel)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.horizontal, 25)
+            .padding(.vertical, 22)
+            .sproutPlate(in: plate)
+            .sproutRide()
         }
-        .animation(Motion.number, value: plant.moisture)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(.horizontal, 25)
-        .padding(.vertical, 22)
-        .sproutPlate(in: plate)
-        .sproutRide()
+    }
+
+    private func weatherLine(_ plant: Plant) -> String? {
+        guard Settings.shared.weather, let climate = Settings.shared.climate,
+              climate.fresh()
+        else { return nil }
+        return climate.line(outdoor: Climate.outdoor(
+            garden.roomName(of: plant.id) ?? ""))
+    }
+
+    /// «вид · комната · добавлен» одной строкой в самом низу.
+    private func meta(_ plant: Plant) -> some View {
+        let parts = [plant.species, garden.roomName(of: plant.id),
+                     plant.addedLabel]
+            .compactMap { $0 }
+            .filter { !$0.isEmpty }
+        return Text(parts.joined(separator: " · "))
+            .font(Typography.settingNote)
+            .foregroundStyle(Palette.secondaryText)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.horizontal, 8)
+            .sproutRide()
     }
 
     /// История поливов: сколько и как часто, график высыхания и, под
@@ -863,6 +938,35 @@ private struct ModelMark: View {
             }
         }
         .animation(Motion.number, value: share)
+    }
+}
+
+/// Кольцо влажности: дуга цвета статуса и процент в середине.
+private struct MoistureRing: View {
+    let moisture: Double
+    let status: MoistureStatus
+    let label: String
+
+    var body: some View {
+        ZStack {
+            Circle()
+                .stroke(Palette.ink.opacity(0.08), lineWidth: 5)
+            Circle()
+                .trim(from: 0, to: min(max(moisture, 0), 1))
+                .stroke(StatusStyle.color(status.tone),
+                        style: StrokeStyle(lineWidth: 5, lineCap: .round))
+                .rotationEffect(.degrees(-90))
+            Text(label)
+                .font(.caption2.weight(.semibold))
+                .monospacedDigit()
+                .foregroundStyle(Palette.ink)
+                .lineLimit(1)
+                .minimumScaleFactor(0.6)
+                .padding(.horizontal, 7)
+        }
+        .frame(width: Metrics.heroRing, height: Metrics.heroRing)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(Lang.format("Влажность %@", label))
     }
 }
 

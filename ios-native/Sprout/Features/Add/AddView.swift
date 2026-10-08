@@ -380,7 +380,7 @@ struct AddView: View {
             SproutDivider()
 
             SproutBlock("Полив", term: .period) {
-                PeriodWheel(days: $period)
+                PeriodStepper(days: $period)
             }
 
             SproutDivider()

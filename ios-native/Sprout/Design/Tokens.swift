@@ -458,9 +458,9 @@ enum Metrics {
     static let actionGap: CGFloat = 10
     static let toolRadius: CGFloat = 20
 
-    /// Барабан срока полива: три строки видно, как у «Таймера».
-    static let wheelWidth: CGFloat = 76
-    static let wheelHeight: CGFloat = 118
+    /// Герой карточки растения: миниатюра не больше 96 pt, кольцо влажности.
+    static let heroPhoto: CGFloat = 96
+    static let heroRing: CGFloat = 52
 
     /// «100%» помещается, и число не толкает ползунок.
     static let percentWidth: CGFloat = 52

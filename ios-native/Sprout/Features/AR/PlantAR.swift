@@ -15,6 +15,8 @@ struct PlantAR: View {
 
     @State private var stage = Stage()
 
+    @State private var modelling = false
+
     /// «Земля ещё влажная» — свой вопрос: корень поверх обложки его не
     /// покажет.
     @State private var overflow = Overflow()
@@ -41,6 +43,11 @@ struct PlantAR: View {
             .safeAreaInset(edge: .bottom) { controls }
             .overlay(alignment: .top) { header }
             .walk(.ar)
+            .sheet(isPresented: $modelling) {
+                if let id = ids.first {
+                    ModelSheet(plantID: id).environment(garden)
+                }
+            }
             .wetPrompt(overflow)
             .animation(Motion.enter, value: stage.phase)
             .animation(Motion.enter, value: stage.chosen)
@@ -148,10 +155,23 @@ struct PlantAR: View {
 
             Spacer(minLength: 0)
 
-            // Противовес крестику — подсказка встаёт ровно посередине.
-            Color.clear
-                .frame(width: 44, height: 44)
-                .accessibilityHidden(true)
+            // У одного растения здесь «Модель» — выбор модели; у сада, как и
+            // раньше, пустое место: противовес крестику, чтобы подсказка
+            // стояла ровно посередине.
+            if ids.count == 1 {
+                Button { modelling = true } label: {
+                    Image(systemName: "cube.transparent")
+                        .font(Typography.navTitle)
+                        .frame(width: Metrics.gearBox, height: Metrics.gearBox)
+                }
+                .buttonStyle(.glass)
+                .buttonBorderShape(.circle)
+                .accessibilityLabel("Модель")
+            } else {
+                Color.clear
+                    .frame(width: 44, height: 44)
+                    .accessibilityHidden(true)
+            }
         }
         .padding(.horizontal, Metrics.contentMargin)
     }
