@@ -184,7 +184,6 @@
   "Привет! Меня не будет с %1$@ по %2$@.": "Hoi! Ik ben weg van %1$@ tot %2$@.",
   "Растения дождутся меня сами — поливать никого не нужно. Спасибо!": "De planten redden zich zonder mij — water geven is niet nodig. Bedankt!",
   "Пожалуйста, полей растения:": "Wil je deze planten water geven:",
-  "• %1$@ (%2$@, «%3$@») — %4$@": "• %1$@ (%2$@, ‘%3$@’) — %4$@",
   "Полить — до мокрой земли, но чтобы вода не стояла в поддоне. Остальные растения дождутся меня сами. Спасибо!": "Geef water tot de aarde vochtig is, maar laat geen water in de schotel staan. De andere planten wachten op mij. Bedankt!",
   "Добавить": "Voeg toe",
   "Дом": "Thuis",
@@ -352,9 +351,7 @@
     "one": "Reis — %lld dag",
     "other": "Reis — %lld dagen"
   },
-  "Все дождутся вас: перед отъездом полейте — и можно ехать.": "Ze wachten allemaal op je: geef ze water voor je vertrekt en klaar.",
   "Кого полить соседу": "Voor de buurman om water te geven",
-  "Остальные дождутся сами: %@.": "De rest redt zich zelf: %@.",
   "%1$@ · полить: %2$@": "%1$@ · water geven: %2$@",
   "Все политы": "Allemaal water gegeven",
   "Отправить памятку соседу": "Stuur briefje naar de buurman",

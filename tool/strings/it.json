@@ -184,7 +184,6 @@
   "Привет! Меня не будет с %1$@ по %2$@.": "Ciao! Sarò via dal %1$@ al %2$@.",
   "Растения дождутся меня сами — поливать никого не нужно. Спасибо!": "Le piante resisteranno senza di me: non serve annaffiare. Grazie!",
   "Пожалуйста, полей растения:": "Per favore, annaffia queste piante:",
-  "• %1$@ (%2$@, «%3$@») — %4$@": "• %1$@ (%2$@, “%3$@”) — %4$@",
   "Полить — до мокрой земли, но чтобы вода не стояла в поддоне. Остальные растения дождутся меня сами. Спасибо!": "Annaffia finché il terriccio è umido, ma senza lasciare acqua nel sottovaso. Le altre piante mi aspetteranno. Grazie!",
   "Добавить": "Aggiungi",
   "Дом": "Casa",
@@ -352,9 +351,7 @@
     "one": "Viaggio: %lld giorno",
     "other": "Viaggio: %lld giorni"
   },
-  "Все дождутся вас: перед отъездом полейте — и можно ехать.": "Tutte ti aspetteranno: annaffiale prima di partire e via.",
   "Кого полить соседу": "Da annaffiare per il vicino",
-  "Остальные дождутся сами: %@.": "Le altre resisteranno da sole: %@.",
   "%1$@ · полить: %2$@": "%1$@ · annaffiare: %2$@",
   "Все политы": "Tutte annaffiate",
   "Отправить памятку соседу": "Invia promemoria al vicino",

@@ -194,7 +194,6 @@
   "Привет! Меня не будет с %1$@ по %2$@.": "Ahoj! Nebudem tu od %1$@ do %2$@.",
   "Растения дождутся меня сами — поливать никого не нужно. Спасибо!": "Rastliny to bezo mňa zvládnu — netreba polievať. Ďakujem!",
   "Пожалуйста, полей растения:": "Prosím, polej tieto rastliny:",
-  "• %1$@ (%2$@, «%3$@») — %4$@": "• %1$@ (%2$@, „%3$@“) — %4$@",
   "Полить — до мокрой земли, но чтобы вода не стояла в поддоне. Остальные растения дождутся меня сами. Спасибо!": "Polievaj, kým zemina nezvlhne, ale nech v miske nestojí voda. Ostatné rastliny na mňa počkajú. Ďakujem!",
   "Добавить": "Pridať",
   "Дом": "Domov",
@@ -365,9 +364,7 @@
     "few": "Cesta — %lld dni",
     "other": "Cesta — %lld dní"
   },
-  "Все дождутся вас: перед отъездом полейте — и можно ехать.": "Všetky na vás počkajú: pred odchodom ich polejte a môžete ísť.",
   "Кого полить соседу": "Na polievanie pre suseda",
-  "Остальные дождутся сами: %@.": "Ostatné to zvládnu samy: %@.",
   "%1$@ · полить: %2$@": "%1$@ · poliať: %2$@",
   "Все политы": "Všetko poliate",
   "Отправить памятку соседу": "Poslať odkaz susedovi",

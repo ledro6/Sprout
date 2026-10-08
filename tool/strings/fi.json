@@ -184,7 +184,6 @@
   "Привет! Меня не будет с %1$@ по %2$@.": "Hei! Olen poissa %1$@–%2$@.",
   "Растения дождутся меня сами — поливать никого не нужно. Спасибо!": "Kasvit pärjäävät ilman minua – kastelua ei tarvita. Kiitos!",
   "Пожалуйста, полей растения:": "Kastelethan nämä kasvit:",
-  "• %1$@ (%2$@, «%3$@») — %4$@": "• %1$@ (%2$@, ”%3$@”) – %4$@",
   "Полить — до мокрой земли, но чтобы вода не стояла в поддоне. Остальные растения дождутся меня сами. Спасибо!": "Kastele, kunnes multa on kostea, mutta älä jätä vettä aluslautaseen. Muut kasvit odottavat minua. Kiitos!",
   "Добавить": "Lisää",
   "Дом": "Koti",
@@ -352,9 +351,7 @@
     "one": "Matka – %lld päivä",
     "other": "Matka – %lld päivää"
   },
-  "Все дождутся вас: перед отъездом полейте — и можно ехать.": "Kaikki odottavat sinua: kastele ne ennen lähtöä, niin voit lähteä.",
   "Кого полить соседу": "Naapurin kasteltavaksi",
-  "Остальные дождутся сами: %@.": "Muut pärjäävät itse: %@.",
   "%1$@ · полить: %2$@": "%1$@ · kastele: %2$@",
   "Все политы": "Kaikki kasteltu",
   "Отправить памятку соседу": "Lähetä viesti naapurille",

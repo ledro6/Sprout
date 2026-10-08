@@ -5,6 +5,8 @@ import UIKit
 enum Slip: Equatable {
     case removal(Removal)
     case pour(Pour)
+    /// Пачка поливов разом — «Полить тех, кому нужно перед отъездом».
+    case pours([Pour])
 
     /// Личность плашки: следующее действие сменяет её размытием, даже если
     /// растение то же.
@@ -13,13 +15,15 @@ enum Slip: Equatable {
         case .removal(let gone): "removal-\(gone.plant.id)"
         case .pour(let pour):
             "pour-\(pour.plant)-\(pour.when.timeIntervalSinceReferenceDate)"
+        case .pours(let pours):
+            "pours-\(pours.first?.when.timeIntervalSinceReferenceDate ?? 0)"
         }
     }
 
     var title: String {
         switch self {
         case .removal: Lang.text("Растение удалено")
-        case .pour: Lang.text("Полито")
+        case .pour, .pours: Lang.text("Полито")
         }
     }
 
@@ -27,6 +31,7 @@ enum Slip: Equatable {
         switch self {
         case .removal(let gone): gone.plant.name
         case .pour(let pour): pour.name
+        case .pours(let pours): Lang.format("%lld растений", pours.count)
         }
     }
 }
@@ -118,6 +123,19 @@ final class Bin {
         return true
     }
 
+    /// Всех, кому пора пить, разом (`Garden.waterNeeded`) — одной плашкой
+    /// «Вернуть» на восемь секунд. Отвечает, сколько полито.
+    @MainActor
+    @discardableResult
+    func waterNeeded(in garden: Garden) -> Int {
+        commit()
+        let pours = withAnimation(Motion.appear) { garden.waterNeeded() }
+        guard !pours.isEmpty else { return 0 }
+        self.garden = garden
+        count(.pours(pours))
+        return pours.count
+    }
+
     @MainActor
     private func count(_ slip: Slip) {
         pending = slip
@@ -153,6 +171,7 @@ final class Bin {
         switch slip {
         case .removal(let gone): garden.putBack(gone)
         case .pour(let pour): garden.unwater(pour)
+        case .pours(let pours): pours.forEach(garden.unwater)
         }
     }
 
@@ -304,7 +323,7 @@ private struct UndoToast: View {
     private func tint(_ slip: Slip) -> Color {
         switch slip {
         case .removal: Palette.alarm
-        case .pour: Palette.water
+        case .pour, .pours: Palette.water
         }
     }
 }

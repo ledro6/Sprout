@@ -184,7 +184,6 @@
   "Привет! Меня не будет с %1$@ по %2$@.": "Szia! Nem leszek itthon: %1$@ – %2$@.",
   "Растения дождутся меня сами — поливать никого не нужно. Спасибо!": "A növények kibírják nélkülem — nem kell öntözni. Köszönöm!",
   "Пожалуйста, полей растения:": "Kérlek, öntözd meg ezeket a növényeket:",
-  "• %1$@ (%2$@, «%3$@») — %4$@": "• %1$@ (%2$@, „%3$@”) — %4$@",
   "Полить — до мокрой земли, но чтобы вода не стояла в поддоне. Остальные растения дождутся меня сами. Спасибо!": "Öntözd, amíg a föld nedves nem lesz, de ne maradjon víz az alátétben. A többi növény megvár. Köszönöm!",
   "Добавить": "Hozzáadás",
   "Дом": "Otthon",
@@ -352,9 +351,7 @@
     "one": "Utazás — %lld nap",
     "other": "Utazás — %lld nap"
   },
-  "Все дождутся вас: перед отъездом полейте — и можно ехать.": "Mind megvárnak: indulás előtt öntözd meg őket, és mehetsz.",
   "Кого полить соседу": "A szomszéd öntözze",
-  "Остальные дождутся сами: %@.": "A többi kibírja magától: %@.",
   "%1$@ · полить: %2$@": "%1$@ · öntözés: %2$@",
   "Все политы": "Mind megöntözve",
   "Отправить памятку соседу": "Üzenet a szomszédnak",

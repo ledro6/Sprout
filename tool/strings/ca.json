@@ -184,7 +184,6 @@
   "Привет! Меня не будет с %1$@ по %2$@.": "Hola! Seré fora del %1$@ al %2$@.",
   "Растения дождутся меня сами — поливать никого не нужно. Спасибо!": "Les plantes aguantaran sense mi: no cal regar. Gràcies!",
   "Пожалуйста, полей растения:": "Si us plau, rega aquestes plantes:",
-  "• %1$@ (%2$@, «%3$@») — %4$@": "• %1$@ (%2$@, «%3$@») — %4$@",
   "Полить — до мокрой земли, но чтобы вода не стояла в поддоне. Остальные растения дождутся меня сами. Спасибо!": "Rega fins que la terra estigui humida, però sense deixar aigua al plat. Les altres plantes m’esperaran. Gràcies!",
   "Добавить": "Afegeix",
   "Дом": "Casa",
@@ -352,9 +351,7 @@
     "one": "Viatge: %lld dia",
     "other": "Viatge: %lld dies"
   },
-  "Все дождутся вас: перед отъездом полейте — и можно ехать.": "Totes t’esperaran: rega-les abans de marxar i llestos.",
   "Кого полить соседу": "Perquè les regui el veí",
-  "Остальные дождутся сами: %@.": "Les altres aguantaran soles: %@.",
   "%1$@ · полить: %2$@": "%1$@ · regar: %2$@",
   "Все политы": "Totes regades",
   "Отправить памятку соседу": "Envia una nota al veí",

@@ -194,7 +194,6 @@
   "Привет! Меня не будет с %1$@ по %2$@.": "Labas! Manęs nebus nuo %1$@ iki %2$@.",
   "Растения дождутся меня сами — поливать никого не нужно. Спасибо!": "Augalai išsivers be manęs – laistyti nereikia. Ačiū!",
   "Пожалуйста, полей растения:": "Prašau, palaistyk šiuos augalus:",
-  "• %1$@ (%2$@, «%3$@») — %4$@": "• %1$@ (%2$@, „%3$@“) – %4$@",
   "Полить — до мокрой земли, но чтобы вода не стояла в поддоне. Остальные растения дождутся меня сами. Спасибо!": "Laistyk, kol žemė sudrėks, bet kad lėkštelėje neliktų vandens. Kiti augalai manęs palauks. Ačiū!",
   "Добавить": "Pridėti",
   "Дом": "Namai",
@@ -365,9 +364,7 @@
     "few": "Kelionė – %lld dienos",
     "other": "Kelionė – %lld dienų"
   },
-  "Все дождутся вас: перед отъездом полейте — и можно ехать.": "Visi jūsų palauks: palaistykite prieš išvykdami ir galite keliauti.",
   "Кого полить соседу": "Kaimynui palaistyti",
-  "Остальные дождутся сами: %@.": "Kiti išsivers patys: %@.",
   "%1$@ · полить: %2$@": "%1$@ · laistyti: %2$@",
   "Все политы": "Visi palaistyti",
   "Отправить памятку соседу": "Siųsti raštelį kaimynui",
