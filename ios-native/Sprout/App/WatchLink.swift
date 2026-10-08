@@ -34,7 +34,9 @@ final class WatchLink: NSObject, WCSessionDelegate {
         let garden = Garden.shared
         garden.reload()
         garden.advance()
-        _ = garden.water(id, at: min(moment, Date()), anyway: anyway)
+        if garden.water(id, at: min(moment, Date()), anyway: anyway) != nil {
+            Journal.shared.waterTap(.watch)
+        }
     }
 
     @MainActor

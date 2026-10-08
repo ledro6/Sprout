@@ -134,6 +134,7 @@ final class Bin {
         commit()
         let pours = withAnimation(Motion.appear) { garden.waterNeeded(ids) }
         guard !pours.isEmpty else { return 0 }
+        Journal.shared.note(.waterAll, "\(pours.count)")
         self.garden = garden
         count(.pours(pours))
         return pours.count

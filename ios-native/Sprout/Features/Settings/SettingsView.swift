@@ -586,6 +586,23 @@ struct SettingsView: View {
                 SproutLink("Сведения о приложении", icon: "info.circle")
             }
             .buttonStyle(.plain)
+
+            SproutDivider()
+
+            // Только на телефоне и только для самопроверки: ничего не
+            // отправляется, см. `Journal`.
+            switchRow("Журнал событий для самопроверки",
+                      note: "Что нажимали и сколько раз — без фото, кличек и мест. Только на этом телефоне.",
+                      isOn: Binding(
+                          get: { Journal.shared.enabled },
+                          set: { Journal.shared.enabled = $0 }))
+
+            SproutDivider()
+
+            NavigationLink { JournalView() } label: {
+                SproutLink("Журнал событий", icon: "list.bullet.rectangle")
+            }
+            .buttonStyle(.plain)
         }
     }
 }

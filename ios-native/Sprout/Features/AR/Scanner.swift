@@ -69,7 +69,10 @@ final class Scanner {
         case .authorized:
             break
         case .notDetermined:
-            guard await AVCaptureDevice.requestAccess(for: .video) else {
+            let allowed = await AVCaptureDevice.requestAccess(for: .video)
+            Journal.shared.note(.permissionResult,
+                                allowed ? "camera:granted" : "camera:denied")
+            guard allowed else {
                 step = .failed(Self.blind)
                 return
             }

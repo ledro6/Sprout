@@ -119,7 +119,7 @@ final class Tags {
     /// Как полив из Siri: с волной и отменой на плашке.
     /// Влажную землю — сперва вопрос, см. `Overflow`.
     func water(_ id: Plant.ID) {
-        Overflow.shared.water(id, in: Garden.shared) {
+        Overflow.shared.water(id, in: Garden.shared, source: .tag) {
             let spot = Cards.shared.rect(id)
             Cheer.shared.now(from: spot == .zero ? Screen.middle : spot)
             Feel.water()

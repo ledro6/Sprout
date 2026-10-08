@@ -183,9 +183,11 @@ struct TodayBlock: View {
     private func recount() {
         var quiet = Transaction()
         quiet.disablesAnimations = !counted
+        let now = garden.score().streak
         withTransaction(quiet) {
-            streak = garden.score().streak
+            streak = now
         }
+        Journal.shared.observe(streak: now)
         counted = true
     }
 }

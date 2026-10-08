@@ -66,6 +66,7 @@ struct PlantAR: View {
             guard Bin.shared.water(id, in: garden, anyway: anyway) else {
                 return
             }
+            Journal.shared.waterTap(.ar)
             Feel.water()
         }
     }

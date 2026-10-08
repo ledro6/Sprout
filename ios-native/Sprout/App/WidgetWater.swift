@@ -30,7 +30,7 @@ struct WaterFromWidget: AppIntent {
         let garden = Garden.shared
         garden.reload()
         garden.advance()
-        _ = garden.water(plant)
+        if garden.water(plant) != nil { Journal.shared.waterTap(.widget) }
         WidgetCenter.shared.reloadAllTimelines()
         return .result()
     }

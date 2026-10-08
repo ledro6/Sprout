@@ -71,6 +71,11 @@ enum Notifier {
         } catch {
             granted = false
         }
+        await MainActor.run {
+            Journal.shared.note(.permissionResult,
+                                granted ? "notifications:granted"
+                                    : "notifications:denied")
+        }
         if reminders {
             await MainActor.run {
                 Settings.shared.reminderAsked = true
@@ -192,6 +197,14 @@ private final class Postman: NSObject, UNUserNotificationCenterDelegate {
            let id = info[Notifier.open] as? String {
             await MainActor.run { Summon.shared.plant = id }
             return
+        }
+        let action = response.actionIdentifier
+        await MainActor.run {
+            Journal.shared.note(.notificationAction,
+                                action == Notifier.tomorrow ? "tomorrow"
+                                    : action == Notifier.pourAll ? "pour_all"
+                                    : action == Notifier.pour ? "pour"
+                                    : "other")
         }
         switch response.actionIdentifier {
         case Notifier.tomorrow:

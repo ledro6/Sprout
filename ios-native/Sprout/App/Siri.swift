@@ -110,6 +110,7 @@ struct WaterPlant: AppIntent {
             return .result(dialog: "\(Lang.format("Земля у «%1$@» ещё влажная (%2$@) — полив не записан. Лишний полив вреден корням.", plant.name, level))")
         }
         withAnimation(Motion.appear) { _ = garden.water(plant.id) }
+        Journal.shared.waterTap(.siri)
         if UIApplication.shared.applicationState == .active {
             let spot = Cards.shared.rect(plant.id)
             Cheer.shared.now(from: spot == .zero ? Screen.middle : spot)

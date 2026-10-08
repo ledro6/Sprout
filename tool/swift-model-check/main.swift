@@ -6214,6 +6214,47 @@ do {
           "пустой сад — ни одного пуша")
 }
 
+print("журнал событий:")
+let ledger = UserDefaults(suiteName: "check.trail")!
+ledger.removePersistentDomain(forName: "check.trail")
+let trail = Journal(store: ledger)
+check(trail.enabled == false, "по умолчанию выключен")
+trail.note(.waterTap, "card")
+check("\(trail.events.count)", "0", "выключенный не записывает")
+trail.enabled = true
+trail.waterTap(.card)
+trail.note(.waterAll, "3")
+check(trail.events.map(\.kind.rawValue).joined(separator: ","),
+      "water_tap,water_all", "события идут по порядку, имена — как в плане")
+check(trail.events.first?.detail ?? "—", "card", "откуда нажали")
+trail.note(.waterTap, "Баксик у окна")
+check(trail.events.last?.detail == nil,
+      "кличка и русский текст в пометку не попадают")
+trail.note(.permissionResult, "Notifications: GRANTED " + String(repeating: "x", count: 40))
+check("\(trail.events.last?.detail?.count ?? 0)", "\(Journal.detailLimit)",
+      "пометка короче предела, регистр — нижний")
+check(Journal(store: ledger).events.count == trail.events.count
+      && Journal(store: ledger).enabled, "журнал и выключатель пережили перезапуск")
+for _ in 0 ..< Journal.limit + 20 { trail.note(.addPlantStarted) }
+check("\(trail.events.count)", "\(Journal.limit)",
+      "кольцо не растёт дальше предела")
+check(trail.events.allSatisfy { $0.kind == .addPlantStarted },
+      "вытесняются старые, а не новые")
+trail.clear()
+check(trail.events.isEmpty && Journal(store: ledger).events.isEmpty,
+      "«Очистить» стирает и в памяти, и на диске")
+check(trail.enabled, "очистка выключатель не трогает")
+trail.observe(streak: 5)
+trail.observe(streak: 6)
+check(trail.events.isEmpty, "серия растёт — разрыва нет")
+trail.observe(streak: 0)
+check(trail.events.map(\.kind.rawValue).joined(), "streak_broken",
+      "серия была и пропала — разрыв")
+check(trail.events.last?.detail ?? "—", "6", "в пометке — длина прерванной серии")
+trail.observe(streak: 0)
+check("\(trail.events.count)", "1", "нулевая серия повторно разрывом не считается")
+check(Journal.Kind.allCases.count == 9, "девять видов событий из плана")
+
 if failed > 0 {
     print("\nне сошлось: \(failed)")
     exit(1)

@@ -302,7 +302,7 @@ struct OrreryView: View {
     }
 
     private func water(_ id: Plant.ID) {
-        Overflow.shared.water(id, in: garden) {
+        Overflow.shared.water(id, in: garden, source: .orrery) {
             let now = Date()
             // Отыгравшие круги больше не нужны.
             splashed = splashed.filter { now.timeIntervalSince($0.value) < 2 }

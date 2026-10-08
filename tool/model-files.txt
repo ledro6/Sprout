@@ -27,6 +27,7 @@ ios-native/Sprout/Model/Pattern/Frolic.swift
 ios-native/Sprout/Model/Core/Pulse.swift
 ios-native/Sprout/Model/Garden/Crop.swift
 ios-native/Sprout/Model/Core/Recents.swift
+ios-native/Sprout/Model/Core/Journal.swift
 ios-native/Sprout/Model/Garden/Score.swift
 ios-native/Sprout/Model/Garden/Twin.swift
 ios-native/Sprout/Model/Garden/Export.swift

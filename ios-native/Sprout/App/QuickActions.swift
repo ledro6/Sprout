@@ -50,7 +50,11 @@ enum QuickActions {
             // Пока спали, сад могли полить виджет или уведомление.
             garden.reload()
             garden.advance()
-            if !garden.waterNeeded().isEmpty { Feel.water() }
+            let done = garden.waterNeeded().count
+            if done > 0 {
+                Journal.shared.note(.waterAll, "\(done)")
+                Feel.water()
+            }
             Summon.shared.home = true
         case add:
             Summon.shared.add = true

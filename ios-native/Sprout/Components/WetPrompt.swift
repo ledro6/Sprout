@@ -31,13 +31,20 @@ final class Overflow {
     /// поливал: откуда пускать волну, знает он; зовётся, только если
     /// полилось.
     func water(_ id: Plant.ID, in garden: Garden,
+               source: Journal.Source = .card,
                then: @escaping @MainActor () -> Void) {
         guard garden.wetCheck(id) != nil else {
-            if Bin.shared.water(id, in: garden) { then() }
+            if Bin.shared.water(id, in: garden) {
+                Journal.shared.waterTap(source)
+                then()
+            }
             return
         }
         ask(id, in: garden) {
-            if Bin.shared.water(id, in: garden, anyway: true) { then() }
+            if Bin.shared.water(id, in: garden, anyway: true) {
+                Journal.shared.waterTap(source)
+                then()
+            }
         }
     }
 
@@ -46,8 +53,12 @@ final class Overflow {
              go: @escaping @MainActor () -> Void) {
         guard let moisture = garden.wetCheck(id),
               let plant = garden.plant(id: id) else { return }
+        Journal.shared.note(.waterGuardShown)
         question = Question(id: id, moisture: moisture,
-                            estimated: plant.estimated, go: go)
+                            estimated: plant.estimated, go: {
+            Journal.shared.note(.waterGuardConfirmed)
+            go()
+        })
     }
 }
 

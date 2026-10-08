@@ -117,6 +117,7 @@ struct AddView: View {
         }
         .onAppear {
             if room.isEmpty { room = rooms.first ?? Lang.text("Дом") }
+            Journal.shared.note(.addPlantStarted)
         }
         // Вид из каталога — с этой вкладки или из поиска: забираем, когда
         // вкладка на экране.
@@ -739,6 +740,7 @@ struct AddView: View {
                                  dryingDays: period, shot: saved,
                                  moisture: start)
         withAnimation(Motion.appear) { garden.add(seedling, to: place) }
+        Journal.shared.note(.addPlantCompleted)
         if let cutting {
             garden.tend(seedling.id, feedEvery: cutting.feed,
                         repotEvery: cutting.repot, duties: cutting.chores)

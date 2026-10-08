@@ -308,7 +308,7 @@ struct PlantView: View {
     /// Полив с анимацией, иначе тревожная тень гасла бы щелчком. Влажную
     /// землю — сперва вопрос, см. `Overflow`.
     private func water() {
-        Overflow.shared.water(plantID, in: garden) { [self] in
+        Overflow.shared.water(plantID, in: garden, source: .plant) { [self] in
             poured += 1
             Cheer.shared.now(from: spot.rect)
             Feel.water()

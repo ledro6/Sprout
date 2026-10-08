@@ -198,7 +198,7 @@ struct PlantMenu: ViewModifier {
 
     private func pour() {
         let id = tenant.id
-        Overflow.shared.water(id, in: garden) {
+        Overflow.shared.water(id, in: garden, source: .menu) {
             // Волна — от карточки, а не от меню: поливают растение.
             let spot = Cards.shared.rect(id)
             Cheer.shared.now(from: spot == .zero ? Screen.middle : spot)
