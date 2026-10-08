@@ -406,7 +406,8 @@ struct PlantView: View {
             VStack(alignment: .leading, spacing: 8) {
                 HStack(spacing: 10) {
                     MoistureRing(moisture: plant.moisture, status: plant.status,
-                                 label: plant.moistureLabel)
+                                 label: plant.moistureLabel,
+                                 spoken: plant.moistureSpoken)
                     VStack(alignment: .leading, spacing: 4) {
                         StatusLabel(status: plant.status)
                             .font(Typography.detail)
@@ -946,6 +947,8 @@ private struct MoistureRing: View {
     let moisture: Double
     let status: MoistureStatus
     let label: String
+    /// Фраза для VoiceOver: процент, откуда он и срок.
+    let spoken: String
 
     var body: some View {
         ZStack {
@@ -966,7 +969,7 @@ private struct MoistureRing: View {
         }
         .frame(width: Metrics.heroRing, height: Metrics.heroRing)
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel(Lang.format("Влажность %@", label))
+        .accessibilityLabel(spoken)
     }
 }
 

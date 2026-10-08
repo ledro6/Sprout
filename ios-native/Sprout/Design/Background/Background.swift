@@ -26,7 +26,7 @@ struct SproutField: View {
         let shapes = motif.dress(Settings.shared.chosen)
         let weave = Launch.shared.weave(for: shapes.count)
         let baseShade = Settings.shared.patternHue.shade
-        let waveShade = Settings.shared.waveHue.shade
+        let waveShade = Settings.shared.waveColour.shade
         let busy = !Cheer.shared.rings.isEmpty
             || Launch.shared.bloomStart != nil
             || Launch.shared.swapStart != nil

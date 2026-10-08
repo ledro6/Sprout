@@ -10,7 +10,16 @@ struct PlantCard: View {
     /// Капля «Полить»; у предпросмотров меню и перетаскивания её нет.
     var drop = false
 
+    /// Крупный шрифт: кличка и процент встают друг под другом, а кличка
+    /// переносится, а не обрезается.
+    @Environment(\.dynamicTypeSize) private var type
+
+    private var big: Bool { type.isAccessibilitySize }
+
     var body: some View {
+        let head = big
+            ? AnyLayout(VStackLayout(alignment: .leading, spacing: 2))
+            : AnyLayout(HStackLayout(spacing: 4))
         VStack(alignment: .leading, spacing: 8) {
             PlantPhoto(plant: plant)
                 .frame(maxWidth: .infinity)
@@ -20,17 +29,17 @@ struct PlantCard: View {
                         .padding(Metrics.modelBadgeInset)
                 }
 
-            HStack(spacing: 4) {
+            head {
                 if urgent {
                     Image(systemName: plant.status.symbol)
                         .foregroundStyle(StatusStyle(plant.status).color)
                         .accessibilityLabel(plant.status.word)
                 }
                 Text(plant.name)
-                    .lineLimit(1)
+                    .lineLimit(big ? nil : 2)
                     .truncationMode(.tail)
                     .contentTransition(.numericText())
-                Spacer(minLength: 4)
+                if !big { Spacer(minLength: 4) }
                 // Переход цифр: знак процента стоит на месте, и кличку ничто
                 // не толкает вбок.
                 Text(plant.moistureLabel)
@@ -50,7 +59,7 @@ struct PlantCard: View {
                         .foregroundStyle(Palette.ink)
                         // Две строки не страшны: капля стоит рядом, а не
                         // под подписью.
-                        .lineLimit(2)
+                        .lineLimit(big ? nil : 2)
                         .minimumScaleFactor(0.8)
                         .contentTransition(.numericText())
                         .animation(Motion.number, value: plant.daysUntilWatering)

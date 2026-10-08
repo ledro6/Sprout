@@ -137,7 +137,7 @@ struct ProfileView: View {
                     Text(named ? garden.owner : Lang.text("Имя не задано"))
                         .font(Typography.navTitle)
                         .foregroundStyle(named ? Palette.ink : Palette.secondaryText)
-                        .lineLimit(1)
+                        .dataLines()
                     Text(named
                          ? Lang.format("Садовод с %@", garden.since.formatted(
                              .dateTime.day().month(.wide).year()))
@@ -430,7 +430,7 @@ struct ProfileView: View {
                 Text(rival.name)
                     .font(Typography.settingRow)
                     .foregroundStyle(Palette.ink)
-                    .lineLimit(1)
+                    .dataLines()
                 Text(note(for: rival))
                     .font(Typography.figureCaption)
                     .foregroundStyle(Palette.secondaryText)

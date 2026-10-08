@@ -324,7 +324,7 @@ struct PlantSettingsView: View {
         return HStack(spacing: 12) {
             Label {
                 Text(duty.title)
-                    .lineLimit(1)
+                    .dataLines()
                     .minimumScaleFactor(0.85)
             } icon: {
                 Image(systemName: duty.icon)
@@ -347,7 +347,7 @@ struct PlantSettingsView: View {
                     Text(every > 0 ? Lang.format("Раз в %lld дней", every)
                          : Lang.text("Не напоминать"))
                         .font(Typography.settingRow)
-                        .lineLimit(1)
+                        .dataLines()
                     Image(systemName: "chevron.up.chevron.down")
                         .font(Typography.settingNote)
                 }
@@ -361,7 +361,7 @@ struct PlantSettingsView: View {
         HStack(spacing: 6) {
             Text(text)
                 .font(Typography.settingRow)
-                .lineLimit(1)
+                .dataLines()
             Image(systemName: "chevron.up.chevron.down")
                 .font(Typography.settingNote)
         }

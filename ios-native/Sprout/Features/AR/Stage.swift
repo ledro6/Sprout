@@ -102,7 +102,7 @@ final class Stage {
         total = shown.count
         loaded = 0
         chosen = shown.count == 1 ? shown.first?.id : nil
-        tint = Settings.shared.waveHue.vivid
+        tint = Settings.shared.waveColour.vivid
         // Пока камера ищет пол, модели достаются из приложения, свои — с
         // диска, сканы — из своих файлов.
         Task { @MainActor [weak self] in

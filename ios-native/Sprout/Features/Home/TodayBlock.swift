@@ -11,6 +11,10 @@ struct TodayBlock: View {
 
     @Environment(Garden.self) private var garden
 
+    /// Крупный шрифт: слова, серия и «Полить всех» встают столбиком, а не
+    /// ужимаются в одну строку.
+    @Environment(\.dynamicTypeSize) private var type
+
     @State private var streak = 0
     /// Первый пересчёт — без анимации: вью SwiftUI создаёт заново при каждом
     /// возвращении на экран, и число серии вырастало бы из нуля снова.
@@ -27,8 +31,11 @@ struct TodayBlock: View {
         // Кого поливать — по всему саду, а не по комнате: кнопка нужна,
         // пока есть кого, где бы он ни стоял.
         let due = MoistureStatus.needsWater(in: garden.rooms)
+        let line = type.isAccessibilitySize
+            ? AnyLayout(VStackLayout(alignment: .leading, spacing: 8))
+            : AnyLayout(HStackLayout(spacing: 10))
         return VStack(alignment: .leading, spacing: 8) {
-            HStack(spacing: 10) {
+            line {
                 Group {
                     if due.isEmpty {
                         Text(MoistureStatus.calmLine(in: garden.rooms))
@@ -39,7 +46,7 @@ struct TodayBlock: View {
                     }
                 }
                 .foregroundStyle(Palette.ink)
-                .lineLimit(2)
+                .lineLimit(type.isAccessibilitySize ? nil : 2)
                 .minimumScaleFactor(0.85)
                 .contentTransition(.numericText())
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -50,7 +57,7 @@ struct TodayBlock: View {
                     Button { pourAll(due) } label: {
                         Text(Lang.format("Полить всех (%lld)", due.count))
                             .font(Typography.settingNote.weight(.semibold))
-                            .lineLimit(1)
+                            .lineLimit(type.isAccessibilitySize ? nil : 1)
                             .minimumScaleFactor(0.8)
                             .padding(.horizontal, 4)
                             .frame(minHeight: 44)

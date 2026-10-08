@@ -114,6 +114,16 @@ check(label(22), "Полив через 22 дня",  "22 дня")
 check(label(1),  "Полив через 1 день",  "1 день")
 check(label(5, estimated: true), "Полив примерно через 5 дней",
       "посчитано, а не измерено — «примерно»")
+// Кольцо влажности для VoiceOver — одна фраза со склонением процентов.
+check(MoistureStatus.spoken(moisture: 0.89, period: 9, estimated: false),
+      "Влажность 89 процентов, измерено датчиком, полив через 8 дней",
+      "кольцо влажности: датчик")
+check(MoistureStatus.spoken(moisture: 0.51, period: 10, estimated: true),
+      "Влажность 51 процент, по расчёту, полив примерно через 5 дней",
+      "кольцо влажности: расчёт, «51 процент»")
+check(MoistureStatus.spoken(moisture: 0.1, period: 10, estimated: true),
+      "Влажность 10 процентов, по расчёту, полить сегодня",
+      "кольцо влажности: сухо — сегодня")
 
 print("данные из макета:")
 let bedroom = Seed.rooms[0]

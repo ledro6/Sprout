@@ -151,3 +151,18 @@ extension View {
         modifier(Ride())
     }
 }
+
+/// Текст с данными (кличка, имя, вид) в одну строку, а при крупнейших
+/// шрифтах — без предела: данные не режутся многоточием.
+private struct DataLines: ViewModifier {
+    @Environment(\.dynamicTypeSize) private var type
+
+    func body(content: Content) -> some View {
+        content.lineLimit(type.isAccessibilitySize ? nil : 1)
+    }
+}
+
+extension View {
+    /// Одна строка, а при крупнейших шрифтах — без предела, см. `DataLines`.
+    func dataLines() -> some View { modifier(DataLines()) }
+}

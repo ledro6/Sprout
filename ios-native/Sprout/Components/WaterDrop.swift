@@ -44,7 +44,7 @@ struct WaterDrop: View {
         .disabled(full)
         .opacity(recent == nil ? 1 : 0.5)
         .animation(Motion.number, value: full)
-        .accessibilityLabel(Lang.format("Полить: %@", plant.name))
+        .accessibilityLabel(Lang.format("Полить %@", plant.name))
         .confirmationDialog(asking.map { Family.again($0) } ?? "",
                             isPresented: Binding(
                                 get: { asking != nil },

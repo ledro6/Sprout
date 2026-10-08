@@ -266,7 +266,7 @@ private struct PourButton: View {
             } else {
                 Image(systemName: "drop.fill")
                     .font(.caption.weight(.semibold))
-                    .accessibilityLabel(Lang.format("Полить: %@", sprig.name))
+                    .accessibilityLabel(Lang.format("Полить %@", sprig.name))
             }
         }
         .buttonStyle(.borderedProminent)

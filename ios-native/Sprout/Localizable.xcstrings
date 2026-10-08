@@ -2324,6 +2324,9 @@
         }
       }
     },
+    "%1$@, %2$@, %3$@": {
+      "extractionState": "manual"
+    },
     "%1$@, %2$lld мин назад": {
       "extractionState": "manual"
     },
@@ -16546,9 +16549,6 @@
     "Без имени": {
       "extractionState": "manual"
     },
-    "Без узора фон — ровный цвет.": {
-      "extractionState": "manual"
-    },
     "Безопасно для кошек и собак": {
       "extractionState": "manual",
       "localizations": {
@@ -30396,6 +30396,41 @@
           "stringUnit": {
             "state": "translated",
             "value": "濕度 %@"
+          }
+        }
+      }
+    },
+    "Влажность %lld процентов": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "variations": {
+            "plural": {
+              "few": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Влажность %lld процента"
+                }
+              },
+              "many": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Влажность %lld процентов"
+                }
+              },
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Влажность %lld процент"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Влажность %lld процента"
+                }
+              }
+            }
           }
         }
       }
@@ -82914,6 +82949,9 @@
           }
         }
       }
+    },
+    "Как узор": {
+      "extractionState": "manual"
     },
     "Какие комнаты на даче": {
       "extractionState": "manual"
@@ -175458,6 +175496,9 @@
         }
       }
     },
+    "Полить %@": {
+      "extractionState": "manual"
+    },
     "Полить всех (%lld)": {
       "extractionState": "manual"
     },
@@ -256311,6 +256352,9 @@
         }
       }
     },
+    "Фигурки на фоне. Их цвет и движение — ниже.": {
+      "extractionState": "manual"
+    },
     "Фигурки плывут порознь": {
       "extractionState": "manual",
       "localizations": {
@@ -257745,6 +257789,9 @@
           }
         }
       }
+    },
+    "Фон ровным цветом. Настройки узора ниже выключены.": {
+      "extractionState": "manual"
     },
     "Фото и вопросы": {
       "extractionState": "manual"
@@ -271011,6 +271058,9 @@
     "изменить": {
       "extractionState": "manual"
     },
+    "измерено датчиком": {
+      "extractionState": "manual"
+    },
     "как в прошлый раз": {
       "extractionState": "manual",
       "localizations": {
@@ -271873,6 +271923,9 @@
       }
     },
     "ожидает отправки": {
+      "extractionState": "manual"
+    },
+    "по расчёту": {
       "extractionState": "manual"
     },
     "пора": {

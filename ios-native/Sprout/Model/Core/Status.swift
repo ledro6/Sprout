@@ -87,6 +87,21 @@ enum MoistureStatus: String, Codable, CaseIterable, Sendable {
             : Lang.format("Полив через %lld дней", days)
     }
 
+    /// Кольцо влажности для VoiceOver одной фразой: «Влажность 89 процентов,
+    /// измерено датчиком, полив через 8 дней». Процент — целым, без «≈»:
+    /// откуда он, сказано словами.
+    static func spoken(moisture: Double, period: Double,
+                       estimated: Bool) -> String {
+        let whole = Int((moisture * 100).rounded())
+        let next = nextWatering(moisture: moisture, period: period,
+                                estimated: estimated)
+        return Lang.format("%1$@, %2$@, %3$@",
+                           Lang.format("Влажность %lld процентов", whole),
+                           estimated ? Lang.text("по расчёту")
+                               : Lang.text("измерено датчиком"),
+                           next.prefix(1).lowercased() + next.dropFirst())
+    }
+
     // MARK: - Защита от перелива
 
     /// Поливать ли: земля ещё влажная — переспросить. Пока только считает;

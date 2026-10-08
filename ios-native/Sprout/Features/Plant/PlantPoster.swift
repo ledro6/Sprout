@@ -287,7 +287,7 @@ private struct PosterPattern: View {
                       repaint: nil,
                       frolic: nil,
                       baseShade: Settings.shared.patternHue.shade,
-                      waveShade: Settings.shared.waveHue.shade,
+                      waveShade: Settings.shared.waveColour.shade,
                       lag: [],
                       era: 0,
                       ember: nil,

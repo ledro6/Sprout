@@ -152,6 +152,15 @@ final class Settings {
         didSet { Self.put(waveHue, Key.waveHue, in: store) }
     }
 
+    /// «Как узор»: волна берёт цвет узора, свой цвет волны не выбирается.
+    /// По умолчанию выключено — у волны свой цвет, как было.
+    var waveLikePattern: Bool {
+        didSet { store.set(waveLikePattern, forKey: Key.waveLikePattern) }
+    }
+
+    /// Цвет, которым волна красится на самом деле.
+    var waveColour: Hue { waveLikePattern ? patternHue : waveHue }
+
     /// Свои цвета — у узора, волны и кружка хозяина свои: добавленный к
     /// узору не лезет в ряд волны. По порядку добавления, до `Hue.ownLimit`
     /// в ряду.
@@ -446,6 +455,7 @@ final class Settings {
         static let waveTint = "waveTint"
         static let patternHue = "patternHue"
         static let waveHue = "waveHue"
+        static let waveLikePattern = "waveLikePattern"
         /// Общий ряд прежней сборки — читается, пока у слоя нет своего.
         static let ownHues = "ownHues"
 
@@ -532,6 +542,7 @@ final class Settings {
             ?? Self.tint(store, Key.patternTint).map(Hue.preset) ?? .pattern
         waveHue = Self.take(Hue.self, Key.waveHue, from: store)
             ?? Self.tint(store, Key.waveTint).map(Hue.preset) ?? .wave
+        waveLikePattern = store.bool(forKey: Key.waveLikePattern)
         // Свои цвета прежней сборки были общими — достаются и узору, и волне.
         let shared = Self.take([Channels].self, Key.ownHues, from: store)
         ownHues = Dictionary(uniqueKeysWithValues: HueLayer.allCases.map {

@@ -213,7 +213,7 @@ struct StatsView: View {
     }
 
     /// Цвет волны, а не узора: столбики считают поливы.
-    private var colour: Color { Palette.swatch(settings.waveHue) }
+    private var colour: Color { Palette.swatch(settings.waveColour) }
 
     // MARK: - Пусто
 
@@ -484,7 +484,7 @@ struct StatsView: View {
                             Text(line.name)
                                 .font(Typography.settingRow)
                                 .foregroundStyle(Palette.ink)
-                                .lineLimit(1)
+                                .dataLines()
                             StatusLabel(status: line.status)
                                 .font(Typography.figureCaption)
                                 .foregroundStyle(Palette.secondaryText)
@@ -953,7 +953,7 @@ struct StatsView: View {
                 Text(room.name)
                     .font(Typography.settingRow)
                     .foregroundStyle(Palette.ink)
-                    .lineLimit(1)
+                    .dataLines()
                 if driest {
                     Text("Суше всех")
                         .font(Typography.figureCaption.weight(.semibold))
@@ -1040,7 +1040,7 @@ struct StatsView: View {
                 Text(line.name)
                     .font(Typography.settingRow)
                     .foregroundStyle(Palette.ink)
-                    .lineLimit(1)
+                    .dataLines()
                     .contentTransition(.numericText())
                 Text([line.species, line.room].filter { !$0.isEmpty }
                         .joined(separator: " · "))

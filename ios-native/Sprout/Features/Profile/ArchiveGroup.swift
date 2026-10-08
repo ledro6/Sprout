@@ -22,7 +22,7 @@ struct ArchiveGroup: View {
                 Text(entry.plant.name)
                     .font(Typography.settingRow)
                     .foregroundStyle(Palette.ink)
-                    .lineLimit(1)
+                    .dataLines()
                 Text(note(entry))
                     .font(Typography.settingNote)
                     .foregroundStyle(Palette.secondaryText)

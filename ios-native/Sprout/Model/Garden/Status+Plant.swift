@@ -38,6 +38,12 @@ extension Plant {
                            Lang.format("%lld%%", battery))
     }
 
+    /// Кольцо влажности словами для VoiceOver, см. `MoistureStatus.spoken`.
+    var moistureSpoken: String {
+        MoistureStatus.spoken(moisture: moisture, period: period,
+                              estimated: estimated)
+    }
+
     /// Полить сегодня — см. `MoistureStatus.due`.
     var needsWaterToday: Bool {
         !isSnoozed() && MoistureStatus.due(moisture: moisture, period: period)

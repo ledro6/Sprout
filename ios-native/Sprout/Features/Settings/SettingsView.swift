@@ -124,6 +124,18 @@ struct SettingsView: View {
             SproutDivider()
 
             SproutBlock("Цвет волны", term: .wave) {
+                // Палитра — только когда цвет волны свой: «Как узор» не
+                // просит выбирать то, что берётся с узора.
+                Picker("Цвет волны", selection: Binding(
+                    get: { settings.waveLikePattern },
+                    set: { settings.waveLikePattern = $0 })) {
+                    Text("Как узор").tag(true)
+                    Text("Свой цвет").tag(false)
+                }
+                .pickerStyle(.segmented)
+                .labelsHidden()
+                .onChange(of: settings.waveLikePattern) { _, _ in Feel.pick() }
+                if !settings.waveLikePattern {
                 HueRow(current: settings.waveHue, layer: .wave,
                        spots: waveSpots,
                        pick: { hue, spot in
@@ -135,6 +147,7 @@ struct SettingsView: View {
                            Feel.pick()
                        },
                        remove: { removeOwn($0, at: $1, from: .wave) })
+                }
             }
         }
     }
@@ -164,10 +177,19 @@ struct SettingsView: View {
 
     // MARK: - Фон
 
+    /// Подпись под «Узор на фоне» — по состоянию переключателя: включён —
+    /// что настраивается ниже, выключен — почему ниже всё погасло.
+    private var patternNote: LocalizedStringKey {
+        LocalizedStringKey(settings.pattern
+            ? Lang.text("Фигурки на фоне. Их цвет и движение — ниже.")
+            : Lang.text("Фон ровным цветом. Настройки узора ниже выключены."))
+    }
+
     private var backdrop: some View {
         SproutGroup("Фон") {
             // Узор можно убрать совсем — всё, что про узор, ниже гаснет.
-            switchRow("Узор на фоне", note: "Без узора фон — ровный цвет.",
+            switchRow("Узор на фоне",
+                      note: patternNote,
                       isOn: Binding(
                           get: { settings.pattern },
                           set: { on in

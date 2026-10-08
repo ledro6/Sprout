@@ -372,7 +372,7 @@ struct AddView: View {
                                 Feel.pick()
                             } label: {
                                 Text(option.species)
-                                    .lineLimit(1)
+                                    .dataLines()
                                     .fixedSize()
                             }
                             .buttonStyle(.glass)

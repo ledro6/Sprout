@@ -97,7 +97,7 @@ struct SensorPicker: View {
                             Text(item.element.name)
                                 .font(Typography.settingRow)
                                 .foregroundStyle(Palette.ink)
-                                .lineLimit(1)
+                                .dataLines()
                             if let detail = item.element.detail {
                                 // «Рядом / Далеко» — словом; децибелы —
                                 // мелкой припиской для любопытных.

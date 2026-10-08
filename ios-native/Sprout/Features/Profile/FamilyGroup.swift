@@ -191,7 +191,7 @@ struct FamilyGroup: View {
                     Text(person.name)
                         .font(Typography.settingRow)
                         .foregroundStyle(Palette.ink)
-                        .lineLimit(1)
+                        .dataLines()
                     Spacer(minLength: 8)
                     Text(role(of: person))
                         .font(Typography.settingNote)
