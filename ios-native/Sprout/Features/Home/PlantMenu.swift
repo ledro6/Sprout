@@ -67,10 +67,6 @@ struct PlantMenu: ViewModifier {
 
     @State private var tenant = Tenant()
 
-    /// Чужой полив меньше часа назад, о котором спрашиваем перед своим, как
-    /// у капли, см. `WaterDrop`.
-    @State private var asking: Watering?
-
     private var plant: Plant? { garden.plant(id: tenant.id) }
 
     func body(content: Content) -> some View {
@@ -80,21 +76,6 @@ struct PlantMenu: ViewModifier {
             .onGeometryChange(for: CGRect.self) { $0.frame(in: .global) }
                 action: { keep($0) }
             .environment(\.sproutHalos, halos && !dimmed))
-            .confirmationDialog(asking.map { Family.again($0) } ?? "",
-                                isPresented: Binding(
-                                    get: { asking != nil },
-                                    set: { if !$0 { asking = nil } }),
-                                titleVisibility: .visible) {
-                // Следом может спросить защита от перелива: лист поднимается,
-                // когда этот уже ушёл.
-                Button("Полить") {
-                    Task { @MainActor in
-                        try? await Task.sleep(for: .seconds(0.4))
-                        pour()
-                    }
-                }
-                Button("Отмена", role: .cancel) {}
-            }
             .alert("Новая комната", isPresented: $moving) {
                 TextField("Балкон", text: $roomDraft)
                 Button("Отмена", role: .cancel) {}
@@ -190,7 +171,7 @@ struct PlantMenu: ViewModifier {
     private func ask() {
         let id = tenant.id
         if let recent = Kinship.shared.recent(id, in: garden.log) {
-            asking = recent
+            Overflow.shared.askAgain(recent) { pour() }
         } else {
             pour()
         }

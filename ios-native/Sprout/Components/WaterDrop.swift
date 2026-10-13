@@ -8,9 +8,6 @@ struct WaterDrop: View {
 
     @Environment(Garden.self) private var garden
 
-    /// Чужой полив меньше часа назад, о котором спрашиваем перед своим.
-    @State private var asking: Watering?
-
     /// Растёт на каждый полив — кольцо и подскок капли, см. `PourRing`.
     @State private var poured = 0
 
@@ -26,7 +23,11 @@ struct WaterDrop: View {
 
     var body: some View {
         Button {
-            if let recent { asking = recent } else { pour() }
+            if let recent {
+                Overflow.shared.askAgain(recent) { pour() }
+            } else {
+                pour()
+            }
         } label: {
             // Пересыхает — капля дышит: зовёт полить.
             Image(systemName: "drop.fill")
@@ -45,22 +46,6 @@ struct WaterDrop: View {
         .opacity(recent == nil ? 1 : 0.5)
         .animation(Motion.number, value: full)
         .accessibilityLabel(Lang.format("Полить %@", plant.name))
-        .confirmationDialog(asking.map { Family.again($0) } ?? "",
-                            isPresented: Binding(
-                                get: { asking != nil },
-                                set: { if !$0 { asking = nil } }),
-                            titleVisibility: .visible) {
-            // Следом может спросить защита от перелива — её лист
-            // поднимается, когда этот уже ушёл: два листа разом SwiftUI
-            // не покажет.
-            Button("Полить") {
-                Task { @MainActor in
-                    try? await Task.sleep(for: .seconds(0.4))
-                    pour()
-                }
-            }
-            Button("Отмена", role: .cancel) {}
-        }
     }
 
     /// Влажную землю — сперва вопрос, см. `Overflow`.

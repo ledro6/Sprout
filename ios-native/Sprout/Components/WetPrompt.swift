@@ -27,6 +27,21 @@ final class Overflow {
 
     var question: Question?
 
+    /// «Маша уже полила 5 мин назад. Всё равно полить?» — перед своим поливом.
+    struct Again: Identifiable {
+        let id: Plant.ID
+        let title: String
+        let go: @MainActor () -> Void
+    }
+
+    var again: Again?
+
+    /// Недавно полил кто-то из семьи: сперва вопрос, потом `go` (обычно —
+    /// `water`, который при влажной земле спросит ещё раз).
+    func askAgain(_ recent: Watering, go: @escaping @MainActor () -> Void) {
+        again = Again(id: recent.plant, title: Family.again(recent), go: go)
+    }
+
     /// Полить — или сначала спросить. Отклик (`then`) — у того, кто
     /// поливал: откуда пускать волну, знает он; зовётся, только если
     /// полилось.
@@ -62,17 +77,33 @@ final class Overflow {
     }
 }
 
-/// Лист вопроса: «Всё равно полить» и «Отмена».
+/// Системный алерт вопроса. Две ступени идут друг за другом: сперва
+/// «Маша уже полила…» (`again`), потом «Земля ещё влажная» (`question`) —
+/// второй поднимается, когда первый уже ушёл.
 struct WetPrompt: ViewModifier {
     let ask: Overflow
 
     func body(content: Content) -> some View {
         content
-            .confirmationDialog(
-                Text(ask.question?.title ?? ""),
+            .alert(
+                ask.again?.title ?? "",
+                isPresented: Binding(get: { ask.again != nil },
+                                     set: { if !$0 { ask.again = nil } }),
+                presenting: ask.again) { again in
+                Button("Полить") {
+                    // Следом может спросить защита от перелива: даём
+                    // первому алерту уйти, а не ставим задержку.
+                    Task { @MainActor in
+                        await Task.yield()
+                        again.go()
+                    }
+                }
+                Button("Отмена", role: .cancel) {}
+            }
+            .alert(
+                ask.question?.title ?? "",
                 isPresented: Binding(get: { ask.question != nil },
                                      set: { if !$0 { ask.question = nil } }),
-                titleVisibility: .visible,
                 presenting: ask.question) { question in
                 Button("Всё равно полить") { question.go() }
                 Button("Отмена", role: .cancel) {}
