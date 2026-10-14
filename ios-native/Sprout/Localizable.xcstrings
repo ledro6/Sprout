@@ -135517,6 +135517,9 @@
         }
       }
     },
+    "Открыть фото": {
+      "extractionState": "manual"
+    },
     "Отлично": {
       "extractionState": "manual",
       "localizations": {
@@ -257809,6 +257812,9 @@
       "extractionState": "manual"
     },
     "Фото и вопросы": {
+      "extractionState": "manual"
+    },
+    "Фото растения": {
       "extractionState": "manual"
     },
     "Фуксия": {

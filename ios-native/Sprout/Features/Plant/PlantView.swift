@@ -30,6 +30,9 @@ struct PlantView: View {
 
     @State private var portraying = false
 
+    /// Фото на весь экран, см. `PhotoViewer`.
+    @State private var viewing = false
+
     @State private var asking = false
 
     /// «Спросить о растении» — выбор: по фото («Что с ним?») или вопросом
@@ -152,6 +155,11 @@ struct PlantView: View {
         }
         .sheet(isPresented: $tuning) {
             PlantSettingsView(plantID: plantID).environment(garden)
+        }
+        .fullScreenCover(isPresented: $viewing) {
+            if let plant {
+                PhotoViewer(names: gallery(plant))
+            }
         }
         .sheet(isPresented: $posting) {
             PosterSheet(poster: .plant(plantID)).environment(garden)
@@ -394,6 +402,18 @@ struct PlantView: View {
         Feel.toss()
     }
 
+    /// Снимки для просмотра: портрет и своё фото, у которых есть файл.
+    /// Нет ни того ни другого (рисунок вида) — просмотра нет.
+    private func gallery(_ plant: Plant) -> [String] {
+        var names: [String] = []
+        for name in [plant.portrait, plant.shot] {
+            if let name, !names.contains(name), Snapshot.image(name) != nil {
+                names.append(name)
+            }
+        }
+        return names
+    }
+
     /// Герой одной строкой: миниатюра до 96 pt, кольцо влажности, источник,
     /// срок до полива и чип интервала «Раз в 9 дней ›». Влажность, срок и
     /// кнопка «Полить» видны без прокрутки и на 667 pt.
@@ -403,6 +423,10 @@ struct PlantView: View {
                 .frame(width: Metrics.heroPhoto, height: Metrics.heroPhoto)
                 .onGeometryChange(for: CGRect.self) { $0.frame(in: .global) }
                     action: { spot.rect = $0 }
+                .contentShape(.rect)
+                .onTapGesture { if !gallery(plant).isEmpty { viewing = true } }
+                .accessibilityAddTraits(gallery(plant).isEmpty ? [] : .isButton)
+                .accessibilityHint(gallery(plant).isEmpty ? "" : "Открыть фото")
             VStack(alignment: .leading, spacing: 8) {
                 HStack(spacing: 10) {
                     MoistureRing(moisture: plant.moisture, status: plant.status,
