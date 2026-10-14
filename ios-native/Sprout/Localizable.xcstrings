@@ -46997,6 +46997,9 @@
     "Дата полива": {
       "extractionState": "manual"
     },
+    "Дату записи в журнале поливов можно поменять: «Изменить дату…».": {
+      "extractionState": "manual"
+    },
     "Датчик": {
       "extractionState": "manual"
     },
@@ -110733,6 +110736,9 @@
     "На неделю": {
       "extractionState": "manual"
     },
+    "На растении видно, почему оно сухо или скоро попросит воды.": {
+      "extractionState": "manual"
+    },
     "На сроки почти не влияет.": {
       "extractionState": "manual",
       "localizations": {
@@ -141162,6 +141168,9 @@
     "Пауза напоминаний…": {
       "extractionState": "manual"
     },
+    "Паузу напоминаний можно поставить до выбранного дня: для всего сада или одной комнаты.": {
+      "extractionState": "manual"
+    },
     "Пеларгония": {
       "extractionState": "manual",
       "localizations": {
@@ -165507,6 +165516,9 @@
       "extractionState": "manual"
     },
     "Полив вовремя": {
+      "extractionState": "manual"
+    },
+    "Полив не перельётся: «Полить всех» пропускает влажные растения, а влажную землю приложение переспросит.": {
       "extractionState": "manual"
     },
     "Полив по метке": {
@@ -265846,6 +265858,9 @@
       "extractionState": "manual"
     },
     "Что нажимали и сколько раз — без фото, кличек и мест. Только на этом телефоне.": {
+      "extractionState": "manual"
+    },
+    "Что нового": {
       "extractionState": "manual"
     },
     "Что с ним?": {

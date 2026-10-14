@@ -395,6 +395,12 @@ final class Settings {
         didSet { store.set(toured, forKey: Key.toured) }
     }
 
+    /// Версия приложения, с которой показано «Что нового»; nil — установка
+    /// свежая, её ведёт знакомство. См. `WhatsNew`.
+    var seenVersion: String? {
+        didSet { store.set(seenVersion, forKey: Key.seenVersion) }
+    }
+
     /// Экраны, чьи подсказки уже показаны, — см. `Walk`. Показать снова —
     /// значит забыть их все.
     private(set) var walked: Set<String> {
@@ -511,6 +517,7 @@ final class Settings {
         static let plainPattern = "plainPattern"
         static let hiddenPattern = "hiddenPattern"
         static let toured = "toured"
+        static let seenVersion = "seenVersion"
         static let walked = "walkedScreens"
         static let launches = "launches"
         static let replay = "replayHints"
@@ -607,6 +614,7 @@ final class Settings {
         tagPour = PotTag.Pour(rawValue: store.string(forKey: Key.tagPour) ?? "")
             ?? .now
         toured = store.bool(forKey: Key.toured)
+        seenVersion = store.string(forKey: Key.seenVersion)
         walked = Set(store.stringArray(forKey: Key.walked) ?? [])
         replay = store.bool(forKey: Key.replay)
         // Счётчика не было, а знакомство уже прошло — сад старый: первым

@@ -214,6 +214,8 @@ struct HomeView: View {
         .sheet(isPresented: $tripping) { TripView().environment(garden) }
         .sheet(isPresented: $pausing) { PauseSheet().environment(garden) }
         .sheet(isPresented: $asking) { AskView().environment(garden) }
+        // Один раз после смены версии: см. `WhatsNew`.
+        .modifier(WhatsNew())
         // Ждали воды, и полили последнего — праздник. Высохли новые —
         // просто счёт растёт.
         .onChange(of: MoistureStatus.needsWater(in: garden.rooms).count) { old, now in
