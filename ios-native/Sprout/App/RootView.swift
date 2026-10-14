@@ -216,13 +216,7 @@ struct RootView: View {
             }
             remind(active: now == .active)
         }
-        .alert(Lang.format("Пока вас не было: %@",
-                           Lang.format("%@ просили воды",
-                                       Lang.format("%lld растений",
-                                                   homecoming?.count ?? 0))),
-               isPresented: Binding(
-                   get: { homecoming != nil },
-                   set: { if !$0 { homecoming = nil } })) {
+        .alert(homecomingTitle, isPresented: homecomingShown) {
             Button(Lang.text("Полить всех")) {
                 if let ids = homecoming { _ = garden.waterNeeded(ids) }
                 homecoming = nil
@@ -230,6 +224,20 @@ struct RootView: View {
             }
             Button(Lang.text("Закрыть"), role: .cancel) { homecoming = nil }
         }
+    }
+
+    /// Заголовок «Пока вас не было» — отдельно: вложенные `Lang.format` прямо
+    /// в `.alert` в конце длинной цепочки модификаторов компилятор не
+    /// успевал вывести.
+    private var homecomingTitle: String {
+        let plants = Lang.format("%lld растений", homecoming?.count ?? 0)
+        let asked = Lang.format("%@ просили воды", plants)
+        return Lang.format("Пока вас не было: %@", asked)
+    }
+
+    private var homecomingShown: Binding<Bool> {
+        Binding(get: { homecoming != nil },
+                set: { if !$0 { homecoming = nil } })
     }
 
     /// Вернулись из «Уезжаю»: пауза кончилась — если недавно, скажем, кто
