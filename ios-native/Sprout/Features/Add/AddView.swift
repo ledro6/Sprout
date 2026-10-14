@@ -342,13 +342,11 @@ struct AddView: View {
     /// «Похоже на … · изменить»; не уверен — ещё до трёх видов чипами.
     private var kind: some View {
         VStack(alignment: .leading, spacing: 8) {
-            HStack(spacing: 6) {
-                Text(kindLine)
-                    .font(Typography.settingRow)
-                    .foregroundStyle(Palette.ink)
-                    .fixedSize(horizontal: false, vertical: true)
-                Text("·")
-                    .foregroundStyle(Palette.secondaryText)
+            Text(kindLine)
+                .font(Typography.settingRow)
+                .foregroundStyle(Palette.ink)
+                .fixedSize(horizontal: false, vertical: true)
+            HStack(spacing: 16) {
                 Button {
                     withAnimation(Motion.appear) { editingKind.toggle() }
                 } label: {
@@ -359,6 +357,16 @@ struct AddView: View {
                         .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
+                if isRecognised {
+                    Button(action: notThisPlant) {
+                        Text("Это не то растение")
+                            .font(Typography.settingNote)
+                            .foregroundStyle(Palette.accent)
+                            .padding(.vertical, 6)
+                            .contentShape(Rectangle())
+                    }
+                    .buttonStyle(.plain)
+                }
                 Spacer(minLength: 0)
             }
             if lowConfidence {
@@ -401,12 +409,31 @@ struct AddView: View {
         .animation(Motion.appear, value: editingKind)
     }
 
+    /// Вид подсказал снимок и его не меняли.
+    private var isRecognised: Bool {
+        guard let guess else { return false }
+        return guess.species == species
+    }
+
     private var kindLine: String {
         if species.isEmpty { return Lang.text("Вид не указан") }
-        if let guess, guess.species == species {
-            return Lang.format("Похоже на %@", species)
+        if let guess, isRecognised {
+            return Sureness(guess.confidence).species(species)
         }
         return species
+    }
+
+    /// Снимок назвал не тот вид: подсказка уходит, названный вид — из чипов.
+    /// Без вида посадить всё равно можно.
+    private func notThisPlant() {
+        guard let rejected = guess?.species else { return }
+        withAnimation(Motion.appear) {
+            species = ""
+            guess = nil
+            candidates.removeAll { $0.species == rejected }
+            editingKind = true
+        }
+        Feel.pick()
     }
 
     /// Классификатор не уверен и назвал больше одного вида.
@@ -515,6 +542,12 @@ struct AddView: View {
                                      Species.periodPhrase(usual)))
                         .font(Typography.settingNote)
                         .foregroundStyle(Palette.secondaryText)
+                }
+                if !wanted.isEmpty, Species.usual(for: wanted) == nil {
+                    Text("Для этого вида пока нет данных. Задайте интервал сами")
+                        .font(Typography.settingNote)
+                        .foregroundStyle(Palette.secondaryText)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
             }
 

@@ -54178,6 +54178,9 @@
     "Для справки": {
       "extractionState": "manual"
     },
+    "Для этого вида пока нет данных. Задайте интервал сами": {
+      "extractionState": "manual"
+    },
     "Дневной садовник": {
       "extractionState": "manual",
       "localizations": {
@@ -187509,9 +187512,6 @@
         }
       }
     },
-    "Похоже на %@": {
-      "extractionState": "manual"
-    },
     "Похоже на %@. Поправьте, если не так.": {
       "extractionState": "manual"
     },
@@ -268134,6 +268134,9 @@
           }
         }
       }
+    },
+    "Это не то растение": {
+      "extractionState": "manual"
     },
     "Это около %@ л воды — если по стакану за раз.": {
       "extractionState": "manual",
