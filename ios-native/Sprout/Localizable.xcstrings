@@ -257809,6 +257809,9 @@
     "Фото и заметки": {
       "extractionState": "manual"
     },
+    "Фото от %@": {
+      "extractionState": "manual"
+    },
     "Фото растения": {
       "extractionState": "manual"
     },

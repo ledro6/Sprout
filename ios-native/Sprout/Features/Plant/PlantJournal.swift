@@ -112,6 +112,8 @@ struct PlantJournal: View {
                                                 style: .continuous))
             }
             .buttonStyle(.plain)
+            .accessibilityLabel(Lang.format("Фото от %@",
+                                            snap.date.formatted(date: .abbreviated, time: .omitted)))
             .contextMenu {
                 Button(role: .destructive) {
                     withAnimation(Motion.appear) {
@@ -220,6 +222,8 @@ struct PlantJournal: View {
                     .focused(writing)
                 Button("Добавить") { addJot() }
                     .font(Typography.settingNote)
+                    .frame(minWidth: 44, minHeight: 44)
+                    .contentShape(Rectangle())
                     .disabled(trimmedDraft.isEmpty)
             }
         }

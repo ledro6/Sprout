@@ -731,6 +731,8 @@ struct PlantView: View {
             } label: {
                 Image(systemName: "xmark")
                     .font(Typography.settingNote)
+                    .frame(minWidth: 44, minHeight: 44)
+                    .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
             .foregroundStyle(Palette.secondaryText)
@@ -753,6 +755,8 @@ struct PlantView: View {
                 .font(Typography.settingNote.weight(.medium))
                 .lineLimit(1)
                 .minimumScaleFactor(0.7)
+                .frame(minWidth: 44, minHeight: 44)
+                .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
         .foregroundStyle(Palette.accent)
