@@ -6294,6 +6294,94 @@ check(!pot05.wet && pot05.status == .ok, "без порога — общий, п
 check(Wrist.Pot(id: "o", name: "o", room: "", moisture: 0.5, period: 5,
                 measured: nil).wetFrom == nil, "посылка прежней сборки без порога")
 
+print("планетарий: точная орбита:")
+do {
+    var utc = Calendar(identifier: .gregorian)
+    utc.timeZone = TimeZone(secondsFromGMT: 0)!
+    let july = Date(timeIntervalSince1970: 1_784_000_000)
+    func pour(_ left: Double?, extra: Bool? = nil, at back: Double = 0)
+        -> Watering {
+        Watering(plant: "К", when: july.addingTimeInterval(-back * 3_600),
+                 left: left, extra: extra)
+    }
+    check(Precision.hit(pour(0.3)) == .bullseye, "20–40 % — в яблочко")
+    check(Precision.hit(pour(0.2)) == .bullseye, "ровно 20 % — ещё в яблочко")
+    check(Precision.hit(pour(0.1)) == .tight, "меньше 20 % — впритык")
+    check(Precision.hit(pour(0)) == .tight, "досуха — впритык, не штраф")
+    check(Precision.hit(pour(0.4)) == .early, "40 % и больше — рано")
+    check(Precision.hit(pour(0.9)) == .early, "влажная земля — рано")
+    check(Precision.hit(pour(nil)) == nil, "без доли воды — не оцениваем")
+    check(Precision.hit(pour(0.3, extra: true)) == .early,
+          "лишний полив — всегда рано, даже с «хорошей» долей")
+    check(Precision.hit(pour(nil, extra: true)) == .early,
+          "лишний без доли воды — тоже рано")
+
+    var tally = Precision.Tally()
+    tally.add(.bullseye)
+    tally.add(.tight)
+    check(tally.judged == 1 && tally.share == nil,
+          "«впритык» в долю не входит; мало поливов — доли нет")
+    tally.add(.bullseye)
+    tally.add(.early)
+    check(round2(tally.share ?? -1), "0.67", "две из трёх оценённых")
+
+    let good = (0 ..< 4).map { pour(0.3, at: Double($0)) }
+    let base = Precision.standing(good, now: july, side: .north,
+                                  calendar: utc)
+    check(base.share == 1, "четыре в яблочко — сто процентов")
+    check(base.record == nil && !base.isRecord,
+          "четырёх оценённых поливов для рекорда мало")
+    let five = Precision.standing(good + [pour(0.25, at: 9)], now: july,
+                                  side: .north, calendar: utc)
+    check(five.record?.judged == 5 && five.isRecord, "пять — рекорд сезона")
+    var worse = five
+    for extra in 1 ... 6 {
+        let flooded = Precision.standing(
+            good + [pour(0.25, at: 9)] + (0 ..< extra).map {
+                pour(0.8, at: Double(20 + $0))
+            }, now: july, side: .north, calendar: utc)
+        check((flooded.share ?? 1) < (worse.share ?? 1),
+              "каждый лишний полив только снижает долю")
+        worse = flooded
+    }
+    let late = Precision.standing(
+        good + [pour(0.25, at: 9)] + (0 ..< 5).map {
+            pour(0.05, at: Double(20 + $0))
+        }, now: july, side: .north, calendar: utc)
+    check(late.share == five.share, "запоздалые поливы долю не трогают")
+    let kept = Precision.Record(share: 0.9, season: "2020-winter", judged: 8)
+    let lower = Precision.standing(
+        [pour(0.3), pour(0.3, at: 1), pour(0.9, at: 2)], now: july,
+        side: .north, calendar: utc, kept: kept)
+    check(lower.record == kept && !lower.isRecord,
+          "рекорд с диска не сбить хуже; сезон не на рекорде")
+    check(Precision.percent(2.0 / 3) == 67, "проценты целые")
+
+    check(Precision.dried(0) && !Precision.dried(0.05),
+          "тускнеет только досуха")
+    let log = [pour(0.3, at: 0.1), pour(0.9, at: 0.2), pour(0.05, at: 0.3),
+               pour(0.3, at: 5), pour(0.3, at: 0.4)]
+    let fresh = Precision.fresh(log, since: nil, now: july)
+    check(fresh.map(\.hit) == [.bullseye, .early, .bullseye],
+          "свежие: яблочко и спотыкание, «впритык» и старые — без реакции")
+    check(Precision.fresh(log, since: log[0].when, now: july).isEmpty,
+          "показанное второй раз не играет")
+
+    let suite = UserDefaults(suiteName: "check.skybook")!
+    suite.removePersistentDomain(forName: "check.skybook")
+    let book = SkyBook(store: suite)
+    _ = book.standing(good + [pour(0.25, at: 9)], now: july, side: .north,
+                      calendar: utc)
+    _ = book.take(log, now: july)
+    check(book.take(log, now: july).isEmpty, "реакции берутся один раз")
+    let again = SkyBook(store: suite)
+    check(again.state.record?.share == 1 && again.state.seen != nil,
+          "книга неба переживает перезапуск")
+    suite.set(Data("{}".utf8), forKey: "skyBook")
+    check(SkyBook(store: suite).state == SkyState(),
+          "пустая запись читается по умолчанию")
+}
+
 if failed > 0 {
     print("\nне сошлось: \(failed)")
     exit(1)

@@ -5,6 +5,10 @@ import SwiftUI
 struct OrreryDial: View {
     let planets: [Orrery.Planet]
     var flashes: [Orrery.Flash] = []
+    /// Искры «в яблочко» у ворот — сила гаснет от единицы.
+    var glints: [Orrery.Flash] = []
+    /// Высохшие досуха тускнеют, пока их не польют.
+    var dimmed: Set<Plant.ID> = []
     var picked: Plant.ID?
     var beat: Double = 0
     /// На обзоре — мелко и без подписей.
@@ -100,6 +104,22 @@ struct OrreryDial: View {
                     lineWidth: 2)
             }
 
+            // Искра «в яблочко»: крестик света у ворот на орбите политой.
+            for glint in glints {
+                let at = Self.spot(radius: glint.radius, angle: 0, in: size,
+                                   small: small)
+                let r = 4 + glint.strength * 10
+                var spark = Path()
+                spark.move(to: CGPoint(x: at.x - r, y: at.y))
+                spark.addLine(to: CGPoint(x: at.x + r, y: at.y))
+                spark.move(to: CGPoint(x: at.x, y: at.y - r))
+                spark.addLine(to: CGPoint(x: at.x, y: at.y + r))
+                context.stroke(spark,
+                               with: .color(.white.opacity(glint.strength)),
+                               style: StrokeStyle(lineWidth: 1.6,
+                                                  lineCap: .round))
+            }
+
             // Солнце — источник воды.
             context.drawLayer { layer in
                 layer.addFilter(.blur(radius: sun / 3))
@@ -134,7 +154,8 @@ struct OrreryDial: View {
                                                       width: r * 2,
                                                       height: r * 2)),
                                with: .color(Palette.level(planet.moisture)
-                                   .opacity(0.8)))
+                                   .opacity(dimmed.contains(planet.id)
+                                            ? 0.2 : 0.8)))
                 }
             }
             for planet in planets {
@@ -153,6 +174,9 @@ struct OrreryDial: View {
                     Gradient(colors: [tone.mix(with: .white, by: 0.5), tone,
                                       tone.mix(with: .black, by: 0.55)]),
                     center: lit, startRadius: 0, endRadius: r * 1.7))
+                if dimmed.contains(planet.id) {
+                    context.fill(disc, with: .color(Palette.space.opacity(0.6)))
+                }
                 if planet.id == picked {
                     context.stroke(disc, with: .color(.white), lineWidth: 2)
                     let name = context.resolve(

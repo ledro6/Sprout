@@ -24,6 +24,23 @@ struct OrreryView: View {
     /// Политые отсюда — у ворот расходится круг.
     @State private var splashed: [Plant.ID: Date] = [:]
 
+    @Environment(\.accessibilityReduceMotion) private var still
+    private let book = SkyBook.shared
+    /// «Небесный журнал» открыт.
+    @State private var journal = false
+    /// Свежие поливы, у которых играет реакция: искра или спотыкание.
+    @State private var echoes: [Echo] = []
+
+    struct Echo: Hashable {
+        var id: Plant.ID
+        var hit: Precision.Hit
+        var start: Date
+    }
+
+    private var side: Season.Side {
+        Season.side(region: Locale.current.region?.identifier)
+    }
+
     private var orbits: [Orrery.Orbit] {
         Orrery.orbits(garden.rooms.flatMap(\.plants))
     }
@@ -34,6 +51,7 @@ struct OrreryView: View {
         ScrollViewReader { reader in
             ScrollView {
                 VStack(spacing: Metrics.groupGap) {
+                    chips
                     dial(orbits, crossings: crossings)
                         .hintSpot(.orreryDial)
                     card(crossings)
@@ -94,7 +112,85 @@ struct OrreryView: View {
             guard !Task.isCancelled, playing == started else { return }
             finish()
         }
+        .onAppear {
+            book.standing(garden.log, side: side)
+            react()
+        }
+        .onChange(of: garden.log.count) {
+            book.standing(garden.log, side: side)
+            react()
+        }
+        .sheet(isPresented: $journal) {
+            SkyJournal().environment(garden)
+        }
         .onDisappear { stop() }
+    }
+
+    // MARK: - Точность
+
+    /// Компактная строка под шапкой: счёт сезона; нажатие — журнал.
+    private var chips: some View {
+        let standing = Precision.standing(garden.log, side: side,
+                                          kept: book.state.record)
+        return HStack {
+            Button { journal = true } label: {
+                HStack(spacing: 6) {
+                    Image(systemName: "scope")
+                    Text(Lang.format("Точность: %@",
+                                     standing.share.map { Stats.percent($0) }
+                                        ?? "—"))
+                }
+                .font(Typography.settingNote)
+                .foregroundStyle(Palette.ink)
+                .padding(.horizontal, 12)
+                .padding(.vertical, 7)
+                .background(Capsule().fill(Color.white.opacity(0.08)))
+            }
+            .buttonStyle(.plain)
+            .accessibilityHint("Откроет небесный журнал")
+            Spacer(minLength: 0)
+        }
+    }
+
+    /// Свежие поливы, которых небо ещё не показывало: «в яблочко» —
+    /// искра у ворот, «рано» — планета спотыкается. При «Уменьшить
+    /// движение» — без анимации, но поливы считаются показанными.
+    private func react() {
+        let fresh = book.take(garden.log)
+        guard !fresh.isEmpty, !still else { return }
+        let now = Date()
+        echoes = echoes.filter { now.timeIntervalSince($0.start) < 2 }
+            + fresh.map { Echo(id: $0.plant, hit: $0.hit, start: now) }
+    }
+
+    /// Планета, которую только что полили рано, спотыкается один раз.
+    private func stumbled(_ planets: [Orrery.Planet],
+                          at moment: Date) -> [Orrery.Planet] {
+        guard !still, !echoes.isEmpty else { return planets }
+        return planets.map { planet in
+            guard let echo = echoes.first(where: {
+                $0.id == planet.id && $0.hit == .early
+            }) else { return planet }
+            let t = moment.timeIntervalSince(echo.start) / 1.2
+            guard t >= 0, t < 1 else { return planet }
+            var out = planet
+            out.angle += 0.24 * (1 - t) * abs(sin(t * 6 * .pi))
+            return out
+        }
+    }
+
+    /// Искры у ворот на орбитах тех, кого полили «в яблочко».
+    private func glints(_ orbits: [Orrery.Orbit],
+                        at moment: Date) -> [Orrery.Flash] {
+        guard !still, !echoes.isEmpty else { return [] }
+        let radius = Dictionary(orbits.map { ($0.id, $0.radius) },
+                                uniquingKeysWith: { first, _ in first })
+        return echoes.compactMap { echo in
+            let since = moment.timeIntervalSince(echo.start) / 1.0
+            guard echo.hit == .bullseye, since >= 0, since < 1,
+                  let place = radius[echo.id] else { return nil }
+            return Orrery.Flash(radius: place, strength: 1 - since)
+        }
     }
 
     // MARK: - Шапка
@@ -117,10 +213,13 @@ struct OrreryView: View {
                 .minimumScaleFactor(0.7)
                 .frame(maxWidth: .infinity)
                 .accessibilityAddTraits(.isHeader)
-            // Противовес «назад»: заголовок стоит ровно посередине.
-            Color.clear
-                .frame(width: Metrics.navCircle, height: Metrics.navCircle)
-                .accessibilityHidden(true)
+            // Он же противовес «назад»: заголовок стоит ровно посередине.
+            Button { journal = true } label: {
+                Image(systemName: "book.closed")
+                    .modifier(NavCircle())
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel("Небесный журнал")
         }
         .padding(.horizontal, Metrics.contentMargin)
         // Пустое место шапки держит касания, как системная панель: под ним
@@ -138,10 +237,15 @@ struct OrreryView: View {
                                 ? 1.0 / 30 : 1.0 / 60)) { context in
             let moment = context.date
             let day = shown(at: moment)
-            let planets = sky(orbits, day: day, at: moment)
+            let planets = stumbled(sky(orbits, day: day, at: moment),
+                                   at: moment)
             OrreryDial(planets: planets,
                        flashes: flashes(orbits, crossings: crossings,
                                         day: day, at: moment),
+                       glints: glints(orbits, at: moment),
+                       dimmed: Set(planets.filter {
+                           Precision.dried($0.moisture)
+                       }.map(\.id)),
                        picked: picked,
                        beat: beat(at: moment))
                 .overlay {

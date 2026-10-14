@@ -64,6 +64,8 @@ ios-native/Sprout/Model/Awards/Gardener.swift
 ios-native/Sprout/Model/Awards/Quests.swift
 ios-native/Sprout/Model/Garden/Recap.swift
 ios-native/Sprout/Model/Orrery/Orrery.swift
+ios-native/Sprout/Model/Orrery/Precision.swift
+ios-native/Sprout/Model/Orrery/SkyBook.swift
 ios-native/Sprout/Model/Help/Walk.swift
 ios-native/Sprout/Model/Botany/Preset.swift
 ios-native/Sprout/Model/Botany/Toxicity.swift

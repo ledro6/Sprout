@@ -13096,6 +13096,9 @@
     "«%@»: полив не записан. Лишний полив вреден корням — откройте растение и проверьте землю.": {
       "extractionState": "manual"
     },
+    "«В яблочко» — полив, когда в земле 20–40 % воды. Впритык и поздно счёт не портят, а ранний полив его снижает: награда только за точность.": {
+      "extractionState": "manual"
+    },
     "«Полить» зовёт лейку: полив засчитается, когда вода коснётся земли.": {
       "extractionState": "manual",
       "localizations": {
@@ -24053,6 +24056,9 @@
         }
       }
     },
+    "В яблочко: %1$lld · впритык: %2$lld · рано: %3$lld": {
+      "extractionState": "manual"
+    },
     "Ванная": {
       "extractionState": "manual",
       "localizations": {
@@ -27523,6 +27529,9 @@
           }
         }
       }
+    },
+    "Весна": {
+      "extractionState": "manual"
     },
     "Весь дом спит, а у растений — ужин.": {
       "extractionState": "manual",
@@ -71721,6 +71730,9 @@
         }
       }
     },
+    "Зима": {
+      "extractionState": "manual"
+    },
     "Зима: земля сохнет медленнее, поливать реже": {
       "extractionState": "manual",
       "localizations": {
@@ -97351,6 +97363,9 @@
         }
       }
     },
+    "Лето": {
+      "extractionState": "manual"
+    },
     "Лето: земля сохнет быстрее, поливать чаще": {
       "extractionState": "manual",
       "localizations": {
@@ -122174,6 +122189,9 @@
         }
       }
     },
+    "Небесный журнал": {
+      "extractionState": "manual"
+    },
     "Небо сада": {
       "extractionState": "manual",
       "localizations": {
@@ -132328,6 +132346,9 @@
         }
       }
     },
+    "Осень": {
+      "extractionState": "manual"
+    },
     "Особые дни": {
       "extractionState": "manual",
       "localizations": {
@@ -134080,6 +134101,9 @@
       "extractionState": "manual"
     },
     "Отключить датчик": {
+      "extractionState": "manual"
+    },
+    "Откроет небесный журнал": {
       "extractionState": "manual"
     },
     "Откроется «Добавить» с этим видом и его сроками — останется дать кличку.": {
@@ -205841,6 +205865,12 @@
     "Рекорд дней подряд": {
       "extractionState": "manual"
     },
+    "Рекорд появится, когда за сезон наберётся несколько оценённых поливов.": {
+      "extractionState": "manual"
+    },
+    "Рекорд: %1$@ — %2$@.": {
+      "extractionState": "manual"
+    },
     "Рекорды": {
       "extractionState": "manual",
       "localizations": {
@@ -218226,6 +218256,9 @@
           }
         }
       }
+    },
+    "Сейчас вы на рекорде.": {
+      "extractionState": "manual"
     },
     "Сейчас земля влажная (%@): с поливом подождите.": {
       "extractionState": "manual"
@@ -242251,6 +242284,12 @@
       "extractionState": "manual"
     },
     "Точное место телефон узнаёт один раз — когда вы нажимаете «Отметить дачу здесь», — и хранит у себя. О приезде на дачу узнаёт сам iPhone.": {
+      "extractionState": "manual"
+    },
+    "Точность": {
+      "extractionState": "manual"
+    },
+    "Точность: %@": {
       "extractionState": "manual"
     },
     "Трава": {
@@ -269642,6 +269681,9 @@
       "extractionState": "manual"
     },
     "в срок %@": {
+      "extractionState": "manual"
+    },
+    "в этом сезоне": {
       "extractionState": "manual"
     },
     "вовремя %@": {
