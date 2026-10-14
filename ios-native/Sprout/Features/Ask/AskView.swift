@@ -33,7 +33,8 @@ struct AskView: View {
                     if let plant {
                         about(plant)
                     }
-                    if !Muse.ready {
+                    // Состояние — наблюдаемое: «Повторить» обновит экран.
+                    if Offer.shared.state != .ready {
                         unavailable
                     } else if talk.lines.isEmpty {
                         intro
@@ -166,21 +167,18 @@ struct AskView: View {
 
     /// Нет модели на этом телефоне — что нужно и что можно без неё.
     private var unavailable: some View {
-        Label {
-            Group {
-                switch Muse.state {
-                case .needsEnabling:
-                    Text("Apple Intelligence на этом телефоне выключена. Включите её в Настройках → «Apple Intelligence и Siri» — и сад сможет отвечать. Проверить растение по фото можно и без неё: «Спросить о растении» → «По фото».")
-                case .loading:
-                    Text("Модель загружается. Когда она будет готова, сад сможет отвечать — загляните сюда чуть позже.")
-                default:
-                    Text("Отвечать на вопросы умеет Apple Intelligence, а она не говорит на языке приложения. Проверить растение по фото можно и без неё: «Спросить о растении» → «По фото».")
-                }
+        VStack(alignment: .leading, spacing: 12) {
+            Label {
+                Text(unavailableLine)
+                    .fixedSize(horizontal: false, vertical: true)
+            } icon: {
+                Image(systemName: "sparkles")
+                    .foregroundStyle(Palette.secondaryText)
             }
-                .fixedSize(horizontal: false, vertical: true)
-        } icon: {
-            Image(systemName: "sparkles")
-                .foregroundStyle(Palette.secondaryText)
+            if Offer.shared.state == .loading {
+                Button("Повторить") { Offer.shared.refresh() }
+                    .buttonStyle(.glass)
+            }
         }
         .font(Typography.settingNote)
         .foregroundStyle(Palette.ink)
@@ -188,6 +186,21 @@ struct AskView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .sproutPlate(in: RoundedRectangle(cornerRadius: Metrics.cardRadius,
                                           style: .continuous))
+    }
+
+    /// Одна понятная строка на каждое «нет модели». Без «Повторить» — только
+    /// там, где ждать и проверять имеет смысл: модель догружается.
+    private var unavailableLine: String {
+        switch Offer.shared.state {
+        case .needsEnabling:
+            Lang.text("Apple Intelligence на этом телефоне выключена. Включите её в Настройках → «Apple Intelligence и Siri» — и сад сможет отвечать. Проверить растение по фото можно и без неё: «Спросить о растении» → «По фото».")
+        case .loading:
+            Lang.text("Модель загружается. Когда она будет готова, сад сможет отвечать — нажмите «Повторить» или загляните чуть позже.")
+        case .noLanguage:
+            Lang.text("Apple Intelligence не говорит на языке приложения, поэтому отвечать сад пока не может. Проверить растение по фото можно и без неё: «Спросить о растении» → «По фото».")
+        case .ready, .hidden:
+            Lang.text("Отвечать на вопросы умеет Apple Intelligence, а она на этом телефоне недоступна. Проверить растение по фото можно и без неё: «Спросить о растении» → «По фото».")
+        }
     }
 
     /// Ждём первых слов — и можно передумать.
