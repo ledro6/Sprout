@@ -17,6 +17,30 @@ enum Twin {
         }
     }
 
+    /// Та же запись: один номер, либо то же растение в пределах окна.
+    static func same(_ a: Watering, _ b: Watering) -> Bool {
+        if let x = a.id, let y = b.id, x == y { return true }
+        return a.plant == b.plant
+            && abs(a.when.timeIntervalSince(b.when)) < window
+    }
+
+    /// Журнал после слияния с записями с диска. Файл поменял виджет или
+    /// кнопка в уведомлении, пока приложение спало: их поливов в памяти нет,
+    /// и без слияния наша запись их сотрёт. Своё не трогаем; чужие записи,
+    /// которых здесь нет, встают по времени. Возвращает и добавленные.
+    static func merge(_ log: [Watering], disk: [Watering])
+        -> (log: [Watering], added: [Watering]) {
+        var result = log
+        var added: [Watering] = []
+        for entry in disk where !result.contains(where: { same($0, entry) }) {
+            let at = result.lastIndex { $0.when <= entry.when }.map { $0 + 1 }
+                ?? 0
+            result.insert(entry, at: at)
+            added.append(entry)
+        }
+        return (result, added)
+    }
+
     /// Какую из двух записей-близнецов оставить: раннюю, при равенстве — с
     /// меньшим номером. Правило одно на всех телефонах семьи, поэтому сад
     /// сходится к одной и той же записи, с какой стороны ни смотри.

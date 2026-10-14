@@ -14,6 +14,7 @@ struct TreatmentCard: View {
     @State private var shooting = false
     @State private var fresh: UIImage?
     @State private var dropping = false
+    @State private var shotFailed = false
     @State private var spot = CGRect.zero
 
     var body: some View {
@@ -63,6 +64,11 @@ struct TreatmentCard: View {
             Button("Оставить", role: .cancel) {}
         } message: {
             Text("Шаги, отметки и снимки «до» и «после» пропадут.")
+        }
+        .alert("Не вышло", isPresented: $shotFailed) {
+            Button("Понятно", role: .cancel) {}
+        } message: {
+            Text("Фото не сохранилось. Попробуйте ещё раз.")
         }
     }
 
@@ -265,7 +271,11 @@ struct TreatmentCard: View {
     }
 
     private func keep(_ image: UIImage) {
-        guard let name = Snapshot.keep(image) else { return }
+        // Не записалось — шаг без снимка, и хозяин об этом знает.
+        guard let name = Snapshot.keep(image) else {
+            shotFailed = true
+            return
+        }
         withAnimation(Motion.enter) {
             garden.treatmentShot(plant.id, file: name, after: true)
         }

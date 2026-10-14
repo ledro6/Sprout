@@ -257809,6 +257809,9 @@
     "Фото и заметки": {
       "extractionState": "manual"
     },
+    "Фото не сохранилось. Попробуйте ещё раз.": {
+      "extractionState": "manual"
+    },
     "Фото от %@": {
       "extractionState": "manual"
     },

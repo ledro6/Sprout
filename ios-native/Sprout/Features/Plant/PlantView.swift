@@ -19,6 +19,7 @@ struct PlantView: View {
     @State private var draft = ""
 
     @State private var moving = false
+    @State private var portrayFailed = false
     @State private var roomDraft = ""
 
     @State private var tuning = false
@@ -158,6 +159,11 @@ struct PlantView: View {
             }
         } message: {
             Text("Как теперь зовут растение?")
+        }
+        .alert("Не вышло", isPresented: $portrayFailed) {
+            Button("Понятно", role: .cancel) {}
+        } message: {
+            Text("Фото не сохранилось. Попробуйте ещё раз.")
         }
         .alert("Новая комната", isPresented: $moving) {
             TextField("Балкон", text: $roomDraft)
@@ -371,7 +377,11 @@ struct PlantView: View {
     }
 
     private func portray(_ file: URL) {
-        guard let name = Snapshot.keep(contentsOf: file) else { return }
+        // Портрет не записался — прежняя обложка остаётся, хозяин узнаёт.
+        guard let name = Snapshot.keep(contentsOf: file) else {
+            portrayFailed = true
+            return
+        }
         withAnimation(Motion.appear) { garden.portray(plantID, file: name) }
         Feel.done()
     }

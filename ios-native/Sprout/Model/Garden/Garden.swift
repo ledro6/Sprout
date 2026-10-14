@@ -1034,10 +1034,24 @@ final class Garden {
                     archive: archive, skips: skips)
     }
 
+    /// Файл писал кто-то другой (виджет, кнопка в уведомлении): его поливы —
+    /// в журнал, растения, которых они касались, — пересчитать, как в `addPast`.
+    /// Иначе наш `save` перепишет файл без них.
+    private func adoptWaterings() {
+        guard let disk = Store.read(), disk.stamp != written else { return }
+        let merged = Twin.merge(log, disk: disk.log)
+        guard !merged.added.isEmpty else { return }
+        log = merged.log
+        for id in Set(merged.added.map(\.plant)) {
+            recount(id, now: Date())
+        }
+    }
+
     /// На действиях хозяина и при уходе в фон, но не на каждом такте часов.
     func save() {
         // Закрытый файл не пишем: пустой сад затёр бы настоящий.
         guard let file, !locked else { return }
+        adoptWaterings()
         do {
             let encoder = JSONEncoder()
             encoder.outputFormatting = .prettyPrinted

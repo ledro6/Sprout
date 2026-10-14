@@ -19,6 +19,7 @@ struct PlantJournal: View {
     @State private var viewing = false
     @State private var start = 0
     @State private var draft = ""
+    @State private var shotFailed = false
 
     private var newestFirst: [Snap] {
         Array(plant.snaps.reversed())
@@ -68,6 +69,11 @@ struct PlantJournal: View {
         .onChange(of: item) { _, chosen in
             if chosen != nil { choosing = false }
             Task { await pick(chosen) }
+        }
+        .alert("Не вышло", isPresented: $shotFailed) {
+            Button("Понятно", role: .cancel) {}
+        } message: {
+            Text("Фото не сохранилось. Попробуйте ещё раз.")
         }
     }
 
@@ -199,7 +205,11 @@ struct PlantJournal: View {
     }
 
     private func keep(_ image: UIImage) {
-        guard let name = Snapshot.keep(image) else { return }
+        // Не записалось — в ленту не попадает, и хозяин об этом знает.
+        guard let name = Snapshot.keep(image) else {
+            shotFailed = true
+            return
+        }
         withAnimation(Motion.enter) {
             garden.addSnap(plant.id, file: name)
         }

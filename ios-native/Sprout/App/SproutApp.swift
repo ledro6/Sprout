@@ -18,12 +18,7 @@ struct SproutApp: App {
         // отметить политых, часам — получить новый сад, общему саду —
         // отправить правку.
         Garden.saved = {
-            Task { @MainActor in
-                Widgets.nudge()
-                WatchLink.shared.send()
-                Kinship.shared.nudge()
-                await Live.shared.sync()
-            }
+            Task { @MainActor in Afterwards.schedule() }
         }
         // Общий сад — до первого окна: система могла разбудить приложение
         // пушем о чужом поливе. Без iCloud в сборке ничего не делает.
@@ -95,5 +90,39 @@ enum WindowTheme {
         case .light: .light
         case .dark: .dark
         }
+    }
+}
+
+/// Побочные действия записи сада — виджету, часам, общему саду и живым
+/// действиям. «Полить всех» пишет сад по одному растению, и без склейки
+/// каждый шаг запускал бы их заново. Здесь новое сохранение отменяет
+/// ожидающее, и действия идут один раз — через секунду после последнего.
+@MainActor
+enum Afterwards {
+    private static var pending: Task<Void, Never>?
+
+    static func schedule() {
+        pending?.cancel()
+        pending = Task {
+            try? await Task.sleep(for: .seconds(1))
+            guard !Task.isCancelled else { return }
+            pending = nil
+            await run()
+        }
+    }
+
+    /// Уходим в фон — ожидающее выполняем сейчас, виджет не должен отстать.
+    static func flush() {
+        guard let task = pending else { return }
+        task.cancel()
+        pending = nil
+        Task { await run() }
+    }
+
+    private static func run() async {
+        Widgets.nudge()
+        WatchLink.shared.send()
+        Kinship.shared.nudge()
+        await Live.shared.sync()
     }
 }

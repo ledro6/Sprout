@@ -7052,6 +7052,57 @@ do {
           "удаление насовсем берёт файлы снимков ленты")
 }
 
+// MARK: - Поливы с диска: виджет пишет сад, пока приложение спит
+
+do {
+    func when(_ seconds: Double) -> Date { noon.addingTimeInterval(seconds) }
+    let mine = [Watering(plant: "А", when: when(0), id: "a1")]
+    // Полив кнопкой в виджете — только на диске: появляется в журнале.
+    let widget = Watering(plant: "Б", when: when(600))
+    let grew = Twin.merge(mine, disk: [mine[0], widget])
+    check(grew.log.count == 2 && grew.added == [widget],
+          "полив только на диске — появляется, свой не дублируется")
+    // Одинаковый в обоих (тот же номер) — не дублируется.
+    let same = Twin.merge(mine, disk: mine)
+    check(same.log == mine && same.added.isEmpty,
+          "одинаковый в обоих — не дублируется")
+    // Тот же полив без номера (виджет) в пределах окна — тот же полив.
+    let twin = Twin.merge([Watering(plant: "А", when: when(0))],
+                          disk: [Watering(plant: "А", when: when(4 * 60))])
+    check(twin.log.count == 1 && twin.added.isEmpty,
+          "близнец в пределах десяти минут — не дублируется")
+    let apart = Twin.merge([Watering(plant: "А", when: when(0))],
+                           disk: [Watering(plant: "А", when: when(11 * 60))])
+    check(apart.log.count == 2 && apart.added.count == 1,
+          "за одиннадцать минут — второй полив")
+    // Другое растение в ту же минуту — свой полив.
+    let other = Twin.merge(mine, disk: [Watering(plant: "В", when: when(0))])
+    check(other.log.count == 2, "другое растение в ту же минуту — не близнец")
+    // Чужой полив встаёт по времени, а не в конец.
+    let sorted = Twin.merge(
+        [Watering(plant: "А", when: when(0)),
+         Watering(plant: "А", when: when(3_600))],
+        disk: [Watering(plant: "Б", when: when(1_800))])
+    check(sorted.log.map(\.when) == [when(0), when(1_800), when(3_600)],
+          "поливы с диска встают по времени")
+    // Пустой диск и пустой журнал — без изменений.
+    check(Twin.merge([], disk: []).log.isEmpty
+          && Twin.merge([], disk: []).added.isEmpty,
+          "пустые журналы — без изменений")
+
+    // Семья: полив перенесли на другое время, а с сервера пришла старая
+    // запись с тем же номером — она его не откатывает.
+    var family = [Watering(plant: "А", when: when(7_200), id: "p1")]
+    var book = Family.Book()
+    var arrival = Family.Arrival()
+    arrival.pours = [Watering(plant: "А", when: when(0), id: "p1")]
+    var rooms: [Room] = []
+    _ = Family.apply(arrival, to: &rooms, log: &family, book: &book,
+                     me: "me", now: when(9_000))
+    check(family.count == 1 && family[0].when == when(7_200),
+          "старая запись с сервера не откатывает перенесённый полив")
+}
+
 if failed > 0 {
     print("\nне сошлось: \(failed)")
     exit(1)
