@@ -631,7 +631,16 @@ struct HomeView: View {
     /// играет волну появления. На кнопке — вид, что на экране.
     private var lookButton: some View {
         Button {
-            withAnimation(Motion.arrange) {
+            // Без анимации самой смены. Прежде её играла пружина
+            // `Motion.arrange`: плитка и список — разные ленивые контейнеры
+            // (LazyVGrid и LazyVStack), у карточек и строк разные вид и
+            // размер, и пружина гнала их по экрану из старых позиций в новые,
+            // пока новые карточки ещё и всплывали своей волной
+            // (`CardAppear`). Теперь смена мгновенна, а мягкость даёт волна
+            // появления (в ней уже учтено «Уменьшить движение»).
+            var quiet = Transaction()
+            quiet.disablesAnimations = true
+            withTransaction(quiet) {
                 revealed.removeAll()
                 Settings.shared.look = look == .grid ? .list : .grid
             }
