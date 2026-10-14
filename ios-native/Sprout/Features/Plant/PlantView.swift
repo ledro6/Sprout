@@ -13,6 +13,7 @@ struct PlantView: View {
     /// Нет Image Playground — нет и «Портрета»: неработающей кнопки не
     /// показываем.
     @Environment(\.supportsImagePlayground) private var playground
+    @Environment(\.dynamicTypeSize) private var type
 
     @State private var renaming = false
     @State private var draft = ""
@@ -548,28 +549,60 @@ struct PlantView: View {
             .frame(maxWidth: .infinity)
     }
 
+    private enum Tile { case ar, ask, share, settings }
+
+    /// Плитки по доступному: без AR и без разбора вопросом остальные
+    /// занимают весь ряд.
+    private var tiles: [Tile] {
+        (PlantAR.available ? [.ar] : []) + [.ask, .share, .settings]
+    }
+
     /// Остальные действия — квадратными плитками стекла: значок и под ним
-    /// подпись до двух строк, без ужатия — в широком прямоугольнике она
-    /// мельчала и не читалась. Без дополненной реальности плиток две, того
-    /// же размера, у левого края.
+    /// подпись до двух строк. Четыре в одном ряду; на крупном шрифте — два
+    /// ряда по две, иначе подписи не влезли бы.
     private func tools(_ plant: Plant) -> some View {
-        HStack(spacing: Metrics.actionGap) {
-            if PlantAR.available {
-                tool("В AR", action: { staging = true }) {
-                    ModelMark(plant: plant)
+        let all = tiles
+        return Group {
+            if type.isAccessibilitySize || type >= .xxxLarge {
+                VStack(spacing: Metrics.actionGap) {
+                    ForEach(Array(stride(from: 0, to: all.count, by: 2)),
+                            id: \.self) { start in
+                        HStack(spacing: Metrics.actionGap) {
+                            ForEach(all[start..<min(start + 2, all.count)],
+                                    id: \.self) { tile($0, plant) }
+                        }
+                    }
+                }
+            } else {
+                HStack(spacing: Metrics.actionGap) {
+                    ForEach(all, id: \.self) { tile($0, plant) }
                 }
             }
+        }
+        .frame(maxWidth: .infinity)
+        .sproutRide()
+    }
+
+    @ViewBuilder
+    private func tile(_ tile: Tile, _ plant: Plant) -> some View {
+        switch tile {
+        case .ar:
+            tool("В AR", action: { staging = true }) {
+                ModelMark(plant: plant)
+            }
+        case .ask:
             if Muse.offered {
-                tool("Спросить о растении",
-                     icon: "bubble.left.and.text.bubble.right") {
+                tool("Спросить", icon: "bubble.left.and.text.bubble.right") {
                     choosing = true
                 }
             } else {
                 tool("Что с ним?", icon: "stethoscope") { diagnosing = true }
             }
+        case .share:
+            tool("Поделиться", icon: "square.and.arrow.up") { posting = true }
+        case .settings:
+            tool("Настройки", icon: "slider.horizontal.3") { tuning = true }
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .sproutRide()
     }
 
     private func tool(_ title: LocalizedStringKey, icon: String,
@@ -593,6 +626,7 @@ struct PlantView: View {
                     .font(Typography.settingNote.weight(.medium))
                     .multilineTextAlignment(.center)
                     .lineLimit(2)
+                    .minimumScaleFactor(0.8)
                     .fixedSize(horizontal: false, vertical: true)
             }
             .foregroundStyle(Palette.ink)
@@ -602,7 +636,6 @@ struct PlantView: View {
             .contentShape(.rect(cornerRadius: Metrics.toolRadius))
         }
         .buttonStyle(SproutPress())
-        .frame(maxWidth: Metrics.toolTile)
     }
 
     /// Поливают раньше срока — предложение сократить его. Отказ запоминается:
