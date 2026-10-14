@@ -46964,6 +46964,9 @@
     "Дата": {
       "extractionState": "manual"
     },
+    "Дата полива": {
+      "extractionState": "manual"
+    },
     "Датчик": {
       "extractionState": "manual"
     },
@@ -75192,6 +75195,9 @@
         }
       }
     },
+    "Изменить дату…": {
+      "extractionState": "manual"
+    },
     "Изменить комнаты…": {
       "extractionState": "manual",
       "localizations": {
@@ -87594,6 +87600,9 @@
       "extractionState": "manual"
     },
     "Когда вы поливаете": {
+      "extractionState": "manual"
+    },
+    "Когда полили": {
       "extractionState": "manual"
     },
     "Когда появятся поливы, здесь будет видно, в какие часы и дни вы поливаете.": {
@@ -174101,6 +174110,9 @@
     "Полил всех": {
       "extractionState": "manual"
     },
+    "Полил вчера": {
+      "extractionState": "manual"
+    },
     "Полила": {
       "extractionState": "manual"
     },
@@ -207920,6 +207932,9 @@
       }
     },
     "Рядом": {
+      "extractionState": "manual"
+    },
+    "Рядом другой полив — или дата вне девяноста дней.": {
       "extractionState": "manual"
     },
     "Рядом несколько меток — поднесите к одной.": {

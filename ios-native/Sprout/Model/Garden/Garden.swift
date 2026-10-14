@@ -204,13 +204,72 @@ final class Garden {
         }
     }
 
-    /// Ошибочная запись из истории. Влажность не трогаем: для свежей ошибки
-    /// есть отмена, а старая давно высохла.
-    func forget(_ entry: Watering) {
+    /// Ошибочная запись из истории. Влажность — по последнему оставшемуся
+    /// поливу: убрали свежий — земля суше, чем показывала.
+    func forget(_ entry: Watering, now: Date = Date()) {
         guard let index = log.lastIndex(where: { $0.same(entry) })
         else { return }
         log.remove(at: index)
+        recount(entry.plant, now: now)
         save()
+    }
+
+    /// Правка даты записи: не раньше девяноста дней и не в будущем. Второй
+    /// полив того же растения в пределах `Twin.window` не делаем: вышли бы
+    /// близнецы. Влажность — по последнему поливу. Возвращает, принята ли дата.
+    @discardableResult
+    func retime(_ entry: Watering, to date: Date, now: Date = Date()) -> Bool {
+        guard Self.inHistory(date, now: now),
+              let index = log.lastIndex(where: { $0.same(entry) })
+        else { return false }
+        let twin = log.indices.contains { other in
+            other != index && log[other].plant == entry.plant
+                && abs(log[other].when.timeIntervalSince(date)) < Twin.window
+        }
+        guard !twin else { return false }
+        log[index].when = date
+        recount(entry.plant, now: now)
+        save()
+        return true
+    }
+
+    /// «Полил вчера»: запись задним числом, те же правила даты, что у
+    /// `retime`. Полив в пределах `Twin.window` — тот же полив, второй записи
+    /// нет. Возвращает, добавлена ли запись.
+    @discardableResult
+    func addPast(_ id: Plant.ID, at date: Date, now: Date = Date()) -> Bool {
+        guard Self.inHistory(date, now: now), plant(id: id) != nil,
+              Twin.index(id, at: date, in: log) == nil
+        else { return false }
+        log.append(Watering(plant: id, when: date))
+        recount(id, now: now)
+        save()
+        return true
+    }
+
+    /// Окно правки журнала задним числом: девяносто дней.
+    private static let history: TimeInterval = 90 * 86_400
+
+    private static func inHistory(_ date: Date, now: Date) -> Bool {
+        date <= now && date >= now.addingTimeInterval(-history)
+    }
+
+    /// Влажность по последнему поливу растения: 1 − дни/срок. Датчик, который
+    /// меряет сам, не трогаем; без записей — оставляем как есть. Метка
+    /// «последний полив» (`wet`) не сдвигается: это не новый полив.
+    private func recount(_ id: Plant.ID, now: Date) {
+        guard let last = log.filter({ $0.plant == id }).map(\.when).max()
+        else { return }
+        for room in rooms.indices {
+            guard let index = rooms[room].plants.firstIndex(where: { $0.id == id })
+            else { continue }
+            let period = rooms[room].plants[index].period
+            guard rooms[room].plants[index].estimated, period > 0
+            else { return }
+            let days = now.timeIntervalSince(last) / 86_400
+            rooms[room].plants[index].moisture = min(1, max(0, 1 - days / period))
+            return
+        }
     }
 
     func score(now: Date = Date(), calendar: Calendar = .current) -> Score {

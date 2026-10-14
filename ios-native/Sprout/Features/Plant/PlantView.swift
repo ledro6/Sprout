@@ -60,6 +60,9 @@ struct PlantView: View {
     /// Список записей под графиком — свёрнут: он нужен, чтобы удалить
     /// ошибочную.
     @State private var listing = false
+    /// Запись, у которой меняют дату, — лист «Дата полива».
+    @State private var retimed = Date()
+    @State private var retiming = false
 
     private var plant: Plant? { garden.plant(id: plantID) }
 
@@ -170,6 +173,9 @@ struct PlantView: View {
         }
         .sheet(isPresented: $interval) {
             IntervalSheet(plantID: plantID).environment(garden)
+        }
+        .sheet(isPresented: $retiming) {
+            RetimeSheet(plantID: plantID, moment: retimed).environment(garden)
         }
         // Один вход на два режима. «Вопросом» есть, пока телефон тянет
         // Apple Intelligence (выключенную лист объяснит); не тянет вовсе —
@@ -408,6 +414,23 @@ struct PlantView: View {
     private func forget(_ moment: Date) {
         withAnimation(Motion.appear) {
             garden.forget(Watering(plant: plantID, when: moment))
+        }
+        Feel.toss()
+    }
+
+    /// «Полил вчера»: запись на вчера в то же время суток; раньше полудня
+    /// сейчас — на двенадцать часов вчера.
+    private func waterYesterday() {
+        let calendar = Calendar.current
+        let now = Date()
+        let hour = calendar.component(.hour, from: now) < 12 ? 12 : nil
+        var moment = calendar.date(byAdding: .day, value: -1, to: now) ?? now
+        if let hour {
+            moment = calendar.date(bySettingHour: hour, minute: 0, second: 0,
+                                   of: moment) ?? moment
+        }
+        withAnimation(Motion.appear) {
+            garden.addPast(plantID, at: moment)
         }
         Feel.toss()
     }
@@ -826,6 +849,12 @@ struct PlantView: View {
             Text("Поливы")
                 .font(Typography.groupTitle)
                 .foregroundStyle(Palette.secondaryText)
+            Button { waterYesterday() } label: {
+                Label("Полил вчера", systemImage: "drop.fill")
+                    .font(Typography.settingRow)
+                    .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(.glass)
             if diary.entries.isEmpty {
                 Text("Поливов ещё не было.")
                     .font(Typography.settingNote)
@@ -916,6 +945,12 @@ struct PlantView: View {
         .contentShape(.contextMenuPreview,
                       RoundedRectangle(cornerRadius: 12, style: .continuous))
         .contextMenu {
+            Button {
+                retimed = moment
+                retiming = true
+            } label: {
+                Label("Изменить дату…", systemImage: "calendar")
+            }
             Button(role: .destructive) { forget(moment) } label: {
                 Label("Удалить запись", systemImage: "trash")
             }

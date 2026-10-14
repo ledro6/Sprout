@@ -2411,12 +2411,13 @@ do {
     garden.unwater(Pour(plant: "pr", name: "pr", moisture: 1,
                         when: moment.addingTimeInterval(5 * 60)))
     check(garden.log.count == twice, "и её отмена прежнюю не трогает")
-    let wet = garden.plant(id: "pr")!.moisture
-    garden.forget(first)
+    let later = moment.addingTimeInterval(86_400)
+    garden.forget(first, now: later)
     check(Diary.of(garden.log, plant: "pr").entries == [moment],
           "ошибочная запись стёрта из истории, другая осталась")
-    check(garden.plant(id: "pr")!.moisture == wet,
-          "а влажность не тронута")
+    let period = garden.plant(id: "pr")!.period
+    check(abs(garden.plant(id: "pr")!.moisture - max(0, 1 - 1 / period)) < 1e-9,
+          "влажность — по оставшемуся поливу")
 }
 
 /// Доля граней, чей обход согласен с нормалями вершин, и всё ли в сетке
@@ -6634,6 +6635,45 @@ do {
           "аккорд — раз в день")
     check(SkyBook(store: suite).state.calm.days.count == 1,
           "время покоя переживает перезапуск")
+}
+
+print("журнал: правка даты, «полил вчера», пересчёт:")
+do {
+    let now = Date(timeIntervalSince1970: 1_784_030_400)  // 2026-07-14 12:00
+    let day: TimeInterval = 86_400
+    let yard = Garden(first: Seed.state)
+    let id = yard.rooms[0].plants[0].id
+    yard.rooms[0].plants[0].dryingDays = 10
+    yard.rooms[0].plants[0].sensor = nil
+    yard.rooms[0].plants[0].source = nil
+    for entry in yard.log.filter({ $0.plant == id }) {
+        yard.forget(entry, now: now)
+    }
+    let period = yard.plant(id: id)!.period
+    yard.water(id, at: now, anyway: true)
+    let before = yard.plant(id: id)!.daysUntilWatering
+    check(yard.retime(Watering(plant: id, when: now), to: now - day, now: now),
+          "дату можно сдвинуть на вчера")
+    check(yard.plant(id: id)!.daysUntilWatering == before - 1,
+          "правка на вчера — до полива на день меньше")
+    check(!yard.retime(Watering(plant: id, when: now - day),
+                       to: now + 60, now: now),
+          "дата в будущем — отказ")
+    check(!yard.retime(Watering(plant: id, when: now - day),
+                       to: now - 91 * day, now: now),
+          "старше девяноста дней — отказ")
+    check(yard.addPast(id, at: now - 2 * day, now: now),
+          "«полил вчера» добавляет прошлый полив")
+    let count = yard.log.count
+    check(!yard.addPast(id, at: now - day + 300, now: now)
+          && yard.log.count == count,
+          "полив в пределах десяти минут — тот же, второй записи нет")
+    let latest = yard.log.filter({ $0.plant == id }).map(\.when).max()
+    check(latest == now - day, "последний полив — вчерашний")
+    yard.forget(Watering(plant: id, when: now - day), now: now)
+    let left = yard.plant(id: id)!.moisture
+    check(abs(left - max(0, 1 - 2 / period)) < 1e-9,
+          "забыли последний полив — влажность по позавчерашнему")
 }
 
 if failed > 0 {
