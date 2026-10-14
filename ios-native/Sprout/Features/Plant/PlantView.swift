@@ -170,8 +170,9 @@ struct PlantView: View {
         .sheet(isPresented: $interval) {
             IntervalSheet(plantID: plantID).environment(garden)
         }
-        // Один вход на два режима. «Вопросом» есть и без Apple
-        // Intelligence: лист объяснит, чего не хватает, а не пропадёт.
+        // Один вход на два режима. «Вопросом» есть, пока телефон тянет
+        // Apple Intelligence (выключенную лист объяснит); не тянет вовсе —
+        // входа нет, кнопка сразу ведёт к «Что с ним?».
         .confirmationDialog("Спросить о растении", isPresented: $choosing,
                             titleVisibility: .visible) {
             Button("По фото") { diagnosing = true }
@@ -254,9 +255,17 @@ struct PlantView: View {
                     }
                 }
             }
-            Button { choosing = true } label: {
-                Label("Спросить о растении",
-                      systemImage: "bubble.left.and.text.bubble.right")
+            // Без Apple Intelligence вовсе спрашивать некого — остаётся
+            // разбор по фото.
+            if Muse.offered {
+                Button { choosing = true } label: {
+                    Label("Спросить о растении",
+                          systemImage: "bubble.left.and.text.bubble.right")
+                }
+            } else {
+                Button { diagnosing = true } label: {
+                    Label("Что с ним?", systemImage: "stethoscope")
+                }
             }
             // Черенок — кодом в переписку: друг посадит его со всем уходом.
             if let plant {
@@ -550,8 +559,14 @@ struct PlantView: View {
                     ModelMark(plant: plant)
                 }
             }
-            tool("Спросить о растении",
-                 icon: "bubble.left.and.text.bubble.right") { choosing = true }
+            if Muse.offered {
+                tool("Спросить о растении",
+                     icon: "bubble.left.and.text.bubble.right") {
+                    choosing = true
+                }
+            } else {
+                tool("Что с ним?", icon: "stethoscope") { diagnosing = true }
+            }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .sproutRide()

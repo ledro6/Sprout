@@ -142,18 +142,20 @@ struct SearchView: View {
     }
 
     /// Под пустым поиском — «Спросить сад» с набранным: может, это и не
-    /// кличка, а вопрос. Без Apple Intelligence кнопка остаётся — лист
-    /// объяснит, чего не хватает.
+    /// кличка, а вопрос. Телефон без Apple Intelligence вовсе —
+    /// кнопки нет (`Muse.offered`); выключена или грузится — лист объяснит.
     private var nothing: some View {
         VStack(spacing: 18) {
             hint(Lang.format("По запросу «%@» ничего не найдено", asked),
                  icon: "leaf")
-            Button { asking = true } label: {
-                Label("Спросить сад",
-                      systemImage: "bubble.left.and.text.bubble.right")
+            if Muse.offered {
+                Button { asking = true } label: {
+                    Label("Спросить сад",
+                          systemImage: "bubble.left.and.text.bubble.right")
+                }
+                .buttonStyle(.glass)
+                .font(Typography.settingNote)
             }
-            .buttonStyle(.glass)
-            .font(Typography.settingNote)
         }
     }
 

@@ -8,13 +8,45 @@ import FoundationModels
 /// Наставления — по-английски: так модель понимает их лучше всего, а
 /// отвечать ей велено на языке приложения.
 enum Muse {
-    /// Спрашивается один раз: читают из тела экрана, а ответ за сеанс не
-    /// меняется.
-    static let ready: Bool = {
+    /// Что с моделью на этом телефоне. Решение — одно на всё приложение:
+    /// вход в ИИ показывают по `offered`, работает ли он — по `ready`.
+    enum State: Equatable {
+        /// Отвечает.
+        case ready
+        /// Телефон не тянет Apple Intelligence: входов в ИИ нет вовсе.
+        case hidden
+        /// Телефон тянет, но выключена в Настройках.
+        case needsEnabling
+        /// Модель ещё загружается.
+        case loading
+        /// Модель есть, но не говорит на языке приложения.
+        case noLanguage
+    }
+
+    static var state: State {
         let model = SystemLanguageModel.default
-        guard case .available = model.availability else { return false }
-        return model.supportsLocale(Lang.locale)
-    }()
+        switch model.availability {
+        case .available:
+            return model.supportsLocale(Lang.locale) ? .ready : .noLanguage
+        case .unavailable(.deviceNotEligible):
+            return .hidden
+        case .unavailable(.appleIntelligenceNotEnabled):
+            return .needsEnabling
+        case .unavailable(.modelNotReady):
+            return .loading
+        case .unavailable:
+            return .hidden
+        }
+    }
+
+    /// Модель готова ответить прямо сейчас.
+    static var ready: Bool { state == .ready }
+
+    /// Показывать ли входы в ИИ: не показываем, только если телефон не
+    /// годится совсем. Читается из тела экрана; обновляется при запуске и
+    /// возвращении в приложение, см. `Offer`.
+    @MainActor
+    static var offered: Bool { Offer.shared.state != .hidden }
 
     /// Язык ответа по-английски: «Russian», «Japanese». Им же отвечает
     /// «Спросить сад», см. `Talk`.
@@ -74,5 +106,21 @@ enum Muse {
             return nil
         }
         return reply.content
+    }
+}
+
+/// Состояние модели, за которым следят экраны: считается при запуске и
+/// каждый раз, когда приложение снова становится активным (пользователь мог
+/// включить Apple Intelligence в Настройках).
+@MainActor
+@Observable
+final class Offer {
+    static let shared = Offer()
+
+    private(set) var state = Muse.state
+
+    func refresh() {
+        let now = Muse.state
+        if now != state { state = now }
     }
 }

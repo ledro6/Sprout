@@ -570,10 +570,13 @@ struct HomeView: View {
                         Label("Сад в AR", systemImage: "arkit")
                     }
                 }
-                // И без Apple Intelligence: лист объяснит, чего не хватает.
-                Button { asking = true } label: {
-                    Label("Спросить сад",
-                          systemImage: "bubble.left.and.text.bubble.right")
+                // Телефону без Apple Intelligence вовсе входа не показываем;
+                // выключенной или грузящейся — лист объяснит.
+                if Muse.offered {
+                    Button { asking = true } label: {
+                        Label("Спросить сад",
+                              systemImage: "bubble.left.and.text.bubble.right")
+                    }
                 }
                 // Метка на горшке — только когда NFC в сборке включён, см.
                 // `Tags.enabled`.

@@ -176,6 +176,7 @@ struct RootView: View {
         // При первом появлении окна могло ещё не быть.
         .onChange(of: phase) { _, now in
             if now == .active {
+                Offer.shared.refresh()
                 Finger.shared.watch()
                 // Пока спали, сад мог полить виджет или кнопка в
                 // уведомлении — а живые действия могли смахнуть.

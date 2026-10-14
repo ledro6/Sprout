@@ -167,7 +167,16 @@ struct AskView: View {
     /// Нет модели на этом телефоне — что нужно и что можно без неё.
     private var unavailable: some View {
         Label {
-            Text("Отвечать на вопросы умеет Apple Intelligence, а на этом телефоне её нет или она не говорит на языке приложения. Нужен iPhone 15 Pro или новее, Apple Intelligence включается в Настройках → «Apple Intelligence и Siri». Проверить растение по фото можно и без неё: «Спросить о растении» → «По фото».")
+            Group {
+                switch Muse.state {
+                case .needsEnabling:
+                    Text("Apple Intelligence на этом телефоне выключена. Включите её в Настройках → «Apple Intelligence и Siri» — и сад сможет отвечать. Проверить растение по фото можно и без неё: «Спросить о растении» → «По фото».")
+                case .loading:
+                    Text("Модель загружается. Когда она будет готова, сад сможет отвечать — загляните сюда чуть позже.")
+                default:
+                    Text("Отвечать на вопросы умеет Apple Intelligence, а она не говорит на языке приложения. Проверить растение по фото можно и без неё: «Спросить о растении» → «По фото».")
+                }
+            }
                 .fixedSize(horizontal: false, vertical: true)
         } icon: {
             Image(systemName: "sparkles")

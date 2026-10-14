@@ -70,7 +70,7 @@ struct DiagnosisSheet: View {
                             .transition(.blurReplace)
                     }
                     planOffer
-                    if !Muse.ready {
+                    if Muse.offered, !Muse.ready {
                         Text("Совет словами пишет Apple Intelligence — на этом телефоне её нет. Находки по снимку работают и без неё.")
                             .font(Typography.settingNote)
                             .foregroundStyle(Palette.secondaryText)
