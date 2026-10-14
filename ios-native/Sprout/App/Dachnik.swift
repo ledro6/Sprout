@@ -241,7 +241,9 @@ final class Dachnik: NSObject {
                        millimeters: hour.precipitation == .snow ? 0
                            : hour.precipitationAmount
                                .converted(to: .millimeters).value,
-                       chance: hour.precipitationChance)
+                       chance: hour.precipitationChance,
+                       temperature: hour.temperature
+                           .converted(to: .celsius).value)
         }
         var next = rain ?? Dacha.Rainfall(counted: from, checked: now)
         let fell = Dacha.fallen(hours, from: from, to: now)
@@ -253,6 +255,7 @@ final class Dachnik: NSObject {
         }
         if let until = fell.until { next.counted = until }
         next.promised = Dacha.promised(hours, now: now, calendar: calendar)
+        next.frost = Dacha.frosted(hours, now: now)
         next.checked = now
         rain = next
         put(next, Key.rain)

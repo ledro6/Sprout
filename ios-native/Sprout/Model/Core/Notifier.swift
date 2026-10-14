@@ -19,10 +19,15 @@ enum Notifier {
     static let category = "watering"
     static let pour = "pour"
 
-    /// Утреннее: «Полил всех» и «Завтра».
+    /// Утреннее: «Полил всех», «На час», «До завтра», «На неделю».
     static let morning = "morning"
     static let pourAll = "pourAll"
     static let tomorrow = "tomorrow"
+    static let hour = "hour"
+    static let week = "week"
+    /// Одно растение: «Полил», отложить и «Не напоминать об этом растении».
+    static let solo = "solo"
+    static let hush = "hush"
 
     /// Кто разбирает нажатия. Держим сами: центр уведомлений держит его
     /// слабо.
@@ -44,15 +49,39 @@ enum Notifier {
                                        options: [],
                                        icon: UNNotificationActionIcon(
                                            systemImageName: "drop.fill"))
+        let one = UNNotificationAction(identifier: pourAll,
+                                       title: Lang.text("Полил"),
+                                       options: [],
+                                       icon: UNNotificationActionIcon(
+                                           systemImageName: "drop.fill"))
         let later = UNNotificationAction(identifier: tomorrow,
-                                         title: Lang.text("Завтра"),
+                                         title: Lang.text("До завтра"),
                                          options: [],
                                          icon: UNNotificationActionIcon(
                                              systemImageName: "moon.zzz"))
+        let hourly = UNNotificationAction(identifier: hour,
+                                          title: Lang.text("На час"),
+                                          options: [],
+                                          icon: UNNotificationActionIcon(
+                                              systemImageName: "clock"))
+        let weekly = UNNotificationAction(identifier: week,
+                                          title: Lang.text("На неделю"),
+                                          options: [],
+                                          icon: UNNotificationActionIcon(
+                                              systemImageName: "calendar"))
+        let mute = UNNotificationAction(identifier: hush,
+                                        title: Lang.text("Не напоминать об этом растении"),
+                                        options: [],
+                                        icon: UNNotificationActionIcon(
+                                            systemImageName: "bell.slash"))
         centre.setNotificationCategories([
             UNNotificationCategory(identifier: category, actions: [water],
                                    intentIdentifiers: [], options: []),
-            UNNotificationCategory(identifier: morning, actions: [all, later],
+            UNNotificationCategory(identifier: morning,
+                                   actions: [all, hourly, later, weekly],
+                                   intentIdentifiers: [], options: []),
+            UNNotificationCategory(identifier: solo,
+                                   actions: [one, later, weekly, mute],
                                    intentIdentifiers: [], options: []),
         ])
     }
@@ -115,17 +144,24 @@ enum Notifier {
             rules.quietTo = settings.quietTo
             // Приезд на дачу — тоже пуш, и день на него оставлен.
             rules.reserve = Dachnik.shared.armed ? 1 : 0
+            // Погода на даче и зима — уличные растения отдыхают (`Outdoor`).
+            rules.rain = Dachnik.shared.rain
+            rules.winter = !Season.growing
+            rules.pause = settings.pause
             return rules
         }
         let slots = Plan.slots(in: rooms, now: Date(), rules: rules,
                                notBefore: notBefore)
+        // Пропущенные поливы — в записи растений, без пуша.
+        let skips = Plan.held(in: rooms, now: Date(), rules: rules)
+        await MainActor.run { Garden.shared.skipped(skips) }
         for (index, slot) in slots.prefix(planned.count).enumerated() {
             let note = UNMutableNotificationContent()
             note.title = slot.title
             note.body = slot.body
             note.sound = .default
             if slot.kind == .morning {
-                note.categoryIdentifier = morning
+                note.categoryIdentifier = slot.ids.count == 1 ? solo : morning
                 note.userInfo = ["plants": slot.ids]
             }
             await post(note, id: planned[index], at: slot.at)
@@ -213,6 +249,26 @@ private final class Postman: NSObject, UNUserNotificationCenterDelegate {
             let next = calendar.date(byAdding: .day, value: 1,
                                      to: calendar.startOfDay(for: Date()))
             await Notifier.replan(notBefore: next)
+        case Notifier.hour, Notifier.week:
+            // Отложить на час или на неделю: растения молчат до срока,
+            // полив не трогаем.
+            let ids = info["plants"] as? [String] ?? []
+            let span: TimeInterval = response.actionIdentifier == Notifier.hour
+                ? 3_600 : 7 * 86_400
+            await MainActor.run {
+                let garden = Garden.shared
+                garden.reload()
+                garden.postpone(ids, until: Date().addingTimeInterval(span))
+            }
+            await Notifier.replan()
+        case Notifier.hush:
+            let ids = info["plants"] as? [String] ?? []
+            await MainActor.run {
+                let garden = Garden.shared
+                garden.reload()
+                garden.hush(ids)
+            }
+            await Notifier.replan()
         case Notifier.pour, Notifier.pourAll:
             guard let ids = info["plants"] as? [String] else { return }
             let wet = await MainActor.run { () -> Plant? in

@@ -35,6 +35,41 @@ enum Plan {
         /// Сводка по уходу — в этот день недели (1 — воскресенье) и час.
         var weekday = 1
         var evening = 18 * 60
+        /// Погода на даче — по ней уличные растения отдыхают, см. `Outdoor`.
+        var rain: Dacha.Rainfall?
+        /// Зима: уличные растения отдыхают.
+        var winter = false
+        /// Пауза напоминаний — «Пауза напоминаний…» или «Уезжаю».
+        var pause: Pause?
+    }
+
+    /// Пауза напоминаний: до какого дня и для кого. `trip` — из «Уезжаю»:
+    /// по возвращении спросим про полив один раз.
+    struct Pause: Codable, Equatable, Sendable {
+        enum Scope: Codable, Equatable, Sendable {
+            case garden
+            case room(String)
+            case plant(Plant.ID)
+        }
+
+        var until: Date
+        var scope: Scope
+        var trip = false
+
+        /// Молчит ли напоминание о растении из комнаты `room` в миг `at`.
+        func holds(_ at: Date, room: String, plant: Plant.ID) -> Bool {
+            guard at < until else { return false }
+            switch scope {
+            case .garden: return true
+            case let .room(name): return name == room
+            case let .plant(id): return id == plant
+            }
+        }
+
+        /// Молчит весь сад в миг `at`: тогда и сводку, и лечение не шлём.
+        func whole(_ at: Date) -> Bool {
+            at < until && scope == .garden
+        }
     }
 
     struct Slot: Equatable, Sendable {
@@ -134,6 +169,30 @@ enum Plan {
 
     /// Что поставить, начиная с `now`; `notBefore` — не раньше (отложили на
     /// завтра). Слоты по возрастанию времени.
+    /// Уличные растения, которых сегодня не поливаем, — с причиной. Их
+    /// записывает сад, см. `Garden.skipped`. Без погоды и не зимой — пусто.
+    static func held(in rooms: [Room], now: Date, rules: Rules = Rules(),
+                     calendar: Calendar = .current) -> [Outdoor.Skip] {
+        let open = Set(Dacha.open(rooms).map(\.name))
+        var out: [Outdoor.Skip] = []
+        for room in rooms where open.contains(room.name) {
+            guard let reason = Outdoor.reason(outdoor: true, rain: rules.rain,
+                                          winter: rules.winter, now: now,
+                                          calendar: calendar)
+            else { continue }
+            for plant in room.plants where Reminder.delay(for: plant) != nil
+                && plant.hushed != true && !plant.isSnoozed(at: now)
+                && rules.pause?.holds(now, room: room.name,
+                                      plant: plant.id) != true {
+                let wet = reason == .rain ? rules.rain?.millimeters : nil
+                out.append(Outdoor.Skip(plant: plant.id,
+                                    day: calendar.startOfDay(for: now),
+                                    reason: reason, millimeters: wet))
+            }
+        }
+        return out
+    }
+
     static func slots(in rooms: [Room], now: Date, rules: Rules = Rules(),
                       notBefore: Date? = nil,
                       calendar: Calendar = .current) -> [Slot] {
@@ -168,12 +227,21 @@ enum Plan {
             }
         }
 
-        // 1. Полив — первым: ему место гарантировано.
-        var thirsty: [(plant: Plant, wait: TimeInterval)] = []
-        for plant in plants {
-            if let wait = Reminder.delay(for: plant) {
-                thirsty.append((plant, wait))
+        // 1. Полив — первым: ему место гарантировано. Уличные растения
+        // молчат в дождь, заморозок и зиму (`Outdoor`); пауза — по комнате.
+        let open = Set(Dacha.open(rooms).map(\.name))
+        var thirsty: [(plant: Plant, room: String, wait: TimeInterval)] = []
+        for room in rooms where Outdoor.reason(
+            outdoor: open.contains(room.name), rain: rules.rain,
+            winter: rules.winter, now: now, calendar: calendar) == nil {
+            for plant in room.plants where plant.hushed != true {
+                if let wait = Reminder.delay(for: plant) {
+                    thirsty.append((plant, room.name, wait))
+                }
             }
+        }
+        func roomOf(_ id: Plant.ID) -> String {
+            rooms.first { $0.plants.contains { $0.id == id } }?.name ?? ""
         }
         for offset in reach {
             let at = outside(moment(today, days: offset,
@@ -181,15 +249,21 @@ enum Plan {
                              rules, calendar)
             guard at >= earliest, fits(at) else { continue }
             let span = at.timeIntervalSince(now)
-            let due = thirsty.filter { $0.wait <= span }.map(\.plant)
-                .sorted { $0.moisture < $1.moisture }
+            let due = thirsty.filter { item in
+                item.wait <= span && !item.plant.isSnoozed(at: at)
+                    && rules.pause?.holds(at, room: item.room,
+                                          plant: item.plant.id) != true
+            }.map(\.plant).sorted { $0.moisture < $1.moisture }
             guard !due.isEmpty else { continue }
             take(Slot(kind: .morning, at: at, title: "",
                       body: morningText(due), ids: due.map(\.id)))
         }
 
         // 2. Шаг лечения — ближайший.
-        if let remedy = Reminder.remedy(in: rooms, now: now) {
+        if let remedy = Reminder.remedy(in: rooms, now: now),
+           rules.pause?.holds(now.addingTimeInterval(remedy.after),
+                              room: roomOf(remedy.plant.id),
+                              plant: remedy.plant.id) != true {
             let at = now.addingTimeInterval(remedy.after)
             place(Slot(kind: .step, at: at,
                        title: Reminder.title(for: remedy),
@@ -204,7 +278,8 @@ enum Plan {
             else { continue }
             let at = moment(today, days: offset, minutes: rules.evening,
                             calendar)
-            guard at >= earliest else { continue }
+            guard at >= earliest, rules.pause?.whole(at) != true
+            else { continue }
             let counts = errands(plants, within: at.timeIntervalSince(now)
                                  + 7 * 86_400)
             if !counts.isEmpty {

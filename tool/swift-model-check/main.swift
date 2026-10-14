@@ -6742,6 +6742,98 @@ do {
           "старый журнал без «soil» читается")
 }
 
+// MARK: - Погода, пропуски и пауза (T-41, T-44)
+do {
+    var clock = Calendar(identifier: .gregorian)
+    clock.timeZone = TimeZone(identifier: "UTC")!
+    let noon = clock.date(from: DateComponents(year: 2026, month: 7, day: 10,
+                                               hour: 12))!
+    let yesterday = noon.addingTimeInterval(-12 * 3_600)
+    var beds = Room(name: "Грядки", plants: [
+        plantNamed("Томат", moisture: 0.1, dryingDays: 6),
+    ])
+    beds.dacha = true
+    let kitchen = Room(name: "Кухня", plants: [
+        plantNamed("Базилик", moisture: 0.1, dryingDays: 4),
+    ])
+    let rooms = [kitchen, beds]
+    func pushes(_ rules: Plan.Rules, _ plant: String) -> Bool {
+        Plan.slots(in: rooms, now: noon, rules: rules, calendar: clock)
+            .contains { $0.ids.contains(plant) }
+    }
+
+    // Дождь 6 мм вчера: уличный полив молчит, комнатный — нет.
+    var rain = Plan.Rules()
+    rain.rain = Dacha.Rainfall(counted: yesterday, checked: noon,
+                               soaked: yesterday, millimeters: 6)
+    check(!pushes(rain, "Томат"), "дождь 6 мм вчера — уличный полив не в пуше")
+    check(pushes(rain, "Базилик"), "комнатный Базилик под дождём — пуш есть")
+    let skipped = Plan.held(in: rooms, now: noon, rules: rain, calendar: clock)
+    check(skipped.map(\.plant) == ["Томат"] && skipped.first?.reason == .rain
+          && skipped.first?.millimeters == 6,
+          "пропуск записан: Томат, дождь, 6 мм")
+    check(Garden.skipKeep == 60, "в записях растения не больше 60")
+    check(Plan.Pause(until: noon, scope: .garden).holds(yesterday, room: "x",
+                                                         plant: "x"),
+          "пауза держит до срока")
+
+    // Нет погоды или она старше шести часов — пуш как обычно.
+    check(pushes(Plan.Rules(), "Томат"), "погоды нет — уличный пуш есть")
+    var old = Plan.Rules()
+    old.rain = Dacha.Rainfall(counted: yesterday, checked: noon
+                              .addingTimeInterval(-7 * 3_600),
+                              soaked: yesterday, millimeters: 6)
+    check(pushes(old, "Томат"), "погода старше шести часов — пуш есть")
+
+    // Заморозок и зима.
+    var cold = Plan.Rules()
+    cold.rain = Dacha.Rainfall(counted: noon, checked: noon, frost: true)
+    check(!pushes(cold, "Томат") && pushes(cold, "Базилик"),
+          "заморозок — уличный полив молчит, комнатный идёт")
+    check(Plan.held(in: rooms, now: noon, rules: cold, calendar: clock)
+          .first?.reason == .frost, "заморозок записан")
+    check(Dacha.frosted([Dacha.Hour(start: noon, millimeters: 0, chance: 0,
+                                    temperature: 1)], now: noon),
+          "прогноз до 1 °C — заморозок")
+    check(!Dacha.frosted([Dacha.Hour(start: noon, millimeters: 0, chance: 0,
+                                     temperature: 5)], now: noon),
+          "прогноз 5 °C — без заморозка")
+    var winter = Plan.Rules()
+    winter.winter = true
+    check(!pushes(winter, "Томат") && pushes(winter, "Базилик"),
+          "зимой уличные отдыхают, комнатные — нет")
+    check(Plan.held(in: rooms, now: noon, rules: winter, calendar: clock)
+          .first?.reason == .winter, "зима записана")
+
+    // Растение, отложенное на неделю, молчит, пока срок не вышел.
+    var snoozed = kitchen
+    snoozed.plants[0].snoozed = noon.addingTimeInterval(7 * 86_400)
+    let quiet = Plan.slots(in: [snoozed], now: noon, calendar: clock)
+    check(quiet.filter { $0.kind == .morning }
+          .allSatisfy { $0.at >= noon.addingTimeInterval(7 * 86_400) },
+          "«На неделю» — Базилик молчит семь дней")
+
+    // Пауза: весь сад — ни одного пуша до срока; потом пуши идут.
+    var paused = Plan.Rules()
+    let until = clock.date(byAdding: .day, value: 3, to: noon)!
+    paused.pause = Plan.Pause(until: until, scope: .garden, trip: true)
+    let during = Plan.slots(in: rooms, now: noon, rules: paused, calendar: clock)
+    check(during.allSatisfy { $0.at >= until },
+          "пауза на три дня — ни одного пуша раньше срока")
+    var ended = Plan.Rules()
+    ended.pause = Plan.Pause(until: yesterday, scope: .garden)
+    check(pushes(ended, "Томат") && pushes(ended, "Базилик"),
+          "после паузы пуши идут")
+    var roomPause = Plan.Rules()
+    roomPause.pause = Plan.Pause(until: until, scope: .room("Кухня"))
+    let roomSlots = Plan.slots(in: rooms, now: noon, rules: roomPause,
+                               calendar: clock)
+    check(!roomSlots.contains { $0.kind == .morning && $0.at < until
+                                && $0.ids.contains("Базилик") }
+          && pushes(roomPause, "Томат"),
+          "пауза по комнате — только её растения молчат")
+}
+
 if failed > 0 {
     print("\nне сошлось: \(failed)")
     exit(1)

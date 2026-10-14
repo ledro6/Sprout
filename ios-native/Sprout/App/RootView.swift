@@ -16,6 +16,8 @@ struct RootView: View {
     private let lock = Lock.shared
 
     @Environment(\.scenePhase) private var phase
+    /// Кто просил воды, пока нас не было («Уезжаю»): один раз спросим.
+    @State private var homecoming: [Plant.ID]?
 
     /// Вкладка на экране: просьба извне открыть растение или сад в AR ведёт
     /// на главную, где бы ни были.
@@ -184,6 +186,7 @@ struct RootView: View {
                 Task { await Live.shared.sync() }
                 Season.settle(on: settings.seasons)
                 Climate.settle(settings.climate, on: settings.weather)
+                returned()
                 Task { await Weatherman.shared.refresh() }
                 Task { await Dachnik.shared.refresh() }
                 // Датчики в горшках — свежие показания.
@@ -213,6 +216,31 @@ struct RootView: View {
             }
             remind(active: now == .active)
         }
+        .alert(Lang.format("Пока вас не было: %@",
+                           Lang.format("%@ просили воды",
+                                       Lang.format("%lld растений",
+                                                   homecoming?.count ?? 0))),
+               isPresented: Binding(
+                   get: { homecoming != nil },
+                   set: { if !$0 { homecoming = nil } })) {
+            Button(Lang.text("Полить всех")) {
+                if let ids = homecoming { _ = garden.waterNeeded(ids) }
+                homecoming = nil
+                Task { await Notifier.replan() }
+            }
+            Button(Lang.text("Закрыть"), role: .cancel) { homecoming = nil }
+        }
+    }
+
+    /// Вернулись из «Уезжаю»: пауза кончилась — если недавно, скажем, кто
+    /// сохнет. Паузу снимаем в любом случае.
+    private func returned() {
+        guard let pause = settings.pause, pause.trip, pause.until <= Date()
+        else { return }
+        settings.pause = nil
+        guard Date().timeIntervalSince(pause.until) < 3 * 86_400 else { return }
+        let thirsty = MoistureStatus.needsWater(in: garden.rooms).map(\.id)
+        if !thirsty.isEmpty { homecoming = thirsty }
     }
 
     private func review() {

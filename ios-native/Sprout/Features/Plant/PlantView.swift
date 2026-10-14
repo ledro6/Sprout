@@ -1011,6 +1011,10 @@ struct PlantView: View {
                             entry(moment)
                                 .transition(.blurReplace)
                         }
+                        ForEach(Array(garden.skips.filter { $0.plant == plant.id }
+                            .suffix(5).enumerated()), id: \.offset) { _, skip in
+                            skipLine(skip)
+                        }
                         Text("Ошибочную запись удалит долгое нажатие.")
                             .font(Typography.settingNote)
                             .foregroundStyle(Palette.secondaryText)
@@ -1032,6 +1036,31 @@ struct PlantView: View {
         .padding(.vertical, 22)
         .sproutPlate(in: plate)
         .sproutRide()
+    }
+
+    /// Пропущенный полив — строкой в «Записях», см. `Outdoor`.
+    private func skipLine(_ skip: Outdoor.Skip) -> some View {
+        Text(Self.skipText(skip))
+            .font(Typography.settingNote)
+            .foregroundStyle(Palette.secondaryText)
+            .fixedSize(horizontal: false, vertical: true)
+    }
+
+    static func skipText(_ skip: Outdoor.Skip) -> String {
+        switch skip.reason {
+        case .frost:
+            return Lang.text("Заморозок — полив пропущен")
+        case .winter:
+            return Lang.text("Зима — уличные растения отдыхают")
+        case .rain:
+            let calendar = Calendar.current
+            let when = calendar.isDateInToday(skip.day) ? Lang.text("сегодня")
+                : calendar.isDateInYesterday(skip.day) ? Lang.text("вчера")
+                : skip.day.formatted(.dateTime.day().month(.wide)
+                    .locale(Lang.locale))
+            let mm = Lang.format("%@ мм", String(Int((skip.millimeters ?? 0).rounded())))
+            return Lang.format("Дождь %@, %@ — полив пропущен", when, mm)
+        }
     }
 
     private func tally(_ diary: Diary) -> some View {

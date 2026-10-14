@@ -121,6 +121,10 @@ struct Plant: Identifiable, Hashable, Codable {
     /// по `edited`, как кличка.
     var snoozed: Date?
 
+    /// «Не напоминать об этом растении» из уведомления: о поливе не шлём.
+    /// Полив не трогает; снимается в настройках растения.
+    var hushed: Bool?
+
     /// Уход со сроками вида там, где своих нет: мелкого ухода в садах
     /// прежних сборок не было.
     var tending: Care {
@@ -304,10 +308,14 @@ struct GardenState: Codable {
     /// часы и напоминания их не видят. В файлах прежних сборок пусто.
     var archive: [Archived] = []
 
+    /// Пропущенные поливы уличных растений — в записи растения. Не больше
+    /// `Garden.skipKeep`; в файлах прежних сборок пусто.
+    var skips: [Outdoor.Skip] = []
+
     init(owner: String, rooms: [Room], savedAt: Date,
          log: [Watering] = [], since: Date = Date(), stamp: String? = nil,
          season: Double? = nil, climate: Climate? = nil,
-         archive: [Archived] = []) {
+         archive: [Archived] = [], skips: [Outdoor.Skip] = []) {
         self.owner = owner
         self.rooms = rooms
         self.savedAt = savedAt
@@ -317,6 +325,7 @@ struct GardenState: Codable {
         self.season = season
         self.climate = climate
         self.archive = archive
+        self.skips = skips
     }
 
     /// Сад в миг `date`, если никто не польёт: приложение закрыто, а земля
@@ -343,6 +352,7 @@ struct GardenState: Codable {
         climate = try box.decodeIfPresent(Climate.self, forKey: .climate)
         archive = try box.decodeIfPresent([Archived].self, forKey: .archive)
             ?? []
+        skips = try box.decodeIfPresent([Outdoor.Skip].self, forKey: .skips) ?? []
     }
 }
 
@@ -523,4 +533,30 @@ enum Seed {
                 || ($0.note?.lowercased().contains(text) ?? false)
         }
     }
+}
+
+/// Погода, при которой уличные растения не поливают: дождь, заморозок, зима.
+/// Пороги — здесь, одни на все места. Погоды нет или она старше `stale` —
+/// поливаем как обычно: лучше лишний пуш, чем молчаливый пропуск.
+enum Outdoor {
+    /// Миллиметров за сутки — прошлые или обещанные на ближайшие сутки.
+    static let rainSkip = 3.0
+    /// °C: ниже — заморозок на ближайшие сутки.
+    static let frost = 3.0
+    /// Погоде старше стольких секунд не верим.
+    static let stale: TimeInterval = 6 * 3_600
+
+    /// Почему уличное растение сегодня не поливаем.
+    enum Reason: String, Codable, Equatable, Sendable {
+        case rain, frost, winter
+    }
+
+    /// Пропущенный полив — в записи растения.
+    struct Skip: Codable, Equatable, Sendable {
+        var plant: Plant.ID
+        var day: Date
+        var reason: Reason
+        var millimeters: Double?
+    }
+
 }

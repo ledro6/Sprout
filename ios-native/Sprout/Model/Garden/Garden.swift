@@ -25,6 +25,9 @@ final class Garden {
     /// смотрит на `rooms`, архивных не видит.
     private(set) var archive: [Archived]
 
+    /// Пропущенные поливы уличных растений, см. `Outdoor` и `skipped`.
+    private(set) var skips: [Outdoor.Skip]
+
     /// Счётчик изменений состава сада — по нему корень пересказывает Siri
     /// клички. Следить за самими комнатами нельзя: влажность в них меняется
     /// ежесекундно.
@@ -60,6 +63,7 @@ final class Garden {
         rooms = state.rooms
         log = state.log
         archive = state.archive
+        skips = state.skips
         since = state.since
         written = state.stamp
         // Время шло и пока приложение было выгружено: отсчёт — с записи.
@@ -75,6 +79,7 @@ final class Garden {
         rooms = state.rooms
         log = state.log
         archive = state.archive
+        skips = state.skips
         since = state.since
         written = state.stamp
         // Файл записан тогда-то — с того мига и сохнет.
@@ -187,6 +192,30 @@ final class Garden {
         change(id) { $0.snoozed = moment.addingTimeInterval(86_400) }
     }
 
+    /// «На час» и «На неделю» из уведомления: растения молчат до `until`.
+    func postpone(_ ids: [Plant.ID], until: Date) {
+        for id in ids { change(id) { $0.snoozed = until } }
+    }
+
+    /// «Не напоминать об этом растении» из уведомления.
+    func hush(_ ids: [Plant.ID]) {
+        for id in ids { change(id) { $0.hushed = true } }
+    }
+
+    /// Пропущенные поливы — в записи растения. Одна запись на растение и
+    /// день; хранятся последние `skipKeep`.
+    func skipped(_ found: [Outdoor.Skip]) {
+        let fresh = found.filter { new in
+            !skips.contains { $0.plant == new.plant && $0.day == new.day }
+        }
+        guard !fresh.isEmpty else { return }
+        skips = Array((skips + fresh).suffix(Self.skipKeep))
+        save()
+    }
+
+    /// Сколько пропущенных поливов помнит сад.
+    static let skipKeep = 60
+
     /// Запись уходит из журнала, влажность — на прежнюю, за вычетом того, что
     /// земля успела высохнуть за отсчёт.
     func unwater(_ pour: Pour) {
@@ -294,6 +323,7 @@ final class Garden {
         rooms = state.rooms
         log = state.log
         archive = state.archive
+        skips = state.skips
         since = state.since
         roster += 1
         save()
@@ -874,7 +904,7 @@ final class Garden {
         GardenState(owner: owner, rooms: rooms, savedAt: Date(),
                     log: log, since: since, stamp: written,
                     season: Season.stretch, climate: Climate.current,
-                    archive: archive)
+                    archive: archive, skips: skips)
     }
 
     /// На действиях хозяина и при уходе в фон, но не на каждом такте часов.

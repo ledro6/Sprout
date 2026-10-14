@@ -46,6 +46,7 @@ struct HomeView: View {
     @State private var roomsOpen = false
 
     @State private var tripping = false
+    @State private var pausing = false
 
     /// «Спросить сад» — из «ещё».
     @State private var asking = false
@@ -210,6 +211,7 @@ struct HomeView: View {
         // окружения полагаться незачем.
         .sheet(isPresented: $roomsOpen) { RoomsView().environment(garden) }
         .sheet(isPresented: $tripping) { TripView().environment(garden) }
+        .sheet(isPresented: $pausing) { PauseSheet().environment(garden) }
         .sheet(isPresented: $asking) { AskView().environment(garden) }
         // Ждали воды, и полили последнего — праздник. Высохли новые —
         // просто счёт растёт.
@@ -593,6 +595,11 @@ struct HomeView: View {
                 Text("Сад")
             }
             Section {
+                Button { pausing = true } label: {
+                    Label("Пауза напоминаний…", systemImage: "bell.slash")
+                }
+            }
+            Section {
                 Button { tripping = true } label: {
                     Label("Уезжаю…", systemImage: "airplane.departure")
                 }
@@ -935,5 +942,59 @@ private struct HomeHead: View {
                 .offset(y: -min(lift, titleHeight))
                 .allowsHitTesting(false)
         }
+    }
+}
+
+/// «Пауза напоминаний…»: до какого дня и для чего молчат напоминания.
+/// Снимается сама в срок или кнопкой «Снять паузу».
+private struct PauseSheet: View {
+    @Environment(Garden.self) private var garden
+    @Environment(\.dismiss) private var dismiss
+
+    @State private var until = Date()
+    /// nil — весь сад, иначе — одна комната.
+    @State private var room: String?
+
+    var body: some View {
+        NavigationStack {
+            Form {
+                DatePicker(Lang.text("До"), selection: $until,
+                           in: Calendar.current.startOfDay(for: Date())...,
+                           displayedComponents: .date)
+                Picker(Lang.text("Что тихо"), selection: $room) {
+                    Text("Весь сад").tag(String?.none)
+                    ForEach(garden.rooms, id: \.name) { item in
+                        Text(item.name).tag(String?.some(item.name))
+                    }
+                }
+                Section {
+                    Button(Lang.text("Поставить паузу")) { start() }
+                    if Settings.shared.pause != nil {
+                        Button(Lang.text("Снять паузу"), role: .destructive) {
+                            Settings.shared.pause = nil
+                            Task { await Notifier.replan() }
+                            dismiss()
+                        }
+                    }
+                }
+            }
+            .navigationTitle(Lang.text("Пауза напоминаний"))
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button(Lang.text("Закрыть")) { dismiss() }
+                }
+            }
+        }
+    }
+
+    private func start() {
+        let calendar = Calendar.current
+        // Выбранный день входит целиком.
+        let end = calendar.date(byAdding: .day, value: 1,
+                                to: calendar.startOfDay(for: until)) ?? until
+        Settings.shared.pause = Plan.Pause(
+            until: end, scope: room.map { .room($0) } ?? .garden)
+        Task { await Notifier.replan() }
+        dismiss()
     }
 }

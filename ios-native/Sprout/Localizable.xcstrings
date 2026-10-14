@@ -3487,6 +3487,12 @@
         }
       }
     },
+    "%@ мм": {
+      "extractionState": "manual"
+    },
+    "%@ просили воды": {
+      "extractionState": "manual"
+    },
     "%@ только что полил. Всё равно полить?": {
       "extractionState": "manual"
     },
@@ -27834,6 +27840,9 @@
           }
         }
       }
+    },
+    "Весь сад": {
+      "extractionState": "manual"
     },
     "Ветер": {
       "extractionState": "manual",
@@ -55900,6 +55909,9 @@
     "До встречи в %@": {
       "extractionState": "manual"
     },
+    "До завтра": {
+      "extractionState": "manual"
+    },
     "До одиннадцати": {
       "extractionState": "manual",
       "localizations": {
@@ -59349,6 +59361,9 @@
           }
         }
       }
+    },
+    "Дождь %@, %@ — полив пропущен": {
+      "extractionState": "manual"
     },
     "Дождь: полив отложен до %@": {
       "extractionState": "manual"
@@ -67724,6 +67739,12 @@
         }
       }
     },
+    "Заморозок — полив пропущен": {
+      "extractionState": "manual"
+    },
+    "Заморозок: полив отложен": {
+      "extractionState": "manual"
+    },
     "Заново": {
       "extractionState": "manual",
       "localizations": {
@@ -71761,6 +71782,9 @@
       }
     },
     "Зима": {
+      "extractionState": "manual"
+    },
+    "Зима — уличные растения отдыхают": {
       "extractionState": "manual"
     },
     "Зима: земля сохнет медленнее, поливать реже": {
@@ -110676,6 +110700,9 @@
     "На метке нет растения Sprout.": {
       "extractionState": "manual"
     },
+    "На неделю": {
+      "extractionState": "manual"
+    },
     "На сроки почти не влияет.": {
       "extractionState": "manual",
       "localizations": {
@@ -111252,6 +111279,9 @@
           }
         }
       }
+    },
+    "На час": {
+      "extractionState": "manual"
     },
     "На этой неделе не вышло": {
       "extractionState": "manual"
@@ -121348,6 +121378,9 @@
           }
         }
       }
+    },
+    "Не напоминать об этом растении": {
+      "extractionState": "manual"
     },
     "Не нашлось места для кадров.": {
       "extractionState": "manual",
@@ -141080,6 +141113,12 @@
           }
         }
       }
+    },
+    "Пауза напоминаний": {
+      "extractionState": "manual"
+    },
+    "Пауза напоминаний…": {
+      "extractionState": "manual"
     },
     "Пеларгония": {
       "extractionState": "manual",
@@ -161053,6 +161092,9 @@
         }
       }
     },
+    "Пока вас не было: %@": {
+      "extractionState": "manual"
+    },
     "Пока пусто": {
       "extractionState": "manual"
     },
@@ -175622,6 +175664,9 @@
     "Полить %@": {
       "extractionState": "manual"
     },
+    "Полить всех": {
+      "extractionState": "manual"
+    },
     "Полить всех (%lld)": {
       "extractionState": "manual"
     },
@@ -186285,6 +186330,9 @@
           }
         }
       }
+    },
+    "Поставить паузу": {
+      "extractionState": "manual"
     },
     "Поставить сад": {
       "extractionState": "manual",
@@ -228791,6 +228839,9 @@
     "Снять отметку": {
       "extractionState": "manual"
     },
+    "Снять паузу": {
+      "extractionState": "manual"
+    },
     "Собираю модель: %@": {
       "extractionState": "manual",
       "localizations": {
@@ -266298,6 +266349,9 @@
           }
         }
       }
+    },
+    "Что тихо": {
+      "extractionState": "manual"
     },
     "Что хранится": {
       "extractionState": "manual",

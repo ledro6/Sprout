@@ -336,6 +336,17 @@ final class Settings {
         didSet { store.set(reminders, forKey: Key.reminders) }
     }
 
+    /// Пауза напоминаний — «Пауза напоминаний…» или «Уезжаю», см. `Plan.Pause`.
+    var pause: Plan.Pause? {
+        didSet {
+            if let pause, let data = try? JSONEncoder().encode(pause) {
+                store.set(data, forKey: Key.pause)
+            } else {
+                store.removeObject(forKey: Key.pause)
+            }
+        }
+    }
+
     /// Утреннее напоминание о поливе — во сколько, минут от полуночи.
     /// По умолчанию 09:00, см. `Plan`.
     var morning: Int {
@@ -444,6 +455,7 @@ final class Settings {
         static let shapes = "patternShapes"
         static let reminders = "reminders"
         static let morning = "reminderMorning"
+        static let pause = "reminderPause"
         static let quietFrom = "quietFrom"
         static let quietTo = "quietTo"
         static let reminderAsked = "reminderAsked"
@@ -573,6 +585,9 @@ final class Settings {
         seasonalPattern = !store.bool(forKey: Key.plainPattern)
         pattern = !store.bool(forKey: Key.hiddenPattern)
         reminders = store.bool(forKey: Key.reminders)
+        pause = store.data(forKey: Key.pause).flatMap {
+            try? JSONDecoder().decode(Plan.Pause.self, from: $0)
+        }
         morning = store.object(forKey: Key.morning) as? Int ?? Plan.Rules().morning
         quietFrom = store.object(forKey: Key.quietFrom) as? Int
             ?? Plan.Rules().quietFrom

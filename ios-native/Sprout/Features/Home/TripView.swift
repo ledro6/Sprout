@@ -216,8 +216,10 @@ struct TripView: View {
             VStack(alignment: .leading, spacing: 8) {
                 Button {
                     if live.counting {
+                        pauseTrip(false)
                         Task { await live.endTrip() }
                     } else {
+                        pauseTrip(true)
                         Task { await live.startTrip(leave: leave, back: back) }
                         Feel.done()
                     }
@@ -257,6 +259,7 @@ struct TripView: View {
             try? await Task.sleep(for: .seconds(1))
             guard !Task.isCancelled else { return }
             await Live.shared.startTrip(leave: leave, back: back)
+            pauseTrip(true)
         }
     }
 
@@ -264,6 +267,22 @@ struct TripView: View {
     /// растение плашка была бы очередью. Только кому пора пить — влажные и
     /// в норме не участвуют. Список соседу пересчитывается сам: он
     /// считается из сада.
+    /// «Уезжаю»: сад молчит до возвращения — день после него включительно.
+    /// Снимается отсчётом или сама, см. `RootView`.
+    private func pauseTrip(_ on: Bool) {
+        if on {
+            let calendar = Calendar.current
+            let until = calendar.date(byAdding: .day, value: 1,
+                                      to: calendar.startOfDay(for: back))
+                ?? back
+            Settings.shared.pause = Plan.Pause(until: until, scope: .garden,
+                                               trip: true)
+        } else if Settings.shared.pause?.trip == true {
+            Settings.shared.pause = nil
+        }
+        Task { await Notifier.replan() }
+    }
+
     private func waterAll() {
         guard Bin.shared.waterNeeded(in: garden) > 0 else { return }
         withAnimation(Motion.appear) { watered = true }
