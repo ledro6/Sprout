@@ -31,6 +31,42 @@ struct RootView: View {
         // Условия знакомства читаются в самом теле: изнутри привязки
         // SwiftUI мог бы не заметить, что вход доиграл.
         let _ = touring
+        framed
+        // Знакомство — один раз, когда вход доиграл и сад не заперт. Ушло
+        // под замок — не пройдено: откроют сад, и оно начнётся снова.
+        .fullScreenCover(isPresented: Binding(
+            get: { touring },
+            set: { if !$0, !locked { settings.toured = true } })) {
+            TourView()
+        }
+        // Заперли — вход прячется под замком; открыли — отыгрывает заново.
+        .onChange(of: lock.open) { _, open in
+            if open {
+                Launch.shared.replay()
+                QuickActions.run()
+            } else {
+                Launch.shared.hide()
+            }
+        }
+        // Наблюдатель касаний — тоже на окно, см. `Finger`.
+        .onAppear {
+            Finger.shared.watch()
+        }
+        // При первом появлении окна могло ещё не быть.
+        .onChange(of: phase) { _, now in phaseChanged(now) }
+        .alert(homecomingTitle, isPresented: homecomingShown) {
+            Button(Lang.text("Полить всех")) {
+                if let ids = homecoming { _ = garden.waterNeeded(ids) }
+                homecoming = nil
+                Task { await Notifier.replan() }
+            }
+            Button(Lang.text("Закрыть"), role: .cancel) { homecoming = nil }
+        }
+    }
+
+    /// Окно до замка. Отдельно от `body`: одной цепочкой из сорока
+    /// модификаторов компилятор не успевал вывести тип.
+    private var framed: some View {
         TabView(selection: $pane) {
             Tab("Главная", systemImage: "house.fill", value: Pane.home) {
                 HomeView().sproutUndo()
@@ -155,75 +191,48 @@ struct RootView: View {
         // Замок поверх всего: запертый сад не должен мелькнуть даже под
         // заставкой.
         .overlay { padlock }
-        // Знакомство — один раз, когда вход доиграл и сад не заперт. Ушло
-        // под замок — не пройдено: откроют сад, и оно начнётся снова.
-        .fullScreenCover(isPresented: Binding(
-            get: { touring },
-            set: { if !$0, !locked { settings.toured = true } })) {
-            TourView()
-        }
-        // Заперли — вход прячется под замком; открыли — отыгрывает заново.
-        .onChange(of: lock.open) { _, open in
-            if open {
-                Launch.shared.replay()
-                QuickActions.run()
-            } else {
-                Launch.shared.hide()
-            }
-        }
-        // Наблюдатель касаний — тоже на окно, см. `Finger`.
-        .onAppear {
+    }
+
+    /// Смена фазы сцены: вход, запирание, сохранение, напоминания.
+    private func phaseChanged(_ now: ScenePhase) {
+        if now == .active {
+            Offer.shared.refresh()
             Finger.shared.watch()
+            // Пока спали, сад мог полить виджет или кнопка в
+            // уведомлении — а живые действия могли смахнуть.
+            garden.reload()
+            Task { await Live.shared.sync() }
+            Season.settle(on: settings.seasons)
+            Climate.settle(settings.climate, on: settings.weather)
+            returned()
+            Task { await Weatherman.shared.refresh() }
+            Task { await Dachnik.shared.refresh() }
+            // Датчики в горшках — свежие показания.
+            Sensors.shared.poll()
+            // Общий сад — что полили и поправили другие.
+            Kinship.shared.wake()
+            // Пока спали, могли включить энергосбережение.
+            Power.shared.refresh()
+            redress()
+            Task { await lock.unlock() }
+        } else {
+            // Запираем на «неактивно», а не на «в фоне»: снимок для
+            // переключателя программ делается раньше, и на нём остался бы
+            // сад.
+            lock.close()
+            // Выгрузить приложение могут в любой момент.
+            garden.save()
         }
-        // При первом появлении окна могло ещё не быть.
-        .onChange(of: phase) { _, now in
-            if now == .active {
-                Offer.shared.refresh()
-                Finger.shared.watch()
-                // Пока спали, сад мог полить виджет или кнопка в
-                // уведомлении — а живые действия могли смахнуть.
-                garden.reload()
-                Task { await Live.shared.sync() }
-                Season.settle(on: settings.seasons)
-                Climate.settle(settings.climate, on: settings.weather)
-                returned()
-                Task { await Weatherman.shared.refresh() }
-                Task { await Dachnik.shared.refresh() }
-                // Датчики в горшках — свежие показания.
-                Sensors.shared.poll()
-                // Общий сад — что полили и поправили другие.
-                Kinship.shared.wake()
-                // Пока спали, могли включить энергосбережение.
-                Power.shared.refresh()
-                redress()
-                Task { await lock.unlock() }
-            } else {
-                // Запираем на «неактивно», а не на «в фоне»: снимок для
-                // переключателя программ делается раньше, и на нём остался бы
-                // сад.
-                lock.close()
-                // Выгрузить приложение могут в любой момент.
-                garden.save()
-            }
-            // Удалённое уходит насовсем только в фоне: на «неактивно»
-            // попадают шторка, «Пункт управления» и Face ID. Календарь —
-            // тогда же и уже без удалённого: план пишется заново целиком.
-            if now == .background {
-                // «Полить всех (n)» на иконке — по саду на этот миг.
-                QuickActions.refresh(garden.rooms)
-                Bin.shared.commit()
-                if settings.calendar { CalendarSync.shared.sync(garden.rooms) }
-            }
-            remind(active: now == .active)
+        // Удалённое уходит насовсем только в фоне: на «неактивно»
+        // попадают шторка, «Пункт управления» и Face ID. Календарь —
+        // тогда же и уже без удалённого: план пишется заново целиком.
+        if now == .background {
+            // «Полить всех (n)» на иконке — по саду на этот миг.
+            QuickActions.refresh(garden.rooms)
+            Bin.shared.commit()
+            if settings.calendar { CalendarSync.shared.sync(garden.rooms) }
         }
-        .alert(homecomingTitle, isPresented: homecomingShown) {
-            Button(Lang.text("Полить всех")) {
-                if let ids = homecoming { _ = garden.waterNeeded(ids) }
-                homecoming = nil
-                Task { await Notifier.replan() }
-            }
-            Button(Lang.text("Закрыть"), role: .cancel) { homecoming = nil }
-        }
+        remind(active: now == .active)
     }
 
     /// Заголовок «Пока вас не было» — отдельно: вложенные `Lang.format` прямо
