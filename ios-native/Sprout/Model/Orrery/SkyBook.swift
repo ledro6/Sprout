@@ -18,6 +18,10 @@ struct SkyState: Codable, Equatable, Sendable {
     var bestStreak = 0
     /// Редкие события, от старых к новым.
     var events: [Rare.Event] = []
+    /// Время покоя («Тихая ночь»).
+    var calm = Calm.Book()
+    /// День, когда уже играл аккорд тишины.
+    var chordDay: String?
 
     init() {}
 
@@ -32,10 +36,13 @@ struct SkyState: Codable, Equatable, Sendable {
                                              forKey: .bestStreak) ?? 0
         events = try box.decodeIfPresent([Rare.Event].self,
                                          forKey: .events) ?? []
+        calm = try box.decodeIfPresent(Calm.Book.self, forKey: .calm)
+            ?? Calm.Book()
+        chordDay = try box.decodeIfPresent(String.self, forKey: .chordDay)
     }
 
     enum CodingKeys: String, CodingKey {
-        case record, seen, guesses, stars, bestStreak, events
+        case record, seen, guesses, stars, bestStreak, events, calm, chordDay
     }
 }
 
@@ -169,5 +176,37 @@ final class SkyBook {
         guard state.events.contains(where: { !$0.shown }) else { return }
         for index in state.events.indices { state.events[index].shown = true }
         save()
+    }
+
+    // MARK: - Тихая ночь
+
+    /// Взгляд на сад. Не чаще раза в минуту, если тишина не сменилась:
+    /// часы идут каждую секунду, а писать на диск раз в секунду незачем.
+    func watch(plants: [Plant], now: Date = Date(),
+               speed: Double = Garden.speed, calendar: Calendar = .current) {
+        if let last = state.calm.last, now.timeIntervalSince(last) < 60,
+           now >= last,
+           Calm.isCalm(plants) == (state.calm.until != nil) { return }
+        var book = state.calm
+        Calm.observe(&book, plants: plants, now: now, speed: speed,
+                     calendar: calendar)
+        guard book != state.calm else { return }
+        state.calm = book
+        save()
+    }
+
+    /// Аккорд тишины — раз в день: пора ли играть. Отвечает «да» один раз.
+    func chordDue(now: Date = Date(), calendar: Calendar = .current) -> Bool {
+        let key = Observatory.dayKey(now, calendar: calendar)
+        guard state.chordDay != key else { return false }
+        state.chordDay = key
+        save()
+        return true
+    }
+
+    /// Покой за этот месяц, секунд: дни с ранним поливом не в счёт.
+    func quiet(log: [Watering], now: Date = Date(),
+               calendar: Calendar = .current) -> TimeInterval {
+        Calm.total(state.calm, month: now, log: log, calendar: calendar)
     }
 }

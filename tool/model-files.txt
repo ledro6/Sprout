@@ -67,6 +67,7 @@ ios-native/Sprout/Model/Orrery/Orrery.swift
 ios-native/Sprout/Model/Orrery/Precision.swift
 ios-native/Sprout/Model/Orrery/Observatory.swift
 ios-native/Sprout/Model/Orrery/Rare.swift
+ios-native/Sprout/Model/Orrery/Calm.swift
 ios-native/Sprout/Model/Orrery/SkyBook.swift
 ios-native/Sprout/Model/Help/Walk.swift
 ios-native/Sprout/Model/Botany/Preset.swift

@@ -30,6 +30,8 @@ struct OrreryView: View {
     @State private var journal = false
     /// Свежие поливы, у которых играет реакция: искра или спотыкание.
     @State private var echoes: [Echo] = []
+    @State private var looked = Date.distantPast
+    @State private var chime = SpheresPlayer()
 
     struct Echo: Hashable {
         var id: Plant.ID
@@ -71,7 +73,7 @@ struct OrreryView: View {
             }
             .background {
                 ZStack {
-                    StarField()
+                    StarField(calm: calm)
                     SkyEvents(kinds: Set(book.unseen.map(\.kind)))
                 }
             }
@@ -120,14 +122,11 @@ struct OrreryView: View {
         }
         .onAppear {
             book.standing(garden.log, side: side)
-            book.settle()
-            discover()
+            look(force: true)
             react()
+            hush()
         }
-        .onChange(of: garden.ticked) {
-            book.settle()
-            discover()
-        }
+        .onChange(of: garden.ticked) { look(force: false) }
         .onChange(of: garden.log.count) {
             book.standing(garden.log, side: side)
             react()
@@ -137,12 +136,40 @@ struct OrreryView: View {
         }
         .onDisappear {
             stop()
+            chime.stop()
             // Показанные события больше в «Небо сада» не вернутся.
             book.markShown()
         }
     }
 
     // MARK: - Редкие события
+
+    /// Взгляд на небо: ответы «Обсерватории», новые события, покой. Часы
+    /// тикают часто, а небу хватает раза в полминуты.
+    private func look(force: Bool) {
+        let now = Date()
+        guard force || now.timeIntervalSince(looked) > 30 else { return }
+        looked = now
+        book.settle()
+        discover()
+        book.watch(plants: garden.rooms.flatMap(\.plants))
+    }
+
+    /// Тихая ночь: в саду никто не просит воды.
+    private var calm: Bool {
+        Calm.isCalm(garden.rooms.flatMap(\.plants))
+    }
+
+    /// Мягкий аккорд тишины: раз в день, если звуки включены и музыка
+    /// не играет.
+    private func hush() {
+        guard Settings.shared.sounds, playing == nil, calm, book.chordDue()
+        else { return }
+        Task { @MainActor in
+            await chime.prepareChord()
+            chime.play()
+        }
+    }
 
     private func discover() {
         book.discover(plants: garden.rooms.flatMap(\.plants),
@@ -649,11 +676,23 @@ struct OrreryView: View {
             / 86_400
         let omens = Orrery.omens(orbits, drift: drift)
         let events = book.unseen
-        if !omens.isEmpty || !events.isEmpty {
+        if !omens.isEmpty || !events.isEmpty || calm {
             VStack(alignment: .leading, spacing: Metrics.rowGap) {
                 Label("Небо сада", systemImage: "sparkles")
                     .font(Typography.detail)
                     .foregroundStyle(Palette.ink)
+                if calm {
+                    HStack(alignment: .firstTextBaseline, spacing: 10) {
+                        Image(systemName: "moon.zzz")
+                            .foregroundStyle(Palette.waterGlow)
+                            .frame(width: 22)
+                        Text("Тихая ночь: воды никто не просит")
+                            .font(Typography.settingNote)
+                            .foregroundStyle(Palette.ink)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                    .transition(.blurReplace)
+                }
                 ForEach(events, id: \.key) { event in
                     let line = Self.caption(event)
                     HStack(alignment: .firstTextBaseline, spacing: 10) {

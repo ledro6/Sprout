@@ -18,6 +18,7 @@ struct SkyJournal: View {
                 VStack(spacing: Metrics.groupGap) {
                     precision
                     observatory
+                    calmCard
                     events
                 }
                 .padding(.horizontal, Metrics.contentMargin)
@@ -103,6 +104,24 @@ struct SkyJournal: View {
             note(Lang.format("Серия верных дней: %lld", book.streak()))
             note(Lang.format("Лучшая серия: %lld", book.state.bestStreak))
             note(Lang.text("Раз в день планетарий спрашивает, кто первым дойдёт до луча. Ответ решён заранее по срокам полива, поэтому полив после выбора ничего не меняет."))
+        }
+    }
+
+    private var calmCard: some View {
+        let seconds = book.quiet(log: garden.log)
+        let parts = Calm.split(seconds)
+        return card(Lang.text("Тихая ночь"), icon: "moon.zzz") {
+            HStack(alignment: .firstTextBaseline) {
+                Text(seconds < 3_600 ? Lang.text("меньше часа")
+                     : Lang.format("%1$lld д %2$lld ч", parts.days,
+                                   parts.hours))
+                    .font(Typography.figure)
+                    .foregroundStyle(Palette.ink)
+                Text("времени покоя в этом месяце")
+                    .font(Typography.settingNote)
+                    .foregroundStyle(Palette.secondaryText)
+            }
+            note(Lang.text("Покой — когда ни одно растение не «скоро пить» и не «сухо». Дни, в которые кто-то полил рано или лишний раз, в счёт не идут."))
         }
     }
 

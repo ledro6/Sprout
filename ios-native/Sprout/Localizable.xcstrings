@@ -2620,6 +2620,9 @@
     "%1$@: %2$lld": {
       "extractionState": "manual"
     },
+    "%1$lld д %2$lld ч": {
+      "extractionState": "manual"
+    },
     "%1$lld из %2$lld": {
       "extractionState": "manual",
       "localizations": {
@@ -161887,6 +161890,9 @@
     "Показывает на экране блокировки, какое растение поливать следующим": {
       "extractionState": "manual"
     },
+    "Покой — когда ни одно растение не «скоро пить» и не «сухо». Дни, в которые кто-то полил рано или лишний раз, в счёт не идут.": {
+      "extractionState": "manual"
+    },
     "Покрутите барабан — ниже видно, как новый срок ляжет на карточку.": {
       "extractionState": "manual",
       "localizations": {
@@ -241446,6 +241452,12 @@
         }
       }
     },
+    "Тихая ночь": {
+      "extractionState": "manual"
+    },
+    "Тихая ночь: воды никто не просит": {
+      "extractionState": "manual"
+    },
     "Тихие часы до": {
       "extractionState": "manual"
     },
@@ -270015,6 +270027,9 @@
     "вовремя —": {
       "extractionState": "manual"
     },
+    "времени покоя в этом месяце": {
+      "extractionState": "manual"
+    },
     "вы": {
       "extractionState": "manual",
       "localizations": {
@@ -271751,6 +271766,9 @@
           }
         }
       }
+    },
+    "меньше часа": {
+      "extractionState": "manual"
     },
     "никто не ждёт": {
       "extractionState": "manual",

@@ -6551,6 +6551,91 @@ do {
           "сияние не повторяется, пока не прошла новая неделя")
 }
 
+print("планетарий: тихая ночь:")
+do {
+    var utc = Calendar(identifier: .gregorian)
+    utc.timeZone = TimeZone(secondsFromGMT: 0)!
+    let noon = Date(timeIntervalSince1970: 1_784_030_400)  // 2026-07-14 12:00
+    let late = noon.addingTimeInterval(11 * 3_600)  // 23:00
+    let quiet = [plantNamed("А", moisture: 0.8, dryingDays: 7),
+                 plantNamed("Б", moisture: 0.6, dryingDays: 7)]
+    check(Calm.isCalm(quiet), "все в норме или влажно — тихая ночь")
+    check(!Calm.isCalm(quiet + [plantNamed("В", moisture: 0.39,
+                                           dryingDays: 7)]),
+          "«скоро пить» — тишины нет")
+    check(!Calm.isCalm([]), "пустой сад не тихий — отдыхать некому")
+    let expected = 0.2 * quiet[1].period * 86_400
+    check(abs((Calm.margin(quiet) ?? -1) - expected) < 1,
+          "тишина продержится, пока первое не дойдёт до 40 %")
+    check(Calm.margin([plantNamed("В", moisture: 0.3, dryingDays: 7)]) == nil,
+          "нет тишины — нет и запаса")
+
+    var book = Calm.Book()
+    Calm.observe(&book, plants: quiet, now: late, calendar: utc)
+    check(book.days.isEmpty && book.until != nil, "первый взгляд — только метка")
+    Calm.observe(&book, plants: quiet, now: late.addingTimeInterval(7_200),
+                 calendar: utc)
+    check(book.days == ["2026-07-14": 3_600, "2026-07-15": 3_600],
+          "два часа через полночь делятся по дням")
+    var lapse = Calm.Book()
+    let dry = [plantNamed("А", moisture: 0.3, dryingDays: 7)]
+    Calm.observe(&lapse, plants: quiet, now: noon, calendar: utc)
+    let gone = noon.addingTimeInterval(40 * 86_400)
+    Calm.observe(&lapse, plants: dry, now: gone, calendar: utc)
+    let counted = lapse.days.values.reduce(0, +)
+    check(abs(counted - expected) < 2 && lapse.until == nil,
+          "после долгого перерыва засчитано лишь то, что тишина держалась сама")
+    Calm.observe(&lapse, plants: dry, now: gone.addingTimeInterval(3_600),
+                 calendar: utc)
+    check(abs(lapse.days.values.reduce(0, +) - counted) < 1,
+          "без тишины время не копится")
+
+    let seconds = 30 * 3_600.0
+    var month = Calm.Book()
+    month.days = ["2026-07-10": 43_200.0, "2026-07-11": 64_800.0,
+                  "2026-06-30": 5_000.0]
+    check(Calm.total(month, month: noon, log: [], calendar: utc) == seconds,
+          "в месяц идут только его дни")
+    let flooded = [Watering(plant: "А", when: noon.addingTimeInterval(
+        -3 * 86_400), left: 0.9)]
+    check(Calm.total(month, month: noon, log: flooded, calendar: utc)
+            == 12 * 3_600,
+          "день с ранним поливом покой не копит (11 июля)")
+    let tight = [Watering(plant: "А", when: noon.addingTimeInterval(
+        -3 * 86_400), left: 0.3)]
+    check(Calm.total(month, month: noon, log: tight, calendar: utc) == seconds,
+          "полив вовремя покой не трогает")
+    let extra = [Watering(plant: "А", when: noon.addingTimeInterval(
+        -3 * 86_400), left: 0.3, extra: true)]
+    check(Calm.total(month, month: noon, log: extra, calendar: utc)
+            == 12 * 3_600, "лишний полив — тем более")
+    let parts = Calm.split(30 * 3_600)
+    check(parts.days == 1 && parts.hours == 6, "сутки и часы")
+
+    let chord = Spheres.calmChord()
+    check(chord.count == Int((1.5 + Spheres.tail) * Double(Spheres.rate))
+            * Spheres.channels, "аккорд короткий")
+    check(chord.contains { abs($0) > 0.05 } && chord.allSatisfy {
+        abs($0) <= 0.46 }, "слышен, но вдвое тише потолка")
+
+    let suite = UserDefaults(suiteName: "check.calm")!
+    suite.removePersistentDomain(forName: "check.calm")
+    let sky = SkyBook(store: suite)
+    sky.watch(plants: quiet, now: noon, speed: 1, calendar: utc)
+    sky.watch(plants: quiet, now: noon.addingTimeInterval(10), speed: 1,
+              calendar: utc)
+    check(sky.state.calm.last == noon, "чаще раза в минуту не пишем")
+    sky.watch(plants: quiet, now: noon.addingTimeInterval(3_600), speed: 1,
+              calendar: utc)
+    check(sky.quiet(log: [], now: noon, calendar: utc) == 3_600,
+          "час покоя набежал")
+    check(sky.chordDue(now: noon, calendar: utc)
+          && !sky.chordDue(now: noon.addingTimeInterval(60), calendar: utc),
+          "аккорд — раз в день")
+    check(SkyBook(store: suite).state.calm.days.count == 1,
+          "время покоя переживает перезапуск")
+}
+
 if failed > 0 {
     print("\nне сошлось: \(failed)")
     exit(1)
