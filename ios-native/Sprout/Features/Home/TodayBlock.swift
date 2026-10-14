@@ -31,6 +31,9 @@ struct TodayBlock: View {
         // Кого поливать — по всему саду, а не по комнате: кнопка нужна,
         // пока есть кого, где бы он ни стоял.
         let due = MoistureStatus.needsWater(in: garden.rooms)
+        // Кнопка и полив — один набор (`pourable`): сколько обещано, столько
+        // и польётся. Некого поливать (все влажные) — кнопки нет вовсе.
+        let pour = MoistureStatus.pourable(in: garden.rooms)
         let line = type.isAccessibilitySize
             ? AnyLayout(VStackLayout(alignment: .leading, spacing: 8))
             : AnyLayout(HStackLayout(spacing: 10))
@@ -53,9 +56,9 @@ struct TodayBlock: View {
                 if streak > 0 {
                     streakChip
                 }
-                if !due.isEmpty {
-                    Button { pourAll(due) } label: {
-                        Text(Lang.format("Полить всех (%lld)", due.count))
+                if !pour.isEmpty {
+                    Button { pourAll() } label: {
+                        Text(Lang.format("Полить всех (%lld)", pour.count))
                             .font(Typography.settingNote.weight(.semibold))
                             .lineLimit(type.isAccessibilitySize ? nil : 1)
                             .minimumScaleFactor(0.8)
@@ -72,7 +75,7 @@ struct TodayBlock: View {
             .frame(maxWidth: .infinity, minHeight: 56, alignment: .leading)
             .sproutPlate(in: RoundedRectangle(cornerRadius: Metrics.cardRadius,
                                               style: .continuous))
-            .animation(Motion.number, value: due.map(\.id))
+            .animation(Motion.number, value: pour.map(\.id))
             chips
         }
         .sproutRide()
@@ -97,8 +100,12 @@ struct TodayBlock: View {
     }
 
     /// «Полить всех»: поливает только тех, кому пора, одной плашкой «Вернуть».
-    private func pourAll(_ due: [Plant]) {
-        let done = Bin.shared.waterNeeded(due.map(\.id), in: garden)
+    /// Список берём на момент нажатия, а не на момент отрисовки: блок
+    /// перерисовывается раз в минуту, и за это время сад могли полить с
+    /// виджета, часов или уведомления.
+    private func pourAll() {
+        let ids = MoistureStatus.pourable(in: garden.rooms).map(\.id)
+        let done = Bin.shared.waterNeeded(ids, in: garden)
         guard done > 0 else { return }
         Cheer.shared.now(from: Screen.middle)
         Feel.water()

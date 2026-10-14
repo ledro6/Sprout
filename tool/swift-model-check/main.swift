@@ -5832,8 +5832,36 @@ do {
           && yard.plant(id: "Норма")?.moisture == 0.5 && yard.log.count == 2,
           "«Полить всех» — без влажных и тех, что в норме")
     yard.restore(start)
-    check(yard.waterNeeded(["Мокрый", "Сухой"]).map(\.plant) == ["Сухой"],
-          "массовый полив из списка — тоже только нужные")
+    check(yard.waterNeeded(["Мокрый", "Сухой", "Пустыня"]).map(\.plant) == ["Пустыня"],
+          "массовый полив из списка — только ждущие воды (30 % с запасом дней не в счёт)")
+    // «Полить всех» на главной: набор, счётчик и полив — одна функция.
+    // Короткий срок: 35 % при сроке в один день — «ноль дней» (ждёт воды), но
+    // статус «в норме»/«скоро». Мокрый с нулём дней — под защитой, не считается.
+    var dueRooms = start.rooms
+    dueRooms[0].plants.append(plantNamed("Суточный", moisture: 0.45, dryingDays: 1))
+    var snoozedOne = plantNamed("Отложенный", moisture: 0.1, dryingDays: 7)
+    snoozedOne.snoozed = Date().addingTimeInterval(3_600)
+    dueRooms[0].plants.append(snoozedOne)
+    let shown = MoistureStatus.pourable(in: dueRooms)
+    let dueIds = Set(MoistureStatus.needsWater(in: dueRooms).map(\.id))
+    check(dueIds.contains("Суточный") && !dueIds.contains("Отложенный"),
+          "ждущие воды: суточный (ноль дней) да, отложенный нет")
+    check(Set(shown.map(\.id)) == Set(dueRooms.flatMap(\.plants).filter {
+        dueIds.contains($0.id) && $0.wateringGuard == .allow
+    }.map(\.id)), "кнопка показывает needsWater без защищённых от перелива")
+    var dueState = start
+    dueState.rooms = dueRooms
+    dueState.log = []
+    yard.restore(dueState)
+    let ids = shown.map(\.id)
+    let done = yard.waterNeeded(ids)
+    check(done.count == shown.count && Set(done.map(\.plant)) == Set(ids),
+          "«Полить всех (n)» поливает ровно n показанных, не меньше")
+    check(MoistureStatus.pourable(in: yard.rooms).isEmpty,
+          "после полива кнопке некого — она скрывается, а не молчит")
+    yard.restore(start)
+    check(Set(yard.waterNeeded().map(\.plant)) == Set(poured.map(\.plant)),
+          "без списка — по-прежнему «скоро пить» и «сухо» (отъезд)")
     // Старый журнал: поля нет — полив засчитывается.
     let old = try! JSONEncoder().encode(Watering(plant: "x", when: day))
     let back = try! JSONDecoder().decode(Watering.self, from: old)

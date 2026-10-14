@@ -109,10 +109,25 @@ extension MoistureStatus {
 }
 
 extension MoistureStatus {
-    /// Кого поливать разом: «скоро пить» и «сухо». Влажные и в норме в
+    /// Кого поливать разом, когда списка нет (отъезд, «Полить всех» с экрана
+    /// блокировки и виджета): «скоро пить» и «сухо». Влажные и в норме в
     /// массовых действиях не участвуют — защита от перелива.
     static func bulk(_ plants: [Plant]) -> [Plant] {
         plants.filter { $0.status == .soon || $0.status == .urgent }
+    }
+
+    /// Единственный ответ на «кого польёт «Полить всех»»: и подпись кнопки,
+    /// и счётчик, и сам полив берут его. Это `needsWater` без тех, кого
+    /// защита от перелива (`wateringGuard`) всё равно не пустит: иначе
+    /// кнопка обещала бы n растений, а полила бы меньше или никого.
+    /// `soon` — ещё и «скоро пить» (`bulk`): так перед отъездом.
+    static func pourable(in rooms: [Room], soon: Bool = false) -> [Plant] {
+        let all = rooms.flatMap(\.plants)
+        let extra = soon ? Set(bulk(all).map(\.id)) : []
+        return all
+            .filter { $0.needsWaterToday || extra.contains($0.id) }
+            .filter { $0.wateringGuard == .allow }
+            .sorted { $0.moisture < $1.moisture }
     }
 
     /// Вторая строка приветствия на карточке дня комнаты `room`: кого здесь

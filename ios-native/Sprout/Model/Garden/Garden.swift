@@ -165,14 +165,18 @@ final class Garden {
                     when: moment)
     }
 
-    /// Массовый полив — «Полить всех», «Уезжаю», живое действие: только те,
-    /// кому пора пить (`MoistureStatus.bulk`), влажные и в норме не
-    /// участвуют. `ids` — из кого выбирать; пусто — весь сад.
+    /// Массовый полив — «Полить всех», «Уезжаю», живое действие. Поливает
+    /// ровно `MoistureStatus.pourable` — тот же набор, что показывает кнопка:
+    /// с `ids` (на главной — ждущие воды) это те из них, кому пора пить
+    /// (`needsWater`, без влажных и отложенных); без `ids` — весь сад, и ещё
+    /// «скоро пить» (`bulk`). Прежде полив брал `bulk`, а кнопка считала по
+    /// `needsWater`: у растения с коротким сроком «ноль дней» при статусе
+    /// «в норме» кнопка обещала его полить и не поливала ничего.
     @discardableResult
     func waterNeeded(_ ids: [Plant.ID]? = nil,
                      at moment: Date = Date()) -> [Pour] {
         let chosen = ids.map(Set.init)
-        return MoistureStatus.bulk(rooms.flatMap(\.plants))
+        return MoistureStatus.pourable(in: rooms, soon: ids == nil)
             .filter { chosen?.contains($0.id) ?? true }
             .compactMap { water($0.id, at: moment) }
     }

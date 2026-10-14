@@ -68,7 +68,7 @@ enum Trip {
         let recent = Set(log.lazy.filter {
             now.timeIntervalSince($0.when) < fresh
         }.map(\.plant))
-        return MoistureStatus.bulk(rooms.flatMap(\.plants))
+        return MoistureStatus.pourable(in: rooms, soon: true)
             .allSatisfy { recent.contains($0.id) }
     }
 
