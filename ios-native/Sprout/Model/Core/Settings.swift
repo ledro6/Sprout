@@ -196,6 +196,13 @@ final class Settings {
         didSet { store.set(saver, forKey: Key.saver) }
     }
 
+    /// ИИ-функции: подсказки от языковой модели Apple, разговор с садом.
+    /// Выключено — входов в ИИ нет вовсе (`Muse.offered`); разбор снимка
+    /// правилами остаётся. По умолчанию включено.
+    var aiEnabled: Bool {
+        didSet { store.set(aiEnabled, forKey: Key.ai) }
+    }
+
     /// Последняя снятая погода — чтобы сроки учитывали её и до нового
     /// запроса.
     var climate: Climate? {
@@ -482,6 +489,7 @@ final class Settings {
         static let weather = "weather"
         static let climate = "climate"
         static let saver = "batterySaver"
+        static let ai = "aiEnabled"
         static let statsHidden = "statsHidden"
         /// Готовый цвет кружка прежней сборки — номером.
         static let avatarTint = "avatarTint"
@@ -565,6 +573,7 @@ final class Settings {
         })
         weather = store.bool(forKey: Key.weather)
         saver = store.bool(forKey: Key.saver)
+        aiEnabled = store.object(forKey: Key.ai) as? Bool ?? true
         climate = Self.take(Climate.self, Key.climate, from: store)
         statsOrder = StatsBlock.order(
             Self.take([StatsBlock].self, Key.statsOrder, from: store) ?? [])

@@ -17,6 +17,10 @@ struct DiagnosisSheet: View {
     @State private var shown: UIImage?
     @State private var thinking = false
     @State private var findings: [Finding] = []
+    /// Что изменилось против прежнего разбора растения.
+    @State private var shift: [String] = []
+    /// Снимок не дал уверенного разбора: прежний разбор не трогаем.
+    @State private var retake = false
     @State private var advice: String?
     /// План лечения составлен по этому снимку.
     @State private var planned = false
@@ -54,11 +58,14 @@ struct DiagnosisSheet: View {
                             .transition(.blurReplace)
                     }
                     if let advice {
-                        Text(advice)
-                            .font(Typography.settingRow)
-                            .foregroundStyle(Palette.ink)
-                            .fixedSize(horizontal: false, vertical: true)
-                            .padding(Metrics.groupPadding)
+                        VStack(alignment: .leading, spacing: 8) {
+                            AIMark()
+                            Text(advice)
+                                .font(Typography.settingRow)
+                                .foregroundStyle(Palette.ink)
+                                .fixedSize(horizontal: false, vertical: true)
+                        }
+                        .padding(Metrics.groupPadding)
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .sproutPlate(in: RoundedRectangle(
                                 cornerRadius: Metrics.cardRadius,
@@ -67,6 +74,18 @@ struct DiagnosisSheet: View {
                     }
                     ForEach(findings) { finding in
                         card(finding)
+                            .transition(.blurReplace)
+                    }
+                    if !shift.isEmpty {
+                        changeNotes
+                            .transition(.blurReplace)
+                    }
+                    if retake {
+                        Text("Сфотографируйте ещё раз, при дневном свете")
+                            .font(Typography.settingRow)
+                            .foregroundStyle(Palette.warn)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .padding(.horizontal, 6)
                             .transition(.blurReplace)
                     }
                     planOffer
@@ -87,6 +106,8 @@ struct DiagnosisSheet: View {
                 .padding(.top, 4)
                 .padding(.bottom, 40)
                 .animation(Motion.enter, value: findings)
+                .animation(Motion.enter, value: shift)
+                .animation(Motion.enter, value: retake)
                 .animation(Motion.enter, value: thinking)
                 .animation(Motion.enter, value: advice)
                 .animation(Motion.enter, value: planned)
@@ -206,6 +227,22 @@ struct DiagnosisSheet: View {
         }
     }
 
+    /// «Что изменилось» против прежнего разбора: строки из модели.
+    private var changeNotes: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text("Что изменилось")
+                .font(Typography.settingNote)
+                .foregroundStyle(Palette.secondaryText)
+            ForEach(shift, id: \.self) { line in
+                Text(line)
+                    .font(Typography.settingRow)
+                    .foregroundStyle(Palette.ink)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+        }
+        .padding(.horizontal, 6)
+    }
+
     private func makePlan() {
         guard let plant,
               var plan = Treatment.plan(findings, plant: plant) else { return }
@@ -293,6 +330,8 @@ struct DiagnosisSheet: View {
             thinking = false
             shown = nil
             findings = []
+            shift = []
+            retake = false
             advice = nil
         }
     }
@@ -304,6 +343,8 @@ struct DiagnosisSheet: View {
             shown = image
             thinking = true
             findings = []
+            shift = []
+            retake = false
             advice = nil
             planned = false
             failed = false
@@ -313,10 +354,18 @@ struct DiagnosisSheet: View {
         let found = Finding.diagnose(seen, plant: plant, log: garden.log,
                                      climate: Settings.shared.weather
                                         ? Settings.shared.climate : nil)
+        // Неуверенный разбор и «растение плохо видно» не сохраняем: иначе
+        // следующий снимок сравнивался бы с догадкой.
+        let diagnosis = Diagnosis(found)
+        let sure = found.first?.kind != .unclear && diagnosis.sureness != .unsure
         withAnimation(Motion.enter) {
             thinking = false
             findings = found
+            retake = !sure
+            shift = sure ? Diagnosis.changes(from: plant.lastDiagnosis,
+                                             to: diagnosis) : []
         }
+        if sure { garden.noteDiagnosis(plantID, diagnosis) }
         Feel.done()
         if Muse.ready, found.first?.kind != .unclear {
             let words = await Muse.advise(found, plant: plant,

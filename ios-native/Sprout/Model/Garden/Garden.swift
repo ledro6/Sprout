@@ -598,6 +598,12 @@ final class Garden {
 
     // MARK: - Лечение
 
+    /// Разбор снимка — прежним для следующего сравнения. Уверенный разбор
+    /// заменяет прежний; неуверенный сюда не попадает.
+    func noteDiagnosis(_ id: Plant.ID, _ diagnosis: Diagnosis) {
+        change(id) { $0.lastDiagnosis = diagnosis }
+    }
+
     /// Новый план лечения — вместо прежнего; снимки прежнего, которых нет в
     /// новом, уходят с диска.
     func treat(_ id: Plant.ID, _ plan: Treatment) {

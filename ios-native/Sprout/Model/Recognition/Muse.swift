@@ -40,13 +40,15 @@ enum Muse {
     }
 
     /// Модель готова ответить прямо сейчас.
-    static var ready: Bool { state == .ready }
+    static var ready: Bool { Settings.shared.aiEnabled && state == .ready }
 
-    /// Показывать ли входы в ИИ: не показываем, только если телефон не
-    /// годится совсем. Читается из тела экрана; обновляется при запуске и
-    /// возвращении в приложение, см. `Offer`.
+    /// Показывать ли входы в ИИ: не показываем, если телефон не годится
+    /// совсем или ИИ выключена в Настройках. Читается из тела экрана;
+    /// обновляется при запуске и возвращении в приложение, см. `Offer`.
     @MainActor
-    static var offered: Bool { Offer.shared.state != .hidden }
+    static var offered: Bool {
+        Settings.shared.aiEnabled && Offer.shared.state != .hidden
+    }
 
     /// Язык ответа по-английски: «Russian», «Japanese». Им же отвечает
     /// «Спросить сад», см. `Talk`.

@@ -16570,6 +16570,9 @@
     "Без геопозиции напоминания по даче приходят как обычно.": {
       "extractionState": "manual"
     },
+    "Без изменений": {
+      "extractionState": "manual"
+    },
     "Без имени": {
       "extractionState": "manual"
     },
@@ -74098,6 +74101,12 @@
         }
       }
     },
+    "ИИ": {
+      "extractionState": "manual"
+    },
+    "ИИ-функции": {
+      "extractionState": "manual"
+    },
     "Идёт до %@": {
       "extractionState": "manual",
       "localizations": {
@@ -117055,6 +117064,9 @@
           }
         }
       }
+    },
+    "Написано ИИ": {
+      "extractionState": "manual"
     },
     "Написать нам": {
       "extractionState": "manual"
@@ -188669,6 +188681,9 @@
     "Почему желтеют листья у растения «%@»?": {
       "extractionState": "manual"
     },
+    "Появилось: %@": {
+      "extractionState": "manual"
+    },
     "Появятся кличка, влажность и срок, а полить можно прямо отсюда.": {
       "extractionState": "manual",
       "localizations": {
@@ -196467,6 +196482,9 @@
           }
         }
       }
+    },
+    "Прошло: %@": {
+      "extractionState": "manual"
     },
     "Пряные травы": {
       "extractionState": "manual",
@@ -230597,6 +230615,9 @@
         }
       }
     },
+    "Совет словами и разговор с садом скрыты. Разбор снимка и подсказки по уходу работают как прежде.": {
+      "extractionState": "manual"
+    },
     "Совет словами пишет Apple Intelligence — на этом телефоне её нет. Находки по снимку работают и без неё.": {
       "extractionState": "manual"
     },
@@ -238707,6 +238728,9 @@
           }
         }
       }
+    },
+    "Сфотографируйте ещё раз, при дневном свете": {
+      "extractionState": "manual"
     },
     "Сфотографируйте растение — вид и срок полива подскажет телефон.": {
       "extractionState": "manual"
@@ -266092,6 +266116,9 @@
           }
         }
       }
+    },
+    "Что изменилось": {
+      "extractionState": "manual"
     },
     "Что нажимали и сколько раз — без фото, кличек и мест. Только на этом телефоне.": {
       "extractionState": "manual"

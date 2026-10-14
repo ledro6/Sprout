@@ -152,12 +152,15 @@ struct AskView: View {
                 .padding(.leading, 48)
                 .frame(maxWidth: .infinity, alignment: .trailing)
         } else if !line.text.isEmpty {
-            Text(Self.rich(line.text))
-                .font(Typography.settingRow)
-                .foregroundStyle(Palette.ink)
-                .fixedSize(horizontal: false, vertical: true)
-                .textSelection(.enabled)
-                .padding(Metrics.groupPadding)
+            VStack(alignment: .leading, spacing: 8) {
+                AIMark()
+                Text(Self.rich(line.text))
+                    .font(Typography.settingRow)
+                    .foregroundStyle(Palette.ink)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .textSelection(.enabled)
+            }
+            .padding(Metrics.groupPadding)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .sproutPlate(in: RoundedRectangle(
                     cornerRadius: Metrics.cardRadius, style: .continuous))

@@ -4404,6 +4404,25 @@ do {
     hungry.care = Care(feedEvery: 14, sinceFed: 40)
     check(Finding.diagnose(yellow, plant: hungry, log: []).first?.kind == .hungry,
           "желтеет, а подкормка давно просрочена — голодает")
+    // Два одинаковых разбора одного снимка не спорят: «Без изменений».
+    let firstLook = Diagnosis(Finding.diagnose(yellow, plant: hungry, log: []),
+                              at: Date(timeIntervalSince1970: 0))
+    let secondLook = Diagnosis(Finding.diagnose(yellow, plant: hungry, log: []),
+                               at: Date(timeIntervalSince1970: 86400))
+    check(Diagnosis.changes(from: firstLook, to: secondLook)
+            == ["Без изменений"],
+          "одинаковый снимок — «Без изменений», а не противоречие")
+    check(Diagnosis.changes(from: nil, to: firstLook).isEmpty,
+          "первый разбор — сравнивать не с чем")
+    let was = Diagnosis([Finding(kind: .yellowing, confidence: 0.9)])
+    let now = Diagnosis([Finding(kind: .hungry, confidence: 0.9)])
+    let moved = Diagnosis.changes(from: was, to: now)
+    check(moved.count == 2 && moved[0].hasPrefix("Появилось")
+            && moved[1].hasPrefix("Прошло"),
+          "новая беда — «Появилось», прежняя — «Прошло»")
+    check(Diagnosis([Finding(kind: .spots, confidence: 0.2)]).sureness
+            == .unsure,
+          "слабая находка — не уверенный разбор")
     let brown = Symptoms.read(rgba: picture((140, 80, 30), (60, 160, 60),
                                             split: 0.4),
                               mask: full, width: side, height: side)

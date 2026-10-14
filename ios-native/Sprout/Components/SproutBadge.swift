@@ -17,3 +17,17 @@ struct SproutBadge: View {
         .background(Palette.greenSoft, in: .capsule)
     }
 }
+
+/// Пометка «ИИ» у текста, который написала языковая модель: отличить её
+/// слова от правил и от собственных записей сада.
+struct AIMark: View {
+    var body: some View {
+        Text("ИИ")
+            .font(Typography.settingNote)
+            .foregroundStyle(Palette.secondaryText)
+            .padding(.horizontal, 7)
+            .padding(.vertical, 1)
+            .overlay(Capsule().strokeBorder(Palette.secondaryText, lineWidth: 1))
+            .accessibilityLabel(Lang.text("Написано ИИ"))
+    }
+}

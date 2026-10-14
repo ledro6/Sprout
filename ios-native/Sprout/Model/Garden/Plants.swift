@@ -28,6 +28,16 @@ enum MoistureSource: String, Codable, Hashable, Sendable {
     case estimate
 }
 
+/// Последний разбор «Что с ним?»: что нашли и насколько уверенно. Беды — как
+/// raw-значения `Finding.Kind` (сам тип — в Ailment.swift, его нет в
+/// виджете, а этот файл там нужен).
+struct Diagnosis: Codable, Hashable, Sendable {
+    var date: Date
+    var kinds: [String]
+    /// 0…1 — по самой сильной находке.
+    var confidence: Double
+}
+
 struct Plant: Identifiable, Hashable, Codable {
     let id: String
     var name: String
@@ -107,6 +117,11 @@ struct Plant: Identifiable, Hashable, Codable {
     /// в садах прежних сборок его нет. Правка плана — правка ухода
     /// (`tended`).
     var treatment: Treatment?
+
+    /// Последний разбор «Что с ним?»: с ним сравнивают следующий снимок.
+    /// Пусто — не разбирали, и в садах прежних сборок. Живёт на этом
+    /// телефоне: отдельно в общий сад не едет и правкой ухода не считается.
+    var lastDiagnosis: Diagnosis?
 
     /// Когда растение ушло в архив: «Растение погибло — в архив». Пусто у
     /// живых и в садах прежних сборок. Архивные лежат в `Garden.archive`, а
@@ -193,6 +208,7 @@ struct Plant: Identifiable, Hashable, Codable {
         plain.moisture = 0
         plain.care = nil
         plain.treatment = nil
+        plain.lastDiagnosis = nil
         plain.sensor = nil
         plain.source = nil
         plain.scan = nil

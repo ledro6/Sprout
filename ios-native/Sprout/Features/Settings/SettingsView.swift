@@ -39,6 +39,7 @@ struct SettingsView: View {
                         watering
                             .hintSpot(.settingsWatering)
                         protection
+                        intelligence
                         DataGroup()
                         about
                             .hintSpot(.settingsAbout)
@@ -518,6 +519,19 @@ struct SettingsView: View {
 
     /// Замок — здешние «вход» и «выход»: учётной записи у Sprout нет. Нечем
     /// запирать — переключатель погашен, и это единственное пояснение.
+    private var intelligence: some View {
+        SproutGroup("ИИ") {
+            // Без ИИ остаётся разбор снимка правилами: он не словами.
+            switchRow("ИИ-функции",
+                      note: settings.aiEnabled ? nil
+                          : "Совет словами и разговор с садом скрыты. Разбор снимка и подсказки по уходу работают как прежде.",
+                      isOn: Binding(
+                          get: { settings.aiEnabled },
+                          set: { settings.aiEnabled = $0 }))
+        }
+        .animation(Motion.enter, value: settings.aiEnabled)
+    }
+
     private var protection: some View {
         SproutGroup("Защита") {
             switchRow("Запирать приложение", term: .lock,
