@@ -572,6 +572,8 @@ enum Family {
             if let portrait = remote.portrait, !safe(file: portrait) {
                 remote.portrait = nil
             }
+            let kept = remote.snaps.filter { safe(file: $0.file) }
+            remote.snapLog = kept.isEmpty ? nil : kept
             if let file = remote.treatment?.before, !safe(file: file) {
                 remote.treatment?.before = nil
             }

@@ -57365,6 +57365,9 @@
         }
       }
     },
+    "Добавить фото": {
+      "extractionState": "manual"
+    },
     "Добавлен %@": {
       "extractionState": "manual",
       "localizations": {
@@ -125229,6 +125232,9 @@
     "Ниже": {
       "extractionState": "manual"
     },
+    "Новая заметка": {
+      "extractionState": "manual"
+    },
     "Новая комната": {
       "extractionState": "manual",
       "localizations": {
@@ -145503,293 +145509,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "%lld個月後換盆"
-          }
-        }
-      }
-    },
-    "Пересадка, удобрения, где любит стоять…": {
-      "extractionState": "manual",
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "تغيير الأصيص، السماد، أين تحب أن تكون…"
-          }
-        },
-        "bg": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Пресаждане, торове, къде обича да стои…"
-          }
-        },
-        "bn": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "টব বদল, সার, কোথায় থাকতে ভালোবাসে…"
-          }
-        },
-        "ca": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Trasplantament, adob, on li agrada estar…"
-          }
-        },
-        "cs": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Přesazování, hnojiva, kde ráda stojí…"
-          }
-        },
-        "da": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Omplantning, gødning, hvor den kan lide at stå …"
-          }
-        },
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Umtopfen, Dünger, wo sie gern steht …"
-          }
-        },
-        "el": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Μεταφύτευση, λίπασμα, πού του αρέσει να στέκεται…"
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Repotting, fertilizer, where it likes to stand…"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Trasplante, abono, dónde le gusta estar…"
-          }
-        },
-        "fi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ruukun vaihto, lannoitus, missä se viihtyy…"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Rempotage, engrais, où elle aime être…"
-          }
-        },
-        "gu": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "કૂંડું બદલવું, ખાતર, ક્યાં રહેવું ગમે…"
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "העברת עציץ, דשנים, איפה הוא אוהב לעמוד…"
-          }
-        },
-        "hi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "गमला बदलना, खाद, कहाँ रहना पसंद है…"
-          }
-        },
-        "hr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Presađivanje, gnojiva, gdje voli stajati…"
-          }
-        },
-        "hu": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Átültetés, tápoldat, hol szeret állni…"
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ganti pot, pupuk, tempat favoritnya…"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Rinvaso, concime, dove le piace stare…"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "植え替え、肥料、好きな置き場所…"
-          }
-        },
-        "kk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Қайта отырғызу, тыңайтқыштар, қайда тұрғанды ұнатады…"
-          }
-        },
-        "kn": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ಕುಂಡ ಬದಲಾವಣೆ, ಗೊಬ್ಬರ, ಎಲ್ಲಿರಲು ಇಷ್ಟ…"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "분갈이, 비료, 좋아하는 자리…"
-          }
-        },
-        "lt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Persodinimas, trąšos, kur mėgsta stovėti…"
-          }
-        },
-        "ml": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ചട്ടി മാറ്റം, വളം, എവിടെ നിൽക്കാനാണ് ഇഷ്ടം…"
-          }
-        },
-        "mr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "कुंडी बदल, खत, कुठे ठेवायला आवडते…"
-          }
-        },
-        "ms": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tukar pasu, baja, tempat kegemarannya…"
-          }
-        },
-        "nb": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Omplanting, gjødsel, hvor den liker å stå …"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Verpotten, voeding, waar hij graag staat…"
-          }
-        },
-        "or": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ଟବ ବଦଳ, ସାର, କେଉଁଠି ରହିବାକୁ ଭଲପାଏ…"
-          }
-        },
-        "pa": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ਗਮਲਾ ਬਦਲਣਾ, ਖਾਦ, ਕਿੱਥੇ ਰਹਿਣਾ ਪਸੰਦ ਹੈ…"
-          }
-        },
-        "pl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Przesadzanie, nawozy, gdzie lubi stać…"
-          }
-        },
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Troca de vaso, adubo, onde gosta de ficar…"
-          }
-        },
-        "pt-PT": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Mudança de vaso, adubo, onde gosta de estar…"
-          }
-        },
-        "ro": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Transplantare, îngrășământ, unde îi place să stea…"
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Presádzanie, hnojivá, kde rada stojí…"
-          }
-        },
-        "sl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Presajanje, gnojila, kje rada stoji …"
-          }
-        },
-        "sv": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Omplantering, gödsel, var den gillar att stå …"
-          }
-        },
-        "ta": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "தொட்டி மாற்றம், உரம், எங்கே இருக்கப் பிடிக்கும்…"
-          }
-        },
-        "te": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "కుండీ మార్పు, ఎరువులు, ఎక్కడ ఉండటం ఇష్టం…"
-          }
-        },
-        "th": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "เปลี่ยนกระถาง ปุ๋ย ชอบอยู่ตรงไหน…"
-          }
-        },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Saksı değişimi, gübre, nerede durmayı sever…"
-          }
-        },
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Пересадка, добрива, де любить стояти…"
-          }
-        },
-        "ur": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "گملا بدلنا، کھاد، کہاں رہنا پسند ہے…"
-          }
-        },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Thay chậu, phân bón, thích đặt ở đâu…"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "换盆、肥料、喜欢放在哪儿…"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "換盆、肥料、喜歡放在哪裡⋯"
           }
         }
       }
@@ -250861,6 +250580,9 @@
         }
       }
     },
+    "Удалить фото": {
+      "extractionState": "manual"
+    },
     "Удалить цвет": {
       "extractionState": "manual",
       "localizations": {
@@ -258070,6 +257792,9 @@
       "extractionState": "manual"
     },
     "Фото и вопросы": {
+      "extractionState": "manual"
+    },
+    "Фото и заметки": {
       "extractionState": "manual"
     },
     "Фото растения": {

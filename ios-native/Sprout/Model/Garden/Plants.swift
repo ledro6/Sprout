@@ -38,6 +38,18 @@ struct Diagnosis: Codable, Hashable, Sendable {
     var confidence: Double
 }
 
+/// Снимок растения на дату — файл в `Shots`, см. `Plant.snaps`.
+struct Snap: Codable, Hashable, Sendable {
+    var date: Date
+    var file: String
+}
+
+/// Заметка с датой, см. `Plant.jots`.
+struct Jot: Codable, Hashable, Sendable {
+    var date: Date
+    var text: String
+}
+
 struct Plant: Identifiable, Hashable, Codable {
     let id: String
     var name: String
@@ -66,11 +78,42 @@ struct Plant: Identifiable, Hashable, Codable {
     /// Файлы растения на диске — уходят вместе с ним: снимок, портрет и
     /// снимки «до» и «после» плана лечения.
     var files: [String] {
-        [shot, portrait].compactMap { $0 } + (treatment?.files ?? [])
+        [shot, portrait].compactMap { $0 } + snaps.map(\.file)
+            + (treatment?.files ?? [])
     }
 
     /// Заметка хозяина. Необязательная по той же причине, что и `shot`.
+    /// Теперь она первая в ленте `journal`, см. `legacyJot`.
     var note: String?
+
+    /// Фото по датам — лента «Фото и заметки». Хранится опционально, чтобы
+    /// сады прежних сборок читались без этого поля; `snaps` отдаёт пусто
+    /// вместо `nil`. По возрастанию даты.
+    var snapLog: [Snap]?
+    var snaps: [Snap] {
+        get { snapLog ?? [] }
+        set { snapLog = newValue.isEmpty ? nil : newValue }
+    }
+
+    /// Заметки с датами — так же, как `snaps`.
+    var jotLog: [Jot]?
+    var jots: [Jot] {
+        get { jotLog ?? [] }
+        set { jotLog = newValue.isEmpty ? nil : newValue }
+    }
+
+    /// Старая `note` как запись ленты: датой заведения растения. Пусто, если
+    /// заметки нет.
+    var legacyJot: Jot? {
+        guard let note, !note.isEmpty else { return nil }
+        let start = Calendar(identifier: .gregorian).date(from: addedOn) ?? .distantPast
+        return Jot(date: start, text: note)
+    }
+
+    /// Лента заметок: старая первой, дальше датированные по возрастанию.
+    var journal: [Jot] {
+        (legacyJot.map { [$0] } ?? []) + jots.sorted { $0.date < $1.date }
+    }
 
     /// Чертёж своей объёмной модели — по снимку, по просьбе хозяина; нет —
     /// готовая модель вида, см. `blueprint`.

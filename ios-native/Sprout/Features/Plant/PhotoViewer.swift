@@ -7,8 +7,14 @@ struct PhotoViewer: View {
     /// Имена файлов в `Shots`, первый — обложка.
     let names: [String]
 
-    @State private var index = 0
+    @State private var index: Int
     @Environment(\.dismiss) private var dismiss
+
+    /// `start` — с какого снимка открыть: лента открывает тот, что нажали.
+    init(names: [String], start: Int = 0) {
+        self.names = names
+        _index = State(initialValue: start)
+    }
 
     var body: some View {
         ZStack(alignment: .topTrailing) {

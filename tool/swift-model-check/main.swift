@@ -6972,6 +6972,63 @@ do {
           "«Полить всех» берёт тех же, что к поливу — ИИ не нужен")
 }
 
+// MARK: - Фото и заметки растения (T-47)
+
+do {
+    // Сад прежней сборки — без лент: поля не пишутся и читаются пустыми.
+    let old = plantNamed("Баксик", moisture: 0.5, dryingDays: 6)
+    let data = try! JSONEncoder().encode(old)
+    let text = String(decoding: data, as: UTF8.self)
+    check(!text.contains("snapLog") && !text.contains("jotLog"),
+          "пустые ленты не пишутся в JSON — сады читаются как прежде")
+    let back = try? JSONDecoder().decode(Plant.self, from: data)
+    check(back?.snaps.isEmpty == true && back?.jots.isEmpty == true,
+          "старый растение без лент читается, ленты пусты")
+
+    let folder = FileManager.default.temporaryDirectory
+        .appendingPathComponent("sprout-journal-\(UUID().uuidString)")
+    try! FileManager.default.createDirectory(at: folder,
+                                             withIntermediateDirectories: true)
+    Store.testing = folder
+    defer {
+        Store.testing = nil
+        try? FileManager.default.removeItem(at: folder)
+    }
+    let yard = Garden(first: Seed.state)
+    yard.rooms = [Room(name: "Кухня", plants: [
+        plantNamed("Баксик", moisture: 0.5, dryingDays: 6),
+    ])]
+    let may = Date(timeIntervalSince1970: 1_715_000_000)
+    let june = may.addingTimeInterval(30 * 86_400)
+    yard.addSnap("Баксик", file: "june.jpg", date: june)
+    yard.addSnap("Баксик", file: "may.jpg", date: may)
+    check(yard.rooms[0].plants[0].snaps.map(\.file) == ["may.jpg", "june.jpg"],
+          "снимки по дате — старый первым")
+    yard.addJot("Баксик", text: "  Пересадил  ", date: june)
+    yard.addJot("Баксик", text: "Посадил", date: may)
+    yard.addJot("Баксик", text: "   ", date: june)
+    let jotted = yard.rooms[0].plants[0]
+    check(jotted.jots.map(\.text) == ["Посадил", "Пересадил"],
+          "заметки по дате, текст обрезан, пустая не пишется")
+    yard.note("Баксик", "Старая заметка")
+    check(yard.rooms[0].plants[0].journal.first?.text == "Старая заметка",
+          "старая заметка — первой в ленте")
+    yard.removeJot("Баксик", jotted.jots[0])
+    check(yard.rooms[0].plants[0].jots.map(\.text) == ["Пересадил"],
+          "removeJot убирает одну заметку")
+    yard.removeSnap("Баксик", file: "may.jpg")
+    check(yard.rooms[0].plants[0].snaps.map(\.file) == ["june.jpg"],
+          "removeSnap убирает снимок из ленты")
+    check(yard.rooms[0].plants[0].files.contains("june.jpg")
+          && !yard.rooms[0].plants[0].files.contains("may.jpg"),
+          "файлы растения — и снимки ленты, и убранного нет")
+    yard.addSnap("Баксик", file: "gone.jpg")
+    let removed = yard.remove("Баксик")
+    check(removed != nil, "растение убрано — в отсчёт «Вернуть»")
+    check(removed?.plant.files.contains("gone.jpg") == true,
+          "удаление насовсем берёт файлы снимков ленты")
+}
+
 if failed > 0 {
     print("\nне сошлось: \(failed)")
     exit(1)

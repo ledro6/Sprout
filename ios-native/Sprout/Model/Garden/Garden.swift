@@ -668,6 +668,45 @@ final class Garden {
         change(id) { $0.note = kept }
     }
 
+    /// Снимок в ленту растения; файл уже лежит в `Shots`. Лента — по дате.
+    func addSnap(_ id: Plant.ID, file: String, date: Date = Date()) {
+        guard plant(id: id) != nil else {
+            Shots.drop(file)
+            return
+        }
+        change(id) { item in
+            item.snaps.append(Snap(date: date, file: file))
+            item.snaps.sort { $0.date < $1.date }
+        }
+    }
+
+    /// Снимок из ленты — и с диска.
+    func removeSnap(_ id: Plant.ID, file: String) {
+        guard plant(id: id)?.snaps.contains(where: { $0.file == file }) == true
+        else { return }
+        change(id) { item in
+            item.snaps.removeAll { $0.file == file }
+        }
+        Shots.drop(file)
+    }
+
+    /// Заметка с датой. Пустой текст — ничего.
+    func addJot(_ id: Plant.ID, text: String, date: Date = Date()) {
+        let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty, plant(id: id) != nil else { return }
+        change(id) { item in
+            item.jots.append(Jot(date: date, text: trimmed))
+            item.jots.sort { $0.date < $1.date }
+        }
+    }
+
+    func removeJot(_ id: Plant.ID, _ jot: Jot) {
+        guard plant(id: id)?.jots.contains(jot) == true else { return }
+        change(id) { item in
+            item.jots.removeAll { $0 == jot }
+        }
+    }
+
     /// Растение занимает место другого, как на экране «Домой»: вперёд —
     /// встаёт за ним, назад — перед ним. Только в своей комнате.
     func move(_ id: Plant.ID, to target: Plant.ID) {

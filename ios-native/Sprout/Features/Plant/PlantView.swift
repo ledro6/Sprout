@@ -45,8 +45,7 @@ struct PlantView: View {
     /// Открытка для друзей — см. `PosterSheet`.
     @State private var posting = false
 
-    /// Заметка правится на месте и ложится в сад, когда поле отпускают.
-    @State private var noteDraft = ""
+    /// Поле заметки — в `PlantJournal`; клавиатуру здесь прячет «Готово».
     @FocusState private var writing: Bool
 
     /// Отсюда идёт волна полива. Не состоянием — см. `Spot`.
@@ -104,7 +103,7 @@ struct PlantView: View {
                         extras(plant)
                         diary(plant)
                             .hintSpot(.plantDiary)
-                        notes
+                        PlantJournal(plant: plant, writing: $writing)
                             .hintSpot(.plantNotes)
                         meta(plant)
                     }
@@ -144,7 +143,6 @@ struct PlantView: View {
         // здесь, а не задержкой анимации — иначе с задержкой шёл бы и уход; и
         // отдельным проходом — смену в проходе появления SwiftUI схлопывает.
         .onAppear {
-            noteDraft = plant?.note ?? ""
             Task { @MainActor in
                 try? await Task.sleep(for: .seconds(Motion.chromeDelay))
                 chrome = true
@@ -218,11 +216,6 @@ struct PlantView: View {
         .onChange(of: plant == nil) { _, gone in
             if gone { close() }
         }
-        .onChange(of: writing) { _, now in
-            if !now { keepNote() }
-        }
-        // Закрыли экран, не отпустив поле, — заметка всё равно сохраняется.
-        .onDisappear { keepNote() }
     }
 
     /// Круг крупнее системной кнопки «назад»: до неё тянуться через весь
@@ -332,7 +325,6 @@ struct PlantView: View {
     /// закрывает само разворачивание, мимо этого.
     private func close() {
         writing = false
-        keepNote()
         chrome = false
         Task { @MainActor in
             try? await Task.sleep(for: .seconds(Motion.chromeLead))
@@ -388,38 +380,6 @@ struct PlantView: View {
     private func unportray() {
         withAnimation(Motion.appear) { garden.unportray(plantID) }
         Feel.toss()
-    }
-
-    /// Звук — только если заметка правда изменилась: отпустить поле ещё не
-    /// значит что-то сохранить.
-    private func keepNote() {
-        guard let plant else { return }
-        let before = plant.note
-        garden.note(plantID, noteDraft)
-        let after = garden.plant(id: plantID)?.note
-        noteDraft = after ?? ""
-        if after != before { Feel.done() }
-    }
-
-    /// Шёпотом, как в «Заметках»: крупная подсказка читалась бы уже записанным.
-    private var notes: some View {
-        VStack(alignment: .leading, spacing: Metrics.diaryGap) {
-            Text("Заметки")
-                .font(Typography.groupTitle)
-                .foregroundStyle(Palette.secondaryText)
-            TextField("Пересадка, удобрения, где любит стоять…",
-                      text: $noteDraft, axis: .vertical)
-                .textFieldStyle(.plain)
-                .font(Typography.settingRow)
-                .foregroundStyle(Palette.ink)
-                .lineLimit(1 ... 12)
-                .focused($writing)
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(.horizontal, 25)
-        .padding(.vertical, 22)
-        .sproutPlate(in: plate)
-        .sproutRide()
     }
 
     private func forget(_ moment: Date) {
