@@ -1066,6 +1066,9 @@ final class Kinship {
     /// Гость общего сада: стереть сад ему нельзя (`Family.mayErase`).
     var guest: Bool { Self.enabled && !Family.mayErase(mode) }
 
+    /// Первый приём из iCloud прошёл: пустой сад тогда — пустой по правде.
+    var fetched: Bool { ledger.book.primed }
+
     /// Подпись в записи журнала, где время уже есть: «Полила Маша».
     func signature(_ entry: Watering) -> String? {
         guard let hand = entry.hand, hand != ledger.me else { return nil }

@@ -44,17 +44,56 @@ struct EmptyGarden: View {
     /// «Показать пример» — сад-пример, пока растений нет.
     var sample: (() -> Void)?
 
+    /// Двадцать секунд ждали сад из iCloud — пора предложить действия.
+    @State private var waited = false
+    /// «Начать заново» — пустой сад, как и без семьи.
+    @State private var fresh = false
+
+    private let kin = Kinship.shared
+
+    /// Семейный сад в iCloud, и первый приём из него ещё не пришёл: пусто
+    /// тут не значит пусто в iCloud.
+    private var searching: Bool {
+        Kinship.enabled && kin.mode != .off && !kin.fetched && !fresh
+    }
+
     var body: some View {
-        StateNote(icon: "leaf",
-                  text: Lang.text("В саду пока пусто. Добавьте первое растение.")) {
-            HStack(spacing: 10) {
-                Button("Добавить", action: add)
-                    .buttonStyle(.glassProminent)
-                    .tint(Palette.accentFill)
-                if let sample {
-                    Button("Показать пример", action: sample)
+        Group {
+            if searching && !waited {
+                StateNote(icon: "icloud",
+                          text: Lang.text("Ищем ваш сад в iCloud…")) {
+                    ProgressView()
+                        .controlSize(.regular)
+                }
+            } else if searching {
+                StateNote(icon: "icloud",
+                          text: Lang.text("Сад в iCloud пока не нашёлся. Восстановите его или начните заново.")) {
+                    HStack(spacing: 10) {
+                        Button("Восстановить") {
+                            Task { await kin.refresh() }
+                        }
+                        .buttonStyle(.glassProminent)
+                        .tint(Palette.accentFill)
+                        Button("Начать заново") { fresh = true }
+                    }
+                }
+            } else {
+                StateNote(icon: "leaf",
+                          text: Lang.text("В саду пока пусто. Добавьте первое растение.")) {
+                    HStack(spacing: 10) {
+                        Button("Добавить", action: add)
+                            .buttonStyle(.glassProminent)
+                            .tint(Palette.accentFill)
+                        if let sample {
+                            Button("Показать пример", action: sample)
+                        }
+                    }
                 }
             }
+        }
+        .task {
+            try? await Task.sleep(for: .seconds(20))
+            waited = true
         }
     }
 }

@@ -76,9 +76,37 @@ struct TodayBlock: View {
             .sproutPlate(in: RoundedRectangle(cornerRadius: Metrics.cardRadius,
                                               style: .continuous))
             .animation(Motion.number, value: pour.map(\.id))
+            if garden.saveFailed {
+                saveNote
+            }
             chips
         }
         .sproutRide()
+    }
+
+    /// Не записалось — сад в памяти цел. Плашка не модальная: висит, пока
+    /// запись не пройдёт.
+    private var saveNote: some View {
+        HStack(spacing: 10) {
+            Label {
+                Text("Не удалось сохранить сад. Попробуем ещё раз")
+            } icon: {
+                Image(systemName: "exclamationmark.triangle")
+            }
+            .font(Typography.settingNote)
+            .foregroundStyle(Palette.warn)
+            .fixedSize(horizontal: false, vertical: true)
+            Spacer(minLength: 8)
+            Button("Повторить") { garden.save() }
+                .font(Typography.settingNote.weight(.semibold))
+                .foregroundStyle(Palette.ink)
+                .frame(minHeight: 44)
+        }
+        .padding(.horizontal, Metrics.groupPadding)
+        .padding(.vertical, 6)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .sproutPlate(in: RoundedRectangle(cornerRadius: Metrics.cardRadius,
+                                          style: .continuous))
     }
 
     /// Серия — огонёк и число: подпись целиком читает VoiceOver.

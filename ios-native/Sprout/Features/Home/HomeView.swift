@@ -168,6 +168,7 @@ struct HomeView: View {
                             .transition(.opacity)
                     }
                 }
+                .modifier(GardenRecovery())
                 .toolbar(.hidden, for: .navigationBar)
                 // Панель вкладок — последняя ступень входа. Её видимость
                 // задаёт содержимое вкладки, а не корень.

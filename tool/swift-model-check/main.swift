@@ -6834,6 +6834,125 @@ do {
           "пауза по комнате — только её растения молчат")
 }
 
+// MARK: - Файл сада: копия, карантин и «не записалось» (T-42)
+
+func pickKind(_ pick: Store.Pick) -> String {
+    switch pick {
+    case .main: "main"
+    case .copy: "copy"
+    case .absent: "absent"
+    case .broken: "broken"
+    }
+}
+func scratchFolder(_ name: String) -> URL {
+    let folder = FileManager.default.temporaryDirectory
+        .appendingPathComponent("sprout-\(name)-\(UUID().uuidString)")
+    try! FileManager.default.createDirectory(at: folder,
+                                             withIntermediateDirectories: true)
+    Store.testing = folder
+    return folder
+}
+func brokenFiles(in folder: URL) -> [String] {
+    (try? FileManager.default.contentsOfDirectory(atPath: folder.path))?
+        .filter { $0.hasPrefix("garden-broken-") } ?? []
+}
+
+do {
+    let junk = Data("не json".utf8)
+    let good = try! JSONEncoder().encode(
+        GardenState(owner: "", rooms: [], savedAt: Date()))
+    check(pickKind(Store.pick(main: nil, copy: good)) == "absent",
+          "нет основного файла — сад заново, копию не подменяем")
+    check(pickKind(Store.pick(main: good, copy: junk)) == "main",
+          "основной читается — копия не нужна")
+    check(pickKind(Store.pick(main: junk, copy: good)) == "copy",
+          "основной битый, копия читается — берём копию")
+    check(pickKind(Store.pick(main: junk, copy: junk)) == "broken",
+          "оба битые — не подменяем молча")
+    check(pickKind(Store.pick(main: junk, copy: nil)) == "broken",
+          "битый без копии — тоже спрашиваем")
+}
+
+do {
+    let folder = scratchFolder("copy")
+    defer { Store.testing = nil; try? FileManager.default.removeItem(at: folder) }
+    let home = Garden(first: Seed.state)
+    home.save()
+    let count = home.plantCount
+    let good = try! Data(contentsOf: Store.garden!)
+    try! good.write(to: Store.copy!, options: .atomic)
+    try! Data("сломано".utf8).write(to: Store.garden!, options: .atomic)
+
+    let restored = Garden(first: Seed.blank)
+    check(!restored.damaged && restored.plantCount == count,
+          "битый основной + хорошая копия — сад из копии")
+    check(Store.read() != nil, "основной файл снова читается")
+    check(brokenFiles(in: folder).count == 1,
+          "битый основной отложен в garden-broken-<дата>.json, не стёрт")
+}
+
+do {
+    let folder = scratchFolder("broken")
+    defer { Store.testing = nil; try? FileManager.default.removeItem(at: folder) }
+    let junk = Data("сломано целиком".utf8)
+    try! junk.write(to: Store.garden!, options: .atomic)
+    try! junk.write(to: Store.copy!, options: .atomic)
+
+    let broke = Garden(first: Seed.blank)
+    check(broke.damaged, "оба битые — сад спрашивает, а не становится пустым молча")
+    let kept = brokenFiles(in: folder)
+    check(kept.count == 1 && (try? Data(contentsOf: folder.appendingPathComponent(kept[0]))) == junk,
+          "битый файл сохранён байт в байт, ничего не удалено")
+    check(!broke.restoreCopy(), "копия тоже не читается — восстановить нельзя")
+    broke.startOver()
+    check(!broke.damaged && Store.read() != nil,
+          "«Начать заново» — пустой сад записан, вопрос закрыт")
+    check(!Garden(first: Seed.blank).damaged,
+          "при следующем запуске вопроса нет — одноразово")
+}
+
+do {
+    let folder = scratchFolder("keep")
+    defer { Store.testing = nil; try? FileManager.default.removeItem(at: folder) }
+    let garden = Garden(first: Seed.state)
+    garden.save()
+    garden.save()
+    check(Store.decode(try! Data(contentsOf: Store.copy!)) != nil,
+          "перед каждой записью прежний хороший файл уходит в копию")
+}
+
+do {
+    let folder = scratchFolder("write")
+    defer { Store.testing = nil; try? FileManager.default.removeItem(at: folder) }
+    // Путь занят папкой — записать файл не выйдет.
+    try! FileManager.default.createDirectory(at: Store.garden!,
+                                             withIntermediateDirectories: true)
+    let garden = Garden(first: Seed.state)
+    let count = garden.plantCount
+    garden.save()
+    check(garden.saveFailed && garden.plantCount == count,
+          "не записалось — флаг поднят, сад в памяти цел")
+    try! FileManager.default.removeItem(at: Store.garden!)
+    garden.save()
+    check(!garden.saveFailed && Store.read() != nil,
+          "записалось — флаг снят")
+}
+
+// MARK: - Полив не зависит от ИИ (T-45)
+
+do {
+    // Muse в сборку модели не входит (нет в model-files.txt): полив и
+    // статусы считаются без неё. Проверяем результат на фиксированном саде.
+    let rooms = [Room(name: "Кухня", plants: [
+        plant(moisture: 0.1, dryingDays: 4),
+        plantNamed("Базилик", moisture: 0.9, dryingDays: 7),
+    ])]
+    let due = MoistureStatus.needsWater(in: rooms).map(\.id)
+    check(due == ["x"], "полив: сухое растение к поливу, влажное — нет")
+    check(MoistureStatus.pourable(in: rooms).map(\.id) == due,
+          "«Полить всех» берёт тех же, что к поливу — ИИ не нужен")
+}
+
 if failed > 0 {
     print("\nне сошлось: \(failed)")
     exit(1)

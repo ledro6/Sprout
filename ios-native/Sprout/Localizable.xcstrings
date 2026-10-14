@@ -32805,6 +32805,12 @@
         }
       }
     },
+    "Восстановить": {
+      "extractionState": "manual"
+    },
+    "Восстановить из копии": {
+      "extractionState": "manual"
+    },
     "Впритык": {
       "extractionState": "manual"
     },
@@ -79276,6 +79282,9 @@
         }
       }
     },
+    "Ищем ваш сад в iCloud…": {
+      "extractionState": "manual"
+    },
     "Ищу…": {
       "extractionState": "manual"
     },
@@ -91966,6 +91975,9 @@
           }
         }
       }
+    },
+    "Копия тоже не читается. Можно начать заново.": {
+      "extractionState": "manual"
     },
     "Коралловый": {
       "extractionState": "manual",
@@ -119651,6 +119663,9 @@
     "Начать": {
       "extractionState": "manual"
     },
+    "Начать заново": {
+      "extractionState": "manual"
+    },
     "Начать скан": {
       "extractionState": "manual",
       "localizations": {
@@ -121700,6 +121715,9 @@
       "extractionState": "manual"
     },
     "Не удалось распознать.": {
+      "extractionState": "manual"
+    },
+    "Не удалось сохранить сад. Попробуем ещё раз": {
       "extractionState": "manual"
     },
     "Не хватает места на телефоне: кадрам нужно несколько гигабайт.": {
@@ -153275,6 +153293,9 @@
           }
         }
       }
+    },
+    "Повторить": {
+      "extractionState": "manual"
     },
     "Погода": {
       "extractionState": "manual",
@@ -185183,6 +185204,9 @@
         }
       }
     },
+    "Последняя синхронизация: %@": {
+      "extractionState": "manual"
+    },
     "Посмотреть в AR": {
       "extractionState": "manual",
       "localizations": {
@@ -209459,6 +209483,9 @@
     "Сад в iCloud": {
       "extractionState": "manual"
     },
+    "Сад в iCloud пока не нашёлся. Восстановите его или начните заново.": {
+      "extractionState": "manual"
+    },
     "Сад друга — на %@. Обновится, когда друг пришлёт код снова.": {
       "extractionState": "manual",
       "localizations": {
@@ -210606,6 +210633,9 @@
           }
         }
       }
+    },
+    "Сад не открылся. Испорченный файл сохранён отдельно — ничего не удалено.": {
+      "extractionState": "manual"
     },
     "Сад не синхронизируется. Проверьте iCloud.": {
       "extractionState": "manual"
@@ -255705,6 +255735,9 @@
       }
     },
     "Файл JSON": {
+      "extractionState": "manual"
+    },
+    "Файл сада повреждён": {
       "extractionState": "manual"
     },
     "Файл сада попадает в резервную копию iPhone — туда же, куда и остальные ваши данные, по правилам Apple.": {

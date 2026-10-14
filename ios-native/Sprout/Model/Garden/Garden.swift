@@ -58,7 +58,18 @@ final class Garden {
     /// кнопке «Показать пример», см. `showSample`. Файл на диске есть — он и
     /// читается, как прежде.
     init(first: GardenState = Seed.blank) {
-        let state = Store.read() ?? first
+        let state: GardenState
+        var broken = false
+        switch Store.load() {
+        case .main(let read), .copy(let read):
+            state = read
+        case .absent:
+            state = first
+        case .broken:
+            // Файл не читается и отложен в сторону: сад пустой, спросим.
+            state = first
+            broken = true
+        }
         owner = state.owner
         rooms = state.rooms
         log = state.log
@@ -69,12 +80,52 @@ final class Garden {
         // Время шло и пока приложение было выгружено: отсчёт — с записи.
         // Нового сада на диске нет, и его отсчёт — с запуска.
         lastTick = min(state.savedAt, Date())
+        damaged = broken
+    }
+
+    /// Основной файл не читается, и сад пустой в памяти: спросить хозяина
+    /// (`GardenRecovery`). Одноразово — после ответа сбрасывается, а
+    /// отложенный файл на диске больше не мешает.
+    private(set) var damaged = false
+
+    /// Не записалось: сад в памяти цел, плашка на «Сегодня» просит повторить.
+    private(set) var saveFailed = false
+
+    /// «Восстановить из копии»: копия становится садом. `false` — копия тоже
+    /// не читается, и сад остаётся как был.
+    @discardableResult
+    func restoreCopy() -> Bool {
+        guard let file, let copy = Store.copy,
+              let data = try? Data(contentsOf: copy),
+              let state = Store.decode(data) else { return false }
+        try? data.write(to: file, options: .atomic)
+        take(state)
+        damaged = false
+        return true
+    }
+
+    /// «Начать заново»: пустой сад, записанный на место отложенного файла.
+    func startOver() {
+        damaged = false
+        save()
+    }
+
+    /// Вопрос про повреждённый файл закрыт без ответа — сад пустой, как
+    /// и был.
+    func dismissDamage() {
+        damaged = false
     }
 
     /// Файл поменяли без нас — берём его. Зовётся при возвращении на экран и
     /// перед командами, которые могут прийти, пока приложение спит.
     func reload() {
         guard let state = Store.read(), state.stamp != written else { return }
+        take(state)
+        roster += 1
+    }
+
+    /// Сад из слепка — в память, с отметкой записи.
+    private func take(_ state: GardenState) {
         owner = state.owner
         rooms = state.rooms
         log = state.log
@@ -84,7 +135,6 @@ final class Garden {
         written = state.stamp
         // Файл записан тогда-то — с того мига и сохнет.
         lastTick = min(state.savedAt, Date())
-        roster += 1
     }
 
     // MARK: - Время
@@ -915,11 +965,16 @@ final class Garden {
             encoder.outputFormatting = .prettyPrinted
             var snapshot = state
             snapshot.stamp = UUID().uuidString
+            // Прежний хороший файл — в копию, раньше, чем его заменим.
+            Store.keep(file)
             try encoder.encode(snapshot).write(to: file, options: .atomic)
             written = snapshot.stamp
+            saveFailed = false
             Self.saved?()
         } catch {
-            // Не сохранились — не повод падать: сад в памяти цел.
+            // Не сохранились — не повод падать: сад в памяти цел, плашка
+            // на «Сегодня» попросит повторить.
+            saveFailed = true
         }
     }
 }

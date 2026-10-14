@@ -16,6 +16,8 @@ struct DataGroup: View {
 
     var body: some View {
         SproutGroup("Данные и поддержка") {
+            syncLine
+
             Menu {
                 ShareLink(item: JournalCSV(log: garden.log, places: places),
                           preview: SharePreview(Lang.text("Журнал поливов, CSV"))) {
@@ -85,6 +87,32 @@ struct DataGroup: View {
         }
         .fullScreenCover(isPresented: $wiped) {
             WipedView()
+        }
+    }
+
+    /// Семейный сад в iCloud: когда последний раз синхронизировался — серым,
+    /// а если что-то мешает — плашкой, как в «Семье». Без семьи — ничего.
+    @ViewBuilder
+    private var syncLine: some View {
+        if Kinship.enabled, Kinship.shared.mode != .off {
+            switch Kinship.shared.status {
+            case .synced(let moment):
+                VStack(alignment: .leading, spacing: 0) {
+                    Text(Lang.format("Последняя синхронизация: %@", moment.formatted(
+                        Date.FormatStyle(date: .abbreviated, time: .shortened)
+                            .locale(Lang.locale))))
+                        .font(Typography.settingNote)
+                        .foregroundStyle(Palette.secondaryText)
+                    SproutDivider()
+                }
+            case .trouble(let text):
+                VStack(alignment: .leading, spacing: 0) {
+                    SyncTrouble(detail: text)
+                    SproutDivider()
+                }
+            default:
+                EmptyView()
+            }
         }
     }
 
