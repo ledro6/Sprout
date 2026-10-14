@@ -60,6 +60,7 @@ struct OrreryView: View {
                         .hintSpot(.orreryTime)
                     play(orbits, crossings: crossings)
                         .hintSpot(.orreryPlay)
+                    observatory(orbits)
                     omens(orbits)
                     parades(orbits)
                         .hintSpot(.orreryParades)
@@ -114,8 +115,10 @@ struct OrreryView: View {
         }
         .onAppear {
             book.standing(garden.log, side: side)
+            book.settle()
             react()
         }
+        .onChange(of: garden.ticked) { book.settle() }
         .onChange(of: garden.log.count) {
             book.standing(garden.log, side: side)
             react()
@@ -124,6 +127,82 @@ struct OrreryView: View {
             SkyJournal().environment(garden)
         }
         .onDisappear { stop() }
+    }
+
+    // MARK: - Обсерватория
+
+    /// Вопрос дня: кто первым дойдёт до луча. Ответ решает модель в миг
+    /// выбора (`Observatory`), полив после него ничего не меняет.
+    @ViewBuilder
+    private func observatory(_ orbits: [Orrery.Orbit]) -> some View {
+        let question = book.question(orbits)
+        let answer = book.today()
+        if !question.isEmpty || answer != nil {
+            VStack(alignment: .leading, spacing: 10) {
+                HStack {
+                    Label("Обсерватория", systemImage: "binoculars")
+                        .font(Typography.detail)
+                        .foregroundStyle(Palette.ink)
+                    Spacer(minLength: 8)
+                    Label("\(book.state.stars)", systemImage: "star.fill")
+                        .font(Typography.settingNote)
+                        .foregroundStyle(Palette.waterGlow)
+                }
+                if let answer {
+                    Text(Self.verdict(answer))
+                        .font(Typography.settingNote)
+                        .foregroundStyle(Palette.secondaryText)
+                        .fixedSize(horizontal: false, vertical: true)
+                } else {
+                    Text("Кто первым дойдёт до луча?")
+                        .font(Typography.settingRow)
+                        .foregroundStyle(Palette.ink)
+                    LazyVGrid(columns: [GridItem(.flexible()),
+                                        GridItem(.flexible())], spacing: 8) {
+                        ForEach(question, id: \.id) { candidate in
+                            Button {
+                                book.pick(candidate.id, from: question)
+                                Feel.pick()
+                            } label: {
+                                Text(candidate.name)
+                                    .font(Typography.settingRow)
+                                    .lineLimit(1)
+                                    .frame(maxWidth: .infinity)
+                            }
+                            .buttonStyle(.glass)
+                        }
+                    }
+                }
+                let streak = book.streak()
+                if streak > 0 {
+                    Text(Lang.format("Серия верных дней: %lld", streak))
+                        .font(Typography.settingNote)
+                        .foregroundStyle(Palette.secondaryText)
+                }
+            }
+            .padding(Metrics.groupPadding)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .sproutPlate(in: RoundedRectangle(cornerRadius: Metrics.cardRadius,
+                                              style: .continuous))
+        }
+    }
+
+    static func verdict(_ entry: Observatory.Entry) -> String {
+        let first = entry.candidates.first { $0.id == entry.winner }?.name ?? ""
+        switch entry.outcome {
+        case .hit:
+            return Lang.format("Верно! Первой дошла %@ — звезда наблюдателя.",
+                               first)
+        case .miss:
+            return Lang.format("Не угадали: первой дошла %@.", first)
+        case nil:
+            let picked = entry.candidates.first { $0.id == entry.picked }?.name
+                ?? ""
+            let when = entry.reveal.formatted(date: .abbreviated,
+                                              time: .shortened)
+            return Lang.format("Вы выбрали: %1$@. Ответ узнаем %2$@.", picked,
+                               when)
+        }
     }
 
     // MARK: - Точность

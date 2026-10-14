@@ -6382,6 +6382,91 @@ do {
           "пустая запись читается по умолчанию")
 }
 
+print("планетарий: обсерватория:")
+do {
+    var utc = Calendar(identifier: .gregorian)
+    utc.timeZone = TimeZone(secondsFromGMT: 0)!
+    // 2026-07-14 12:00 UTC.
+    let noon = Date(timeIntervalSince1970: 1_784_030_400)
+    func orbit(_ id: String, _ moisture: Double, _ period: Double,
+               rank: Int) -> Orrery.Orbit {
+        Orrery.Orbit(id: id, name: id, period: period, moisture: moisture,
+                     radius: 0.5, rank: rank)
+    }
+    // «Б» ближе к лучу по углу (0,35), но срок у неё длинный: придёт
+    // позже «А», у которой влажности больше, а круг короткий.
+    let orbits = [orbit("А", 0.5, 2, rank: 0), orbit("Б", 0.35, 40, rank: 1),
+                  orbit("В", 0.6, 10, rank: 2), orbit("Г", 0.9, 5, rank: 3),
+                  orbit("Д", 0.95, 30, rank: 4), orbit("Е", 0.1, 3, rank: 5)]
+    let cands = Observatory.candidates(orbits)
+    check(cands.map(\.id) == ["Б", "А", "В", "Г"],
+          "четыре ближайших к лучу по углу; уже сухая — не кандидат")
+    check(Observatory.winner(cands)?.id == "А",
+          "первой придёт та, у кого срок короче, а не та, что ближе по углу")
+    check(Observatory.candidates([orbits[0]]).isEmpty,
+          "одной планете вопрос не задают")
+
+    let entry = Observatory.pick("А", from: cands, now: noon, calendar: utc)!
+    check(entry.outcome == nil && entry.winner == "А", "ответ пока скрыт")
+    check(abs(entry.reveal.timeIntervalSince(noon) - 0.6 * 86_400) < 1,
+          "открывается, когда по часам придёт первая")
+    check(Observatory.pick("Я", from: cands, now: noon, calendar: utc) == nil,
+          "выбрать можно только из кандидаток")
+    check(Observatory.settle(entry, now: noon).outcome == nil,
+          "до срока — без ответа")
+    let hit = Observatory.settle(entry, now: entry.reveal)
+    check(hit.outcome == .hit, "угадал — звезда")
+    let slow = Observatory.pick("Б", from: cands, now: noon, calendar: utc)!
+    check(Observatory.settle(slow, now: slow.reveal).outcome == .miss,
+          "выбрал не ту — промах")
+    // Полив после выбора на ответ не влияет: итог решён в миг выбора.
+    check(slow.winner == "А" && slow.picked == "Б",
+          "победитель записан сразу, полив ничего не меняет")
+    let far = [orbit("К", 0.9, 100, rank: 0), orbit("Л", 0.8, 100, rank: 1)]
+    let late = Observatory.pick("К", from: Observatory.candidates(far),
+                                now: noon, calendar: utc)!
+    check(late.reveal == utc.startOfDay(for: noon).addingTimeInterval(2 * 86_400),
+          "ответ открывается не позже конца следующего дня")
+    check(Observatory.open([entry], now: noon.addingTimeInterval(3_600),
+                           calendar: utc) == false
+          && Observatory.open([entry], now: noon.addingTimeInterval(86_400),
+                              calendar: utc),
+          "один вопрос в день")
+
+    func win(_ back: Int) -> Observatory.Entry {
+        var one = entry
+        let at = noon.addingTimeInterval(-Double(back) * 86_400)
+        one.day = Observatory.dayKey(at, calendar: utc)
+        one.outcome = .hit
+        return one
+    }
+    check(Observatory.streak([win(0), win(1), win(2)], today: noon,
+                             calendar: utc) == 3, "три верных дня подряд")
+    check(Observatory.streak([win(1), win(2)], today: noon, calendar: utc) == 2,
+          "сегодня ещё не отвечали — серия не рвётся")
+    check(Observatory.streak([win(0), win(2)], today: noon, calendar: utc) == 1,
+          "пропущенный день рвёт серию")
+    check(Observatory.streak([win(3)], today: noon, calendar: utc) == 0,
+          "давняя серия кончилась")
+
+    let suite = UserDefaults(suiteName: "check.observatory")!
+    suite.removePersistentDomain(forName: "check.observatory")
+    let book = SkyBook(store: suite)
+    check(book.question(orbits, now: noon, calendar: utc).count == 4,
+          "вопрос дня задан")
+    book.pick("А", from: cands, now: noon, speed: 1, calendar: utc)
+    check(book.question(orbits, now: noon, calendar: utc).isEmpty,
+          "второй вопрос в тот же день не задают")
+    check(book.state.stars == 0, "до срока звезды нет")
+    book.settle(now: entry.reveal.addingTimeInterval(1), calendar: utc)
+    book.settle(now: entry.reveal.addingTimeInterval(2), calendar: utc)
+    check(book.state.stars == 1 && book.state.bestStreak == 1,
+          "звезда за верный ответ — один раз")
+    let again = SkyBook(store: suite)
+    check(again.state.stars == 1 && again.state.guesses.count == 1,
+          "звёзды переживают перезапуск")
+}
+
 if failed > 0 {
     print("\nне сошлось: \(failed)")
     exit(1)

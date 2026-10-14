@@ -10,6 +10,12 @@ struct SkyState: Codable, Equatable, Sendable {
     var record: Precision.Record?
     /// Последний полив, чья реакция (искра, спотыкание) уже показана.
     var seen: Date?
+    /// Вопросы «Обсерватории» последних дней.
+    var guesses: [Observatory.Entry] = []
+    /// Звёзды наблюдателя — верные ответы за всё время.
+    var stars = 0
+    /// Самая длинная серия верных дней.
+    var bestStreak = 0
 
     init() {}
 
@@ -17,10 +23,15 @@ struct SkyState: Codable, Equatable, Sendable {
         let box = try decoder.container(keyedBy: CodingKeys.self)
         record = try box.decodeIfPresent(Precision.Record.self, forKey: .record)
         seen = try box.decodeIfPresent(Date.self, forKey: .seen)
+        guesses = try box.decodeIfPresent([Observatory.Entry].self,
+                                          forKey: .guesses) ?? []
+        stars = try box.decodeIfPresent(Int.self, forKey: .stars) ?? 0
+        bestStreak = try box.decodeIfPresent(Int.self,
+                                             forKey: .bestStreak) ?? 0
     }
 
     enum CodingKeys: String, CodingKey {
-        case record, seen
+        case record, seen, guesses, stars, bestStreak
     }
 }
 
@@ -75,5 +86,59 @@ final class SkyBook {
             save()
         }
         return fresh
+    }
+
+    // MARK: - Обсерватория
+
+    /// Вопрос дня: кандидатки, если сегодня ещё не отвечали.
+    func question(_ orbits: [Orrery.Orbit], now: Date = Date(),
+                  calendar: Calendar = .current) -> [Observatory.Candidate] {
+        guard Observatory.open(state.guesses, now: now, calendar: calendar)
+        else { return [] }
+        return Observatory.candidates(orbits)
+    }
+
+    /// Сегодняшний ответ, если он есть.
+    func today(now: Date = Date(), calendar: Calendar = .current)
+        -> Observatory.Entry? {
+        let key = Observatory.dayKey(now, calendar: calendar)
+        return state.guesses.first { $0.day == key }
+    }
+
+    func pick(_ id: Plant.ID, from candidates: [Observatory.Candidate],
+              now: Date = Date(), speed: Double = Garden.speed,
+              calendar: Calendar = .current) {
+        guard Observatory.open(state.guesses, now: now, calendar: calendar),
+              let entry = Observatory.pick(id, from: candidates, now: now,
+                                           speed: speed, calendar: calendar)
+        else { return }
+        state.guesses.append(entry)
+        state.guesses = Array(state.guesses.suffix(Observatory.keep))
+        save()
+        settle(now: now, calendar: calendar)
+    }
+
+    /// Открывает ответы, чей срок пришёл: звезда за верный, серия.
+    func settle(now: Date = Date(), calendar: Calendar = .current) {
+        var changed = false
+        for index in state.guesses.indices {
+            let before = state.guesses[index]
+            let after = Observatory.settle(before, now: now)
+            guard after != before else { continue }
+            state.guesses[index] = after
+            if after.outcome == .hit { state.stars += 1 }
+            changed = true
+        }
+        let streak = Observatory.streak(state.guesses, today: now,
+                                        calendar: calendar)
+        if streak > state.bestStreak {
+            state.bestStreak = streak
+            changed = true
+        }
+        if changed { save() }
+    }
+
+    func streak(now: Date = Date(), calendar: Calendar = .current) -> Int {
+        Observatory.streak(state.guesses, today: now, calendar: calendar)
     }
 }

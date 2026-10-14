@@ -17,6 +17,7 @@ struct SkyJournal: View {
             ScrollView {
                 VStack(spacing: Metrics.groupGap) {
                     precision
+                    observatory
                 }
                 .padding(.horizontal, Metrics.contentMargin)
                 .padding(.top, 8)
@@ -85,6 +86,22 @@ struct SkyJournal: View {
                 note(Lang.text("Рекорд появится, когда за сезон наберётся несколько оценённых поливов."))
             }
             note(Lang.text("«В яблочко» — полив, когда в земле 20–40 % воды. Впритык и поздно счёт не портят, а ранний полив его снижает: награда только за точность."))
+        }
+    }
+
+    private var observatory: some View {
+        card(Lang.text("Обсерватория"), icon: "binoculars") {
+            HStack(alignment: .firstTextBaseline) {
+                Label("\(book.state.stars)", systemImage: "star.fill")
+                    .font(Typography.figure)
+                    .foregroundStyle(Palette.waterGlow)
+                Text("звёзд наблюдателя")
+                    .font(Typography.settingNote)
+                    .foregroundStyle(Palette.secondaryText)
+            }
+            note(Lang.format("Серия верных дней: %lld", book.streak()))
+            note(Lang.format("Лучшая серия: %lld", book.state.bestStreak))
+            note(Lang.text("Раз в день планетарий спрашивает, кто первым дойдёт до луча. Ответ решён заранее по срокам полива, поэтому полив после выбора ничего не меняет."))
         }
     }
 
