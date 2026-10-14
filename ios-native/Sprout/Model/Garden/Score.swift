@@ -2,6 +2,11 @@ import Foundation
 
 /// Запись журнала: кого полили и когда. Время настоящее, а не садовое: по
 /// садовым часам «сегодня» кончалось бы втрое чаще настоящего.
+/// Какой была земля до полива, по ответу хозяина.
+enum Soil: String, Codable, Hashable, Sendable {
+    case dry, fine, wet
+}
+
 struct Watering: Codable, Hashable, Sendable {
     var plant: Plant.ID
     var when: Date
@@ -30,6 +35,10 @@ struct Watering: Codable, Hashable, Sendable {
 
     /// Полив, который засчитывается, — не лишний.
     var counts: Bool { extra != true }
+
+    /// Ответ «Как земля была?» после полива рукой. Пусто — не спрашивали
+    /// или не ответили; в журналах прежних сборок пусто.
+    var soil: Soil? = nil
 
     /// Та же запись — по растению и мигу: доля воды в сравнении не участвует.
     func same(_ other: Watering) -> Bool {

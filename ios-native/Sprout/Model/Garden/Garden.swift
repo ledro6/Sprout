@@ -566,6 +566,14 @@ final class Garden {
         change(id) { $0.quiet = days }
     }
 
+    /// Ответ «Как земля была?» — ложится на запись полива. Срок не трогает:
+    /// его меняют отдельно, по двум ответам подряд (`SoilNote.suggest`).
+    func note(soil: Soil, for entry: Watering) {
+        guard let index = log.lastIndex(where: { $0.same(entry) }) else { return }
+        log[index].soil = soil
+        save()
+    }
+
     /// Пустая заметка — её нет.
     func note(_ id: Plant.ID, _ text: String) {
         let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)

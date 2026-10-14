@@ -4784,6 +4784,9 @@
         }
       }
     },
+    "%lld мин назад": {
+      "extractionState": "manual"
+    },
     "%lld поливов": {
       "extractionState": "manual",
       "localizations": {
@@ -8482,6 +8485,9 @@
           }
         }
       }
+    },
+    "%lld ч назад": {
+      "extractionState": "manual"
     },
     "%lld%%": {
       "extractionState": "manual",
@@ -22042,6 +22048,9 @@
       }
     },
     "В саду уже столько участников, сколько разрешает iCloud.": {
+      "extractionState": "manual"
+    },
+    "В самый раз": {
       "extractionState": "manual"
     },
     "В самый раз: карточка как раз светится оранжевым.": {
@@ -61371,6 +61380,9 @@
         }
       }
     },
+    "Ещё влажная": {
+      "extractionState": "manual"
+    },
     "Ещё впереди": {
       "extractionState": "manual",
       "localizations": {
@@ -71446,7 +71458,13 @@
         }
       }
     },
+    "Земля говорит": {
+      "extractionState": "manual"
+    },
     "Земля ещё влажная (%@)": {
+      "extractionState": "manual"
+    },
+    "Земля ещё влажная (%@): проверим через %lld дн": {
       "extractionState": "manual"
     },
     "Земля сухая?": {
@@ -82112,6 +82130,9 @@
           }
         }
       }
+    },
+    "Как земля была?": {
+      "extractionState": "manual"
     },
     "Как назовём?": {
       "extractionState": "manual"
@@ -150598,6 +150619,9 @@
         }
       }
     },
+    "По датчику %@, обновлено %@": {
+      "extractionState": "manual"
+    },
     "По запросу «%@» ничего не найдено": {
       "extractionState": "manual"
     },
@@ -150887,6 +150911,12 @@
           }
         }
       }
+    },
+    "По расчёту: вид «%@»": {
+      "extractionState": "manual"
+    },
+    "По расчёту: последний полив %lld дн назад, вид «%@»": {
+      "extractionState": "manual"
     },
     "По фото": {
       "extractionState": "manual"
@@ -230773,6 +230803,9 @@
         }
       }
     },
+    "Сократить до %lld дн?": {
+      "extractionState": "manual"
+    },
     "Соня": {
       "extractionState": "manual",
       "localizations": {
@@ -249552,6 +249585,9 @@
       }
     },
     "Уведомления выключены в Настройках телефона — напоминание о поливе не придёт.": {
+      "extractionState": "manual"
+    },
+    "Увеличить интервал до %lld дн?": {
       "extractionState": "manual"
     },
     "Уверенность: %@": {
@@ -270045,6 +270081,9 @@
     "времени покоя в этом месяце": {
       "extractionState": "manual"
     },
+    "вчера": {
+      "extractionState": "manual"
+    },
     "вы": {
       "extractionState": "manual",
       "localizations": {
@@ -276741,6 +276780,9 @@
           }
         }
       }
+    },
+    "только что": {
+      "extractionState": "manual"
     },
     "удалить": {
       "extractionState": "manual"

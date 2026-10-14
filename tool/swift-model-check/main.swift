@@ -6676,6 +6676,72 @@ do {
           "забыли последний полив — влажность по позавчерашнему")
 }
 
+print("обратная связь от почвы:")
+do {
+    let now = Date(timeIntervalSince1970: 1_784_030_400)  // 2026-07-14 12:00
+    let day: TimeInterval = 86_400
+    let yard = Garden(first: Seed.state)
+    let id = yard.rooms[0].plants[0].id
+    yard.rooms[0].plants[0].dryingDays = 10
+    yard.rooms[0].plants[0].sensor = nil
+    yard.rooms[0].plants[0].source = nil
+    for entry in yard.log.filter({ $0.plant == id }) {
+        yard.forget(entry, now: now)
+    }
+    yard.rooms[0].plants[0].moisture = 0.5
+    let bare = SoilNote.reason(for: yard.plant(id: id)!, log: [], now: now)
+    check(bare.hasPrefix("По расчёту") && bare.contains(yard.plant(id: id)!.species),
+          "без полива — расчёт и вид")
+    yard.rooms[0].plants[0].moisture = 0.9
+    check(SoilNote.reason(for: yard.plant(id: id)!, log: [], now: now)
+          .contains("влажная"), "влажная земля — строка про влажность")
+    yard.water(id, at: now - 2 * day, anyway: true)
+    yard.rooms[0].plants[0].moisture = 0.5
+    check(SoilNote.reason(for: yard.plant(id: id)!, log: yard.log, now: now)
+          .contains("2 дн назад"), "расчёт — дни от последнего полива")
+
+    yard.water(id, at: now - day, anyway: true)
+    let first = Watering(plant: id, when: now - 2 * day)
+    let second = Watering(plant: id, when: now - day)
+    check(SoilNote.suggest(for: yard.plant(id: id)!, log: yard.log) == nil,
+          "без ответов — предложения нет")
+    yard.note(soil: .wet, for: first)
+    check(SoilNote.suggest(for: yard.plant(id: id)!, log: yard.log) == nil,
+          "один ответ — ещё не повод")
+    yard.note(soil: .wet, for: second)
+    check(SoilNote.suggest(for: yard.plant(id: id)!, log: yard.log) == 11,
+          "два «влажно» подряд — N+1")
+    check(yard.plant(id: id)!.dryingDays == 10,
+          "срок не меняется, пока не нажали «Изменить»")
+    yard.note(soil: .dry, for: first)
+    yard.note(soil: .dry, for: second)
+    check(SoilNote.suggest(for: yard.plant(id: id)!, log: yard.log) == 9,
+          "два «сухо» подряд — N−1")
+    yard.note(soil: .fine, for: second)
+    check(SoilNote.suggest(for: yard.plant(id: id)!, log: yard.log) == nil,
+          "«в самый раз» — предложения нет")
+
+    yard.rooms[0].plants[0].sensor = Sensor(kind: .flora, id: "s", name: "Flower care")
+    do {
+        let sensored = yard.rooms[0].plants[0]
+        let sid = sensored.id
+        check(sensored.estimated || SoilNote.reason(for: sensored, log: [],
+                                                    now: now).hasPrefix("По датчику"),
+              "с датчиком — строка про датчик")
+        yard.water(sid, at: now - 2 * day, anyway: true)
+        yard.water(sid, at: now - day, anyway: true)
+        yard.note(soil: .wet, for: Watering(plant: sid, when: now - 2 * day))
+        yard.note(soil: .wet, for: Watering(plant: sid, when: now - day))
+        check(SoilNote.suggest(for: yard.plant(id: sid)!, log: yard.log) == nil,
+              "растение с датчиком — предложения нет")
+    }
+
+    let old = try? JSONDecoder().decode(
+        Watering.self, from: Data("{\"plant\":\"pr\",\"when\":700000000}".utf8))
+    check(old?.plant == "pr" && old?.soil == nil,
+          "старый журнал без «soil» читается")
+}
+
 if failed > 0 {
     print("\nне сошлось: \(failed)")
     exit(1)

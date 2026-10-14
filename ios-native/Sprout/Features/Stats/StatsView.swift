@@ -488,6 +488,12 @@ struct StatsView: View {
                             StatusLabel(status: line.status)
                                 .font(Typography.figureCaption)
                                 .foregroundStyle(Palette.secondaryText)
+                            if let plant = garden.plant(id: line.id) {
+                                Text(SoilNote.reason(for: plant, log: garden.log))
+                                    .font(Typography.figureCaption)
+                                    .foregroundStyle(Palette.secondaryText)
+                                    .fixedSize(horizontal: false, vertical: true)
+                            }
                         }
                         Spacer(minLength: 8)
                         Text(MoistureStatus.percent(line.moisture,

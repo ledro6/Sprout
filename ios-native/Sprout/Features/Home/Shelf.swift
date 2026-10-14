@@ -49,6 +49,7 @@ struct PlantRow: View {
     /// Крупный шрифт: строка растёт в высоту, а не режет текст — фото, текст
     /// и процент встают друг под другом.
     @Environment(\.dynamicTypeSize) private var type
+    @Environment(Garden.self) private var garden
 
     private var stacked: Bool { type.isAccessibilitySize }
 
@@ -76,6 +77,12 @@ struct PlantRow: View {
                     .font(Typography.cardCaption)
                     .lineLimit(stacked ? nil : 1)
                     .minimumScaleFactor(0.8)
+                // Откуда влажность: датчик, расчёт или «ещё влажная».
+                Text(SoilNote.reason(for: plant, log: garden.log))
+                    .font(Typography.cardCaption)
+                    .foregroundStyle(Palette.secondaryText)
+                    .lineLimit(stacked ? nil : 2)
+                    .minimumScaleFactor(0.7)
                 // Сухому «полить сегодня» уже сказал статус.
                 if plant.status != .urgent {
                     Text(plant.wateringLabel)

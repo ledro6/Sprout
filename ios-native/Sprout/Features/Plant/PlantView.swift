@@ -63,6 +63,8 @@ struct PlantView: View {
     /// Запись, у которой меняют дату, — лист «Дата полива».
     @State private var retimed = Date()
     @State private var retiming = false
+    /// Перерисовка после ответа или отказа: они лежат в настройках телефона.
+    @State private var soilTick = 0
 
     private var plant: Plant? { garden.plant(id: plantID) }
 
@@ -83,6 +85,15 @@ struct PlantView: View {
                         }
                         if let days = Rhythm.suggest(for: plant, log: garden.log) {
                             rhythm(plant, days: days)
+                                .transition(.blurReplace)
+                        }
+                        if let entry = pendingSoil(plant) {
+                            soilAsk(entry)
+                                .transition(.blurReplace)
+                        }
+                        if let days = SoilNote.suggest(for: plant, log: garden.log),
+                           !adviceHidden(plant) {
+                            soilAdvice(plant, days: days)
                                 .transition(.blurReplace)
                         }
                         care(plant)
@@ -471,6 +482,10 @@ struct PlantView: View {
                             .foregroundStyle(Palette.ink)
                             .animation(Motion.number, value: plant.status)
                         SourceBadge(estimated: plant.estimated)
+                        Text(SoilNote.reason(for: plant, log: garden.log))
+                            .font(Typography.settingNote)
+                            .foregroundStyle(Palette.secondaryText)
+                            .fixedSize(horizontal: false, vertical: true)
                     }
                 }
                 Text(garden.wateringLabel(plant))
@@ -691,6 +706,129 @@ struct PlantView: View {
                     withAnimation(Motion.enter) { garden.quiet(plantID, days) }
                 } label: {
                     Text("Оставить")
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.8)
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.glass)
+            }
+            .font(Typography.settingRow)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.horizontal, 25)
+        .padding(.vertical, 22)
+        .sproutPlate(in: plate)
+        .sproutRide()
+    }
+
+    /// Последний полив рукой, на который ещё не ответили «Как земля была?»:
+    /// не старше суток, у растения без датчика, и не пропущенный.
+    private func pendingSoil(_ plant: Plant) -> Watering? {
+        guard plant.sensor == nil,
+              let last = garden.log.filter({ $0.plant == plant.id })
+                  .max(by: { $0.when < $1.when }),
+              last.soil == nil,
+              Date().timeIntervalSince(last.when) < 86_400,
+              !soilSkips.contains(skipKey(last))
+        else { return nil }
+        return last
+    }
+
+    private var soilSkips: Set<String> {
+        Set(UserDefaults.standard.stringArray(forKey: "soil.skipped") ?? [])
+    }
+
+    private func skipKey(_ entry: Watering) -> String {
+        "\(entry.plant)|\(entry.when.timeIntervalSince1970)"
+    }
+
+    /// Предложение срока отклонили до нового ответа: помним ответ, на
+    /// котором отказались.
+    private func adviceHidden(_ plant: Plant) -> Bool {
+        guard let latest = SoilNote.answered(for: plant, log: garden.log).last
+        else { return false }
+        return UserDefaults.standard.double(forKey: "soil.advice.\(plant.id)")
+            == latest.when.timeIntervalSince1970
+    }
+
+    /// Вопрос о земле после полива рукой: одна строка, «×» — пропустить.
+    private func soilAsk(_ entry: Watering) -> some View {
+        HStack(spacing: 10) {
+            Text("Как земля была?")
+                .font(Typography.settingNote)
+                .foregroundStyle(Palette.secondaryText)
+                .lineLimit(1)
+                .minimumScaleFactor(0.8)
+            Spacer(minLength: 4)
+            soilChoice(Lang.key("Сухая"), .dry, entry)
+            soilChoice(Lang.key("В самый раз"), .fine, entry)
+            soilChoice(Lang.key("Ещё влажная"), .wet, entry)
+            Button {
+                var skips = Array(soilSkips)
+                skips.append(skipKey(entry))
+                UserDefaults.standard.set(skips, forKey: "soil.skipped")
+                soilTick += 1
+            } label: {
+                Image(systemName: "xmark")
+                    .font(Typography.settingNote)
+            }
+            .buttonStyle(.plain)
+            .foregroundStyle(Palette.secondaryText)
+            .accessibilityLabel("Пропустить")
+        }
+        .padding(.horizontal, 18)
+        .padding(.vertical, 12)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .sproutPlate(in: plate)
+        .sproutRide()
+    }
+
+    private func soilChoice(_ title: String, _ soil: Soil,
+                            _ entry: Watering) -> some View {
+        Button {
+            withAnimation(Motion.enter) { garden.note(soil: soil, for: entry) }
+            Feel.toss()
+        } label: {
+            Text(Lang.text(title))
+                .font(Typography.settingNote.weight(.medium))
+                .lineLimit(1)
+                .minimumScaleFactor(0.7)
+        }
+        .buttonStyle(.plain)
+        .foregroundStyle(Palette.accent)
+    }
+
+    /// Два ответа подряд — предложение срока. Меняет срок только кнопка
+    /// «Изменить» (тот же `adopt`, что у ритма); «Не сейчас» прячет до
+    /// нового ответа.
+    private func soilAdvice(_ plant: Plant, days: Double) -> some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Label("Земля говорит", systemImage: "drop.halffull")
+                .font(Typography.detail)
+                .foregroundStyle(Palette.ink)
+            Text(days > plant.dryingDays
+                 ? Lang.format("Увеличить интервал до %lld дн?", Int(days))
+                 : Lang.format("Сократить до %lld дн?", Int(days)))
+                .font(Typography.settingNote)
+                .foregroundStyle(Palette.secondaryText)
+                .fixedSize(horizontal: false, vertical: true)
+            HStack(spacing: Metrics.actionGap) {
+                Button { adopt(days) } label: {
+                    Text("Изменить")
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.8)
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.glassProminent)
+                .tint(Palette.accentFill)
+                Button {
+                    if let latest = SoilNote.answered(for: plant, log: garden.log).last {
+                        UserDefaults.standard.set(latest.when.timeIntervalSince1970,
+                                                  forKey: "soil.advice.\(plant.id)")
+                    }
+                    soilTick += 1
+                } label: {
+                    Text("Не сейчас")
                         .lineLimit(1)
                         .minimumScaleFactor(0.8)
                         .frame(maxWidth: .infinity)
