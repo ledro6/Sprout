@@ -6467,6 +6467,90 @@ do {
           "звёзды переживают перезапуск")
 }
 
+print("планетарий: редкие события:")
+do {
+    var utc = Calendar(identifier: .gregorian)
+    utc.timeZone = TimeZone(secondsFromGMT: 0)!
+    let noon = Date(timeIntervalSince1970: 1_784_030_400)  // 2026-07-14 12:00
+    func pour(_ plant: String, _ left: Double?, back days: Double,
+              extra: Bool? = nil) -> Watering {
+        Watering(plant: plant, when: noon.addingTimeInterval(-days * 86_400),
+                 left: left, extra: extra)
+    }
+    func grown(_ name: String, _ moisture: Double,
+               added: DateComponents? = nil) -> Plant {
+        var plant = plantNamed(name, moisture: moisture, dryingDays: 7)
+        if let added { plant.addedOn = added }
+        return plant
+    }
+    let calm = [grown("А", 0.8), grown("Б", 0.6)]
+    check(Rare.aurora(calm, log: [pour("А", 0.3, back: 2)], now: noon,
+                      calendar: utc), "неделя без сухих — северное сияние")
+    check(Rare.aurora(calm, log: [pour("А", nil, back: 2)], now: noon,
+                      calendar: utc), "полив без доли воды сиянию не мешает")
+    check(!Rare.aurora([grown("А", 0.1), grown("Б", 0.6)], log: [], now: noon,
+                       calendar: utc), "сухое растение сейчас — сияния нет")
+    check(!Rare.aurora(calm, log: [pour("А", 0.1, back: 2)], now: noon,
+                       calendar: utc), "поливали впритык — оно пересыхало")
+    check(!Rare.aurora(calm, log: [pour("А", 0.9, back: 2)], now: noon,
+                       calendar: utc),
+          "ранний полив сияния не даёт: иначе награда за лишнее")
+    check(!Rare.aurora(calm, log: [pour("А", 0.3, back: 2, extra: true)],
+                       now: noon, calendar: utc), "лишний полив — тем более")
+    check(Rare.aurora(calm, log: [pour("А", 0.9, back: 9)], now: noon,
+                      calendar: utc), "ранний полив давнее недели не в счёт")
+    let young = DateComponents(year: 2026, month: 7, day: 12)
+    check(!Rare.aurora([grown("А", 0.8, added: young)], log: [], now: noon,
+                       calendar: utc), "сад моложе недели без сияния")
+    check(!Rare.aurora([], log: [], now: noon, calendar: utc),
+          "пустому саду сияния нет")
+
+    let fresh = [grown("Нов", 1, added: young),
+                 grown("Был", 1, added: DateComponents(year: 2026, month: 7,
+                                                       day: 11)),
+                 grown("Завтра", 1, added: DateComponents(year: 2026,
+                                                          month: 7, day: 15))]
+    check(Rare.comets(fresh, now: noon, calendar: utc).map(\.name) == ["Нов"],
+          "комета — растение не старше трёх дней")
+
+    let parade = [pour("А", 0.3, back: 1), pour("Б", 0.1, back: 1),
+                  pour("В", 0.25, back: 1)]
+    check(Rare.meteors(parade, now: noon, calendar: utc)
+            == ["2026-07-13": 3], "парад вчера, все вовремя — метеорный дождь")
+    check(Rare.meteors(parade + [pour("Г", 0.9, back: 1)], now: noon,
+                       calendar: utc).isEmpty,
+          "один ранний полив отменяет дождь")
+    check(Rare.meteors(parade + [pour("Г", 0.3, back: 1, extra: true)],
+                       now: noon, calendar: utc).isEmpty,
+          "лишний полив — тоже")
+    check(Rare.meteors(Array(parade.prefix(2)), now: noon, calendar: utc)
+            .isEmpty, "двое — ещё не парад")
+    check(Rare.meteors([pour("А", 0.3, back: 0.1), pour("Б", 0.3, back: 0.1),
+                        pour("В", 0.3, back: 0.1)], now: noon, calendar: utc)
+            .isEmpty, "сегодняшний день ещё не кончился")
+
+    let found = Rare.detect(plants: fresh + calm, log: parade, old: [],
+                            now: noon, calendar: utc)
+    check(Set(found.map(\.kind)) == [.comet, .meteor],
+          "сияния нет (есть юные и сухие нет — но парад поливал впритык)")
+    let suite = UserDefaults(suiteName: "check.rare")!
+    suite.removePersistentDomain(forName: "check.rare")
+    let book = SkyBook(store: suite)
+    book.discover(plants: fresh, log: parade, now: noon, calendar: utc)
+    check(book.unseen.count == 2, "новое записано, не показано")
+    book.markShown()
+    book.discover(plants: fresh, log: parade, now: noon, calendar: utc)
+    check(book.unseen.isEmpty && book.state.events.count == 2,
+          "каждое событие — один раз")
+    check(SkyBook(store: suite).state.events.count == 2,
+          "история переживает перезапуск")
+    let old = [Rare.Event(kind: .aurora, key: "aurora:x",
+                          when: noon.addingTimeInterval(-3 * 86_400))]
+    check(Rare.detect(plants: calm, log: [], old: old, now: noon,
+                      calendar: utc).isEmpty,
+          "сияние не повторяется, пока не прошла новая неделя")
+}
+
 if failed > 0 {
     print("\nне сошлось: \(failed)")
     exit(1)

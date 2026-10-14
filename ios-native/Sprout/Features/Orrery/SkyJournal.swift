@@ -18,6 +18,7 @@ struct SkyJournal: View {
                 VStack(spacing: Metrics.groupGap) {
                     precision
                     observatory
+                    events
                 }
                 .padding(.horizontal, Metrics.contentMargin)
                 .padding(.top, 8)
@@ -102,6 +103,33 @@ struct SkyJournal: View {
             note(Lang.format("Серия верных дней: %lld", book.streak()))
             note(Lang.format("Лучшая серия: %lld", book.state.bestStreak))
             note(Lang.text("Раз в день планетарий спрашивает, кто первым дойдёт до луча. Ответ решён заранее по срокам полива, поэтому полив после выбора ничего не меняет."))
+        }
+    }
+
+    private var events: some View {
+        let past = Array(book.state.events.suffix(12).reversed())
+        return card(Lang.text("Редкие события"), icon: "sparkles") {
+            if past.isEmpty {
+                note(Lang.text("Пока тихо. Северное сияние — неделя без пересохших и без ранних поливов; комета — новое растение; метеорный дождь — парад, где все напились вовремя."))
+            }
+            ForEach(past, id: \.key) { event in
+                let line = OrreryView.caption(event)
+                HStack(alignment: .firstTextBaseline, spacing: 10) {
+                    Image(systemName: line.icon)
+                        .foregroundStyle(Palette.waterGlow)
+                        .frame(width: 22)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(line.text)
+                            .font(Typography.settingNote)
+                            .foregroundStyle(Palette.ink)
+                            .fixedSize(horizontal: false, vertical: true)
+                        Text(event.when.formatted(date: .abbreviated,
+                                                  time: .omitted))
+                            .font(Typography.figureCaption)
+                            .foregroundStyle(Palette.secondaryText)
+                    }
+                }
+            }
         }
     }
 

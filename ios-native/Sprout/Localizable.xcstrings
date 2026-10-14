@@ -89608,6 +89608,9 @@
     "Кольцо — кому скоро пить и у кого сухо. Ниже — самые сухие растения.": {
       "extractionState": "manual"
     },
+    "Комета: %@ только что прилетела в сад.": {
+      "extractionState": "manual"
+    },
     "Комнат": {
       "extractionState": "manual",
       "localizations": {
@@ -104854,6 +104857,9 @@
           }
         }
       }
+    },
+    "Метеорный дождь: у парада все напились вовремя.": {
+      "extractionState": "manual"
     },
     "Метка записана": {
       "extractionState": "manual"
@@ -161008,6 +161014,9 @@
     "Пока пусто": {
       "extractionState": "manual"
     },
+    "Пока тихо. Северное сияние — неделя без пересохших и без ранних поливов; комета — новое растение; метеорный дождь — парад, где все напились вовремя.": {
+      "extractionState": "manual"
+    },
     "Покажите друзьям, как рос ваш сад.": {
       "extractionState": "manual",
       "localizations": {
@@ -205309,6 +205318,9 @@
     "Расчёт": {
       "extractionState": "manual"
     },
+    "Редкие события": {
+      "extractionState": "manual"
+    },
     "Реже всех": {
       "extractionState": "manual",
       "localizations": {
@@ -215406,6 +215418,9 @@
       }
     },
     "Сделано": {
+      "extractionState": "manual"
+    },
+    "Северное сияние: неделю в саду никто не пересыхал.": {
       "extractionState": "manual"
     },
     "Сегодня": {

@@ -69,7 +69,12 @@ struct OrreryView: View {
                 .padding(.top, 8)
                 .padding(.bottom, Metrics.barGap)
             }
-            .background { StarField() }
+            .background {
+                ZStack {
+                    StarField()
+                    SkyEvents(kinds: Set(book.unseen.map(\.kind)))
+                }
+            }
             .walk(.orrery, scroll: reader)
         }
         // Панелью, а не поверх: прокрутка уходит под шапку мягким краем, как
@@ -116,9 +121,13 @@ struct OrreryView: View {
         .onAppear {
             book.standing(garden.log, side: side)
             book.settle()
+            discover()
             react()
         }
-        .onChange(of: garden.ticked) { book.settle() }
+        .onChange(of: garden.ticked) {
+            book.settle()
+            discover()
+        }
         .onChange(of: garden.log.count) {
             book.standing(garden.log, side: side)
             react()
@@ -126,7 +135,18 @@ struct OrreryView: View {
         .sheet(isPresented: $journal) {
             SkyJournal().environment(garden)
         }
-        .onDisappear { stop() }
+        .onDisappear {
+            stop()
+            // Показанные события больше в «Небо сада» не вернутся.
+            book.markShown()
+        }
+    }
+
+    // MARK: - Редкие события
+
+    private func discover() {
+        book.discover(plants: garden.rooms.flatMap(\.plants),
+                      log: garden.log)
     }
 
     // MARK: - Обсерватория
@@ -628,11 +648,25 @@ struct OrreryView: View {
         let drift = Date().timeIntervalSince(garden.ticked) * Garden.speed
             / 86_400
         let omens = Orrery.omens(orbits, drift: drift)
-        if !omens.isEmpty {
+        let events = book.unseen
+        if !omens.isEmpty || !events.isEmpty {
             VStack(alignment: .leading, spacing: Metrics.rowGap) {
                 Label("Небо сада", systemImage: "sparkles")
                     .font(Typography.detail)
                     .foregroundStyle(Palette.ink)
+                ForEach(events, id: \.key) { event in
+                    let line = Self.caption(event)
+                    HStack(alignment: .firstTextBaseline, spacing: 10) {
+                        Image(systemName: line.icon)
+                            .foregroundStyle(Palette.waterGlow)
+                            .frame(width: 22)
+                        Text(line.text)
+                            .font(Typography.settingNote)
+                            .foregroundStyle(Palette.ink)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                    .transition(.blurReplace)
+                }
                 ForEach(omens, id: \.self) { omen in
                     let line = Self.line(omen)
                     HStack(alignment: .firstTextBaseline, spacing: 10) {
@@ -652,6 +686,22 @@ struct OrreryView: View {
             .sproutPlate(in: RoundedRectangle(cornerRadius: Metrics.cardRadius,
                                               style: .continuous))
             .animation(Motion.pill, value: omens)
+        }
+    }
+
+    /// Строка о редком событии для «Неба сада» и журнала.
+    static func caption(_ event: Rare.Event) -> (icon: String, text: String) {
+        switch event.kind {
+        case .aurora:
+            ("moon.stars",
+             Lang.text("Северное сияние: неделю в саду никто не пересыхал."))
+        case .comet:
+            ("sparkle",
+             Lang.format("Комета: %@ только что прилетела в сад.",
+                         event.subject))
+        case .meteor:
+            ("sparkles",
+             Lang.text("Метеорный дождь: у парада все напились вовремя."))
         }
     }
 

@@ -16,6 +16,8 @@ struct SkyState: Codable, Equatable, Sendable {
     var stars = 0
     /// Самая длинная серия верных дней.
     var bestStreak = 0
+    /// Редкие события, от старых к новым.
+    var events: [Rare.Event] = []
 
     init() {}
 
@@ -28,10 +30,12 @@ struct SkyState: Codable, Equatable, Sendable {
         stars = try box.decodeIfPresent(Int.self, forKey: .stars) ?? 0
         bestStreak = try box.decodeIfPresent(Int.self,
                                              forKey: .bestStreak) ?? 0
+        events = try box.decodeIfPresent([Rare.Event].self,
+                                         forKey: .events) ?? []
     }
 
     enum CodingKeys: String, CodingKey {
-        case record, seen, guesses, stars, bestStreak
+        case record, seen, guesses, stars, bestStreak, events
     }
 }
 
@@ -140,5 +144,30 @@ final class SkyBook {
 
     func streak(now: Date = Date(), calendar: Calendar = .current) -> Int {
         Observatory.streak(state.guesses, today: now, calendar: calendar)
+    }
+
+    // MARK: - Редкие события
+
+    /// Столько событий помним.
+    static let keepEvents = 60
+
+    /// Новое на небе: записывается в книгу, показанным ещё не считается.
+    func discover(plants: [Plant], log: [Watering], now: Date = Date(),
+                  calendar: Calendar = .current) {
+        let found = Rare.detect(plants: plants, log: log, old: state.events,
+                                now: now, calendar: calendar)
+        guard !found.isEmpty else { return }
+        state.events = Array((state.events + found).suffix(Self.keepEvents))
+        save()
+    }
+
+    /// Ещё не показанные — для строк «Неба сада» и картинки.
+    var unseen: [Rare.Event] { state.events.filter { !$0.shown } }
+
+    /// Показанное больше не возвращается в «Небо сада».
+    func markShown() {
+        guard state.events.contains(where: { !$0.shown }) else { return }
+        for index in state.events.indices { state.events[index].shown = true }
+        save()
     }
 }
