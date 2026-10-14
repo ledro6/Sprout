@@ -6860,6 +6860,7 @@ func pickKind(_ pick: Store.Pick) -> String {
     case .main: "main"
     case .copy: "copy"
     case .absent: "absent"
+    case .locked: "locked"
     case .broken: "broken"
     }
 }
@@ -6880,15 +6881,19 @@ do {
     let junk = Data("не json".utf8)
     let good = try! JSONEncoder().encode(
         GardenState(owner: "", rooms: [], savedAt: Date()))
-    check(pickKind(Store.pick(main: nil, copy: good)) == "absent",
+    check(pickKind(Store.pick(main: nil, copy: good, exists: false)) == "absent",
           "нет основного файла — сад заново, копию не подменяем")
-    check(pickKind(Store.pick(main: good, copy: junk)) == "main",
+    check(pickKind(Store.pick(main: nil, copy: good, exists: true)) == "locked",
+          "файл есть, а не читается (закрыт) — сад не трогаем, копию не берём")
+    check(pickKind(Store.pick(main: nil, copy: nil, exists: true)) == "locked",
+          "закрыт и без копии — тоже не трогаем")
+    check(pickKind(Store.pick(main: good, copy: junk, exists: true)) == "main",
           "основной читается — копия не нужна")
-    check(pickKind(Store.pick(main: junk, copy: good)) == "copy",
+    check(pickKind(Store.pick(main: junk, copy: good, exists: true)) == "copy",
           "основной битый, копия читается — берём копию")
-    check(pickKind(Store.pick(main: junk, copy: junk)) == "broken",
+    check(pickKind(Store.pick(main: junk, copy: junk, exists: true)) == "broken",
           "оба битые — не подменяем молча")
-    check(pickKind(Store.pick(main: junk, copy: nil)) == "broken",
+    check(pickKind(Store.pick(main: junk, copy: nil, exists: true)) == "broken",
           "битый без копии — тоже спрашиваем")
 }
 
@@ -6943,18 +6948,36 @@ do {
 do {
     let folder = scratchFolder("write")
     defer { Store.testing = nil; try? FileManager.default.removeItem(at: folder) }
-    // Путь занят папкой — записать файл не выйдет.
-    try! FileManager.default.createDirectory(at: Store.garden!,
-                                             withIntermediateDirectories: true)
+    // Папки нет — записать файл не выйдет (а файла нет, так что не закрыт).
+    Store.testing = folder.appendingPathComponent("missing", isDirectory: true)
     let garden = Garden(first: Seed.state)
     let count = garden.plantCount
     garden.save()
     check(garden.saveFailed && garden.plantCount == count,
           "не записалось — флаг поднят, сад в памяти цел")
-    try! FileManager.default.removeItem(at: Store.garden!)
+    try! FileManager.default.createDirectory(at: Store.testing!,
+                                             withIntermediateDirectories: true)
     garden.save()
     check(!garden.saveFailed && Store.read() != nil,
           "записалось — флаг снят")
+}
+
+do {
+    let folder = scratchFolder("locked")
+    defer { Store.testing = nil; try? FileManager.default.removeItem(at: folder) }
+    // Файл есть, но не читается (закрыт): сад пустой, поверх не пишем.
+    try! FileManager.default.createDirectory(at: Store.garden!,
+                                             withIntermediateDirectories: true)
+    let garden = Garden(first: Seed.state)
+    check(garden.locked, "закрыт — флаг поднят")
+    garden.save()
+    check(!garden.saveFailed && FileManager.default.fileExists(atPath: Store.garden!.path),
+          "закрыт — не пишем поверх, без ошибки записи")
+    try! FileManager.default.removeItem(at: Store.garden!)
+    garden.unlock()
+    check(!garden.locked, "открыли телефон — флаг снят")
+    garden.save()
+    check(Store.read() != nil, "после открытия сад записывается")
 }
 
 // MARK: - Полив не зависит от ИИ (T-45)

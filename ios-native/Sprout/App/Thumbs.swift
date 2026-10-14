@@ -14,6 +14,8 @@ enum Thumbs {
         try? files.createDirectory(at: folder, withIntermediateDirectories: true)
         var keep: Set<String> = []
         for plant in rooms.flatMap(\.plants) {
+            // Отменили (сад опять поменялся) — новый проход доделает сам.
+            guard !Task.isCancelled else { return }
             guard let file = Store.thumb(for: plant) else { continue }
             keep.insert(file.lastPathComponent)
             guard !files.fileExists(atPath: file.path) else { continue }
@@ -25,6 +27,9 @@ enum Thumbs {
             else { continue }
             try? data.write(to: file, options: .atomic)
         }
+        // Отменённый проход знает не все растения: удалять по неполному
+        // списку нельзя.
+        guard !Task.isCancelled else { return }
         for name in (try? files.contentsOfDirectory(atPath: folder.path)) ?? []
             where !keep.contains(name) {
             try? files.removeItem(at: folder.appendingPathComponent(name))

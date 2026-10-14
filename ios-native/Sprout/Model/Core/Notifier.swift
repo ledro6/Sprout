@@ -31,6 +31,7 @@ enum Notifier {
 
     /// Кто разбирает нажатия. Держим сами: центр уведомлений держит его
     /// слабо.
+    @MainActor
     private static let postman = Postman()
 
     /// При запуске, до первого уведомления: иначе кнопка не появится, а
@@ -224,6 +225,7 @@ enum Notifier {
 /// Нажатия по уведомлениям. «Полил» приходит и к закрытому приложению —
 /// система поднимает его в фоне, и полив ложится в тот же `Garden.shared`,
 /// что видят экраны и Siri.
+@MainActor
 private final class Postman: NSObject, UNUserNotificationCenterDelegate {
     func userNotificationCenter(_ center: UNUserNotificationCenter,
                                 didReceive response: UNNotificationResponse)
@@ -231,17 +233,15 @@ private final class Postman: NSObject, UNUserNotificationCenterDelegate {
         let info = response.notification.request.content.userInfo
         if response.actionIdentifier == UNNotificationDefaultActionIdentifier,
            let id = info[Notifier.open] as? String {
-            await MainActor.run { Summon.shared.plant = id }
+            Summon.shared.plant = id
             return
         }
         let action = response.actionIdentifier
-        await MainActor.run {
-            Journal.shared.note(.notificationAction,
-                                action == Notifier.tomorrow ? "tomorrow"
-                                    : action == Notifier.pourAll ? "pour_all"
-                                    : action == Notifier.pour ? "pour"
-                                    : "other")
-        }
+        Journal.shared.note(.notificationAction,
+                            action == Notifier.tomorrow ? "tomorrow"
+                                : action == Notifier.pourAll ? "pour_all"
+                                : action == Notifier.pour ? "pour"
+                                : "other")
         switch response.actionIdentifier {
         case Notifier.tomorrow:
             // Отложить: расписание заново, но не раньше завтрашнего утра.
@@ -255,33 +255,31 @@ private final class Postman: NSObject, UNUserNotificationCenterDelegate {
             let ids = info["plants"] as? [String] ?? []
             let span: TimeInterval = response.actionIdentifier == Notifier.hour
                 ? 3_600 : 7 * 86_400
-            await MainActor.run {
-                let garden = Garden.shared
-                garden.reload()
-                garden.postpone(ids, until: Date().addingTimeInterval(span))
-            }
+            let garden = Garden.shared
+            garden.reload()
+            garden.postpone(ids, until: Date().addingTimeInterval(span))
             await Notifier.replan()
         case Notifier.hush:
             let ids = info["plants"] as? [String] ?? []
-            await MainActor.run {
-                let garden = Garden.shared
-                garden.reload()
-                garden.hush(ids)
-            }
+            let garden = Garden.shared
+            garden.reload()
+            garden.hush(ids)
             await Notifier.replan()
         case Notifier.pour, Notifier.pourAll:
             guard let ids = info["plants"] as? [String] else { return }
-            let wet = await MainActor.run { () -> Plant? in
-                let garden = Garden.shared
-                // Приложение могло стоять в фоне — сперва чужие правки
-                // (виджет), потом прошедшее время.
-                garden.reload()
-                garden.advance()
-                // Поливает только тех, кому пора пить (`waterNeeded`):
-                // влажную землю «Полил» не трогает.
-                guard garden.waterNeeded(ids).isEmpty else { return nil }
-                return ids.first { garden.wetCheck($0) != nil }
+            let garden = Garden.shared
+            // Приложение могло стоять в фоне — сперва чужие правки
+            // (виджет), потом прошедшее время.
+            garden.reload()
+            garden.advance()
+            // Поливает только тех, кому пора пить (`waterNeeded`):
+            // влажную землю «Полил» не трогает.
+            let wet: Plant?
+            if garden.waterNeeded(ids).isEmpty {
+                wet = ids.first { garden.wetCheck($0) != nil }
                     .flatMap { garden.plant(id: $0) }
+            } else {
+                wet = nil
             }
             if let wet { await Notifier.wet(wet) }
             await Notifier.replan()

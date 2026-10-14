@@ -18,6 +18,8 @@ struct RootView: View {
     @Environment(\.scenePhase) private var phase
     /// Кто просил воды, пока нас не было («Уезжаю»): один раз спросим.
     @State private var homecoming: [Plant.ID]?
+    /// Картинки для виджета: прежний проход отменяем, новый идёт вместо него.
+    @State private var thumbs: Task<Void, Never>?
 
     /// Вкладка на экране: просьба извне открыть растение или сад в AR ведёт
     /// на главную, где бы ни были.
@@ -148,8 +150,9 @@ struct RootView: View {
         .onChange(of: garden.roster, initial: true) { _, _ in
             SproutShortcuts.updateAppShortcutParameters()
             // Картинки для виджета — тем же поводом: состав сада сменился.
+            thumbs?.cancel()
             let rooms = garden.rooms
-            Task(priority: .utility) { await Thumbs.export(rooms) }
+            thumbs = Task(priority: .utility) { await Thumbs.export(rooms) }
             // И свои модели для AR: мастерская отмечает собранные и
             // выбрасывает модели и сканы ушедших растений. Сама она ничего
             // не собирает — готовые модели видов лежат в приложении.

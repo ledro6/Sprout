@@ -33,6 +33,12 @@ struct SproutApp: App {
         WatchLink.shared.start()
         // До первого окна: тема встаёт раньше первого кадра.
         WindowTheme.watch()
+        // Телефон открыли — закрытый сад читаем заново (см. `Garden.unlock`).
+        _ = NotificationCenter.default.addObserver(
+            forName: UIApplication.protectedDataDidBecomeAvailableNotification,
+            object: nil, queue: .main) { _ in
+            Garden.shared.unlock()
+        }
     }
 
     var body: some Scene {

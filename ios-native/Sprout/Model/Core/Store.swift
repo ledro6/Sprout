@@ -73,6 +73,9 @@ enum Store {
         case copy(GardenState)
         /// Основного файла нет: сад начинается заново, как и раньше.
         case absent
+        /// Файл есть, но не читается (телефон закрыт, защита данных): сад не
+        /// заменяем ни пустым, ни копией — ждём, пока откроют телефон.
+        case locked
         /// Оба не читаются: сад не заменяем молча, спрашиваем хозяина.
         case broken
     }
@@ -83,8 +86,10 @@ enum Store {
 
     /// Чистое решение, что брать. Файлы передаются данными — тесты берут
     /// свои.
-    static func pick(main: Data?, copy: Data?) -> Pick {
-        guard let main else { return .absent }
+    static func pick(main: Data?, copy: Data?, exists: Bool) -> Pick {
+        // Файла нет — сад заново. Есть, но не читается — закрыт: пустой сад
+        // на его месте затёр бы настоящий.
+        guard let main else { return exists ? .locked : .absent }
         if let state = decode(main) { return .main(state) }
         if let copy, let state = decode(copy) { return .copy(state) }
         return .broken
@@ -96,10 +101,11 @@ enum Store {
     static func load() -> Pick {
         guard let file = garden else { return .absent }
         let main = try? Data(contentsOf: file)
+        let exists = FileManager.default.fileExists(atPath: file.path)
         let kept = copy.flatMap { try? Data(contentsOf: $0) }
-        let picked = pick(main: main, copy: kept)
+        let picked = pick(main: main, copy: kept, exists: exists)
         switch picked {
-        case .main, .absent:
+        case .main, .absent, .locked:
             break
         case .copy:
             // Не убрали битый — его не затираем копией.

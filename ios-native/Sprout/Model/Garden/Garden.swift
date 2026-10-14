@@ -60,11 +60,17 @@ final class Garden {
     init(first: GardenState = Seed.blank) {
         let state: GardenState
         var broken = false
+        var waiting = false
         switch Store.load() {
         case .main(let read), .copy(let read):
             state = read
         case .absent:
             state = first
+        case .locked:
+            // Файл есть, но закрыт: сад пустой и не пишется, пока телефон не
+            // откроют — см. `unlock`.
+            state = first
+            waiting = true
         case .broken:
             // Файл не читается и отложен в сторону: сад пустой, спросим.
             state = first
@@ -81,12 +87,18 @@ final class Garden {
         // Нового сада на диске нет, и его отсчёт — с запуска.
         lastTick = min(state.savedAt, Date())
         damaged = broken
+        locked = waiting
     }
 
     /// Основной файл не читается, и сад пустой в памяти: спросить хозяина
     /// (`GardenRecovery`). Одноразово — после ответа сбрасывается, а
     /// отложенный файл на диске больше не мешает.
     private(set) var damaged = false
+
+    /// Файл на диске есть, но закрыт (телефон заблокирован). Сад в памяти
+    /// пустой, и `save` его не пишет — иначе затёр бы настоящий. Открыли
+    /// телефон — `unlock` читает файл заново.
+    private(set) var locked = false
 
     /// Не записалось: сад в памяти цел, плашка на «Сегодня» просит повторить.
     private(set) var saveFailed = false
@@ -114,6 +126,24 @@ final class Garden {
     /// и был.
     func dismissDamage() {
         damaged = false
+    }
+
+    /// Телефон открыли: закрытый файл читаем заново. Сад из него — в память;
+    /// испорченный файл уходит в карантин и приводит к вопросу о восстановлении.
+    func unlock() {
+        guard locked else { return }
+        switch Store.load() {
+        case .locked:
+            return
+        case .main(let read), .copy(let read):
+            take(read)
+            roster += 1
+        case .absent:
+            break
+        case .broken:
+            damaged = true
+        }
+        locked = false
     }
 
     /// Файл поменяли без нас — берём его. Зовётся при возвращении на экран и
@@ -1004,7 +1034,8 @@ final class Garden {
 
     /// На действиях хозяина и при уходе в фон, но не на каждом такте часов.
     func save() {
-        guard let file else { return }
+        // Закрытый файл не пишем: пустой сад затёр бы настоящий.
+        guard let file, !locked else { return }
         do {
             let encoder = JSONEncoder()
             encoder.outputFormatting = .prettyPrinted
