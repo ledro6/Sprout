@@ -156,6 +156,8 @@ final class Garden {
 
     /// Сад из слепка — в память, с отметкой записи.
     private func take(_ state: GardenState) {
+        // Файл прочитался — значит, открыт: дальше пишем как обычно.
+        locked = false
         owner = state.owner
         rooms = state.rooms
         log = state.log
