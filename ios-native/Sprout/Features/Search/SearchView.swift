@@ -84,7 +84,7 @@ struct SearchView: View {
                 }
                 .toolbar {
                     ToolbarItem(placement: .topBarTrailing) {
-                        Button("Закрыть") { specimen = nil }
+                        Button("Закрыть", role: .close) { specimen = nil }
                     }
                 }
             }
@@ -129,7 +129,7 @@ struct SearchView: View {
                 .sproutRide()
                 .hintSpot(.searchRecents)
 
-                Button("Очистить") {
+                Button("Очистить", role: .destructive) {
                     withAnimation(Motion.pill) { recents.clear() }
                 }
                 .buttonStyle(.glass)

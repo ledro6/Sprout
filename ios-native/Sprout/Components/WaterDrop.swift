@@ -43,6 +43,7 @@ struct WaterDrop: View {
         .tint(Palette.accentFill)
         .pourRing(Circle(), trigger: poured)
         .disabled(full)
+        .accessibilityLabel("Полить")
         .opacity(recent == nil ? 1 : 0.5)
         .animation(Motion.number, value: full)
         .accessibilityLabel(Lang.format("Полить %@", plant.name))

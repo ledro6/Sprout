@@ -23,7 +23,7 @@ struct SheetClose: View {
     let action: () -> Void
 
     var body: some View {
-        Button(action: action) {
+        Button(role: .close, action: action) {
             Image(systemName: "xmark")
         }
         .accessibilityLabel("Закрыть")

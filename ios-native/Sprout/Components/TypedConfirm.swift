@@ -53,7 +53,7 @@ struct TypedConfirm: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Отмена") { dismiss() }
+                    Button("Отмена", role: .cancel) { dismiss() }
                 }
             }
             .onAppear { focused = true }

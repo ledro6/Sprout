@@ -309,14 +309,14 @@ private struct UndoToast: View {
                     .font(Typography.toastAction)
                     .foregroundStyle(Palette.accent)
                     .padding(.horizontal, 12)
-                    .padding(.vertical, 8)
+                    .frame(minHeight: 44)
                     .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
         }
         .padding(.leading, 10)
         .padding(.trailing, 6)
-        .padding(.vertical, 8)
+        .padding(.vertical, 0)
         .sproutGlass(in: .capsule)
         .padding(.horizontal, Metrics.contentMargin)
         .padding(.bottom, Metrics.toastGap)

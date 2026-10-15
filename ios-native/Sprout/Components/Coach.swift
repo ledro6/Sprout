@@ -309,6 +309,8 @@ private struct CoachLayer: View {
                         .font(Typography.settingNote)
                         .foregroundStyle(Palette.secondaryText)
                         .buttonStyle(.plain)
+                        .frame(minHeight: 44)
+                        .contentShape(Rectangle())
                 }
                 Spacer(minLength: 0)
                 Button { next(hints.count) } label: {

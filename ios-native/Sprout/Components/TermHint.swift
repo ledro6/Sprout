@@ -21,7 +21,7 @@ struct TermHint: View {
                 .padding(Metrics.hintReach)
                 .contentShape(Rectangle())
         }
-        .buttonStyle(.plain)
+        .buttonStyle(.borderless)
         .padding(-Metrics.hintReach)
         .accessibilityLabel(Lang.format("Что значит «%@»", term.title))
         .popover(isPresented: $open) {

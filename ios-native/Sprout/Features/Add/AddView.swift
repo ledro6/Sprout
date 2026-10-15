@@ -237,7 +237,7 @@ struct AddView: View {
                 Text("Ввести вручную")
                     .font(Typography.settingNote)
                     .foregroundStyle(Palette.accent)
-                    .padding(.vertical, 8)
+                    .frame(minHeight: 44)
                     .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
@@ -262,6 +262,15 @@ struct AddView: View {
 
     /// Миниатюра снимка: нажатие — выбрать кадр заново из оригинала.
     private var thumb: some View {
+        Button(action: pickFrame) {
+            thumbFace
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(shot == nil ? "Снимка нет" : "Снимок растения")
+        .accessibilityHint(shot == nil ? "" : "Нажмите, чтобы выбрать кадр")
+    }
+
+    private var thumbFace: some View {
         Color.clear
             .overlay {
                 if let shot {
@@ -284,15 +293,15 @@ struct AddView: View {
             .frame(width: 72, height: 72)
             .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
             .contentShape(Rectangle())
-            .onTapGesture {
-                if raw != nil {
-                    trimming = true
-                } else if Camera.exists {
-                    shooting = true
-                }
-            }
-            .accessibilityLabel(shot == nil ? "Снимка нет" : "Снимок растения")
-            .accessibilityHint(shot == nil ? "" : "Нажмите, чтобы выбрать кадр")
+    }
+
+    /// Нажатие на миниатюру: кадр заново из оригинала или камера.
+    private func pickFrame() {
+        if raw != nil {
+            trimming = true
+        } else if Camera.exists {
+            shooting = true
+        }
     }
 
     // MARK: - Растение
@@ -307,8 +316,11 @@ struct AddView: View {
                                 Image(systemName: "xmark.circle.fill")
                                     .font(Typography.navTitle)
                                     .foregroundStyle(Palette.ink.opacity(0.6))
+                                    .frame(minWidth: 44, minHeight: 44)
+                                    .contentShape(.rect)
                             }
-                            .buttonStyle(.plain)
+                            .buttonStyle(.borderless)
+                            .padding(-10)
                             .offset(x: 6, y: -6)
                             .accessibilityLabel("Убрать снимок")
                         }
@@ -354,6 +366,7 @@ struct AddView: View {
                         .font(Typography.settingRow)
                         .foregroundStyle(Palette.accent)
                         .padding(.vertical, 6)
+                        .frame(minHeight: 44)
                         .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
@@ -363,6 +376,7 @@ struct AddView: View {
                             .font(Typography.settingNote)
                             .foregroundStyle(Palette.accent)
                             .padding(.vertical, 6)
+                            .frame(minHeight: 44)
                             .contentShape(Rectangle())
                     }
                     .buttonStyle(.plain)
@@ -467,8 +481,11 @@ struct AddView: View {
                     Image(systemName: "xmark.circle.fill")
                         .font(Typography.navTitle)
                         .foregroundStyle(.tertiary)
+                        .frame(minWidth: 44, minHeight: 44)
+                        .contentShape(.rect)
                 }
-                .buttonStyle(.plain)
+                .buttonStyle(.borderless)
+                .padding(-10)
                 .accessibilityLabel("Убрать растение друга")
             }
             .transition(.blurReplace)

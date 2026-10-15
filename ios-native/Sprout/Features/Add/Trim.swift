@@ -41,10 +41,10 @@ struct Trim: View {
             .sproutSettledEdge()
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
-                    Button("Отмена") { dismiss() }
+                    Button("Отмена", role: .cancel) { dismiss() }
                 }
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("Готово") { finish() }
+                    Button("Готово", role: .confirm) { finish() }
                         .fontWeight(.semibold)
                 }
             }
