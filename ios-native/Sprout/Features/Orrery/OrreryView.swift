@@ -323,16 +323,16 @@ struct OrreryView: View {
 
     // MARK: - Шапка
 
-    /// Как системная строка панели: круги по 44 pt — те же, что на экране
-    /// растения, — и заголовок посередине. В тёмном окружении стекло кругов
-    /// тёмное, знаки и заголовок светлые.
+    /// Как системная строка панели: круглые кнопки-значки по стандарту
+    /// `CornerCircle` и заголовок посередине. В тёмном окружении стекло
+    /// кругов тёмное, знаки и заголовок светлые.
     private var header: some View {
         HStack(spacing: 8) {
             Button { dismiss() } label: {
                 Image(systemName: "chevron.backward")
-                    .modifier(NavCircle())
+                    .cornerGlyph()
             }
-            .buttonStyle(.plain)
+            .cornerButton()
             .accessibilityLabel("Назад")
             Text("Планетарий")
                 .font(Typography.navTitle)
@@ -344,9 +344,9 @@ struct OrreryView: View {
             // Он же противовес «назад»: заголовок стоит ровно посередине.
             Button { journal = true } label: {
                 Image(systemName: "book.closed")
-                    .modifier(NavCircle())
+                    .cornerGlyph()
             }
-            .buttonStyle(.plain)
+            .cornerButton()
             .accessibilityLabel("Небесный журнал")
         }
         .padding(.horizontal, Metrics.contentMargin)

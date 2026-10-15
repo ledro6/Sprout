@@ -50,6 +50,10 @@ struct HomeView: View {
     @State private var settings = false
 
     @State private var roomsOpen = false
+    /// Переименование и удаление комнаты из меню ленты.
+    @State private var renaming: Room?
+    @State private var renameDraft = ""
+    @State private var doomed: Room?
 
     @State private var tripping = false
     @State private var pausing = false
@@ -217,6 +221,19 @@ struct HomeView: View {
         // Сад передаём явно: без него лист упал бы, а на наследование
         // окружения полагаться незачем.
         .sheet(isPresented: $roomsOpen) { RoomsView().environment(garden) }
+        // Переименование и удаление из меню ленты — как в «Комнатах».
+        .alert("Переименовать комнату", isPresented: Binding(
+            get: { renaming != nil },
+            set: { if !$0 { renaming = nil } })
+        ) {
+            TextField("Название", text: $renameDraft)
+            Button("Отмена", role: .cancel) {}
+            // Без имени — неактивна, как в «Комнатах».
+            Button("Сохранить") { commitRename() }
+                .disabled(renameDraft.trimmingCharacters(in: .whitespacesAndNewlines)
+                    .isEmpty)
+        }
+        .roomDeletion($doomed)
         .sheet(isPresented: $tripping) { TripView().environment(garden) }
         .sheet(isPresented: $pausing) { PauseSheet().environment(garden) }
         .sheet(isPresented: $asking) { AskView().environment(garden) }
@@ -412,7 +429,64 @@ struct HomeView: View {
                  grownRow: grownRow,
                  corner: cornerWidth,
                  titleHeight: $titleHeight,
+                 actions: roomActions,
                  go: go)
+    }
+
+    /// Меню комнаты на ленте — те же действия, что в «Комнатах», плюс полив
+    /// всей комнаты, как «Полить» у сада. Ссылки — на текущие значения: меню
+    /// строится заново при каждом открытии.
+    private func roomActions(_ index: Int) -> RoomActions? {
+        guard garden.rooms.indices.contains(index) else { return nil }
+        let room = garden.rooms[index]
+        let thirsty = MoistureStatus.pourable(in: [room]).map(\.id)
+        return RoomActions(
+            atDacha: room.atDacha,
+            canWater: !thirsty.isEmpty,
+            canUp: index > 0,
+            canDown: index < garden.rooms.count - 1,
+            rename: {
+                renameDraft = room.name
+                renaming = room
+            },
+            water: {
+                guard Bin.shared.waterNeeded(thirsty, in: garden) > 0 else { return }
+                Cheer.shared.now(from: Screen.middle)
+                Feel.water()
+            },
+            dacha: { on in
+                withAnimation(Motion.enter) { garden.settle(room.name, dacha: on) }
+                Feel.pick()
+            },
+            up: { move(index, by: -1) },
+            down: { move(index, by: 1) },
+            delete: {
+                if room.plants.isEmpty {
+                    withAnimation(Motion.arrange) { garden.deleteRoom(room.name) }
+                } else {
+                    doomed = room
+                }
+            })
+    }
+
+    /// Порядок — как в «Комнатах». Листание целевой страницы привязано к
+    /// комнате по имени, поэтому после переноса лента едет за ней сама.
+    private func move(_ index: Int, by step: Int) {
+        // Куда встать — как в «Комнатах»: `onMove` принимает место вставки.
+        let to = step > 0 ? index + 2 : index - 1
+        withAnimation(Motion.arrange) {
+            garden.moveRooms(from: IndexSet(integer: index), to: to)
+        }
+    }
+
+    /// Имя — как в «Комнатах»: занятое или пустое возвращается с отказом.
+    private func commitRename() {
+        defer { renaming = nil }
+        guard let room = renaming, renameDraft != room.name else { return }
+        let renamed = withAnimation(Motion.number) {
+            garden.renameRoom(room.name, to: renameDraft)
+        }
+        if !renamed { Feel.wrong() }
     }
 
     /// Листнуть к странице нажатием — на выглядывающую комнату или из
@@ -565,7 +639,7 @@ struct HomeView: View {
     private func cornerIcon(_ name: String) -> some View {
         Image(systemName: name)
             .contentTransition(.symbolEffect(.replace))
-            .cornerCircle()
+            .cornerGlyph()
     }
 
     /// Всё, что делают с садом целиком: AR, обход, вопрос модели, отъезд,
@@ -633,7 +707,7 @@ struct HomeView: View {
             cornerIcon(moreIcon)
         }
         .menuStyle(.button)
-        .buttonStyle(.plain)
+        .cornerButton()
         .accessibilityLabel("Ещё")
     }
 
@@ -643,21 +717,26 @@ struct HomeView: View {
         return "ellipsis"
     }
 
+    /// Кривая перехода «Вид»: без отскока и длиннее `Motion.arrange`, чтобы
+    /// глаз успевал проследить перетекание карточек в строки.
+    private static let lookSwap = Animation.smooth(duration: 0.55)
+
     /// Плиткой или списком — переключатель: растения перетекают из одного
     /// вида в другой (`PlantTile.morph`), волна появления не играет. На кнопке —
     /// вид, что на экране.
     private var lookButton: some View {
         Button {
-            // Пружина `Motion.arrange`: карточка и строка сходятся по общему id.
-            // При «Уменьшить движение» смена мгновенна.
-            withAnimation(reduceMotion ? nil : Motion.arrange) {
+            // Одна кривая на всё перетекание: карточка и строка сходятся по
+            // общему id. При «Уменьшить движение» — затухание без перемещения
+            // (см. `Shelf`: `morph` и `dissolves`).
+            withAnimation(reduceMotion ? .easeInOut(duration: 0.3) : Self.lookSwap) {
                 Settings.shared.look = look == .grid ? .list : .grid
             }
             Feel.pick()
         } label: {
             cornerIcon(look.icon)
         }
-        .buttonStyle(.plain)
+        .cornerButton()
         .accessibilityLabel("Вид")
         .accessibilityValue(look.title)
     }
@@ -707,9 +786,9 @@ struct HomeView: View {
         if editing {
             Button(action: finish) {
                 Image(systemName: "checkmark")
-                    .cornerCircle(tint: Palette.accentFill)
+                    .cornerGlyph()
             }
-            .buttonStyle(.plain)
+            .cornerButton(prominent: true)
             .accessibilityLabel("Готово")
             .transition(.scale.combined(with: .opacity))
         }
@@ -800,7 +879,8 @@ struct HomeView: View {
                               look: look,
                               opening: opening,
                               zoom: cardZoom,
-                              morph: shelfMorph,
+                              morph: reduceMotion ? nil : shelfMorph,
+                              dissolves: reduceMotion,
                               open: show,
                               index: item.offset,
                               room: index,
@@ -890,6 +970,9 @@ private struct HomeHead: View {
 
     @Binding var titleHeight: CGFloat
 
+    /// Меню комнаты под номером; у «Новой комнаты» его нет.
+    let actions: (Int) -> RoomActions?
+
     let go: (Int) -> Void
 
     var body: some View {
@@ -915,6 +998,7 @@ private struct HomeHead: View {
                       rest: size,
                       grown: grown,
                       corner: corner + Metrics.roomGap,
+                      actions: actions,
                       go: go)
                 .frame(height: row + (grownRow - row) * grown)
                 .sproutRide()

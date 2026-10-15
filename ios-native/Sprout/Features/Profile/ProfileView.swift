@@ -131,7 +131,7 @@ struct ProfileView: View {
                 Button { editing = true } label: {
                     AvatarCircle(size: Metrics.avatar)
                 }
-                .buttonStyle(.borderless)
+                .buttonStyle(.plain)
                 .accessibilityLabel("Изменить профиль")
                 VStack(alignment: .leading, spacing: 3) {
                     Text(named ? garden.owner : Lang.text("Имя не задано"))
@@ -234,6 +234,56 @@ struct ProfileView: View {
 
     // MARK: - Награды
 
+    /// Ряд приглашения: «Поделиться», «Соревнование», «Вставить». `compact` —
+    /// «Соревнование» значком. Счёт соревнования здесь не едет: его шлёт
+    /// «Отправить счёт» в карточке, чужим он по умолчанию не виден.
+    @ViewBuilder
+    private func inviteRow(compact: Bool) -> some View {
+        HStack(spacing: 10) {
+            ShareLink(item: plainCard) {
+                Label("Поделиться", systemImage: "square.and.arrow.up")
+                    .labelStyle(.iconOnly)
+                    .cornerGlyph()
+            }
+            .cornerButton()
+
+            if compact {
+                Menu { challengeItems } label: {
+                    Label("Соревнование", systemImage: "flag.checkered")
+                        .labelStyle(.iconOnly)
+                        .cornerGlyph()
+                }
+                .menuStyle(.button)
+                .cornerButton()
+            } else {
+                Menu { challengeItems } label: {
+                    Label("Соревнование", systemImage: "flag.checkered")
+                        .lineLimit(1)
+                }
+                .menuStyle(.button)
+                .buttonStyle(.glass)
+            }
+
+            // Системная кнопка вставки не показывает баннера «вставлено
+            // из…»; своя, читающая буфер сама, дёргала бы предупреждение
+            // iOS.
+            PasteButton(payloadType: String.self) { items in
+                guard let text = items.first else { return }
+                Task { @MainActor in invite(text) }
+            }
+            .buttonBorderShape(.capsule)
+            .onGeometryChange(for: CGRect.self) { $0.frame(in: .global) }
+                action: { paste.rect = $0 }
+        }
+    }
+
+    @ViewBuilder
+    private var challengeItems: some View {
+        ForEach(Race.kinds) { quest in
+            Button(Race.title(quest)) { challenge(quest) }
+        }
+    }
+
     /// Последние медали рядком и ссылка на полку — как сводка в «Фитнесе».
     private var awards: some View {
         SproutGroup("Награды") {
@@ -291,40 +341,11 @@ struct ProfileView: View {
 
             SproutDivider()
 
-            HStack(spacing: 10) {
-                // Значком: подписи «Позвать» и «Испытание» рядом с
-                // «Вставить» в строку не помещались. Счёт испытания в этом
-                // коде не едет — его шлёт «Отправить счёт» в карточке
-                // испытания: чужим он по умолчанию не виден.
-                ShareLink(item: plainCard) {
-                    Label("Поделиться", systemImage: "square.and.arrow.up")
-                        .labelStyle(.iconOnly)
-                }
-                .buttonStyle(.glass)
-                .buttonBorderShape(.circle)
-
-                Menu {
-                    ForEach(Race.kinds) { quest in
-                        Button(Race.title(quest)) { challenge(quest) }
-                    }
-                } label: {
-                    Label("Соревнование", systemImage: "flag.checkered")
-                        .lineLimit(1)
-                }
-                .buttonStyle(.glass)
-                .fixedSize()
-
-                // Системная кнопка вставки не показывает баннера «вставлено
-                // из…»; своя, читающая буфер сама, дёргала бы предупреждение
-                // iOS.
-                PasteButton(payloadType: String.self) { items in
-                    guard let text = items.first else { return }
-                    Task { @MainActor in invite(text) }
-                }
-                .buttonBorderShape(.capsule)
-                .fixedSize()
-                .onGeometryChange(for: CGRect.self) { $0.frame(in: .global) }
-                    action: { paste.rect = $0 }
+            // Два варианта ряда: с подписью «Соревнование» и значком. Какой
+            // влезает в ширину, выбирает SwiftUI — ряд не раздаёт экран.
+            ViewThatFits(in: .horizontal) {
+                inviteRow(compact: false)
+                inviteRow(compact: true)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
         }

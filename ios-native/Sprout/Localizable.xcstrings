@@ -90855,6 +90855,9 @@
         }
       }
     },
+    "Комната на даче": {
+      "extractionState": "manual"
+    },
     "Комната появится, когда вы нажмёте «Готово».": {
       "extractionState": "manual",
       "localizations": {
@@ -143192,7 +143195,16 @@
         }
       }
     },
+    "Переименовать комнату": {
+      "extractionState": "manual"
+    },
     "Переместить": {
+      "extractionState": "manual"
+    },
+    "Переместить выше": {
+      "extractionState": "manual"
+    },
+    "Переместить ниже": {
       "extractionState": "manual"
     },
     "Пересадил": {
@@ -175741,6 +175753,9 @@
           }
         }
       }
+    },
+    "Полить комнату": {
+      "extractionState": "manual"
     },
     "Полить перед отъездом, кому пора": {
       "extractionState": "manual"
@@ -250322,6 +250337,9 @@
           }
         }
       }
+    },
+    "Удалить комнату": {
+      "extractionState": "manual"
     },
     "Удалить комнату «%@»?": {
       "extractionState": "manual",

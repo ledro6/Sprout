@@ -162,13 +162,9 @@ struct PlantAR: View {
             if ids.count == 1 {
                 Button { modelling = true } label: {
                     Image(systemName: "cube.transparent")
-                        .font(Typography.navTitle)
-                        .frame(width: Metrics.gearBox, height: Metrics.gearBox)
+                        .cornerGlyph()
                 }
-                .buttonStyle(.glass)
-                .buttonBorderShape(.circle)
-                .frame(minWidth: 44, minHeight: 44)
-                .contentShape(.rect)
+                .cornerButton()
                 .accessibilityLabel("Модель")
             } else {
                 Color.clear

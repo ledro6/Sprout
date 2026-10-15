@@ -228,14 +228,11 @@ struct PlantView: View {
         }
     }
 
-    /// Круг крупнее системной кнопки «назад»: до неё тянуться через весь
-    /// экран, и маленькая промахивалась.
     private var back: some View {
         Button { close() } label: {
-            Image(systemName: "chevron.backward")
-                .modifier(NavCircle())
+            Image(systemName: "chevron.backward").cornerGlyph()
         }
-        .buttonStyle(.plain)
+        .cornerButton()
         .accessibilityLabel("Назад")
         .modifier(Chrome(shown: chrome))
         .sproutRide()
@@ -324,12 +321,11 @@ struct PlantView: View {
                 Label("Удалить", systemImage: "trash")
             }
         } label: {
-            Image(systemName: "ellipsis")
-                .modifier(NavCircle())
+            Image(systemName: "ellipsis").cornerGlyph()
         }
-        .accessibilityLabel("Ещё")
         .menuStyle(.button)
-        .buttonStyle(.plain)
+        .cornerButton()
+        .accessibilityLabel("Ещё")
         .modifier(Chrome(shown: chrome))
         .sproutRide()
     }
@@ -440,17 +436,15 @@ struct PlantView: View {
     /// кнопка «Полить» видны без прокрутки и на 667 pt.
     private func hero(_ plant: Plant) -> some View {
         HStack(alignment: .top, spacing: 14) {
-            Button { viewing = true } label: {
-                PlantPhoto(plant: plant, radius: 18)
-                    .frame(width: Metrics.heroPhoto, height: Metrics.heroPhoto)
-                    .onGeometryChange(for: CGRect.self) { $0.frame(in: .global) }
-                        action: { spot.rect = $0 }
-                    .contentShape(.rect)
-            }
-            .buttonStyle(SproutPress())
-            .matchedTransitionSource(id: "hero-photo", in: photoZoom)
-            .disabled(gallery(plant).isEmpty)
-            .accessibilityHint(gallery(plant).isEmpty ? "" : "Открыть фото")
+            PlantPhoto(plant: plant, radius: 18)
+                .frame(width: Metrics.heroPhoto, height: Metrics.heroPhoto)
+                .matchedTransitionSource(id: "hero-photo", in: photoZoom)
+                .onGeometryChange(for: CGRect.self) { $0.frame(in: .global) }
+                    action: { spot.rect = $0 }
+                .contentShape(.rect)
+                .onTapGesture { if !gallery(plant).isEmpty { viewing = true } }
+                .accessibilityAddTraits(gallery(plant).isEmpty ? [] : .isButton)
+                .accessibilityHint(gallery(plant).isEmpty ? "" : "Открыть фото")
             VStack(alignment: .leading, spacing: 8) {
                 HStack(spacing: 10) {
                     MoistureRing(moisture: plant.moisture, status: plant.status,
@@ -731,38 +725,50 @@ struct PlantView: View {
             == latest.when.timeIntervalSince1970
     }
 
-    /// Вопрос о земле после полива рукой: одна строка, «×» — пропустить.
+    /// Вопрос о земле после полива рукой: заголовок и три ответа, «×» —
+    /// пропустить (стандартная круглая кнопка).
     private func soilAsk(_ entry: Watering) -> some View {
-        HStack(spacing: 10) {
-            Text("Как земля была?")
-                .font(Typography.settingNote)
-                .foregroundStyle(Palette.secondaryText)
-                .lineLimit(1)
-                .minimumScaleFactor(0.8)
-            Spacer(minLength: 4)
-            soilChoice(Lang.key("Сухая"), .dry, entry)
-            soilChoice(Lang.key("В самый раз"), .fine, entry)
-            soilChoice(Lang.key("Ещё влажная"), .wet, entry)
-            Button {
-                var skips = Array(soilSkips)
-                skips.append(skipKey(entry))
-                UserDefaults.standard.set(skips, forKey: "soil.skipped")
-                soilTick += 1
-            } label: {
-                Image(systemName: "xmark")
-                    .font(Typography.settingNote)
-                    .frame(minWidth: 44, minHeight: 44)
-                    .contentShape(Rectangle())
+        HStack(alignment: .top, spacing: 10) {
+            VStack(alignment: .leading, spacing: 10) {
+                Text("Как земля была?")
+                    .font(Typography.detail)
+                    .foregroundStyle(Palette.ink)
+                soilChoices(entry)
             }
-            .buttonStyle(SproutPress())
-            .foregroundStyle(Palette.secondaryText)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            Button { soilAskDismiss(entry) } label: {
+                Image(systemName: "xmark").cornerGlyph()
+            }
+            .cornerButton()
             .accessibilityLabel("Пропустить")
         }
-        .padding(.horizontal, 18)
-        .padding(.vertical, 12)
+        .padding(14)
         .frame(maxWidth: .infinity, alignment: .leading)
         .sproutPlate(in: plate)
         .sproutRide()
+    }
+
+    private func soilAskDismiss(_ entry: Watering) {
+        var skips = Array(soilSkips)
+        skips.append(skipKey(entry))
+        UserDefaults.standard.set(skips, forKey: "soil.skipped")
+        soilTick += 1
+    }
+
+    /// Ответы в ряд; если на ширине не помещаются — столбиком.
+    @ViewBuilder
+    private func soilChoices(_ entry: Watering) -> some View {
+        ViewThatFits(in: .horizontal) {
+            HStack(spacing: 8) { soilChoiceButtons(entry) }
+            VStack(alignment: .leading, spacing: 8) { soilChoiceButtons(entry) }
+        }
+    }
+
+    @ViewBuilder
+    private func soilChoiceButtons(_ entry: Watering) -> some View {
+        soilChoice(Lang.key("Сухая"), .dry, entry)
+        soilChoice(Lang.key("В самый раз"), .fine, entry)
+        soilChoice(Lang.key("Ещё влажная"), .wet, entry)
     }
 
     private func soilChoice(_ title: String, _ soil: Soil,
@@ -773,13 +779,12 @@ struct PlantView: View {
         } label: {
             Text(Lang.text(title))
                 .font(Typography.settingNote.weight(.medium))
+                .foregroundStyle(Palette.ink)
                 .lineLimit(1)
                 .minimumScaleFactor(0.7)
-                .frame(minWidth: 44, minHeight: 44)
-                .contentShape(Rectangle())
+                .frame(maxWidth: .infinity)
         }
-        .buttonStyle(SproutPress())
-        .foregroundStyle(Palette.accent)
+        .buttonStyle(.glass)
     }
 
     /// Два ответа подряд — предложение срока. Меняет срок только кнопка
@@ -1250,15 +1255,5 @@ private struct ToolGlass: ViewModifier {
         } else {
             content.glassEffect(.regular.interactive(), in: shape)
         }
-    }
-}
-
-/// Кнопка панели — стеклянный круг одного размера у «назад» и у меню:
-/// стиль `.glass` у меню добавлял свои поля, и круг выходил больше. Те же
-/// круги — в шапке планетария.
-struct NavCircle: ViewModifier {
-    func body(content: Content) -> some View {
-        // Тот же размер, что у круглых кнопок главной.
-        content.cornerCircle()
     }
 }

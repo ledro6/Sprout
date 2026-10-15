@@ -101,28 +101,36 @@ struct ProfileEditor: View {
             .map { Image(uiImage: $0) }
     }
 
+    /// Кнопки фото: «Выбрать» или «Другое», и «Убрать», если фото есть.
+    @ViewBuilder
+    private var photoButtons: some View {
+        PhotosPicker(selection: $picking, matching: .images,
+                     photoLibrary: .shared()) {
+            Label(settings.avatarShot == nil ? "Выбрать фото"
+                                             : "Другое фото",
+                  systemImage: "photo")
+                .lineLimit(1)
+        }
+        .buttonStyle(.glass)
+        if settings.avatarShot != nil {
+            Button(role: .destructive, action: unportrait) {
+                Label("Убрать фото", systemImage: "trash")
+                    .lineLimit(1)
+            }
+            .buttonStyle(.glass)
+            .transition(.blurReplace)
+        }
+    }
+
     /// Крупный кружок, кнопки фото под ним и «Портрет» отдельным рядом: в
     /// один ряд три кнопки не влезали.
     private var face: some View {
         VStack(spacing: 14) {
             AvatarCircle(size: Metrics.avatar * 1.6)
-            HStack(spacing: 10) {
-                PhotosPicker(selection: $picking, matching: .images,
-                             photoLibrary: .shared()) {
-                    Label(settings.avatarShot == nil ? "Выбрать фото"
-                                                     : "Другое фото",
-                          systemImage: "photo")
-                        .lineLimit(1)
-                }
-                .buttonStyle(.glass)
-                if settings.avatarShot != nil {
-                    Button(role: .destructive, action: unportrait) {
-                        Label("Убрать фото", systemImage: "trash")
-                            .lineLimit(1)
-                    }
-                    .buttonStyle(.glass)
-                    .transition(.blurReplace)
-                }
+            // В ряд; при крупном шрифте или на узком экране — столбиком.
+            ViewThatFits(in: .horizontal) {
+                HStack(spacing: 10) { photoButtons }
+                VStack(spacing: 10) { photoButtons }
             }
             .font(Typography.settingNote)
             if playground {

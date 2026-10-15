@@ -87,20 +87,7 @@ struct RoomsView: View {
         } message: {
             Text("Растения в неё можно будет посадить или перевезти.")
         }
-        .confirmationDialog(
-            Lang.format("Удалить комнату «%@»?", doomed?.name ?? ""),
-            isPresented: Binding(get: { doomed != nil },
-                                 set: { if !$0 { doomed = nil } }),
-            titleVisibility: .visible,
-            presenting: doomed
-        ) { room in
-            Button("Удалить", role: .destructive) {
-                withAnimation(Motion.arrange) { garden.deleteRoom(room.name) }
-            }
-            Button("Отмена", role: .cancel) {}
-        } message: { room in
-            Text(Self.warning(for: room))
-        }
+        .roomDeletion($doomed)
     }
 
     private static let hint = Lang.text("""
@@ -108,7 +95,7 @@ struct RoomsView: View {
         поменять порядок, — в том же порядке комнаты листаются на главной.
         """)
 
-    private static func warning(for room: Room) -> String {
+    static func warning(for room: Room) -> String {
         Lang.format("Вместе с ней уйдут %lld растений. Вернуть их будет нельзя.",
                     room.plants.count)
     }
@@ -140,6 +127,37 @@ struct RoomsView: View {
     private func add() {
         let added = withAnimation(Motion.arrange) { garden.addRoom(draft) }
         if !added { Feel.wrong() }
+    }
+}
+
+extension View {
+    /// Подтверждение удаления комнаты с растениями — одно и на «Комнатах», и
+    /// на ленте главной. `doomed` задаёт комнату, которую спрашивают.
+    func roomDeletion(_ doomed: Binding<Room?>) -> some View {
+        modifier(RoomDeletion(doomed: doomed))
+    }
+}
+
+private struct RoomDeletion: ViewModifier {
+    @Binding var doomed: Room?
+    @Environment(Garden.self) private var garden
+
+    func body(content: Content) -> some View {
+        content
+            .confirmationDialog(
+                Lang.format("Удалить комнату «%@»?", doomed?.name ?? ""),
+                isPresented: Binding(get: { doomed != nil },
+                                     set: { if !$0 { doomed = nil } }),
+                titleVisibility: .visible,
+                presenting: doomed
+            ) { room in
+                Button("Удалить", role: .destructive) {
+                    withAnimation(Motion.arrange) { garden.deleteRoom(room.name) }
+                }
+                Button("Отмена", role: .cancel) {}
+            } message: { room in
+                Text(RoomsView.warning(for: room))
+            }
     }
 }
 

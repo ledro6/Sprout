@@ -18,6 +18,8 @@ struct PlantTile: View {
     /// Пространство перетекания между плиткой и списком. Растение с одним
     /// id в обоих видах сходится в одну геометрию; на поиске его нет.
     var morph: Namespace.ID?
+    /// При «Уменьшить движение» перетекания нет: плитка растворяется.
+    var dissolves = false
 
     let open: (Plant.ID) -> Void
 
@@ -62,7 +64,9 @@ struct PlantTile: View {
                              onShown: onShown))
         .sproutRide()
         .modifier(Morph(id: plant.id, space: morph))
-        .transition(.asymmetric(insertion: .identity, removal: .opacity))
+        .transition(dissolves
+                    ? .opacity
+                    : .asymmetric(insertion: .identity, removal: .opacity))
         // Источник перехода — последним: замер снимается с готовой геометрии.
         .matchedTransitionSource(id: plant.id, in: zoom)
     }

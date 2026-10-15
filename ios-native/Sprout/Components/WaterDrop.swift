@@ -31,15 +31,13 @@ struct WaterDrop: View {
         } label: {
             // Пересыхает — капля дышит: зовёт полить.
             Image(systemName: "drop.fill")
-                .font(.system(size: Metrics.dropGlyph, weight: .semibold))
                 .symbolEffect(.breathe, isActive: plant.thirst == .alarm
                               && !Power.shared.calm)
                 .symbolEffect(.bounce, options: .speed(2),
                               value: still ? 0 : poured)
-                .frame(width: Metrics.dropBox, height: Metrics.dropBox)
+                .cornerGlyph()
         }
-        .buttonStyle(.glassProminent)
-        .buttonBorderShape(.circle)
+        .cornerButton(prominent: true)
         .tint(Palette.accentFill)
         .pourRing(Circle(), trigger: poured)
         .disabled(full)

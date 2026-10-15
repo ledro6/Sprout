@@ -1,39 +1,32 @@
 import SwiftUI
 
-/// Круглые значки шапок — «Вид», «•••», «Готово», «Закрыть», шестерёнка — одного
-/// размера на всех экранах: круг `size`, значок `glyph` полужирный. Область
-/// касания — `touch`, круг её не сужает.
+/// Круглые кнопки-значки — «Вид», «•••», «Готово», «Закрыть», шестерёнка,
+/// «назад» — на всех экранах одного размера и с родной физикой нажатия:
+/// системное стекло `.glass` в форме круга. Значок — в рамке одного
+/// размера, иначе круг под широким значком («•••») выходил бы шире, чем
+/// под узким («×»).
 enum CornerCircle {
-    static let size: CGFloat = 36
-    static let glyph: CGFloat = 15
-    static let touch: CGFloat = 44
+    /// Рамка значка; круг стекла — она плюс системные поля кнопки.
+    static let box: CGFloat = 24
+    static let glyph: CGFloat = 17
 }
 
 extension View {
-    /// Значок круглой кнопки: стеклянный круг `CornerCircle.size`, касание
-    /// `CornerCircle.touch`. Кнопке ставится `.buttonStyle(.plain)`: стиль
-    /// `.glass` добавляет свои поля, и круг выходит больше. С `tint` круг
-    /// закрашивается — для главного действия («Готово»).
-    func cornerCircle(tint: Color? = nil) -> some View {
-        modifier(CornerCircleModifier(tint: tint))
-    }
-}
-
-private struct CornerCircleModifier: ViewModifier {
-    let tint: Color?
-
-    func body(content: Content) -> some View {
-        content
-            .font(.system(size: CornerCircle.glyph, weight: .semibold))
-            .foregroundStyle(tint == nil ? Palette.ink : Color.white)
-            .frame(width: CornerCircle.size, height: CornerCircle.size)
-            .glassEffect(glass, in: .circle)
-            .frame(width: CornerCircle.touch, height: CornerCircle.touch)
-            .contentShape(.circle)
+    /// Значок внутри круглой кнопки (`label` у `Button`, `Menu`,
+    /// `ShareLink`).
+    func cornerGlyph() -> some View {
+        font(.system(size: CornerCircle.glyph, weight: .semibold))
+            .frame(width: CornerCircle.box, height: CornerCircle.box)
     }
 
-    private var glass: Glass {
-        guard let tint else { return .regular.interactive() }
-        return .regular.tint(tint).interactive()
+    /// Сама кнопка: круг системного стекла. `prominent` — закрашенный, для
+    /// главного действия («Готово»).
+    @ViewBuilder
+    func cornerButton(prominent: Bool = false) -> some View {
+        if prominent {
+            buttonStyle(.glassProminent).buttonBorderShape(.circle)
+        } else {
+            buttonStyle(.glass).buttonBorderShape(.circle)
+        }
     }
 }

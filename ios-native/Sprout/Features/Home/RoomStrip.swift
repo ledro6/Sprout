@@ -7,6 +7,21 @@ enum HomeLeaf: Hashable {
     case fresh
 }
 
+/// Действия над комнатой из её меню на ленте — те же, что в «Комнатах», плюс
+/// полив всей комнаты. Сама логика — в `HomeView`, здесь только кнопки.
+struct RoomActions {
+    let atDacha: Bool
+    let canWater: Bool
+    let canUp: Bool
+    let canDown: Bool
+    let rename: () -> Void
+    let water: () -> Void
+    let dacha: (Bool) -> Void
+    let up: () -> Void
+    let down: () -> Void
+    let delete: () -> Void
+}
+
 /// Где сейчас листание главной и насколько прокручена каждая страница.
 /// Меняется каждый кадр жеста, поэтому живёт не в состоянии экрана, а в
 /// стороне: будит только шапку, которая его читает, а полки стоят.
@@ -95,8 +110,9 @@ final class Glide {
 /// имени, а не экрана. `at` — положение листания страниц, дробное посреди
 /// жеста.
 ///
-/// Пальца лента не берёт: листают страницы под ней, и смахнуть можно прямо
-/// по названию. Нажатие на выглядывающее имя листает к нему.
+/// Пальца лента не берёт: листают страницы под ней, и смахнуть можно по полосе.
+/// На самом имени текущей комнаты держат меню (см. `nameMenu`), там смахивание
+/// не начнётся. Нажатие на выглядывающее имя листает к нему.
 struct RoomStrip: View {
     let names: [String]
 
@@ -117,6 +133,9 @@ struct RoomStrip: View {
 
     /// Ширина кнопок у конца: поднявшись к ним, лента ужимается.
     var corner: CGFloat = 0
+
+    /// Меню комнаты под номером; у «Новой комнаты» его нет.
+    let actions: (Int) -> RoomActions?
 
     let go: (Int) -> Void
 
@@ -213,6 +232,9 @@ struct RoomStrip: View {
         .frame(maxHeight: .infinity)
         .mask { edges }
         .allowsHitTesting(false)
+        .overlay(alignment: .leading) {
+            nameMenu(widths: widths, starts: starts, turned: turned, lead: lead)
+        }
         .overlay(alignment: .leading) {
             next(widths: widths, starts: starts, turned: turned, lead: lead)
         }
@@ -328,6 +350,64 @@ struct RoomStrip: View {
             ],
             startPoint: flipped ? .trailing : .leading,
             endPoint: flipped ? .leading : .trailing)
+    }
+
+    /// Имя текущей комнаты — с меню по удержанию. Перехватывает касание только
+    /// его полоса по ширине текста: остальная лента пропускает касание к
+    /// страницам, как и раньше. Меню — по текущей комнате, «Новой» нет.
+    @ViewBuilder
+    private func nameMenu(widths: [CGFloat], starts: [CGFloat],
+                          turned: CGFloat, lead: CGFloat) -> some View {
+        if current < names.count, let menu = actions(current) {
+            let slot = starts[current] - turned
+            let wide = min(widths[current], max(span - lead - slot, 0))
+            Color.clear
+                .frame(width: max(wide, 1))
+                .frame(maxHeight: .infinity)
+                .contentShape(Rectangle())
+                // Без своего превью меню поднимало бы пустой прозрачный
+                // прямоугольник.
+                .contextMenu {
+                    roomMenu(menu)
+                } preview: {
+                    Text(names[current])
+                        .font(.title2.weight(.bold))
+                        .foregroundStyle(Palette.ink)
+                        .padding(.horizontal, 20)
+                        .padding(.vertical, 12)
+                }
+                .offset(x: left(slot, max(wide, 1), lead: lead))
+                .accessibilityHidden(true)
+        }
+    }
+
+    /// Порядок пунктов: частое сверху, порядок и удаление — отдельно, удаление
+    /// последним и красным.
+    @ViewBuilder
+    private func roomMenu(_ menu: RoomActions) -> some View {
+        Button(action: menu.rename) {
+            Label("Переименовать", systemImage: "pencil")
+        }
+        Button(action: menu.water) {
+            Label("Полить комнату", systemImage: "drop")
+        }
+        .disabled(!menu.canWater)
+        Toggle(isOn: Binding(get: { menu.atDacha }, set: menu.dacha)) {
+            Label("Комната на даче", systemImage: "house.lodge")
+        }
+        Divider()
+        Button(action: menu.up) {
+            Label("Переместить выше", systemImage: "arrow.up")
+        }
+        .disabled(!menu.canUp)
+        Button(action: menu.down) {
+            Label("Переместить ниже", systemImage: "arrow.down")
+        }
+        .disabled(!menu.canDown)
+        Divider()
+        Button(role: .destructive, action: menu.delete) {
+            Label("Удалить комнату", systemImage: "trash")
+        }
     }
 
     /// Выглядывающее имя нажимается — листаем к нему.

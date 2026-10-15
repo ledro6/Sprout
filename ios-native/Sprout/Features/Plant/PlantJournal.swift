@@ -118,6 +118,7 @@ struct PlantJournal: View {
                     .stroke(Palette.secondaryText, lineWidth: 1)
             )
         }
+        .menuStyle(.button)
         .buttonStyle(SproutPress())
         .accessibilityLabel("Добавить фото")
     }

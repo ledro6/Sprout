@@ -265,14 +265,10 @@ struct AskView: View {
                 .sproutGlass(in: .capsule)
             Button(action: send) {
                 Image(systemName: "arrow.up")
-                    .font(Typography.detail)
-                    .frame(width: Metrics.gearBox, height: Metrics.gearBox)
+                    .cornerGlyph()
             }
-            .buttonStyle(.glassProminent)
+            .cornerButton(prominent: true)
             .tint(Palette.accentFill)
-            .frame(minWidth: 44, minHeight: 44)
-            .contentShape(.circle)
-            .buttonBorderShape(.circle)
             .disabled(!Muse.works(.ask) || talk.busy || Sage.question(draft) == nil)
             .accessibilityLabel("Спросить")
         }

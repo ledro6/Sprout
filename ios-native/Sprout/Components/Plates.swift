@@ -64,18 +64,16 @@ struct SproutBlock<Control: View>: View {
     }
 }
 
-/// Кнопка настроек — системное `.glass`: продавливание, отскок, блик и замена
-/// материала приходят с ним. Шестерёнка нарисована крупнее коробки — знак
-/// заметнее, кнопка прежняя.
+/// Кнопка настроек — круглая кнопка-значок по стандарту `CornerCircle`.
 struct SproutGear: View {
     let open: () -> Void
 
     var body: some View {
         Button(action: open) {
             Image(systemName: "gearshape")
-                .cornerCircle()
+                .cornerGlyph()
         }
-        .buttonStyle(.plain)
+        .cornerButton()
         .accessibilityLabel("Настройки")
     }
 }
