@@ -89,7 +89,7 @@ struct DiagnosisSheet: View {
                             .transition(.blurReplace)
                     }
                     planOffer
-                    if Muse.offered, !Muse.ready {
+                    if Muse.shown(.advice), !Muse.works(.advice) {
                         Text("Совет словами пишет Apple Intelligence — на этом телефоне её нет. Находки по снимку работают и без неё.")
                             .font(Typography.settingNote)
                             .foregroundStyle(Palette.secondaryText)
@@ -367,7 +367,7 @@ struct DiagnosisSheet: View {
         }
         if sure { garden.noteDiagnosis(plantID, diagnosis) }
         Feel.done()
-        if Muse.ready, found.first?.kind != .unclear {
+        if Muse.works(.advice), found.first?.kind != .unclear {
             let words = await Muse.advise(found, plant: plant,
                                           room: garden.roomName(of: plantID),
                                           log: garden.log)?

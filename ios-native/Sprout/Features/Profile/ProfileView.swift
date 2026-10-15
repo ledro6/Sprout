@@ -308,7 +308,7 @@ struct ProfileView: View {
                         Button(Race.title(quest)) { challenge(quest) }
                     }
                 } label: {
-                    Label("Испытание", systemImage: "flag.checkered")
+                    Label("Соревнование", systemImage: "flag.checkered")
                         .lineLimit(1)
                 }
                 .buttonStyle(.glass)
@@ -352,7 +352,7 @@ struct ProfileView: View {
         )) {
             Button("Хорошо", role: .cancel) {}
         } message: {
-            Text(Lang.format("Вы в испытании от %@. Свой счёт отправляйте кнопкой «Отправить счёт».",
+            Text(Lang.format("Вы в соревновании от %@. Свой счёт отправляйте кнопкой «Отправить счёт».",
                              joined?.host ?? ""))
         }
         .sheet(item: $comparing) { friend in
@@ -499,18 +499,6 @@ struct ProfileView: View {
         SproutGroup("Ещё") {
             Button { opening = true } label: {
                 SproutLink("Настройки", icon: "gearshape")
-            }
-            .buttonStyle(.plain)
-
-            SproutDivider()
-
-            // Подсказки экранов — снова, при следующем заходе на каждый;
-            // этот экран — сразу, чтобы было видно, что сработало.
-            Button {
-                Settings.shared.rewalk()
-                Coach.shared.start(.profile)
-            } label: {
-                SproutLink("Подсказки", icon: "lightbulb")
             }
             .buttonStyle(.plain)
 

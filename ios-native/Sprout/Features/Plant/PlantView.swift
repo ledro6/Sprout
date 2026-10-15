@@ -34,6 +34,8 @@ struct PlantView: View {
 
     /// Фото на весь экран, см. `PhotoViewer`.
     @State private var viewing = false
+    /// Миниатюра фото растёт в просмотр (`matchedTransitionSource`).
+    @Namespace private var photoZoom
 
     @State private var asking = false
 
@@ -178,6 +180,8 @@ struct PlantView: View {
         .fullScreenCover(isPresented: $viewing) {
             if let plant {
                 PhotoViewer(names: gallery(plant))
+                    .navigationTransition(.zoom(sourceID: "hero-photo",
+                                                in: photoZoom))
             }
         }
         .sheet(isPresented: $posting) {
@@ -300,8 +304,10 @@ struct PlantView: View {
                           systemImage: "sensor.tag.radiowaves.forward")
                 }
             }
-            Button { Coach.shared.start(.plant) } label: {
-                Label("Подсказки", systemImage: "questionmark.circle")
+            if Settings.shared.hints {
+                Button { Coach.shared.start(.plant) } label: {
+                    Label("Подсказки", systemImage: "questionmark.circle")
+                }
             }
             MoveMenu(current: garden.roomName(of: plantID),
                      rooms: garden.rooms.map(\.name),
@@ -403,6 +409,7 @@ struct PlantView: View {
 
     /// «Полил вчера»: запись на вчера в то же время суток; раньше полудня
     /// сейчас — на двенадцать часов вчера.
+    /// Запись отменяется «Вернуть» в плашке, как обычный полив (`Bin.past`).
     private func waterYesterday() {
         let calendar = Calendar.current
         let now = Date()
@@ -412,9 +419,7 @@ struct PlantView: View {
             moment = calendar.date(bySettingHour: hour, minute: 0, second: 0,
                                    of: moment) ?? moment
         }
-        withAnimation(Motion.appear) {
-            garden.addPast(plantID, at: moment)
-        }
+        Bin.shared.past(plantID, at: moment, in: garden)
         Feel.toss()
     }
 
@@ -442,7 +447,8 @@ struct PlantView: View {
                         action: { spot.rect = $0 }
                     .contentShape(.rect)
             }
-            .buttonStyle(.plain)
+            .buttonStyle(SproutPress())
+            .matchedTransitionSource(id: "hero-photo", in: photoZoom)
             .disabled(gallery(plant).isEmpty)
             .accessibilityHint(gallery(plant).isEmpty ? "" : "Открыть фото")
             VStack(alignment: .leading, spacing: 8) {
@@ -496,7 +502,7 @@ struct PlantView: View {
             .background(Capsule().fill(Palette.ink.opacity(0.08)))
             .contentShape(.capsule)
         }
-        .buttonStyle(.borderless)
+        .buttonStyle(SproutPress())
         .accessibilityHint("Меняет срок полива")
     }
 
@@ -644,7 +650,7 @@ struct PlantView: View {
             .foregroundStyle(Palette.ink)
             .padding(6)
             .frame(maxWidth: .infinity, minHeight: Metrics.toolTile)
-            .sproutGlass(in: .rect(cornerRadius: Metrics.toolRadius))
+            .modifier(ToolGlass())
             .contentShape(.rect(cornerRadius: Metrics.toolRadius))
         }
         .buttonStyle(SproutPress())
@@ -748,7 +754,7 @@ struct PlantView: View {
                     .frame(minWidth: 44, minHeight: 44)
                     .contentShape(Rectangle())
             }
-            .buttonStyle(.borderless)
+            .buttonStyle(SproutPress())
             .foregroundStyle(Palette.secondaryText)
             .accessibilityLabel("Пропустить")
         }
@@ -772,7 +778,7 @@ struct PlantView: View {
                 .frame(minWidth: 44, minHeight: 44)
                 .contentShape(Rectangle())
         }
-        .buttonStyle(.borderless)
+        .buttonStyle(SproutPress())
         .foregroundStyle(Palette.accent)
     }
 
@@ -971,6 +977,10 @@ struct PlantView: View {
                     .frame(maxWidth: .infinity)
             }
             .buttonStyle(.glass)
+            Text("Забыли отметить вчерашний полив — запишем его на вчера.")
+                .font(Typography.settingNote)
+                .foregroundStyle(Palette.secondaryText)
+                .fixedSize(horizontal: false, vertical: true)
             if diary.entries.isEmpty {
                 Text("Поливов ещё не было.")
                     .font(Typography.settingNote)
@@ -1225,16 +1235,30 @@ private struct MoistureRing: View {
     }
 }
 
+/// Стекло плитки-инструмента, которое откликается на нажатие (`interactive`):
+/// системное стекло подсвечивается и пружинит под пальцем. При «Понижении
+/// прозрачности» — непрозрачная карточка, как у `sproutGlass`.
+private struct ToolGlass: ViewModifier {
+    @Environment(\.accessibilityReduceTransparency) private var solid
+
+    @ViewBuilder
+    func body(content: Content) -> some View {
+        let shape = RoundedRectangle(cornerRadius: Metrics.toolRadius,
+                                     style: .continuous)
+        if solid {
+            content.background(Palette.card, in: shape)
+        } else {
+            content.glassEffect(.regular.interactive(), in: shape)
+        }
+    }
+}
+
 /// Кнопка панели — стеклянный круг одного размера у «назад» и у меню:
 /// стиль `.glass` у меню добавлял свои поля, и круг выходил больше. Те же
 /// круги — в шапке планетария.
 struct NavCircle: ViewModifier {
     func body(content: Content) -> some View {
-        content
-            .font(Typography.navButton)
-            .foregroundStyle(Palette.ink)
-            .frame(width: Metrics.navCircle, height: Metrics.navCircle)
-            .glassEffect(.regular.interactive(), in: .circle)
-            .contentShape(.circle)
+        // Тот же размер, что у круглых кнопок главной.
+        content.cornerCircle()
     }
 }

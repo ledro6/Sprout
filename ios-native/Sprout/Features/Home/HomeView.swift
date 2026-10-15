@@ -32,6 +32,12 @@ struct HomeView: View {
 
     @Namespace private var cardZoom
 
+    /// Плитка и список — разные контейнеры; растение перетекает из одного
+    /// в другой по своему id, см. `PlantTile.morph`.
+    @Namespace private var shelfMorph
+
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
     /// Путь держим сами: переход можно начинать только после того, как
     /// погашен ореол.
     @State private var path: [Plant.ID] = []
@@ -528,10 +534,10 @@ struct HomeView: View {
     }
 
     /// Кнопки справа сверху: вид и «•••» (сад, отъезд, сортировка,
-    /// настройки), «Готово» в правке. Стоят на месте и в покое, и на прокрутке: в покое — вровень
-    /// с заголовком, на прокрутке к ним поднимается лента комнат. Стекло
-    /// системное (`.glass`): с ним приходят продавливание, отскок, блик,
-    /// меню, вырастающее из кнопки, и «Уменьшение прозрачности».
+    /// настройки), «Готово» в правке. Стоят на месте и в покое, и на прокрутке:
+    /// в покое — вровень с заголовком, на прокрутке к ним поднимается лента
+    /// комнат. Все одного размера — `CornerCircle`; стекло — интерактивное,
+    /// с ним приходят продавливание и блик.
     private var corner: some View {
         HStack(spacing: Metrics.cornerGap) {
             // В правке — только «Готово»: сортировать и менять вид посреди
@@ -558,11 +564,8 @@ struct HomeView: View {
     /// системным переходом значка.
     private func cornerIcon(_ name: String) -> some View {
         Image(systemName: name)
-            .font(.system(size: Metrics.cornerGlyph, weight: .semibold))
-            .foregroundStyle(Palette.ink)
-            .frame(minWidth: 44, minHeight: 44)
-            .contentShape(.circle)
             .contentTransition(.symbolEffect(.replace))
+            .cornerCircle()
     }
 
     /// Всё, что делают с садом целиком: AR, обход, вопрос модели, отъезд,
@@ -578,7 +581,7 @@ struct HomeView: View {
                 }
                 // Телефону без Apple Intelligence вовсе входа не показываем;
                 // выключенной или грузящейся — лист объяснит.
-                if Muse.offered {
+                if Muse.shown(.ask) {
                     Button { asking = true } label: {
                         Label("Спросить сад",
                               systemImage: "bubble.left.and.text.bubble.right")
@@ -630,8 +633,7 @@ struct HomeView: View {
             cornerIcon(moreIcon)
         }
         .menuStyle(.button)
-        .buttonStyle(.glass)
-        .buttonBorderShape(.circle)
+        .buttonStyle(.plain)
         .accessibilityLabel("Ещё")
     }
 
@@ -641,29 +643,21 @@ struct HomeView: View {
         return "ellipsis"
     }
 
-    /// Плиткой или списком — переключатель: нажатие меняет вид и заново
-    /// играет волну появления. На кнопке — вид, что на экране.
+    /// Плиткой или списком — переключатель: растения перетекают из одного
+    /// вида в другой (`PlantTile.morph`), волна появления не играет. На кнопке —
+    /// вид, что на экране.
     private var lookButton: some View {
         Button {
-            // Без анимации самой смены. Прежде её играла пружина
-            // `Motion.arrange`: плитка и список — разные ленивые контейнеры
-            // (LazyVGrid и LazyVStack), у карточек и строк разные вид и
-            // размер, и пружина гнала их по экрану из старых позиций в новые,
-            // пока новые карточки ещё и всплывали своей волной
-            // (`CardAppear`). Теперь смена мгновенна, а мягкость даёт волна
-            // появления (в ней уже учтено «Уменьшить движение»).
-            var quiet = Transaction()
-            quiet.disablesAnimations = true
-            withTransaction(quiet) {
-                revealed.removeAll()
+            // Пружина `Motion.arrange`: карточка и строка сходятся по общему id.
+            // При «Уменьшить движение» смена мгновенна.
+            withAnimation(reduceMotion ? nil : Motion.arrange) {
                 Settings.shared.look = look == .grid ? .list : .grid
             }
             Feel.pick()
         } label: {
             cornerIcon(look.icon)
         }
-        .buttonStyle(.glass)
-        .buttonBorderShape(.circle)
+        .buttonStyle(.plain)
         .accessibilityLabel("Вид")
         .accessibilityValue(look.title)
     }
@@ -713,13 +707,9 @@ struct HomeView: View {
         if editing {
             Button(action: finish) {
                 Image(systemName: "checkmark")
-                    .font(.system(size: Metrics.cornerGlyph, weight: .semibold))
-                    .frame(minWidth: 44, minHeight: 44)
-                    .contentShape(.circle)
+                    .cornerCircle(tint: Palette.accentFill)
             }
-            .buttonStyle(.glassProminent)
-            .tint(Palette.accentFill)
-            .buttonBorderShape(.circle)
+            .buttonStyle(.plain)
             .accessibilityLabel("Готово")
             .transition(.scale.combined(with: .opacity))
         }
@@ -810,6 +800,7 @@ struct HomeView: View {
                               look: look,
                               opening: opening,
                               zoom: cardZoom,
+                              morph: shelfMorph,
                               open: show,
                               index: item.offset,
                               room: index,

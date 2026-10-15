@@ -273,7 +273,7 @@ struct AskView: View {
             .frame(minWidth: 44, minHeight: 44)
             .contentShape(.circle)
             .buttonBorderShape(.circle)
-            .disabled(!Muse.ready || talk.busy || Sage.question(draft) == nil)
+            .disabled(!Muse.works(.ask) || talk.busy || Sage.question(draft) == nil)
             .accessibilityLabel("Спросить")
         }
         .padding(.horizontal, Metrics.contentMargin)
@@ -281,7 +281,7 @@ struct AskView: View {
     }
 
     private func send() {
-        guard Muse.ready, !talk.busy, let question = Sage.question(draft) else { return }
+        guard Muse.works(.ask), !talk.busy, let question = Sage.question(draft) else { return }
         draft = ""
         ask(question)
     }

@@ -23,6 +23,42 @@ enum Muse {
         case noLanguage
     }
 
+    /// ИИ-функция — со своим выключателем в Настройках («Apple Intelligence»).
+    enum Feature: CaseIterable {
+        /// «Спросить сад».
+        case ask
+        /// Совет словами по снимку растения.
+        case advice
+        /// Кличка растению.
+        case names
+
+        var on: Bool {
+            let settings = Settings.shared
+            switch self {
+            case .ask: return settings.aiAsk
+            case .advice: return settings.aiAdvice
+            case .names: return settings.aiNames
+            }
+        }
+    }
+
+    /// Почему модель не отвечает — подпись под выключателем; `nil`, если
+    /// отвечает.
+    static func reason(for state: State) -> String? {
+        switch state {
+        case .ready:
+            return nil
+        case .hidden:
+            return Lang.text("Этот телефон не поддерживает Apple Intelligence.")
+        case .needsEnabling:
+            return Lang.text("Apple Intelligence выключена. Включите её в Настройках телефона → «Apple Intelligence и Siri».")
+        case .loading:
+            return Lang.text("Модель загружается. Попробуйте чуть позже.")
+        case .noLanguage:
+            return Lang.text("Apple Intelligence не говорит на языке приложения.")
+        }
+    }
+
     static var state: State {
         let model = SystemLanguageModel.default
         switch model.availability {
@@ -39,15 +75,29 @@ enum Muse {
         }
     }
 
-    /// Модель готова ответить прямо сейчас.
-    static var ready: Bool { Settings.shared.aiEnabled && state == .ready }
+    /// Модель готова ответить прямо сейчас и хоть одна функция включена.
+    /// Для конкретной функции — `works(_:)`.
+    static var ready: Bool {
+        Feature.allCases.contains { $0.on } && state == .ready
+    }
+
+    /// Модель готова и функция включена.
+    static func works(_ feature: Feature) -> Bool {
+        feature.on && state == .ready
+    }
 
     /// Показывать ли входы в ИИ: не показываем, если телефон не годится
-    /// совсем или ИИ выключена в Настройках. Читается из тела экрана;
-    /// обновляется при запуске и возвращении в приложение, см. `Offer`.
+    /// совсем или все функции выключены в Настройках. Читается из тела
+    /// экрана; обновляется при запуске и возвращении в приложение, см. `Offer`.
     @MainActor
     static var offered: Bool {
-        Settings.shared.aiEnabled && Offer.shared.state != .hidden
+        Feature.allCases.contains { $0.on } && Offer.shared.state != .hidden
+    }
+
+    /// Показывать ли вход в одну функцию.
+    @MainActor
+    static func shown(_ feature: Feature) -> Bool {
+        feature.on && Offer.shared.state != .hidden
     }
 
     /// Язык ответа по-английски: «Russian», «Japanese». Им же отвечает
@@ -61,6 +111,7 @@ enum Muse {
     /// Одну кличку, а не список: нажать «ещё раз» проще, чем выбирать из
     /// пяти.
     static func nickname(for species: String) async -> String? {
+        guard works(.names) else { return nil }
         let answer = await say("""
         Invent one short, affectionate nickname for a houseplant of the \
         species "\(species)". The nickname must be in \(language), a single \
@@ -86,6 +137,7 @@ enum Muse {
     /// говорят сами.
     static func advise(_ findings: [Finding], plant: Plant, room: String?,
                        log: [Watering]) async -> String? {
+        guard works(.advice) else { return nil }
         let answer = await say(Sage.diagnosis(findings, plant: plant,
                                               room: room, log: log,
                                               language: language))

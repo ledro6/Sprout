@@ -1,18 +1,16 @@
 import SwiftUI
 
-/// Крестик полноэкранных экранов — AR и скана: стеклянный кружок размером
-/// с шестерёнку настроек.
+/// Крестик полноэкранных экранов — AR и скана: стеклянный кружок
+/// одного размера с прочими значками шапок.
 struct CloseButton: View {
     let action: () -> Void
 
     var body: some View {
         Button(action: action) {
             Image(systemName: "xmark")
-                .font(Typography.navTitle)
-                .frame(width: Metrics.gearBox, height: Metrics.gearBox)
+                .cornerCircle()
         }
-        .buttonStyle(.glass)
-        .buttonBorderShape(.circle)
+        .buttonStyle(.plain)
         .accessibilityLabel("Закрыть")
     }
 }

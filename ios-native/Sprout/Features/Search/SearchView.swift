@@ -148,7 +148,7 @@ struct SearchView: View {
         VStack(spacing: 18) {
             hint(Lang.format("По запросу «%@» ничего не найдено", asked),
                  icon: "leaf")
-            if Muse.offered {
+            if Muse.shown(.ask) {
                 Button { asking = true } label: {
                     Label("Спросить сад",
                           systemImage: "bubble.left.and.text.bubble.right")

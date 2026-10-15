@@ -196,11 +196,26 @@ final class Settings {
         didSet { store.set(saver, forKey: Key.saver) }
     }
 
-    /// ИИ-функции: подсказки от языковой модели Apple, разговор с садом.
-    /// Выключено — входов в ИИ нет вовсе (`Muse.offered`); разбор снимка
-    /// правилами остаётся. По умолчанию включено.
-    var aiEnabled: Bool {
-        didSet { store.set(aiEnabled, forKey: Key.ai) }
+    /// ИИ-функции по отдельности (`Muse.Feature`): «Спросить сад», совет
+    /// словами по снимку, кличка. Выключено — вход в функцию скрыт
+    /// (`Muse.shown`); разбор снимка правилами остаётся. По умолчанию
+    /// включено.
+    var aiAsk: Bool {
+        didSet { store.set(aiAsk, forKey: Key.aiAsk) }
+    }
+
+    var aiAdvice: Bool {
+        didSet { store.set(aiAdvice, forKey: Key.aiAdvice) }
+    }
+
+    var aiNames: Bool {
+        didSet { store.set(aiNames, forKey: Key.aiNames) }
+    }
+
+    /// Подсказки экранов (`Coach`) — выключено, ни одна не показывается.
+    /// По умолчанию включено.
+    var hints: Bool {
+        didSet { store.set(hints, forKey: Key.hints) }
     }
 
     /// Последняя снятая погода — чтобы сроки учитывали её и до нового
@@ -495,7 +510,13 @@ final class Settings {
         static let weather = "weather"
         static let climate = "climate"
         static let saver = "batterySaver"
+        /// Прежний общий выключатель ИИ — читается один раз, при переходе на
+        /// отдельные: выключенный прежде остаётся выключенным во всём.
         static let ai = "aiEnabled"
+        static let aiAsk = "aiAsk"
+        static let aiAdvice = "aiAdvice"
+        static let aiNames = "aiNames"
+        static let hints = "hintsOn"
         static let statsHidden = "statsHidden"
         /// Готовый цвет кружка прежней сборки — номером.
         static let avatarTint = "avatarTint"
@@ -580,7 +601,11 @@ final class Settings {
         })
         weather = store.bool(forKey: Key.weather)
         saver = store.bool(forKey: Key.saver)
-        aiEnabled = store.object(forKey: Key.ai) as? Bool ?? true
+        let legacyAI = store.object(forKey: Key.ai) as? Bool ?? true
+        aiAsk = store.object(forKey: Key.aiAsk) as? Bool ?? legacyAI
+        aiAdvice = store.object(forKey: Key.aiAdvice) as? Bool ?? legacyAI
+        aiNames = store.object(forKey: Key.aiNames) as? Bool ?? legacyAI
+        hints = store.object(forKey: Key.hints) as? Bool ?? true
         climate = Self.take(Climate.self, Key.climate, from: store)
         statsOrder = StatsBlock.order(
             Self.take([StatsBlock].self, Key.statsOrder, from: store) ?? [])

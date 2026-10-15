@@ -73,12 +73,9 @@ struct SproutGear: View {
     var body: some View {
         Button(action: open) {
             Image(systemName: "gearshape")
-                .font(.system(size: Metrics.gearGlyph, weight: .semibold))
-                .foregroundStyle(Palette.ink)
-                .frame(width: Metrics.gearBox, height: Metrics.gearBox)
+                .cornerCircle()
         }
-        .buttonStyle(.glass)
-        .buttonBorderShape(.circle)
+        .buttonStyle(.plain)
         .accessibilityLabel("Настройки")
     }
 }

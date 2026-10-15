@@ -89,7 +89,7 @@ struct StatsView: View {
                 ScrollView {
                     VStack(alignment: .leading, spacing: 0) {
                         SproutHead("Статистика",
-                                   choosing: blank ? nil : $choosing)
+                                   choosing: blank ? nil : choosingBinding)
                         VStack(alignment: .leading,
                                spacing: Metrics.groupGap) {
                             if blank {
@@ -105,24 +105,21 @@ struct StatsView: View {
                                         .transition(.blurReplace)
                                 }
                                 let shown = settings.statsShown
-                                // В выборе блоки складываются в список: так
-                                // их видно все разом, и таскать легко.
-                                if choosing {
-                                    VStack(spacing: Metrics.statRowGap) {
-                                        ForEach(shown, id: \.self) { block in
-                                            row(block)
-                                                .matchedGeometryEffect(
-                                                    id: block, in: fold)
-                                        }
+                                // Один список на оба вида: ячейки с теми же id.
+                                // В «Выбрать» карточка складывается в строку
+                                // на месте, а не сменяется другим деревом.
+                                VStack(alignment: .leading, spacing: listGap) {
+                                    if !choosing, recapPlace == .banner {
+                                        recapTeaser
                                     }
-                                } else {
-                                    if recapPlace == .banner { recapTeaser }
                                     ForEach(shown, id: \.self) { block in
-                                        content(block)
+                                        cell(block)
                                             .matchedGeometryEffect(
                                                 id: block, in: fold)
                                     }
-                                    if recapPlace == .footer { recapTeaser }
+                                    if !choosing, recapPlace == .footer {
+                                        recapTeaser
+                                    }
                                 }
                                 if shown.isEmpty && !choosing {
                                     Text("Все блоки убраны — нажмите «Выбрать», чтобы вернуть.")
@@ -138,8 +135,9 @@ struct StatsView: View {
                                 }
                             }
                         }
-                        .animation(Motion.arrange, value: settings.statsShown)
-                        .animation(Motion.fold, value: choosing)
+                        // Соседи раздвигаются пружиной; вход и выход из
+                        // «Выбрать» — через `choosingBinding`, одной анимацией.
+                        .animation(.snappy, value: settings.statsShown)
                         .padding(.horizontal, Metrics.contentMargin)
                         .padding(.top, 8)
                         .padding(.bottom, Metrics.barGap)
@@ -222,6 +220,26 @@ struct StatsView: View {
 
     // MARK: - Выбор блоков
 
+    /// «Выбрать» меняет режим одной анимацией `.smooth`: кнопка в шапке
+    /// переключает значение через эту привязку, и вложенный `withAnimation`
+    /// перебивает её пружину. Без второй анимации поверх — иначе экран дёргался.
+    private var choosingBinding: Binding<Bool> {
+        Binding(
+            get: { choosing },
+            set: { value in withAnimation(.smooth) { choosing = value } })
+    }
+
+    /// Отступ списка: в выборе строки плотнее, чем карточки.
+    private var listGap: CGFloat {
+        choosing ? Metrics.statRowGap : Metrics.groupGap
+    }
+
+    /// Ячейка блока: карточка, а в «Выбрать» — строка с тем же id.
+    @ViewBuilder
+    private func cell(_ block: StatsBlock) -> some View {
+        if choosing { row(block) } else { content(block) }
+    }
+
     /// Блок в выборе — строкой: «−» убирает, за полоски справа тянут.
     private func row(_ block: StatsBlock) -> some View {
         HStack(spacing: 12) {
@@ -289,17 +307,15 @@ struct StatsView: View {
                 var shift = value.translation.height - CGFloat(hops) * pitch
                 let shown = settings.statsShown
                 if let at = shown.firstIndex(of: block) {
+                    // Соседи едут через `.animation(.snappy, value:)` списка;
+                    // сама тащимая строка без анимации — см. `row`.
                     if shift > pitch / 2, at + 1 < shown.count {
-                        withAnimation(Motion.arrange) {
-                            settings.swap(block, with: shown[at + 1])
-                        }
+                        settings.swap(block, with: shown[at + 1])
                         hops += 1
                         shift -= pitch
                         Feel.pick()
                     } else if shift < -pitch / 2, at > 0 {
-                        withAnimation(Motion.arrange) {
-                            settings.swap(block, with: shown[at - 1])
-                        }
+                        settings.swap(block, with: shown[at - 1])
                         hops -= 1
                         shift += pitch
                         Feel.pick()

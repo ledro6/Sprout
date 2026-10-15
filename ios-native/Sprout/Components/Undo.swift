@@ -7,6 +7,9 @@ enum Slip: Equatable {
     case pour(Pour)
     /// Пачка поливов разом — «Полить всех» на главной и «Уезжаю».
     case pours([Pour])
+    /// «Полил вчера»: запись задним числом. Отмена — `forget`: запись уходит,
+    /// влажность пересчитывается по прежним поливам.
+    case past(Watering, name: String)
 
     /// Личность плашки: следующее действие сменяет её размытием, даже если
     /// растение то же.
@@ -17,6 +20,8 @@ enum Slip: Equatable {
             "pour-\(pour.plant)-\(pour.when.timeIntervalSinceReferenceDate)"
         case .pours(let pours):
             "pours-\(pours.count)-\(pours.first?.when.timeIntervalSinceReferenceDate ?? 0)"
+        case .past(let entry, _):
+            "past-\(entry.plant)-\(entry.when.timeIntervalSinceReferenceDate)"
         }
     }
 
@@ -25,6 +30,7 @@ enum Slip: Equatable {
         case .removal: Lang.text("Растение удалено")
         case .pour: Lang.text("Полито")
         case .pours(let pours): Lang.format("Политы %lld растений", pours.count)
+        case .past: Lang.text("Записано на вчера")
         }
     }
 
@@ -32,6 +38,7 @@ enum Slip: Equatable {
         switch self {
         case .removal(let gone): gone.plant.name
         case .pour(let pour): pour.name
+        case .past(_, let name): name
         case .pours(let pours):
             pours.map(\.name).joined(separator: ", ")
         }
@@ -140,6 +147,21 @@ final class Bin {
         return pours.count
     }
 
+    /// «Полил вчера»: запись задним числом. Отмена — та же плашка «Вернуть» на
+    /// восемь секунд. Отвечает, записано ли (нет — растения нет или полив уже
+    /// рядом по времени).
+    @MainActor
+    @discardableResult
+    func past(_ id: Plant.ID, at moment: Date, in garden: Garden) -> Bool {
+        commit()
+        guard withAnimation(Motion.appear, { garden.addPast(id, at: moment) })
+        else { return false }
+        self.garden = garden
+        let name = garden.plant(id: id)?.name ?? ""
+        count(.past(Watering(plant: id, when: moment), name: name))
+        return true
+    }
+
     @MainActor
     private func count(_ slip: Slip) {
         pending = slip
@@ -176,6 +198,7 @@ final class Bin {
         case .removal(let gone): garden.putBack(gone)
         case .pour(let pour): garden.unwater(pour)
         case .pours(let pours): pours.reversed().forEach { garden.unwater($0) }
+        case .past(let entry, _): garden.forget(entry)
         }
     }
 
@@ -327,7 +350,7 @@ private struct UndoToast: View {
     private func tint(_ slip: Slip) -> Color {
         switch slip {
         case .removal: Palette.alarm
-        case .pour, .pours: Palette.water
+        case .pour, .pours, .past: Palette.water
         }
     }
 }

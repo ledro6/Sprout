@@ -2,8 +2,8 @@ import PhotosUI
 import SwiftUI
 
 /// «Фото и заметки» на экране растения: лента снимков по датам, новые
-/// первыми, и заметки с датами. Снимок добавляют в два касания — «+» и выбор
-/// «Снять» или «Из галереи», как в «Что с ним?». Старая заметка идёт первой,
+/// первыми, и заметки с датами. Снимок добавляют в два касания — «Добавить
+/// фото», затем «Снять» или «Из галереи» в меню. Старая заметка идёт первой,
 /// см. `Plant.legacyJot`.
 struct PlantJournal: View {
     let plant: Plant
@@ -11,13 +11,15 @@ struct PlantJournal: View {
 
     @Environment(Garden.self) private var garden
 
-    @State private var choosing = false
-    @State private var wantsCamera = false
+    @State private var pickingPhoto = false
     @State private var shooting = false
     @State private var fresh: UIImage?
     @State private var item: PhotosPickerItem?
     @State private var viewing = false
     @State private var start = 0
+    /// Снимок, который открыли: от его миниатюры растёт просмотр.
+    @State private var opened = ""
+    @Namespace private var viewZoom
     @State private var draft = ""
     @State private var shotFailed = false
 
@@ -56,18 +58,17 @@ struct PlantJournal: View {
         .sproutPlate(in: RoundedRectangle(cornerRadius: Metrics.cardRadius,
                                           style: .continuous))
         .sproutRide()
-        .sheet(isPresented: $choosing, onDismiss: { showCamera() }) {
-            choice
-        }
+        .photosPicker(isPresented: $pickingPhoto, selection: $item,
+                      matching: .images)
         .fullScreenCover(isPresented: $shooting, onDismiss: { keepShot() }) {
             Camera { image in fresh = image }
                 .ignoresSafeArea()
         }
         .fullScreenCover(isPresented: $viewing) {
             PhotoViewer(names: viewerNames, start: start)
+                .navigationTransition(.zoom(sourceID: opened, in: viewZoom))
         }
         .onChange(of: item) { _, chosen in
-            if chosen != nil { choosing = false }
             Task { await pick(chosen) }
         }
         .alert("Не вышло", isPresented: $shotFailed) {
@@ -90,13 +91,25 @@ struct PlantJournal: View {
         }
     }
 
+    /// Одна кнопка «Добавить фото» с меню «Снять» и «Из галереи». Галерею
+    /// открывает флаг: `PhotosPicker` внутри меню не открывается.
     private var addTile: some View {
-        Button { choosing = true } label: {
+        Menu {
+            if Camera.exists {
+                Button { shooting = true } label: {
+                    Label("Снять", systemImage: "camera")
+                }
+            }
+            Button { pickingPhoto = true } label: {
+                Label("Из галереи", systemImage: "photo")
+            }
+        } label: {
             VStack(spacing: 6) {
-                Image(systemName: "plus")
+                Image(systemName: "camera.fill")
                     .font(.system(size: 22, weight: .semibold))
-                Text("Добавить")
+                Text("Добавить фото")
                     .font(Typography.settingNote)
+                    .multilineTextAlignment(.center)
             }
             .foregroundStyle(Palette.accentFill)
             .frame(width: 112, height: 112)
@@ -105,7 +118,7 @@ struct PlantJournal: View {
                     .stroke(Palette.secondaryText, lineWidth: 1)
             )
         }
-        .buttonStyle(.borderless)
+        .buttonStyle(SproutPress())
         .accessibilityLabel("Добавить фото")
     }
 
@@ -117,7 +130,8 @@ struct PlantJournal: View {
                     .clipShape(RoundedRectangle(cornerRadius: 16,
                                                 style: .continuous))
             }
-            .buttonStyle(.borderless)
+            .buttonStyle(SproutPress())
+            .matchedTransitionSource(id: snap.file, in: viewZoom)
             .accessibilityLabel(Lang.format("Фото от %@",
                                             snap.date.formatted(date: .abbreviated, time: .omitted)))
             .contextMenu {
@@ -152,41 +166,11 @@ struct PlantJournal: View {
     private func open(_ file: String) {
         guard let index = viewerNames.firstIndex(of: file) else { return }
         start = index
+        opened = file
         viewing = true
     }
 
-    // MARK: - Выбор и добавление снимка
-
-    private var choice: some View {
-        VStack(spacing: 12) {
-            if Camera.exists {
-                Button {
-                    wantsCamera = true
-                    choosing = false
-                } label: {
-                    Label("Снять", systemImage: "camera")
-                        .frame(maxWidth: .infinity)
-                }
-                .buttonStyle(.glass)
-            }
-            PhotosPicker(selection: $item, matching: .images) {
-                Label("Из галереи", systemImage: "photo")
-                    .frame(maxWidth: .infinity)
-            }
-            .buttonStyle(.glass)
-        }
-        .font(Typography.settingNote)
-        .padding(Metrics.margin)
-        .presentationDetents([.height(180)])
-    }
-
-    /// Камеру открываем, когда лист выбора закрылся: два листа разом SwiftUI
-    /// не покажет.
-    private func showCamera() {
-        guard wantsCamera else { return }
-        wantsCamera = false
-        shooting = true
-    }
+    // MARK: - Добавление снимка
 
     private func keepShot() {
         guard let image = fresh else { return }

@@ -155,13 +155,25 @@ struct AwardSheet: View {
     let count: Int
 
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.accessibilityReduceMotion) private var still
 
     private let cabinet = Cabinet.shared
 
     @State private var picked: Int?
+    /// Поворот медали при переходе (градусы) и прозрачность — для «Уменьшения движения».
+    @State private var turn: Double = 0
+    @State private var fade: Double = 1
+    @State private var turning = false
+
+    /// Половина перехода: медаль поворачивается ребром за столько секунд.
+    private let edge = 0.14
+
+    private var current: Int {
+        picked ?? max(cabinet.level(award), 1)
+    }
 
     private var shown: Rank {
-        Rank(award, picked ?? max(cabinet.level(award), 1))
+        Rank(award, current)
     }
 
     var body: some View {
@@ -171,8 +183,11 @@ struct AwardSheet: View {
             ScrollView {
                 VStack(spacing: 20) {
                     MedalStage(rank: rank, earned: earned != nil, date: earned)
-                        .id(rank)
                         .frame(height: 300)
+                        .rotation3DEffect(.degrees(turn),
+                                          axis: (x: 0, y: 1, z: 0),
+                                          perspective: 0.4)
+                        .opacity(fade)
                     VStack(spacing: 8) {
                         Text(rank.title)
                             .font(Typography.welcome)
@@ -216,6 +231,41 @@ struct AwardSheet: View {
         .presentationDetents([.large])
     }
 
+    /// Переход на ступень: текущая медаль поворачивается ребром (0→90°, easeIn),
+    /// на ребре подменяется, новая доворачивается (90°→0, easeOut). Всего ≤0.3 с.
+    /// Направление — по листанию: вперёд (выше уровень) и назад — разные стороны.
+    /// При «Уменьшении движения» — простое затухание.
+    private func pick(_ level: Int) {
+        guard !turning, level != current else { return }
+        turning = true
+        Feel.pick()
+        let sign: Double = level > current ? -1 : 1
+        if still {
+            withAnimation(.easeIn(duration: edge)) { fade = 0 }
+        } else {
+            withAnimation(.easeIn(duration: edge)) { turn = 90 * sign }
+        }
+        Task { @MainActor in
+            try? await Task.sleep(for: .seconds(edge))
+            // Подмена на ребре: без анимации, чтобы не было видно скачка.
+            var now = Transaction()
+            now.disablesAnimations = true
+            withTransaction(now) {
+                picked = level
+                turn = still ? 0 : -90 * sign
+            }
+            // Короткая пауза, чтобы доворот начался уже с нового кадра, а не склеился со сменой.
+            try? await Task.sleep(for: .milliseconds(10))
+            if still {
+                withAnimation(.easeOut(duration: edge)) { fade = 1 }
+            } else {
+                withAnimation(.easeOut(duration: edge)) { turn = 0 }
+            }
+            try? await Task.sleep(for: .seconds(edge))
+            turning = false
+        }
+    }
+
     /// Ступени по порядку: медаль, название и дата или сколько осталось.
     private var ladder: some View {
         SproutGroup("Уровни") {
@@ -223,8 +273,7 @@ struct AwardSheet: View {
                 let rank = Rank(award, level)
                 let date = cabinet.date(rank)
                 Button {
-                    withAnimation(Motion.pill) { picked = level }
-                    Feel.pick()
+                    pick(level)
                 } label: {
                     HStack(spacing: 12) {
                         MedalBadge(rank: rank, earned: date != nil)

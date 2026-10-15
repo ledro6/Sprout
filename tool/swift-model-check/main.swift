@@ -1910,7 +1910,7 @@ do {
           "вовремя в челлендже — два полива: до и после недели не в счёт")
     let back = Race.read(race.card(calendar: utc))
     check(back == race, "челлендж возвращается из сообщения целым")
-    check(race.card(calendar: utc).contains("Лера зовёт в испытание Sprout: «Кто больше польёт вовремя»"),
+    check(race.card(calendar: utc).contains("Лера зовёт в соревнование Sprout: «Кто больше польёт вовремя»"),
           "в сообщении — кто зовёт и во что")
     var odd = race
     odd.quest = .noFlood
@@ -1942,6 +1942,13 @@ do {
           "места: чужие — из их кодов, кто в другом челлендже — не в таблице")
     friends.leave(race.id)
     check(friends.races.isEmpty, "из челленджа можно выйти")
+    check(friends.current(at: at(6, 12), calendar: utc) == nil,
+          "после выхода показывать нечего — только кнопки")
+    check(friends.rivals.first { $0.name == "Боря" }?.race == nil
+          && friends.rivals.first { $0.name == "Аня" }?.race?.count == 9,
+          "счёт друга в этом челлендже стёрт, чужой — остаётся")
+    check(Friends(store: box).rivals.first { $0.name == "Боря" }?.race == nil,
+          "стёртый счёт не возвращается после перезапуска")
 }
 
 print("что разглядел телефон:")

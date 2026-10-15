@@ -11,7 +11,12 @@ struct TermHint: View {
         self.term = term
     }
 
+    // Подсказки выключены в Настройках — значка «?» нет.
     var body: some View {
+        if Settings.shared.hints { hint }
+    }
+
+    private var hint: some View {
         Button { open = true } label: {
             Image(systemName: "questionmark.circle")
                 .font(Typography.settingNote)

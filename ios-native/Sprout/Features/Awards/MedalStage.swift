@@ -19,6 +19,9 @@ struct MedalStage: View {
     @State private var rig = MedalRig()
     @State private var sparks = Sparks()
     @State private var ready = false
+    /// Контейнер медали: при смене ранга в нём подменяется сама модель,
+    /// а сцена, камера и свет остаются прежними.
+    @State private var holder = Entity()
 
     @Environment(\.accessibilityReduceMotion) private var still
 
@@ -30,15 +33,11 @@ struct MedalStage: View {
             RealityView { content in
                 // По умолчанию на iOS — камера AR; медали нужна своя сцена.
                 content.camera = .virtual
-                let made = await MedalCraft.medal(rank, earned: earned,
-                                                  date: date)
-                content.add(made.root)
+                content.add(holder)
                 content.add(MedalCraft.camera())
                 for light in MedalCraft.lights() { content.add(light) }
-                rig.medal = made.spinner
-                ready = true
-                if !still { sparks.burst(earned ? 90 : 24) }
             }
+            .task(id: rank) { await load() }
             .backgroundStyle(Color.clear)
             .scaleEffect(ready || still ? 1 : Motion.medalScale)
             .opacity(ready ? 1 : 0)
@@ -51,6 +50,21 @@ struct MedalStage: View {
         .accessibilityElement()
         .accessibilityLabel(rank.title)
         .accessibilityAddTraits(.isImage)
+    }
+
+    /// Грузит модель нового ранга и подменяет её, когда та готова: прежняя
+    /// медаль остаётся на сцене до этого. Появление (рост и искры) — только
+    /// при первом показе; при смене ранга анимации входа не играют.
+    private func load() async {
+        let made = await MedalCraft.medal(rank, earned: earned, date: date)
+        guard !Task.isCancelled else { return }
+        for old in Array(holder.children) { old.removeFromParent() }
+        holder.addChild(made.root)
+        rig.medal = made.spinner
+        if !ready {
+            ready = true
+            if !still { sparks.burst(earned ? 90 : 24) }
+        }
     }
 }
 

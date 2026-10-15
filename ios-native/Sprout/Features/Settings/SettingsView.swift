@@ -517,19 +517,39 @@ struct SettingsView: View {
 
     // MARK: - Защита
 
-    /// Замок — здешние «вход» и «выход»: учётной записи у Sprout нет. Нечем
-    /// запирать — переключатель погашен, и это единственное пояснение.
+    /// Каждая ИИ-функция — отдельно. Телефону без Apple Intelligence или с
+    /// выключенной ею выключатели погашены, а под каждым — причина из
+    /// `Muse.reason`. Разбор снимка правилами работает всегда.
     private var intelligence: some View {
-        SproutGroup("ИИ") {
-            // Без ИИ остаётся разбор снимка правилами: он не словами.
-            switchRow("ИИ-функции",
-                      note: settings.aiEnabled ? nil
-                          : "Совет словами и разговор с садом скрыты. Разбор снимка и подсказки по уходу работают как прежде.",
-                      isOn: Binding(
-                          get: { settings.aiEnabled },
-                          set: { settings.aiEnabled = $0 }))
+        SproutGroup("Apple Intelligence") {
+            aiRow(LocalizedStringKey(Lang.key("Спросить сад")), isOn: Binding(
+                get: { settings.aiAsk },
+                set: { settings.aiAsk = $0 }))
+
+            SproutDivider()
+
+            aiRow(LocalizedStringKey(Lang.key("Совет словами по снимку")), isOn: Binding(
+                get: { settings.aiAdvice },
+                set: { settings.aiAdvice = $0 }))
+
+            SproutDivider()
+
+            aiRow(LocalizedStringKey(Lang.key("Клички растениям")), isOn: Binding(
+                get: { settings.aiNames },
+                set: { settings.aiNames = $0 }))
         }
-        .animation(Motion.enter, value: settings.aiEnabled)
+    }
+
+    /// Выключатель ИИ-функции: погашен, пока модель не отвечает, и тогда
+    /// под ним — причина. `Offer` обновляет её, когда пользователь включит
+    /// Apple Intelligence.
+    private func aiRow(_ title: LocalizedStringKey,
+                       isOn: Binding<Bool>) -> some View {
+        let reason = Muse.reason(for: Offer.shared.state)
+        return switchRow(title,
+                         note: reason.map { LocalizedStringKey($0) },
+                         isOn: isOn)
+            .disabled(reason != nil)
     }
 
     private var protection: some View {
@@ -562,6 +582,15 @@ struct SettingsView: View {
 
     private var about: some View {
         SproutGroup("О приложении") {
+            switchRow("Подсказки",
+                      note: settings.hints ? nil
+                          : "Подсказки на экранах не показываются. Вернуть — переключателем.",
+                      isOn: Binding(
+                          get: { settings.hints },
+                          set: { settings.hints = $0 }))
+
+            SproutDivider()
+
             Button { touring = true } label: {
                 SproutLink("Как пользоваться", icon: "hand.tap")
             }
@@ -585,6 +614,7 @@ struct SettingsView: View {
                 SproutLink("Показать подсказки снова", icon: "lightbulb")
             }
             .buttonStyle(.plain)
+            .disabled(!settings.hints)
 
             SproutDivider()
 

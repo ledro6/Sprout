@@ -331,7 +331,7 @@ struct AddView: View {
                         .font(Typography.settingRow)
                         .focused($typing)
                         .submitLabel(.done)
-                    if Muse.ready {
+                    if Muse.works(.names) {
                         Button { Task { await invent() } } label: {
                             Label("Придумать", systemImage: "sparkles")
                                 .lineLimit(1)
@@ -724,7 +724,7 @@ struct AddView: View {
             }
         }
         // Кличка про запас: подставится при посадке, если поле пустое.
-        if Muse.ready {
+        if Muse.works(.names) {
             suggestion = await Muse.nickname(for: wanted.isEmpty
                                              ? Lang.text("Комнатное растение")
                                              : wanted)

@@ -33,7 +33,11 @@ struct PhotoViewer: View {
                 .frame(minWidth: 44, minHeight: 44)
                 .padding(.trailing, Metrics.contentMargin)
         }
-        .preferredColorScheme(.dark)
+        // Тёмная тема — только для содержимого. `preferredColorScheme` менял
+        // схему всего окна на время показа и мигал при открытии и закрытии.
+        // Строка состояния на чёрном фоне скрыта, иначе её текст был бы тёмным.
+        .environment(\.colorScheme, .dark)
+        .statusBarHidden(true)
     }
 }
 

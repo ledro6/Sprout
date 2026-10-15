@@ -209,17 +209,17 @@ struct RaceCard: View {
             }
             // Выход — отдельно и не рядом с «Отправить счёт», и с вопросом.
             Button(role: .destructive) { quitting = true } label: {
-                Label("Выйти из испытания",
+                Label("Выйти из соревнования",
                       systemImage: "rectangle.portrait.and.arrow.right")
             }
             .buttonStyle(.borderless)
             .font(Typography.settingNote)
-            .confirmationDialog("Выйти из испытания?", isPresented: $quitting,
+            .confirmationDialog("Выйти из соревнования?", isPresented: $quitting,
                                 titleVisibility: .visible) {
                 Button("Выйти", role: .destructive, action: leave)
                 Button("Отмена", role: .cancel) {}
             } message: {
-                Text("Испытание пропадёт с этого телефона. Вернуться можно, вставив приглашение ещё раз.")
+                Text("Соревнование пропадёт с этого телефона. Вернуться можно, вставив приглашение ещё раз.")
             }
         }
     }

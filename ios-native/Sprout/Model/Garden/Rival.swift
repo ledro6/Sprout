@@ -184,9 +184,18 @@ final class Friends {
         saveRaces()
     }
 
+    /// Выход стирает челлендж и счёт друзей в нём: вставленный снова код
+    /// не должен вернуть старые числа.
     func leave(_ id: Race.ID) {
         races.removeAll { $0.id == id }
         saveRaces()
+        rivals = rivals.map { rival in
+            guard rival.race?.id == id else { return rival }
+            var cleared = rival
+            cleared.race = nil
+            return cleared
+        }
+        save()
     }
 
     /// Места в челлендже: свой счёт — живой, чужие — какими их прислали.
