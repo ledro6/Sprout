@@ -155,18 +155,12 @@ struct AwardSheet: View {
     let count: Int
 
     @Environment(\.dismiss) private var dismiss
-    @Environment(\.accessibilityReduceMotion) private var still
 
     private let cabinet = Cabinet.shared
 
     @State private var picked: Int?
-    /// Поворот медали при переходе (градусы) и прозрачность — для «Уменьшения движения».
-    @State private var turn: Double = 0
-    @State private var fade: Double = 1
-    @State private var turning = false
-
-    /// Половина перехода: медаль поворачивается ребром за столько секунд.
-    private let edge = 0.14
+    /// Знак переворота медали: по направлению листания (см. MedalStage).
+    @State private var turnSign: Double = 1
 
     private var current: Int {
         picked ?? max(cabinet.level(award), 1)
@@ -182,12 +176,9 @@ struct AwardSheet: View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: 20) {
-                    MedalStage(rank: rank, earned: earned != nil, date: earned)
+                    MedalStage(rank: rank, earned: earned != nil, date: earned,
+                               turnSign: turnSign)
                         .frame(height: 300)
-                        .rotation3DEffect(.degrees(turn),
-                                          axis: (x: 0, y: 1, z: 0),
-                                          perspective: 0.4)
-                        .opacity(fade)
                     VStack(spacing: 8) {
                         Text(rank.title)
                             .font(Typography.welcome)
@@ -231,39 +222,15 @@ struct AwardSheet: View {
         .presentationDetents([.large])
     }
 
-    /// Переход на ступень: текущая медаль поворачивается ребром (0→90°, easeIn),
-    /// на ребре подменяется, новая доворачивается (90°→0, easeOut). Всего ≤0.3 с.
-    /// Направление — по листанию: вперёд (выше уровень) и назад — разные стороны.
-    /// При «Уменьшении движения» — простое затухание.
+    /// Переход на ступень: медаль сама переворачивается в MedalStage. Знак
+    /// поворота — по листанию: вперёд (выше уровень) и назад — разные стороны.
+    /// Повторное нажатие во время переворота не накладывается: новая ступень
+    /// ждёт конца текущего переворота (см. MedalStage).
     private func pick(_ level: Int) {
-        guard !turning, level != current else { return }
-        turning = true
+        guard level != current else { return }
         Feel.pick()
-        let sign: Double = level > current ? -1 : 1
-        if still {
-            withAnimation(.easeIn(duration: edge)) { fade = 0 }
-        } else {
-            withAnimation(.easeIn(duration: edge)) { turn = 90 * sign }
-        }
-        Task { @MainActor in
-            try? await Task.sleep(for: .seconds(edge))
-            // Подмена на ребре: без анимации, чтобы не было видно скачка.
-            var now = Transaction()
-            now.disablesAnimations = true
-            withTransaction(now) {
-                picked = level
-                turn = still ? 0 : -90 * sign
-            }
-            // Короткая пауза, чтобы доворот начался уже с нового кадра, а не склеился со сменой.
-            try? await Task.sleep(for: .milliseconds(10))
-            if still {
-                withAnimation(.easeOut(duration: edge)) { fade = 1 }
-            } else {
-                withAnimation(.easeOut(duration: edge)) { turn = 0 }
-            }
-            try? await Task.sleep(for: .seconds(edge))
-            turning = false
-        }
+        turnSign = level > current ? -1 : 1
+        picked = level
     }
 
     /// Ступени по порядку: медаль, название и дата или сколько осталось.
