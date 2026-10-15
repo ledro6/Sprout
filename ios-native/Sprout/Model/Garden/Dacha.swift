@@ -65,6 +65,8 @@ enum Dacha {
         var millimeters: Double
         /// 0…1.
         var chance: Double
+        /// °C; нет — заморозка не видно.
+        var temperature: Double? = nil
     }
 
     /// Что дождь уже сделал и что обещано. Живёт между запусками, чтобы
@@ -79,6 +81,8 @@ enum Dacha {
         var millimeters: Double?
         /// Начало суток, на которые обещан дождь.
         var promised: Date?
+        /// Заморозок обещан на ближайшие сутки.
+        var frost: Bool?
     }
 
     /// Морось землю не промочит: столько миллиметров не в счёт.
@@ -123,11 +127,53 @@ enum Dacha {
         return total >= enough && surest >= likely ? tomorrow : nil
     }
 
+    /// Заморозок обещан: хоть в один час ближайших суток ниже `Outdoor.frost`.
+    static func frosted(_ hours: [Hour], now: Date) -> Bool {
+        let end = now.addingTimeInterval(86_400)
+        return hours.contains { hour in
+            guard let temperature = hour.temperature, hour.start <= end,
+                  hour.start.addingTimeInterval(3_600) > now
+            else { return false }
+            return temperature < Outdoor.frost
+        }
+    }
+
     /// «Прошёл дождь» — сутки после того, как он отложил полив.
     static func lately(_ rain: Rainfall?, now: Date = Date()) -> Bool {
         guard let soaked = rain?.soaked else { return false }
         let age = now.timeIntervalSince(soaked)
         return age >= 0 && age < 86_400
+    }
+
+    /// Одна плашка дождя на карточке дачи: «Дождь: полив отложен до
+    /// завтра». Прошёл дождь — полив ждёт до завтра; обещан на завтра — до
+    /// послезавтра, с датой. Нет дождя — пусто.
+    static func rainLine(_ rain: Rainfall?, now: Date = Date(),
+                         calendar: Calendar = .current) -> String? {
+        guard let rain, Outdoor.wet(rain, now: now, calendar: calendar)
+                || rain.frost == true
+        else { return nil }
+        if !Outdoor.wet(rain, now: now, calendar: calendar) {
+            return Lang.text("Заморозок: полив отложен")
+        }
+        let days = tomorrow(rain, now: now, calendar: calendar) ? 2 : 1
+        guard days > 1 else {
+            return Lang.text("Дождь: полив отложен до завтра")
+        }
+        guard let day = calendar.date(byAdding: .day, value: days,
+                                      to: calendar.startOfDay(for: now))
+        else { return nil }
+        let style = Date.FormatStyle(calendar: calendar,
+                                     timeZone: calendar.timeZone)
+            .day().month(.wide).locale(Lang.locale)
+        return Lang.format("Дождь: полив отложен до %@", day.formatted(style))
+    }
+
+    /// «Напоминать только на даче» держится, пока приезд можно заметить:
+    /// без точной геопозиции настройка выключается сама — иначе о дачных
+    /// растениях не напомнило бы ничего.
+    static func onlyThere(_ wanted: Bool, located: Bool) -> Bool {
+        wanted && located
     }
 
     /// «Завтра дождь» — пока обещанные сутки и правда завтрашние.
@@ -139,6 +185,36 @@ enum Dacha {
                   to: calendar.startOfDay(for: now))
         else { return false }
         return calendar.isDate(promised, inSameDayAs: tomorrow)
+    }
+}
+
+extension Outdoor {
+    /// Причина, по которой уличные растения сегодня не поливаем, или nil.
+    /// Комнаты под крышей не касаются; зимой уличные отдыхают.
+    static func reason(outdoor: Bool, rain: Dacha.Rainfall?, winter: Bool,
+                       now: Date, calendar: Calendar = .current) -> Reason? {
+        guard outdoor else { return nil }
+        if let rain, now.timeIntervalSince(rain.checked) < stale {
+            if wet(rain, now: now, calendar: calendar) { return .rain }
+            if rain.frost == true { return .frost }
+        }
+        return winter ? .winter : nil
+    }
+
+    /// Дождь был за сутки (не меньше `rainSkip`) или обещан на сегодня-завтра.
+    static func wet(_ rain: Dacha.Rainfall, now: Date,
+                    calendar: Calendar = .current) -> Bool {
+        if let soaked = rain.soaked {
+            let age = now.timeIntervalSince(soaked)
+            if age >= 0, age < 86_400, (rain.millimeters ?? rainSkip) >= rainSkip {
+                return true
+            }
+        }
+        if let promised = rain.promised,
+           promised >= calendar.startOfDay(for: now) {
+            return true
+        }
+        return false
     }
 }
 

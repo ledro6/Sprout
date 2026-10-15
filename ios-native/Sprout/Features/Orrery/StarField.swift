@@ -3,6 +3,9 @@ import SwiftUI
 /// Звёзды планетария — неподвижные, мерцают вразнобой. Места — из
 /// постоянного зерна: небо не перетасовывается при каждом открытии.
 struct StarField: View {
+    /// «Тихая ночь»: звёзды мерцают втрое медленнее.
+    var calm = false
+
     private static let stars: [(x: Double, y: Double, size: Double,
                                 phase: Double)] = {
         var seed: UInt64 = 0x5EED
@@ -29,7 +32,7 @@ struct StarField: View {
                                 startRadius: 0,
                                 endRadius: max(size.width, size.height) * 0.8))
                 for star in Self.stars {
-                    let twinkle = (sin((time / 2.6 + star.phase) * 2 * .pi)
+                    let twinkle = (sin((time / (calm ? 7.5 : 2.6) + star.phase) * 2 * .pi)
                                    + 1) / 2
                     let r = star.size * (0.7 + 0.3 * twinkle)
                     canvas.fill(Path(ellipseIn: CGRect(

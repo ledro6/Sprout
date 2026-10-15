@@ -24,6 +24,25 @@ struct OrreryView: View {
     /// Политые отсюда — у ворот расходится круг.
     @State private var splashed: [Plant.ID: Date] = [:]
 
+    @Environment(\.accessibilityReduceMotion) private var still
+    private let book = SkyBook.shared
+    /// «Небесный журнал» открыт.
+    @State private var journal = false
+    /// Свежие поливы, у которых играет реакция: искра или спотыкание.
+    @State private var echoes: [Echo] = []
+    @State private var looked = Date.distantPast
+    @State private var chime = SpheresPlayer()
+
+    struct Echo: Hashable {
+        var id: Plant.ID
+        var hit: Precision.Hit
+        var start: Date
+    }
+
+    private var side: Season.Side {
+        Season.side(region: Locale.current.region?.identifier)
+    }
+
     private var orbits: [Orrery.Orbit] {
         Orrery.orbits(garden.rooms.flatMap(\.plants))
     }
@@ -34,6 +53,7 @@ struct OrreryView: View {
         ScrollViewReader { reader in
             ScrollView {
                 VStack(spacing: Metrics.groupGap) {
+                    chips
                     dial(orbits, crossings: crossings)
                         .hintSpot(.orreryDial)
                     card(crossings)
@@ -42,15 +62,21 @@ struct OrreryView: View {
                         .hintSpot(.orreryTime)
                     play(orbits, crossings: crossings)
                         .hintSpot(.orreryPlay)
+                    observatory(orbits)
                     omens(orbits)
                     parades(orbits)
                         .hintSpot(.orreryParades)
                 }
                 .padding(.horizontal, Metrics.contentMargin)
                 .padding(.top, 8)
-                .padding(.bottom, 40)
+                .padding(.bottom, Metrics.barGap)
             }
-            .background { StarField() }
+            .background {
+                ZStack {
+                    StarField(calm: calm)
+                    SkyEvents(kinds: Set(book.unseen.map(\.kind)))
+                }
+            }
             .walk(.orrery, scroll: reader)
         }
         // Панелью, а не поверх: прокрутка уходит под шапку мягким краем, как
@@ -94,21 +120,219 @@ struct OrreryView: View {
             guard !Task.isCancelled, playing == started else { return }
             finish()
         }
-        .onDisappear { stop() }
+        .onAppear {
+            book.standing(garden.log, side: side)
+            look(force: true)
+            react()
+            hush()
+        }
+        .onChange(of: garden.ticked) { look(force: false) }
+        .onChange(of: garden.log.count) {
+            book.standing(garden.log, side: side)
+            react()
+        }
+        .sheet(isPresented: $journal) {
+            SkyJournal().environment(garden)
+        }
+        .onDisappear {
+            stop()
+            chime.stop()
+            // Показанные события больше в «Небо сада» не вернутся.
+            book.markShown()
+        }
+    }
+
+    // MARK: - Редкие события
+
+    /// Взгляд на небо: ответы «Обсерватории», новые события, покой. Часы
+    /// тикают часто, а небу хватает раза в полминуты.
+    private func look(force: Bool) {
+        let now = Date()
+        guard force || now.timeIntervalSince(looked) > 30 else { return }
+        looked = now
+        book.settle()
+        discover()
+        book.watch(plants: garden.rooms.flatMap(\.plants))
+    }
+
+    /// Тихая ночь: в саду никто не просит воды.
+    private var calm: Bool {
+        Calm.isCalm(garden.rooms.flatMap(\.plants))
+    }
+
+    /// Мягкий аккорд тишины: раз в день, если звуки включены и музыка
+    /// не играет.
+    private func hush() {
+        guard Settings.shared.sounds, playing == nil, calm, book.chordDue()
+        else { return }
+        Task { @MainActor in
+            await chime.prepareChord()
+            chime.play()
+        }
+    }
+
+    private func discover() {
+        book.discover(plants: garden.rooms.flatMap(\.plants),
+                      log: garden.log)
+    }
+
+    // MARK: - Обсерватория
+
+    /// Вопрос дня: кто первым дойдёт до луча. Ответ решает модель в миг
+    /// выбора (`Observatory`), полив после него ничего не меняет.
+    @ViewBuilder
+    private func observatory(_ orbits: [Orrery.Orbit]) -> some View {
+        let question = book.question(orbits)
+        let answer = book.today()
+        if !question.isEmpty || answer != nil {
+            VStack(alignment: .leading, spacing: 10) {
+                HStack {
+                    Label("Обсерватория", systemImage: "binoculars")
+                        .font(Typography.detail)
+                        .foregroundStyle(Palette.ink)
+                    Spacer(minLength: 8)
+                    Label("\(book.state.stars)", systemImage: "star.fill")
+                        .font(Typography.settingNote)
+                        .foregroundStyle(Palette.waterGlow)
+                }
+                if let answer {
+                    Text(Self.verdict(answer))
+                        .font(Typography.settingNote)
+                        .foregroundStyle(Palette.secondaryText)
+                        .fixedSize(horizontal: false, vertical: true)
+                } else {
+                    Text("Кто первым дойдёт до луча?")
+                        .font(Typography.settingRow)
+                        .foregroundStyle(Palette.ink)
+                    LazyVGrid(columns: [GridItem(.flexible()),
+                                        GridItem(.flexible())], spacing: 8) {
+                        ForEach(question, id: \.id) { candidate in
+                            Button {
+                                book.pick(candidate.id, from: question)
+                                Feel.pick()
+                            } label: {
+                                Text(candidate.name)
+                                    .font(Typography.settingRow)
+                                    .lineLimit(1)
+                                    .frame(maxWidth: .infinity)
+                            }
+                            .buttonStyle(.glass)
+                        }
+                    }
+                }
+                let streak = book.streak()
+                if streak > 0 {
+                    Text(Lang.format("Серия верных дней: %lld", streak))
+                        .font(Typography.settingNote)
+                        .foregroundStyle(Palette.secondaryText)
+                }
+            }
+            .padding(Metrics.groupPadding)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .sproutPlate(in: RoundedRectangle(cornerRadius: Metrics.cardRadius,
+                                              style: .continuous))
+        }
+    }
+
+    static func verdict(_ entry: Observatory.Entry) -> String {
+        let first = entry.candidates.first { $0.id == entry.winner }?.name ?? ""
+        switch entry.outcome {
+        case .hit:
+            return Lang.format("Верно! Первой дошла %@ — звезда наблюдателя.",
+                               first)
+        case .miss:
+            return Lang.format("Не угадали: первой дошла %@.", first)
+        case nil:
+            let picked = entry.candidates.first { $0.id == entry.picked }?.name
+                ?? ""
+            let when = entry.reveal.formatted(date: .abbreviated,
+                                              time: .shortened)
+            return Lang.format("Вы выбрали: %1$@. Ответ узнаем %2$@.", picked,
+                               when)
+        }
+    }
+
+    // MARK: - Точность
+
+    /// Компактная строка под шапкой: счёт сезона; нажатие — журнал.
+    private var chips: some View {
+        let standing = Precision.standing(garden.log, side: side,
+                                          kept: book.state.record)
+        return HStack {
+            Button { journal = true } label: {
+                HStack(spacing: 6) {
+                    Image(systemName: "scope")
+                    Text(Lang.format("Точность: %@",
+                                     standing.share.map { Stats.percent($0) }
+                                        ?? "—"))
+                }
+                .font(Typography.settingNote)
+                .foregroundStyle(Palette.ink)
+                .padding(.horizontal, 12)
+                .padding(.vertical, 7)
+                .background(Capsule().fill(Color.white.opacity(0.08)))
+            }
+            .buttonStyle(.borderless)
+            .frame(minHeight: 44)
+            .contentShape(.rect)
+            .accessibilityHint("Откроет небесный журнал")
+            Spacer(minLength: 0)
+        }
+    }
+
+    /// Свежие поливы, которых небо ещё не показывало: «в яблочко» —
+    /// искра у ворот, «рано» — планета спотыкается. При «Уменьшить
+    /// движение» — без анимации, но поливы считаются показанными.
+    private func react() {
+        let fresh = book.take(garden.log)
+        guard !fresh.isEmpty, !still else { return }
+        let now = Date()
+        echoes = echoes.filter { now.timeIntervalSince($0.start) < 2 }
+            + fresh.map { Echo(id: $0.plant, hit: $0.hit, start: now) }
+    }
+
+    /// Планета, которую только что полили рано, спотыкается один раз.
+    private func stumbled(_ planets: [Orrery.Planet],
+                          at moment: Date) -> [Orrery.Planet] {
+        guard !still, !echoes.isEmpty else { return planets }
+        return planets.map { planet in
+            guard let echo = echoes.first(where: {
+                $0.id == planet.id && $0.hit == .early
+            }) else { return planet }
+            let t = moment.timeIntervalSince(echo.start) / 1.2
+            guard t >= 0, t < 1 else { return planet }
+            var out = planet
+            out.angle += 0.24 * (1 - t) * abs(sin(t * 6 * .pi))
+            return out
+        }
+    }
+
+    /// Искры у ворот на орбитах тех, кого полили «в яблочко».
+    private func glints(_ orbits: [Orrery.Orbit],
+                        at moment: Date) -> [Orrery.Flash] {
+        guard !still, !echoes.isEmpty else { return [] }
+        let radius = Dictionary(orbits.map { ($0.id, $0.radius) },
+                                uniquingKeysWith: { first, _ in first })
+        return echoes.compactMap { echo in
+            let since = moment.timeIntervalSince(echo.start) / 1.0
+            guard echo.hit == .bullseye, since >= 0, since < 1,
+                  let place = radius[echo.id] else { return nil }
+            return Orrery.Flash(radius: place, strength: 1 - since)
+        }
     }
 
     // MARK: - Шапка
 
-    /// Как системная строка панели: круги по 44 pt — те же, что на экране
-    /// растения, — и заголовок посередине. В тёмном окружении стекло кругов
-    /// тёмное, знаки и заголовок светлые.
+    /// Как системная строка панели: круглые кнопки-значки по стандарту
+    /// `CornerCircle` и заголовок посередине. В тёмном окружении стекло
+    /// кругов тёмное, знаки и заголовок светлые.
     private var header: some View {
         HStack(spacing: 8) {
             Button { dismiss() } label: {
                 Image(systemName: "chevron.backward")
-                    .modifier(NavCircle())
+                    .cornerGlyph()
             }
-            .buttonStyle(.plain)
+            .cornerButton()
             .accessibilityLabel("Назад")
             Text("Планетарий")
                 .font(Typography.navTitle)
@@ -117,12 +341,13 @@ struct OrreryView: View {
                 .minimumScaleFactor(0.7)
                 .frame(maxWidth: .infinity)
                 .accessibilityAddTraits(.isHeader)
-            Button { Coach.shared.start(.orrery) } label: {
-                Image(systemName: "questionmark")
-                    .modifier(NavCircle())
+            // Он же противовес «назад»: заголовок стоит ровно посередине.
+            Button { journal = true } label: {
+                Image(systemName: "book.closed")
+                    .cornerGlyph()
             }
-            .buttonStyle(.plain)
-            .accessibilityLabel("Подсказки")
+            .cornerButton()
+            .accessibilityLabel("Небесный журнал")
         }
         .padding(.horizontal, Metrics.contentMargin)
         // Пустое место шапки держит касания, как системная панель: под ним
@@ -140,10 +365,15 @@ struct OrreryView: View {
                                 ? 1.0 / 30 : 1.0 / 60)) { context in
             let moment = context.date
             let day = shown(at: moment)
-            let planets = sky(orbits, day: day, at: moment)
+            let planets = stumbled(sky(orbits, day: day, at: moment),
+                                   at: moment)
             OrreryDial(planets: planets,
                        flashes: flashes(orbits, crossings: crossings,
                                         day: day, at: moment),
+                       glints: glints(orbits, at: moment),
+                       dimmed: Set(planets.filter {
+                           Precision.dried($0.moisture)
+                       }.map(\.id)),
                        picked: picked,
                        beat: beat(at: moment))
                 .overlay {
@@ -161,7 +391,7 @@ struct OrreryView: View {
         .overlay(alignment: .top) {
             Image(systemName: "drop.fill")
                 .font(Typography.settingNote)
-                .foregroundStyle(Palette.water)
+                .foregroundStyle(Palette.waterGlow)
                 .padding(4)
                 .hintSpot(.orreryGate)
                 .allowsHitTesting(false)
@@ -237,7 +467,7 @@ struct OrreryView: View {
                 Label("Нажмите на планету — узнаете, кто это.",
                       systemImage: "hand.tap")
                     .font(Typography.settingNote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Palette.secondaryText)
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
         }
@@ -262,7 +492,7 @@ struct OrreryView: View {
                         .foregroundStyle(Palette.ink)
                     Text(plant.species)
                         .font(Typography.settingNote)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Palette.secondaryText)
                 }
                 Spacer(minLength: 8)
                 Text(Stats.percent(level))
@@ -270,11 +500,13 @@ struct OrreryView: View {
                     .foregroundStyle(Palette.level(level))
                     .contentTransition(.numericText())
             }
+            // Вперёд по времени — тем же движком, от влажности того дня.
             Text(live ? plant.wateringLabel
-                 : next.map { Plant.wateringLabel(
-                     days: Int(($0.day - ahead).rounded())) } ?? "")
+                 : next.map { _ in MoistureStatus.nextWatering(
+                     moisture: level, period: plant.period,
+                     estimated: plant.estimated) } ?? "")
                 .font(Typography.settingNote)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Palette.secondaryText)
                 .contentTransition(.numericText())
             HStack(spacing: 10) {
                 if live {
@@ -285,6 +517,7 @@ struct OrreryView: View {
                             .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(.glassProminent)
+                    .tint(Palette.accentFill)
                 }
                 NavigationLink(value: StatsRoute.plant(plant.id)) {
                     Label("Открыть растение", systemImage: "arrow.up.forward")
@@ -301,12 +534,13 @@ struct OrreryView: View {
     }
 
     private func water(_ id: Plant.ID) {
-        guard Bin.shared.water(id, in: garden) else { return }
-        let now = Date()
-        // Отыгравшие круги больше не нужны.
-        splashed = splashed.filter { now.timeIntervalSince($0.value) < 2 }
-        splashed[id] = now
-        Feel.water()
+        Overflow.shared.water(id, in: garden, source: .orrery) {
+            let now = Date()
+            // Отыгравшие круги больше не нужны.
+            splashed = splashed.filter { now.timeIntervalSince($0.value) < 2 }
+            splashed[id] = now
+            Feel.water()
+        }
     }
 
     // MARK: - Время
@@ -322,7 +556,7 @@ struct OrreryView: View {
                 Text(ahead == 0 ? Lang.text("Сейчас")
                      : Stats.day(Int(ahead.rounded())))
                     .font(Typography.settingNote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Palette.secondaryText)
                     .contentTransition(.numericText())
             }
             TimelineView(.animation(paused: playing == nil)) { context in
@@ -377,6 +611,7 @@ struct OrreryView: View {
                 .frame(maxWidth: .infinity)
             }
             .buttonStyle(.glassProminent)
+            .tint(Palette.accentFill)
             .controlSize(.extraLarge)
             .disabled(preparing || orbits.isEmpty)
             HStack(spacing: 6) {
@@ -389,7 +624,7 @@ struct OrreryView: View {
                 }
             }
             .font(Typography.settingNote)
-            .foregroundStyle(.secondary)
+            .foregroundStyle(Palette.secondaryText)
             .fixedSize(horizontal: false, vertical: true)
         }
     }
@@ -442,20 +677,46 @@ struct OrreryView: View {
         let drift = Date().timeIntervalSince(garden.ticked) * Garden.speed
             / 86_400
         let omens = Orrery.omens(orbits, drift: drift)
-        if !omens.isEmpty {
+        let events = book.unseen
+        if !omens.isEmpty || !events.isEmpty || calm {
             VStack(alignment: .leading, spacing: Metrics.rowGap) {
                 Label("Небо сада", systemImage: "sparkles")
                     .font(Typography.detail)
                     .foregroundStyle(Palette.ink)
+                if calm {
+                    HStack(alignment: .firstTextBaseline, spacing: 10) {
+                        Image(systemName: "moon.zzz")
+                            .foregroundStyle(Palette.waterGlow)
+                            .frame(width: 22)
+                        Text("Тихая ночь: воды никто не просит")
+                            .font(Typography.settingNote)
+                            .foregroundStyle(Palette.ink)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                    .transition(.blurReplace)
+                }
+                ForEach(events, id: \.key) { event in
+                    let line = Self.caption(event)
+                    HStack(alignment: .firstTextBaseline, spacing: 10) {
+                        Image(systemName: line.icon)
+                            .foregroundStyle(Palette.waterGlow)
+                            .frame(width: 22)
+                        Text(line.text)
+                            .font(Typography.settingNote)
+                            .foregroundStyle(Palette.ink)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                    .transition(.blurReplace)
+                }
                 ForEach(omens, id: \.self) { omen in
                     let line = Self.line(omen)
                     HStack(alignment: .firstTextBaseline, spacing: 10) {
                         Image(systemName: line.icon)
-                            .foregroundStyle(Palette.water)
+                            .foregroundStyle(Palette.waterGlow)
                             .frame(width: 22)
                         Text(line.text)
                             .font(Typography.settingNote)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(Palette.secondaryText)
                             .fixedSize(horizontal: false, vertical: true)
                     }
                     .transition(.blurReplace)
@@ -466,6 +727,22 @@ struct OrreryView: View {
             .sproutPlate(in: RoundedRectangle(cornerRadius: Metrics.cardRadius,
                                               style: .continuous))
             .animation(Motion.pill, value: omens)
+        }
+    }
+
+    /// Строка о редком событии для «Неба сада» и журнала.
+    static func caption(_ event: Rare.Event) -> (icon: String, text: String) {
+        switch event.kind {
+        case .aurora:
+            ("moon.stars",
+             Lang.text("Северное сияние: неделю в саду никто не пересыхал."))
+        case .comet:
+            ("sparkle",
+             Lang.format("Комета: %@ только что прилетела в сад.",
+                         event.subject))
+        case .meteor:
+            ("sparkles",
+             Lang.text("Метеорный дождь: у парада все напились вовремя."))
         }
     }
 
@@ -508,7 +785,7 @@ struct OrreryView: View {
             if parades.isEmpty {
                 Text("В ближайший месяц парадов нет: растения просят воды вразнобой.")
                     .font(Typography.settingNote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Palette.secondaryText)
                     .fixedSize(horizontal: false, vertical: true)
             }
             ForEach(Array(parades.enumerated()), id: \.element.id) { item in
@@ -536,14 +813,14 @@ struct OrreryView: View {
                 .font(Typography.detail)
                 .foregroundStyle(Palette.space)
                 .frame(width: 34, height: 34)
-                .background(Circle().fill(Palette.water))
+                .background(Circle().fill(Palette.waterGlow))
             VStack(alignment: .leading, spacing: 2) {
                 Text(Stats.day(parade.day))
                     .font(Typography.settingRow)
                     .foregroundStyle(Palette.ink)
                 Text(Stats.names(parade.names))
                     .font(Typography.settingNote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Palette.secondaryText)
                     .lineLimit(2)
             }
             Spacer(minLength: 8)

@@ -2,6 +2,11 @@ import Foundation
 
 /// Запись журнала: кого полили и когда. Время настоящее, а не садовое: по
 /// садовым часам «сегодня» кончалось бы втрое чаще настоящего.
+/// Какой была земля до полива, по ответу хозяина.
+enum Soil: String, Codable, Hashable, Sendable {
+    case dry, fine, wet
+}
+
 struct Watering: Codable, Hashable, Sendable {
     var plant: Plant.ID
     var when: Date
@@ -22,6 +27,18 @@ struct Watering: Codable, Hashable, Sendable {
 
     /// «Полила», а не «Полил».
     var she: Bool? = nil
+
+    /// Лишний полив: земля была влажной, полили, подтвердив. Он есть в
+    /// журнале, но не идёт в серию, задания, опыт, награды и «вовремя». В
+    /// журналах прежних сборок пусто — их поливы не пересчитываются.
+    var extra: Bool? = nil
+
+    /// Полив, который засчитывается, — не лишний.
+    var counts: Bool { extra != true }
+
+    /// Ответ «Как земля была?» после полива рукой. Пусто — не спрашивали
+    /// или не ответили; в журналах прежних сборок пусто.
+    var soil: Soil? = nil
 
     /// Та же запись — по растению и мигу: доля воды в сравнении не участвует.
     func same(_ other: Watering) -> Bool {
@@ -52,6 +69,8 @@ struct Score: Sendable {
 
     var streak = 0
     var best = 0
+    /// Серия только что прервалась — по честным правилам (`Fair`).
+    var broke = false
 
     var rooms: [Tally] = []
     var plants: [Tally] = []
@@ -64,8 +83,10 @@ struct Score: Sendable {
 
     /// Календарь и «сейчас» — снаружи, чтобы прогон модели не зависел от
     /// часового пояса и дня запуска.
+    /// `fair` — дата честных правил (`Fair`): с неё серия — хорошие дни
+    /// подряд, а не дни с поливом; пусто — прежние правила.
     static func of(_ log: [Watering], rooms: [Room],
-                   now: Date = Date(),
+                   now: Date = Date(), fair: Date? = Fair.from,
                    calendar: Calendar = .current) -> Score {
         var score = Score()
         score.total = log.count
@@ -77,13 +98,20 @@ struct Score: Sendable {
         score.week = log.count { $0.when >= weekAgo }
 
         var byDay: [Date: Int] = [:]
-        for note in log {
+        for note in log where note.counts {
             let day = calendar.startOfDay(for: note.when)
             byDay[day, default: 0] += 1
         }
         score.streak = Self.streak(from: midnight, days: Set(byDay.keys),
                                    calendar: calendar)
         score.best = Self.best(days: Set(byDay.keys), calendar: calendar)
+        if let fair {
+            let run = Fair.run(log, rooms: rooms, from: fair, now: now,
+                               calendar: calendar)
+            score.streak = run.streak
+            score.best = run.best
+            score.broke = run.broke
+        }
 
         score.days = (0 ..< Self.span).reversed().compactMap { back in
             guard let day = calendar.date(byAdding: .day, value: -back,

@@ -22,6 +22,9 @@ struct NewRoom: View {
 
     let edit: () -> Void
 
+    /// «Показать пример» — сад-пример на пустом саду.
+    var sample: (() -> Void)?
+
     private var blank: Bool {
         draft.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
@@ -29,18 +32,22 @@ struct NewRoom: View {
     var body: some View {
         VStack(spacing: 16) {
             if bare {
-                Text(Lang.text("""
-                    В саду пока ничего не растёт. Посадите первое растение во \
-                    вкладке «Добавить».
-                    """))
+                Text(Lang.text("В саду пока пусто. Добавьте первое растение."))
                     .font(Typography.settingNote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Palette.secondaryText)
                     .multilineTextAlignment(.center)
                     .fixedSize(horizontal: false, vertical: true)
+                if let sample {
+                    Button(action: sample) {
+                        Label("Показать пример", systemImage: "sparkles")
+                            .font(Typography.settingNote)
+                    }
+                    .buttonStyle(.glass)
+                }
             }
             Text("Растения в неё можно будет посадить или перевезти.")
                 .font(Typography.settingNote)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Palette.secondaryText)
                 .multilineTextAlignment(.center)
                 .fixedSize(horizontal: false, vertical: true)
 
@@ -52,6 +59,7 @@ struct NewRoom: View {
                     .frame(maxWidth: .infinity)
             }
             .buttonStyle(.glassProminent)
+            .tint(Palette.accentFill)
             .controlSize(.large)
             .disabled(blank)
 

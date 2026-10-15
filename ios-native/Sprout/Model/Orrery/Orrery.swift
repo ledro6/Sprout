@@ -265,6 +265,15 @@ enum Spheres {
         }
     }
 
+    /// Мягкий аккорд «Тихой ночи»: ля, до-диез и ми тем же голосом
+    /// шкатулки, пара секунд с залом и вполовину тише обычной ноты.
+    static func calmChord() -> [Float] {
+        let notes = [Note(at: 0.1, pitch: 220, pan: -0.25),
+                     Note(at: 0.45, pitch: 277.18, pan: 0),
+                     Note(at: 0.8, pitch: 329.63, pan: 0.25)]
+        return render(notes, seconds: 1.5).map { $0 * 0.5 }
+    }
+
     /// Обертоны шкатулки: основной, октава, дуодецима и чуть расстроенный
     /// четвёртый — он и даёт металлический язычок. Спад — секунды.
     private static let partials: [(ratio: Double, level: Double,

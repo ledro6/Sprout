@@ -15,6 +15,12 @@ struct PlantTile: View {
 
     let zoom: Namespace.ID
 
+    /// Пространство перетекания между плиткой и списком. Растение с одним
+    /// id в обоих видах сходится в одну геометрию; на поиске его нет.
+    var morph: Namespace.ID?
+    /// При «Уменьшить движение» перетекания нет: плитка растворяется.
+    var dissolves = false
+
     let open: (Plant.ID) -> Void
 
     /// Появление в сетке; на поиске его нет.
@@ -45,7 +51,7 @@ struct PlantTile: View {
         Button { if !editing { open(plant.id) } } label: {
             label
         }
-        .buttonStyle(SproutPress())
+        .buttonStyle(PlantPress())
         .modifier(PlantMenu(id: plant.id, look: look, enabled: menus))
         .modifier(Arrange(id: plant.id, look: look, on: arranges,
                           held: held, dragged: dragged, move: move,
@@ -57,9 +63,28 @@ struct PlantTile: View {
         .modifier(CardAppear(index: index, room: room, animates: appears,
                              onShown: onShown))
         .sproutRide()
-        .transition(.asymmetric(insertion: .identity, removal: .opacity))
+        .modifier(Morph(id: plant.id, space: morph))
+        .transition(dissolves
+                    ? .opacity
+                    : .asymmetric(insertion: .identity, removal: .opacity))
         // Источник перехода — последним: замер снимается с готовой геометрии.
         .matchedTransitionSource(id: plant.id, in: zoom)
+    }
+
+    /// Перетекание включаем только тогда, когда есть пространство: без него
+    /// модификатор не применяется вовсе.
+    private struct Morph: ViewModifier {
+        let id: Plant.ID
+        let space: Namespace.ID?
+
+        @ViewBuilder
+        func body(content: Content) -> some View {
+            if let space {
+                content.matchedGeometryEffect(id: id, in: space)
+            } else {
+                content
+            }
+        }
     }
 
     @ViewBuilder
@@ -71,5 +96,18 @@ struct PlantTile: View {
         case .list:
             PlantRow(plant: plant, editing: editing, drop: waters)
         }
+    }
+}
+
+/// Проседание плашки по нажатию: масштаб `SproutPress` плюс потемнение, чтобы
+/// нажатие читалось и на непрозрачной карточке, и на крупной. Срабатывает
+/// только по `isPressed`, то есть не на касании, с которого начинается
+/// прокрутка.
+private struct PlantPress: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .scaleEffect(configuration.isPressed ? Motion.pressScale : 1)
+            .brightness(configuration.isPressed ? -0.06 : 0)
+            .animation(Motion.press, value: configuration.isPressed)
     }
 }

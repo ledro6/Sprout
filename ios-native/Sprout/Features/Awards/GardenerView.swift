@@ -33,7 +33,7 @@ private struct GardenerPage: View {
             }
             .padding(.horizontal, Metrics.contentMargin)
             .padding(.top, 8)
-            .padding(.bottom, 28)
+            .padding(.bottom, Metrics.barGap)
         }
         .background { SproutBackground() }
         .navigationTitle("Садовник")
@@ -56,7 +56,7 @@ private struct GardenerPage: View {
                 .contentTransition(.opacity)
             Text(Lang.format("Уровень %lld", me.level))
                 .font(Typography.detail)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Palette.secondaryText)
                 .contentTransition(.numericText())
             ProgressView(value: me.progress)
                 .tint(Palette.green)
@@ -65,7 +65,7 @@ private struct GardenerPage: View {
                                                 me.left))
             Text(Lang.format("До следующего уровня: %lld", me.left))
                 .font(Typography.settingNote)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Palette.secondaryText)
                 .monospacedDigit()
                 .contentTransition(.numericText())
         }
@@ -90,16 +90,16 @@ private struct GardenerPage: View {
                 Text(Lang.format("Новые задания — %@", week.end.formatted(
                     .dateTime.weekday(.wide))))
                     .font(Typography.settingNote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Palette.secondaryText)
                     .fixedSize(horizontal: false, vertical: true)
                 Text("Выполните все задания четырёх недель за одно время года — и на полке появится медаль сезона.")
                     .font(Typography.settingNote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Palette.secondaryText)
                     .fixedSize(horizontal: false, vertical: true)
             } else {
                 Text("Посадите первое растение — и появятся задания.")
                     .font(Typography.settingNote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Palette.secondaryText)
             }
         }
     }
@@ -114,7 +114,7 @@ private struct GardenerPage: View {
                     Text(level.formatted())
                         .font(Typography.figureCaption.weight(.semibold))
                         .foregroundStyle(level <= me.level ? .white
-                                         : Color.secondary)
+                                         : Palette.secondaryText)
                         .frame(width: 26, height: 26)
                         .background(Circle().fill(level <= me.level
                                                   ? Palette.green
@@ -122,7 +122,7 @@ private struct GardenerPage: View {
                     Text(Gardener.title(level))
                         .font(Typography.settingRow)
                         .foregroundStyle(level <= me.level ? Palette.ink
-                                         : Color.secondary)
+                                         : Palette.secondaryText)
                         .lineLimit(1)
                         .minimumScaleFactor(0.85)
                     Spacer(minLength: 8)
@@ -188,7 +188,7 @@ struct QuestRow: View {
                       : challenge.quest.icon)
                     .font(.system(size: 14, weight: .semibold))
                     .foregroundStyle(challenge.done ? Palette.green
-                                     : challenge.failed ? Color.secondary
+                                     : challenge.failed ? Palette.secondaryText
                                      : Palette.accent)
                     .contentTransition(.symbolEffect(.replace))
             }
@@ -196,13 +196,13 @@ struct QuestRow: View {
             VStack(alignment: .leading, spacing: 3) {
                 Text(challenge.title)
                     .font(Typography.settingRow)
-                    .foregroundStyle(challenge.failed ? Color.secondary
+                    .foregroundStyle(challenge.failed ? Palette.secondaryText
                                      : Palette.ink)
                     .strikethrough(challenge.failed)
                     .fixedSize(horizontal: false, vertical: true)
                 Text(challenge.quest.detail)
                     .font(Typography.settingNote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Palette.secondaryText)
                     .fixedSize(horizontal: false, vertical: true)
                 Text(status)
                     .font(Typography.settingNote.weight(.semibold))

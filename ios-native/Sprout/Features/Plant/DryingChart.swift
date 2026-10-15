@@ -18,12 +18,12 @@ struct DryingChart: View {
                               xEnd: .value(Self.timeAxis, last),
                               yStart: .value(Self.levelAxis, 0),
                               yEnd: .value(Self.levelAxis, Thirst.alarmBelow))
-                    .foregroundStyle(Palette.alarm.opacity(0.08))
+                    .foregroundStyle(Palette.alarmGlow.opacity(0.08))
                 RectangleMark(xStart: .value(Self.timeAxis, first),
                               xEnd: .value(Self.timeAxis, last),
                               yStart: .value(Self.levelAxis, Thirst.alarmBelow),
                               yEnd: .value(Self.levelAxis, Thirst.warnBelow))
-                    .foregroundStyle(Palette.warn.opacity(0.06))
+                    .foregroundStyle(Palette.warnGlow.opacity(0.06))
             }
             ForEach(points) { point in
                 // Без стопки: площадь по умолчанию складывает значения с
@@ -34,8 +34,8 @@ struct DryingChart: View {
                          stacking: .unstacked)
                     .interpolationMethod(.linear)
                     .foregroundStyle(LinearGradient(
-                        colors: [Palette.water.opacity(0.32),
-                                 Palette.water.opacity(0.02)],
+                        colors: [Palette.waterGlow.opacity(0.32),
+                                 Palette.waterGlow.opacity(0.02)],
                         startPoint: .top, endPoint: .bottom))
                 LineMark(x: .value(Self.timeAxis, point.when),
                          y: .value(Self.levelAxis, point.level))
@@ -79,7 +79,16 @@ struct DryingChart: View {
                     .locale(Lang.locale))
             }
         }
-        .frame(height: 168)
+        // Оси подписаны: по вертикали — вода в земле, по горизонтали — даты.
+        .chartYAxisLabel(position: .leading) {
+            Text(Self.levelAxis).font(.caption2)
+                .foregroundStyle(Palette.secondaryText)
+        }
+        .chartXAxisLabel(position: .bottom) {
+            Text(Self.timeAxis).font(.caption2)
+                .foregroundStyle(Palette.secondaryText)
+        }
+        .frame(height: 192)
         .accessibilityElement()
         .accessibilityLabel("Как сохнет земля")
         .accessibilityValue(Lang.format("Поливов на графике: %lld",

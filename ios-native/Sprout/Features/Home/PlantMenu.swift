@@ -27,10 +27,12 @@ final class Tenant {
     var id: Plant.ID = ""
 }
 
-/// Меню растения по долгому нажатию — одно на главную и поиск: настройки,
-/// AR, переезд и удаление. Полить — каплей на карточке, переименовать — в
+/// Меню растения по долгому нажатию — одно на главную и поиск: полить,
+/// (ждущему воды — отложить на день), настройки, AR, переезд и удаление; те
+/// же действия — у VoiceOver (`accessibilityAction`). Переименовать — в
 /// настройках растения, расставить — продержав палец дольше меню. Удаление
-/// без подтверждения: вернуть можно с плашки, см. `Bin`.
+/// переспрашивает, потом восемь секунд его можно вернуть с плашки, см.
+/// `Bin`.
 struct PlantMenu: ViewModifier {
     let id: Plant.ID
 
@@ -108,6 +110,14 @@ struct PlantMenu: ViewModifier {
     private func menu(_ base: some View) -> some View {
         if enabled {
             base.contextMenu {
+                Button { ask() } label: {
+                    Label("Полить", systemImage: "drop.fill")
+                }
+                if plant?.needsWaterToday == true {
+                    Button { snooze() } label: {
+                        Label("Отложить на день", systemImage: "moon.zzz")
+                    }
+                }
                 Button { tuning = tenant.id } label: {
                     Label("Настройки", systemImage: "slider.horizontal.3")
                 }
@@ -124,12 +134,21 @@ struct PlantMenu: ViewModifier {
                              roomDraft = ""
                              moving = true
                          })
+                Button { Bin.shared.askRetire(tenant.id, in: garden) } label: {
+                    Label("Растение погибло — в архив",
+                          systemImage: "archivebox")
+                }
+                Divider()
                 Button(role: .destructive) { toss() } label: {
                     Label("Удалить", systemImage: "trash")
                 }
             } preview: {
                 preview
             }
+            // То же, что свайпы списка, — для VoiceOver и Переключателей.
+            .accessibilityAction(named: Text("Полить")) { ask() }
+            .accessibilityAction(named: Text("Отложить на день")) { snooze() }
+            .accessibilityAction(named: Text("Настройки")) { tuning = tenant.id }
         } else {
             base
         }
@@ -148,9 +167,37 @@ struct PlantMenu: ViewModifier {
         return wide > 0 ? wide : Screen.width - 2 * Metrics.contentMargin
     }
 
+    /// Полить: недавно полил кто-то из семьи — сперва вопрос, иначе сразу;
+    /// влажную землю переспросит защита от перелива, см. `Overflow`.
+    private func ask() {
+        let id = tenant.id
+        if let recent = Kinship.shared.recent(id, in: garden.log) {
+            Overflow.shared.askAgain(recent) { pour() }
+        } else {
+            pour()
+        }
+    }
+
+    private func pour() {
+        let id = tenant.id
+        Overflow.shared.water(id, in: garden, source: .menu) {
+            // Волна — от карточки, а не от меню: поливают растение.
+            let spot = Cards.shared.rect(id)
+            Cheer.shared.now(from: spot == .zero ? Screen.middle : spot)
+            Feel.water()
+        }
+    }
+
+    /// «Отложить на день»: растение сутки не числится ждущим воды.
+    private func snooze() {
+        let id = tenant.id
+        withAnimation(Motion.arrange) { garden.snooze(id) }
+        Feel.pick()
+    }
+
     private func toss() {
         let who = tenant.id
-        Bin.shared.toss(who, from: Cards.shared.rect(who), in: garden)
+        Bin.shared.ask(who, from: Cards.shared.rect(who), in: garden)
     }
 
     private func relocate(to room: String) {

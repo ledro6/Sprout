@@ -25,7 +25,7 @@ struct AwardsView: View {
             }
             .padding(.horizontal, Metrics.contentMargin)
             .padding(.top, 4)
-            .padding(.bottom, 40)
+            .padding(.bottom, Metrics.barGap)
         }
         .background { SproutBackground() }
         .navigationTitle("Награды")
@@ -44,7 +44,7 @@ struct AwardsView: View {
         Text(Lang.format("Получено %1$lld из %2$lld", cabinet.total,
                          Award.total))
             .font(Typography.settingNote)
-            .foregroundStyle(.secondary)
+            .foregroundStyle(Palette.secondaryText)
             .contentTransition(.numericText())
             .padding(.leading, 6)
     }
@@ -53,7 +53,7 @@ struct AwardsView: View {
         VStack(alignment: .leading, spacing: 8) {
             Text(group.title)
                 .font(Typography.groupTitle)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Palette.secondaryText)
                 .padding(.leading, 6)
             LazyVGrid(columns: columns, spacing: 18) {
                 ForEach(group.awards) { award in
@@ -84,7 +84,7 @@ struct AwardsView: View {
                              count: cabinet.count(award, in: trophies),
                              cabinet: cabinet))
                 .font(Typography.cardCaption)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Palette.secondaryText)
                 .monospacedDigit()
                 .lineLimit(1)
                 .minimumScaleFactor(0.8)
@@ -159,9 +159,15 @@ struct AwardSheet: View {
     private let cabinet = Cabinet.shared
 
     @State private var picked: Int?
+    /// Знак переворота медали: по направлению листания (см. MedalStage).
+    @State private var turnSign: Double = 1
+
+    private var current: Int {
+        picked ?? max(cabinet.level(award), 1)
+    }
 
     private var shown: Rank {
-        Rank(award, picked ?? max(cabinet.level(award), 1))
+        Rank(award, current)
     }
 
     var body: some View {
@@ -170,8 +176,8 @@ struct AwardSheet: View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: 20) {
-                    MedalStage(rank: rank, earned: earned != nil, date: earned)
-                        .id(rank)
+                    MedalStage(rank: rank, earned: earned != nil, date: earned,
+                               turnSign: turnSign)
                         .frame(height: 300)
                     VStack(spacing: 8) {
                         Text(rank.title)
@@ -180,13 +186,13 @@ struct AwardSheet: View {
                             .multilineTextAlignment(.center)
                         Text(rank.detail)
                             .font(Typography.settingRow)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(Palette.secondaryText)
                             .multilineTextAlignment(.center)
                             .fixedSize(horizontal: false, vertical: true)
                         if let earned {
                             Text(Lang.format("Получена %@", AwardsView.day(earned)))
                                 .font(Typography.settingNote)
-                                .foregroundStyle(.secondary)
+                                .foregroundStyle(Palette.secondaryText)
                                 .padding(.top, 4)
                         } else if rank.goal > 1 {
                             ProgressView(value: Double(min(count, rank.goal)),
@@ -196,7 +202,7 @@ struct AwardSheet: View {
                                 .padding(.top, 8)
                             Text(AwardsView.left(rank, count))
                                 .font(Typography.settingNote)
-                                .foregroundStyle(.secondary)
+                                .foregroundStyle(Palette.secondaryText)
                                 .monospacedDigit()
                         }
                     }
@@ -209,11 +215,22 @@ struct AwardSheet: View {
             }
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("Готово") { dismiss() }
+                    Button("Закрыть", role: .close) { dismiss() }
                 }
             }
         }
         .presentationDetents([.large])
+    }
+
+    /// Переход на ступень: медаль сама переворачивается в MedalStage. Знак
+    /// поворота — по листанию: вперёд (выше уровень) и назад — разные стороны.
+    /// Повторное нажатие во время переворота не накладывается: новая ступень
+    /// ждёт конца текущего переворота (см. MedalStage).
+    private func pick(_ level: Int) {
+        guard level != current else { return }
+        Feel.pick()
+        turnSign = level > current ? -1 : 1
+        picked = level
     }
 
     /// Ступени по порядку: медаль, название и дата или сколько осталось.
@@ -223,8 +240,7 @@ struct AwardSheet: View {
                 let rank = Rank(award, level)
                 let date = cabinet.date(rank)
                 Button {
-                    withAnimation(Motion.pill) { picked = level }
-                    Feel.pick()
+                    pick(level)
                 } label: {
                     HStack(spacing: 12) {
                         MedalBadge(rank: rank, earned: date != nil)
@@ -236,7 +252,7 @@ struct AwardSheet: View {
                             Text(date.map(AwardsView.day)
                                  ?? AwardsView.left(rank, count))
                                 .font(Typography.settingNote)
-                                .foregroundStyle(.secondary)
+                                .foregroundStyle(Palette.secondaryText)
                                 .monospacedDigit()
                         }
                         Spacer(minLength: 8)

@@ -42,9 +42,9 @@ struct Almanac: Sendable {
 
             var title: String {
                 switch self {
-                case .early: Lang.text("Заранее")
-                case .onTime: Lang.text("Вовремя")
-                case .lastMoment: Lang.text("В последний момент")
+                case .early: Lang.text("Рано")
+                case .onTime: Lang.text("В срок")
+                case .lastMoment: Lang.text("Впритык")
                 case .dry: Lang.text("Пересохло")
                 }
             }
@@ -146,6 +146,8 @@ struct Almanac: Sendable {
         var moisture: Double
         /// Дней сада до полива — тем же счётом, что на карточке.
         var due: Int
+        /// Влажность посчитана, а не с датчика — «≈» и «Расчёт».
+        var estimated = true
         var waterings: Int
         var total: Int
         var last: Date?
@@ -158,9 +160,23 @@ struct Almanac: Sendable {
         var warn = 0
         var alarm = 0
         var average: Double?
-        /// Влажность каждого — от самого сухого: полоска на обзоре.
+        /// Влажность каждого — от самого сухого.
         var levels: [Double] = []
         var driest: String?
+        /// Растения от самого сухого — «Самые сухие» на обзоре.
+        var thirsty: [Thirsty] = []
+
+        /// Строка «Самых сухих»: имя, статус и процент.
+        struct Thirsty: Identifiable, Hashable, Sendable {
+            var id: Plant.ID
+            var name: String
+            var moisture: Double
+            var status: MoistureStatus
+            var estimated: Bool
+        }
+
+        /// Сколько строк видно, пока не нажали «Показать все».
+        static let shortList = 5
 
         var count: Int { calm + warn + alarm }
 
@@ -302,6 +318,7 @@ struct Almanac: Sendable {
                     id: plant.id, name: plant.name, species: plant.species,
                     room: room.name, moisture: plant.moisture,
                     due: plant.daysUntilWatering,
+                    estimated: plant.estimated,
                     waterings: all.count { $0.when >= start
                         && $0.when <= moment },
                     total: all.count,
@@ -330,6 +347,7 @@ struct Almanac: Sendable {
             var line = line
             line.moisture = plant.moisture
             line.due = plant.daysUntilWatering
+            line.estimated = plant.estimated
             return line
         }
         return book
@@ -469,11 +487,16 @@ struct Almanac: Sendable {
     static func now(_ rooms: [Room]) -> Now {
         let plants = rooms.flatMap(\.plants)
         var now = Now()
+        // Группы — по статусу (`MoistureStatus`): «Ждут воды» — ровно те,
+        // кого полить сегодня, как на карточке дня; «Скоро пить» — `soon`
+        // без них; остальные довольны. Каждое растение — в одной группе.
         for plant in plants {
-            switch plant.thirst {
-            case .calm: now.calm += 1
-            case .warn: now.warn += 1
-            case .alarm: now.alarm += 1
+            if plant.needsWaterToday {
+                now.alarm += 1
+            } else if plant.status == .soon {
+                now.warn += 1
+            } else {
+                now.calm += 1
             }
         }
         guard !plants.isEmpty else { return now }
@@ -481,6 +504,17 @@ struct Almanac: Sendable {
             / Double(plants.count)
         now.levels = plants.map(\.moisture).sorted()
         now.driest = plants.min { $0.moisture < $1.moisture }?.name
+        now.thirsty = plants.enumerated()
+            .sorted { $0.element.moisture != $1.element.moisture
+                ? $0.element.moisture < $1.element.moisture
+                : $0.offset < $1.offset }
+            .map { item in
+                let plant = item.element
+                return Now.Thirsty(id: plant.id, name: plant.name,
+                                   moisture: plant.moisture,
+                                   status: plant.status,
+                                   estimated: plant.estimated)
+            }
         return now
     }
 

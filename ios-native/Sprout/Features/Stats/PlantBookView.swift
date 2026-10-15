@@ -37,7 +37,7 @@ struct PlantBookView: View {
                     }
                     .padding(.horizontal, Metrics.contentMargin)
                     .padding(.top, 8)
-                    .padding(.bottom, 40)
+                    .padding(.bottom, Metrics.barGap)
                 }
             }
             .background { SproutBackground() }
@@ -48,11 +48,6 @@ struct PlantBookView: View {
         .scrollEdgeEffectStyle(.soft, for: .top)
         .sproutSettledEdge()
         .toolbar(.visible, for: .navigationBar)
-        .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                WalkButton(walk: .book, bare: true)
-            }
-        }
         .onAppear(perform: recount)
         .onChange(of: garden.log.count) {
             withAnimation(Motion.number) { recount() }
@@ -82,8 +77,8 @@ struct PlantBookView: View {
                 Text([plant.species, garden.roomName(of: plant.id) ?? ""]
                         .filter { !$0.isEmpty }.joined(separator: " · "))
                     .font(Typography.settingNote)
-                    .foregroundStyle(.secondary)
-                Text(Lang.format("Влажность %@", plant.moistureLabel))
+                    .foregroundStyle(Palette.secondaryText)
+                Text(plant.moistureLine)
                     .font(Typography.settingNote.weight(.semibold))
                     .foregroundStyle(Palette.level(plant.moisture))
                     .contentTransition(.numericText())
@@ -133,7 +128,7 @@ struct PlantBookView: View {
                 }
                 Text(Stats.verdict(Almanac.Aim.zone(typical)))
                     .font(Typography.settingNote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Palette.secondaryText)
                     .fixedSize(horizontal: false, vertical: true)
                 ZoneBar(aim: book.aim)
                 ForEach(Almanac.Aim.Zone.allCases) { zone in
@@ -142,7 +137,7 @@ struct PlantBookView: View {
             } else {
                 Text("Полейте растение — и здесь появится, сколько воды было в земле в этот миг.")
                     .font(Typography.settingNote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Palette.secondaryText)
                     .fixedSize(horizontal: false, vertical: true)
             }
         }
@@ -160,7 +155,7 @@ struct PlantBookView: View {
             if points.isEmpty {
                 Text("Поливов ещё не было.")
                     .font(Typography.settingNote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Palette.secondaryText)
             } else {
                 DryingChart(points: points)
             }
@@ -194,7 +189,7 @@ struct PlantBookView: View {
                                  Species.periodPhrase(days),
                                  Species.periodPhrase(plant.dryingDays)))
                     .font(Typography.settingNote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Palette.secondaryText)
                     .fixedSize(horizontal: false, vertical: true)
             }
         }

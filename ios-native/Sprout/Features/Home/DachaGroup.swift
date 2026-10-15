@@ -18,7 +18,7 @@ struct DachaGroup: View {
 
     var body: some View {
         Section {
-            SproutGroup("Дача") {
+            SproutGroup("Какие комнаты на даче") {
                 ForEach(garden.rooms) { room in
                     if room.id != garden.rooms.first?.id { SproutDivider() }
                     row(room)
@@ -54,7 +54,7 @@ struct DachaGroup: View {
         } footer: {
             Text(Self.footer)
                 .font(Typography.settingNote)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Palette.secondaryText)
                 .padding(.horizontal, Metrics.contentMargin)
         }
     }
@@ -75,7 +75,7 @@ struct DachaGroup: View {
                 if let note = note(for: room) {
                     Text(note)
                         .font(Typography.settingNote)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Palette.secondaryText)
                         .fixedSize(horizontal: false, vertical: true)
                         .transition(.blurReplace)
                 }
@@ -114,7 +114,7 @@ struct DachaGroup: View {
                 ProgressView()
                 Text("Узнаём, где вы…")
                     .font(Typography.settingNote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Palette.secondaryText)
             }
         } else if let spot = dachnik.spot {
             marked(spot)
@@ -134,10 +134,11 @@ struct DachaGroup: View {
                         .frame(maxWidth: .infinity)
                 }
                 .buttonStyle(.glassProminent)
+                .tint(Palette.accentFill)
                 .controlSize(.large)
                 Text(Self.why)
                     .font(Typography.settingNote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Palette.secondaryText)
                     .fixedSize(horizontal: false, vertical: true)
                 if dachnik.missed { missed }
             }
@@ -181,7 +182,7 @@ struct DachaGroup: View {
                     Text(Lang.format("Отмечено %@", spot.marked.formatted(
                         .dateTime.day().month(.wide).locale(Lang.locale))))
                         .font(Typography.settingNote)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Palette.secondaryText)
                 }
             } icon: {
                 Image(systemName: "mappin.and.ellipse")
@@ -254,7 +255,7 @@ struct DachaGroup: View {
                 .foregroundStyle(Palette.warn)
             Text(note)
                 .font(Typography.settingNote)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Palette.secondaryText)
                 .fixedSize(horizontal: false, vertical: true)
         }
     }
@@ -284,7 +285,7 @@ struct DachaGroup: View {
                         .fixedSize(horizontal: false, vertical: true)
                     Text("Обычные напоминания о них не придут — только по приезде.")
                         .font(Typography.settingNote)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Palette.secondaryText)
                         .fixedSize(horizontal: false, vertical: true)
                 }
                 Spacer(minLength: 0)
@@ -292,11 +293,19 @@ struct DachaGroup: View {
                        isOn: Binding(get: { dachnik.only },
                                      set: { dachnik.only = $0 }))
                     .labelsHidden()
+                    .disabled(!dachnik.located)
+            }
+            if !dachnik.located {
+                Text("Без геопозиции напоминания по даче приходят как обычно.")
+                    .font(Typography.settingNote)
+                    .foregroundStyle(Palette.secondaryText)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .transition(.blurReplace)
             }
         } else {
             Text("Напоминание по приезде придёт, если включить «Напоминать о поливе» в настройках.")
                 .font(Typography.settingNote)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Palette.secondaryText)
                 .fixedSize(horizontal: false, vertical: true)
         }
     }

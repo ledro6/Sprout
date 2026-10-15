@@ -14,6 +14,7 @@ struct TreatmentCard: View {
     @State private var shooting = false
     @State private var fresh: UIImage?
     @State private var dropping = false
+    @State private var shotFailed = false
     @State private var spot = CGRect.zero
 
     var body: some View {
@@ -24,11 +25,11 @@ struct TreatmentCard: View {
                 HStack(spacing: 8) {
                     Text("План лечения")
                         .font(Typography.groupTitle)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Palette.secondaryText)
                     Spacer(minLength: 8)
                     Text(Lang.format("%1$lld из %2$lld", plan.done, plan.total))
                         .font(Typography.settingNote)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Palette.secondaryText)
                         .monospacedDigit()
                         .contentTransition(.numericText())
                 }
@@ -64,6 +65,11 @@ struct TreatmentCard: View {
         } message: {
             Text("Шаги, отметки и снимки «до» и «после» пропадут.")
         }
+        .alert("Не вышло", isPresented: $shotFailed) {
+            Button("Понятно", role: .cancel) {}
+        } message: {
+            Text("Фото не сохранилось. Попробуйте ещё раз.")
+        }
     }
 
     // MARK: - Лечится
@@ -97,12 +103,12 @@ struct TreatmentCard: View {
                 .padding(.vertical, 4)
         }
         .buttonStyle(.glassProminent)
-        .tint(Palette.green)
+        .tint(Palette.greenFill)
         .controlSize(.large)
         Button("Отменить план") { dropping = true }
             .font(Typography.settingNote)
-            .buttonStyle(.plain)
-            .foregroundStyle(.secondary)
+            .buttonStyle(.borderless)
+            .foregroundStyle(Palette.secondaryText)
             .frame(maxWidth: .infinity)
     }
 
@@ -126,7 +132,7 @@ struct TreatmentCard: View {
                                         : Palette.ink.opacity(0.35)))
                     .contentTransition(.symbolEffect(.replace))
             }
-            .buttonStyle(.plain)
+            .buttonStyle(.borderless)
             .accessibilityLabel(done ? "Снять отметку" : "Сделано")
             VStack(alignment: .leading, spacing: 3) {
                 Label {
@@ -141,7 +147,7 @@ struct TreatmentCard: View {
                 .foregroundStyle(Palette.ink.opacity(done ? 0.5 : 1))
                 Text(meta)
                     .font(Typography.settingNote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Palette.secondaryText)
                     .contentTransition(.numericText())
             }
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -224,7 +230,7 @@ struct TreatmentCard: View {
                 .foregroundStyle(Palette.ink)
             Text("Растение снова в строю. Снимки «до» и «после» остаются здесь, пока план не убран.")
                 .font(Typography.settingNote)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Palette.secondaryText)
                 .multilineTextAlignment(.center)
                 .fixedSize(horizontal: false, vertical: true)
             photos
@@ -265,7 +271,11 @@ struct TreatmentCard: View {
     }
 
     private func keep(_ image: UIImage) {
-        guard let name = Snapshot.keep(image) else { return }
+        // Не записалось — шаг без снимка, и хозяин об этом знает.
+        guard let name = Snapshot.keep(image) else {
+            shotFailed = true
+            return
+        }
         withAnimation(Motion.enter) {
             garden.treatmentShot(plant.id, file: name, after: true)
         }

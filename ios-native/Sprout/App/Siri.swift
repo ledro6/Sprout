@@ -41,10 +41,11 @@ struct PlantEntity: AppEntity {
         id = plant.id
         name = plant.name
         self.room = room
-        let percent = Lang.format("%lld%%", Int((plant.moisture * 100).rounded()))
+        let percent = plant.moistureLabel
         let line = Lang.format("%1$@ · %2$@", room, percent)
-        status = plant.thirst == .calm ? line
-            : Lang.format("%1$@ · %2$@", line, Lang.text("Пора поливать"))
+        status = plant.needsWaterToday
+            ? Lang.format("%1$@ · %2$@", line, Lang.text("Пора поливать"))
+            : line
         thumb = Store.thumb(for: plant)
     }
 }
@@ -101,7 +102,15 @@ struct WaterPlant: AppIntent {
         guard garden.plant(id: plant.id) != nil else {
             return .result(dialog: "\(Lang.format("Растения «%@» в саду больше нет.", plant.name))")
         }
+        // Влажную землю голосом не поливаем: подтвердить нечем, а лишний
+        // полив вреден. Пусть хозяин посмотрит сам.
+        if let wet = garden.wetCheck(plant.id) {
+            let level = MoistureStatus.percent(
+                wet, estimated: garden.plant(id: plant.id)?.estimated ?? true)
+            return .result(dialog: "\(Lang.format("Земля у «%1$@» ещё влажная (%2$@) — полив не записан. Лишний полив вреден корням.", plant.name, level))")
+        }
         withAnimation(Motion.appear) { _ = garden.water(plant.id) }
+        Journal.shared.waterTap(.siri)
         if UIApplication.shared.applicationState == .active {
             let spot = Cards.shared.rect(plant.id)
             Cheer.shared.now(from: spot == .zero ? Screen.middle : spot)
@@ -120,7 +129,7 @@ struct WhoNeedsWater: AppIntent {
         let garden = Garden.shared
         garden.reload()
         garden.advance()
-        let line = Seed.dueLine(Seed.due(in: garden.rooms))
+        let line = Seed.dueLine(MoistureStatus.needsWater(in: garden.rooms))
         return .result(dialog: "\(line)")
     }
 }
@@ -150,6 +159,12 @@ final class Summon {
     var garden = false
     /// Открыть растение — из визуального интеллекта или Spotlight.
     var plant: Plant.ID?
+    /// На вкладку «Добавить» — из пустого сада и быстрого действия иконки.
+    var add = false
+    /// «Уезжаю» — из быстрого действия иконки.
+    var trip = false
+    /// На главную — после «Полить всех» из быстрого действия.
+    var home = false
 }
 
 /// После слова «растение» кличка остаётся в именительном — «Полей растение

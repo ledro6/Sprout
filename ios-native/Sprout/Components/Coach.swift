@@ -21,19 +21,24 @@ final class Coach {
     private init() {}
 
     /// Сами — только в первый запуск приложения, при первом заходе на экран
-    /// и после знакомства: оно важнее. Со второго запуска — только по «?»;
-    /// кроме нового на знакомом экране (`Walk.news`): оно показывается один
+    /// и после знакомства: оно важнее. Со второго запуска — только после
+    /// «Подсказки» в Настройках (`Settings.rewalk`); кроме нового на знакомом экране (`Walk.news`): оно показывается один
     /// раз, но после подсказок самого экрана.
     func offer(_ walk: Walk) {
         let settings = Settings.shared
         guard self.walk == nil, settings.toured,
-              settings.firstRun || walk.news, !settings.seen(walk),
+              settings.firstRun || settings.replay || walk.news,
+              !settings.seen(walk),
               walk.after.map(settings.seen) ?? true
         else { return }
         start(walk)
     }
 
+    /// Единственная дверь к показу: и сама подсказка (`offer`), и ручной
+    /// вызов («Подсказки» у растения) идут сюда. Выключено в Настройках —
+    /// не показываем ничего.
     func start(_ walk: Walk) {
+        guard Settings.shared.hints else { return }
         withAnimation(Motion.chrome) {
             self.walk = walk
             step = 0
@@ -245,11 +250,11 @@ private struct CoachLayer: View {
     /// Ободок дышит: глаз находит окно сразу.
     private func ring(_ hole: CGRect) -> some View {
         RoundedRectangle(cornerRadius: radius(hole), style: .continuous)
-            .strokeBorder(Palette.accent, lineWidth: 2)
+            .strokeBorder(Palette.accentGlow, lineWidth: 2)
             .frame(width: hole.width, height: hole.height)
             .phaseAnimator([false, true]) { view, lit in
                 view
-                    .shadow(color: Palette.accent.opacity(lit ? 0.9 : 0.35),
+                    .shadow(color: Palette.accentGlow.opacity(lit ? 0.9 : 0.35),
                             radius: lit ? 14 : 6)
                     .scaleEffect(lit ? 1.015 : 1)
             } animation: { _ in .easeInOut(duration: 1.1) }
@@ -293,7 +298,7 @@ private struct CoachLayer: View {
         let card = VStack(alignment: .leading, spacing: 8) {
             Text(Lang.format("%1$lld из %2$lld", step + 1, hints.count))
                 .font(Typography.figureCaption)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Palette.secondaryText)
                 .monospacedDigit()
             Text(hint.title)
                 .font(Typography.detail)
@@ -306,8 +311,10 @@ private struct CoachLayer: View {
                 if !last {
                     Button("Пропустить") { skip() }
                         .font(Typography.settingNote)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Palette.secondaryText)
                         .buttonStyle(.plain)
+                        .frame(minHeight: 44)
+                        .contentShape(Rectangle())
                 }
                 Spacer(minLength: 0)
                 Button { next(hints.count) } label: {
@@ -316,6 +323,7 @@ private struct CoachLayer: View {
                         .padding(.horizontal, 6)
                 }
                 .buttonStyle(.glassProminent)
+                .tint(Palette.accentFill)
             }
             .padding(.top, 4)
         }
@@ -374,34 +382,5 @@ private struct Beak: Shape {
         path.addLine(to: CGPoint(x: rect.maxX, y: rect.maxY))
         path.closeSubpath()
         return path
-    }
-}
-
-/// «?» в заголовке экрана — подсказки ещё раз.
-struct WalkButton: View {
-    let walk: Walk
-
-    /// В панели навигации стекло под кнопкой рисует система — своё легло
-    /// бы вторым, и кнопка читалась бы двойной.
-    var bare = false
-
-    var body: some View {
-        if bare {
-            Button { Coach.shared.start(walk) } label: {
-                Image(systemName: "questionmark")
-            }
-            .accessibilityLabel("Подсказки")
-        } else {
-            Button { Coach.shared.start(walk) } label: {
-                Image(systemName: "questionmark")
-                    .font(.system(size: Metrics.gearGlyph - 4,
-                                  weight: .semibold))
-                    .foregroundStyle(Palette.ink)
-                    .frame(width: Metrics.gearBox, height: Metrics.gearBox)
-            }
-            .buttonStyle(.glass)
-            .buttonBorderShape(.circle)
-            .accessibilityLabel("Подсказки")
-        }
     }
 }

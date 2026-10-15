@@ -15,10 +15,20 @@ struct MedalStage: View {
 
     /// Дата на обороте; у неполученной — «Ещё впереди».
     var date: Date?
+    /// Знак переворота при смене ранга: +1 или −1, по направлению листания.
+    var turnSign: Double = 1
 
     @State private var rig = MedalRig()
     @State private var sparks = Sparks()
     @State private var ready = false
+    /// Прозрачность для «Уменьшения движения»: затухание на подмене.
+    @State private var veil: Double = 1
+    /// Контейнер медали: при смене ранга в нём подменяется сама модель,
+    /// а сцена, камера и свет остаются прежними.
+    @State private var holder = Entity()
+    /// Показанная сейчас медаль: её корень, поворотный и вращаемый узлы.
+    @State private var shown: MedalCraft.Made?
+    @State private var flip = MedalFlip()
 
     @Environment(\.accessibilityReduceMotion) private var still
 
@@ -30,19 +40,16 @@ struct MedalStage: View {
             RealityView { content in
                 // По умолчанию на iOS — камера AR; медали нужна своя сцена.
                 content.camera = .virtual
-                let made = await MedalCraft.medal(rank, earned: earned,
-                                                  date: date)
-                content.add(made.root)
+                content.add(holder)
                 content.add(MedalCraft.camera())
                 for light in MedalCraft.lights() { content.add(light) }
-                rig.medal = made.spinner
-                ready = true
-                if !still { sparks.burst(earned ? 90 : 24) }
             }
+            .task(id: rank) { await load() }
             .backgroundStyle(Color.clear)
             .scaleEffect(ready || still ? 1 : Motion.medalScale)
-            .opacity(ready ? 1 : 0)
+            .opacity(ready ? veil : 0)
             .animation(still ? nil : Motion.medal, value: ready)
+            .animation(.easeInOut(duration: 0.25), value: veil)
         }
         .contentShape(Rectangle())
         .gesture(DragGesture(minimumDistance: 0)
@@ -51,6 +58,66 @@ struct MedalStage: View {
         .accessibilityElement()
         .accessibilityLabel(rank.title)
         .accessibilityAddTraits(.isImage)
+    }
+
+    /// Грузит модель нового ранга. Первый показ — сразу, с ростом и искрами.
+    /// При смене ранга новая модель грузится, пока старая на экране, затем
+    /// ждёт конца идущего переворота и переворачивает медаль.
+    private func load() async {
+        let sign = turnSign
+        let made = await MedalCraft.medal(rank, earned: earned, date: date)
+        guard !Task.isCancelled else { return }
+        guard ready else {
+            install(made)
+            ready = true
+            if !still { sparks.burst(earned ? 90 : 24) }
+            return
+        }
+        // Смена, пришедшая во время переворота, ждёт его конца; без наложений.
+        await flip.running?.value
+        guard !Task.isCancelled else { return }
+        turnOver(to: made, sign: sign)
+    }
+
+    /// Подмена модели: старая уходит из контейнера, новая встаёт на её место
+    /// и наследует текущий свободный поворот, чтобы тот не прыгнул.
+    private func install(_ made: MedalCraft.Made) {
+        for old in Array(holder.children) { old.removeFromParent() }
+        holder.addChild(made.root)
+        rig.attach(made.spinner)
+        shown = made
+    }
+
+    /// Переворот: один непрерывный поворот узла `turner` на 180° по кривой
+    /// easeInOut, 0.7 с. На 90° — ребром — подмена; новый узел продолжает тот же
+    /// поворот с −90° до 0, поэтому скорость в точке подмены не меняется.
+    /// При «Уменьшении движения» — затухание, подмена, проявление.
+    private func turnOver(to made: MedalCraft.Made, sign: Double) {
+        let old = shown?.turner
+        flip.running = Task { @MainActor in
+            if still {
+                veil = 0
+                try? await Task.sleep(for: .milliseconds(250))
+                install(made)
+                veil = 1
+                try? await Task.sleep(for: .milliseconds(250))
+                return
+            }
+            var swapped = false
+            await flip.play(seconds: 0.7) { t in
+                let angle = sign * .pi * (0.5 - 0.5 * cos(.pi * t))
+                if !swapped, t < 0.5 {
+                    old?.orientation = MedalFlip.turn(angle)
+                    return
+                }
+                if !swapped {
+                    swapped = true
+                    install(made)
+                    sparks.burst(14)
+                }
+                made.turner.orientation = MedalFlip.turn(angle - sign * .pi)
+            }
+        }
     }
 }
 
@@ -96,6 +163,12 @@ final class MedalRig {
         speed * exp(-max(date.timeIntervalSince(moved), 0) * 6)
     }
 
+    /// Новая модель встаёт в текущий поворот: свободный поворот не прыгает.
+    func attach(_ entity: Entity) {
+        medal = entity
+        entity.orientation = simd_quatf(angle: angle, axis: SIMD3(0, 1, 0))
+    }
+
     /// Докручивается по кадрам экрана — до 120 в секунду на ProMotion.
     /// Разгон сразу, торможение долгое: четвёртая степень.
     private func glide(to target: Float, seconds: Double) {
@@ -123,6 +196,36 @@ final class MedalRig {
         previous = angle
         moved = now
         medal?.orientation = simd_quatf(angle: angle, axis: SIMD3(0, 1, 0))
+    }
+}
+
+/// Переворот смены ранга. Идёт своим покадровым циклом и держит свою задачу:
+/// отмена `.task(id:)` его не обрывает, а следующая смена ждёт его конца.
+@MainActor
+final class MedalFlip {
+    /// Идущий переворот.
+    var running: Task<Void, Never>?
+    private let clock = FrameClock()
+
+    /// Поворот вокруг вертикальной оси Y на угол в радианах.
+    static func turn(_ angle: Double) -> simd_quatf {
+        simd_quatf(angle: Float(angle), axis: SIMD3(0, 1, 0))
+    }
+
+    /// Крутит по кадрам экрана за `seconds`; `frame` получает время 0…1.
+    func play(seconds: Double, _ frame: @escaping (Double) -> Void) async {
+        await withCheckedContinuation { (done: CheckedContinuation<Void, Never>) in
+            let begin = CACurrentMediaTime()
+            clock.run { now in
+                let t = max(0, min((now - begin) / seconds, 1))
+                frame(t)
+                if t >= 1 {
+                    done.resume()
+                    return false
+                }
+                return true
+            }
+        }
     }
 }
 
@@ -189,18 +292,22 @@ enum MedalCraft {
     /// своей камерой, и камерой по умолчанию, что смотрит из нуля вдоль −z.
     static let spot = SIMD3<Float>(0, 0, -0.26)
 
-    /// Корень стоит на месте и держит свет студии, крутится — вложенная
-    /// медаль: отражения остаются в комнате, и блики бегут по металлу.
+    /// Корень стоит на месте и держит свет студии. Поворот смены ранга — узел
+    /// `turner`, свободное вращение пальцем — `spinner` внутри него: отражения
+    /// остаются в комнате, и блики бегут по металлу.
     struct Made {
         let root: Entity
+        let turner: Entity
         let spinner: Entity
     }
 
     static func medal(_ rank: Rank, earned: Bool, date: Date?) async -> Made {
         let root = Entity()
         root.position = spot
+        let turner = Entity()
+        root.addChild(turner)
         let spinner = Entity()
-        root.addChild(spinner)
+        turner.addChild(spinner)
         let coin = Entity()
         // Диск лежит в плоскости пола; встаёт лицом к зрителю.
         coin.orientation = simd_quatf(angle: .pi / 2, axis: SIMD3(1, 0, 0))
@@ -238,7 +345,7 @@ enum MedalCraft {
                     ImageBasedLightReceiverComponent(imageBasedLight: studio))
             }
         }
-        return Made(root: root, spinner: spinner)
+        return Made(root: root, turner: turner, spinner: spinner)
     }
 
     /// Гравировка оборота — белые буквы на чёрном, доли единицы, ряды

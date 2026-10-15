@@ -87,7 +87,7 @@ struct SkipInRound: LiveActivityIntent {
 }
 
 struct WaterBeforeTrip: LiveActivityIntent {
-    static let title: LocalizedStringResource = "Полить всех перед отъездом"
+    static let title: LocalizedStringResource = "Полить перед отъездом, кому пора"
     static let isDiscoverable = false
 
     init() {}

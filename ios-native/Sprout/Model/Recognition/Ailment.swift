@@ -338,7 +338,7 @@ extension Treatment {
         guard !steps.isEmpty else { return nil }
         steps.append(Step(
             id: "check",
-            advice: Lang.key("Снимите растение снова в «Что с ним?» и сравните с тем, что было."),
+            advice: Lang.key("Снимите растение снова: «Спросить о растении» → «По фото» — и сравните с тем, что было."),
             icon: "camera.viewfinder",
             due: now.addingTimeInterval(seconds(days: max(span, last),
                                                 speed: speed))))
@@ -360,5 +360,80 @@ extension Treatment {
             plant.tending.every(.mist)
                 ?? Duty.mist.usual(for: plant.blueprint.preset) ?? rareMist
         }
+    }
+}
+
+/// Уверенность словами, а не процентом: догадка не выглядит измерением.
+/// Одна шкала на находки «Что с ним?» и на вид в «Добавить».
+enum Sureness: Sendable, Equatable {
+    case likely, maybe, unsure
+
+    init(_ confidence: Double) {
+        switch confidence {
+        case 0.7...: self = .likely
+        case 0.4...: self = .maybe
+        default: self = .unsure
+        }
+    }
+
+    /// Подпись у находки.
+    var word: String {
+        switch self {
+        case .likely: Lang.text("Похоже на то")
+        case .maybe: Lang.text("Возможно")
+        case .unsure: Lang.text("Не уверен")
+        }
+    }
+
+    /// Вид на снимке в «Добавить» — фразой.
+    func species(_ name: String) -> String {
+        switch self {
+        case .likely:
+            Lang.format("Похоже на %@. Поправьте, если не так.", name)
+        case .maybe:
+            Lang.format("Возможно, это %@. Поправьте, если не так.", name)
+        case .unsure:
+            Lang.format("Не уверен — может быть, %@. Лучше впишите вид сами.",
+                        name)
+        }
+    }
+}
+
+/// Разбор растения на «Что с ним?» — по находкам: как `Diagnosis` лежит на
+/// растении (Plants.swift), так и сравнивается здесь.
+extension Diagnosis {
+    /// Беды, без «здоров» и «не видно»; уверенность — по самой сильной.
+    init(_ found: [Finding], at date: Date = Date()) {
+        self.init(date: date,
+                  kinds: found.filter { $0.kind != .unclear && $0.kind != .healthy }
+                      .map(\.kind.rawValue),
+                  confidence: found.first?.confidence ?? 0)
+    }
+
+    var sureness: Sureness { Sureness(confidence) }
+
+    /// Что изменилось против прежнего разбора: появилось, прошло, а если
+    /// совпало — «Без изменений». Без прежнего разбора строк нет.
+    static func changes(from old: Diagnosis?, to new: Diagnosis) -> [String] {
+        guard let old else { return [] }
+        let appeared = new.kinds.filter { !old.kinds.contains($0) }
+        let gone = old.kinds.filter { !new.kinds.contains($0) }
+        if appeared.isEmpty, gone.isEmpty {
+            return [Lang.text("Без изменений")]
+        }
+        var lines: [String] = []
+        if !appeared.isEmpty {
+            lines.append(Lang.format("Появилось: %@", titles(appeared)))
+        }
+        if !gone.isEmpty {
+            lines.append(Lang.format("Прошло: %@", titles(gone)))
+        }
+        return lines
+    }
+
+    private static func titles(_ kinds: [String]) -> String {
+        kinds.compactMap { Finding.Kind(rawValue: $0) }
+            .map { Finding(kind: $0, confidence: 1).title }
+            .joined(separator: ", ")
     }
 }

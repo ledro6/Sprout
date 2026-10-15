@@ -16,6 +16,10 @@ struct RootView: View {
     private let lock = Lock.shared
 
     @Environment(\.scenePhase) private var phase
+    /// Кто просил воды, пока нас не было («Уезжаю»): один раз спросим.
+    @State private var homecoming: [Plant.ID]?
+    /// Картинки для виджета: прежний проход отменяем, новый идёт вместо него.
+    @State private var thumbs: Task<Void, Never>?
 
     /// Вкладка на экране: просьба извне открыть растение или сад в AR ведёт
     /// на главную, где бы ни были.
@@ -29,6 +33,42 @@ struct RootView: View {
         // Условия знакомства читаются в самом теле: изнутри привязки
         // SwiftUI мог бы не заметить, что вход доиграл.
         let _ = touring
+        framed
+        // Знакомство — один раз, когда вход доиграл и сад не заперт. Ушло
+        // под замок — не пройдено: откроют сад, и оно начнётся снова.
+        .fullScreenCover(isPresented: Binding(
+            get: { touring },
+            set: { if !$0, !locked { settings.toured = true } })) {
+            TourView()
+        }
+        // Заперли — вход прячется под замком; открыли — отыгрывает заново.
+        .onChange(of: lock.open) { _, open in
+            if open {
+                Launch.shared.replay()
+                QuickActions.run()
+            } else {
+                Launch.shared.hide()
+            }
+        }
+        // Наблюдатель касаний — тоже на окно, см. `Finger`.
+        .onAppear {
+            Finger.shared.watch()
+        }
+        // При первом появлении окна могло ещё не быть.
+        .onChange(of: phase) { _, now in phaseChanged(now) }
+        .alert(homecomingTitle, isPresented: homecomingShown) {
+            Button(Lang.text("Полить всех")) {
+                if let ids = homecoming { _ = garden.waterNeeded(ids) }
+                homecoming = nil
+                Task { await Notifier.replan() }
+            }
+            Button(Lang.text("Закрыть"), role: .cancel) { homecoming = nil }
+        }
+    }
+
+    /// Окно до замка. Отдельно от `body`: одной цепочкой из сорока
+    /// модификаторов компилятор не успевал вывести тип.
+    private var framed: some View {
         TabView(selection: $pane) {
             Tab("Главная", systemImage: "house.fill", value: Pane.home) {
                 HomeView().sproutUndo()
@@ -57,6 +97,25 @@ struct RootView: View {
         .onChange(of: Summon.shared.garden) { _, asked in
             if asked { pane = .home }
         }
+        .onChange(of: Summon.shared.add) { _, asked in
+            guard asked else { return }
+            pane = .add
+            Summon.shared.add = false
+        }
+        .onChange(of: Summon.shared.home) { _, asked in
+            guard asked else { return }
+            pane = .home
+            Summon.shared.home = false
+        }
+        // «Уезжаю» с иконки — лист поверх любой вкладки.
+        .sheet(isPresented: Binding(
+            get: { Summon.shared.trip },
+            set: { Summon.shared.trip = $0 })) {
+            TripView().environment(garden)
+        }
+        // Быстрые действия иконки: при запуске с нуля — как только корень
+        // слушает.
+        .task { QuickActions.run() }
         // Ссылка на растение — та же, что на NFC-метке, см. `PotTag`.
         // Снаружи она приходит, только если схема `sprout` объявлена в
         // Info.plist (README «NFC-метки на горшках»).
@@ -67,6 +126,10 @@ struct RootView: View {
         }
         // «Полить?» и сообщения после метки на горшке.
         .modifier(TagPrompt())
+        // «Земля ещё влажная» — вопрос перед лишним поливом, см. `Overflow`.
+        .wetPrompt()
+        // «Удалить …? Журнал поливов тоже исчезнет» — см. `Bin.ask`.
+        .modifier(TossPrompt())
         // «Посадить такое же» из каталога — на вкладку «Добавить».
         .onChange(of: Sowing.shared.specimen) { _, asked in
             if asked != nil { pane = .add }
@@ -87,8 +150,9 @@ struct RootView: View {
         .onChange(of: garden.roster, initial: true) { _, _ in
             SproutShortcuts.updateAppShortcutParameters()
             // Картинки для виджета — тем же поводом: состав сада сменился.
+            thumbs?.cancel()
             let rooms = garden.rooms
-            Task(priority: .utility) { await Thumbs.export(rooms) }
+            thumbs = Task(priority: .utility) { await Thumbs.export(rooms) }
             // И свои модели для AR: мастерская отмечает собранные и
             // выбрасывает модели и сканы ушедших растений. Сама она ничего
             // не собирает — готовые модели видов лежат в приложении.
@@ -130,58 +194,75 @@ struct RootView: View {
         // Замок поверх всего: запертый сад не должен мелькнуть даже под
         // заставкой.
         .overlay { padlock }
-        // Знакомство — один раз, когда вход доиграл и сад не заперт. Ушло
-        // под замок — не пройдено: откроют сад, и оно начнётся снова.
-        .fullScreenCover(isPresented: Binding(
-            get: { touring },
-            set: { if !$0, !locked { settings.toured = true } })) {
-            TourView()
-        }
-        // Заперли — вход прячется под замком; открыли — отыгрывает заново.
-        .onChange(of: lock.open) { _, open in
-            if open { Launch.shared.replay() } else { Launch.shared.hide() }
-        }
-        // Наблюдатель касаний — тоже на окно, см. `Finger`.
-        .onAppear {
+    }
+
+    /// Смена фазы сцены: вход, запирание, сохранение, напоминания.
+    private func phaseChanged(_ now: ScenePhase) {
+        if now == .active {
+            Offer.shared.refresh()
             Finger.shared.watch()
+            // Пока спали, сад мог полить виджет или кнопка в
+            // уведомлении — а живые действия могли смахнуть.
+            garden.reload()
+            Task { await Live.shared.sync() }
+            Season.settle(on: settings.seasons)
+            Climate.settle(settings.climate, on: settings.weather)
+            returned()
+            Task { await Weatherman.shared.refresh() }
+            Task { await Dachnik.shared.refresh() }
+            // Датчики в горшках — свежие показания.
+            Sensors.shared.poll()
+            // Общий сад — что полили и поправили другие.
+            Kinship.shared.wake()
+            // Пока спали, могли включить энергосбережение.
+            Power.shared.refresh()
+            redress()
+            Task { await lock.unlock() }
+        } else {
+            // Запираем на «неактивно», а не на «в фоне»: снимок для
+            // переключателя программ делается раньше, и на нём остался бы
+            // сад.
+            lock.close()
+            // Выгрузить приложение могут в любой момент.
+            garden.save()
         }
-        // При первом появлении окна могло ещё не быть.
-        .onChange(of: phase) { _, now in
-            if now == .active {
-                Finger.shared.watch()
-                // Пока спали, сад мог полить виджет или кнопка в
-                // уведомлении — а живые действия могли смахнуть.
-                garden.reload()
-                Task { await Live.shared.sync() }
-                Season.settle(on: settings.seasons)
-                Climate.settle(settings.climate, on: settings.weather)
-                Task { await Weatherman.shared.refresh() }
-                Task { await Dachnik.shared.refresh() }
-                // Датчики в горшках — свежие показания.
-                Sensors.shared.poll()
-                // Общий сад — что полили и поправили другие.
-                Kinship.shared.wake()
-                // Пока спали, могли включить энергосбережение.
-                Power.shared.refresh()
-                redress()
-                Task { await lock.unlock() }
-            } else {
-                // Запираем на «неактивно», а не на «в фоне»: снимок для
-                // переключателя программ делается раньше, и на нём остался бы
-                // сад.
-                lock.close()
-                // Выгрузить приложение могут в любой момент.
-                garden.save()
-            }
-            // Удалённое уходит насовсем только в фоне: на «неактивно»
-            // попадают шторка, «Пункт управления» и Face ID. Календарь —
-            // тогда же и уже без удалённого: план пишется заново целиком.
-            if now == .background {
-                Bin.shared.commit()
-                if settings.calendar { CalendarSync.shared.sync(garden.rooms) }
-            }
-            remind(active: now == .active)
+        // Удалённое уходит насовсем только в фоне: на «неактивно»
+        // попадают шторка, «Пункт управления» и Face ID. Календарь —
+        // тогда же и уже без удалённого: план пишется заново целиком.
+        if now == .background {
+            // Отложенные побочные действия сохранения — сейчас, пока есть время.
+            Afterwards.flush()
+            // «Полить всех (n)» на иконке — по саду на этот миг.
+            QuickActions.refresh(garden.rooms)
+            Bin.shared.commit()
+            if settings.calendar { CalendarSync.shared.sync(garden.rooms) }
         }
+        remind(active: now == .active)
+    }
+
+    /// Заголовок «Пока вас не было» — отдельно: вложенные `Lang.format` прямо
+    /// в `.alert` в конце длинной цепочки модификаторов компилятор не
+    /// успевал вывести.
+    private var homecomingTitle: String {
+        let plants = Lang.format("%lld растений", homecoming?.count ?? 0)
+        let asked = Lang.format("%@ просили воды", plants)
+        return Lang.format("Пока вас не было: %@", asked)
+    }
+
+    private var homecomingShown: Binding<Bool> {
+        Binding(get: { homecoming != nil },
+                set: { if !$0 { homecoming = nil } })
+    }
+
+    /// Вернулись из «Уезжаю»: пауза кончилась — если недавно, скажем, кто
+    /// сохнет. Паузу снимаем в любом случае.
+    private func returned() {
+        guard let pause = settings.pause, pause.trip, pause.until <= Date()
+        else { return }
+        settings.pause = nil
+        guard Date().timeIntervalSince(pause.until) < 3 * 86_400 else { return }
+        let thirsty = MoistureStatus.needsWater(in: garden.rooms).map(\.id)
+        if !thirsty.isEmpty { homecoming = thirsty }
     }
 
     private func review() {
@@ -262,8 +343,7 @@ struct RootView: View {
         }
         // Без дачных, если о них напоминают только на даче.
         let rooms = Dachnik.shared.reminded(garden.rooms)
-        let threshold = settings.threshold
-        Task { await Notifier.schedule(in: rooms, threshold: threshold) }
+        Task { await Notifier.schedule(in: rooms) }
     }
 
     /// Раз в секунду: даже у самого быстрого растения процент меняется за

@@ -79,7 +79,15 @@ final class Dachnik: NSObject {
     func look() {
         let now = Self.access(of: ensure())
         if access != now { access = now }
+        // Геопозицию запретили или оставили примерной — приезд не заметить:
+        // «только на даче» выключается само, напоминания идут как обычно.
+        if only, now == .denied || now == .approximate {
+            only = Dacha.onlyThere(only, located: false)
+        }
     }
+
+    /// Без геопозиции «только на даче» не включить, см. `look`.
+    var located: Bool { access == .fine }
 
     /// «Отметить дачу здесь»: разрешение, если его ещё не спрашивали, потом
     /// одно место — с той точностью, какую даст телефон.
@@ -233,7 +241,9 @@ final class Dachnik: NSObject {
                        millimeters: hour.precipitation == .snow ? 0
                            : hour.precipitationAmount
                                .converted(to: .millimeters).value,
-                       chance: hour.precipitationChance)
+                       chance: hour.precipitationChance,
+                       temperature: hour.temperature
+                           .converted(to: .celsius).value)
         }
         var next = rain ?? Dacha.Rainfall(counted: from, checked: now)
         let fell = Dacha.fallen(hours, from: from, to: now)
@@ -245,6 +255,7 @@ final class Dachnik: NSObject {
         }
         if let until = fell.until { next.counted = until }
         next.promised = Dacha.promised(hours, now: now, calendar: calendar)
+        next.frost = Dacha.frosted(hours, now: now)
         next.checked = now
         rain = next
         put(next, Key.rain)

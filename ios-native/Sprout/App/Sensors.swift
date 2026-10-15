@@ -19,16 +19,22 @@ final class Sensors: NSObject {
         var kind: Sensor.Kind
         var id: String
         var name: String
-        /// Комната в «Доме» или сила сигнала.
+        /// Комната в «Доме» или «Рядом / Далеко».
         var detail: String?
+        /// Сигнал в дБм — мелко, для тех, кому нужны подробности.
+        var signal: String?
     }
 
     private(set) var found: [Found] = []
     private(set) var scanning = false
     /// Bluetooth выключен или запрещён — искать нечем.
     private(set) var blind = false
+    /// Bluetooth запрещён для Sprout — поможет только «Открыть Настройки».
+    private(set) var denied = false
     /// «Дом» не отвечает — почему.
     private(set) var homeless: String?
+    /// Доступ к «Дому» запрещён — нужна кнопка в Настройки.
+    private(set) var homeDenied = false
     /// «Дом» спросили и ждём: список его датчиков ещё не пришёл.
     private(set) var asking = false
 
@@ -159,8 +165,11 @@ final class Sensors: NSObject {
     /// Все датчики влажности «Дома».
     private func gather(_ manager: HMHomeManager) {
         asking = false
-        if manager.authorizationStatus.contains(.restricted) {
-            homeless = Lang.text("Доступ к «Дому» запрещён — разрешите его в Настройках → Sprout.")
+        let access = manager.authorizationStatus
+        homeDenied = access.contains(.restricted)
+            || (access.contains(.determined) && !access.contains(.authorized))
+        if homeDenied {
+            homeless = Lang.text("Нужен доступ к «Дому», чтобы найти датчик.")
             return
         }
         for home in manager.homes {
@@ -175,8 +184,8 @@ final class Sensors: NSObject {
                 }
             }
         }
-        if manager.homes.isEmpty {
-            homeless = Lang.text("В «Доме» пусто. Если датчики там есть — возможно, приложению не включили HomeKit в Xcode.")
+        if found.allSatisfy({ $0.kind != .home }) {
+            homeless = Lang.text("Датчиков в «Доме» не найдено. Добавьте датчик в приложении «Дом» или выберите из списка выше.")
         }
     }
 
@@ -225,6 +234,7 @@ extension Sensors: @preconcurrency CBCentralManagerDelegate {
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
         blind = central.state == .poweredOff || central.state == .unauthorized
             || central.state == .unsupported
+        denied = central.state == .unauthorized
         guard central.state == .poweredOn else { return }
         let queued = waiting
         waiting = []
@@ -241,8 +251,8 @@ extension Sensors: @preconcurrency CBCentralManagerDelegate {
         let id = peripheral.identifier.uuidString
         guard !found.contains(where: { $0.id == id }) else { return }
         found.append(Found(kind: .flora, id: id, name: name ?? "Flower Care",
-                           detail: Lang.format("Сигнал %lld дБм",
-                                               RSSI.intValue)))
+                           detail: Sensor.distance(RSSI.intValue),
+                           signal: Lang.format("%lld дБм", RSSI.intValue)))
     }
 
     func centralManager(_ central: CBCentralManager,

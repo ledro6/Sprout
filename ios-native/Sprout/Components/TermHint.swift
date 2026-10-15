@@ -11,17 +11,22 @@ struct TermHint: View {
         self.term = term
     }
 
+    // Подсказки выключены в Настройках — значка «?» нет.
     var body: some View {
+        if Settings.shared.hints { hint }
+    }
+
+    private var hint: some View {
         Button { open = true } label: {
             Image(systemName: "questionmark.circle")
                 .font(Typography.settingNote)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Palette.secondaryText)
                 // Значок мелкий — палец ловит поле вокруг, а строка от
                 // этого не растёт.
                 .padding(Metrics.hintReach)
                 .contentShape(Rectangle())
         }
-        .buttonStyle(.plain)
+        .buttonStyle(.borderless)
         .padding(-Metrics.hintReach)
         .accessibilityLabel(Lang.format("Что значит «%@»", term.title))
         .popover(isPresented: $open) {
@@ -49,7 +54,7 @@ struct TermCard: View {
                     .foregroundStyle(Palette.ink)
                 Text(term.meaning)
                     .font(Typography.settingNote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Palette.secondaryText)
                     .fixedSize(horizontal: false, vertical: true)
             }
             .frame(maxWidth: .infinity, alignment: .leading)

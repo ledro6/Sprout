@@ -1,14 +1,15 @@
 import Foundation
 
-/// Насколько сухо: ниже 40% тень оранжевая, ниже 20% красная. Силу тени
-/// считает `alarm` — плавно, без ступеней.
+/// Насколько сухо — для тени карточки: ниже 40% тень оранжевая, ниже 20%
+/// красная. Силу тени считает `alarm` — плавно, без ступеней. Пороги — у
+/// статуса (`MoistureStatus`): что значит «сухо», решает он один.
 enum Thirst {
     case calm
     case warn
     case alarm
 
-    static let warnBelow = 0.4
-    static let alarmBelow = 0.2
+    static let warnBelow = MoistureStatus.soonBelow
+    static let alarmBelow = MoistureStatus.urgentBelow
 
     init(moisture: Double) {
         switch moisture {
@@ -17,6 +18,36 @@ enum Thirst {
         default: self = .calm
         }
     }
+}
+
+/// Откуда влажность: измерил датчик или посчитал срок.
+enum MoistureSource: String, Codable, Hashable, Sendable {
+    /// Последнее показание датчика: между показаниями не сохнет.
+    case sensor
+    /// Посчитано по сроку от полива — или задано вопросом при посадке.
+    case estimate
+}
+
+/// Последний разбор «Что с ним?»: что нашли и насколько уверенно. Беды — как
+/// raw-значения `Finding.Kind` (сам тип — в Ailment.swift, его нет в
+/// виджете, а этот файл там нужен).
+struct Diagnosis: Codable, Hashable, Sendable {
+    var date: Date
+    var kinds: [String]
+    /// 0…1 — по самой сильной находке.
+    var confidence: Double
+}
+
+/// Снимок растения на дату — файл в `Shots`, см. `Plant.snaps`.
+struct Snap: Codable, Hashable, Sendable {
+    var date: Date
+    var file: String
+}
+
+/// Заметка с датой, см. `Plant.jots`.
+struct Jot: Codable, Hashable, Sendable {
+    var date: Date
+    var text: String
 }
 
 struct Plant: Identifiable, Hashable, Codable {
@@ -47,11 +78,42 @@ struct Plant: Identifiable, Hashable, Codable {
     /// Файлы растения на диске — уходят вместе с ним: снимок, портрет и
     /// снимки «до» и «после» плана лечения.
     var files: [String] {
-        [shot, portrait].compactMap { $0 } + (treatment?.files ?? [])
+        [shot, portrait].compactMap { $0 } + snaps.map(\.file)
+            + (treatment?.files ?? [])
     }
 
     /// Заметка хозяина. Необязательная по той же причине, что и `shot`.
+    /// Теперь она первая в ленте `journal`, см. `legacyJot`.
     var note: String?
+
+    /// Фото по датам — лента «Фото и заметки». Хранится опционально, чтобы
+    /// сады прежних сборок читались без этого поля; `snaps` отдаёт пусто
+    /// вместо `nil`. По возрастанию даты.
+    var snapLog: [Snap]?
+    var snaps: [Snap] {
+        get { snapLog ?? [] }
+        set { snapLog = newValue.isEmpty ? nil : newValue }
+    }
+
+    /// Заметки с датами — так же, как `snaps`.
+    var jotLog: [Jot]?
+    var jots: [Jot] {
+        get { jotLog ?? [] }
+        set { jotLog = newValue.isEmpty ? nil : newValue }
+    }
+
+    /// Старая `note` как запись ленты: датой заведения растения. Пусто, если
+    /// заметки нет.
+    var legacyJot: Jot? {
+        guard let note, !note.isEmpty else { return nil }
+        let start = Calendar(identifier: .gregorian).date(from: addedOn) ?? .distantPast
+        return Jot(date: start, text: note)
+    }
+
+    /// Лента заметок: старая первой, дальше датированные по возрастанию.
+    var journal: [Jot] {
+        (legacyJot.map { [$0] } ?? []) + jots.sorted { $0.date < $1.date }
+    }
 
     /// Чертёж своей объёмной модели — по снимку, по просьбе хозяина; нет —
     /// готовая модель вида, см. `blueprint`.
@@ -71,6 +133,11 @@ struct Plant: Identifiable, Hashable, Codable {
     /// Датчик влажности в горшке; есть — влажность берётся с него, а не
     /// считается по сроку.
     var sensor: Sensor?
+
+    /// Откуда нынешняя влажность. Пусто в садах прежних сборок и после
+    /// полива рукой — посчитана (`estimate`). Ставит датчик, снимает полив
+    /// и отвязка датчика; см. `estimated`.
+    var source: MoistureSource?
 
     /// Когда хозяин в последний раз правил растение: кличку, вид, срок,
     /// снимок, заметку, комнату или место в ней. В общем саду (`Family`) из
@@ -94,6 +161,28 @@ struct Plant: Identifiable, Hashable, Codable {
     /// (`tended`).
     var treatment: Treatment?
 
+    /// Последний разбор «Что с ним?»: с ним сравнивают следующий снимок.
+    /// Пусто — не разбирали, и в садах прежних сборок. Живёт на этом
+    /// телефоне: отдельно в общий сад не едет и правкой ухода не считается.
+    var lastDiagnosis: Diagnosis?
+
+    /// Когда растение ушло в архив: «Растение погибло — в архив». Пусто у
+    /// живых и в садах прежних сборок. Архивные лежат в `Garden.archive`, а
+    /// не в комнатах, поэтому не попадают ни в «что полить», ни в «Сад
+    /// сегодня», ни в серию; в общем саду поле едет в записи растения и
+    /// сливается по `edited`, как кличка.
+    var archived: Date?
+
+    /// «Отложить на день»: до этого момента растение не считается ждущим
+    /// воды (`needsWaterToday`). Полили — отсрочка снимается. Пусто у всех и
+    /// в садах прежних сборок; в общем саду едет в записи растения и сливается
+    /// по `edited`, как кличка.
+    var snoozed: Date?
+
+    /// «Не напоминать об этом растении» из уведомления: о поливе не шлём.
+    /// Полив не трогает; снимается в настройках растения.
+    var hushed: Bool?
+
     /// Уход со сроками вида там, где своих нет: мелкого ухода в садах
     /// прежних сборок не было.
     var tending: Care {
@@ -110,7 +199,7 @@ struct Plant: Identifiable, Hashable, Codable {
 
     /// Из влажности, а не хранится: два числа рано или поздно разошлись бы.
     var daysUntilWatering: Int {
-        max(0, Int((moisture * period).rounded()))
+        MoistureStatus.days(moisture: moisture, period: period)
     }
 
     var thirst: Thirst { Thirst(moisture: moisture) }
@@ -121,11 +210,13 @@ struct Plant: Identifiable, Hashable, Codable {
         return min(1, (Thirst.warnBelow - moisture) / Thirst.warnBelow)
     }
 
+    /// Процент на экране: с датчика — как есть, посчитанный — «≈N%».
     var moistureLabel: String {
-        Lang.format("%lld%%", Int((moisture * 100).rounded()))
+        MoistureStatus.percent(moisture, estimated: estimated)
     }
 
-    var wateringLabel: String { Self.wateringLabel(days: daysUntilWatering) }
+    /// Подпись срока — словами статуса, см. `MoistureStatus.nextWatering`.
+    var wateringLabel: String { nextWateringText }
 
     /// Дата — по-местному: у кого «2.11.2024», у кого «11/2/2024».
     var addedLabel: String {
@@ -135,9 +226,11 @@ struct Plant: Identifiable, Hashable, Codable {
                 .locale(Lang.locale)))
     }
 
+    /// Измеренная датчиком влажность по таймеру не сохнет: до нового
+    /// показания стоит последнее — иначе «датчик» показывал бы расчёт.
     mutating func dry(days: Double) {
         guard dryingDays > 0, days > 0 else { return }
-        moisture = max(0, moisture - days / period)
+        if estimated { moisture = max(0, moisture - days / period) }
         var tended = tending
         tended.pass(days: days, growing: Season.growing)
         care = tended
@@ -158,7 +251,9 @@ struct Plant: Identifiable, Hashable, Codable {
         plain.moisture = 0
         plain.care = nil
         plain.treatment = nil
+        plain.lastDiagnosis = nil
         plain.sensor = nil
+        plain.source = nil
         plain.scan = nil
         plain.edited = nil
         plain.wet = nil
@@ -183,23 +278,16 @@ struct Plant: Identifiable, Hashable, Codable {
         return Double(sum % 97) / 97
     }
 
-    /// С двоеточием вместо «через»: строка короче и читается сроком.
-    static func wateringLabel(days: Int) -> String {
-        if days <= 0 { return Lang.text("Следующий полив: сегодня") }
-        if days == 1 { return Lang.text("Следующий полив: завтра") }
-        return Lang.format("Следующий полив: %lld дней", days)
-    }
-
     /// Номер случайный: кличек бывает две одинаковых.
     /// Номер можно дать свой — чертёж модели берёт из него зерно ещё до
     /// посадки.
     static func new(name: String, species: String, dryingDays: Double,
                     photo: String = "monstera", shot: String? = nil,
                     traits: Traits? = nil, id: String = UUID().uuidString,
-                    on day: Date = Date(),
+                    moisture: Double = 1, on day: Date = Date(),
                     calendar: Calendar = .current) -> Plant {
         Plant(id: id, name: name, species: species,
-              moisture: 1, dryingDays: dryingDays,
+              moisture: min(max(moisture, 0), 1), dryingDays: dryingDays,
               addedOn: calendar.dateComponents([.year, .month, .day],
                                                from: day),
               photo: photo, shot: shot,
@@ -238,6 +326,14 @@ struct Removal: Equatable {
     var index: Int
 }
 
+/// Растение в архиве и где оно стояло: в эту комнату оно вернётся.
+struct Archived: Codable, Hashable {
+    var plant: Plant
+    var room: String
+    /// Ключ комнаты в общем саду, см. `Room.key`.
+    var key: String?
+}
+
 /// Полив, который ещё можно отменить: влажность до него и запись в журнале.
 struct Pour: Equatable {
     var plant: Plant.ID
@@ -267,9 +363,18 @@ struct GardenState: Codable {
     /// Погода в миг записи — туда же, виджету.
     var climate: Climate?
 
+    /// Архив: погибшие растения с журналом. Отдельно от комнат — виджет,
+    /// часы и напоминания их не видят. В файлах прежних сборок пусто.
+    var archive: [Archived] = []
+
+    /// Пропущенные поливы уличных растений — в записи растения. Не больше
+    /// `Garden.skipKeep`; в файлах прежних сборок пусто.
+    var skips: [Outdoor.Skip] = []
+
     init(owner: String, rooms: [Room], savedAt: Date,
          log: [Watering] = [], since: Date = Date(), stamp: String? = nil,
-         season: Double? = nil, climate: Climate? = nil) {
+         season: Double? = nil, climate: Climate? = nil,
+         archive: [Archived] = [], skips: [Outdoor.Skip] = []) {
         self.owner = owner
         self.rooms = rooms
         self.savedAt = savedAt
@@ -278,6 +383,8 @@ struct GardenState: Codable {
         self.stamp = stamp
         self.season = season
         self.climate = climate
+        self.archive = archive
+        self.skips = skips
     }
 
     /// Сад в миг `date`, если никто не польёт: приложение закрыто, а земля
@@ -302,6 +409,9 @@ struct GardenState: Codable {
         stamp = try box.decodeIfPresent(String.self, forKey: .stamp)
         season = try box.decodeIfPresent(Double.self, forKey: .season)
         climate = try box.decodeIfPresent(Climate.self, forKey: .climate)
+        archive = try box.decodeIfPresent([Archived].self, forKey: .archive)
+            ?? []
+        skips = try box.decodeIfPresent([Outdoor.Skip].self, forKey: .skips) ?? []
     }
 }
 
@@ -322,8 +432,15 @@ enum Seed {
             : Lang.format("Добро пожаловать, %@!", name)
     }
 
+    /// Сад-пример: для «Показать пример», превью и проверок модели.
     static var state: GardenState {
         GardenState(owner: owner, rooms: rooms, savedAt: Date(),
+                    log: [], since: Date())
+    }
+
+    /// Новый сад первого запуска — пустой.
+    static var blank: GardenState {
+        GardenState(owner: owner, rooms: [], savedAt: Date(),
                     log: [], since: Date())
     }
 
@@ -416,13 +533,6 @@ enum Seed {
         ]),
     ]
 
-    /// «Сегодня» — тем же счётом, что подпись на карточке.
-    static func due(in rooms: [Room]) -> [Plant] {
-        rooms.flatMap(\.plants)
-            .filter { $0.daysUntilWatering == 0 }
-            .sorted { $0.moisture < $1.moisture }
-    }
-
     /// Для Siri: больше пяти имён на слух не держатся — остальные числом.
     static func dueLine(_ plants: [Plant]) -> String {
         let names = plants.map(\.name)
@@ -482,4 +592,30 @@ enum Seed {
                 || ($0.note?.lowercased().contains(text) ?? false)
         }
     }
+}
+
+/// Погода, при которой уличные растения не поливают: дождь, заморозок, зима.
+/// Пороги — здесь, одни на все места. Погоды нет или она старше `stale` —
+/// поливаем как обычно: лучше лишний пуш, чем молчаливый пропуск.
+enum Outdoor {
+    /// Миллиметров за сутки — прошлые или обещанные на ближайшие сутки.
+    static let rainSkip = 3.0
+    /// °C: ниже — заморозок на ближайшие сутки.
+    static let frost = 3.0
+    /// Погоде старше стольких секунд не верим.
+    static let stale: TimeInterval = 6 * 3_600
+
+    /// Почему уличное растение сегодня не поливаем.
+    enum Reason: String, Codable, Equatable, Sendable {
+        case rain, frost, winter
+    }
+
+    /// Пропущенный полив — в записи растения.
+    struct Skip: Codable, Equatable, Sendable {
+        var plant: Plant.ID
+        var day: Date
+        var reason: Reason
+        var millimeters: Double?
+    }
+
 }

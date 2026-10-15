@@ -59,8 +59,9 @@ struct Diary: Equatable {
         var id: String { "\(when.timeIntervalSince1970)-\(poured)" }
     }
 
-    /// Сколько дней сада видно на графике.
-    static let span = 30.0
+    /// Сколько дней сада видно на графике: десять настоящих суток, как и
+    /// при прежнем ускоренном времени.
+    static let span = 10.0
 
     /// На столько раньше полива стоит точка «до» — на графике не видно.
     static let tick: TimeInterval = 0.5

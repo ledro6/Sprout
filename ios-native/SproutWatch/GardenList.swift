@@ -86,13 +86,17 @@ private struct PotPage: View {
 
     @State private var poured = 0
 
+    /// Земля ещё влажная — переспросить, как на телефоне.
+    @State private var asking = false
+
     var body: some View {
         if let pot = band.wrist?.pots.first(where: { $0.id == id }) {
             ScrollView {
                 VStack(spacing: 8) {
                     Dial(moisture: pot.moisture, width: 9) {
                         VStack(spacing: 0) {
-                            Text(Lang.format("%lld%%", pot.percent))
+                            Text(MoistureStatus.percent(
+                                pot.moisture, estimated: pot.estimated))
                                 .font(.system(size: 26, weight: .bold,
                                               design: .rounded))
                                 .monospacedDigit()
@@ -114,14 +118,18 @@ private struct PotPage: View {
                         .multilineTextAlignment(.center)
                         .contentTransition(.opacity)
                     Button {
-                        band.water(pot.id)
-                        poured += 1
+                        if pot.wet {
+                            asking = true
+                        } else {
+                            band.water(pot.id)
+                            poured += 1
+                        }
                     } label: {
                         Label("Полить", systemImage: "drop.fill")
                             .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(.borderedProminent)
-                    .tint(WristTone.water)
+                    .tint(WristTone.fill)
                     .disabled(pot.moisture >= 0.99)
                     .handGestureShortcut(.primaryAction)
                     .padding(.top, 4)
@@ -129,6 +137,18 @@ private struct PotPage: View {
             }
             .navigationTitle(pot.name)
             .sensoryFeedback(.success, trigger: poured)
+            .confirmationDialog(
+                Text(Lang.format("Земля ещё влажная (%@)", MoistureStatus.percent(
+                    pot.moisture, estimated: pot.estimated))),
+                isPresented: $asking, titleVisibility: .visible) {
+                Button("Всё равно полить") {
+                    band.water(pot.id, anyway: true)
+                    poured += 1
+                }
+                Button("Отмена", role: .cancel) {}
+            } message: {
+                Text("Лишний полив вреден корням")
+            }
         } else {
             Image(systemName: "leaf")
                 .font(.title2)
@@ -150,7 +170,7 @@ private struct Dial<Label: View>: View {
     }
 
     var body: some View {
-        let tint = WristTone.of(Wrist.Level(moisture: moisture))
+        let tint = WristTone.of(MoistureStatus(moisture: moisture))
         ZStack {
             Circle()
                 .stroke(tint.opacity(0.22), lineWidth: width)
@@ -165,15 +185,28 @@ private struct Dial<Label: View>: View {
     }
 }
 
+/// Часы всегда тёмные — берём тёмную половину таблицы приложения
+/// (`Legible`), где проверяется контраст.
 enum WristTone {
-    static let water = Color(red: 0.25, green: 0.62, blue: 1)
-    static let done = Color(red: 0.42, green: 0.86, blue: 0.5)
+    static let water = inked(Legible.wet.dark)
+    static let done = inked(Legible.ok.dark)
 
-    static func of(_ level: Wrist.Level) -> Color {
-        switch level {
-        case .calm: water
-        case .warn: .orange
-        case .alarm: .red
+    /// Заливка кнопки «Полить» под белую надпись.
+    static let fill = inked(Legible.accentFill.dark)
+
+    /// Статус — из общего движка (`MoistureStatus`), цвета — тёмная
+    /// половина таблицы `Legible`.
+    static func of(_ status: MoistureStatus) -> Color {
+        switch status.tone {
+        case .warn: inked(Legible.soon.dark)
+        case .alarm: inked(Legible.urgent.dark)
+        case .water, .green, .secondary: water
         }
     }
+}
+
+/// Цвет из таблицы модели.
+func inked(_ paint: Paint) -> Color {
+    Color(red: paint.red / 255, green: paint.green / 255,
+          blue: paint.blue / 255, opacity: paint.alpha)
 }

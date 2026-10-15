@@ -28,10 +28,14 @@ struct Sprig: Identifiable, Hashable {
     let moisture: Double
     let label: String
     let thumb: URL?
+    /// Полить сегодня — тот же набор, что «Ждут воды» в приложении.
+    var due = false
+    /// Влажность посчитана, а не с датчика — «≈» у процента.
+    var estimated = true
 
-    var percent: String { Lang.format("%lld%%", Int((moisture * 100).rounded())) }
+    var percent: String { MoistureStatus.percent(moisture, estimated: estimated) }
 
-    var thirst: Thirst { Thirst(moisture: moisture) }
+    var status: MoistureStatus { MoistureStatus(moisture: moisture) }
 }
 
 struct Glance: TimelineEntry {
@@ -44,7 +48,8 @@ struct Glance: TimelineEntry {
     /// своих местах, а не перебегают, когда один обгонит другого.
     var garden: [Sprig] = []
 
-    var thirsty: [Sprig] { sprigs.filter { $0.thirst != .calm } }
+    /// Кого полить сегодня — `MoistureStatus.needsWater`.
+    var thirsty: [Sprig] { sprigs.filter(\.due) }
 
     static func now() -> Glance { ahead(from: .now, steps: 1)[0] }
 
@@ -65,7 +70,9 @@ struct Glance: TimelineEntry {
                 room.plants.map { plant in
                     Sprig(id: plant.id, name: plant.name, room: room.name,
                           moisture: plant.moisture, label: plant.wateringLabel,
-                          thumb: Store.thumb(for: plant))
+                          thumb: Store.thumb(for: plant),
+                          due: plant.needsWaterToday,
+                          estimated: plant.estimated)
                 }
             }
             return Glance(date: date,
@@ -79,20 +86,30 @@ struct Glance: TimelineEntry {
     static var sample: Glance {
         let sprigs = [
             Sprig(id: "a", name: Lang.text("Спатифиллум"), room: "",
-                  moisture: 0.08, label: Plant.wateringLabel(days: 0),
-                  thumb: nil),
+                  moisture: 0.08,
+                  label: MoistureStatus.nextWatering(
+                      moisture: 0.08, period: 7, estimated: true),
+                  thumb: nil, due: MoistureStatus.due(moisture: 0.08, period: 7)),
             Sprig(id: "b", name: Lang.text("Фиалка"), room: "",
-                  moisture: 0.21, label: Plant.wateringLabel(days: 1),
-                  thumb: nil),
+                  moisture: 0.21,
+                  label: MoistureStatus.nextWatering(
+                      moisture: 0.21, period: 5, estimated: true),
+                  thumb: nil, due: MoistureStatus.due(moisture: 0.21, period: 5)),
             Sprig(id: "c", name: Lang.text("Монстера"), room: "",
-                  moisture: 0.64, label: Plant.wateringLabel(days: 6),
-                  thumb: nil),
+                  moisture: 0.64,
+                  label: MoistureStatus.nextWatering(
+                      moisture: 0.64, period: 9.4, estimated: true),
+                  thumb: nil, due: MoistureStatus.due(moisture: 0.64, period: 9.4)),
             Sprig(id: "d", name: Lang.text("Кактус"), room: "",
-                  moisture: 0.9, label: Plant.wateringLabel(days: 40),
-                  thumb: nil),
+                  moisture: 0.9,
+                  label: MoistureStatus.nextWatering(
+                      moisture: 0.9, period: 44, estimated: true),
+                  thumb: nil, due: MoistureStatus.due(moisture: 0.9, period: 44)),
             Sprig(id: "e", name: Lang.text("Фикус"), room: "",
-                  moisture: 0.47, label: Plant.wateringLabel(days: 4),
-                  thumb: nil),
+                  moisture: 0.47,
+                  label: MoistureStatus.nextWatering(
+                      moisture: 0.47, period: 8.5, estimated: true),
+                  thumb: nil, due: MoistureStatus.due(moisture: 0.47, period: 8.5)),
         ]
         return Glance(date: .now, sprigs: sprigs.sorted { $0.moisture < $1.moisture },
                       ready: true, garden: sprigs)
@@ -142,9 +159,13 @@ struct ThirstView: View {
             Blank(icon: "leaf", line: "Откройте Sprout — и сад появится здесь.")
         } else if entry.sprigs.isEmpty {
             Blank(icon: "leaf", line: "В саду пока пусто.")
+        } else if entry.thirsty.isEmpty, family != .systemLarge {
+            // Малый и средний показывают только тех, кому пора пить
+            // (`MoistureStatus.needsWater`); некому — так и сказано.
+            Blank(icon: "checkmark.circle", line: "Все политы")
         } else {
             switch family {
-            case .systemSmall: small(entry.sprigs[0])
+            case .systemSmall: small(entry.thirsty[0])
             case .systemMedium: medium
             default: large
             }
@@ -158,7 +179,7 @@ struct ThirstView: View {
                 Spacer(minLength: 4)
                 Text(sprig.percent)
                     .font(.title2.weight(.bold))
-                    .foregroundStyle(Tone.of(sprig.thirst))
+                    .foregroundStyle(Tone.of(sprig.status))
                     .contentTransition(.numericText())
             }
             Spacer(minLength: 2)
@@ -177,7 +198,7 @@ struct ThirstView: View {
 
     private var medium: some View {
         HStack(alignment: .top, spacing: 10) {
-            ForEach(entry.sprigs.prefix(3)) { sprig in
+            ForEach(entry.thirsty.prefix(3)) { sprig in
                 VStack(spacing: 5) {
                     Thumb(url: sprig.thumb, side: 48)
                     Text(sprig.name)
@@ -185,7 +206,7 @@ struct ThirstView: View {
                         .lineLimit(1)
                     Text(sprig.percent)
                         .font(.title3.weight(.bold))
-                        .foregroundStyle(Tone.of(sprig.thirst))
+                        .foregroundStyle(Tone.of(sprig.status))
                         .contentTransition(.numericText())
                     PourButton(sprig: sprig, wide: false)
                 }
@@ -214,7 +235,7 @@ struct ThirstView: View {
                     Spacer(minLength: 4)
                     Text(sprig.percent)
                         .font(.headline)
-                        .foregroundStyle(Tone.of(sprig.thirst))
+                        .foregroundStyle(Tone.of(sprig.status))
                         .contentTransition(.numericText())
                     PourButton(sprig: sprig, wide: false)
                 }
@@ -231,6 +252,12 @@ private struct PourButton: View {
     let wide: Bool
 
     var body: some View {
+        // Влажную землю из виджета не льём: подтвердить здесь нечем, а
+        // лишний полив вреден, — см. `Garden.water`. Кнопки нет вовсе.
+        if sprig.status != .wet { button }
+    }
+
+    private var button: some View {
         Button(intent: WaterFromWidget(plant: sprig.id)) {
             if wide {
                 Label("Полить", systemImage: "drop.fill")
@@ -239,13 +266,12 @@ private struct PourButton: View {
             } else {
                 Image(systemName: "drop.fill")
                     .font(.caption.weight(.semibold))
-                    .accessibilityLabel(Lang.format("Полить: %@", sprig.name))
+                    .accessibilityLabel(Lang.format("Полить %@", sprig.name))
             }
         }
         .buttonStyle(.borderedProminent)
         .buttonBorderShape(.capsule)
-        .tint(Tone.water)
-        .disabled(sprig.moisture >= 0.99)
+        .tint(Tone.fill)
     }
 }
 
@@ -304,19 +330,40 @@ struct Leafy: View {
     }
 }
 
+/// Цвета виджетов — из той же таблицы, что у приложения (`Legible`): там
+/// их контраст проверяет модель.
 enum Tone {
-    static let water = Color(red: 0, green: 0.53, blue: 1)
-    static let leaf = Color(red: 0.2, green: 0.62, blue: 0.3)
+    /// Вода текстом и значками.
+    static let water = inked(Legible.wet)
+    static let leaf = inked(Legible.ok)
 
-    /// Те же пороги, что тень на карточке: ниже 40% — оранжевый, ниже 20% —
-    /// красный.
-    static func of(_ thirst: Thirst) -> Color {
-        switch thirst {
-        case .calm: .primary
-        case .warn: .orange
-        case .alarm: .red
+    /// Заливка кнопки «Полить» — белая надпись на ней читается в обеих темах.
+    static let fill = inked(Legible.accentFill)
+
+    /// Статус — из общего движка (`MoistureStatus`), цвета — из таблицы
+    /// `Legible`: не системные оранжевый и красный — на белом они бледнее
+    /// нужного.
+    static func of(_ status: MoistureStatus) -> Color {
+        switch status.tone {
+        case .warn: inked(Legible.soon)
+        case .alarm: inked(Legible.urgent)
+        case .water, .green, .secondary: .primary
         }
     }
+}
+
+/// Цвет из таблицы модели.
+func inked(_ paint: Paint) -> Color {
+    Color(red: paint.red / 255, green: paint.green / 255,
+          blue: paint.blue / 255, opacity: paint.alpha)
+}
+
+/// Пара из таблицы — по теме.
+func inked(_ pair: Legible.Pair) -> Color {
+    Color(UIColor { traits in
+        UIColor(inked(traits.userInterfaceStyle == .dark
+                      ? pair.dark : pair.light))
+    })
 }
 
 // MARK: - Экран блокировки
@@ -355,18 +402,20 @@ struct GlanceView: View {
             Text(entry.thirsty.count.formatted())
         }
         .gaugeStyle(.accessoryCircular)
-        .accessibilityLabel(Lang.format("Просят воды: %lld", entry.thirsty.count))
+        .accessibilityLabel(Lang.format("Полить: %lld", entry.thirsty.count))
     }
 
     private var inline: some View {
         Label(entry.thirsty.isEmpty ? Lang.text("Все политы")
-              : Lang.format("Просят воды: %lld", entry.thirsty.count),
+              : Lang.format("Полить: %lld", entry.thirsty.count),
               systemImage: "drop.fill")
     }
 
     private var rectangular: some View {
         VStack(alignment: .leading, spacing: 2) {
-            Label("Кого полить", systemImage: "drop.fill")
+            Label(entry.thirsty.isEmpty ? Lang.text("Кого полить")
+                  : Lang.format("Полить: %lld", entry.thirsty.count),
+                  systemImage: "drop.fill")
                 .font(.headline)
                 .widgetAccentable()
             if entry.thirsty.isEmpty {

@@ -27,7 +27,7 @@ struct Trim: View {
                 window
                 Text("Потяните снимок или разведите пальцы. Двойное нажатие вернёт как было.")
                     .font(Typography.settingNote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Palette.secondaryText)
                     .multilineTextAlignment(.center)
                     .fixedSize(horizontal: false, vertical: true)
                     .padding(.horizontal, 40)
@@ -41,10 +41,10 @@ struct Trim: View {
             .sproutSettledEdge()
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
-                    Button("Отмена") { dismiss() }
+                    Button("Отмена", role: .cancel) { dismiss() }
                 }
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("Готово") { finish() }
+                    Button("Готово", role: .confirm) { finish() }
                         .fontWeight(.semibold)
                 }
             }

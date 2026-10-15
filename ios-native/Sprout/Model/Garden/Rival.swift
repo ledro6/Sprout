@@ -184,9 +184,18 @@ final class Friends {
         saveRaces()
     }
 
+    /// Выход стирает челлендж и счёт друзей в нём: вставленный снова код
+    /// не должен вернуть старые числа.
     func leave(_ id: Race.ID) {
         races.removeAll { $0.id == id }
         saveRaces()
+        rivals = rivals.map { rival in
+            guard rival.race?.id == id else { return rival }
+            var cleared = rival
+            cleared.race = nil
+            return cleared
+        }
+        save()
     }
 
     /// Места в челлендже: свой счёт — живой, чужие — какими их прислали.
@@ -239,9 +248,19 @@ final class Friends {
         store.set(data, forKey: Self.racesKey)
     }
 
-    /// При равенстве — по кличке, чтобы строки не перескакивали от запуска к
+    /// Рейтинг — по доле поливов вовремя (`Rival.aim`), а не по числу
+    /// поливов: много поливать не значит поливать хорошо. Без доли (коды
+    /// прежних сборок, ни одного полива с остатком) — в конце. При
+    /// равенстве — по кличке, чтобы строки не перескакивали от запуска к
     /// запуску.
-    private static func ranked(_ list: [Rival]) -> [Rival] {
-        list.sorted { ($0.total, $1.name) > ($1.total, $0.name) }
+    static func ranked(_ list: [Rival]) -> [Rival] {
+        list.sorted { left, right in
+            switch (left.aim, right.aim) {
+            case let (one?, two?) where one != two: return one > two
+            case (.some, .none): return true
+            case (.none, .some): return false
+            default: return left.name < right.name
+            }
+        }
     }
 }

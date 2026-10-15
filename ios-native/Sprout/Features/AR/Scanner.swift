@@ -69,7 +69,10 @@ final class Scanner {
         case .authorized:
             break
         case .notDetermined:
-            guard await AVCaptureDevice.requestAccess(for: .video) else {
+            let allowed = await AVCaptureDevice.requestAccess(for: .video)
+            Journal.shared.note(.permissionResult,
+                                allowed ? "camera:granted" : "camera:denied")
+            guard allowed else {
                 step = .failed(Self.blind)
                 return
             }
@@ -128,6 +131,12 @@ final class Scanner {
                 try? await Task.sleep(for: .milliseconds(250))
             }
         }
+    }
+
+    /// Камере отказали — на экране ошибки появляется «Открыть Настройки».
+    static var cameraBlocked: Bool {
+        let status = AVCaptureDevice.authorizationStatus(for: .video)
+        return status == .denied || status == .restricted
     }
 
     /// Нет доступа к камере — куда идти.

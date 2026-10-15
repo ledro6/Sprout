@@ -57,11 +57,106 @@ enum Store {
         return thumbs?.appendingPathComponent(String(key, radix: 16) + ".jpg")
     }
 
-    /// Битый файл — тоже «нет файла»: лучше макетный сад, чем не
-    /// запуститься.
+    /// Копия прежнего хорошего файла: перед каждой записью. Из неё сад
+    /// восстанавливают, если основной файл повредился.
+    static let copyName = "garden-backup.json"
+
+    static var copy: URL? {
+        garden?.deletingLastPathComponent().appendingPathComponent(copyName)
+    }
+
+    /// Что взять из файлов сада при запуске.
+    enum Pick {
+        /// Основной файл читается.
+        case main(GardenState)
+        /// Основной битый, копия читается — сад берём из неё.
+        case copy(GardenState)
+        /// Основного файла нет: сад начинается заново, как и раньше.
+        case absent
+        /// Файл есть, но не читается (телефон закрыт, защита данных): сад не
+        /// заменяем ни пустым, ни копией — ждём, пока откроют телефон.
+        case locked
+        /// Оба не читаются: сад не заменяем молча, спрашиваем хозяина.
+        case broken
+    }
+
+    static func decode(_ data: Data) -> GardenState? {
+        try? JSONDecoder().decode(GardenState.self, from: data)
+    }
+
+    /// Чистое решение, что брать. Файлы передаются данными — тесты берут
+    /// свои.
+    static func pick(main: Data?, copy: Data?, exists: Bool) -> Pick {
+        // Файла нет — сад заново. Есть, но не читается — закрыт: пустой сад
+        // на его месте затёр бы настоящий.
+        guard let main else { return exists ? .locked : .absent }
+        if let state = decode(main) { return .main(state) }
+        if let copy, let state = decode(copy) { return .copy(state) }
+        return .broken
+    }
+
+    /// Читает сад при запуске. Битый основной файл не стирается: он уходит в
+    /// `garden-broken-<дата>.json`, а при читаемой копии её содержимое
+    /// встаёт на его место.
+    static func load() -> Pick {
+        guard let file = garden else { return .absent }
+        let main = try? Data(contentsOf: file)
+        let exists = FileManager.default.fileExists(atPath: file.path)
+        let kept = copy.flatMap { try? Data(contentsOf: $0) }
+        let picked = pick(main: main, copy: kept, exists: exists)
+        switch picked {
+        case .main, .absent, .locked:
+            break
+        case .copy:
+            // Не убрали битый — его не затираем копией.
+            if quarantine(file) != nil {
+                try? kept?.write(to: file, options: .atomic)
+            }
+        case .broken:
+            quarantine(file)
+        }
+        return picked
+    }
+
+    /// Прежний хороший файл — в копию, перед тем как писать новый. Битый
+    /// копию не затирает.
+    static func keep(_ file: URL) {
+        guard let copy, let data = try? Data(contentsOf: file),
+              decode(data) != nil else { return }
+        try? data.write(to: copy, options: .atomic)
+    }
+
+    /// Файл убирается с дороги, но не удаляется: имя с датой, и если такое
+    /// уже есть — с номером.
+    @discardableResult
+    static func quarantine(_ file: URL) -> URL? {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.dateFormat = "yyyy-MM-dd-HHmmss"
+        let stamp = formatter.string(from: Date())
+        let folder = file.deletingLastPathComponent()
+        let files = FileManager.default
+        var target = folder.appendingPathComponent(
+            "garden-broken-\(stamp).json")
+        var number = 2
+        while files.fileExists(atPath: target.path) {
+            target = folder.appendingPathComponent(
+                "garden-broken-\(stamp)-\(number).json")
+            number += 1
+        }
+        do {
+            try files.moveItem(at: file, to: target)
+            return target
+        } catch {
+            return nil
+        }
+    }
+
+    /// Битый файл — тоже «нет файла» для тех, кто читает без решения: виджет
+    /// и перечитывание не должны заменять сад. Решает `load`.
     static func read() -> GardenState? {
         guard let file = garden, let data = try? Data(contentsOf: file)
         else { return nil }
-        return try? JSONDecoder().decode(GardenState.self, from: data)
+        return decode(data)
     }
 }

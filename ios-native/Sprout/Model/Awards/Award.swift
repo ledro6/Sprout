@@ -279,6 +279,27 @@ struct Rank: Hashable, Identifiable, Sendable {
 
     /// Верхняя ступень — дальше расти некуда.
     var top: Bool { level == award.levels }
+
+    /// «До «Неделя подряд»: 2 хороших дня» — сколько осталось, в единицах
+    /// награды. Название — в кавычках и без склонения: двоеточие не
+    /// требует падежа.
+    func toGo(_ left: Int) -> String {
+        Lang.format("До «%1$@»: %2$@", title, Self.unit(award, left))
+    }
+
+    static func unit(_ award: Award, _ count: Int) -> String {
+        switch award {
+        case .drops: Lang.format("%lld поливов", count)
+        case .bullseye: Lang.format("%lld поливов вовремя", count)
+        case .streak:
+            Fair.from != nil ? Lang.format("%lld хороших дней", count)
+                : Lang.format("%lld дней подряд", count)
+        case .noDrought: Lang.format("%lld дней без засухи", count)
+        case .jungle: Lang.format("%lld растений", count)
+        case .botanist: Lang.format("%lld видов", count)
+        default: Lang.format("%lld раз", count)
+        }
+    }
 }
 
 /// Металл медали: свет и тень — между ними ложится отблеск. Идёт по
@@ -344,15 +365,24 @@ struct Trophies: Sendable {
 
     func level(_ award: Award) -> Int { reached[award]?.count ?? 0 }
 
+    /// `fair` — дата честных правил (`Fair`): с неё «Поливы» считают
+    /// только нужные, а «Дни подряд» — хорошие дни.
     static func of(_ log: [Watering], rooms: [Room], since: Date,
-                   now: Date = Date(),
+                   now: Date = Date(), fair: Date? = Fair.from,
                    calendar: Calendar = .current) -> Trophies {
         var out = Trophies()
-        let sorted = log.sorted { $0.when < $1.when }
-        out.set(.drops, count: sorted.count,
-                at: Award.drops.steps.filter { $0 <= sorted.count }
-                    .map { sorted[$0 - 1].when })
-        let runs = dayRuns(sorted, calendar: calendar)
+        // Лишний полив по влажной земле наград не приносит.
+        let sorted = log.filter(\.counts).sorted { $0.when < $1.when }
+        let drops = sorted.filter { Fair.credits($0, from: fair) }
+        out.set(.drops, count: drops.count,
+                at: Award.drops.steps.filter { $0 <= drops.count }
+                    .map { drops[$0 - 1].when })
+        var runs = dayRuns(sorted, calendar: calendar)
+        if let fair {
+            let run = Fair.run(log, rooms: rooms, from: fair, now: now,
+                               calendar: calendar)
+            runs = Runs(best: run.best, firsts: run.firsts)
+        }
         out.set(.streak, count: runs.best,
                 at: Award.streak.steps.compactMap(runs.reached))
         let clean = drought(sorted, rooms: rooms, since: since, now: now)

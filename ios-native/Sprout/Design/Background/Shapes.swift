@@ -338,11 +338,11 @@ struct SproutLogo: View, Animatable {
                 }
 
                 for leaf in leaves {
-                    layer.stroke(leaf, with: .color(Palette.green),
+                    layer.stroke(leaf, with: .color(Palette.leaf),
                                  style: style)
                 }
                 for drop in drops {
-                    layer.fill(drop, with: .color(Palette.water))
+                    layer.fill(drop, with: .color(Palette.waterGlow))
                 }
             }
         }

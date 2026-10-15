@@ -1,14 +1,25 @@
 import SwiftUI
 
 /// Карточка растения: фото, кличка, влажность и срок полива. На главной — с
-/// каплей «Полить» в углу фото: подпись под фото и так занимает всю ширину.
+/// каплей «Полить» под фото, в нижней строке: поверх фото она закрывала
+/// растение. Срочная карточка (сухо или скоро пить) кроме свечения несёт
+/// значок статуса перед кличкой: в оттенках серого свечение не видно.
 struct PlantCard: View {
     let plant: Plant
 
     /// Капля «Полить»; у предпросмотров меню и перетаскивания её нет.
     var drop = false
 
+    /// Крупный шрифт: кличка и процент встают друг под другом, а кличка
+    /// переносится, а не обрезается.
+    @Environment(\.dynamicTypeSize) private var type
+
+    private var big: Bool { type.isAccessibilitySize }
+
     var body: some View {
+        let head = big
+            ? AnyLayout(VStackLayout(alignment: .leading, spacing: 2))
+            : AnyLayout(HStackLayout(spacing: 4))
         VStack(alignment: .leading, spacing: 8) {
             PlantPhoto(plant: plant)
                 .frame(maxWidth: .infinity)
@@ -17,20 +28,18 @@ struct PlantCard: View {
                     ModelBadge(plant: plant)
                         .padding(Metrics.modelBadgeInset)
                 }
-                .overlay(alignment: .bottomTrailing) {
-                    if drop {
-                        WaterDrop(plant: plant)
-                            .padding(Metrics.dropInset)
-                            .transition(.scale.combined(with: .opacity))
-                    }
-                }
 
-            HStack {
+            head {
+                if urgent {
+                    Image(systemName: plant.status.symbol)
+                        .foregroundStyle(StatusStyle(plant.status).color)
+                        .accessibilityLabel(plant.status.word)
+                }
                 Text(plant.name)
-                    .lineLimit(1)
+                    .lineLimit(big ? nil : 2)
                     .truncationMode(.tail)
                     .contentTransition(.numericText())
-                Spacer(minLength: 4)
+                if !big { Spacer(minLength: 4) }
                 // Переход цифр: знак процента стоит на месте, и кличку ничто
                 // не толкает вбок.
                 Text(plant.moistureLabel)
@@ -43,22 +52,39 @@ struct PlantCard: View {
             .animation(Motion.number, value: plant.moistureLabel)
             .modifier(Sharpen())
 
-            Text(plant.wateringLabel)
-                .font(Typography.cardCaption)
-                .foregroundStyle(Palette.ink)
-                // Одна строка: самая длинная подпись помещается; предел — на
-                // случай крупного шрифта.
-                .lineLimit(1)
-                .minimumScaleFactor(0.7)
-                .contentTransition(.numericText())
-                .animation(Motion.number, value: plant.daysUntilWatering)
+            HStack(spacing: 6) {
+                VStack(alignment: .leading, spacing: 3) {
+                    Text(plant.wateringLabel)
+                        .font(Typography.cardCaption)
+                        .foregroundStyle(Palette.ink)
+                        // Две строки не страшны: капля стоит рядом, а не
+                        // под подписью.
+                        .lineLimit(big ? nil : 2)
+                        .minimumScaleFactor(0.8)
+                        .contentTransition(.numericText())
+                        .animation(Motion.number, value: plant.daysUntilWatering)
+                    // Откуда процент над ней: «Датчик» или «Расчёт».
+                    SourceBadge(estimated: plant.estimated)
+                }
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .modifier(Sharpen())
+                if drop {
+                    WaterDrop(plant: plant)
+                        .transition(.scale.combined(with: .opacity))
+                }
+            }
+            .modifier(Sharpen())
+
+            RecentPour(plant: plant)
         }
         .padding(.horizontal, Metrics.cardPadding)
         .padding(.vertical, 10)
-        .sproutPlate(in: shape)
+        .sproutSolidPlate(in: shape)
         .modifier(PlantGlow(plant: plant, shape: shape))
+    }
+
+    /// Срочная: свечение горит — «скоро пить» или «сухо».
+    private var urgent: Bool {
+        plant.status == .urgent || plant.status == .soon
     }
 
     private var shape: RoundedRectangle {

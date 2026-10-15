@@ -269,6 +269,8 @@ ALLOW = {
     "Sprout/Model/Core/Pulse.swift": [r"^[а-яё]+$"],
     "Sprout/Model/Garden/Climate.swift": [r"^[а-яё]+$"],
     "Sprout/Model/Garden/Family.swift": [r"^[а-яё]+$"],
+    # Слова совета полить — для проверки ответа модели, см. `Sage.pours`.
+    "Sprout/Model/Recognition/Sage.swift": [r"^[а-яё ]+$"],
 }
 
 

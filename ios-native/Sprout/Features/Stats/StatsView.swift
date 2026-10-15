@@ -36,6 +36,13 @@ struct StatsView: View {
     /// «Итоги года» открыты — во весь экран, поверх вкладок.
     @State private var recapping = false
 
+    /// Где «Итоги года»: сверху в сезон, внизу при долгом журнале, —
+    /// пересчитывается с итогом, см. `recount`.
+    @State private var recapPlace: Recap.Place = .hidden
+
+    /// «Самые сухие» раскрыты целиком.
+    @State private var allThirsty = false
+
     /// «Выбрать»: блоки складываются в список, их можно перетаскивать и
     /// убирать.
     @State private var choosing = false
@@ -73,16 +80,16 @@ struct StatsView: View {
 
     private let calendar = Calendar.current
 
-    /// Итоги — за нынешний год: до декабря — с января по сегодня.
-    private var year: Int { calendar.component(.year, from: Date()) }
+    /// Итоги — за нынешний год, а в январе — за прошедший.
+    private var year: Int { Recap.year(for: Date(), calendar: calendar) }
 
     var body: some View {
         NavigationStack(path: $path) {
             ScrollViewReader { reader in
                 ScrollView {
                     VStack(alignment: .leading, spacing: 0) {
-                        SproutHead("Статистика", walk: .stats,
-                                   choosing: blank ? nil : $choosing)
+                        SproutHead("Статистика",
+                                   choosing: blank ? nil : choosingBinding)
                         VStack(alignment: .leading,
                                spacing: Metrics.groupGap) {
                             if blank {
@@ -92,47 +99,48 @@ struct StatsView: View {
                                 if choosing {
                                     Text("Тяните за полоски справа, чтобы поменять порядок, «−» — убрать.")
                                         .font(Typography.settingNote)
-                                        .foregroundStyle(.secondary)
+                                        .foregroundStyle(Palette.secondaryText)
                                         .fixedSize(horizontal: false, vertical: true)
                                         .padding(.leading, 6)
                                         .transition(.blurReplace)
                                 }
                                 let shown = settings.statsShown
-                                // В выборе блоки складываются в список: так
-                                // их видно все разом, и таскать легко.
-                                if choosing {
-                                    VStack(spacing: Metrics.statRowGap) {
-                                        ForEach(shown, id: \.self) { block in
-                                            row(block)
-                                                .matchedGeometryEffect(
-                                                    id: block, in: fold)
-                                        }
+                                // Один список на оба вида: ячейки с теми же id.
+                                // В «Выбрать» карточка складывается в строку
+                                // на месте, а не сменяется другим деревом.
+                                VStack(alignment: .leading, spacing: listGap) {
+                                    if !choosing, recapPlace == .banner {
+                                        recapTeaser
                                     }
-                                } else {
                                     ForEach(shown, id: \.self) { block in
-                                        content(block)
+                                        cell(block)
                                             .matchedGeometryEffect(
                                                 id: block, in: fold)
+                                    }
+                                    if !choosing, recapPlace == .footer {
+                                        recapTeaser
                                     }
                                 }
                                 if shown.isEmpty && !choosing {
                                     Text("Все блоки убраны — нажмите «Выбрать», чтобы вернуть.")
                                         .font(Typography.settingNote)
-                                        .foregroundStyle(.secondary)
+                                        .foregroundStyle(Palette.secondaryText)
                                         .fixedSize(horizontal: false, vertical: true)
                                         .padding(.leading, 6)
                                 }
-                                if choosing && !settings.statsHidden.isEmpty {
+                                if choosing
+                                    && settings.statsHidden.contains(where: \.listed) {
                                     hiddenGroup
                                         .transition(.blurReplace)
                                 }
                             }
                         }
-                        .animation(Motion.arrange, value: settings.statsShown)
-                        .animation(Motion.fold, value: choosing)
+                        // Соседи раздвигаются пружиной; вход и выход из
+                        // «Выбрать» — через `choosingBinding`, одной анимацией.
+                        .animation(.snappy, value: settings.statsShown)
                         .padding(.horizontal, Metrics.contentMargin)
                         .padding(.top, 8)
-                        .padding(.bottom, 28)
+                        .padding(.bottom, Metrics.barGap)
                     }
                 }
                 // Вход во вкладку — плавно; фон стоит.
@@ -184,6 +192,15 @@ struct StatsView: View {
     private func recount() {
         book = Almanac.of(garden.log, rooms: garden.rooms, period: period,
                           since: garden.since)
+        recapPlace = Recap.place(garden.log, calendar: calendar)
+    }
+
+    /// «Итоги года» — не блок списка: баннер сверху с 1 декабря по 15
+    /// января, в остальное время — внизу и только при 90 днях журнала.
+    private var recapTeaser: some View {
+        Button { recapping = true } label: { RecapTeaser(year: year) }
+            .buttonStyle(.plain)
+            .sproutRide()
     }
 
     private func refresh() {
@@ -194,7 +211,7 @@ struct StatsView: View {
     }
 
     /// Цвет волны, а не узора: столбики считают поливы.
-    private var colour: Color { Palette.swatch(settings.waveHue) }
+    private var colour: Color { Palette.swatch(settings.waveColour) }
 
     // MARK: - Пусто
 
@@ -202,6 +219,26 @@ struct StatsView: View {
     private var blank: Bool { book.plants.isEmpty && book.total == 0 }
 
     // MARK: - Выбор блоков
+
+    /// «Выбрать» меняет режим одной анимацией `.smooth`: кнопка в шапке
+    /// переключает значение через эту привязку, и вложенный `withAnimation`
+    /// перебивает её пружину. Без второй анимации поверх — иначе экран дёргался.
+    private var choosingBinding: Binding<Bool> {
+        Binding(
+            get: { choosing },
+            set: { value in withAnimation(.smooth) { choosing = value } })
+    }
+
+    /// Отступ списка: в выборе строки плотнее, чем карточки.
+    private var listGap: CGFloat {
+        choosing ? Metrics.statRowGap : Metrics.groupGap
+    }
+
+    /// Ячейка блока: карточка, а в «Выбрать» — строка с тем же id.
+    @ViewBuilder
+    private func cell(_ block: StatsBlock) -> some View {
+        if choosing { row(block) } else { content(block) }
+    }
 
     /// Блок в выборе — строкой: «−» убирает, за полоски справа тянут.
     private func row(_ block: StatsBlock) -> some View {
@@ -215,7 +252,9 @@ struct StatsView: View {
                     .symbolRenderingMode(.palette)
                     .foregroundStyle(.white, Palette.alarm)
             }
-            .buttonStyle(.plain)
+            .buttonStyle(.borderless)
+            .frame(minWidth: 44, minHeight: 44)
+            .contentShape(.rect)
             .accessibilityLabel(Lang.format("Убрать «%@»", block.title))
             Image(systemName: block.icon)
                 .font(Typography.settingRow)
@@ -228,7 +267,7 @@ struct StatsView: View {
             Spacer(minLength: 8)
             Image(systemName: "line.3.horizontal")
                 .font(Typography.settingRow)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Palette.secondaryText)
                 .frame(width: 48, height: Metrics.statRow)
                 .contentShape(Rectangle())
                 .gesture(carry(block))
@@ -268,17 +307,15 @@ struct StatsView: View {
                 var shift = value.translation.height - CGFloat(hops) * pitch
                 let shown = settings.statsShown
                 if let at = shown.firstIndex(of: block) {
+                    // Соседи едут через `.animation(.snappy, value:)` списка;
+                    // сама тащимая строка без анимации — см. `row`.
                     if shift > pitch / 2, at + 1 < shown.count {
-                        withAnimation(Motion.arrange) {
-                            settings.swap(block, with: shown[at + 1])
-                        }
+                        settings.swap(block, with: shown[at + 1])
                         hops += 1
                         shift -= pitch
                         Feel.pick()
                     } else if shift < -pitch / 2, at > 0 {
-                        withAnimation(Motion.arrange) {
-                            settings.swap(block, with: shown[at - 1])
-                        }
+                        settings.swap(block, with: shown[at - 1])
                         hops -= 1
                         shift += pitch
                         Feel.pick()
@@ -312,9 +349,8 @@ struct StatsView: View {
         case .now:
             now.hintSpot(.statsNow)
         case .recap:
-            Button { recapping = true } label: { RecapTeaser(year: year) }
-                .buttonStyle(.plain)
-                .sproutRide()
+            // Не в списке — см. `recapTeaser`.
+            EmptyView()
         case .orrery:
             NavigationLink(value: StatsRoute.orrery) { OrreryTeaser() }
                 .buttonStyle(.plain)
@@ -344,7 +380,9 @@ struct StatsView: View {
     /// Скрытые — строками с «+»: вернуть на место, в конец.
     private var hiddenGroup: some View {
         SproutGroup("Скрытые") {
-            ForEach(StatsBlock.allCases.filter(settings.statsHidden.contains)) {
+            ForEach(StatsBlock.allCases.filter {
+                $0.listed && settings.statsHidden.contains($0)
+            }) {
                 block in
                 Button {
                     withAnimation(Motion.arrange) { settings.show(block) }
@@ -378,7 +416,7 @@ struct StatsView: View {
                 .foregroundStyle(.tertiary)
             Text("В саду пока пусто. Посадите первое растение во вкладке «Добавить» — и здесь появятся цифры.")
                 .font(Typography.settingNote)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Palette.secondaryText)
                 .multilineTextAlignment(.center)
                 .fixedSize(horizontal: false, vertical: true)
         }
@@ -407,6 +445,9 @@ struct StatsView: View {
     private var now: some View {
         let state = book.now
         return SproutGroup("Сад сегодня") {
+            Text("Состояние сада")
+                .font(Typography.settingNote)
+                .foregroundStyle(Palette.secondaryText)
             HStack(spacing: 18) {
                 ThirstRing(state) {
                     VStack(spacing: 0) {
@@ -414,25 +455,28 @@ struct StatsView: View {
                             .font(Typography.figure)
                             .foregroundStyle(Palette.ink)
                             .contentTransition(.numericText())
-                        Text("Довольны")
+                        Text("В порядке")
                             .font(Typography.figureCaption)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(Palette.secondaryText)
                     }
                 }
                 .frame(width: Metrics.statRingSize,
                        height: Metrics.statRingSize)
                 VStack(alignment: .leading, spacing: 10) {
-                    legend(Palette.green, state.calm, Lang.text("Довольны"))
+                    legend(Palette.secondaryText, state.calm,
+                           Lang.text("В порядке"))
                     legend(Palette.warn, state.warn, Lang.text("Скоро пить"))
-                    legend(Palette.alarm, state.alarm, Lang.text("Ждут воды"))
+                    legend(Palette.alarm, state.alarm, Lang.text("Сухо"))
                 }
             }
-            MoistureStrip(levels: state.levels)
+            if !state.thirsty.isEmpty {
+                thirsty(state.thirsty)
+            }
             if let average = state.average {
                 HStack(alignment: .firstTextBaseline, spacing: 6) {
                     Text(nowLine(average: average, driest: state.driest))
                         .font(Typography.settingNote)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Palette.secondaryText)
                         .fixedSize(horizontal: false, vertical: true)
                         .contentTransition(.numericText())
                     TermHint(.moisture)
@@ -440,6 +484,58 @@ struct StatsView: View {
             }
         }
         .sproutRide()
+    }
+
+    /// «Самые сухие»: пять строк — имя, статус словом движка и процент, —
+    /// остальные по «Показать все».
+    private func thirsty(_ lines: [Almanac.Now.Thirsty]) -> some View {
+        let short = Almanac.Now.shortList
+        let shown = allThirsty ? lines : Array(lines.prefix(short))
+        return VStack(alignment: .leading, spacing: 10) {
+            Text("Самые сухие")
+                .font(Typography.settingNote.weight(.semibold))
+                .foregroundStyle(Palette.secondaryText)
+            ForEach(shown) { line in
+                NavigationLink(value: StatsRoute.plant(line.id)) {
+                    HStack(spacing: 10) {
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(line.name)
+                                .font(Typography.settingRow)
+                                .foregroundStyle(Palette.ink)
+                                .dataLines()
+                            StatusLabel(status: line.status)
+                                .font(Typography.figureCaption)
+                                .foregroundStyle(Palette.secondaryText)
+                            if let plant = garden.plant(id: line.id) {
+                                Text(SoilNote.reason(for: plant, log: garden.log))
+                                    .font(Typography.figureCaption)
+                                    .foregroundStyle(Palette.secondaryText)
+                                    .fixedSize(horizontal: false, vertical: true)
+                            }
+                        }
+                        Spacer(minLength: 8)
+                        Text(MoistureStatus.percent(line.moisture,
+                                                    estimated: line.estimated))
+                            .font(Typography.detail)
+                            .foregroundStyle(Palette.ink)
+                            .monospacedDigit()
+                            .contentTransition(.numericText())
+                    }
+                    .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+                .accessibilityElement(children: .combine)
+            }
+            if lines.count > short {
+                Button(allThirsty ? Lang.text("Свернуть")
+                       : Lang.format("Показать все (%lld)", lines.count)) {
+                    withAnimation(Motion.enter) { allThirsty.toggle() }
+                }
+                .buttonStyle(.glass)
+                .font(Typography.settingNote)
+            }
+        }
+        .animation(Motion.enter, value: allThirsty)
     }
 
     private func nowLine(average: Double, driest: String?) -> String {
@@ -496,7 +592,7 @@ struct StatsView: View {
                     StatTile(value: book.aim.known > 0
                                  ? Stats.percent(book.aim.share(.onTime))
                                  : "—",
-                             caption: "Вовремя")
+                             caption: "В срок")
                 }
             }
         }
@@ -529,7 +625,7 @@ struct StatsView: View {
             VStack(alignment: .leading, spacing: 12) {
                 Text(barCaption)
                     .font(Typography.settingNote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Palette.secondaryText)
                     .contentTransition(.numericText())
                     .animation(Motion.number, value: pickedBar)
                 if book.total == 0 {
@@ -648,7 +744,7 @@ struct StatsView: View {
                     }
                     Text(Stats.verdict(Almanac.Aim.zone(typical)))
                         .font(Typography.settingNote)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Palette.secondaryText)
                         .fixedSize(horizontal: false, vertical: true)
                 }
                 histogram(typical: typical)
@@ -659,7 +755,7 @@ struct StatsView: View {
             } else {
                 Text("Полейте растение — и здесь появится, сколько воды было в земле в этот миг.")
                     .font(Typography.settingNote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Palette.secondaryText)
                     .fixedSize(horizontal: false, vertical: true)
             }
         }
@@ -680,7 +776,7 @@ struct StatsView: View {
                     .cornerRadius(3, style: .continuous)
             }
             RuleMark(x: .value(Self.levelAxis, typical * 100))
-                .foregroundStyle(Palette.ink.opacity(0.7))
+                .foregroundStyle(Palette.secondaryText)
                 .lineStyle(StrokeStyle(lineWidth: 1.5, dash: [3, 3]))
         }
         .chartXScale(domain: 0.0 ... 100.0)
@@ -703,7 +799,7 @@ struct StatsView: View {
             if book.total == 0 {
                 Text("Когда появятся поливы, здесь будет видно, в какие часы и дни вы поливаете.")
                     .font(Typography.settingNote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Palette.secondaryText)
                     .fixedSize(horizontal: false, vertical: true)
             } else {
                 HStack(spacing: 16) {
@@ -741,7 +837,7 @@ struct StatsView: View {
         SproutGroup("Календарь поливов") {
             Text(cellCaption)
                 .font(Typography.settingNote)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Palette.secondaryText)
                 .fixedSize(horizontal: false, vertical: true)
                 .contentTransition(.numericText())
                 .animation(Motion.number, value: pickedCell)
@@ -803,7 +899,7 @@ struct StatsView: View {
             VStack(alignment: .leading, spacing: 12) {
                 Text(aheadCaption)
                     .font(Typography.settingNote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Palette.secondaryText)
                     .fixedSize(horizontal: false, vertical: true)
                     .contentTransition(.numericText())
                     .animation(Motion.number, value: chosenDay?.offset)
@@ -874,14 +970,14 @@ struct StatsView: View {
         let level = room.moisture ?? 0
         let details = [Lang.format("%lld растений", room.plants),
                        Lang.format("%lld поливов", room.waterings)]
-            + (room.onTime.map { [Lang.format("вовремя %@",
+            + (room.onTime.map { [Lang.format("в срок %@",
                                               Stats.percent($0))] } ?? [])
         return VStack(alignment: .leading, spacing: 6) {
             HStack(spacing: 8) {
                 Text(room.name)
                     .font(Typography.settingRow)
                     .foregroundStyle(Palette.ink)
-                    .lineLimit(1)
+                    .dataLines()
                 if driest {
                     Text("Суше всех")
                         .font(Typography.figureCaption.weight(.semibold))
@@ -908,7 +1004,7 @@ struct StatsView: View {
                 }
             Text(details.joined(separator: " · "))
                 .font(Typography.figureCaption)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Palette.secondaryText)
         }
         .animation(Motion.number, value: level)
         .accessibilityElement(children: .combine)
@@ -952,7 +1048,7 @@ struct StatsView: View {
             }
             Text("Нажмите на растение — откроется его статистика.")
                 .font(Typography.figureCaption)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Palette.secondaryText)
         }
         .sproutRide()
     }
@@ -961,24 +1057,27 @@ struct StatsView: View {
         HStack(spacing: 12) {
             Text(place.formatted())
                 .font(Typography.detail)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Palette.secondaryText)
                 .monospacedDigit()
                 .frame(width: 22)
             VStack(alignment: .leading, spacing: 2) {
                 Text(line.name)
                     .font(Typography.settingRow)
                     .foregroundStyle(Palette.ink)
-                    .lineLimit(1)
+                    .dataLines()
                     .contentTransition(.numericText())
                 Text([line.species, line.room].filter { !$0.isEmpty }
                         .joined(separator: " · "))
                     .font(Typography.figureCaption)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Palette.secondaryText)
                     .lineLimit(1)
                     .contentTransition(.numericText())
             }
             Spacer(minLength: 8)
-            Text(board == .driest ? Stats.percent(line.moisture)
+            if board == .driest { SourceBadge(estimated: line.estimated) }
+            Text(board == .driest
+                 ? MoistureStatus.percent(line.moisture,
+                                          estimated: line.estimated)
                  : Lang.format("%lld поливов", line.waterings))
                 .font(Typography.settingRow)
                 .foregroundStyle(board == .driest

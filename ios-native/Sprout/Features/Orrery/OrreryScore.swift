@@ -44,7 +44,7 @@ struct OrreryScore: View {
                 let column = CGRect(x: x(Double(moment)) - 5, y: 0, width: 10,
                                     height: size.height)
                 context.fill(Path(roundedRect: column, cornerRadius: 5),
-                             with: .color(Palette.water.opacity(0.14)))
+                             with: .color(Palette.waterGlow.opacity(0.14)))
             }
             // Ноты: сыгранные — ярче, та, что звучит сейчас, — с ореолом.
             let dot = min(max((size.height - inset * 2) / CGFloat(rows) * 0.7,
@@ -59,12 +59,12 @@ struct OrreryScore: View {
                         Path(ellipseIn: CGRect(x: at.x - glow, y: at.y - glow,
                                                width: glow * 2,
                                                height: glow * 2)),
-                        with: .color(Palette.water.opacity(0.35 * (1 - since / 1.2))))
+                        with: .color(Palette.waterGlow.opacity(0.35 * (1 - since / 1.2))))
                 }
                 context.fill(
                     Path(ellipseIn: CGRect(x: at.x - dot / 2, y: at.y - dot / 2,
                                            width: dot, height: dot)),
-                    with: .color(played ? Palette.water
+                    with: .color(played ? Palette.waterGlow
                                  : .white.opacity(0.35)))
             }
             // Показанный день.

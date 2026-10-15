@@ -80,7 +80,26 @@ enum Species {
         return nil
     }
 
-    /// Потолок барабана срока: дольше без воды не живёт и кактус.
+    /// Несколько видов на выбор, когда классификатор не уверен: все знакомые
+    /// слова из наблюдений, от самого уверенного, без повторов. Пусто — нет
+    /// ни одного знакомого слова.
+    static func candidates(_ seen: [Sighting], limit: Int = 3,
+                           floor: Double = Species.floor) -> [Guess] {
+        var found: [Guess] = []
+        for entry in table {
+            guard let hit = seen.filter({ $0.confidence >= floor })
+                .first(where: { $0.name.lowercased().contains(entry.word) })
+            else { continue }
+            let name = Lang.text(entry.species)
+            guard !found.contains(where: { $0.species == name }) else { continue }
+            found.append(Guess(species: name, dryingDays: entry.days,
+                               confidence: hit.confidence))
+        }
+        return Array(found.sorted { $0.confidence > $1.confidence }
+            .prefix(limit))
+    }
+
+    /// Потолок срока полива: дольше без воды не живёт и кактус.
     static let longest = 60
 
     /// Дробное — одним знаком и в родительном: «6,5 дня».

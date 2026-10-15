@@ -18,6 +18,19 @@ final class SpheresPlayer {
         player?.prepareToPlay()
     }
 
+    /// Аккорд «Тихой ночи» — короткий и тихий, готовится в фоне.
+    func prepareChord() async {
+        let data = await Task.detached(priority: .utility) {
+            Spheres.wav(Spheres.calmChord())
+        }.value
+        try? AVAudioSession.sharedInstance().setCategory(.ambient)
+        player = try? AVAudioPlayer(data: data,
+                                    fileTypeHint: AVFileType.wav.rawValue)
+        player?.prepareToPlay()
+    }
+
+    func play() { player?.play() }
+
     /// Запускает звук чуть погодя, по часам звуковой карты, и отвечает,
     /// через сколько секунд он станет слышен — с задержкой вывода: у
     /// наушников по Bluetooth она в десятые доли секунды.

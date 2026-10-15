@@ -14,35 +14,40 @@ struct Wrist: Codable, Equatable, Sendable {
         /// За сколько дней высыхает — после полива с часов срок считается
         /// от него.
         var period: Double
+        /// Влажность с датчика, а не посчитана по сроку. Пусто в посылках
+        /// прежних сборок — посчитана.
+        var measured: Bool?
+        /// С какой влажности вид считается «влажным» — у суккулентов своя.
+        /// Пусто в посылках прежних сборок — общий порог.
+        var wetFrom: Double?
 
-        var level: Level { Level(moisture: moisture) }
+        /// Статус и сроки — тем же движком, что в приложении
+        /// (`MoistureStatus`): своих порогов у часов нет.
+        var status: MoistureStatus {
+            MoistureStatus(moisture: moisture, wetFrom: wetFrom)
+        }
+
+        /// Полить сегодня — как «Ждут воды» на телефоне.
+        var due: Bool { MoistureStatus.due(moisture: moisture, period: period) }
 
         /// Дней до полива — как на карточке в приложении.
-        var days: Int { max(0, Int((moisture * period).rounded())) }
+        var days: Int { MoistureStatus.days(moisture: moisture, period: period) }
 
         var percent: Int { Int((moisture * 100).rounded()) }
 
+        /// Земля ещё влажная — полив переспрашивает, см.
+        /// `MoistureStatus.wateringGuard`.
+        var wet: Bool {
+            MoistureStatus.wateringGuard(moisture: moisture,
+                                         wetFrom: wetFrom) != .allow
+        }
+
+        var estimated: Bool { measured != true }
+
         /// Те же слова, что на карточке в приложении, — и те же переводы.
         var label: String {
-            if days <= 0 { return Lang.text("Следующий полив: сегодня") }
-            if days == 1 { return Lang.text("Следующий полив: завтра") }
-            return Lang.format("Следующий полив: %lld дней", days)
-        }
-    }
-
-    /// Та же тень, что на карточке: ниже 40% — пора, ниже 20% — срочно.
-    enum Level: Sendable {
-        case calm, warn, alarm
-
-        static let warnBelow = 0.4
-        static let alarmBelow = 0.2
-
-        init(moisture: Double) {
-            switch moisture {
-            case ..<Self.alarmBelow: self = .alarm
-            case ..<Self.warnBelow: self = .warn
-            default: self = .calm
-            }
+            MoistureStatus.nextWatering(moisture: moisture, period: period,
+                                        estimated: estimated)
         }
     }
 
@@ -50,18 +55,25 @@ struct Wrist: Codable, Equatable, Sendable {
     var pots: [Pot]
     var sent: Date
 
-    var thirsty: [Pot] { pots.filter { $0.level != .calm } }
+    /// Кого полить сегодня — тот же набор, что `MoistureStatus.needsWater`.
+    var thirsty: [Pot] { pots.filter(\.due) }
 
     /// Полили с часов — сразу на часах, не дожидаясь телефона: он догонит.
     /// Слепок помечается мигом полива: посылка телефона, собранная раньше,
     /// его уже не перетрёт.
-    mutating func water(_ id: String, at moment: Date = Date()) {
-        guard let index = pots.firstIndex(where: { $0.id == id }) else {
-            return
+    /// Влажную землю — только с подтверждением (`anyway`), как на
+    /// телефоне; отвечает, полилось ли.
+    @discardableResult
+    mutating func water(_ id: String, at moment: Date = Date(),
+                        anyway: Bool = false) -> Bool {
+        guard let index = pots.firstIndex(where: { $0.id == id }),
+              anyway || !pots[index].wet else {
+            return false
         }
         pots[index].moisture = 1
         pots.sort { $0.moisture < $1.moisture }
         sent = max(sent, moment)
+        return true
     }
 
     /// Новая посылка — только если она не старше того, что уже есть.
@@ -104,5 +116,7 @@ struct Wrist: Codable, Equatable, Sendable {
         static let garden = "garden"
         static let water = "water"
         static let when = "when"
+        /// Полили влажную землю, подтвердив, — см. `Garden.water`.
+        static let anyway = "anyway"
     }
 }

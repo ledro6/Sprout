@@ -5,6 +5,10 @@ import SwiftUI
 struct OrreryDial: View {
     let planets: [Orrery.Planet]
     var flashes: [Orrery.Flash] = []
+    /// Искры «в яблочко» у ворот — сила гаснет от единицы.
+    var glints: [Orrery.Flash] = []
+    /// Высохшие досуха тускнеют, пока их не польют.
+    var dimmed: Set<Plant.ID> = []
     var picked: Plant.ID?
     var beat: Double = 0
     /// На обзоре — мелко и без подписей.
@@ -56,13 +60,13 @@ struct OrreryDial: View {
                     y: middle.y - (full + 8) * CGFloat(cos(angle))))
             }
             wedge.closeSubpath()
-            context.fill(wedge, with: .color(Palette.water.opacity(0.1)))
+            context.fill(wedge, with: .color(Palette.waterGlow.opacity(0.1)))
             var beam = Path()
             beam.move(to: CGPoint(x: middle.x, y: middle.y - sun / 2))
             beam.addLine(to: CGPoint(x: middle.x, y: middle.y - full - 6))
             context.stroke(beam, with: .linearGradient(
-                Gradient(colors: [Palette.water.opacity(0.9),
-                                  Palette.water.opacity(0.15)]),
+                Gradient(colors: [Palette.waterGlow.opacity(0.9),
+                                  Palette.waterGlow.opacity(0.15)]),
                 startPoint: middle,
                 endPoint: CGPoint(x: middle.x, y: middle.y - full)),
                 style: StrokeStyle(lineWidth: small ? 1.5 : 2.5,
@@ -96,8 +100,24 @@ struct OrreryDial: View {
                 context.stroke(
                     Path(ellipseIn: CGRect(x: at.x - r, y: at.y - r,
                                            width: r * 2, height: r * 2)),
-                    with: .color(Palette.water.opacity(flash.strength)),
+                    with: .color(Palette.waterGlow.opacity(flash.strength)),
                     lineWidth: 2)
+            }
+
+            // Искра «в яблочко»: крестик света у ворот на орбите политой.
+            for glint in glints {
+                let at = Self.spot(radius: glint.radius, angle: 0, in: size,
+                                   small: small)
+                let r = 4 + glint.strength * 10
+                var spark = Path()
+                spark.move(to: CGPoint(x: at.x - r, y: at.y))
+                spark.addLine(to: CGPoint(x: at.x + r, y: at.y))
+                spark.move(to: CGPoint(x: at.x, y: at.y - r))
+                spark.addLine(to: CGPoint(x: at.x, y: at.y + r))
+                context.stroke(spark,
+                               with: .color(.white.opacity(glint.strength)),
+                               style: StrokeStyle(lineWidth: 1.6,
+                                                  lineCap: .round))
             }
 
             // Солнце — источник воды.
@@ -107,13 +127,13 @@ struct OrreryDial: View {
                                                   y: middle.y - sun * 0.7,
                                                   width: sun * 1.4,
                                                   height: sun * 1.4)),
-                           with: .color(Palette.water.opacity(0.55)))
+                           with: .color(Palette.waterGlow.opacity(0.55)))
             }
             context.fill(Path(ellipseIn: CGRect(x: middle.x - sun / 2,
                                                 y: middle.y - sun / 2,
                                                 width: sun, height: sun)),
                          with: .radialGradient(
-                             Gradient(colors: [.white, Palette.water]),
+                             Gradient(colors: [.white, Palette.waterGlow]),
                              center: middle, startRadius: 0,
                              endRadius: sun / 2))
             var drop = context.resolve(Image(systemName: "drop.fill"))
@@ -134,7 +154,8 @@ struct OrreryDial: View {
                                                       width: r * 2,
                                                       height: r * 2)),
                                with: .color(Palette.level(planet.moisture)
-                                   .opacity(0.8)))
+                                   .opacity(dimmed.contains(planet.id)
+                                            ? 0.2 : 0.8)))
                 }
             }
             for planet in planets {
@@ -153,6 +174,9 @@ struct OrreryDial: View {
                     Gradient(colors: [tone.mix(with: .white, by: 0.5), tone,
                                       tone.mix(with: .black, by: 0.55)]),
                     center: lit, startRadius: 0, endRadius: r * 1.7))
+                if dimmed.contains(planet.id) {
+                    context.fill(disc, with: .color(Palette.space.opacity(0.6)))
+                }
                 if planet.id == picked {
                     context.stroke(disc, with: .color(.white), lineWidth: 2)
                     let name = context.resolve(
@@ -173,7 +197,7 @@ struct OrreryDial: View {
     private func diameter(of planet: Orrery.Planet) -> CGFloat {
         let base = planet.id == picked ? Metrics.planetPicked : Metrics.planet
         let scaled = small ? base * 0.62 : base
-        guard Thirst(moisture: planet.moisture) == .alarm else { return scaled }
+        guard MoistureStatus(moisture: planet.moisture) == .urgent else { return scaled }
         return scaled * (1 + 0.3 * CGFloat(beat))
     }
 }
