@@ -131,7 +131,7 @@ struct ProfileView: View {
                 Button { editing = true } label: {
                     AvatarCircle(size: Metrics.avatar)
                 }
-                .buttonStyle(.plain)
+                .buttonStyle(.borderless)
                 .accessibilityLabel("Изменить профиль")
                 VStack(alignment: .leading, spacing: 3) {
                     Text(named ? garden.owner : Lang.text("Имя не задано"))

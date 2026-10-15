@@ -98,6 +98,8 @@ struct TodayBlock: View {
             .fixedSize(horizontal: false, vertical: true)
             Spacer(minLength: 8)
             Button("Повторить") { garden.save() }
+                .frame(minHeight: 44)
+                .contentShape(.rect)
                 .font(Typography.settingNote.weight(.semibold))
                 .foregroundStyle(Palette.ink)
                 .frame(minHeight: 44)

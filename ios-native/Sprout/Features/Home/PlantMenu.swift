@@ -138,6 +138,7 @@ struct PlantMenu: ViewModifier {
                     Label("Растение погибло — в архив",
                           systemImage: "archivebox")
                 }
+                Divider()
                 Button(role: .destructive) { toss() } label: {
                     Label("Удалить", systemImage: "trash")
                 }

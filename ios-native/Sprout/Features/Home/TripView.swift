@@ -69,7 +69,7 @@ struct TripView: View {
             .sproutSettledEdge()
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("Закрыть") { dismiss() }
+                    Button("Закрыть", role: .close) { dismiss() }
                 }
             }
         }

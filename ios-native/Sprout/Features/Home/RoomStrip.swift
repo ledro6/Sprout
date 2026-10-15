@@ -344,7 +344,7 @@ struct RoomStrip: View {
                     .frame(maxHeight: .infinity)
                     .contentShape(Rectangle())
             }
-            .buttonStyle(.plain)
+            .buttonStyle(.borderless)
             .offset(x: left(starts[index] - turned, max(wide, 1), lead: lead))
             .accessibilityHidden(true)
         }
@@ -360,7 +360,7 @@ struct RoomStrip: View {
                     .frame(maxHeight: .infinity)
                     .contentShape(Rectangle())
             }
-            .buttonStyle(.plain)
+            .buttonStyle(.borderless)
             .offset(x: flipped ? span - lead : 0)
             .accessibilityHidden(true)
         }

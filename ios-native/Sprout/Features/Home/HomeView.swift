@@ -560,7 +560,8 @@ struct HomeView: View {
         Image(systemName: name)
             .font(.system(size: Metrics.cornerGlyph, weight: .semibold))
             .foregroundStyle(Palette.ink)
-            .frame(width: Metrics.gearBox, height: Metrics.gearBox)
+            .frame(minWidth: 44, minHeight: 44)
+            .contentShape(.circle)
             .contentTransition(.symbolEffect(.replace))
     }
 
@@ -713,7 +714,8 @@ struct HomeView: View {
             Button(action: finish) {
                 Image(systemName: "checkmark")
                     .font(.system(size: Metrics.cornerGlyph, weight: .semibold))
-                    .frame(width: Metrics.gearBox, height: Metrics.gearBox)
+                    .frame(minWidth: 44, minHeight: 44)
+                    .contentShape(.circle)
             }
             .buttonStyle(.glassProminent)
             .tint(Palette.accentFill)
@@ -973,7 +975,7 @@ private struct PauseSheet: View {
                 Section {
                     Button(Lang.text("Поставить паузу")) { start() }
                     if Settings.shared.pause != nil {
-                        Button(Lang.text("Снять паузу"), role: .destructive) {
+                        Button(Lang.text("Снять паузу")) {
                             Settings.shared.pause = nil
                             Task { await Notifier.replan() }
                             dismiss()
@@ -984,7 +986,7 @@ private struct PauseSheet: View {
             .navigationTitle(Lang.text("Пауза напоминаний"))
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button(Lang.text("Закрыть")) { dismiss() }
+                    Button(Lang.text("Закрыть"), role: .close) { dismiss() }
                 }
             }
         }

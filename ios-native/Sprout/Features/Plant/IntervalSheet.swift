@@ -48,10 +48,10 @@ struct IntervalSheet: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
-                    Button("Отмена") { dismiss() }
+                    Button("Отмена", role: .cancel) { dismiss() }
                 }
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("Готово") { apply(days) }
+                    Button("Готово", role: .confirm) { apply(days) }
                 }
             }
         }

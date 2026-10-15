@@ -105,7 +105,7 @@ struct PlantJournal: View {
                     .stroke(Palette.secondaryText, lineWidth: 1)
             )
         }
-        .buttonStyle(.plain)
+        .buttonStyle(.borderless)
         .accessibilityLabel("Добавить фото")
     }
 
@@ -117,7 +117,7 @@ struct PlantJournal: View {
                     .clipShape(RoundedRectangle(cornerRadius: 16,
                                                 style: .continuous))
             }
-            .buttonStyle(.plain)
+            .buttonStyle(.borderless)
             .accessibilityLabel(Lang.format("Фото от %@",
                                             snap.date.formatted(date: .abbreviated, time: .omitted)))
             .contextMenu {

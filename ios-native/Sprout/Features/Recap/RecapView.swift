@@ -359,6 +359,5 @@ struct RecapTeaser: View {
         .contentShape(RoundedRectangle(cornerRadius: Metrics.cardRadius,
                                        style: .continuous))
         .accessibilityElement(children: .combine)
-        .accessibilityAddTraits(.isButton)
     }
 }

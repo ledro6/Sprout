@@ -69,7 +69,7 @@ struct ProfileEditor: View {
             .sproutSettledEdge()
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("Готово") {
+                    Button("Готово", role: .confirm) {
                         save()
                         dismiss()
                     }

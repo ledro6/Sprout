@@ -107,7 +107,7 @@ struct TreatmentCard: View {
         .controlSize(.large)
         Button("Отменить план") { dropping = true }
             .font(Typography.settingNote)
-            .buttonStyle(.plain)
+            .buttonStyle(.borderless)
             .foregroundStyle(Palette.secondaryText)
             .frame(maxWidth: .infinity)
     }
@@ -132,7 +132,7 @@ struct TreatmentCard: View {
                                         : Palette.ink.opacity(0.35)))
                     .contentTransition(.symbolEffect(.replace))
             }
-            .buttonStyle(.plain)
+            .buttonStyle(.borderless)
             .accessibilityLabel(done ? "Снять отметку" : "Сделано")
             VStack(alignment: .leading, spacing: 3) {
                 Label {

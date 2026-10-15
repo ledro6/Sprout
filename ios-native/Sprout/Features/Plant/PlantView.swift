@@ -137,7 +137,7 @@ struct PlantView: View {
                 .sharedBackgroundVisibility(.hidden)
             ToolbarItemGroup(placement: .keyboard) {
                 Spacer()
-                Button("Готово") { writing = false }
+                Button("Готово", role: .confirm) { writing = false }
             }
         }
         // Панель проступает, отстав от разворачивания карточки. Отставание
@@ -310,6 +310,7 @@ struct PlantView: View {
                          roomDraft = ""
                          moving = true
                      })
+            Divider()
             Button { Bin.shared.askRetire(plantID, in: garden) } label: {
                 Label("Растение погибло — в архив", systemImage: "archivebox")
             }
@@ -320,6 +321,7 @@ struct PlantView: View {
             Image(systemName: "ellipsis")
                 .modifier(NavCircle())
         }
+        .accessibilityLabel("Ещё")
         .menuStyle(.button)
         .buttonStyle(.plain)
         .modifier(Chrome(shown: chrome))
@@ -433,14 +435,16 @@ struct PlantView: View {
     /// кнопка «Полить» видны без прокрутки и на 667 pt.
     private func hero(_ plant: Plant) -> some View {
         HStack(alignment: .top, spacing: 14) {
-            PlantPhoto(plant: plant, radius: 18)
-                .frame(width: Metrics.heroPhoto, height: Metrics.heroPhoto)
-                .onGeometryChange(for: CGRect.self) { $0.frame(in: .global) }
-                    action: { spot.rect = $0 }
-                .contentShape(.rect)
-                .onTapGesture { if !gallery(plant).isEmpty { viewing = true } }
-                .accessibilityAddTraits(gallery(plant).isEmpty ? [] : .isButton)
-                .accessibilityHint(gallery(plant).isEmpty ? "" : "Открыть фото")
+            Button { viewing = true } label: {
+                PlantPhoto(plant: plant, radius: 18)
+                    .frame(width: Metrics.heroPhoto, height: Metrics.heroPhoto)
+                    .onGeometryChange(for: CGRect.self) { $0.frame(in: .global) }
+                        action: { spot.rect = $0 }
+                    .contentShape(.rect)
+            }
+            .buttonStyle(.plain)
+            .disabled(gallery(plant).isEmpty)
+            .accessibilityHint(gallery(plant).isEmpty ? "" : "Открыть фото")
             VStack(alignment: .leading, spacing: 8) {
                 HStack(spacing: 10) {
                     MoistureRing(moisture: plant.moisture, status: plant.status,
@@ -492,7 +496,7 @@ struct PlantView: View {
             .background(Capsule().fill(Palette.ink.opacity(0.08)))
             .contentShape(.capsule)
         }
-        .buttonStyle(.plain)
+        .buttonStyle(.borderless)
         .accessibilityHint("Меняет срок полива")
     }
 
@@ -744,7 +748,7 @@ struct PlantView: View {
                     .frame(minWidth: 44, minHeight: 44)
                     .contentShape(Rectangle())
             }
-            .buttonStyle(.plain)
+            .buttonStyle(.borderless)
             .foregroundStyle(Palette.secondaryText)
             .accessibilityLabel("Пропустить")
         }
@@ -768,7 +772,7 @@ struct PlantView: View {
                 .frame(minWidth: 44, minHeight: 44)
                 .contentShape(Rectangle())
         }
-        .buttonStyle(.plain)
+        .buttonStyle(.borderless)
         .foregroundStyle(Palette.accent)
     }
 

@@ -34,7 +34,7 @@ struct ArchiveGroup: View {
                 Feel.back()
             }
             .font(Typography.settingNote)
-            .buttonStyle(.bordered)
+            .buttonStyle(.glass)
             .frame(minHeight: 44)
         }
         .accessibilityElement(children: .contain)

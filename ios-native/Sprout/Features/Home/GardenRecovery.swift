@@ -47,7 +47,7 @@ struct RecoverySheet: View {
                 .buttonStyle(.glassProminent)
                 .tint(Palette.accentFill)
             }
-            Button("Начать заново") { garden.startOver() }
+            Button("Начать заново", role: .destructive) { garden.startOver() }
                 .buttonStyle(.glass)
         }
         .font(Typography.settingNote)

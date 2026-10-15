@@ -38,10 +38,10 @@ struct RetimeSheet: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
-                    Button("Отмена") { dismiss() }
+                    Button("Отмена", role: .cancel) { dismiss() }
                 }
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("Готово") { save() }
+                    Button("Готово", role: .confirm) { save() }
                 }
             }
         }

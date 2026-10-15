@@ -48,7 +48,7 @@ struct SensorPicker: View {
             .sproutSettledEdge()
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
-                    Button("Отмена") { dismiss() }
+                    Button("Отмена", role: .cancel) { dismiss() }
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {

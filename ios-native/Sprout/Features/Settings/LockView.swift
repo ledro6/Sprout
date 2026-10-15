@@ -36,6 +36,7 @@ struct LockView: View {
                     Button("Ввести код-пароль") {
                         Task { await lock.unlock() }
                     }
+                    .buttonStyle(.glass)
                     .font(Typography.settingNote)
                     .disabled(lock.asking)
                 case .lockout?:
