@@ -81,7 +81,7 @@ struct AskView: View {
                     .disabled(talk.lines.isEmpty && talk.trouble == nil)
                 }
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("Закрыть") { dismiss() }
+                    Button("Закрыть", role: .close) { dismiss() }
                 }
             }
         }
@@ -270,6 +270,8 @@ struct AskView: View {
             }
             .buttonStyle(.glassProminent)
             .tint(Palette.accentFill)
+            .frame(minWidth: 44, minHeight: 44)
+            .contentShape(.circle)
             .buttonBorderShape(.circle)
             .disabled(!Muse.ready || talk.busy || Sage.question(draft) == nil)
             .accessibilityLabel("Спросить")

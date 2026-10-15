@@ -285,29 +285,31 @@ struct WateringCalendar: View {
             ForEach(weeks.indices, id: \.self) { week in
                 VStack(spacing: 3) {
                     ForEach(weeks[week]) { cell in
-                        RoundedRectangle(cornerRadius: 3, style: .continuous)
-                            .fill(cell.count == 0
-                                  ? Palette.ink.opacity(0.07)
-                                  : colour.opacity(0.3 + 0.7
-                                      * Double(cell.count) / Double(most)))
-                            .aspectRatio(1, contentMode: .fit)
-                            .overlay {
-                                if picked == cell.day || today == cell.day {
-                                    RoundedRectangle(cornerRadius: 3,
-                                                     style: .continuous)
-                                        .strokeBorder(picked == cell.day
-                                                      ? Palette.ink
-                                                      : Palette.ink.opacity(0.35),
-                                                      lineWidth: 1.5)
-                                }
+                        Button {
+                            withAnimation(Motion.pill) {
+                                picked = picked == cell.day ? nil : cell.day
                             }
-                            .contentShape(Rectangle())
-                            .onTapGesture {
-                                withAnimation(Motion.pill) {
-                                    picked = picked == cell.day ? nil : cell.day
+                            Feel.pick()
+                        } label: {
+                            RoundedRectangle(cornerRadius: 3, style: .continuous)
+                                .fill(cell.count == 0
+                                      ? Palette.ink.opacity(0.07)
+                                      : colour.opacity(0.3 + 0.7
+                                          * Double(cell.count) / Double(most)))
+                                .aspectRatio(1, contentMode: .fit)
+                                .overlay {
+                                    if picked == cell.day || today == cell.day {
+                                        RoundedRectangle(cornerRadius: 3,
+                                                         style: .continuous)
+                                            .strokeBorder(picked == cell.day
+                                                          ? Palette.ink
+                                                          : Palette.ink.opacity(0.35),
+                                                          lineWidth: 1.5)
+                                    }
                                 }
-                                Feel.pick()
-                            }
+                                .contentShape(Rectangle())
+                        }
+                        .buttonStyle(.borderless)
                     }
                 }
                 .frame(maxWidth: .infinity, alignment: .top)

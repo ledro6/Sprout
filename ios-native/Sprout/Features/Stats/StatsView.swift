@@ -234,7 +234,9 @@ struct StatsView: View {
                     .symbolRenderingMode(.palette)
                     .foregroundStyle(.white, Palette.alarm)
             }
-            .buttonStyle(.plain)
+            .buttonStyle(.borderless)
+            .frame(minWidth: 44, minHeight: 44)
+            .contentShape(.rect)
             .accessibilityLabel(Lang.format("Убрать «%@»", block.title))
             Image(systemName: block.icon)
                 .font(Typography.settingRow)

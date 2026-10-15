@@ -272,7 +272,9 @@ struct OrreryView: View {
                 .padding(.vertical, 7)
                 .background(Capsule().fill(Color.white.opacity(0.08)))
             }
-            .buttonStyle(.plain)
+            .buttonStyle(.borderless)
+            .frame(minHeight: 44)
+            .contentShape(.rect)
             .accessibilityHint("Откроет небесный журнал")
             Spacer(minLength: 0)
         }

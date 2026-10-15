@@ -47,7 +47,7 @@ struct ModelSheet: View {
             .sproutSettledEdge()
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("Готово") { dismiss() }
+                    Button("Готово", role: .confirm) { dismiss() }
                 }
             }
         }

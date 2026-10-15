@@ -30,7 +30,7 @@ struct SkyJournal: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Готово") { dismiss() }
+                    Button("Готово", role: .confirm) { dismiss() }
                 }
             }
         }

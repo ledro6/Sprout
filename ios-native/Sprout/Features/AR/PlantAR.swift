@@ -167,6 +167,8 @@ struct PlantAR: View {
                 }
                 .buttonStyle(.glass)
                 .buttonBorderShape(.circle)
+                .frame(minWidth: 44, minHeight: 44)
+                .contentShape(.rect)
                 .accessibilityLabel("Модель")
             } else {
                 Color.clear
